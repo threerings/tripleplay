@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 <project name="tripleplay" default="compile" xmlns:artifact="urn:maven-artifact-ant">
-  <property name="deploy.dir"   location="dist"/>
+  <property name="deploy.dir"   location="target"/>
   <property name="src.dir"      location="src/main/java"/>
   <property name="tsrc.dir"     location="src/test/java"/>
   <property name="classes.dir"  location="${deploy.dir}/classes"/>
