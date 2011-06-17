@@ -10,12 +10,7 @@ Building
 
 The library is built using [Ant](http://ant.apache.org/).
 
-Invoke ant with any of the following targets:
-
-    all: builds the distribution files and javadoc documentation
-    compile: builds only the class files (dist/classes)
-    javadoc: builds only the javadoc documentation (dist/docs)
-    dist: builds the distribution jar files (dist/*.jar)
+Invoke `ant -p` to see documentation on the build targets.
 
 Artifacts
 ---------
