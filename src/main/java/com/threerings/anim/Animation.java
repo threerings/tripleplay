@@ -256,6 +256,14 @@ public abstract class Animation
         };
     }
 
+    /**
+     * Cancels this animation. It will unregister itself on its next tick.
+     */
+    public void cancel ()
+    {
+        _current = null;
+    }
+
     protected Animation ()
     {
     }
@@ -267,6 +275,9 @@ public abstract class Animation
 
     protected boolean apply (Animator animator, float time)
     {
+        // if we're cancelled, abandon ship now
+        if (_current == null) return false;
+
         // if the current animation is still running, keep going
         if (!_current.apply(time)) return false;
 
