@@ -10,6 +10,8 @@ import java.util.List;
 
 import forplay.core.Layer;
 
+import com.threerings.util.FloatMath;
+
 /**
  * Handles creation and management of animations. Animations may involve the tweening of a
  * geometric property of a layer (x, y, rotation, scale, alpha), or simple delays, or performing
@@ -44,7 +46,12 @@ public abstract class Animator
     public Animation.One tweenRotation (final Layer layer) {
         return register(new Animation.One(new Animation.Value() {
             public float get () {
-                return 0; // TODO
+                float m01 = layer.transform().m01();
+                float m11 = layer.transform().m11();
+                float rot = FloatMath.atan2(m01, m11);
+                // avoid returning +PI sometimes and -PI others
+                if (rot == FloatMath.PI) rot = -FloatMath.PI;
+                return rot;
             }
             public void set (float value) {
                 layer.setRotation(value);
@@ -55,7 +62,7 @@ public abstract class Animator
     public Animation.One tweenScale (final Layer layer) {
         return register(new Animation.One(new Animation.Value() {
             public float get () {
-                return 1; // TODO
+                return layer.transform().m00(); // assume x and y scale are equal
             }
             public void set (float value) {
                 layer.setScale(value);
@@ -146,10 +153,12 @@ public abstract class Animator
     protected static Animation.Value onScaleX (final Layer layer) {
         return new Animation.Value() {
             public float get () {
-                return 1; // TODO
+                float m00 = layer.transform().m00();
+                float m01 = layer.transform().m01();
+                return FloatMath.sqrt(m00*m00 + m01*m01);
             }
             public void set (float value) {
-                layer.setScale(value, 1); // TODO
+                layer.transform().setM00(value);
             }
         };
     }
@@ -157,10 +166,12 @@ public abstract class Animator
     protected static Animation.Value onScaleY (final Layer layer) {
         return new Animation.Value() {
             public float get () {
-                return 1; // TODO
+                float m10 = layer.transform().m10();
+                float m11 = layer.transform().m11();
+                return FloatMath.sqrt(m10*m10 + m11*m11);
             }
             public void set (float value) {
-                layer.setScale(1, value); // TODO
+                layer.transform().setM11(value);
             }
         };
     }
