@@ -47,6 +47,14 @@
       <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.samskivert</groupId>
+      <artifactId>pythagoras</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
