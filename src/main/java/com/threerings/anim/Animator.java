@@ -27,24 +27,45 @@ public abstract class Animator
         return new Impl();
     }
 
+    /**
+     * Registers an animation with this animator. It will be started on the next frame and continue
+     * until cancelled or it reports that it has completed.
+     */
+    public abstract <T extends Animation> T add (T tween);
+
+    /**
+     * Starts a tween on the supplied layer's x/y-translation.
+     */
     public Animation.Two tweenTranslation (Layer layer) {
         return tweenXY(layer);
     }
 
+    /**
+     * Starts a tween on the supplied layer's x/y-translation.
+     */
     public Animation.Two tweenXY (Layer layer) {
-        return register(new Animation.Two(onX(layer), onY(layer)));
+        return add(new Animation.Two(onX(layer), onY(layer)));
     }
 
+    /**
+     * Starts a tween on the supplied layer's x-translation.
+     */
     public Animation.One tweenX (Layer layer) {
-        return register(new Animation.One(onX(layer)));
+        return add(new Animation.One(onX(layer)));
     }
 
+    /**
+     * Starts a tween on the supplied layer's y-translation.
+     */
     public Animation.One tweenY (Layer layer) {
-        return register(new Animation.One(onY(layer)));
+        return add(new Animation.One(onY(layer)));
     }
 
+    /**
+     * Starts a tween on the supplied layer's rotation.
+     */
     public Animation.One tweenRotation (final Layer layer) {
-        return register(new Animation.One(new Animation.Value() {
+        return add(new Animation.One(new Animation.Value() {
             public float get () {
                 float m01 = layer.transform().m01();
                 float m11 = layer.transform().m11();
@@ -59,8 +80,11 @@ public abstract class Animator
         }));
     }
 
+    /**
+     * Starts a tween on the supplied layer's x/y-scale.
+     */
     public Animation.One tweenScale (final Layer layer) {
-        return register(new Animation.One(new Animation.Value() {
+        return add(new Animation.One(new Animation.Value() {
             public float get () {
                 return layer.transform().m00(); // assume x and y scale are equal
             }
@@ -70,20 +94,32 @@ public abstract class Animator
         }));
     }
 
+    /**
+     * Starts a tween on the supplied layer's x/y-scale.
+     */
     public Animation.Two tweenScaleXY (Layer layer) {
-        return register(new Animation.Two(onScaleX(layer), onScaleY(layer)));
+        return add(new Animation.Two(onScaleX(layer), onScaleY(layer)));
     }
 
+    /**
+     * Starts a tween on the supplied layer's x-scale.
+     */
     public Animation.One tweenScaleX (Layer layer) {
-        return register(new Animation.One(onScaleX(layer)));
+        return add(new Animation.One(onScaleX(layer)));
     }
 
+    /**
+     * Starts a tween on the supplied layer's y-scale.
+     */
     public Animation.One tweenScaleY (Layer layer) {
-        return register(new Animation.One(onScaleY(layer)));
+        return add(new Animation.One(onScaleY(layer)));
     }
 
+    /**
+     * Starts a tween on the supplied layer's transparency.
+     */
     public Animation.One tweenAlpha (final Layer layer) {
-        return register(new Animation.One(new Animation.Value() {
+        return add(new Animation.One(new Animation.Value() {
             public float get () {
                 return layer.alpha();
             }
@@ -94,29 +130,29 @@ public abstract class Animator
     }
 
     /**
-     * Creates a tween that delays for the specified number of seconds.
+     * Creates an animation that delays for the specified number of seconds.
      */
     public Animation.Delay delay (float seconds)
     {
-        return register(new Animation.Delay(seconds));
+        return add(new Animation.Delay(seconds));
     }
 
     /**
-     * Returns an animator which can be used to construct a tween that will be repeated until the
-     * supplied layer has been removed from its parent. The layer must be added to a parent before
-     * the next frame tick (if it's not already), or the cancellation will trigger immediately.
+     * Returns an animator which can be used to construct an animation that will be repeated until
+     * the supplied layer has been removed from its parent. The layer must be added to a parent
+     * before the next frame (if it's not already), or the cancellation will trigger immediately.
      */
     public Animator repeat (Layer layer)
     {
-        return register(new Animation.Repeat(layer)).then();
+        return add(new Animation.Repeat(layer)).then();
     }
 
     /**
-     * Creates a tween that executes the supplied runnable and immediately completes.
+     * Creates an animation that executes the supplied runnable and immediately completes.
      */
     public Animation.Action action (Runnable action)
     {
-        return register(new Animation.Action(action));
+        return add(new Animation.Action(action));
     }
 
     /**
@@ -125,8 +161,6 @@ public abstract class Animator
     public void update (float time) {
         // nada by default
     }
-
-    protected abstract <T extends Animation> T register (T tween);
 
     protected static Animation.Value onX (final Layer layer) {
         return new Animation.Value() {
@@ -178,7 +212,7 @@ public abstract class Animator
 
     /** Implementation details, avert your eyes. */
     protected static class Impl extends Animator {
-        @Override protected <T extends Animation> T register (T anim) {
+        @Override public <T extends Animation> T add (T anim) {
             _nanims.add(anim);
             return anim;
         }

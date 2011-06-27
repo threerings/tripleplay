@@ -249,7 +249,7 @@ public abstract class Animation
             throw new IllegalStateException("This animation already has a 'then' animation.");
         }
         return new Animator() {
-            protected <T extends Animation> T register (T anim) {
+            @Override public <T extends Animation> T add (T anim) {
                 _next = anim;
                 return anim;
             }
@@ -257,7 +257,7 @@ public abstract class Animation
     }
 
     /**
-     * Cancels this animation. It will unregister itself on its next tick.
+     * Cancels this animation. It will remove itself from its animator the next frame.
      */
     public void cancel ()
     {
