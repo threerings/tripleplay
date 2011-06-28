@@ -9,8 +9,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Random;
+import java.util.RandomAccess;
 
 /**
  * Provides utility routines to simplify obtaining randomized values.
@@ -107,9 +109,27 @@ public class Randoms
     /**
      * Shuffle the specified list using our Random.
      */
-    public void shuffle (List<?> list)
+    public <T> void shuffle (List<T> list)
     {
-        Collections.shuffle(list, _r);
+        // we can't use Collections.shuffle here because GWT doesn't implement it
+        int size = list.size();
+        if (list instanceof RandomAccess) {
+            for (int ii = size; ii > 1; ii--) {
+                swap(list, ii-1, _r.nextInt(ii));
+            }
+
+        } else {
+            Object[] array = list.toArray();
+            for (int ii = size; ii > 1; ii--) {
+                swap(array, ii-1, _r.nextInt(ii));
+            }
+            ListIterator<T> it = list.listIterator();
+            for (int ii = 0; ii < size; ii++) {
+                it.next();
+                @SuppressWarnings("unchecked") T elem = (T)array[ii];
+                it.set(elem);
+            }
+        }
     }
 
     /**
@@ -267,6 +287,20 @@ public class Randoms
         }
         lagIt.remove(); // remove 'pick' from the lagging iterator
         return pick;
+    }
+
+    /** Helper for {@link #shuffle}. */
+    protected static <T> void swap (List<T> list, int ii, int jj)
+    {
+        list.set(ii, list.set(jj, list.get(ii)));
+    }
+
+    /** Helper for {@link #shuffle}. */
+    protected static void swap (Object[] array, int ii, int jj)
+    {
+        Object tmp = array[ii];
+        array[ii] = array[jj];
+        array[jj] = tmp;
     }
 
     /** The random number generator. */
