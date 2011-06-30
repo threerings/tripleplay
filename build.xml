@@ -6,7 +6,7 @@
   <property name="classes.dir"  location="${deploy.dir}/classes"/>
   <property name="tclasses.dir" location="${deploy.dir}/test-classes"/>
 
-  <property name="ooo-build.vers" value="2.5"/>
+  <property name="ooo-build.vers" value="2.6"/>
   <ant antfile="etc/bootstrap.xml"/>
   <import file="${user.home}/.m2/ooo-build/${ooo-build.vers}/ooo-build.xml"/>
 
@@ -14,10 +14,6 @@
     <mkdir dir="${deploy.dir}"/>
 
     <mavendep pom="pom.xml" id="compile"/>
-    <path id="compile.classpath">
-      <path refid="compile.path"/>
-      <pathelement location="${classes.dir}"/>
-    </path>
 
     <mavendep pom="pom.xml" id="test" scope="test"/>
     <path id="test.classpath">
@@ -36,7 +32,7 @@
 <!-- unused
     <copy todir="${classes.dir}"><fileset dir="src/main/resources" includes="**"/></copy>
 -->
-    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="compile.classpath"/>
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="compile.path"/>
 <!-- unused
     <mkdir dir="${tclasses.dir}"/>
     <copy todir="${tclasses.dir}"><fileset dir="src/test/resources" includes="**"/></copy>
@@ -72,7 +68,6 @@
 
   <target name="install" depends="package"
           description="Deploys build artifacts to Maven repository.">
-    <jar basedir="${src.dir}" destfile="${deploy.dir}/${ant.project.name}-sources.jar"/>
     <mavendeploy file="${deploy.dir}/${ant.project.name}.jar" srcdir="${src.dir}" pom="pom.xml"/>
   </target>
 </project>
