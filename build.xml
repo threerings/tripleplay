@@ -6,7 +6,7 @@
   <property name="classes.dir"  location="${deploy.dir}/classes"/>
   <property name="tclasses.dir" location="${deploy.dir}/test-classes"/>
 
-  <property name="ooo-build.vers" value="2.1"/>
+  <property name="ooo-build.vers" value="2.5"/>
   <ant antfile="etc/bootstrap.xml"/>
   <import file="${user.home}/.m2/ooo-build/${ooo-build.vers}/ooo-build.xml"/>
 
