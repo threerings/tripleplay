@@ -258,10 +258,17 @@ public abstract class Animation
 
     /**
      * Cancels this animation. It will remove itself from its animator the next frame.
+     * @return true if this animation was actually running and was canceled, false if it had
+     * already completed.
      */
-    public void cancel ()
+    public boolean cancel ()
     {
-        _current = null;
+        if (_current != null) {
+            _current = null;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected Animation ()
@@ -281,15 +288,16 @@ public abstract class Animation
         // if the current animation is still running, keep going
         if (!_current.apply(time)) return false;
 
-        // if the current animation is finished and we have no next animation, then we're done
-        if (_current._next == null) return true;
-
-        // otherwise initialize our next animation (accounting for any overrun on our current
+        // initialize our next animation if we have one (accounting for any overrun on our current
         // animation) and keep going
         float overrun = _current.getOverrun(time);
         _current = _current._next;
-        _current.init(time-overrun);
-        return false;
+        if (_current != null) {
+            _current.init(time-overrun);
+            return false;
+        } else {
+            return true; // no next animation, so we're done
+        }
     }
 
     protected abstract boolean apply (float time);
