@@ -8,9 +8,9 @@ package com.threerings.anim;
 import java.util.ArrayList;
 import java.util.List;
 
-import forplay.core.Layer;
+import pythagoras.f.FloatMath;
 
-import com.threerings.util.FloatMath;
+import forplay.core.Layer;
 
 /**
  * Handles creation and management of animations. Animations may involve the tweening of a
