@@ -274,8 +274,8 @@ public abstract class Animator
             // if our current animation queue has emptied out (and we have nothing queued up to be
             // registered on the next frame), check whether we have any barriers to unblock
             if (_anims.isEmpty() && _nanims.isEmpty() && !_barriers.isEmpty()) {
-                List<Animation> accum = _barriers.remove(0);
-                _nanims.addAll(accum);
+                List<Animation> anims = _barriers.remove(0);
+                _nanims.addAll(anims);
                 // if we just unblocked the last accumulator, start accumulating back on the
                 // non-barriered accumulator
                 if (_barriers.isEmpty()) {
