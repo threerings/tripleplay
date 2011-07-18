@@ -184,7 +184,20 @@ public abstract class Animator
      * Causes this animator to delay the start of any subsequently registered animations until all
      * currently registered animations are complete.
      */
-    public abstract void addBarrier ();
+    public void addBarrier () {
+        addBarrier(0);
+    }
+
+    /**
+     * Causes this animator to delay the start of any subsequently registered animations until the
+     * specified delay has elapsed <em>after this barrier becomes active</em>. Any previously
+     * registered barriers must first expire and this barrier must move to the head of the list
+     * before its delay timer will be started. This is probably what you want.
+     */
+    public void addBarrier (float delay) {
+        throw new UnsupportedOperationException(
+            "Barriers are only supported on the top-level animator.");
+    }
 
     /**
      * Performs per-frame animation processing.
@@ -248,9 +261,11 @@ public abstract class Animator
             return anim;
         }
 
-        @Override public void addBarrier () {
-            // start accumulating animations to a new list
-            _barriers.add(_accum = new ArrayList<Animation>());
+        @Override public void addBarrier (float delay) {
+            Barrier barrier = new Barrier(delay);
+            _barriers.add(barrier);
+            // pushing a barrier causes subsequent animations to be accumulated separately
+            _accum = barrier.accum;
         }
 
         @Override public void update (float time) {
@@ -271,13 +286,12 @@ public abstract class Animator
                 }
             }
 
-            // if our current animation queue has emptied out (and we have nothing queued up to be
-            // registered on the next frame), check whether we have any barriers to unblock
-            if (_anims.isEmpty() && _nanims.isEmpty() && !_barriers.isEmpty()) {
-                List<Animation> anims = _barriers.remove(0);
-                _nanims.addAll(anims);
-                // if we just unblocked the last accumulator, start accumulating back on the
-                // non-barriered accumulator
+            // if we have no active animations, or a timed barrier has expired, unblock a barrier
+            boolean noActiveAnims = _anims.isEmpty() && _nanims.isEmpty();
+            if (!_barriers.isEmpty() && (noActiveAnims || _barriers.get(0).expired(time))) {
+                Barrier barrier = _barriers.remove(0);
+                _nanims.addAll(barrier.accum);
+                // if we just unblocked the last barrier, start accumulating back on _nanims
                 if (_barriers.isEmpty()) {
                     _accum = _nanims;
                 }
@@ -287,6 +301,23 @@ public abstract class Animator
         protected List<Animation> _anims = new ArrayList<Animation>();
         protected List<Animation> _nanims = new ArrayList<Animation>();
         protected List<Animation> _accum = _nanims;
-        protected List<List<Animation>> _barriers = new ArrayList<List<Animation>>();
+        protected List<Barrier> _barriers = new ArrayList<Barrier>();
+    }
+
+    /** Implementation details, avert your eyes. */
+    protected static class Barrier {
+        public List<Animation> accum = new ArrayList<Animation>();
+        public float expireDelay;
+        public float absoluteExpireTime;
+
+        public Barrier (float expireDelay) {
+            this.expireDelay = expireDelay;
+        }
+
+        public boolean expired (float time) {
+            if (expireDelay == 0) return false;
+            if (absoluteExpireTime == 0) absoluteExpireTime = time + expireDelay;
+            return time > absoluteExpireTime;
+        }
     }
 }
