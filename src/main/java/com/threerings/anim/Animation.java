@@ -287,7 +287,7 @@ public abstract class Animation
     protected boolean apply (Animator animator, float time)
     {
         // if we're cancelled, abandon ship now
-        if (_current == null) return false;
+        if (_current == null) return true;
 
         // if the current animation is still running, keep going
         if (!_current.apply(time)) return false;
@@ -313,6 +313,10 @@ public abstract class Animation
     protected float getOverrun (float time)
     {
         return 0f;
+    }
+
+    @Override public String toString () {
+        return getClass().getName() + " start:" + _start;
     }
 
     protected float _start;
