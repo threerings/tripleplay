@@ -10,6 +10,7 @@ import java.util.List;
 
 import pythagoras.f.FloatMath;
 
+import forplay.core.GroupLayer;
 import forplay.core.Layer;
 
 /**
@@ -156,6 +157,36 @@ public abstract class Animator
     }
 
     /**
+     * Adds the supplied child to the supplied parent. This is generally done as the beginning of a
+     * chain of animations, which itself may be delayed or subject to animation barriers.
+     */
+    public Animation.Action add (final GroupLayer parent, final Layer child) {
+        return action(new Runnable() {
+            public void run () {
+                parent.add(child);
+            }
+        });
+    }
+
+    /**
+     * Destroys the specified layer. This is generally done as the end of a chain of animations,
+     * which culminate in the removal (destruction) of the target layer.
+     */
+    public Animation.Action destroy (final Layer layer) {
+        return action(new Runnable() {
+            public void run () {
+                layer.destroy();
+            }
+        });
+    }
+
+    /**
+     * Causes this animator to delay the start of any subsequently registered animations until all
+     * currently registered animations are complete.
+     */
+    public abstract void addBarrier ();
+
+    /**
      * Performs per-frame animation processing.
      */
     public void update (float time) {
@@ -213,11 +244,17 @@ public abstract class Animator
     /** Implementation details, avert your eyes. */
     protected static class Impl extends Animator {
         @Override public <T extends Animation> T add (T anim) {
-            _nanims.add(anim);
+            _accum.add(anim);
             return anim;
         }
 
+        @Override public void addBarrier () {
+            // start accumulating animations to a new list
+            _barriers.add(_accum = new ArrayList<Animation>());
+        }
+
         @Override public void update (float time) {
+            // if we have any animations queued up to be added, add those now
             if (!_nanims.isEmpty()) {
                 for (int ii = 0, ll = _nanims.size(); ii < ll; ii++) {
                     _nanims.get(ii).init(time);
@@ -225,15 +262,31 @@ public abstract class Animator
                 _anims.addAll(_nanims);
                 _nanims.clear();
             }
+
+            // now process all of our registered animations
             for (int ii = 0, ll = _anims.size(); ii < ll; ii++) {
                 if (_anims.get(ii).apply(this, time)) {
                     _anims.remove(ii--);
                     ll -= 1;
                 }
             }
+
+            // if our current animation queue has emptied out (and we have nothing queued up to be
+            // registered on the next frame), check whether we have any barriers to unblock
+            if (_anims.isEmpty() && _nanims.isEmpty() && !_barriers.isEmpty()) {
+                List<Animation> accum = _barriers.remove(0);
+                _nanims.addAll(accum);
+                // if we just unblocked the last accumulator, start accumulating back on the
+                // non-barriered accumulator
+                if (_barriers.isEmpty()) {
+                    _accum = _nanims;
+                }
+            }
         }
 
         protected List<Animation> _anims = new ArrayList<Animation>();
         protected List<Animation> _nanims = new ArrayList<Animation>();
+        protected List<Animation> _accum = _nanims;
+        protected List<List<Animation>> _barriers = new ArrayList<List<Animation>>();
     }
 }

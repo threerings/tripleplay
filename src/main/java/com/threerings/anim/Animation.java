@@ -253,6 +253,10 @@ public abstract class Animation
                 _next = anim;
                 return anim;
             }
+            @Override public void addBarrier () {
+                throw new UnsupportedOperationException(
+                    "Barriers are only supported on the top-level animator.");
+            }
         };
     }
 
