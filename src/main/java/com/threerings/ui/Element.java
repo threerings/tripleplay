@@ -21,7 +21,7 @@ import forplay.core.Transform;
 
 /**
  * The root of the interface element hierarchy. See {@link Widget} for the root of all interactive
- * elements, and {@link Container} for the root of all grouping elements.
+ * elements, and {@link Group} for the root of all grouping elements.
  */
 public abstract class Element
 {
@@ -97,7 +97,7 @@ public abstract class Element
 
     /**
      * Configures whether this element is visible. An invisible element is not rendered and
-     * consumes no space in a container.
+     * consumes no space in a group.
      */
     public void setVisible (boolean visible) {
         if (visible != isVisible()) {
@@ -148,6 +148,18 @@ public abstract class Element
         if (_styles != null) {
             _styles.remove(new StyleKey<V>(style, state));
         }
+    }
+
+    /**
+     * Called when this element (or its parent element) was added to the interface hierarchy.
+     */
+    protected void wasAdded () {
+    }
+
+    /**
+     * Called when this element (or its parent element) was removed from the interface hierarchy.
+     */
+    protected void wasRemoved () {
     }
 
     /**
@@ -253,7 +265,7 @@ public abstract class Element
     }
 
     protected int _flags;
-    protected Container _parent;
+    protected Group _parent;
     protected Dimension _preferredSize;
     protected Dimension _size = new Dimension();
     protected Map<StyleKey<?>, Object> _styles; // lazily initialized to save memory
