@@ -16,16 +16,15 @@ import forplay.core.Layer;
  */
 public abstract class Widget extends Element
 {
-    @Override protected void setSize (float width, float height) {
-        // no need to do anything if we're being set to our existing size
-        if (_size.width == width && _size.height == height) return;
-
+    @Override protected void layout () {
         // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
-        int cwidth = (int)Math.ceil(width), cheight = (int)Math.ceil(height);
+        int cwidth = (int)Math.ceil(_size.width), cheight = (int)Math.ceil(_size.height);
         if (_layer == null ||
             _layer.canvas().width() < cwidth || _layer.canvas().height() < cheight) {
             if (_layer != null) _layer.destroy();
+            Layer oldLayer = _layer;
             _layer = ForPlay.graphics().createCanvasLayer(cwidth, cheight);
+            if (_parent != null) _parent.layerChanged(this, oldLayer, _layer);
         } else {
             _layer.canvas().clear();
         }

@@ -120,12 +120,9 @@ public abstract class Element
      * This method may not be called before this element has been added to the interface hierarchy.
      */
     public <V> V getStyle (Style<V> style, State state) {
-        Asserts.checkState(_parent != null, "Styles may not be queried before an " +
-                           "element has been added to the interface hierarchy.");
-        StyleKey<V> key = new StyleKey<V>(style, state);
-        @SuppressWarnings("unchecked") V value = (_styles == null) ? null : (V)_styles.get(key);
-        return (value != null) ? value :
-            (style.inherited ? _parent.getStyle(style, state) : style.getDefault(state));
+        Asserts.checkState(isAdded(), "Styles may not be queried before an element has been " +
+                           "added to the interface hierarchy.");
+        return getStyle(new StyleKey<V>(style, state));
     }
 
     /**
@@ -153,13 +150,15 @@ public abstract class Element
     /**
      * Called when this element (or its parent element) was added to the interface hierarchy.
      */
-    protected void wasAdded () {
+    protected void wasAdded (Group parent) {
+        _parent = parent;
     }
 
     /**
      * Called when this element (or its parent element) was removed from the interface hierarchy.
      */
     protected void wasRemoved () {
+        _parent = null;
     }
 
     /**
@@ -217,17 +216,37 @@ public abstract class Element
      * direction to the specified height.
      */
     protected IDimension getPreferredSize (float hintX, float hintY) {
-        if (_preferredSize == null) {
-            computeSize(hintX, hintY, _preferredSize = new Dimension());
-        }
+        if (_preferredSize == null) _preferredSize = computeSize(hintX, hintY);
         return _preferredSize;
+    }
+
+    /**
+     * Configures the location of this element, relative to its parent.
+     */
+    protected void setLocation (float x, float y) {
+        layer().transform().setTranslation(x, y);
     }
 
     /**
      * Configures the size of this widget, potentially triggering a regeneration of its
      * visualization.
      */
-    protected abstract void setSize (float width, float height);
+    protected void resize (float width, float height) {
+        if (_size.width == width && _size.height == height) return; // NOOP
+        _size.setSize(width, height);
+        layout();
+    }
+
+    /**
+     * A helper for {@link #getStyle(Style,State)}.
+     */
+    protected <V> V getStyle (StyleKey<V> key) {
+        @SuppressWarnings("unchecked") V value = (_styles == null) ? null : (V)_styles.get(key);
+        if (value != null) return value;
+        // if we hit the root and no one has defined the style, use the default
+        return (key.style.inherited && _parent != null) ?
+            _parent.getStyle(key) : key.style.getDefault(key.state);
+    }
 
     /**
      * Recomputes this element's preferred size.
@@ -236,9 +255,15 @@ public abstract class Element
      * direction to the specified width.
      * @param hintY if non-zero, an indication that the element will be constrained in the y
      * direction to the specified height.
-     * @param into the preferred size is written into this parameter.
      */
-    protected abstract void computeSize (float hintX, float hintY, Dimension into);
+    protected abstract Dimension computeSize (float hintX, float hintY);
+
+    /**
+     * Rebuilds this element's visualization. Called when this element's size has changed. In the
+     * case of groups, this will relayout its children, in the case of widgets, this will rerender
+     * the widget.
+     */
+    protected abstract void layout ();
 
     /**
      * Returns the layer associated with this interface element.
@@ -264,7 +289,7 @@ public abstract class Element
         }
     }
 
-    protected int _flags;
+    protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
     protected Group _parent;
     protected Dimension _preferredSize;
     protected Dimension _size = new Dimension();

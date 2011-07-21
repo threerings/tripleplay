@@ -84,32 +84,45 @@ public class Group extends Element
     }
 
     protected void didAdd (Element child) {
-        if (isAdded()) child.wasAdded();
+        // the child may not have created its layer yet
+        Layer l = child.layer();
+        if (l != null) _layer.add(l);
+        if (isAdded()) child.wasAdded(this);
     }
 
     protected void didRemove (Element child) {
+        // the child may not have created its layer yet
+        Layer l = child.layer();
+        if (l != null) _layer.remove(l);
         if (_constraints != null) _constraints.remove(child);
         if (isAdded()) child.wasRemoved();
     }
 
-    @Override protected void wasAdded () {
+    protected void layerChanged (Element elem, Layer oldLayer, Layer newLayer) {
+        if (oldLayer != null) _layer.remove(oldLayer);
+        if (newLayer != null) _layer.add(newLayer);
+    }
+
+    @Override protected void wasAdded (Group parent) {
+        super.wasAdded(parent);
         for (Element child : _children) {
-            child.wasAdded();
+            child.wasAdded(this);
         }
     }
 
     @Override protected void wasRemoved () {
+        super.wasRemoved();
         for (Element child : _children) {
             child.wasRemoved();
         }
     }
 
-    @Override protected void computeSize (float hintX, float hintY, Dimension into) {
-        _layout.computeSize(_children, _constraints, hintX, hintY, into);
+    @Override protected Dimension computeSize (float hintX, float hintY) {
+        return _layout.computeSize(_children, _constraints, hintX, hintY);
     }
 
-    @Override protected void setSize (float width, float height) {
-        _layout.layout(_children, _constraints, width, height);
+    @Override protected void layout () {
+        _layout.layout(_children, _constraints, _size.width, _size.height);
     }
 
     @Override protected Layer layer () {

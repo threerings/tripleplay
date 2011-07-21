@@ -41,14 +41,14 @@ public class Label extends Widget
         }
     }
 
-    @Override protected void computeSize (float hintX, float hintY, Dimension into) {
+    @Override protected Dimension computeSize (float hintX, float hintY) {
         TextFormat format = Style.createTextFormat(this, state());
         if (hintX > 0) {
             format = format.withWrapWidth(hintX);
         }
         // TODO: should we do something with a y-hint?
         _layout = ForPlay.graphics().layoutText(_text, format);
-        into.setSize(_layout.width(), _layout.height());
+        return new Dimension(_layout.width(), _layout.height());
     }
 
     protected void render (Canvas canvas) {

@@ -33,17 +33,16 @@
     <copy todir="${classes.dir}"><fileset dir="src/main/resources" includes="**"/></copy>
 -->
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="compile.path"/>
-<!-- unused
     <mkdir dir="${tclasses.dir}"/>
+<!-- unused
     <copy todir="${tclasses.dir}"><fileset dir="src/test/resources" includes="**"/></copy>
-    <ooojavac srcdir="${tsrc.dir}" destdir="${tclasses.dir}" classpathref="test.classpath"/>
 -->
+    <ooojavac srcdir="${tsrc.dir}" destdir="${tclasses.dir}" classpathref="test.classpath"/>
   </target>
 
   <property name="test" value=""/>
   <target name="test" depends="compile"
           description="Runs unit tests. Use -Dtest=Foo to run only FooTest.">
-<!-- unused
     <taskdef name="unit" classpathref="test.path"
       classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
     <mkdir dir="${deploy.dir}/test-reports"/>
@@ -55,7 +54,10 @@
         <fileset dir="${tsrc.dir}" includes="**/*${test}*Test.java"/>
       </batchtest>
     </unit>
--->
+  </target>
+
+  <target name="widget-demo" depends="compile" description="Runs widget demo app.">
+    <java fork="true" classpathref="test.classpath" classname="com.threerings.ui.WidgetDemo"/>
   </target>
 
   <target name="package" depends="test" description="Builds jar files.">

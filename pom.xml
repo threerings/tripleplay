@@ -62,6 +62,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
     <!-- we include the source files in our main jar for use by GWT -->
     <resources>

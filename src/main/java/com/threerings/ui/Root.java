@@ -5,6 +5,8 @@
 
 package com.threerings.ui;
 
+import pythagoras.f.IDimension;
+
 /**
  * The root of a display hierarchy. An application can have one or more roots, but they should not
  * overlap and will behave as if oblivious to one another's existence.
@@ -13,6 +15,22 @@ public class Root extends Group
 {
     public Root (Layout layout) {
         super(layout);
+    }
+
+    /**
+     * Sizes this root element to its preferred size.
+     */
+    public void pack () {
+        IDimension psize = getPreferredSize(0, 0);
+        setSize(psize.getWidth(), psize.getHeight());
+    }
+
+    /**
+     * Sets the size of this root element.
+     */
+    public void setSize (float width, float height) {
+        _size.setSize(width, height);
+        invalidate();
     }
 
     /**
@@ -27,7 +45,8 @@ public class Root extends Group
      */
     public void paint (float alpha) {
         if (!_valid) {
-            // TODO: revalidate!
+            layout();
+            _valid = true;
         }
     }
 

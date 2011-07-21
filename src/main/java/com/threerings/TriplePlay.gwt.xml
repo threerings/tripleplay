@@ -4,5 +4,7 @@
   <inherits name="forplay.ForPlay"/>
 
   <source path="anim"/>
+  <source path="game"/>
+  <source path="ui"/>
   <source path="util"/>
 </module>

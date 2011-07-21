@@ -16,24 +16,30 @@ import pythagoras.f.Dimension;
 public abstract class Layout
 {
     /** An abstract base class for all layout constraints. */
-    public static abstract class Constraint {}
+    public static interface Constraint {}
 
     /**
      * Creates a group with this layout. This is useful after a chain of method calls that
      * configures the layout, e.g.: {@code GroupLayout.vertical().alignTop().gap(10).toGroup()}.
+     *
+     * @param elems elements to add to the newly created group.
      */
-    public Group toGroup () {
-        return new Group(this);
+    public Group toGroup (Element... elems) {
+        Group g = new Group(this);
+        for (Element elem : elems) {
+            g.add(elem);
+        }
+        return g;
     }
 
     /**
-     * Computes the size needed to arrange the supplied children (with the specified constraints)
-     * according to their preferred size, given the specified x and y size hints. Stores the
-     * results in {@code into}. Neither {@code elems} nor {@code constraints} should be mutated.
+     * Computes and returns the size needed to arrange the supplied children (with the specified
+     * constraints) according to their preferred size, given the specified x and y size hints.
+     * Neither {@code elems} nor {@code constraints} should be mutated.
      */
-    public abstract void computeSize (
+    public abstract Dimension computeSize (
         List<Element> elems, Map<Element, Layout.Constraint> constraints,
-        float hintX, float hintY, Dimension into);
+        float hintX, float hintY);
 
     /**
      * Lays out the supplied elements (according to the specified constraints) into a region of the
