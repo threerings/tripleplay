@@ -57,7 +57,7 @@ public abstract class Style<V>
     };
 
     /** The shadow color for an element. Inherited. */
-    public static final Style<Integer> SHADOW = newStyle(true, 0xAA000000);
+    public static final Style<Integer> SHADOW = newStyle(true, 0x55000000);
 
     /** The horizontal alignment of an element. Not inherited. */
     public static final Style<HAlign> HALIGN = newStyle(false, HAlign.LEFT);
