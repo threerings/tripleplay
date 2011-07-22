@@ -34,11 +34,12 @@ public class Label extends Widget
     /**
      * Sets the text of this label to the supplied value.
      */
-    public void setText (String text) {
+    public Label setText (String text) {
         if (!text.equals(_text)) {
             _text = text;
             invalidate();
         }
+        return this;
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
