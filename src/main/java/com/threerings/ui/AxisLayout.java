@@ -113,7 +113,7 @@ public abstract class AxisLayout extends Layout
         @Override public Dimension computeSize (
             List<Element> elems, Map<Element, Layout.Constraint> constraints,
             float hintX, float hintY) {
-            Metrics m = computeMetrics(elems, constraints, hintX, hintY);
+            Metrics m = computeMetrics(elems, constraints, hintX, hintY, true);
             return new Dimension(m.maxWidth, m.totalHeight + _gap * (m.count-1));
         }
 
@@ -121,7 +121,7 @@ public abstract class AxisLayout extends Layout
             List<Element> elems, Map<Element, Layout.Constraint> constraints,
             float width, float height) {
 
-            Metrics m = computeMetrics(elems, constraints, width, height);
+            Metrics m = computeMetrics(elems, constraints, width, height, true);
             float stretchHeight = Math.max(0, height - _gap * (m.count-1) - m.fixHeight);
             float y = (m.stretchCount > 0) ? 0 : _alignOn.computeOffset(m.totalHeight, height);
             for (Element elem : elems) {
@@ -166,7 +166,7 @@ public abstract class AxisLayout extends Layout
         @Override public Dimension computeSize (
             List<Element> elems, Map<Element, Layout.Constraint> constraints,
             float hintX, float hintY) {
-            Metrics m = computeMetrics(elems, constraints, hintX, hintY);
+            Metrics m = computeMetrics(elems, constraints, hintX, hintY, false);
             return new Dimension(m.totalWidth + _gap * (m.count-1), m.maxHeight);
         }
 
@@ -174,7 +174,7 @@ public abstract class AxisLayout extends Layout
             List<Element> elems, Map<Element, Layout.Constraint> constraints,
             float width, float height) {
 
-            Metrics m = computeMetrics(elems, constraints, width, height);
+            Metrics m = computeMetrics(elems, constraints, width, height, false);
             float stretchWidth = Math.max(0, width - _gap * (m.count-1) - m.fixWidth);
             float x = (m.stretchCount > 0) ? 0 : _alignOn.computeOffset(m.totalWidth, width);
             for (Element elem : elems) {
@@ -271,28 +271,46 @@ public abstract class AxisLayout extends Layout
 
     protected Metrics computeMetrics (
         List<Element> elems, Map<Element, Layout.Constraint> constraints,
-        float hintX, float hintY) {
+        float hintX, float hintY, boolean vert) {
 
         Metrics m = new Metrics();
         for (Element elem : elems) {
             if (!elem.isVisible()) continue;
             m.count++;
 
-            IDimension psize = elem.getPreferredSize(hintX, hintY);
+            // only compute the preferred size for the fixed elements in this pass
+            Constraint c = getConstraint(constraints, elem);
+            if (!c.stretch) {
+                IDimension psize = elem.getPreferredSize(hintX, hintY);
+                float pwidth = psize.getWidth(), pheight = psize.getHeight();
+                m.totalWidth += pwidth;
+                m.totalHeight += pheight;
+                m.maxWidth = Math.max(m.maxWidth, pwidth);
+                m.maxHeight = Math.max(m.maxHeight, pheight);
+                m.fixWidth += pwidth;
+                m.fixHeight += pheight;
+            } else {
+                m.stretchCount++;
+                m.totalWeight += c.weight;
+            }
+        }
+
+        // now compute the preferred size for the stretched elements, providing them with more
+        // accurate width/height hints
+        for (Element elem : elems) {
+            if (!elem.isVisible()) continue;
+            Constraint c = getConstraint(constraints, elem);
+            if (!c.stretch) continue;
+
+            // the first argument to computeSize is not used for stretched elements
+            float ehintX = vert ? hintX : c.computeSize(0, m.totalWeight, hintX);
+            float ehintY = vert ? c.computeSize(0, m.totalWeight, hintY) : hintY;
+            IDimension psize = elem.getPreferredSize(ehintX, ehintY);
             float pwidth = psize.getWidth(), pheight = psize.getHeight();
             m.totalWidth += pwidth;
             m.totalHeight += pheight;
             m.maxWidth = Math.max(m.maxWidth, pwidth);
             m.maxHeight = Math.max(m.maxHeight, pheight);
-
-            Constraint c = getConstraint(constraints, elem);
-            if (c.stretch) {
-                m.stretchCount++;
-                m.totalWeight += c.weight;
-            } else {
-                m.fixWidth += pwidth;
-                m.fixHeight += pheight;
-            }
         }
 
         return m;
