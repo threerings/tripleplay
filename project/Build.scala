@@ -8,14 +8,14 @@ object TriplePlayBuild extends Build {
   // test targets here in tripleplay); if one or the other symlink does not exist, it will obtain
   // those dependencies via Maven
   def findProject (name :String, depend :ModuleID, project : => ProjectReference) =
-    if (new java.io.File(name).exists) (None, project)
-    else                               (Some(depend), null)
+    if (new java.io.File(name).exists) (None, Some(project)) else (Some(depend), None)
 
   val (localDeps, localProjs) = Seq(
     findProject("pythagoras", "com.samskivert" % "pythagoras" % "1.1-SNAPSHOT",
                 RootProject(file("pythagoras"))),
     findProject("forplay", "com.googlecode.forplay" % "core" % "1.0-SNAPSHOT",
-                ProjectRef(file("forplay"), "core"))) unzip
+                ProjectRef(file("forplay"), "core"))
+  ) unzip
 
   lazy val tripleplay = (Project(
     "tripleplay", file("."), settings = Defaults.defaultSettings ++ Seq(
@@ -35,5 +35,5 @@ object TriplePlayBuild extends Build {
  	      "com.novocode" % "junit-interface" % "0.7" % "test->default"
       )
     )
-  ) /: localProjs) { (p, lp) => if (lp == null) p else p dependsOn(lp) }
+  ) /: localProjs.flatten) { _ dependsOn _ }
 }
