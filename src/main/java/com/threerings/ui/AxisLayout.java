@@ -114,16 +114,16 @@ public abstract class AxisLayout extends Layout
             List<Element> elems, Map<Element, Layout.Constraint> constraints,
             float hintX, float hintY) {
             Metrics m = computeMetrics(elems, constraints, hintX, hintY, true);
-            return new Dimension(m.maxWidth, m.totalHeight + _gap * (m.count-1));
+            return new Dimension(m.maxWidth, m.prefHeight + m.gaps(_gap));
         }
 
         @Override public void layout (
             List<Element> elems, Map<Element, Layout.Constraint> constraints,
-            float width, float height) {
+            float left, float top, float width, float height) {
 
             Metrics m = computeMetrics(elems, constraints, width, height, true);
-            float stretchHeight = Math.max(0, height - _gap * (m.count-1) - m.fixHeight);
-            float y = (m.stretchCount > 0) ? 0 : _alignOn.computeOffset(m.totalHeight, height);
+            float stretchHeight = Math.max(0, height - m.gaps(_gap) - m.fixHeight);
+            float y = top + ((m.stretchers > 0) ? 0 : _alignOn.computeOffset(m.fixHeight, height));
             for (Element elem : elems) {
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.getPreferredSize(width, height); // will be cached
@@ -131,7 +131,7 @@ public abstract class AxisLayout extends Layout
                 float ewidth = _offPolicy.computeSize(psize.getWidth(), m.maxWidth, width);
                 float eheight = c.computeSize(psize.getHeight(), m.totalWeight, stretchHeight);
                 elem.resize(ewidth, eheight);
-                elem.setLocation(_alignOff.computeOffset(ewidth, width), y);
+                elem.setLocation(left + _alignOff.computeOffset(ewidth, width), y);
                 y += (eheight + _gap);
             }
         }
@@ -167,16 +167,16 @@ public abstract class AxisLayout extends Layout
             List<Element> elems, Map<Element, Layout.Constraint> constraints,
             float hintX, float hintY) {
             Metrics m = computeMetrics(elems, constraints, hintX, hintY, false);
-            return new Dimension(m.totalWidth + _gap * (m.count-1), m.maxHeight);
+            return new Dimension(m.prefWidth + m.gaps(_gap), m.maxHeight);
         }
 
         @Override public void layout (
             List<Element> elems, Map<Element, Layout.Constraint> constraints,
-            float width, float height) {
+            float left, float top, float width, float height) {
 
             Metrics m = computeMetrics(elems, constraints, width, height, false);
-            float stretchWidth = Math.max(0, width - _gap * (m.count-1) - m.fixWidth);
-            float x = (m.stretchCount > 0) ? 0 : _alignOn.computeOffset(m.totalWidth, width);
+            float stretchWidth = Math.max(0, width - m.gaps(_gap) - m.fixWidth);
+            float x = left + ((m.stretchers > 0) ? 0 : _alignOn.computeOffset(m.fixWidth, width));
             for (Element elem : elems) {
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.getPreferredSize(width, height); // will be cached
@@ -184,7 +184,7 @@ public abstract class AxisLayout extends Layout
                 float ewidth = c.computeSize(psize.getWidth(), m.totalWeight, stretchWidth);
                 float eheight = _offPolicy.computeSize(psize.getHeight(), m.maxHeight, height);
                 elem.resize(ewidth, eheight);
-                elem.setLocation(x, _alignOff.computeOffset(eheight, height));
+                elem.setLocation(x, top + _alignOff.computeOffset(eheight, height));
                 x += (ewidth + _gap);
             }
         }
@@ -283,14 +283,14 @@ public abstract class AxisLayout extends Layout
             if (!c.stretch) {
                 IDimension psize = elem.getPreferredSize(hintX, hintY);
                 float pwidth = psize.getWidth(), pheight = psize.getHeight();
-                m.totalWidth += pwidth;
-                m.totalHeight += pheight;
+                m.prefWidth += pwidth;
+                m.prefHeight += pheight;
                 m.maxWidth = Math.max(m.maxWidth, pwidth);
                 m.maxHeight = Math.max(m.maxHeight, pheight);
                 m.fixWidth += pwidth;
                 m.fixHeight += pheight;
             } else {
-                m.stretchCount++;
+                m.stretchers++;
                 m.totalWeight += c.weight;
             }
         }
@@ -303,15 +303,18 @@ public abstract class AxisLayout extends Layout
             if (!c.stretch) continue;
 
             // the first argument to computeSize is not used for stretched elements
-            float ehintX = vert ? hintX : c.computeSize(0, m.totalWeight, hintX);
-            float ehintY = vert ? c.computeSize(0, m.totalWeight, hintY) : hintY;
+            float availX = hintX - m.gaps(_gap), availY = hintY - m.gaps(_gap);
+            float ehintX = vert ? availX : c.computeSize(0, m.totalWeight, availX);
+            float ehintY = vert ? c.computeSize(0, m.totalWeight, availY) : availY;
             IDimension psize = elem.getPreferredSize(ehintX, ehintY);
             float pwidth = psize.getWidth(), pheight = psize.getHeight();
-            m.totalWidth += pwidth;
-            m.totalHeight += pheight;
+            m.unitWidth = Math.max(m.unitWidth, pwidth / c.weight);
+            m.unitHeight = Math.max(m.unitHeight, pheight / c.weight);
             m.maxWidth = Math.max(m.maxWidth, pwidth);
             m.maxHeight = Math.max(m.maxHeight, pheight);
         }
+        m.prefWidth += m.stretchers * m.unitWidth;
+        m.prefHeight += m.stretchers * m.unitHeight;
 
         return m;
     }
@@ -324,8 +327,8 @@ public abstract class AxisLayout extends Layout
     protected static class Metrics {
         public int count;
 
-        public float totalWidth;
-        public float totalHeight;
+        public float prefWidth;
+        public float prefHeight;
 
         public float maxWidth;
         public float maxHeight;
@@ -333,8 +336,15 @@ public abstract class AxisLayout extends Layout
         public float fixWidth;
         public float fixHeight;
 
-        public int stretchCount;
+        public float unitWidth;
+        public float unitHeight;
+
+        public int stretchers;
         public float totalWeight;
+
+        public float gaps (float gap) {
+            return gap * (count-1);
+        }
     }
 
     protected Align _alignOn = Align.CENTER, _alignOff = Align.CENTER;
