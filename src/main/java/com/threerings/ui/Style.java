@@ -34,7 +34,7 @@ public abstract class Style<V>
         NONE };
 
     /** The foreground color for an element. Inherited. */
-    public static final Style<Integer> FOREGROUND = new Style<Integer>(true) {
+    public static final Style<Integer> COLOR = new Style<Integer>(true) {
         public Integer getDefault (Element.State state) {
             switch (state) {
             case DISABLED: return 0xCC000000;
@@ -42,9 +42,6 @@ public abstract class Style<V>
             }
         }
     };
-
-    /** The background color for an element. Inherited. */
-    public static final Style<Integer> BACKGROUND = newStyle(true, 0xFFCCCCCC);
 
     /** The highlight color for an element. Inherited. */
     public static final Style<Integer> HIGHLIGHT = new Style<Integer>(true) {
@@ -81,7 +78,7 @@ public abstract class Style<V>
     public static TextFormat createTextFormat (Element elem, Element.State state) {
         TextFormat format = new TextFormat().
             withFont(elem.getStyle(Style.FONT, state)).
-            withTextColor(elem.getStyle(Style.FOREGROUND, state)).
+            withTextColor(elem.getStyle(Style.COLOR, state)).
             withAlignment(toAlignment(elem.getStyle(Style.HALIGN, state)));
         switch (elem.getStyle(Style.TEXT_EFFECT, state)) {
         case OUTLINE:

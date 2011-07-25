@@ -16,11 +16,17 @@ import forplay.core.Layer;
 
 import pythagoras.f.Dimension;
 
+import com.threerings.ui.bgs.NullBackground;
+
 /**
  * A grouping element that contains other elements and lays them out according to a layout policy.
  */
 public class Group extends Element
 {
+    /** The background for a group. Not inherited. */
+    public static final Style<Background> BACKGROUND = Style.<Background>newStyle(
+        false, new NullBackground());
+
     /**
      * Creates a group with the specified layout.
      */
@@ -118,19 +124,34 @@ public class Group extends Element
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
-        return _layout.computeSize(_children, _constraints, hintX, hintY);
+        Background bg = getStyle(BACKGROUND, State.DEFAULT);
+        Dimension dims = _layout.computeSize(
+            _children, _constraints, hintX - bg.width(), hintY - bg.height());
+        dims.width += bg.width();
+        dims.height += bg.height();
+        System.out.println("Prefer " + dims);
+        return dims;
     }
 
     @Override protected void layout () {
-        _layout.layout(_children, _constraints, _size.width, _size.height);
+        if (_bginst != null) _bginst.destroy();
+        Background bg = getStyle(BACKGROUND, State.DEFAULT);
+        _bginst = bg.instantiate(_size);
+        _bginst.addTo(_layer);
+        System.out.println("Got " + _size);
+        _layout.layout(_children, _constraints, bg.left, bg.top,
+                       _size.width - bg.width(), _size.height - bg.height());
     }
 
     @Override protected Layer layer () {
         return _layer;
     }
 
-    protected final Layout _layout;
     protected final GroupLayer _layer = ForPlay.graphics().createGroupLayer();
     protected final List<Element> _children = new ArrayList<Element>();
+
+    protected final Layout _layout;
     protected Map<Element, Layout.Constraint> _constraints; // lazily created
+
+    protected Background.Instance _bginst;
 }
