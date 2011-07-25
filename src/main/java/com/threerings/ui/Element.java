@@ -119,7 +119,7 @@ public abstract class Element
      * non-inherited styles), or this element's parent will be consulted (for inherited styles).
      * This method may not be called before this element has been added to the interface hierarchy.
      */
-    public <V> V getStyle (Style<V> style, State state) {
+    public <V> V getStyle (State state, Style<V> style) {
         Asserts.checkState(isAdded(), "Styles may not be queried before an element has been " +
                            "added to the interface hierarchy.");
         return getStyle(new StyleKey<V>(style, state));
@@ -129,7 +129,7 @@ public abstract class Element
      * Configures the specified style for this element. This may be called before the element has
      * been added to the interface hierarchy.
      */
-    public <V> void setStyle (Style<V> style, V value, State state) {
+    public <V> void setStyle (State state, Style<V> style, V value) {
         if (_styles == null) {
             _styles = new HashMap<StyleKey<?>, Object>();
         }

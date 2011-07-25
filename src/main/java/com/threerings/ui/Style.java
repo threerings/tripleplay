@@ -77,17 +77,17 @@ public abstract class Style<V>
      */
     public static TextFormat createTextFormat (Element elem, Element.State state) {
         TextFormat format = new TextFormat().
-            withFont(elem.getStyle(Style.FONT, state)).
-            withTextColor(elem.getStyle(Style.COLOR, state)).
-            withAlignment(toAlignment(elem.getStyle(Style.HALIGN, state)));
-        switch (elem.getStyle(Style.TEXT_EFFECT, state)) {
+            withFont(elem.getStyle(state, Style.FONT)).
+            withTextColor(elem.getStyle(state, Style.COLOR)).
+            withAlignment(toAlignment(elem.getStyle(state, Style.HALIGN)));
+        switch (elem.getStyle(state, Style.TEXT_EFFECT)) {
         case OUTLINE:
             format = format.withEffect(
-                TextFormat.Effect.outline(elem.getStyle(Style.HIGHLIGHT, state)));
+                TextFormat.Effect.outline(elem.getStyle(state, Style.HIGHLIGHT)));
             break;
         case SHADOW:
             format = format.withEffect(
-                TextFormat.Effect.shadow(elem.getStyle(Style.SHADOW, state), SHADOW_X, SHADOW_Y));
+                TextFormat.Effect.shadow(elem.getStyle(state, Style.SHADOW), SHADOW_X, SHADOW_Y));
             break;
         }
         return format;

@@ -124,21 +124,19 @@ public class Group extends Element
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
-        Background bg = getStyle(BACKGROUND, State.DEFAULT);
+        Background bg = getStyle(State.DEFAULT, BACKGROUND);
         Dimension dims = _layout.computeSize(
             _children, _constraints, hintX - bg.width(), hintY - bg.height());
         dims.width += bg.width();
         dims.height += bg.height();
-        System.out.println("Prefer " + dims);
         return dims;
     }
 
     @Override protected void layout () {
         if (_bginst != null) _bginst.destroy();
-        Background bg = getStyle(BACKGROUND, State.DEFAULT);
+        Background bg = getStyle(State.DEFAULT, BACKGROUND);
         _bginst = bg.instantiate(_size);
         _bginst.addTo(_layer);
-        System.out.println("Got " + _size);
         _layout.layout(_children, _constraints, bg.left, bg.top,
                        _size.width - bg.width(), _size.height - bg.height());
     }
