@@ -13,8 +13,11 @@ import pythagoras.f.IDimension;
  */
 public class Root extends Group
 {
-    public Root (Layout layout) {
-        super(layout);
+    /**
+     * Creates a root element with the specified layout and stylesheet.
+     */
+    public Root (Layout layout, Stylesheet sheet) {
+        super(layout, sheet);
     }
 
     /**

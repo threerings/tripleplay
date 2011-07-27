@@ -9,6 +9,8 @@ import forplay.core.Font;
 import forplay.core.ForPlay;
 import forplay.core.TextFormat;
 
+import com.threerings.ui.bgs.NullBackground;
+
 /**
  * Defines style properties for interface elements. Some style properties are inherited, such that
  * a property not specified in a leaf element will be inherited by the nearest parent for which the
@@ -69,6 +71,10 @@ public abstract class Style<V>
     /** The effect to use when rendering text, if any. Inherited. */
     public static final Style<TextEffect> TEXT_EFFECT = newStyle(true, TextEffect.NONE);
 
+    /** The background for an element. Not inherited. */
+    public static final Style<Background> BACKGROUND = newStyle(
+        false, (Background)new NullBackground());
+
     /** Indicates whether or not this style property is inherited. */
     public final boolean inherited;
 
@@ -77,17 +83,18 @@ public abstract class Style<V>
      */
     public static TextFormat createTextFormat (Element elem, Element.State state) {
         TextFormat format = new TextFormat().
-            withFont(elem.getStyle(state, Style.FONT)).
-            withTextColor(elem.getStyle(state, Style.COLOR)).
-            withAlignment(toAlignment(elem.getStyle(state, Style.HALIGN)));
-        switch (elem.getStyle(state, Style.TEXT_EFFECT)) {
+            withFont(Styles.resolveStyle(elem, state, Style.FONT)).
+            withTextColor(Styles.resolveStyle(elem, state, Style.COLOR)).
+            withAlignment(toAlignment(Styles.resolveStyle(elem, state, Style.HALIGN)));
+        switch (Styles.resolveStyle(elem, state, Style.TEXT_EFFECT)) {
         case OUTLINE:
             format = format.withEffect(
-                TextFormat.Effect.outline(elem.getStyle(state, Style.HIGHLIGHT)));
+                TextFormat.Effect.outline(Styles.resolveStyle(elem, state, Style.HIGHLIGHT)));
             break;
         case SHADOW:
             format = format.withEffect(
-                TextFormat.Effect.shadow(elem.getStyle(state, Style.SHADOW), SHADOW_X, SHADOW_Y));
+                TextFormat.Effect.shadow(
+                    Styles.resolveStyle(elem, state, Style.SHADOW), SHADOW_X, SHADOW_Y));
             break;
         }
         return format;

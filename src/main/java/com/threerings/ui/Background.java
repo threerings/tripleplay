@@ -12,6 +12,7 @@ import forplay.core.Image;
 import forplay.core.ImageLayer;
 import forplay.core.Layer;
 
+import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 
 import com.threerings.ui.bgs.SolidBackground;
@@ -57,6 +58,15 @@ public abstract class Background
     /** Returns this background's adjustment to an element's height. */
     public float height () {
         return top + bottom;
+    }
+
+    /**
+     * Adds this background's insests to the supplied dimensions. Returns {@code size} for chaning.
+     */
+    public Dimension addInsets (Dimension size) {
+        size.width += width();
+        size.height += height();
+        return size;
     }
 
     /**

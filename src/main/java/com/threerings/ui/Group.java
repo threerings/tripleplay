@@ -10,31 +10,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import forplay.core.ForPlay;
-import forplay.core.GroupLayer;
-import forplay.core.Layer;
-
 import pythagoras.f.Dimension;
-
-import com.threerings.ui.bgs.NullBackground;
 
 /**
  * A grouping element that contains other elements and lays them out according to a layout policy.
  */
 public class Group extends Element
 {
-    /** The background for a group. Not inherited. */
-    public static final Style<Background> BACKGROUND = Style.<Background>newStyle(
-        false, new NullBackground());
-
     /**
-     * Creates a group with the specified layout.
+     * Creates a group with the specified layout and no stylesheet.
      */
     public Group (Layout layout) {
-        _layout = layout;
+        this(layout, null);
     }
 
-    // TODO: was added, was removed, blah blah
+    /**
+     * Creates a group with the specified layout and stylesheet.
+     */
+    public Group (Layout layout, Stylesheet sheet) {
+        _layout = layout;
+        _sheet = sheet;
+    }
+
+    /**
+     * Returns the stylesheet configured for this group, or null.
+     */
+    public Stylesheet stylesheet () {
+        return _sheet;
+    }
 
     public int childCount () {
         return _children.size();
@@ -90,23 +93,14 @@ public class Group extends Element
     }
 
     protected void didAdd (Element child) {
-        // the child may not have created its layer yet
-        Layer l = child.layer();
-        if (l != null) _layer.add(l);
+        layer.add(child.layer);
         if (isAdded()) child.wasAdded(this);
     }
 
     protected void didRemove (Element child) {
-        // the child may not have created its layer yet
-        Layer l = child.layer();
-        if (l != null) _layer.remove(l);
+        layer.remove(child.layer);
         if (_constraints != null) _constraints.remove(child);
         if (isAdded()) child.wasRemoved();
-    }
-
-    protected void layerChanged (Element elem, Layer oldLayer, Layer newLayer) {
-        if (oldLayer != null) _layer.remove(oldLayer);
-        if (newLayer != null) _layer.add(newLayer);
     }
 
     @Override protected void wasAdded (Group parent) {
@@ -121,35 +115,50 @@ public class Group extends Element
         for (Element child : _children) {
             child.wasRemoved();
         }
+
+        // clear out our background instance
+        if (_bginst != null) _bginst.destroy();
+        // if we're added again, we'll be re-laid-out
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
-        Background bg = getStyle(State.DEFAULT, BACKGROUND);
-        Dimension dims = _layout.computeSize(
-            _children, _constraints, hintX - bg.width(), hintY - bg.height());
-        dims.width += bg.width();
-        dims.height += bg.height();
-        return dims;
+        LayoutData ldata = computeLayout(hintX, hintY);
+        Dimension size = _layout.computeSize(
+            _children, _constraints, hintX - ldata.bg.width(), hintY - ldata.bg.height());
+        return ldata.bg.addInsets(size);
     }
 
     @Override protected void layout () {
+        LayoutData ldata = computeLayout(_size.width, _size.height);
+
+        // prepare our background
         if (_bginst != null) _bginst.destroy();
-        Background bg = getStyle(State.DEFAULT, BACKGROUND);
-        _bginst = bg.instantiate(_size);
-        _bginst.addTo(_layer);
-        _layout.layout(_children, _constraints, bg.left, bg.top,
-                       _size.width - bg.width(), _size.height - bg.height());
+        _bginst = ldata.bg.instantiate(_size);
+        _bginst.addTo(layer);
+
+        // layout our children
+        _layout.layout(_children, _constraints, ldata.bg.left, ldata.bg.top,
+                       _size.width - ldata.bg.width(), _size.height - ldata.bg.height());
     }
 
-    @Override protected Layer layer () {
-        return _layer;
+    protected LayoutData computeLayout (float hintX, float hintY) {
+        if (_ldata == null) {
+            _ldata = new LayoutData();
+            // determine our background
+            _ldata.bg = resolveStyle(state(), Style.BACKGROUND);
+        }
+        return _ldata;
     }
 
-    protected final GroupLayer _layer = ForPlay.graphics().createGroupLayer();
-    protected final List<Element> _children = new ArrayList<Element>();
+    protected static class LayoutData {
+        public Background bg;
+    }
 
     protected final Layout _layout;
+    protected final Stylesheet _sheet;
+    protected final List<Element> _children = new ArrayList<Element>();
     protected Map<Element, Layout.Constraint> _constraints; // lazily created
 
+    protected LayoutData _ldata;
     protected Background.Instance _bginst;
 }

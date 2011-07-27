@@ -5,7 +5,7 @@
 
 package com.threerings.ui;
 
-import forplay.core.Canvas;
+import forplay.core.CanvasLayer;
 import forplay.core.ForPlay;
 import forplay.core.TextFormat;
 import forplay.core.TextLayout;
@@ -15,7 +15,7 @@ import pythagoras.f.Dimension;
 /**
  * A widget that displays one or more lines of text.
  */
-public class Label extends Widget
+public class Label extends TextWidget
 {
     /**
      * Creates a label with the specified starting text.
@@ -27,19 +27,26 @@ public class Label extends Widget
     /**
      * Returns the currently configured text.
      */
-    public String text () {
+    @Override public String text () {
         return _text;
     }
 
     /**
      * Sets the text of this label to the supplied value.
      */
-    public Label setText (String text) {
+    @Override public Label setText (String text) {
         if (!text.equals(_text)) {
             _text = text;
             invalidate();
         }
         return this;
+    }
+
+    @Override protected void wasRemoved () {
+        super.wasRemoved();
+        // destroy our text canvas
+        if (_tlayer != null) _tlayer.destroy();
+        // if we're added again, we'll be re-laid-out
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
@@ -52,11 +59,19 @@ public class Label extends Widget
         return new Dimension(_layout.width(), _layout.height());
     }
 
-    protected void render (Canvas canvas) {
-        canvas.drawText(_layout, 0, 0);
+    @Override protected void layout () {
+        // prepare our label
+        if (_text.length() > 0) {
+            _tlayer = prepareCanvas(_tlayer, _size.width, _size.height);
+            _tlayer.canvas().drawText(_layout, 0, 0);
+        } else {
+            if (_tlayer != null) _tlayer.destroy();
+        }
+
         _layout = null; // no need to keep this around
     }
 
     protected String _text;
+    protected CanvasLayer _tlayer;
     protected TextLayout _layout;
 }

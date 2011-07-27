@@ -5,9 +5,6 @@
 
 package com.threerings.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
@@ -16,7 +13,8 @@ import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 
 import forplay.core.Asserts;
-import forplay.core.Layer;
+import forplay.core.ForPlay;
+import forplay.core.GroupLayer;
 import forplay.core.Transform;
 
 /**
@@ -30,18 +28,21 @@ public abstract class Element
         DEFAULT, DISABLED, DOWN;
     }
 
+    /** The layer associated with this element. */
+    public final GroupLayer layer = ForPlay.graphics().createGroupLayer();
+
     /**
      * Returns this element's x offset relative to its parent.
      */
     public float x () {
-        return layer().transform().tx();
+        return layer.transform().tx();
     }
 
     /**
      * Returns this element's y offset relative to its parent.
      */
     public float y () {
-        return layer().transform().ty();
+        return layer.transform().ty();
     }
 
     /**
@@ -56,7 +57,7 @@ public abstract class Element
      * @return {@code loc} for convenience.
      */
     public IPoint location (Point loc) {
-        Transform transform = layer().transform();
+        Transform transform = layer.transform();
         return loc.set(transform.tx(), transform.ty());
     }
 
@@ -65,9 +66,23 @@ public abstract class Element
      * @return {@code bounds} for convenience.
      */
     public IRectangle bounds (Rectangle bounds) {
-        Transform transform = layer().transform();
+        Transform transform = layer.transform();
         bounds.setBounds(transform.tx(), transform.ty(), _size.width, _size.height);
         return bounds;
+    }
+
+    /**
+     * Returns the parent of this element, or null.
+     */
+    public Group parent () {
+        return _parent;
+    }
+
+    /**
+     * Returns the styles configured on this element.
+     */
+    public Styles styles () {
+        return _styles;
     }
 
     /**
@@ -114,15 +129,11 @@ public abstract class Element
     }
 
     /**
-     * Returns the appropriate value for the specified style when the widget is in the specified
-     * state. If no value is configured for this element, the default will be returned (for
-     * non-inherited styles), or this element's parent will be consulted (for inherited styles).
-     * This method may not be called before this element has been added to the interface hierarchy.
+     * Configures the specified style for this element in its default state. This may be called
+     * before the element has been added to the interface hierarchy.
      */
-    public <V> V getStyle (State state, Style<V> style) {
-        Asserts.checkState(isAdded(), "Styles may not be queried before an element has been " +
-                           "added to the interface hierarchy.");
-        return getStyle(new StyleKey<V>(style, state));
+    public <V> void setStyle (Style<V> style, V value) {
+        setStyle(State.DEFAULT, style, value);
     }
 
     /**
@@ -130,10 +141,7 @@ public abstract class Element
      * been added to the interface hierarchy.
      */
     public <V> void setStyle (State state, Style<V> style, V value) {
-        if (_styles == null) {
-            _styles = new HashMap<StyleKey<?>, Object>();
-        }
-        _styles.put(new StyleKey<V>(style, state), value);
+        _styles = _styles.set(state, style, value);
     }
 
     /**
@@ -141,10 +149,8 @@ public abstract class Element
      * default or inherited value for that style. This may be called before the element has been
      * added to the interface hierarchy.
      */
-    public <V> void clearStyle (Style<V> style, State state) {
-        if (_styles != null) {
-            _styles.remove(new StyleKey<V>(style, state));
-        }
+    public <V> void clearStyle (State state, Style<V> style) {
+        _styles = _styles.clear(state, style);
     }
 
     /**
@@ -173,7 +179,7 @@ public abstract class Element
      * requires it to recreate its visualization.
      */
     protected void invalidate () {
-        // note that our preferred size is no longer valid
+        // note that our preferred size and background are no longer valid
         _preferredSize = null;
         // invalidate our parent if we've got one
         if (_parent != null) {
@@ -224,7 +230,7 @@ public abstract class Element
      * Configures the location of this element, relative to its parent.
      */
     protected void setLocation (float x, float y) {
-        layer().transform().setTranslation(x, y);
+        layer.transform().setTranslation(x, y);
     }
 
     /**
@@ -238,14 +244,11 @@ public abstract class Element
     }
 
     /**
-     * A helper for {@link #getStyle(Style,State)}.
+     * Resolves the value for the supplied style. See {@link Styles#resolveStyle} for the gritty
+     * details.
      */
-    protected <V> V getStyle (StyleKey<V> key) {
-        @SuppressWarnings("unchecked") V value = (_styles == null) ? null : (V)_styles.get(key);
-        if (value != null) return value;
-        // if we hit the root and no one has defined the style, use the default
-        return (key.style.inherited && _parent != null) ?
-            _parent.getStyle(key) : key.style.getDefault(key.state);
+    protected <V> V resolveStyle (State state, Style<V> style) {
+        return Styles.resolveStyle(this, state, style);
     }
 
     /**
@@ -265,35 +268,11 @@ public abstract class Element
      */
     protected abstract void layout ();
 
-    /**
-     * Returns the layer associated with this interface element.
-     */
-    protected abstract Layer layer ();
-
-    protected static class StyleKey<V> {
-        public Style<V> style;
-        public State state;
-
-        public StyleKey (Style<V> style, State state) {
-            this.style = style;
-            this.state = state;
-        }
-
-        @Override public boolean equals (Object other) {
-            StyleKey<?> okey = (StyleKey<?>)other;
-            return (okey.style == style) && (okey.state == state);
-        }
-
-        @Override public int hashCode () {
-            return style.hashCode() ^ state.hashCode();
-        }
-    }
-
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
     protected Group _parent;
     protected Dimension _preferredSize;
     protected Dimension _size = new Dimension();
-    protected Map<StyleKey<?>, Object> _styles; // lazily initialized to save memory
+    protected Styles _styles = Styles.none();
 
     protected static enum Flag {
         ENABLED(1 << 0), VISIBLE(1 << 1), HOVERED(1 << 2);

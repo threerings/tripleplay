@@ -24,14 +24,16 @@ public class WidgetDemo implements Game
     public void init () {
 
         // create our demo interface
-        _root = new Root(AxisLayout.vertical().alignTop());
+        _root = new Root(AxisLayout.vertical());
+        _root.setSize(ForPlay.graphics().width(), ForPlay.graphics().height());
         ForPlay.graphics().rootLayer().add(_root.layer());
 
-        _root.add(new Label("Hello"));
-        _root.add(new Label("ForPlay"));
-        _root.add(new Label("World"));
-
-        _root.pack();
+        Group cols = new Group(AxisLayout.horizontal().alignTop());
+        cols.setStyle(Group.BACKGROUND, Background.solid(0xFFFFCC99, 5));
+        cols.add(new Label(TEXT1), AxisLayout.stretched());
+        cols.add(new Label(TEXT2), AxisLayout.stretched());
+        cols.add(new Label(TEXT3), AxisLayout.stretched());
+        _root.add(cols);
     }
 
     @Override // from interface Game
@@ -50,4 +52,8 @@ public class WidgetDemo implements Game
     }
 
     protected Root _root;
+
+    protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+    protected static final String TEXT2 = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.";
+    protected static final String TEXT3 = "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.";
 }

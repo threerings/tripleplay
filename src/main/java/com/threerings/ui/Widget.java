@@ -11,36 +11,26 @@ import forplay.core.ForPlay;
 import forplay.core.Layer;
 
 /**
- * The base class for all user interface widgets. Manages the canvas into which a widget is
- * rendered when its state changes, and interacts with the input manager.
+ * The base class for all user interface widgets. Provides helper methods for managing a canvas
+ * into which a widget is rendered when its state changes.
  */
 public abstract class Widget extends Element
 {
-    @Override protected void layout () {
-        // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
-        int cwidth = (int)Math.ceil(_size.width), cheight = (int)Math.ceil(_size.height);
-        if (_layer == null ||
-            _layer.canvas().width() < cwidth || _layer.canvas().height() < cheight) {
-            if (_layer != null) _layer.destroy();
-            Layer oldLayer = _layer;
-            _layer = ForPlay.graphics().createCanvasLayer(cwidth, cheight);
-            if (_parent != null) _parent.layerChanged(this, oldLayer, _layer);
-        } else {
-            _layer.canvas().clear();
-        }
-
-        // rerender ourselves into this new canvas
-        render(_layer.canvas());
-    }
-
-    @Override protected Layer layer () {
-        return _layer;
-    }
-
     /**
-     * Rerenders this widget into the supplied canvas.
+     * Prepares a canvas layer as a rendering target of the supplied dimensions. The canvas may be
+     * null, in which case a new canvas will be created. If the supplied canvas is too small, it
+     * will be destroyed and a new canvas created. Otherwise the canvas will be cleared. If a new
+     * canvas is created, it will automatically be added to this widget's {@link #layer}.
      */
-    protected abstract void render (Canvas canvas);
-
-    protected CanvasLayer _layer;
+    protected CanvasLayer prepareCanvas (CanvasLayer cl, float width, float height) {
+        // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
+        int cwidth = (int)Math.ceil(width), cheight = (int)Math.ceil(height);
+        if (cl == null || cl.canvas().width() < cwidth || cl.canvas().height() < cheight) {
+            if (cl != null) cl.destroy();
+            layer.add(cl = ForPlay.graphics().createCanvasLayer(cwidth, cheight));
+        } else {
+            cl.canvas().clear();
+        }
+        return cl;
+    }
 }
