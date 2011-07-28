@@ -123,7 +123,8 @@ public abstract class AxisLayout extends Layout
 
             Metrics m = computeMetrics(elems, constraints, width, height, true);
             float stretchHeight = Math.max(0, height - m.gaps(_gap) - m.fixHeight);
-            float y = top + ((m.stretchers > 0) ? 0 : _alignOn.computeOffset(m.fixHeight, height));
+            float y = top + ((m.stretchers > 0) ? 0 :
+                             _alignOn.computeOffset(m.fixHeight + m.gaps(_gap), height));
             for (Element elem : elems) {
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.getPreferredSize(width, height); // will be cached
@@ -176,7 +177,8 @@ public abstract class AxisLayout extends Layout
 
             Metrics m = computeMetrics(elems, constraints, width, height, false);
             float stretchWidth = Math.max(0, width - m.gaps(_gap) - m.fixWidth);
-            float x = left + ((m.stretchers > 0) ? 0 : _alignOn.computeOffset(m.fixWidth, width));
+            float x = left + ((m.stretchers > 0) ? 0 :
+                              _alignOn.computeOffset(m.fixWidth + m.gaps(_gap), width));
             for (Element elem : elems) {
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.getPreferredSize(width, height); // will be cached
