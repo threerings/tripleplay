@@ -18,13 +18,6 @@ import pythagoras.f.Dimension;
 public class Label extends TextWidget
 {
     /**
-     * Creates a label with the specified starting text.
-     */
-    public Label (String text) {
-        setText(text);
-    }
-
-    /**
      * Returns the currently configured text.
      */
     @Override public String text () {
@@ -63,6 +56,8 @@ public class Label extends TextWidget
         // prepare our label
         if (_text.length() > 0) {
             _tlayer = prepareCanvas(_tlayer, _size.width, _size.height);
+            // _tlayer.canvas().setFillColor(0xFFCCCCCC);
+            // _tlayer.canvas().fillRect(0, 0, _size.width, _size.height);
             _tlayer.canvas().drawText(_layout, 0, 0);
         } else {
             if (_tlayer != null) _tlayer.destroy();
