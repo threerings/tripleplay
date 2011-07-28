@@ -24,12 +24,12 @@ public class WidgetDemo implements Game
     public void init () {
 
         // create our demo interface
-        _root = new Root(AxisLayout.vertical());
+        _root = new Root(AxisLayout.vertical(), Stylesheet.builder().create());
         _root.setSize(ForPlay.graphics().width(), ForPlay.graphics().height());
-        ForPlay.graphics().rootLayer().add(_root.layer());
+        ForPlay.graphics().rootLayer().add(_root.layer);
 
         Group cols = new Group(AxisLayout.horizontal().alignTop());
-        cols.setStyle(Group.BACKGROUND, Background.solid(0xFFFFCC99, 5));
+        cols.setStyle(Style.BACKGROUND, Background.solid(0xFFFFCC99, 5));
         cols.add(new Label(TEXT1), AxisLayout.stretched());
         cols.add(new Label(TEXT2), AxisLayout.stretched());
         cols.add(new Label(TEXT3), AxisLayout.stretched());

@@ -50,7 +50,7 @@ public class Stylesheet
      */
     <V> V get (Class<?> eclass, Styles.Key<V> key) {
         Styles styles = _styles.get(eclass);
-        V value = styles.get(key);
+        V value = (styles == null) ? null : styles.get(key);
         if (value != null) return value;
 
         // if we found no mapping and the style is inherited (and we're not already at the root --

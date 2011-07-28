@@ -20,6 +20,13 @@ public final class Styles
     }
 
     /**
+     * Returns the binding for the specified style (in the default state), or null.
+     */
+    public <V> V get (Style<V> style) {
+        return get(Element.State.DEFAULT, style);
+    }
+
+    /**
      * Returns the binding for the specified style in the specified state, or null.
      */
     public <V> V get (Element.State state, Style<V> style) {
@@ -56,11 +63,11 @@ public final class Styles
             nkeys = new Key<?>[_keys.length+1];
             System.arraycopy(_keys, 0, nkeys, 0, iidx);
             nkeys[iidx] = key;
-            System.arraycopy(_keys, iidx, nkeys, iidx+1, nkeys.length-iidx);
+            System.arraycopy(_keys, iidx, nkeys, iidx+1, _keys.length-iidx);
             nvalues = new Object[nkeys.length];
             System.arraycopy(_values, 0, nvalues, 0, iidx);
             nvalues[iidx] = value;
-            System.arraycopy(_values, iidx, nvalues, iidx+1, nvalues.length-iidx);
+            System.arraycopy(_values, iidx, nvalues, iidx+1, _values.length-iidx);
         } else {
             nkeys = new Key<?>[_keys.length];
             System.arraycopy(_keys, 0, nkeys, 0, nkeys.length);
@@ -149,8 +156,9 @@ public final class Styles
             if (this.style == other.style) {
                 return state.compareTo(other.state);
             } else {
-                int hc = hashCode(), ohc = other.hashCode();
-                return (hc < ohc) ? -1 : (ohc > hc ? 1 : 0);
+                int hc = style.hashCode(), ohc = other.style.hashCode();
+                assert(hc != ohc);
+                return (hc < ohc) ? -1 : 1;
             }
         }
 
