@@ -86,6 +86,21 @@ public abstract class Element
     }
 
     /**
+     * Configures the styles for this element. Any previously configured styles are overwritten.
+     */
+    public void setStyles (Styles styles) {
+        _styles = styles;
+    }
+
+    /**
+     * Adds the supplied styles to this element. Where the new styles overlap with existing styles,
+     * the new styles are preferred, but non-overlapping old styles are preserved.
+     */
+    public void addStyles (Styles styles) {
+        throw new RuntimeException("TODO");
+    }
+
+    /**
      * Returns whether this element is enabled.
      */
     public boolean isEnabled () {
