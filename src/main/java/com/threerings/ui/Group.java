@@ -47,19 +47,22 @@ public class Group extends Element
         return _children.get(index);
     }
 
-    public void add (Element child) {
-        add(_children.size(), child);
+    public Group add (Element... children) {
+        for (Element child : children) {
+            add(_children.size(), child);
+        }
+        return this;
     }
 
-    public void add (int index, Element child) {
-        add(index, child, null);
+    public Group add (int index, Element child) {
+        return add(index, child, null);
     }
 
-    public void add (Element child, Layout.Constraint constraint) {
-        add(_children.size(), child, constraint);
+    public Group add (Element child, Layout.Constraint constraint) {
+        return add(_children.size(), child, constraint);
     }
 
-    public void add (int index, Element child, Layout.Constraint constraint) {
+    public Group add (int index, Element child, Layout.Constraint constraint) {
         // TODO: check if child is already added here? has parent?
         _children.add(index, child);
         if (constraint != null) {
@@ -70,6 +73,7 @@ public class Group extends Element
         }
         didAdd(child);
         invalidate();
+        return this;
     }
 
     public void remove (Element child) {
