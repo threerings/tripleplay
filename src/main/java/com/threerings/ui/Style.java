@@ -122,7 +122,7 @@ public abstract class Style<V>
     /**
      * Returns a {@link Binding} with this style bound to the specified value.
      */
-    public Binding<V> to (V value) {
+    public Binding<V> is (V value) {
         return new Binding<V>(this, value);
     }
 

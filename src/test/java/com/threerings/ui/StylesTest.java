@@ -27,41 +27,41 @@ public class StylesTest
     @Test public void testNonReceiverMod () {
         Styles s = Styles.none();
         assertNull(s.get(Style.COLOR));
-        Styles s1 = s.add(Style.COLOR.to(0xFFAABBCC));
+        Styles s1 = s.add(Style.COLOR.is(0xFFAABBCC));
         assertNull(s.get(Style.COLOR));
         assertEquals((Integer)0xFFAABBCC, s1.get(Style.COLOR));
     }
 
     @Test public void testAddsGets () {
-        Styles s = Styles.make(Style.COLOR.to(0xFFAABBCC),
-                               Style.SHADOW.to(0xFF333333),
-                               Style.HIGHLIGHT.to(0xFFAAAAAA));
+        Styles s = Styles.make(Style.COLOR.is(0xFFAABBCC),
+                               Style.SHADOW.is(0xFF333333),
+                               Style.HIGHLIGHT.is(0xFFAAAAAA));
         assertEquals((Integer)0xFFAABBCC, s.get(Style.COLOR));
         assertEquals((Integer)0xFF333333, s.get(Style.SHADOW));
         assertEquals((Integer)0xFFAAAAAA, s.get(Style.HIGHLIGHT));
     }
 
     @Test public void testOverwrite () {
-        Styles s = Styles.make(Style.COLOR.to(0xFFAABBCC),
-                               Style.SHADOW.to(0xFF333333));
+        Styles s = Styles.make(Style.COLOR.is(0xFFAABBCC),
+                               Style.SHADOW.is(0xFF333333));
         assertEquals((Integer)0xFFAABBCC, s.get(Style.COLOR));
         assertEquals((Integer)0xFF333333, s.get(Style.SHADOW));
 
-        Styles ns = s.add(Style.COLOR.to(0xFFBBAACC));
+        Styles ns = s.add(Style.COLOR.is(0xFFBBAACC));
         assertEquals((Integer)0xFFBBAACC, ns.get(Style.COLOR));
 
-        ns = s.add(Style.COLOR.to(0xFFBBAACC), Style.HIGHLIGHT.to(0xFFAAAAAA));
+        ns = s.add(Style.COLOR.is(0xFFBBAACC), Style.HIGHLIGHT.is(0xFFAAAAAA));
         assertEquals((Integer)0xFFBBAACC, ns.get(Style.COLOR));
         assertEquals((Integer)0xFFAAAAAA, ns.get(Style.HIGHLIGHT));
 
-        ns = s.add(Style.HIGHLIGHT.to(0xFFAAAAAA), Style.COLOR.to(0xFFBBAACC));
+        ns = s.add(Style.HIGHLIGHT.is(0xFFAAAAAA), Style.COLOR.is(0xFFBBAACC));
         assertEquals((Integer)0xFFBBAACC, ns.get(Style.COLOR));
         assertEquals((Integer)0xFFAAAAAA, ns.get(Style.HIGHLIGHT));
     }
 
     @Test public void testClear () {
-        Styles s = Styles.make(Style.COLOR.to(0xFFAABBCC),
-                               Style.SHADOW.to(0xFF333333));
+        Styles s = Styles.make(Style.COLOR.is(0xFFAABBCC),
+                               Style.SHADOW.is(0xFF333333));
         assertEquals((Integer)0xFFAABBCC, s.get(Style.COLOR));
         assertEquals((Integer)0xFF333333, s.get(Style.SHADOW));
 
