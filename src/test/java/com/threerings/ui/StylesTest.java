@@ -27,12 +27,12 @@ public class StylesTest
     @Test public void testNonReceiverMod () {
         Styles s = Styles.none();
         assertNull(s.get(Style.COLOR));
-        Styles s1 = s.set(Style.COLOR.to(0xFFAABBCC));
+        Styles s1 = s.add(Style.COLOR.to(0xFFAABBCC));
         assertNull(s.get(Style.COLOR));
         assertEquals((Integer)0xFFAABBCC, s1.get(Style.COLOR));
     }
 
-    @Test public void testSetsGets () {
+    @Test public void testAddsGets () {
         Styles s = Styles.make(Style.COLOR.to(0xFFAABBCC),
                                Style.SHADOW.to(0xFF333333),
                                Style.HIGHLIGHT.to(0xFFAAAAAA));
@@ -47,14 +47,14 @@ public class StylesTest
         assertEquals((Integer)0xFFAABBCC, s.get(Style.COLOR));
         assertEquals((Integer)0xFF333333, s.get(Style.SHADOW));
 
-        Styles ns = s.set(Style.COLOR.to(0xFFBBAACC));
+        Styles ns = s.add(Style.COLOR.to(0xFFBBAACC));
         assertEquals((Integer)0xFFBBAACC, ns.get(Style.COLOR));
 
-        ns = s.set(Style.COLOR.to(0xFFBBAACC), Style.HIGHLIGHT.to(0xFFAAAAAA));
+        ns = s.add(Style.COLOR.to(0xFFBBAACC), Style.HIGHLIGHT.to(0xFFAAAAAA));
         assertEquals((Integer)0xFFBBAACC, ns.get(Style.COLOR));
         assertEquals((Integer)0xFFAAAAAA, ns.get(Style.HIGHLIGHT));
 
-        ns = s.set(Style.HIGHLIGHT.to(0xFFAAAAAA), Style.COLOR.to(0xFFBBAACC));
+        ns = s.add(Style.HIGHLIGHT.to(0xFFAAAAAA), Style.COLOR.to(0xFFBBAACC));
         assertEquals((Integer)0xFFBBAACC, ns.get(Style.COLOR));
         assertEquals((Integer)0xFFAAAAAA, ns.get(Style.HIGHLIGHT));
     }
@@ -65,7 +65,7 @@ public class StylesTest
         assertEquals((Integer)0xFFAABBCC, s.get(Style.COLOR));
         assertEquals((Integer)0xFF333333, s.get(Style.SHADOW));
 
-        s = s.clear(Style.COLOR);
+        s = s.clear(Element.State.DEFAULT, Style.COLOR);
         assertEquals(null, s.get(Style.COLOR));
     }
 }

@@ -22,24 +22,76 @@ public final class Styles
     }
 
     /**
-     * Creates a styles instance with the supplied style bindings (in the default state).
+     * Creates a styles instance with the supplied style bindings in the specified state.
      */
+    public static Styles make (Element.State state, Style.Binding<?>... bindings) {
+        return none().add(state, bindings);
+    }
+
+    /** Creates a styles instance with the supplied style bindings in the DEFAULT state. */
     public static Styles make (Style.Binding<?>... bindings) {
         return make(Element.State.DEFAULT, bindings);
     }
 
-    /**
-     * Creates a styles instance with the supplied style bindings in the specified state.
-     */
-    public static Styles make (Element.State state, Style.Binding<?>... bindings) {
-        return none().set(state, bindings);
+    /** Creates a styles instance with the supplied style bindings in the DISABLED state. */
+    public static Styles makeDisabled (Style.Binding<?>... bindings) {
+        return make(Element.State.DISABLED, bindings);
+    }
+
+    /** Creates a styles instance with the supplied style bindings in the DOWN state. */
+    public static Styles makeDown (Style.Binding<?>... bindings) {
+        return make(Element.State.DOWN, bindings);
     }
 
     /**
-     * Returns the binding for the specified style (in the default state), or null.
+     * Returns a new instance where the supplied bindings overwrite any previous bindings for the
+     * specified styles (in the specified state). The receiver is not modified.
      */
-    public <V> V get (Style<V> style) {
-        return get(Element.State.DEFAULT, style);
+    public Styles add (Element.State state, Style.Binding<?>... bindings) {
+        Binding[] nbindings = new Binding[bindings.length];
+        for (int ii = 0; ii < bindings.length; ii++) {
+            nbindings[ii] = new Binding(state, bindings[ii].style, bindings[ii].value);
+        }
+        // note that we take advantage of the fact that merge can handle unsorted bindings
+        return merge(new Styles(nbindings));
+    }
+
+    /**
+     * Returns a new instance where the supplied bindings overwrite any previous bindings for the
+     * specified styles in the default state. The receiver is not modified.
+     */
+    public Styles add (Style.Binding<?>... bindings) {
+        return add(Element.State.DEFAULT, bindings);
+    }
+
+    /**
+     * Returns a new instance where the supplied bindings overwrite any previous bindings for the
+     * specified styles in the disabled state. The receiver is not modified.
+     */
+    public Styles addDisabled (Style.Binding<?>... bindings) {
+        return add(Element.State.DISABLED, bindings);
+    }
+
+    /**
+     * Returns a new instance where the supplied bindings overwrite any previous bindings for the
+     * specified styles in the down state. The receiver is not modified.
+     */
+    public Styles addDown (Style.Binding<?>... bindings) {
+        return add(Element.State.DOWN, bindings);
+    }
+
+    /**
+     * Returns a new instance where no binding exists for the specified style in the specified
+     * state. The receiver is not modified.
+     */
+    public Styles clear (Element.State state, Style<?> style) {
+        Key key = new Key(state, style);
+        int index = Arrays.binarySearch(_bindings, key);
+        if (index < 0) return this;
+        Binding[] nbindings = new Binding[_bindings.length-1];
+        System.arraycopy(_bindings, 0, nbindings, 0, index);
+        System.arraycopy(_bindings, index+1, nbindings, index, nbindings.length-index);
+        return new Styles(nbindings);
     }
 
     /**
@@ -50,32 +102,10 @@ public final class Styles
     }
 
     /**
-     * Returns a new instance where the supplied binding overwrites any previous binding for the
-     * specified style (in the default state). The receiver is not modified.
+     * Returns the binding for the specified style (in the default state), or null.
      */
-    public Styles set (Style.Binding<?>... bindings) {
-        return set(Element.State.DEFAULT, bindings);
-    }
-
-    /**
-     * Returns a new instance where no binding exists for the specified style (in the default
-     * state). The receiver is not modified.
-     */
-    public Styles clear (Style<?> style) {
-        return clear(Element.State.DEFAULT, style);
-    }
-
-    /**
-     * Returns a new instance where the supplied binding overwrites any previous binding for the
-     * specified style (in the specified state). The receiver is not modified.
-     */
-    public Styles set (Element.State state, Style.Binding<?>... bindings) {
-        Binding[] nbindings = new Binding[bindings.length];
-        for (int ii = 0; ii < bindings.length; ii++) {
-            nbindings[ii] = new Binding(state, bindings[ii].style, bindings[ii].value);
-        }
-        // note that we take advantage of the fact that merge can handle unsorted bindings
-        return merge(new Styles(nbindings));
+    public <V> V get (Style<V> style) {
+        return get(Element.State.DEFAULT, style);
     }
 
     /**
@@ -103,20 +133,6 @@ public final class Styles
         }
         Arrays.sort(nbindings);
 
-        return new Styles(nbindings);
-    }
-
-    /**
-     * Returns a new instance where no binding exists for the specified style (in the specified
-     * state). The receiver is not modified.
-     */
-    public Styles clear (Element.State state, Style<?> style) {
-        Key key = new Key(state, style);
-        int index = Arrays.binarySearch(_bindings, key);
-        if (index < 0) return this;
-        Binding[] nbindings = new Binding[_bindings.length-1];
-        System.arraycopy(_bindings, 0, nbindings, 0, index);
-        System.arraycopy(_bindings, index+1, nbindings, index, nbindings.length-index);
         return new Styles(nbindings);
     }
 
