@@ -64,7 +64,10 @@ public class Button extends TextWidget
             float twidth = _size.width - ldata.bg.width();
             float theight = _size.height - ldata.bg.height();
             _tlayer = prepareCanvas(_tlayer, twidth, theight);
-            _tlayer.canvas().drawText(ldata.text, ldata.bg.left, ldata.bg.top);
+            // _tlayer.canvas().setFillColor(0xFFCCCCCC);
+            // _tlayer.canvas().fillRect(0, 0, _size.width, _size.height);
+            _tlayer.canvas().drawText(ldata.text, 0, 0);
+            _tlayer.setTranslation(ldata.bg.left, ldata.bg.top);
         } else {
             if (_tlayer != null) _tlayer.destroy();
         }
