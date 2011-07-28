@@ -20,6 +20,20 @@ import com.threerings.ui.bgs.NullBackground;
  */
 public abstract class Style<V>
 {
+    /** Used to configure {@link Styles} instances. See {@link Styles#set}. */
+    public static class Binding<V> {
+        /** The style being configured. */
+        public final Style<V> style;
+
+        /** The value to be bound for the style. */
+        public final V value;
+
+        public Binding (Style<V> style, V value) {
+            this.style = style;
+            this.value = value;
+        }
+    }
+
     /** Defines horizontal alignment choices. */
     public static enum HAlign { LEFT, RIGHT, CENTER };
 
@@ -104,6 +118,13 @@ public abstract class Style<V>
      * Returns the default value for this style in the given state.
      */
     public abstract V getDefault (Element.State state);
+
+    /**
+     * Returns a {@link Binding} with this style bound to the specified value.
+     */
+    public Binding<V> to (V value) {
+        return new Binding<V>(this, value);
+    }
 
     protected Style (boolean inherited) {
         this.inherited = inherited;

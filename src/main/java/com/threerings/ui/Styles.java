@@ -5,6 +5,8 @@
 
 package com.threerings.ui;
 
+import java.util.Arrays;
+
 /**
  * An immutable collection of styles. Used in builder-style to add, replace or remove styles.
  * Configure a group of styles and then apply them to an element via {@link Element#setStyles} or
@@ -20,6 +22,20 @@ public final class Styles
     }
 
     /**
+     * Creates a styles instance with the supplied style bindings (in the default state).
+     */
+    public static Styles make (Style.Binding<?>... bindings) {
+        return make(Element.State.DEFAULT, bindings);
+    }
+
+    /**
+     * Creates a styles instance with the supplied style bindings in the specified state.
+     */
+    public static Styles make (Element.State state, Style.Binding<?>... bindings) {
+        return none().set(state, bindings);
+    }
+
+    /**
      * Returns the binding for the specified style (in the default state), or null.
      */
     public <V> V get (Style<V> style) {
@@ -30,22 +46,22 @@ public final class Styles
      * Returns the binding for the specified style in the specified state, or null.
      */
     public <V> V get (Element.State state, Style<V> style) {
-        return get(new Key<V>(style, state));
+        return this.<V>get(new Key(state, style));
     }
 
     /**
      * Returns a new instance where the supplied binding overwrites any previous binding for the
      * specified style (in the default state). The receiver is not modified.
      */
-    public <V> Styles set (Style<V> style, V value) {
-        return set(Element.State.DEFAULT, style, value);
+    public Styles set (Style.Binding<?>... bindings) {
+        return set(Element.State.DEFAULT, bindings);
     }
 
     /**
      * Returns a new instance where no binding exists for the specified style (in the default
      * state). The receiver is not modified.
      */
-    public <V> Styles clear (Style<V> style) {
+    public Styles clear (Style<?> style) {
         return clear(Element.State.DEFAULT, style);
     }
 
@@ -53,81 +69,72 @@ public final class Styles
      * Returns a new instance where the supplied binding overwrites any previous binding for the
      * specified style (in the specified state). The receiver is not modified.
      */
-    public <V> Styles set (Element.State state, Style<V> style, V value) {
-        Key<V> key = new Key<V>(style, state);
-        Key<?>[] nkeys;
-        Object[] nvalues;
-        int index = findIndex(key);
-        if (index < 0) {
-            int iidx = -(index+1);
-            nkeys = new Key<?>[_keys.length+1];
-            System.arraycopy(_keys, 0, nkeys, 0, iidx);
-            nkeys[iidx] = key;
-            System.arraycopy(_keys, iidx, nkeys, iidx+1, _keys.length-iidx);
-            nvalues = new Object[nkeys.length];
-            System.arraycopy(_values, 0, nvalues, 0, iidx);
-            nvalues[iidx] = value;
-            System.arraycopy(_values, iidx, nvalues, iidx+1, _values.length-iidx);
-        } else {
-            nkeys = new Key<?>[_keys.length];
-            System.arraycopy(_keys, 0, nkeys, 0, nkeys.length);
-            nkeys[index] = key;
-            nvalues = new Object[nkeys.length];
-            System.arraycopy(_values, 0, nvalues, 0, nvalues.length);
-            nvalues[index] = value;
+    public Styles set (Element.State state, Style.Binding<?>... bindings) {
+        Binding[] nbindings = new Binding[bindings.length];
+        for (int ii = 0; ii < bindings.length; ii++) {
+            nbindings[ii] = new Binding(state, bindings[ii].style, bindings[ii].value);
         }
-        return new Styles(nkeys, nvalues);
+        // note that we take advantage of the fact that merge can handle unsorted bindings
+        return merge(new Styles(nbindings));
+    }
+
+    /**
+     * Returns a new styles instance which merges these styles with the supplied styles. Where both
+     * instances define a particular style, the supplied {@code styles} will take precedence.
+     */
+    public Styles merge (Styles styles) {
+        // determine which of the to-be-merged styles also exist in our styles
+        Binding[] obindings = styles._bindings;
+        int[] dupidx = new int[obindings.length];
+        int dups = 0;
+        for (int ii = 0; ii < obindings.length; ii++) {
+            int idx = Arrays.binarySearch(_bindings, obindings[ii]);
+            if (idx >= 0) dups++;
+            dupidx[ii] = idx;
+        }
+
+        // copy the old bindings, overwrite any duplicated bindings, tack the rest on the end
+        Binding[] nbindings = new Binding[_bindings.length + obindings.length - dups];
+        System.arraycopy(_bindings, 0, nbindings, 0, _bindings.length);
+        int idx = _bindings.length;
+        for (int ii = 0; ii < obindings.length; ii++) {
+            if (dupidx[ii] >= 0) nbindings[dupidx[ii]] = obindings[ii];
+            else nbindings[idx++] = obindings[ii];
+        }
+        Arrays.sort(nbindings);
+
+        return new Styles(nbindings);
     }
 
     /**
      * Returns a new instance where no binding exists for the specified style (in the specified
      * state). The receiver is not modified.
      */
-    public <V> Styles clear (Element.State state, Style<V> style) {
-        Key<V> key = new Key<V>(style, state);
-        int index = findIndex(key);
+    public Styles clear (Element.State state, Style<?> style) {
+        Key key = new Key(state, style);
+        int index = Arrays.binarySearch(_bindings, key);
         if (index < 0) return this;
-        Key<?>[] nkeys = new Key<?>[_keys.length-1];
-        Object[] nvalues = new Object[nkeys.length];
-        System.arraycopy(_keys, 0, nkeys, 0, index);
-        System.arraycopy(_keys, index+1, nkeys, index, nkeys.length-index);
-        System.arraycopy(_values, 0, nvalues, 0, index);
-        System.arraycopy(_values, index+1, nvalues, index, nvalues.length-index);
-        return new Styles(nkeys, nvalues);
+        Binding[] nbindings = new Binding[_bindings.length-1];
+        System.arraycopy(_bindings, 0, nbindings, 0, index);
+        System.arraycopy(_bindings, index+1, nbindings, index, nbindings.length-index);
+        return new Styles(nbindings);
     }
 
-    <V> V get (Key<V> key) {
-        int index = findIndex(key);
+    <V> V get (Key key) {
+        int index = Arrays.binarySearch(_bindings, key);
         if (index < 0) return null;
-        @SuppressWarnings("unchecked") V value = (V)_values[index];
+        @SuppressWarnings("unchecked") V value = (V)_bindings[index].value;
         return value;
     }
 
-    private int findIndex (Key<?> key) {
-        int low = 0, high = _keys.length-1;
-        while (low <= high) {
-            int mid = (low + high) >>> 1;
-            int cmp = key.compareTo(_keys[mid]);
-            if (cmp > 0) {
-                low = mid + 1;
-            } else if (cmp < 0) {
-                high = mid - 1;
-            } else {
-                return mid; // key found
-            }
-        }
-        return -(low + 1); // key not found.
-    }
-
-    private Styles (Key<?>[] keys, Object[] values) {
-        _keys = keys;
-        _values = values;
+    private Styles (Binding[] bindings) {
+        _bindings = bindings;
     }
 
     static <V> V resolveStyle (Element element, Element.State state, Style<V> style) {
         // first check for the style configured directly on the element
-        Key<V> key = new Key<V>(style, state);
-        V value = element.styles().get(key);
+        Key key = new Key(state, style);
+        V value = element.styles().<V>get(key);
         if (value != null) return value;
 
         // now check for the style in the appropriate stylesheets
@@ -135,7 +142,7 @@ public final class Styles
         for (; group != null; group = group.parent()) {
             Stylesheet sheet = group.stylesheet();
             if (sheet == null) continue;
-            value = sheet.get(element.getClass(), key);
+            value = sheet.<V>get(element.getClass(), key);
             if (value != null) return value;
         }
 
@@ -143,16 +150,16 @@ public final class Styles
         return style.getDefault(state);
     }
 
-    static class Key<V> implements Comparable<Key<?>> {
-        public Style<V> style;
+    static class Key implements Comparable<Key> {
         public Element.State state;
+        public Style<?> style;
 
-        public Key (Style<V> style, Element.State state) {
-            this.style = style;
+        public Key (Element.State state, Style<?> style) {
             this.state = state;
+            this.style = style;
         }
 
-        @Override public int compareTo (Key<?> other) {
+        @Override public int compareTo (Key other) {
             if (this.style == other.style) {
                 return state.compareTo(other.state);
             } else {
@@ -163,7 +170,7 @@ public final class Styles
         }
 
         @Override public boolean equals (Object other) {
-            Key<?> okey = (Key<?>)other;
+            Key okey = (Key)other;
             return (okey.style == style) && (okey.state == state);
         }
 
@@ -172,8 +179,16 @@ public final class Styles
         }
     }
 
-    protected Key<?>[] _keys;
-    protected Object[] _values;
+    static class Binding extends Key {
+        public Object value;
 
-    protected static final Styles _noneSingleton = new Styles(new Key<?>[0], new Object[0]);
+        public Binding (Element.State state, Style<?> style, Object value) {
+            super(state, style);
+            this.value = value;
+        }
+    }
+
+    protected Binding[] _bindings;
+
+    protected static final Styles _noneSingleton = new Styles(new Binding[0]);
 }

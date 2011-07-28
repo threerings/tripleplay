@@ -97,7 +97,7 @@ public abstract class Element
      * the new styles are preferred, but non-overlapping old styles are preserved.
      */
     public void addStyles (Styles styles) {
-        throw new RuntimeException("TODO");
+        _styles = _styles.merge(styles);
     }
 
     /**
@@ -141,31 +141,6 @@ public abstract class Element
      */
     public boolean isAdded () {
         return getRoot() != null;
-    }
-
-    /**
-     * Configures the specified style for this element in its default state. This may be called
-     * before the element has been added to the interface hierarchy.
-     */
-    public <V> void setStyle (Style<V> style, V value) {
-        setStyle(State.DEFAULT, style, value);
-    }
-
-    /**
-     * Configures the specified style for this element. This may be called before the element has
-     * been added to the interface hierarchy.
-     */
-    public <V> void setStyle (State state, Style<V> style, V value) {
-        _styles = _styles.set(state, style, value);
-    }
-
-    /**
-     * Clears out the specified style for this element. The element will revert to using the
-     * default or inherited value for that style. This may be called before the element has been
-     * added to the interface hierarchy.
-     */
-    public <V> void clearStyle (State state, Style<V> style) {
-        _styles = _styles.clear(state, style);
     }
 
     /**
