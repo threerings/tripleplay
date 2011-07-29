@@ -25,6 +25,14 @@ public class Coords
     }
 
     /**
+     * Converts the supplied point from coordinates relative to the specified layer to screen
+     * coordinates. The results are stored into {@code into}, which is returned for convenience.
+     */
+    public static Point layerToScreen (Layer layer, float x, float y, Point into) {
+        return layerToScreen(layer, into.set(x, y), into);
+    }
+
+    /**
      * Converts the supplied point from coordinates relative to the specified child layer to
      * coordinates relative to the specified parent layer. The results are stored into {@code
      * into}, which is returned for convenience.
@@ -48,6 +56,15 @@ public class Coords
     }
 
     /**
+     * Converts the supplied point from coordinates relative to the specified child layer to
+     * coordinates relative to the specified parent layer. The results are stored into {@code
+     * into}, which is returned for convenience.
+     */
+    public static Point layerToParent (Layer layer, Layer parent, float x, float y, Point into) {
+        return layerToParent(layer, parent, into.set(x, y), into);
+    }
+
+    /**
      * Converts the supplied point from screen coordinates to coordinates relative to the specified
      * layer. The results are stored into {@code into}, which is returned for convenience.
      */
@@ -60,6 +77,14 @@ public class Coords
         into.x += layer.originX();
         into.y += layer.originY();
         return into;
+    }
+
+    /**
+     * Converts the supplied point from screen coordinates to coordinates relative to the specified
+     * layer. The results are stored into {@code into}, which is returned for convenience.
+     */
+    public static Point screenToLayer (Layer layer, float x, float y, Point into) {
+        return screenToLayer(layer, into.set(x, y), into);
     }
 
     /** A scratch transform, used by {@link #screenToLayer} and {@link #layerToScreen}. */
