@@ -5,7 +5,11 @@
 
 package com.threerings.ui;
 
+import pythagoras.f.AffineTransform;
 import pythagoras.f.IDimension;
+import pythagoras.f.Point;
+
+import com.threerings.util.Coords;
 
 /**
  * The root of a display hierarchy. An application can have one or more roots, but they should not
@@ -13,13 +17,6 @@ import pythagoras.f.IDimension;
  */
 public class Root extends Group
 {
-    /**
-     * Creates a root element with the specified layout and stylesheet.
-     */
-    public Root (Layout layout, Stylesheet sheet) {
-        super(layout, sheet);
-    }
-
     /**
      * Sizes this root element to its preferred size.
      */
@@ -36,20 +33,31 @@ public class Root extends Group
         invalidate();
     }
 
-    /**
-     * Updates this root element. Must be called from {@link Game#update}.
-     */
-    public void update (float delta) {
-        // TODO
+    protected Root (Interface iface, Layout layout, Stylesheet sheet) {
+        super(layout, sheet);
+        _iface = iface;
     }
 
-    /**
-     * "Paints" this root element. Must be called from {@link Game#update}.
-     */
-    public void paint (float alpha) {
-        if (!_valid) {
-            layout();
-            _valid = true;
+    protected boolean dispatchPointerStart (float x, float y) {
+        Point p = new Point(x, y);
+        _active = hitTest(new AffineTransform(), p);
+        if (_active == null) return false;
+        _active.onPointerStart(p.x, p.y);
+        return true;
+    }
+
+    protected void dispatchPointerDrag (float x, float y) {
+        if (_active != null) {
+            Point p = Coords.screenToLayer(_active.layer, x, y, new Point());
+            _active.onPointerDrag(p.x, p.y);
+        }
+    }
+
+    protected void dispatchPointerEnd (float x, float y) {
+        if (_active != null) {
+            Point p = Coords.screenToLayer(_active.layer, x, y, new Point());
+            _active.onPointerEnd(p.x, p.y);
+            _active = null;
         }
     }
 
@@ -57,9 +65,13 @@ public class Root extends Group
         return this;
     }
 
-    @Override protected void invalidate () {
-        _valid = false;
+    @Override protected void validate () {
+        if (!isSet(Flag.VALID)) {
+            super.validate();
+        }
     }
 
+    protected final Interface _iface;
     protected boolean _valid;
+    protected Element _active;
 }

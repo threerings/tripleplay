@@ -35,6 +35,10 @@ public class Label extends TextWidget
         return this;
     }
 
+    @Override public String toString () {
+        return "Label(" + _text + ")";
+    }
+
     @Override protected void wasRemoved () {
         super.wasRemoved();
         // destroy our text canvas

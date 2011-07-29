@@ -5,6 +5,7 @@
 
 package com.threerings.ui;
 
+import pythagoras.f.AffineTransform;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
@@ -158,6 +159,56 @@ public abstract class Element
     }
 
     /**
+     * Returns true if the supplied, element-relative, coordinates are inside our bounds.
+     */
+    protected boolean contains (float x, float y) {
+        return !(x < 0 || x > _size.width || y < 0 || y > _size.height);
+    }
+
+    /**
+     * Used to determine whether a point falls in this element's bounds.
+     * @param xform a scratch transform for use by the element.
+     * @param point the point to be tested in this element's parent's coordinate system.
+     * @return the leaf-most element that contains the supplied point or null if neither this
+     * element, nor its children contain the point. Also {@code point} is updated to contain the
+     * hit-element-relative coordinates in the event of a hit.
+     */
+    protected Element hitTest (AffineTransform xform, Point point) {
+        // transform the point into our coordinate system
+        Transform lt = layer.transform();
+        xform.setTransform(lt.m00(), lt.m10(), lt.m01(), lt.m11(), lt.tx(), lt.ty());
+        point = xform.inverseTransform(point, point);
+        float x = point.x + layer.originX(), y = point.y + layer.originY();
+        // check whether it falls within our bounds
+        if (!contains(x, y)) return null;
+        // if we're the hit component, update the supplied point
+        point.set(x, y);
+        return this;
+    }
+
+    /**
+     * Called when the a touch/drag is started within the bounds of this component.
+     */
+    protected void onPointerStart (float x, float y) {
+    }
+
+    /**
+     * Called when a touch that started within the bounds of this component is dragged. The drag
+     * may progress outside the bounds of this component, but the events will still be dispatched
+     * to this component until the touch is released.
+     */
+    protected void onPointerDrag (float x, float y) {
+    }
+
+    /**
+     * Called when a touch that started within the bounds of this component is released. The
+     * coordinates may be outside the bounds of this component, but the touch in question started
+     * inside this component's bounds.
+     */
+    protected void onPointerEnd (float x, float y) {
+    }
+
+    /**
      * Computes the style state of this element based on its flags.
      */
     protected State state () {
@@ -169,11 +220,25 @@ public abstract class Element
      * requires it to recreate its visualization.
      */
     protected void invalidate () {
-        // note that our preferred size and background are no longer valid
-        _preferredSize = null;
-        // invalidate our parent if we've got one
-        if (_parent != null) {
-            _parent.invalidate();
+        if (isSet(Flag.VALID)) {
+            set(Flag.VALID, false);
+            // note that our preferred size and background are no longer valid
+            _preferredSize = null;
+            // invalidate our parent if we've got one
+            if (_parent != null) {
+                _parent.invalidate();
+            }
+        }
+    }
+
+    /**
+     * Does whatever this element needs to validate itself. This may involve recomputing
+     * visualizations, or laying out children, or anything else.
+     */
+    protected void validate () {
+        if (!isSet(Flag.VALID)) {
+            layout();
+            set(Flag.VALID, true);
         }
     }
 
@@ -224,13 +289,12 @@ public abstract class Element
     }
 
     /**
-     * Configures the size of this widget, potentially triggering a regeneration of its
-     * visualization.
+     * Configures the size of this widget.
      */
     protected void resize (float width, float height) {
         if (_size.width == width && _size.height == height) return; // NOOP
         _size.setSize(width, height);
-        layout();
+        invalidate();
     }
 
     /**
@@ -265,7 +329,7 @@ public abstract class Element
     protected Styles _styles = Styles.none();
 
     protected static enum Flag {
-        ENABLED(1 << 0), VISIBLE(1 << 1), HOVERED(1 << 2);
+        VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), DOWN(1 << 3);
 
         public final int mask;
 

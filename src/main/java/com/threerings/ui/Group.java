@@ -10,7 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import forplay.core.Transform;
+
+import pythagoras.f.AffineTransform;
 import pythagoras.f.Dimension;
+import pythagoras.f.Point;
 
 /**
  * A grouping element that contains other elements and lays them out according to a layout policy.
@@ -125,6 +129,22 @@ public class Group extends Element
         // if we're added again, we'll be re-laid-out
     }
 
+    @Override protected Element hitTest (AffineTransform xform, Point point) {
+        // transform the point into our coordinate system
+        Transform lt = layer.transform();
+        xform.setTransform(lt.m00(), lt.m10(), lt.m01(), lt.m11(), lt.tx(), lt.ty());
+        point = xform.inverseTransform(point, point);
+        // check whether it falls within our bounds
+        float x = point.x + layer.originX(), y = point.y + layer.originY();
+        if (!contains(x, y)) return null;
+        // determine whether it falls within the bounds of any of our children
+        for (Element child : _children) {
+            Element hit = child.hitTest(xform, point.set(x, y));
+            if (hit != null) return hit;
+        }
+        return null;
+    }
+
     @Override protected Dimension computeSize (float hintX, float hintY) {
         LayoutData ldata = computeLayout(hintX, hintY);
         Dimension size = _layout.computeSize(
@@ -143,6 +163,11 @@ public class Group extends Element
         // layout our children
         _layout.layout(_children, _constraints, ldata.bg.left, ldata.bg.top,
                        _size.width - ldata.bg.width(), _size.height - ldata.bg.height());
+
+        // layout is only called as part of revalidation, so now we validate our children
+        for (Element child : _children) {
+            child.validate();
+        }
     }
 
     protected LayoutData computeLayout (float hintX, float hintY) {

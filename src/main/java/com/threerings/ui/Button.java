@@ -36,6 +36,10 @@ public class Button extends TextWidget
         return this;
     }
 
+    @Override public String toString () {
+        return "Button(" + _text + ")";
+    }
+
     @Override protected void wasRemoved () {
         super.wasRemoved();
         // destroy our text canvas
@@ -75,8 +79,39 @@ public class Button extends TextWidget
         _ldata = null; // we no longer need our layout data
     }
 
+    @Override protected void onPointerStart (float x, float y) {
+        super.onPointerStart(x, y);
+        set(Flag.DOWN, true);
+        invalidate();
+    }
+
+    @Override protected void onPointerDrag (float x, float y) {
+        super.onPointerDrag(x, y);
+        boolean down = contains(x, y);
+        if (down != isSet(Flag.DOWN)) {
+            set(Flag.DOWN, down);
+            invalidate();
+        }
+    }
+
+    @Override protected void onPointerEnd (float x, float y) {
+        super.onPointerEnd(x, y);
+        // we don't check whether the supplied coordinates are in our bounds or not because only
+        // the drag changes result in changes to the button's visualization, and we want to behave
+        // based on what the user sees
+        if (isSet(Flag.DOWN)) {
+            set(Flag.DOWN, false);
+            invalidate();
+            // TODO: dispatch click
+        }
+    }
+
     @Override protected State state () {
-        return super.state(); // TODO: return down state
+        State sstate = super.state();
+        switch (sstate) {
+        case DEFAULT: return isSet(Flag.DOWN) ? State.DOWN : State.DEFAULT;
+        default:      return sstate;
+        }
     }
 
     protected LayoutData computeLayout (float hintX, float hintY) {

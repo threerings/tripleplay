@@ -22,28 +22,49 @@ public class WidgetDemo implements Game
 
     @Override // from interface Game
     public void init () {
+        _iface = new Interface(null);
+
+        // define our root stylesheet
+        Styles buttonStyles = Styles.none().
+            add(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF, 5))).
+            addDown(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 6, 4, 4, 6)));
+        Stylesheet rootSheet = Stylesheet.builder().
+            add(Button.class, buttonStyles).
+            create();
 
         // create our demo interface
-        _root = new Root(AxisLayout.vertical(), Stylesheet.builder().create());
-        _root.setSize(ForPlay.graphics().width(), ForPlay.graphics().height());
-        ForPlay.graphics().rootLayer().add(_root.layer);
+        Root root = _iface.createRoot(AxisLayout.vertical(), rootSheet);
+        root.setSize(ForPlay.graphics().width(), ForPlay.graphics().height());
+        root.setStyles(Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFFCC99, 5))));
+        ForPlay.graphics().rootLayer().add(root.layer);
 
         Group cols = new Group(AxisLayout.horizontal().alignTop());
-        cols.setStyle(Style.BACKGROUND, Background.solid(0xFFFFCC99, 5));
-        cols.add(new Label(TEXT1), AxisLayout.stretched());
-        cols.add(new Label(TEXT2), AxisLayout.stretched());
-        cols.add(new Label(TEXT3), AxisLayout.stretched());
-        _root.add(cols);
+        cols.add(new Label().setText(TEXT1), AxisLayout.stretched());
+        cols.add(new Label().setText(TEXT2), AxisLayout.stretched());
+        cols.add(new Label().setText(TEXT3), AxisLayout.stretched());
+        root.add(cols);
+
+        Group tvLeft = new Group(AxisLayout.vertical());
+        tvLeft.add(new Label().setText("Toggle viz:"));
+        tvLeft.add(new Button().setText("Toggle"));
+        Group tvRight = new Group(AxisLayout.vertical());
+        tvRight.add(new Label().setText("Label 1"));
+        tvRight.add(new Label().setText("Label 2"));
+        tvRight.add(new Label().setText("Label 3"));
+
+        Group bits = new Group(AxisLayout.horizontal().alignTop()).add(tvLeft, tvRight);
+        bits.setStyles(Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5))));
+        root.add(bits);
     }
 
     @Override // from interface Game
     public void update (float delta) {
-        _root.update(delta);
+        _iface.update(delta);
     }
 
     @Override // from interface Game
     public void paint (float alpha) {
-        _root.paint(alpha);
+        _iface.paint(alpha);
     }
 
     @Override // from interface Game
@@ -51,7 +72,7 @@ public class WidgetDemo implements Game
         return 30;
     }
 
-    protected Root _root;
+    protected Interface _iface;
 
     protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
     protected static final String TEXT2 = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.";
