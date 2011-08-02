@@ -9,6 +9,8 @@ import forplay.core.ForPlay;
 import forplay.core.Game;
 import forplay.java.JavaPlatform;
 
+import react.Signals;
+
 /**
  * A test app for demoing the UI widgets.
  */
@@ -46,10 +48,13 @@ public class WidgetDemo implements Game
 
         Group tvLeft = new Group(AxisLayout.vertical());
         tvLeft.add(new Label().setText("Toggle viz:"));
-        tvLeft.add(new Button().setText("Toggle"));
+        Button toggle = new Button().setText("Toggle");
+        tvLeft.add(toggle);
         Group tvRight = new Group(AxisLayout.vertical());
         tvRight.add(new Label().setText("Label 1"));
-        tvRight.add(new Label().setText("Label 2"));
+        final Label label2 = new Label().setText("Label 2");
+        Signals.toggler(toggle.click, true).connect(label2.visibleSlot());
+        tvRight.add(label2);
         tvRight.add(new Label().setText("Label 3"));
 
         Group bits = new Group(AxisLayout.horizontal().alignTop()).add(tvLeft, tvRight);

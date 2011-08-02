@@ -13,6 +13,10 @@ import pythagoras.f.IRectangle;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 
+import react.Signal;
+import react.Slot;
+import react.Value;
+
 import forplay.core.Asserts;
 import forplay.core.ForPlay;
 import forplay.core.GroupLayer;
@@ -120,6 +124,18 @@ public abstract class Element
     }
 
     /**
+     * Returns a slot which can be used to wire the enabled status of this element to a {@link
+     * Signal} or {@link Value}.
+     */
+    public Slot<Boolean> enabledSlot () {
+        return new Slot<Boolean>() {
+            public void onEmit (Boolean value) {
+                setEnabled(value);
+            }
+        };
+    }
+
+    /**
      * Returns whether this element is visible.
      */
     public boolean isVisible () {
@@ -135,6 +151,18 @@ public abstract class Element
             set(Flag.VISIBLE, visible);
             invalidate();
         }
+    }
+
+    /**
+     * Returns a slot which can be used to wire the visible status of this element to a {@link
+     * Signal} or {@link Value}.
+     */
+    public Slot<Boolean> visibleSlot () {
+        return new Slot<Boolean>() {
+            public void onEmit (Boolean value) {
+                setVisible(value);
+            }
+        };
     }
 
     /**

@@ -125,7 +125,10 @@ public class Group extends Element
         }
 
         // clear out our background instance
-        if (_bginst != null) _bginst.destroy();
+        if (_bginst != null) {
+            _bginst.destroy();
+            _bginst = null;
+        }
         // if we're added again, we'll be re-laid-out
     }
 

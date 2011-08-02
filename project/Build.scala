@@ -11,6 +11,8 @@ object TriplePlayBuild extends Build {
     if (new java.io.File(name).exists) (None, Some(project)) else (Some(depend), None)
 
   val (localDeps, localProjs) = Seq(
+    findProject("react", "com.threerings" % "react" % "1.0-SNAPSHOT",
+                RootProject(file("react"))),
     findProject("pythagoras", "com.samskivert" % "pythagoras" % "1.1-SNAPSHOT",
                 RootProject(file("pythagoras"))),
     findProject("forplay", "com.googlecode.forplay" % "core" % "1.0-SNAPSHOT",

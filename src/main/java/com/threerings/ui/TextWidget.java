@@ -5,6 +5,11 @@
 
 package com.threerings.ui;
 
+import forplay.core.CanvasLayer;
+import forplay.core.ForPlay;
+import forplay.core.TextFormat;
+import forplay.core.TextLayout;
+
 /**
  * An abstract base class for widgets that contain text.
  */
@@ -13,10 +18,55 @@ public abstract class TextWidget extends Widget
     /**
      * Returns the text configured for this widget.
      */
-    public abstract String text ();
+    public String text () {
+        return _text;
+    }
 
     /**
      * Updates the text configured for this widget.
      */
-    public abstract TextWidget setText (String text);
+    public TextWidget setText (String text) {
+        if (!text.equals(_text)) {
+            _text = text;
+            clearTextLayer();
+            invalidate();
+        }
+        return this;
+    }
+
+    @Override protected void wasRemoved () {
+        super.wasRemoved();
+        clearTextLayer();
+    }
+
+    protected TextLayout layoutText (String text, float hintX, float hintY) {
+        if (text.length() == 0) return null;
+
+        TextFormat format = Style.createTextFormat(this, state());
+        // TODO: should we do something with a y-hint?
+        if (hintX > 0) {
+            format = format.withWrapWidth(hintX);
+        }
+        return ForPlay.graphics().layoutText(text, format);
+    }
+
+    protected void renderLayout (TextLayout layout, float x, float y, float width, float height) {
+        if (layout != null) {
+            _tlayer = prepareCanvas(_tlayer, width, height);
+            // _tlayer.canvas().setFillColor(0xFFCCCCCC);
+            // _tlayer.canvas().fillRect(0, 0, width, height);
+            _tlayer.canvas().drawText(layout, 0, 0);
+            _tlayer.setTranslation(x, y);
+        }
+    }
+
+    protected void clearTextLayer () {
+        if (_tlayer != null) {
+            _tlayer.destroy();
+            _tlayer = null;
+        }
+    }
+
+    protected String _text;
+    protected CanvasLayer _tlayer;
 }

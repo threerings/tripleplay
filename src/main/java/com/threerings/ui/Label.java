@@ -17,21 +17,8 @@ import pythagoras.f.Dimension;
  */
 public class Label extends TextWidget
 {
-    /**
-     * Returns the currently configured text.
-     */
-    @Override public String text () {
-        return _text;
-    }
-
-    /**
-     * Sets the text of this label to the supplied value.
-     */
     @Override public Label setText (String text) {
-        if (!text.equals(_text)) {
-            _text = text;
-            invalidate();
-        }
+        super.setText(text);
         return this;
     }
 
@@ -39,38 +26,28 @@ public class Label extends TextWidget
         return "Label(" + _text + ")";
     }
 
-    @Override protected void wasRemoved () {
-        super.wasRemoved();
-        // destroy our text canvas
-        if (_tlayer != null) _tlayer.destroy();
-        // if we're added again, we'll be re-laid-out
-    }
-
     @Override protected Dimension computeSize (float hintX, float hintY) {
-        TextFormat format = Style.createTextFormat(this, state());
-        if (hintX > 0) {
-            format = format.withWrapWidth(hintX);
+        Dimension size = new Dimension();
+        TextLayout layout = computeLayout(hintX, hintY);
+        if (layout != null) {
+            size.width += layout.width();
+            size.height += layout.height();
         }
-        // TODO: should we do something with a y-hint?
-        _layout = ForPlay.graphics().layoutText(_text, format);
-        return new Dimension(_layout.width(), _layout.height());
+        return size;
     }
 
     @Override protected void layout () {
-        // prepare our label
-        if (_text.length() > 0) {
-            _tlayer = prepareCanvas(_tlayer, _size.width, _size.height);
-            // _tlayer.canvas().setFillColor(0xFFCCCCCC);
-            // _tlayer.canvas().fillRect(0, 0, _size.width, _size.height);
-            _tlayer.canvas().drawText(_layout, 0, 0);
-        } else {
-            if (_tlayer != null) _tlayer.destroy();
-        }
-
+        float width = _size.width, height = _size.height;
+        TextLayout layout = computeLayout(width, height);
+        renderLayout(layout, 0, 0, width, height);
         _layout = null; // no need to keep this around
     }
 
-    protected String _text;
-    protected CanvasLayer _tlayer;
+    protected TextLayout computeLayout (float hintX, float hintY) {
+        if (_layout != null) return _layout;
+        _layout = layoutText(_text, hintX, hintY);
+        return _layout;
+    }
+
     protected TextLayout _layout;
 }

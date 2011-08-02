@@ -13,11 +13,16 @@ import forplay.core.TextLayout;
 
 import pythagoras.f.Dimension;
 
+import react.Signal;
+
 /**
  * A button that displays text, or an icon, or both.
  */
 public class Button extends TextWidget
 {
+    /** A signal that is emitted when this button is clicked. */
+    public final Signal<Button> click = Signal.create();
+
     /**
      * Returns the currently configured text, or null if the button does not use text.
      */
@@ -29,10 +34,7 @@ public class Button extends TextWidget
      * Sets the text of this button to the supplied value.
      */
     @Override public Button setText (String text) {
-        if (!text.equals(_text)) {
-            _text = text;
-            invalidate();
-        }
+        super.setText(text);
         return this;
     }
 
@@ -42,39 +44,39 @@ public class Button extends TextWidget
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        // destroy our text canvas
-        if (_tlayer != null) _tlayer.destroy();
         // clear out our background instance
-        if (_bginst != null) _bginst.destroy();
+        if (_bginst != null) {
+            _bginst.destroy();
+            _bginst = null;
+        }
         // if we're added again, we'll be re-laid-out
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
+        Dimension size = new Dimension();
         LayoutData ldata = computeLayout(hintX, hintY);
+        if (ldata.text != null) {
+            size.width += ldata.text.width();
+            size.height += ldata.text.height();
+        }
         // TODO: if we have an icon, add that into the mix
-        return ldata.bg.addInsets(new Dimension(ldata.text.width(), ldata.text.height()));
+        return ldata.bg.addInsets(size);
     }
 
     @Override protected void layout () {
-        LayoutData ldata = computeLayout(_size.width, _size.height);
+        float width = _size.width, height = _size.height;
+        LayoutData ldata = computeLayout(width, height);
 
         // prepare our background
+        Background bg = _ldata.bg;
         if (_bginst != null) _bginst.destroy();
-        _bginst = ldata.bg.instantiate(_size);
+        _bginst = bg.instantiate(_size);
         _bginst.addTo(layer);
+        width -= bg.width();
+        height -= bg.height();
 
         // prepare our label
-        if (_text.length() > 0) {
-            float twidth = _size.width - ldata.bg.width();
-            float theight = _size.height - ldata.bg.height();
-            _tlayer = prepareCanvas(_tlayer, twidth, theight);
-            // _tlayer.canvas().setFillColor(0xFFCCCCCC);
-            // _tlayer.canvas().fillRect(0, 0, _size.width, _size.height);
-            _tlayer.canvas().drawText(ldata.text, 0, 0);
-            _tlayer.setTranslation(ldata.bg.left, ldata.bg.top);
-        } else {
-            if (_tlayer != null) _tlayer.destroy();
-        }
+        renderLayout(_ldata.text, bg.left, bg.top, width, height);
 
         _ldata = null; // we no longer need our layout data
     }
@@ -102,7 +104,7 @@ public class Button extends TextWidget
         if (isSet(Flag.DOWN)) {
             set(Flag.DOWN, false);
             invalidate();
-            // TODO: dispatch click
+            click.emit(this); // emit a click event
         }
     }
 
@@ -119,16 +121,13 @@ public class Button extends TextWidget
         _ldata = new LayoutData();
 
         // determine our background
-        _ldata.bg = resolveStyle(state(), Style.BACKGROUND);
-        hintX -= _ldata.bg.width();
-        hintY -= _ldata.bg.height();
+        Background bg = resolveStyle(state(), Style.BACKGROUND);
+        hintX -= bg.width();
+        hintY -= bg.height();
+        _ldata.bg = bg;
 
-        TextFormat format = Style.createTextFormat(this, state());
-        // TODO: should we do something with a y-hint?
-        if (hintX > 0) {
-            format = format.withWrapWidth(hintX);
-        }
-        _ldata.text = ForPlay.graphics().layoutText(_text, format);
+        // layout our text
+        _ldata.text = layoutText(_text, hintX, hintY);
 
         return _ldata;
     }
@@ -138,8 +137,6 @@ public class Button extends TextWidget
         public Background bg;
     }
 
-    protected String _text;
-    protected CanvasLayer _tlayer;
     protected Background.Instance _bginst;
     protected LayoutData _ldata;
 }
