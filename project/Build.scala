@@ -23,14 +23,25 @@ object TriplePlayBuild extends Build {
     "tripleplay", file("."), settings = Defaults.defaultSettings ++ Seq(
       organization := "com.threerings",
       version      := "1.0-SNAPSHOT",
-      name         := "triplelpay",
+      name         := "tripleplay",
       crossPaths   := false,
+      scalaVersion := "2.9.0-1",
 
       javacOptions ++= Seq("-Xlint", "-Xlint:-serial"),
       fork in Compile := true,
 
+      // TODO: reenable doc publishing when scaladoc doesn't choke on our code
+      publishArtifact in (Compile, packageDoc) := false,
+
       resolvers += "Local Maven Repository" at Path.userHome.asURL + "/.m2/repository",
 
+      // this hackery causes publish-local to install to ~/.m2/repository instead of ~/.ivy
+      otherResolvers := Seq(Resolver.file("dotM2", file(Path.userHome + "/.m2/repository"))),
+      publishLocalConfiguration <<= (packagedArtifacts, deliverLocal, ivyLoggingLevel) map {
+        (arts, _, level) => new PublishConfiguration(None, "dotM2", arts, level)
+      },
+
+      autoScalaLibrary := false, // no scala-library dependency
       libraryDependencies ++= localDeps.flatten ++ Seq(
         // test dependencies
         "junit" % "junit" % "4.+" % "test",
