@@ -13,9 +13,7 @@ import pythagoras.f.IRectangle;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 
-import react.Signal;
 import react.Slot;
-import react.Value;
 
 import forplay.core.Asserts;
 import forplay.core.ForPlay;
@@ -125,7 +123,7 @@ public abstract class Element
 
     /**
      * Returns a slot which can be used to wire the enabled status of this element to a {@link
-     * Signal} or {@link Value}.
+     * react.Signal} or {@link react.Value}.
      */
     public Slot<Boolean> enabledSlot () {
         return new Slot<Boolean>() {
@@ -155,7 +153,7 @@ public abstract class Element
 
     /**
      * Returns a slot which can be used to wire the visible status of this element to a {@link
-     * Signal} or {@link Value}.
+     * react.Signal} or {@link react.Value}.
      */
     public Slot<Boolean> visibleSlot () {
         return new Slot<Boolean>() {
