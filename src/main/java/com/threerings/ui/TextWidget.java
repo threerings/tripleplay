@@ -10,6 +10,8 @@ import forplay.core.ForPlay;
 import forplay.core.TextFormat;
 import forplay.core.TextLayout;
 
+import react.Slot;
+
 /**
  * An abstract base class for widgets that contain text.
  */
@@ -32,6 +34,18 @@ public abstract class TextWidget extends Widget
             invalidate();
         }
         return this;
+    }
+
+    /**
+     * Returns a slot which can be used to wire the text of this widget to a {@link react.Signal}
+     * or {@link react.Value}.
+     */
+    public Slot<String> textSlot () {
+        return new Slot<String>() {
+            public void onEmit (String text) {
+                setText(text);
+            }
+        };
     }
 
     @Override protected void wasRemoved () {
