@@ -66,7 +66,8 @@ public class Interface
     protected final List<Root> _roots = new ArrayList<Root>();
     protected final List<Root> _dispatch = new ArrayList<Root>();
     protected final Pointer.Listener _delegate, _plistener = new Pointer.Listener() {
-        @Override public void onPointerStart (float x, float y) {
+        @Override public void onPointerStart (Pointer.Event event) {
+            float x = event.x(), y = event.y();
             try {
                 // copy our roots to a separate list to avoid conflicts if a root is added or
                 // removed while dispatching an event
@@ -77,24 +78,24 @@ public class Interface
                         return;
                     }
                 }
-                _delegate.onPointerStart(x, y);
+                _delegate.onPointerStart(event);
             } finally {
                 _dispatch.clear();
             }
         }
-        @Override public void onPointerDrag (float x, float y) {
+        @Override public void onPointerDrag (Pointer.Event event) {
             if (_active != null) {
-                _active.dispatchPointerDrag(x, y);
+                _active.dispatchPointerDrag(event.x(), event.y());
             } else {
-                _delegate.onPointerDrag(x, y);
+                _delegate.onPointerDrag(event);
             }
         }
-        @Override public void onPointerEnd (float x, float y) {
+        @Override public void onPointerEnd (Pointer.Event event) {
             if (_active != null) {
-                _active.dispatchPointerEnd(x, y);
+                _active.dispatchPointerEnd(event.x(), event.y());
                 _active = null;
             } else {
-                _delegate.onPointerEnd(x, y);
+                _delegate.onPointerEnd(event);
             }
         }
         protected Root _active;
