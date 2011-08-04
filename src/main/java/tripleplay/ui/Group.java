@@ -31,9 +31,9 @@ public class Group extends Element
     /**
      * Creates a group with the specified layout and custom styles.
      */
-    public Group (Layout layout, Style.Binding<?>... bindings) {
+    public Group (Layout layout, Styles styles) {
         _layout = layout;
-        setStyles(Styles.make(bindings));
+        setStyles(styles);
     }
 
     /**

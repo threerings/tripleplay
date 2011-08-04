@@ -44,7 +44,7 @@ public class WidgetDemo implements Game
         Group bits;
         Button toggle;
         Label label2;
-        Style.Binding<?> greenBg = Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5));
+        Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
         root.add(new Group(AxisLayout.horizontal().alignTop()).add(
                      new Label().setText(TEXT1), AxisLayout.stretched()).add(
                      new Label().setText(TEXT2), AxisLayout.stretched()).add(

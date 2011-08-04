@@ -26,8 +26,8 @@ public class Label extends TextWidget
     /**
      * Creates a label with the specified custom styles.
      */
-    public Label (Style.Binding<?>... bindings) {
-        setStyles(Styles.make(bindings));
+    public Label (Styles styles) {
+        setStyles(styles);
     }
 
     @Override public Label setText (String text) {

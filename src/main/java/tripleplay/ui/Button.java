@@ -32,8 +32,8 @@ public class Button extends TextWidget
     /**
      * Creates a button with the specified custom styles.
      */
-    public Button (Style.Binding<?>... bindings) {
-        setStyles(Styles.make(bindings));
+    public Button (Styles styles) {
+        setStyles(styles);
     }
 
     /**
