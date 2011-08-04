@@ -37,6 +37,16 @@ public class Group extends Element
     }
 
     /**
+     * Captures a reference to this element in the supplied reference. See {@link Ref} for why you
+     * might want to do this.
+     * @return this instance for convenient call chaining.
+     */
+    public Group ref (Ref<? super Group> ref) {
+        ref.elem = this;
+        return this;
+    }
+
+    /**
      * Returns the stylesheet configured for this group, or null.
      */
     public Stylesheet stylesheet () {

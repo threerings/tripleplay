@@ -37,6 +37,16 @@ public class Label extends TextWidget
         setStyles(Styles.make(bindings));
     }
 
+    /**
+     * Captures a reference to this element in the supplied reference. See {@link Ref} for why you
+     * might want to do this.
+     * @return this instance for convenient call chaining.
+     */
+    public Label ref (Ref<? super Label> ref) {
+        ref.elem = this;
+        return this;
+    }
+
     @Override public Label setText (String text) {
         super.setText(text);
         return this;
