@@ -53,24 +53,28 @@ public abstract class TextWidget extends Widget
         clearTextLayer();
     }
 
-    protected TextLayout layoutText (String text, float hintX, float hintY) {
-        if (text.length() == 0) return null;
+    protected void layoutText (LayoutData ldata, String text, float hintX, float hintY) {
+        if (text.length() == 0) return;
 
         TextFormat format = Style.createTextFormat(this, state());
         // TODO: should we do something with a y-hint?
         if (hintX > 0) {
             format = format.withWrapWidth(hintX);
         }
-        return ForPlay.graphics().layoutText(text, format);
+        ldata.text = ForPlay.graphics().layoutText(text, format);
+        ldata.halign = resolveStyle(state(), Style.HALIGN);
+        ldata.valign = resolveStyle(state(), Style.VALIGN);
     }
 
-    protected void renderLayout (TextLayout layout, float x, float y, float width, float height) {
-        if (layout != null) {
-            _tlayer = prepareCanvas(_tlayer, width, height);
+    protected void renderLayout (LayoutData ldata, float x, float y, float width, float height) {
+        if (ldata.text != null) {
+            float twidth = ldata.text.width(), theight = ldata.text.height();
+            _tlayer = prepareCanvas(_tlayer, twidth, theight);
             // _tlayer.canvas().setFillColor(0xFFCCCCCC);
             // _tlayer.canvas().fillRect(0, 0, width, height);
-            _tlayer.canvas().drawText(layout, 0, 0);
-            _tlayer.setTranslation(x, y);
+            _tlayer.canvas().drawText(ldata.text, 0, 0);
+            _tlayer.setTranslation(x + ldata.halign.getOffset(twidth, width),
+                                   y + ldata.valign.getOffset(theight, height));
         }
     }
 
@@ -79,6 +83,12 @@ public abstract class TextWidget extends Widget
             _tlayer.destroy();
             _tlayer = null;
         }
+    }
+
+    protected static class LayoutData {
+        public TextLayout text;
+        public Style.HAlign halign;
+        public Style.VAlign valign;
     }
 
     protected String _text;

@@ -76,7 +76,7 @@ public class Button extends TextWidget
         height -= bg.height();
 
         // prepare our label
-        renderLayout(_ldata.text, bg.left, bg.top, width, height);
+        renderLayout(_ldata, bg.left, bg.top, width, height);
 
         _ldata = null; // we no longer need our layout data
     }
@@ -127,13 +127,12 @@ public class Button extends TextWidget
         _ldata.bg = bg;
 
         // layout our text
-        _ldata.text = layoutText(_text, hintX, hintY);
+        layoutText(_ldata, _text, hintX, hintY);
 
         return _ldata;
     }
 
-    protected static class LayoutData {
-        public TextLayout text;
+    protected static class LayoutData extends TextWidget.LayoutData {
         public Background bg;
     }
 

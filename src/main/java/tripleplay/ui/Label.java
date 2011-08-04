@@ -28,26 +28,27 @@ public class Label extends TextWidget
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
         Dimension size = new Dimension();
-        TextLayout layout = computeLayout(hintX, hintY);
-        if (layout != null) {
-            size.width += layout.width();
-            size.height += layout.height();
+        LayoutData ldata = computeLayout(hintX, hintY);
+        if (ldata.text != null) {
+            size.width += ldata.text.width();
+            size.height += ldata.text.height();
         }
         return size;
     }
 
     @Override protected void layout () {
         float width = _size.width, height = _size.height;
-        TextLayout layout = computeLayout(width, height);
-        renderLayout(layout, 0, 0, width, height);
-        _layout = null; // no need to keep this around
+        LayoutData ldata = computeLayout(width, height);
+        renderLayout(ldata, 0, 0, width, height);
+        _ldata = null; // no need to keep this around
     }
 
-    protected TextLayout computeLayout (float hintX, float hintY) {
-        if (_layout != null) return _layout;
-        _layout = layoutText(_text, hintX, hintY);
-        return _layout;
+    protected LayoutData computeLayout (float hintX, float hintY) {
+        if (_ldata != null) return _ldata;
+        _ldata = new LayoutData();
+        layoutText(_ldata, _text, hintX, hintY);
+        return _ldata;
     }
 
-    protected TextLayout _layout;
+    protected LayoutData _ldata;
 }
