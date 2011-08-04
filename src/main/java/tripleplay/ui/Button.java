@@ -24,6 +24,26 @@ public class Button extends TextWidget
     public final Signal<Button> click = Signal.create();
 
     /**
+     * Creates a button with no custom styles.
+     */
+    public Button () {
+    }
+
+    /**
+     * Creates a button with the specified custom styles.
+     */
+    public Button (Styles styles) {
+        setStyles(styles);
+    }
+
+    /**
+     * Creates a button with the specified custom styles.
+     */
+    public Button (Style.Binding<?>... bindings) {
+        setStyles(Styles.make(bindings));
+    }
+
+    /**
      * Returns the currently configured text, or null if the button does not use text.
      */
     @Override public String text () {

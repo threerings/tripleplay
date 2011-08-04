@@ -17,6 +17,26 @@ import pythagoras.f.Dimension;
  */
 public class Label extends TextWidget
 {
+    /**
+     * Creates a label with no custom styles.
+     */
+    public Label () {
+    }
+
+    /**
+     * Creates a label with the specified custom styles.
+     */
+    public Label (Styles styles) {
+        setStyles(styles);
+    }
+
+    /**
+     * Creates a label with the specified custom styles.
+     */
+    public Label (Style.Binding<?>... bindings) {
+        setStyles(Styles.make(bindings));
+    }
+
     @Override public Label setText (String text) {
         super.setText(text);
         return this;
