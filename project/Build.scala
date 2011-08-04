@@ -3,7 +3,7 @@ import Keys._
 
 // allows projects to be symlinked into the current directory for a direct dependency,
 // or fall back to obtaining the project from Maven otherwise
-class Local (locals :(String, String, ModuleID)*) {
+class Locals (locals :(String, String, ModuleID)*) {
   def addDeps (p :Project) = (locals collect {
     case (id, subp, dep) if (file(id).exists) => symproj(file(id), subp)
   }).foldLeft(p) { _ dependsOn _ }
@@ -15,7 +15,7 @@ class Local (locals :(String, String, ModuleID)*) {
 }
 
 object TriplePlayBuild extends Build {
-  val locals = new Local(
+  val locals = new Locals(
     ("pythagoras", null,  "com.samskivert" % "pythagoras" % "1.1-SNAPSHOT"),
     ("react",      null,  "com.threerings" % "react" % "1.0-SNAPSHOT"),
     ("forplay",   "core", "com.googlecode.forplay" % "core" % "1.0-SNAPSHOT")
