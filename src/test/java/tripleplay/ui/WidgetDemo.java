@@ -25,6 +25,7 @@ public class WidgetDemo implements Game
     @Override // from interface Game
     public void init () {
         _iface = new Interface(null);
+        _iface.activate();
 
         // define our root stylesheet
         Styles buttonStyles = Styles.none().
