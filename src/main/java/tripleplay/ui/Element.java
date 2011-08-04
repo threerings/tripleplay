@@ -104,6 +104,14 @@ public abstract class Element
     }
 
     /**
+     * Adds the supplied styles to this element. Where the new styles overlap with existing styles,
+     * the new styles are preferred, but non-overlapping old styles are preserved.
+     */
+    public void addStyles (Style.Binding<?>... bindings) {
+        addStyles(Styles.make(bindings));
+    }
+
+    /**
      * Returns whether this element is enabled.
      */
     public boolean isEnabled () {
