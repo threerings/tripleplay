@@ -37,16 +37,6 @@ public class Button extends TextWidget
     }
 
     /**
-     * Captures a reference to this element in the supplied reference. See {@link Ref} for why you
-     * might want to do this.
-     * @return this instance for convenient call chaining.
-     */
-    public Button ref (Ref<? super Button> ref) {
-        ref.elem = this;
-        return this;
-    }
-
-    /**
      * Returns the currently configured text, or null if the button does not use text.
      */
     @Override public String text () {
