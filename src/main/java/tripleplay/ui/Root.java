@@ -26,6 +26,22 @@ public class Root extends Group
     }
 
     /**
+     * Sizes this root element to the specified width and its preferred height.
+     */
+    public void packToWidth (float width) {
+        IDimension psize = getPreferredSize(width, 0);
+        setSize(width, psize.getHeight());
+    }
+
+    /**
+     * Sizes this root element to the specified height and its preferred width.
+     */
+    public void packToHeight (float height) {
+        IDimension psize = getPreferredSize(0, height);
+        setSize(psize.getWidth(), height);
+    }
+
+    /**
      * Sets the size of this root element.
      */
     public void setSize (float width, float height) {
