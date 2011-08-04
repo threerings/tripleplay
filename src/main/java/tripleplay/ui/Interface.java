@@ -28,6 +28,12 @@ public class Interface
     public Interface (Pointer.Listener delegate) {
         // if we have no delegate, use a NOOP delegate to simplify our logic
         _delegate = (delegate == null) ? new Pointer.Adapter() : delegate;
+    }
+
+    /**
+     * Activates this interface, which causes it to take control of user input.
+     */
+    public void activate () {
         ForPlay.pointer().setListener(_plistener);
     }
 
