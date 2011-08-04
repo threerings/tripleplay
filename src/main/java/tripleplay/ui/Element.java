@@ -151,6 +151,7 @@ public abstract class Element
     public void setVisible (boolean visible) {
         if (visible != isVisible()) {
             set(Flag.VISIBLE, visible);
+            layer.setVisible(visible);
             invalidate();
         }
     }
