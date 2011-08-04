@@ -38,29 +38,26 @@ public class WidgetDemo implements Game
         // create our demo interface
         Root root = _iface.createRoot(AxisLayout.vertical(), rootSheet);
         root.setSize(ForPlay.graphics().width(), ForPlay.graphics().height());
-        root.setStyles(Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFFCC99, 5))));
+        root.addStyles(Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CCFF, 5))));
         ForPlay.graphics().rootLayer().add(root.layer);
 
-        Group cols = new Group(AxisLayout.horizontal().alignTop());
-        cols.add(new Label().setText(TEXT1), AxisLayout.stretched());
-        cols.add(new Label().setText(TEXT2), AxisLayout.stretched());
-        cols.add(new Label().setText(TEXT3), AxisLayout.stretched());
-        root.add(cols);
-
-        Group tvLeft = new Group(AxisLayout.vertical());
-        tvLeft.add(new Label().setText("Toggle viz:"));
-        Button toggle = new Button().setText("Toggle");
-        tvLeft.add(toggle);
-        Group tvRight = new Group(AxisLayout.vertical());
-        tvRight.add(new Label().setText("Label 1"));
-        final Label label2 = new Label().setText("Label 2");
+        Group bits;
+        Button toggle;
+        Label label2;
+        Style.Binding<?> greenBg = Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5));
+        root.add(new Group(AxisLayout.horizontal().alignTop()).add(
+                     new Label().setText(TEXT1), AxisLayout.stretched()).add(
+                     new Label().setText(TEXT2), AxisLayout.stretched()).add(
+                     new Label().setText(TEXT3), AxisLayout.stretched()),
+                 new Group(AxisLayout.horizontal().alignTop(), greenBg).add(
+                     new Group(AxisLayout.vertical()).add(
+                         new Label().setText("Toggle viz:"),
+                         toggle = new Button().setText("Toggle")),
+                     new Group(AxisLayout.vertical()).add(
+                         new Label().setText("Label 1"),
+                         label2 = new Label().setText("Label 2")/*,
+                         new Label().setText("Label 3") */)));
         Signals.toggler(toggle.click, true).connect(label2.visibleSlot());
-        tvRight.add(label2);
-        tvRight.add(new Label().setText("Label 3"));
-
-        Group bits = new Group(AxisLayout.horizontal().alignTop()).add(tvLeft, tvRight);
-        bits.setStyles(Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5))));
-        root.add(bits);
     }
 
     @Override // from interface Game

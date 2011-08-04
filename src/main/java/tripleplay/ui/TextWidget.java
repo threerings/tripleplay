@@ -54,7 +54,7 @@ public abstract class TextWidget extends Widget
     }
 
     protected void layoutText (LayoutData ldata, String text, float hintX, float hintY) {
-        if (text.length() == 0) return;
+        if (text.length() == 0 || !isVisible()) return;
 
         TextFormat format = Style.createTextFormat(this, state());
         // TODO: should we do something with a y-hint?

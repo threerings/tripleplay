@@ -50,7 +50,8 @@ public class Root extends Group
     }
 
     protected Root (Interface iface, Layout layout, Stylesheet sheet) {
-        super(layout, sheet);
+        super(layout);
+        setStylesheet(sheet);
         _iface = iface;
     }
 

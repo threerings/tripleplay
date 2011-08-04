@@ -22,18 +22,18 @@ import pythagoras.f.Point;
 public class Group extends Element
 {
     /**
-     * Creates a group with the specified layout and no stylesheet.
+     * Creates a group with the specified layout and no custom styles.
      */
     public Group (Layout layout) {
-        this(layout, null);
+        _layout = layout;
     }
 
     /**
-     * Creates a group with the specified layout and stylesheet.
+     * Creates a group with the specified layout and custom styles.
      */
-    public Group (Layout layout, Stylesheet sheet) {
+    public Group (Layout layout, Style.Binding<?>... bindings) {
         _layout = layout;
-        _sheet = sheet;
+        setStyles(Styles.make(bindings));
     }
 
     /**
@@ -51,6 +51,14 @@ public class Group extends Element
      */
     public Stylesheet stylesheet () {
         return _sheet;
+    }
+
+    /**
+     * Configures the stylesheet to be used by this group.
+     */
+    public Group setStylesheet (Stylesheet sheet) {
+        _sheet = sheet;
+        return this;
     }
 
     public int childCount () {
@@ -197,8 +205,8 @@ public class Group extends Element
     }
 
     protected final Layout _layout;
-    protected final Stylesheet _sheet;
     protected final List<Element> _children = new ArrayList<Element>();
+    protected Stylesheet _sheet;
     protected Map<Element, Layout.Constraint> _constraints; // lazily created
 
     protected LayoutData _ldata;

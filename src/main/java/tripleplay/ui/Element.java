@@ -90,25 +90,21 @@ public abstract class Element
 
     /**
      * Configures the styles for this element. Any previously configured styles are overwritten.
+     * @return this element for convenient call chaining.
      */
-    public void setStyles (Styles styles) {
+    public Element setStyles (Styles styles) {
         _styles = styles;
+        return this;
     }
 
     /**
      * Adds the supplied styles to this element. Where the new styles overlap with existing styles,
      * the new styles are preferred, but non-overlapping old styles are preserved.
+     * @return this element for convenient call chaining.
      */
-    public void addStyles (Styles styles) {
+    public Element addStyles (Styles styles) {
         _styles = _styles.merge(styles);
-    }
-
-    /**
-     * Adds the supplied styles to this element. Where the new styles overlap with existing styles,
-     * the new styles are preferred, but non-overlapping old styles are preserved.
-     */
-    public void addStyles (Style.Binding<?>... bindings) {
-        addStyles(Styles.make(bindings));
+        return this;
     }
 
     /**
