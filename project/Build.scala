@@ -1,25 +1,27 @@
 import sbt._
 import Keys._
 
+// allows projects to be symlinked into the current directory for a direct dependency,
+// or fall back to obtaining the project from Maven otherwise
+class Local (locals :(String, String, ModuleID)*) {
+  def addDeps (p :Project) = (locals collect {
+    case (id, subp, dep) if (file(id).exists) => symproj(file(id), subp)
+  }).foldLeft(p) { _ dependsOn _ }
+  def libDeps = locals collect {
+    case (id, subp, dep) if (!file(id).exists) => dep
+  }
+  private def symproj (dir :File, subproj :String = null) =
+    if (subproj == null) RootProject(dir) else ProjectRef(dir, subproj)
+}
+
 object TriplePlayBuild extends Build {
-  // we do some jockeying here to allow the intrepid developer to symlink a checkout of pythagoras
-  // and forplay into the current directory, in which case SBT is instructed to use those directly
-  // as dependent projects (allowing automatic rebuild of files therein when, for example, running
-  // test targets here in tripleplay); if one or the other symlink does not exist, it will obtain
-  // those dependencies via Maven
-  def findProject (name :String, depend :ModuleID, project : => ProjectReference) =
-    if (new java.io.File(name).exists) (None, Some(project)) else (Some(depend), None)
+  val locals = new Local(
+    ("pythagoras", null,  "com.samskivert" % "pythagoras" % "1.1-SNAPSHOT"),
+    ("react",      null,  "com.threerings" % "react" % "1.0-SNAPSHOT"),
+    ("forplay",   "core", "com.googlecode.forplay" % "core" % "1.0-SNAPSHOT")
+  )
 
-  val (localDeps, localProjs) = Seq(
-    findProject("react", "com.threerings" % "react" % "1.0-SNAPSHOT",
-                RootProject(file("react"))),
-    findProject("pythagoras", "com.samskivert" % "pythagoras" % "1.1-SNAPSHOT",
-                RootProject(file("pythagoras"))),
-    findProject("forplay", "com.googlecode.forplay" % "core" % "1.0-SNAPSHOT",
-                ProjectRef(file("forplay"), "core"))
-  ) unzip
-
-  lazy val tripleplay = (Project(
+  lazy val tripleplay = locals.addDeps(Project(
     "tripleplay", file("."), settings = Defaults.defaultSettings ++ Seq(
       organization := "com.threerings",
       version      := "1.0-SNAPSHOT",
@@ -42,11 +44,11 @@ object TriplePlayBuild extends Build {
       },
 
       autoScalaLibrary := false, // no scala-library dependency
-      libraryDependencies ++= localDeps.flatten ++ Seq(
+      libraryDependencies ++= locals.libDeps ++ Seq(
         // test dependencies
         "junit" % "junit" % "4.+" % "test",
  	      "com.novocode" % "junit-interface" % "0.7" % "test->default"
       )
     )
-  ) /: localProjs.flatten) { _ dependsOn _ }
+  ))
 }
