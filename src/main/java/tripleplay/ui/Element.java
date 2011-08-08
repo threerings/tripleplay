@@ -322,7 +322,7 @@ public abstract class Element
     /**
      * Configures the size of this widget.
      */
-    protected void resize (float width, float height) {
+    protected void setSize (float width, float height) {
         if (_size.width == width && _size.height == height) return; // NOOP
         _size.setSize(width, height);
         invalidate();

@@ -131,7 +131,7 @@ public abstract class AxisLayout extends Layout
                 Constraint c = getConstraint(constraints, elem);
                 float ewidth = _offPolicy.computeSize(psize.getWidth(), m.maxWidth, width);
                 float eheight = c.computeSize(psize.getHeight(), m.totalWeight, stretchHeight);
-                elem.resize(ewidth, eheight);
+                elem.setSize(ewidth, eheight);
                 elem.setLocation(left + _alignOff.computeOffset(ewidth, width), y);
                 y += (eheight + _gap);
             }
@@ -185,7 +185,7 @@ public abstract class AxisLayout extends Layout
                 Constraint c = getConstraint(constraints, elem);
                 float ewidth = c.computeSize(psize.getWidth(), m.totalWeight, stretchWidth);
                 float eheight = _offPolicy.computeSize(psize.getHeight(), m.maxHeight, height);
-                elem.resize(ewidth, eheight);
+                elem.setSize(ewidth, eheight);
                 elem.setLocation(x, top + _alignOff.computeOffset(eheight, height));
                 x += (ewidth + _gap);
             }
