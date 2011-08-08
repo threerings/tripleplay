@@ -1,13 +1,13 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.ui;
 
-import forplay.core.Font;
-import forplay.core.ForPlay;
-import forplay.core.TextFormat;
+import playn.core.Font;
+import playn.core.PlayN;
+import playn.core.TextFormat;
 
 import tripleplay.ui.bgs.NullBackground;
 
@@ -112,7 +112,7 @@ public abstract class Style<V>
 
     /** The font used to render text. Inherited. */
     public static final Style<Font> FONT = newStyle(
-        true, ForPlay.graphics().createFont("Helvetica", Font.Style.PLAIN, 16));
+        true, PlayN.graphics().createFont("Helvetica", Font.Style.PLAIN, 16));
 
     /** The effect to use when rendering text, if any. Inherited. */
     public static final Style<TextEffect> TEXT_EFFECT = newStyle(true, TextEffect.NONE);

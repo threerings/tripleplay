@@ -1,16 +1,16 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.ui;
 
-import forplay.core.CanvasLayer;
-import forplay.core.ForPlay;
-import forplay.core.GroupLayer;
-import forplay.core.Image;
-import forplay.core.ImageLayer;
-import forplay.core.Layer;
+import playn.core.CanvasLayer;
+import playn.core.PlayN;
+import playn.core.GroupLayer;
+import playn.core.Image;
+import playn.core.ImageLayer;
+import playn.core.Layer;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
@@ -83,16 +83,16 @@ public abstract class Background
     }
 
     protected static Layer createSolidLayer (int color, float width, float height) {
-        // TODO: rewrite this as an active-rendered layer when ForPlay supports such things
+        // TODO: rewrite this as an active-rendered layer when PlayN supports such things
         int cwidth = (int)Math.ceil(width), cheight = (int)Math.ceil(height);
-        final CanvasLayer canvas = ForPlay.graphics().createCanvasLayer(cwidth, cheight);
+        final CanvasLayer canvas = PlayN.graphics().createCanvasLayer(cwidth, cheight);
         canvas.canvas().setFillColor(color);
         canvas.canvas().fillRect(0, 0, width, height);
         return canvas;
     }
 
     protected static Layer createTiledLayer (Image image, float width, float height) {
-        ImageLayer layer = ForPlay.graphics().createImageLayer(image);
+        ImageLayer layer = PlayN.graphics().createImageLayer(image);
         layer.setRepeatX(true);
         layer.setRepeatY(true);
         return layer;

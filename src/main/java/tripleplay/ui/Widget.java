@@ -1,14 +1,14 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.ui;
 
-import forplay.core.Canvas;
-import forplay.core.CanvasLayer;
-import forplay.core.ForPlay;
-import forplay.core.Layer;
+import playn.core.Canvas;
+import playn.core.CanvasLayer;
+import playn.core.PlayN;
+import playn.core.Layer;
 
 /**
  * The base class for all user interface widgets. Provides helper methods for managing a canvas
@@ -27,7 +27,7 @@ public abstract class Widget extends Element
         int cwidth = (int)Math.ceil(width), cheight = (int)Math.ceil(height);
         if (cl == null || cl.canvas().width() < cwidth || cl.canvas().height() < cheight) {
             if (cl != null) cl.destroy();
-            layer.add(cl = ForPlay.graphics().createCanvasLayer(cwidth, cheight));
+            layer.add(cl = PlayN.graphics().createCanvasLayer(cwidth, cheight));
         } else {
             cl.canvas().clear();
         }

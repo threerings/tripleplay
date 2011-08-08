@@ -1,5 +1,5 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
@@ -15,10 +15,10 @@ import pythagoras.f.Rectangle;
 
 import react.Slot;
 
-import forplay.core.Asserts;
-import forplay.core.ForPlay;
-import forplay.core.GroupLayer;
-import forplay.core.Transform;
+import playn.core.Asserts;
+import playn.core.PlayN;
+import playn.core.GroupLayer;
+import playn.core.Transform;
 
 /**
  * The root of the interface element hierarchy. See {@link Widget} for the root of all interactive
@@ -32,7 +32,7 @@ public abstract class Element
     }
 
     /** The layer associated with this element. */
-    public final GroupLayer layer = ForPlay.graphics().createGroupLayer();
+    public final GroupLayer layer = PlayN.graphics().createGroupLayer();
 
     /**
      * Returns this element's x offset relative to its parent.

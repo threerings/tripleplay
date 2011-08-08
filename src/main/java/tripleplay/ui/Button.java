@@ -1,15 +1,15 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.ui;
 
-import forplay.core.Canvas;
-import forplay.core.CanvasLayer;
-import forplay.core.ForPlay;
-import forplay.core.TextFormat;
-import forplay.core.TextLayout;
+import playn.core.Canvas;
+import playn.core.CanvasLayer;
+import playn.core.PlayN;
+import playn.core.TextFormat;
+import playn.core.TextLayout;
 
 import pythagoras.f.Dimension;
 

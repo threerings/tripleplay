@@ -1,13 +1,13 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.ui;
 
-import forplay.core.ForPlay;
-import forplay.core.Game;
-import forplay.java.JavaPlatform;
+import playn.core.PlayN;
+import playn.core.Game;
+import playn.java.JavaPlatform;
 
 import react.Signals;
 
@@ -19,7 +19,7 @@ public class WidgetDemo implements Game
     public static void main (String[] args) {
         JavaPlatform platform = JavaPlatform.register();
         platform.assetManager().setPathPrefix("src/main/resources");
-        ForPlay.run(new WidgetDemo());
+        PlayN.run(new WidgetDemo());
     }
 
     @Override // from interface Game
@@ -37,9 +37,9 @@ public class WidgetDemo implements Game
 
         // create our demo interface
         Root root = _iface.createRoot(AxisLayout.vertical(), rootSheet);
-        root.setSize(ForPlay.graphics().width(), ForPlay.graphics().height());
+        root.setSize(PlayN.graphics().width(), PlayN.graphics().height());
         root.addStyles(Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CCFF, 5))));
-        ForPlay.graphics().rootLayer().add(root.layer);
+        PlayN.graphics().rootLayer().add(root.layer);
 
         Group bits;
         Button toggle;

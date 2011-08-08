@@ -1,12 +1,12 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.game;
 
-import forplay.core.ForPlay;
-import forplay.core.GroupLayer;
+import playn.core.PlayN;
+import playn.core.GroupLayer;
 
 /**
  * Contains the UI for a single game screen.
@@ -16,7 +16,7 @@ import forplay.core.GroupLayer;
 public abstract class Screen
 {
     /** The layer on which all of this screen's UI must be placed. */
-    public final GroupLayer layer = ForPlay.graphics().createGroupLayer();
+    public final GroupLayer layer = PlayN.graphics().createGroupLayer();
 
     // the following methods provide hooks into the visibility lifecycle of a screen, which takes
     // the form: added -> shown -> { hidden -> shown -> ... } -> hidden -> removed

@@ -1,5 +1,5 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
@@ -8,8 +8,8 @@ package tripleplay.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import forplay.core.ForPlay;
-import forplay.core.Game;
+import playn.core.PlayN;
+import playn.core.Game;
 
 /**
  * Manages a stack of screens. The stack supports useful manipulations: pushing a new screen onto
@@ -97,13 +97,13 @@ public abstract class ScreenStack
     }
 
     protected void show (Screen screen) {
-        ForPlay.graphics().rootLayer().add(screen.layer);
+        PlayN.graphics().rootLayer().add(screen.layer);
         try { screen.wasShown(); }
         catch (RuntimeException e) { handleError(e); }
     }
 
     protected void hide (Screen screen) {
-        ForPlay.graphics().rootLayer().remove(screen.layer);
+        PlayN.graphics().rootLayer().remove(screen.layer);
         try { screen.wasHidden(); }
         catch (RuntimeException e) { handleError(e); }
     }

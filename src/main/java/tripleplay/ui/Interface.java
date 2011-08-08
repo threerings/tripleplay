@@ -1,5 +1,5 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
@@ -8,12 +8,12 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import forplay.core.ForPlay;
-import forplay.core.Game;
-import forplay.core.Pointer;
+import playn.core.PlayN;
+import playn.core.Game;
+import playn.core.Pointer;
 
 /**
- * The main class that integrates the Triple Play UI with a ForPlay game. This class is mainly
+ * The main class that integrates the Triple Play UI with a PlayN game. This class is mainly
  * necessary to handle the proper dispatching of input events to UI elements. Create an interface
  * instance, create {@link Root} groups via the interface and add the {@link Root#layer}s into your
  * scene graph wherever you desire. Call {@link #update} and {@link #paint} from {@link
@@ -34,7 +34,7 @@ public class Interface
      * Activates this interface, which causes it to take control of user input.
      */
     public void activate () {
-        ForPlay.pointer().setListener(_plistener);
+        PlayN.pointer().setListener(_plistener);
     }
 
     /**

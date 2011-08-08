@@ -2,8 +2,8 @@ Triple Play
 ===========
 
 Triple Play is a collection of game-related utility classes that can be used
-with the [ForPlay](http://code.google.com/p/forplay) library on all of its
-myriad platform targets.
+with the [PlayN](http://code.google.com/p/playn) library on all of its myriad
+platform targets.
 
 Building
 --------

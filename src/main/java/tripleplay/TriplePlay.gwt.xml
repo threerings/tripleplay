@@ -1,7 +1,7 @@
 <!-- defines our GWT module -->
 <module>
   <inherits name="pythagoras.Pythagoras"/>
-  <inherits name="forplay.ForPlay"/>
+  <inherits name="playn.PlayN"/>
 
   <source path="anim"/>
   <source path="game"/>

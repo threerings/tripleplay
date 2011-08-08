@@ -1,11 +1,11 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.util;
 
-import forplay.core.Layer;
+import playn.core.Layer;
 
 import pythagoras.f.AffineTransform;
 import pythagoras.f.IPoint;
@@ -47,7 +47,7 @@ public class Coords
             }
             into.x -= layer.originX();
             into.y -= layer.originY();
-            forplay.core.Transform lt = layer.transform();
+            playn.core.Transform lt = layer.transform();
             _scratch.setTransform(lt.m00(), lt.m10(), lt.m01(), lt.m11(), lt.tx(), lt.ty());
             _scratch.transform(into, into);
             layer = layer.parent();
@@ -71,7 +71,7 @@ public class Coords
     public static Point screenToLayer (Layer layer, IPoint point, Point into) {
         Layer parent = layer.parent();
         IPoint cur = (parent == null) ? point : screenToLayer(parent, point, into);
-        forplay.core.Transform lt = layer.transform();
+        playn.core.Transform lt = layer.transform();
         _scratch.setTransform(lt.m00(), lt.m10(), lt.m01(), lt.m11(), lt.tx(), lt.ty());
         into = _scratch.inverseTransform(cur, into);
         into.x += layer.originX();

@@ -1,5 +1,5 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
@@ -10,8 +10,8 @@ import java.util.List;
 
 import pythagoras.f.FloatMath;
 
-import forplay.core.GroupLayer;
-import forplay.core.Layer;
+import playn.core.GroupLayer;
+import playn.core.Layer;
 
 /**
  * Handles creation and management of animations. Animations may involve the tweening of a

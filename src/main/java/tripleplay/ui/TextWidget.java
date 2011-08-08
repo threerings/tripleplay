@@ -1,14 +1,14 @@
 //
-// Triple Play - utilities for use in ForPlay-based games
+// Triple Play - utilities for use in PlayN-based games
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.ui;
 
-import forplay.core.CanvasLayer;
-import forplay.core.ForPlay;
-import forplay.core.TextFormat;
-import forplay.core.TextLayout;
+import playn.core.CanvasLayer;
+import playn.core.PlayN;
+import playn.core.TextFormat;
+import playn.core.TextLayout;
 
 import react.Slot;
 
@@ -61,7 +61,7 @@ public abstract class TextWidget extends Widget
         if (hintX > 0) {
             format = format.withWrapWidth(hintX);
         }
-        ldata.text = ForPlay.graphics().layoutText(text, format);
+        ldata.text = PlayN.graphics().layoutText(text, format);
         ldata.halign = resolveStyle(state(), Style.HALIGN);
         ldata.valign = resolveStyle(state(), Style.VALIGN);
     }

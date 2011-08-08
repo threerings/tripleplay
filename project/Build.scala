@@ -18,7 +18,7 @@ object TriplePlayBuild extends Build {
   val locals = new Locals(
     ("pythagoras", null,  "com.samskivert" % "pythagoras" % "1.1-SNAPSHOT"),
     ("react",      null,  "com.threerings" % "react" % "1.0-SNAPSHOT"),
-    ("forplay",   "core", "com.googlecode.forplay" % "core" % "1.0-SNAPSHOT")
+    ("playn",     "core", "com.googlecode.playn" % "core" % "1.0-SNAPSHOT")
   )
 
   lazy val tripleplay = locals.addDeps(Project(
