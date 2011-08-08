@@ -6,9 +6,14 @@
 package tripleplay.ui;
 
 import playn.core.CanvasLayer;
+import playn.core.Image;
+import playn.core.ImageLayer;
 import playn.core.PlayN;
+import playn.core.ResourceCallback;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
+
+import pythagoras.f.Dimension;
 
 import react.Slot;
 
@@ -48,33 +53,130 @@ public abstract class TextWidget extends Widget
         };
     }
 
+    /**
+     * Sets the icon to be displayed by this widget.
+     */
+    public TextWidget setIcon (Image icon) {
+        if (icon != _icon) {
+            _icon = icon;
+            _icon.addCallback(new ResourceCallback<Image>() {
+                public void done (Image resource) {
+                    invalidate();
+                }
+                public void error (Throwable err) {
+                    // noop!
+                }
+            });
+        }
+        return this;
+    }
+
+    /**
+     * Returns the icon displayed by this widget, or null.
+     */
+    public Image icon () {
+        return _icon;
+    }
+
+    /**
+     * Returns a slot which can be used to wire the icon of this widget to a {@link react.Signal}
+     * or {@link react.Value}.
+     */
+    public Slot<Image> iconSlot () {
+        return new Slot<Image>() {
+            public void onEmit (Image icon) {
+                setIcon(icon);
+            }
+        };
+    }
+
     @Override protected void wasRemoved () {
         super.wasRemoved();
         clearTextLayer();
+        clearIconLayer();
     }
 
     protected void layoutText (LayoutData ldata, String text, float hintX, float hintY) {
-        if (text.length() == 0 || !isVisible()) return;
+        if (!isVisible()) return;
 
-        TextFormat format = Style.createTextFormat(this, state());
-        // TODO: should we do something with a y-hint?
-        if (hintX > 0) {
-            format = format.withWrapWidth(hintX);
+        if (text.length() > 0) {
+            TextFormat format = Style.createTextFormat(this, state());
+            if (hintX > 0) format = format.withWrapWidth(hintX);
+            // TODO: should we do something with a y-hint?
+            ldata.text = PlayN.graphics().layoutText(text, format);
+            ldata.halign = resolveStyle(state(), Style.HALIGN);
+            ldata.valign = resolveStyle(state(), Style.VALIGN);
         }
-        ldata.text = PlayN.graphics().layoutText(text, format);
-        ldata.halign = resolveStyle(state(), Style.HALIGN);
-        ldata.valign = resolveStyle(state(), Style.VALIGN);
+        if (_icon != null) {
+            ldata.iconPos = resolveStyle(state(), Style.ICON_POS);
+            ldata.iconGap = resolveStyle(state(), Style.ICON_GAP);
+        }
+    }
+
+    protected Dimension computeTextSize (LayoutData ldata, Dimension size) {
+        if (ldata.text != null) {
+            size.width += ldata.text.width();
+            size.height += ldata.text.height();
+        }
+        if (_icon != null) {
+            switch (ldata.iconPos) {
+            case LEFT:
+            case RIGHT:
+                size.width += (_icon.width() + ldata.iconGap);
+                size.height = Math.max(size.height, _icon.height());
+                break;
+            case ABOVE:
+            case BELOW:
+                size.width = Math.max(size.width, _icon.width());
+                size.height += (_icon.height() + ldata.iconGap);
+                break;
+            }
+        }
+        return size;
     }
 
     protected void renderLayout (LayoutData ldata, float x, float y, float width, float height) {
+        float tx = x, ty = y, usedWidth = 0, usedHeight = 0;
+        if (_icon != null) {
+            float ix = x, iy = y;
+            float iwidth = _icon.width(), iheight = _icon.height();
+            switch (ldata.iconPos) {
+            case LEFT:
+                tx += iwidth + ldata.iconGap;
+                iy += ldata.valign.getOffset(iheight, height);
+                usedWidth = iwidth;
+                break;
+            case ABOVE:
+                ty += iheight + ldata.iconGap;
+                ix += ldata.halign.getOffset(iwidth, width);
+                usedHeight = iheight;
+                break;
+            case RIGHT:
+                ix += width - iwidth;
+                iy += ldata.valign.getOffset(iheight, height);
+                usedWidth = iwidth;
+                break;
+            case BELOW:
+                iy += height - iheight;
+                ix += ldata.halign.getOffset(iwidth, width);
+                usedHeight = iheight;
+                break;
+            }
+            if (_ilayer == null) layer.add(_ilayer = PlayN.graphics().createImageLayer(_icon));
+            else _ilayer.setImage(_icon);
+            _ilayer.setTranslation(ix, iy);
+        } else {
+            iwidth = iheight = 0;
+        }
+
         if (ldata.text != null) {
             float twidth = ldata.text.width(), theight = ldata.text.height();
             _tlayer = prepareCanvas(_tlayer, twidth, theight);
-            // _tlayer.canvas().setFillColor(0xFFCCCCCC);
-            // _tlayer.canvas().fillRect(0, 0, width, height);
+            _tlayer.canvas().setFillColor(0xFFCCCCCC);
+            _tlayer.canvas().fillRect(0, 0, width, height);
             _tlayer.canvas().drawText(ldata.text, 0, 0);
-            _tlayer.setTranslation(x + ldata.halign.getOffset(twidth, width),
-                                   y + ldata.valign.getOffset(theight, height));
+            _tlayer.setTranslation(tx + ldata.halign.getOffset(twidth, width-usedWidth),
+                                   ty + ldata.valign.getOffset(theight, height-usedHeight));
         }
     }
 
@@ -85,12 +187,24 @@ public abstract class TextWidget extends Widget
         }
     }
 
+    protected void clearIconLayer () {
+        if (_ilayer != null) {
+            _ilayer.destroy();
+            _ilayer = null;
+        }
+    }
+
     protected static class LayoutData {
         public TextLayout text;
         public Style.HAlign halign;
         public Style.VAlign valign;
+        public Style.Pos iconPos;
+        public int iconGap;
     }
 
     protected String _text;
     protected CanvasLayer _tlayer;
+
+    protected Image _icon;
+    protected ImageLayer _ilayer;
 }

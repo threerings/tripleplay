@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.PlayN;
+import playn.core.Image;
 import playn.core.Game;
 import playn.java.JavaPlatform;
 
@@ -18,7 +19,7 @@ public class WidgetDemo implements Game
 {
     public static void main (String[] args) {
         JavaPlatform platform = JavaPlatform.register();
-        platform.assetManager().setPathPrefix("src/main/resources");
+        platform.assetManager().setPathPrefix("src/test/resources");
         PlayN.run(new WidgetDemo());
     }
 
@@ -36,16 +37,18 @@ public class WidgetDemo implements Game
             create();
 
         // create our demo interface
-        Root root = _iface.createRoot(AxisLayout.vertical(), rootSheet);
+        Root root = _iface.createRoot(AxisLayout.vertical().gap(15), rootSheet);
         root.setSize(PlayN.graphics().width(), PlayN.graphics().height());
         root.addStyles(Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CCFF, 5))));
         PlayN.graphics().rootLayer().add(root.layer);
+
+        Image smiley = PlayN.assetManager().getImage("images/smiley.png");
 
         Group bits;
         Button toggle;
         Label label2;
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
-        root.add(new Group(AxisLayout.horizontal().alignTop()).add(
+        root.add(/*new Group(AxisLayout.horizontal().alignTop()).add(
                      new Label().setText(TEXT1), AxisLayout.stretched()).add(
                      new Label().setText(TEXT2), AxisLayout.stretched()).add(
                      new Label().setText(TEXT3), AxisLayout.stretched()),
@@ -56,8 +59,19 @@ public class WidgetDemo implements Game
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Label 1"),
                          label2 = new Label().setText("Label 2"),
-                         new Label().setText("Label 3"))));
-        Signals.toggler(toggle.click, true).connect(label2.visibleSlot());
+                         new Label().setIcon(smiley).setText("Label 3"))), */
+                 new Group(AxisLayout.horizontal().gap(15), greenBg).add(
+                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))
+                         ).setText("Left").setIcon(smiley),
+                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.RIGHT))
+                         ).setText("Right").setIcon(smiley),
+                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.ABOVE),
+                                           Style.HALIGN.is(Style.HAlign.CENTER))
+                         ).setText("Above").setIcon(smiley),
+                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
+                                           Style.HALIGN.is(Style.HAlign.CENTER))
+                         ).setText("Below").setIcon(smiley)));
+        // Signals.toggler(toggle.click, true).connect(label2.visibleSlot());
     }
 
     @Override // from interface Game

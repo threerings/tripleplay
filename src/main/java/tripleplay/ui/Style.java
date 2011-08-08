@@ -72,6 +72,11 @@ public abstract class Style<V>
         public abstract float getOffset (float size, float extent);
     };
 
+    /** Defines icon position choices. */
+    public static enum Pos {
+        LEFT, ABOVE, RIGHT, BELOW;
+    }
+
     /** Defines supported text effects. */
     public static enum TextEffect {
         /** Outlines the text in the highlight color. */
@@ -120,6 +125,12 @@ public abstract class Style<V>
     /** The background for an element. Not inherited. */
     public static final Style<Background> BACKGROUND = newStyle(
         false, (Background)new NullBackground());
+
+    /** The position relative to the text to render an icon for labels, buttons, etc. */
+    public static final Style<Pos> ICON_POS = newStyle(false, Pos.LEFT);
+
+    /** The gap between the icon and text in labels, buttons, etc. */
+    public static final Style<Integer> ICON_GAP = newStyle(false, 2);
 
     /** Indicates whether or not this style property is inherited. */
     public final boolean inherited;

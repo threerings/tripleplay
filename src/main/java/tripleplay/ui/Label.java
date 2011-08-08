@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.CanvasLayer;
+import playn.core.Image;
 import playn.core.PlayN;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
@@ -13,7 +14,7 @@ import playn.core.TextLayout;
 import pythagoras.f.Dimension;
 
 /**
- * A widget that displays one or more lines of text.
+ * A widget that displays one or more lines of text and/or an icon image.
  */
 public class Label extends TextWidget
 {
@@ -35,18 +36,18 @@ public class Label extends TextWidget
         return this;
     }
 
+    @Override public Label setIcon (Image icon) {
+        super.setIcon(icon);
+        return this;
+    }
+
     @Override public String toString () {
         return "Label(" + _text + ")";
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
-        Dimension size = new Dimension();
         LayoutData ldata = computeLayout(hintX, hintY);
-        if (ldata.text != null) {
-            size.width += ldata.text.width();
-            size.height += ldata.text.height();
-        }
-        return size;
+        return computeTextSize(ldata, new Dimension());
     }
 
     @Override protected void layout () {

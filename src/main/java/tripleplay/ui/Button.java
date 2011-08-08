@@ -66,13 +66,8 @@ public class Button extends TextWidget
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
-        Dimension size = new Dimension();
         LayoutData ldata = computeLayout(hintX, hintY);
-        if (ldata.text != null) {
-            size.width += ldata.text.width();
-            size.height += ldata.text.height();
-        }
-        // TODO: if we have an icon, add that into the mix
+        Dimension size = computeTextSize(ldata, new Dimension());
         return ldata.bg.addInsets(size);
     }
 
@@ -88,7 +83,7 @@ public class Button extends TextWidget
         width -= bg.width();
         height -= bg.height();
 
-        // prepare our label
+        // prepare our label and icon
         renderLayout(_ldata, bg.left, bg.top, width, height);
 
         _ldata = null; // we no longer need our layout data
