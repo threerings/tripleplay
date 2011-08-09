@@ -48,7 +48,7 @@ public class WidgetDemo implements Game
         Button toggle;
         Label label2;
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
-        root.add(/*new Group(AxisLayout.horizontal().alignTop()).add(
+        root.add(new Group(AxisLayout.horizontal().alignTop()).add(
                      new Label().setText(TEXT1), AxisLayout.stretched()).add(
                      new Label().setText(TEXT2), AxisLayout.stretched()).add(
                      new Label().setText(TEXT3), AxisLayout.stretched()),
@@ -59,7 +59,7 @@ public class WidgetDemo implements Game
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Label 1"),
                          label2 = new Label().setText("Label 2"),
-                         new Label().setIcon(smiley).setText("Label 3"))), */
+                         new Label().setIcon(smiley).setText("Label 3"))),
                  new Group(AxisLayout.horizontal().gap(15), greenBg).add(
                      new Label(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))
                          ).setText("Left").setIcon(smiley),
@@ -71,7 +71,7 @@ public class WidgetDemo implements Game
                      new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
                                            Style.HALIGN.is(Style.HAlign.CENTER))
                          ).setText("Below").setIcon(smiley)));
-        // Signals.toggler(toggle.click, true).connect(label2.visibleSlot());
+        Signals.toggler(toggle.click, true).connect(label2.visibleSlot());
     }
 
     @Override // from interface Game

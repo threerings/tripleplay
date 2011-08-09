@@ -165,15 +165,13 @@ public abstract class TextWidget extends Widget
             if (_ilayer == null) layer.add(_ilayer = PlayN.graphics().createImageLayer(_icon));
             else _ilayer.setImage(_icon);
             _ilayer.setTranslation(ix, iy);
-        } else {
-            iwidth = iheight = 0;
         }
 
         if (ldata.text != null) {
             float twidth = ldata.text.width(), theight = ldata.text.height();
             _tlayer = prepareCanvas(_tlayer, twidth, theight);
-            _tlayer.canvas().setFillColor(0xFFCCCCCC);
-            _tlayer.canvas().fillRect(0, 0, width, height);
+            // _tlayer.canvas().setFillColor(0xFFCCCCCC);
+            // _tlayer.canvas().fillRect(0, 0, width, height);
             _tlayer.canvas().drawText(ldata.text, 0, 0);
             _tlayer.setTranslation(tx + ldata.halign.getOffset(twidth, width-usedWidth),
                                    ty + ldata.valign.getOffset(theight, height-usedHeight));
