@@ -7,11 +7,13 @@ package tripleplay.ui;
 
 import playn.core.Canvas;
 import playn.core.CanvasLayer;
+import playn.core.Image;
 import playn.core.PlayN;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.IRectangle;
 
 import react.Signal;
 
@@ -48,6 +50,16 @@ public class Button extends TextWidget
      */
     @Override public Button setText (String text) {
         super.setText(text);
+        return this;
+    }
+
+    @Override public Button setIcon (Image icon) {
+        super.setIcon(icon);
+        return this;
+    }
+
+    @Override public Button setIcon (Image icon, IRectangle region) {
+        super.setIcon(icon, region);
         return this;
     }
 

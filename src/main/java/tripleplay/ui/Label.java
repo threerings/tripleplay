@@ -12,6 +12,7 @@ import playn.core.TextFormat;
 import playn.core.TextLayout;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.IRectangle;
 
 /**
  * A widget that displays one or more lines of text and/or an icon image.
@@ -38,6 +39,11 @@ public class Label extends TextWidget
 
     @Override public Label setIcon (Image icon) {
         super.setIcon(icon);
+        return this;
+    }
+
+    @Override public Label setIcon (Image icon, IRectangle region) {
+        super.setIcon(icon, region);
         return this;
     }
 

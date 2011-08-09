@@ -14,6 +14,7 @@ import playn.core.TextFormat;
 import playn.core.TextLayout;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.IRectangle;
 
 import react.Slot;
 
@@ -57,8 +58,30 @@ public abstract class TextWidget extends Widget
      * Sets the icon to be displayed by this widget.
      */
     public TextWidget setIcon (Image icon) {
-        if (icon != _icon) {
+        if (icon != _icon || _iregion != null) {
             _icon = icon;
+            _icon.addCallback(new ResourceCallback<Image>() {
+                public void done (Image resource) {
+                    invalidate();
+                }
+                public void error (Throwable err) {
+                    // noop!
+                }
+            });
+            _iregion = null;
+        }
+        return this;
+    }
+
+    /**
+     * Sets the icon to be displayed by this widget.
+     *
+     * @param region the subregion of the supplied image to be used as the icon.
+     */
+    public TextWidget setIcon (Image icon, IRectangle region) {
+        if (icon != _icon || !region.equals(_iregion)) {
+            _icon = icon;
+            _iregion = region;
             _icon.addCallback(new ResourceCallback<Image>() {
                 public void done (Image resource) {
                     invalidate();
@@ -122,13 +145,13 @@ public abstract class TextWidget extends Widget
             switch (ldata.iconPos) {
             case LEFT:
             case RIGHT:
-                size.width += (_icon.width() + ldata.iconGap);
-                size.height = Math.max(size.height, _icon.height());
+                size.width += (iconWidth() + ldata.iconGap);
+                size.height = Math.max(size.height, iconHeight());
                 break;
             case ABOVE:
             case BELOW:
-                size.width = Math.max(size.width, _icon.width());
-                size.height += (_icon.height() + ldata.iconGap);
+                size.width = Math.max(size.width, iconWidth());
+                size.height += (iconHeight() + ldata.iconGap);
                 break;
             }
         }
@@ -139,7 +162,7 @@ public abstract class TextWidget extends Widget
         float tx = x, ty = y, usedWidth = 0, usedHeight = 0;
         if (_icon != null) {
             float ix = x, iy = y;
-            float iwidth = _icon.width(), iheight = _icon.height();
+            float iwidth = iconWidth(), iheight = iconHeight();
             switch (ldata.iconPos) {
             case LEFT:
                 tx += iwidth + ldata.iconGap;
@@ -164,6 +187,12 @@ public abstract class TextWidget extends Widget
             }
             if (_ilayer == null) layer.add(_ilayer = PlayN.graphics().createImageLayer(_icon));
             else _ilayer.setImage(_icon);
+            if (_iregion != null) {
+                _ilayer.setWidth(_iregion.getWidth());
+                _ilayer.setHeight(_iregion.getHeight());
+                _ilayer.setSourceRect(_iregion.getX(), _iregion.getY(),
+                                      _iregion.getWidth(), _iregion.getHeight());
+            }
             _ilayer.setTranslation(ix, iy);
         }
 
@@ -192,6 +221,14 @@ public abstract class TextWidget extends Widget
         }
     }
 
+    protected float iconWidth () {
+        return (_iregion == null) ? _icon.width() : _iregion.getWidth();
+    }
+
+    protected float iconHeight () {
+        return (_iregion == null) ? _icon.height() : _iregion.getHeight();
+    }
+
     protected static class LayoutData {
         public TextLayout text;
         public Style.HAlign halign;
@@ -204,5 +241,6 @@ public abstract class TextWidget extends Widget
     protected CanvasLayer _tlayer;
 
     protected Image _icon;
+    protected IRectangle _iregion;
     protected ImageLayer _ilayer;
 }

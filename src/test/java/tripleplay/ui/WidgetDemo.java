@@ -12,6 +12,9 @@ import playn.java.JavaPlatform;
 
 import react.Signals;
 
+import pythagoras.f.IRectangle;
+import pythagoras.f.Rectangle;
+
 /**
  * A test app for demoing the UI widgets.
  */
@@ -43,6 +46,7 @@ public class WidgetDemo implements Game
         PlayN.graphics().rootLayer().add(root.layer);
 
         Image smiley = PlayN.assetManager().getImage("images/smiley.png");
+        Image squares = PlayN.assetManager().getImage("images/squares.png");
 
         Group bits;
         Button toggle;
@@ -62,15 +66,15 @@ public class WidgetDemo implements Game
                          new Label().setIcon(smiley).setText("Label 3"))),
                  new Group(AxisLayout.horizontal().gap(15), greenBg).add(
                      new Label(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))
-                         ).setText("Left").setIcon(smiley),
+                         ).setText("Left").setIcon(squares, getIBounds(0)),
                      new Label(Styles.make(Style.ICON_POS.is(Style.Pos.RIGHT))
-                         ).setText("Right").setIcon(smiley),
+                         ).setText("Right").setIcon(squares, getIBounds(1)),
                      new Label(Styles.make(Style.ICON_POS.is(Style.Pos.ABOVE),
                                            Style.HALIGN.is(Style.HAlign.CENTER))
-                         ).setText("Above").setIcon(smiley),
+                         ).setText("Above").setIcon(squares, getIBounds(2)),
                      new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
                                            Style.HALIGN.is(Style.HAlign.CENTER))
-                         ).setText("Below").setIcon(smiley)));
+                         ).setText("Below").setIcon(squares, getIBounds(3))));
         Signals.toggler(toggle.click, true).connect(label2.visibleSlot());
     }
 
@@ -87,6 +91,11 @@ public class WidgetDemo implements Game
     @Override // from interface Game
     public int updateRate () {
         return 30;
+    }
+
+    protected IRectangle getIBounds (int index) {
+        final float iwidth = 16, iheight = 16;
+        return new Rectangle(index*iwidth, 0, iwidth, iheight);
     }
 
     protected Interface _iface;
