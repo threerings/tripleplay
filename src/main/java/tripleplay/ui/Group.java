@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import playn.core.Transform;
@@ -58,9 +59,11 @@ public class Group extends Element
     }
 
     public Group add (Element... children) {
+        _children.addAll(Arrays.asList(children));
         for (Element child : children) {
-            add(_children.size(), child);
+            didAdd(child);
         }
+        invalidate();
         return this;
     }
 
