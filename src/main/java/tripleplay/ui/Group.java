@@ -6,9 +6,7 @@
 package tripleplay.ui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import playn.core.Transform;
 
@@ -67,22 +65,8 @@ public class Group extends Element
     }
 
     public Group add (int index, Element child) {
-        return add(index, child, null);
-    }
-
-    public Group add (Element child, Layout.Constraint constraint) {
-        return add(_children.size(), child, constraint);
-    }
-
-    public Group add (int index, Element child, Layout.Constraint constraint) {
         // TODO: check if child is already added here? has parent?
         _children.add(index, child);
-        if (constraint != null) {
-            if (_constraints == null) {
-                _constraints = new HashMap<Element, Layout.Constraint>();
-            }
-            _constraints.put(child, constraint);
-        }
         didAdd(child);
         invalidate();
         return this;
@@ -101,7 +85,6 @@ public class Group extends Element
     }
 
     public void removeAll () {
-        _constraints = null;
         while (!_children.isEmpty()) {
             removeAt(_children.size()-1);
         }
@@ -115,7 +98,6 @@ public class Group extends Element
 
     protected void didRemove (Element child) {
         layer.remove(child.layer);
-        if (_constraints != null) _constraints.remove(child);
         if (isAdded()) child.wasRemoved();
     }
 
@@ -159,7 +141,7 @@ public class Group extends Element
     @Override protected Dimension computeSize (float hintX, float hintY) {
         LayoutData ldata = computeLayout(hintX, hintY);
         Dimension size = _layout.computeSize(
-            _children, _constraints, hintX - ldata.bg.width(), hintY - ldata.bg.height());
+            _children, hintX - ldata.bg.width(), hintY - ldata.bg.height());
         return ldata.bg.addInsets(size);
     }
 
@@ -168,11 +150,13 @@ public class Group extends Element
 
         // prepare our background
         if (_bginst != null) _bginst.destroy();
-        _bginst = ldata.bg.instantiate(_size);
-        _bginst.addTo(layer);
+        if (_size.width > 0 && _size.height > 0) {
+            _bginst = ldata.bg.instantiate(_size);
+            _bginst.addTo(layer);
+        }
 
         // layout our children
-        _layout.layout(_children, _constraints, ldata.bg.left, ldata.bg.top,
+        _layout.layout(_children, ldata.bg.left, ldata.bg.top,
                        _size.width - ldata.bg.width(), _size.height - ldata.bg.height());
 
         // layout is only called as part of revalidation, so now we validate our children
@@ -197,7 +181,6 @@ public class Group extends Element
     protected final Layout _layout;
     protected final List<Element> _children = new ArrayList<Element>();
     protected Stylesheet _sheet;
-    protected Map<Element, Layout.Constraint> _constraints; // lazily created
 
     protected LayoutData _ldata;
     protected Background.Instance _bginst;

@@ -110,25 +110,21 @@ public abstract class AxisLayout extends Layout
             return this;
         }
 
-        @Override public Dimension computeSize (
-            List<Element> elems, Map<Element, Layout.Constraint> constraints,
-            float hintX, float hintY) {
-            Metrics m = computeMetrics(elems, constraints, hintX, hintY, true);
+        @Override public Dimension computeSize (List<Element> elems, float hintX, float hintY) {
+            Metrics m = computeMetrics(elems, hintX, hintY, true);
             return new Dimension(m.maxWidth, m.prefHeight + m.gaps(_gap));
         }
 
-        @Override public void layout (
-            List<Element> elems, Map<Element, Layout.Constraint> constraints,
-            float left, float top, float width, float height) {
-
-            Metrics m = computeMetrics(elems, constraints, width, height, true);
+        @Override public void layout (List<Element> elems,
+                                      float left, float top, float width, float height) {
+            Metrics m = computeMetrics(elems, width, height, true);
             float stretchHeight = Math.max(0, height - m.gaps(_gap) - m.fixHeight);
             float y = top + ((m.stretchers > 0) ? 0 :
                              _alignOn.computeOffset(m.fixHeight + m.gaps(_gap), height));
             for (Element elem : elems) {
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.getPreferredSize(width, height); // will be cached
-                Constraint c = getConstraint(constraints, elem);
+                Constraint c = getConstraint(elem);
                 float ewidth = _offPolicy.computeSize(psize.getWidth(), m.maxWidth, width);
                 float eheight = c.computeSize(psize.getHeight(), m.totalWeight, stretchHeight);
                 elem.setSize(ewidth, eheight);
@@ -164,25 +160,21 @@ public abstract class AxisLayout extends Layout
             return this;
         }
 
-        @Override public Dimension computeSize (
-            List<Element> elems, Map<Element, Layout.Constraint> constraints,
-            float hintX, float hintY) {
-            Metrics m = computeMetrics(elems, constraints, hintX, hintY, false);
+        @Override public Dimension computeSize (List<Element> elems, float hintX, float hintY) {
+            Metrics m = computeMetrics(elems, hintX, hintY, false);
             return new Dimension(m.prefWidth + m.gaps(_gap), m.maxHeight);
         }
 
-        @Override public void layout (
-            List<Element> elems, Map<Element, Layout.Constraint> constraints,
-            float left, float top, float width, float height) {
-
-            Metrics m = computeMetrics(elems, constraints, width, height, false);
+        @Override public void layout (List<Element> elems,
+                                      float left, float top, float width, float height) {
+            Metrics m = computeMetrics(elems, width, height, false);
             float stretchWidth = Math.max(0, width - m.gaps(_gap) - m.fixWidth);
             float x = left + ((m.stretchers > 0) ? 0 :
                               _alignOn.computeOffset(m.fixWidth + m.gaps(_gap), width));
             for (Element elem : elems) {
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.getPreferredSize(width, height); // will be cached
-                Constraint c = getConstraint(constraints, elem);
+                Constraint c = getConstraint(elem);
                 float ewidth = c.computeSize(psize.getWidth(), m.totalWeight, stretchWidth);
                 float eheight = _offPolicy.computeSize(psize.getHeight(), m.maxHeight, height);
                 elem.setSize(ewidth, eheight);
@@ -271,17 +263,14 @@ public abstract class AxisLayout extends Layout
         return this;
     }
 
-    protected Metrics computeMetrics (
-        List<Element> elems, Map<Element, Layout.Constraint> constraints,
-        float hintX, float hintY, boolean vert) {
-
+    protected Metrics computeMetrics (List<Element> elems, float hintX, float hintY, boolean vert) {
         Metrics m = new Metrics();
         for (Element elem : elems) {
             if (!elem.isVisible()) continue;
             m.count++;
 
             // only compute the preferred size for the fixed elements in this pass
-            Constraint c = getConstraint(constraints, elem);
+            Constraint c = getConstraint(elem);
             if (!c.stretch) {
                 IDimension psize = elem.getPreferredSize(hintX, hintY);
                 float pwidth = psize.getWidth(), pheight = psize.getHeight();
@@ -301,7 +290,7 @@ public abstract class AxisLayout extends Layout
         // accurate width/height hints
         for (Element elem : elems) {
             if (!elem.isVisible()) continue;
-            Constraint c = getConstraint(constraints, elem);
+            Constraint c = getConstraint(elem);
             if (!c.stretch) continue;
 
             // the first argument to computeSize is not used for stretched elements
@@ -321,8 +310,8 @@ public abstract class AxisLayout extends Layout
         return m;
     }
 
-    protected static Constraint getConstraint (Map<Element, Layout.Constraint> cmap, Element elem) {
-        Constraint c = (cmap == null) ? null : (Constraint)cmap.get(elem);
+    protected static Constraint getConstraint (Element elem) {
+        Constraint c = (Constraint)elem.getConstraint();
         return (c == null) ? UNSTRETCHED : c;
     }
 

@@ -169,6 +169,22 @@ public abstract class Element
     }
 
     /**
+     * Returns the layout constraint configured on this element, or null.
+     */
+    public Layout.Constraint getConstraint () {
+        return _constraint;
+    }
+
+    /**
+     * Configures the layout constraint on this element.
+     * @return this element for call chaining.
+     */
+    public Element setConstraint (Layout.Constraint constraint) {
+        _constraint = constraint;
+        return this;
+    }
+
+    /**
      * Returns true if this element is part of an interface heirarchy.
      */
     public boolean isAdded () {
@@ -358,6 +374,7 @@ public abstract class Element
     protected Dimension _preferredSize;
     protected Dimension _size = new Dimension();
     protected Styles _styles = Styles.none();
+    protected Layout.Constraint _constraint;
 
     protected static enum Flag {
         VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), DOWN(1 << 3);

@@ -127,9 +127,9 @@ public abstract class TextWidget extends Widget
             if (hintX > 0) format = format.withWrapWidth(hintX);
             // TODO: should we do something with a y-hint?
             ldata.text = PlayN.graphics().layoutText(text, format);
-            ldata.halign = resolveStyle(state(), Style.HALIGN);
-            ldata.valign = resolveStyle(state(), Style.VALIGN);
         }
+        ldata.halign = resolveStyle(state(), Style.HALIGN);
+        ldata.valign = resolveStyle(state(), Style.VALIGN);
         if (_icon != null) {
             ldata.iconPos = resolveStyle(state(), Style.ICON_POS);
             ldata.iconGap = resolveStyle(state(), Style.ICON_GAP);
@@ -237,7 +237,7 @@ public abstract class TextWidget extends Widget
         public int iconGap;
     }
 
-    protected String _text;
+    protected String _text = "";
     protected CanvasLayer _tlayer;
 
     protected Image _icon;

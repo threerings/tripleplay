@@ -53,9 +53,9 @@ public class WidgetDemo implements Game
         Label label2;
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
         root.add(new Group(AxisLayout.horizontal().alignTop()).add(
-                     new Label().setText(TEXT1), AxisLayout.stretched()).add(
-                     new Label().setText(TEXT2), AxisLayout.stretched()).add(
-                     new Label().setText(TEXT3), AxisLayout.stretched()),
+                     new Label().setText(TEXT1).setConstraint(AxisLayout.stretched()),
+                     new Label().setText(TEXT2).setConstraint(AxisLayout.stretched()),
+                     new Label().setText(TEXT3).setConstraint(AxisLayout.stretched())),
                  new Group(AxisLayout.horizontal().alignTop(), greenBg).add(
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Toggle viz:"),

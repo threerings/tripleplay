@@ -90,8 +90,10 @@ public class Button extends TextWidget
         // prepare our background
         Background bg = _ldata.bg;
         if (_bginst != null) _bginst.destroy();
-        _bginst = bg.instantiate(_size);
-        _bginst.addTo(layer);
+        if (_size.width > 0 && _size.height > 0) {
+            _bginst = bg.instantiate(_size);
+            _bginst.addTo(layer);
+        }
         width -= bg.width();
         height -= bg.height();
 
