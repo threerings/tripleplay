@@ -166,22 +166,22 @@ public abstract class TextWidget extends Widget
             switch (ldata.iconPos) {
             case LEFT:
                 tx += iwidth + ldata.iconGap;
-                iy += ldata.valign.getOffset(iheight, height);
+                iy += ldata.valign.offset(iheight, height);
                 usedWidth = iwidth;
                 break;
             case ABOVE:
                 ty += iheight + ldata.iconGap;
-                ix += ldata.halign.getOffset(iwidth, width);
+                ix += ldata.halign.offset(iwidth, width);
                 usedHeight = iheight;
                 break;
             case RIGHT:
                 ix += width - iwidth;
-                iy += ldata.valign.getOffset(iheight, height);
+                iy += ldata.valign.offset(iheight, height);
                 usedWidth = iwidth;
                 break;
             case BELOW:
                 iy += height - iheight;
-                ix += ldata.halign.getOffset(iwidth, width);
+                ix += ldata.halign.offset(iwidth, width);
                 usedHeight = iheight;
                 break;
             }
@@ -202,8 +202,8 @@ public abstract class TextWidget extends Widget
             // _tlayer.canvas().setFillColor(0xFFCCCCCC);
             // _tlayer.canvas().fillRect(0, 0, width, height);
             _tlayer.canvas().drawText(ldata.text, 0, 0);
-            _tlayer.setTranslation(tx + ldata.halign.getOffset(twidth, width-usedWidth),
-                                   ty + ldata.valign.getOffset(theight, height-usedHeight));
+            _tlayer.setTranslation(tx + ldata.halign.offset(twidth, width-usedWidth),
+                                   ty + ldata.valign.offset(theight, height-usedHeight));
         }
     }
 

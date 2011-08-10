@@ -21,7 +21,7 @@ public class Root extends Group
      * Sizes this root element to its preferred size.
      */
     public void pack () {
-        IDimension psize = getPreferredSize(0, 0);
+        IDimension psize = preferredSize(0, 0);
         setSize(psize.getWidth(), psize.getHeight());
     }
 
@@ -29,7 +29,7 @@ public class Root extends Group
      * Sizes this root element to the specified width and its preferred height.
      */
     public void packToWidth (float width) {
-        IDimension psize = getPreferredSize(width, 0);
+        IDimension psize = preferredSize(width, 0);
         setSize(width, psize.getHeight());
     }
 
@@ -37,7 +37,7 @@ public class Root extends Group
      * Sizes this root element to the specified height and its preferred width.
      */
     public void packToHeight (float height) {
-        IDimension psize = getPreferredSize(0, height);
+        IDimension psize = preferredSize(0, height);
         setSize(psize.getWidth(), height);
     }
 
@@ -78,7 +78,7 @@ public class Root extends Group
         }
     }
 
-    @Override protected Root getRoot () {
+    @Override protected Root root () {
         return this;
     }
 

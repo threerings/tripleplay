@@ -61,7 +61,7 @@ public abstract class Animation
         }
 
         @Override
-        protected float getOverrun (float time) {
+        protected float overrun (float time) {
             return (time - _start) - _duration;
         }
 
@@ -176,7 +176,7 @@ public abstract class Animation
         }
 
         @Override
-        protected float getOverrun (float time) {
+        protected float overrun (float time) {
             return (time - _start) - _duration;
         }
 
@@ -230,7 +230,7 @@ public abstract class Animation
             if (_layer.parent() == null) return true;
 
             // otherwise, reset to the head of the chain and keep going
-            float overrun = _current.getOverrun(time);
+            float overrun = _current.overrun(time);
             _current = _next;
             _current.init(time-overrun);
             return false;
@@ -290,7 +290,7 @@ public abstract class Animation
 
         // initialize our next animation if we have one (accounting for any overrun on our current
         // animation) and keep going
-        float overrun = _current.getOverrun(time);
+        float overrun = _current.overrun(time);
         _current = _current._next;
         if (_current != null) {
             _current.init(time-overrun);
@@ -306,7 +306,7 @@ public abstract class Animation
      * Returns the amount of time this animation has overrun its duration, given the supplied
      * current timestamp. The result may be negative if the animation is not complete.
      */
-    protected float getOverrun (float time)
+    protected float overrun (float time)
     {
         return 0f;
     }

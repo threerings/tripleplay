@@ -37,39 +37,39 @@ public abstract class Style<V>
     /** Defines horizontal alignment choices. */
     public static enum HAlign {
         LEFT {
-            public float getOffset (float size, float extent) {
+            public float offset (float size, float extent) {
                 return 0;
             }
         }, RIGHT {
-            public float getOffset (float size, float extent) {
+            public float offset (float size, float extent) {
                 return (extent - size);
             }
         }, CENTER {
-            public float getOffset (float size, float extent) {
+            public float offset (float size, float extent) {
                 return (extent - size)/2;
             }
         };
 
-        public abstract float getOffset (float size, float extent);
+        public abstract float offset (float size, float extent);
     };
 
     /** Defines vertical alignment choices. */
     public static enum VAlign {
         TOP {
-            public float getOffset (float size, float extent) {
+            public float offset (float size, float extent) {
                 return 0;
             }
         }, BOTTOM {
-            public float getOffset (float size, float extent) {
+            public float offset (float size, float extent) {
                 return (extent - size);
             }
         }, CENTER {
-            public float getOffset (float size, float extent) {
+            public float offset (float size, float extent) {
                 return (extent - size)/2;
             }
         };
 
-        public abstract float getOffset (float size, float extent);
+        public abstract float offset (float size, float extent);
     };
 
     /** Defines icon position choices. */

@@ -171,7 +171,7 @@ public abstract class Element
     /**
      * Returns the layout constraint configured on this element, or null.
      */
-    public Layout.Constraint getConstraint () {
+    public Layout.Constraint constraint () {
         return _constraint;
     }
 
@@ -188,7 +188,7 @@ public abstract class Element
      * Returns true if this element is part of an interface heirarchy.
      */
     public boolean isAdded () {
-        return getRoot() != null;
+        return root() != null;
     }
 
     /**
@@ -293,8 +293,8 @@ public abstract class Element
      * Returns the root of this element's hierarchy, or null if the element is not currently added
      * to a hierarchy.
      */
-    protected Root getRoot () {
-        return (_parent == null) ? null : _parent.getRoot();
+    protected Root root () {
+        return (_parent == null) ? null : _parent.root();
     }
 
     /**
@@ -323,7 +323,7 @@ public abstract class Element
      * @param hintY if non-zero, an indication that the element will be constrained in the y
      * direction to the specified height.
      */
-    protected IDimension getPreferredSize (float hintX, float hintY) {
+    protected IDimension preferredSize (float hintX, float hintY) {
         if (_preferredSize == null) _preferredSize = computeSize(hintX, hintY);
         return _preferredSize;
     }
