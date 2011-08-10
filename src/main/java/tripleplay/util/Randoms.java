@@ -22,8 +22,7 @@ public class Randoms
     /**
      * A factory to create a new Randoms object.
      */
-    public static Randoms with (Random rand)
-    {
+    public static Randoms with (Random rand) {
         return new Randoms(rand);
     }
 
@@ -35,8 +34,7 @@ public class Randoms
      *
      * @throws IllegalArgumentException if <code>high</code> is not positive.
      */
-    public int getInt (int high)
-    {
+    public int getInt (int high) {
         return _r.nextInt(high);
     }
 
@@ -46,8 +44,7 @@ public class Randoms
      *
      * @throws IllegalArgumentException if <code>high - low</code> is not positive.
      */
-    public int getInRange (int low, int high)
-    {
+    public int getInRange (int low, int high) {
         return low + _r.nextInt(high - low);
     }
 
@@ -57,8 +54,7 @@ public class Randoms
      *
      * @param high the high value limiting the random number sought.
      */
-    public float getFloat (float high)
-    {
+    public float getFloat (float high) {
         return _r.nextFloat() * high;
     }
 
@@ -66,8 +62,7 @@ public class Randoms
      * Returns a pseudorandom, uniformly distributed <code>float</code> value between
      * <code>low</code> (inclusive) and <code>high</code> (exclusive).
      */
-    public float getInRange (float low, float high)
-    {
+    public float getInRange (float low, float high) {
         return low + (_r.nextFloat() * (high - low));
     }
 
@@ -76,24 +71,21 @@ public class Randoms
      *
      * @throws IllegalArgumentException if <code>n</code> is not positive.
      */
-    public boolean getChance (int n)
-    {
+    public boolean getChance (int n) {
         return (0 == _r.nextInt(n));
     }
 
     /**
      * Has a probability <code>p</code> of returning true.
      */
-    public boolean getProbability (float p)
-    {
+    public boolean getProbability (float p) {
         return _r.nextFloat() < p;
     }
 
     /**
      * Returns <code>true</code> or <code>false</code> with approximately even probability.
      */
-    public boolean getBoolean ()
-    {
+    public boolean getBoolean () {
         return _r.nextBoolean();
     }
 
@@ -101,16 +93,14 @@ public class Randoms
      * Returns a pseudorandom, normally distributed <code>float</code> value around the
      * <code>mean</code> with the standard deviation <code>dev</code>.
      */
-    public float getNormal (float mean, float dev)
-    {
+    public float getNormal (float mean, float dev) {
         return (float)_r.nextGaussian() * dev + mean;
     }
 
     /**
      * Shuffle the specified list using our Random.
      */
-    public <T> void shuffle (List<T> list)
-    {
+    public <T> void shuffle (List<T> list) {
         // we can't use Collections.shuffle here because GWT doesn't implement it
         int size = list.size();
         if (list instanceof RandomAccess) {
@@ -142,8 +132,7 @@ public class Randoms
      *
      * @throws NullPointerException if the iterator is null.
      */
-    public <T> T pick (Iterator<? extends T> iterator, T ifEmpty)
-    {
+    public <T> T pick (Iterator<? extends T> iterator, T ifEmpty) {
         if (!iterator.hasNext()) {
             return ifEmpty;
         }
@@ -167,8 +156,7 @@ public class Randoms
      *
      * @throws NullPointerException if the iterable is null.
      */
-    public <T> T pick (Iterable<? extends T> iterable, T ifEmpty)
-    {
+    public <T> T pick (Iterable<? extends T> iterable, T ifEmpty) {
         return pickPluck(iterable, ifEmpty, false);
     }
 
@@ -183,8 +171,7 @@ public class Randoms
      * @throws NullPointerException if the map is null.
      * @throws IllegalArgumentException if any weight is less than 0.
      */
-    public <T> T pick (Map<? extends T, ? extends Number> weightMap, T ifEmpty)
-    {
+    public <T> T pick (Map<? extends T, ? extends Number> weightMap, T ifEmpty) {
         T pick = ifEmpty;
         double total = 0.0;
         for (Map.Entry<? extends T, ? extends Number> entry : weightMap.entrySet()) {
@@ -213,24 +200,21 @@ public class Randoms
      * @throws UnsupportedOperationException if the iterable is unmodifiable or its Iterator
      * does not support {@link Iterator#remove()}.
      */
-    public <T> T pluck (Iterable<? extends T> iterable, T ifEmpty)
-    {
+    public <T> T pluck (Iterable<? extends T> iterable, T ifEmpty) {
         return pickPluck(iterable, ifEmpty, true);
     }
 
     /**
      * Construct a Randoms.
      */
-    protected Randoms (Random rand)
-    {
+    protected Randoms (Random rand) {
         _r = rand;
     }
 
     /**
      * Shared code for pick and pluck.
      */
-    protected <T> T pickPluck (Iterable<? extends T> iterable, T ifEmpty, boolean remove)
-    {
+    protected <T> T pickPluck (Iterable<? extends T> iterable, T ifEmpty, boolean remove) {
         if (iterable instanceof Collection) {
             // optimized path for Collection
             @SuppressWarnings("unchecked")
@@ -290,14 +274,12 @@ public class Randoms
     }
 
     /** Helper for {@link #shuffle}. */
-    protected static <T> void swap (List<T> list, int ii, int jj)
-    {
+    protected static <T> void swap (List<T> list, int ii, int jj) {
         list.set(ii, list.set(jj, list.get(ii)));
     }
 
     /** Helper for {@link #shuffle}. */
-    protected static void swap (Object[] array, int ii, int jj)
-    {
+    protected static void swap (Object[] array, int ii, int jj) {
         Object tmp = array[ii];
         array[ii] = array[jj];
         array[jj] = tmp;

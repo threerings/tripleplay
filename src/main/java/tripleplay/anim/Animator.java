@@ -133,8 +133,7 @@ public abstract class Animator
     /**
      * Creates an animation that delays for the specified number of seconds.
      */
-    public Animation.Delay delay (float seconds)
-    {
+    public Animation.Delay delay (float seconds) {
         return add(new Animation.Delay(seconds));
     }
 
@@ -143,16 +142,14 @@ public abstract class Animator
      * the supplied layer has been removed from its parent. The layer must be added to a parent
      * before the next frame (if it's not already), or the cancellation will trigger immediately.
      */
-    public Animator repeat (Layer layer)
-    {
+    public Animator repeat (Layer layer) {
         return add(new Animation.Repeat(layer)).then();
     }
 
     /**
      * Creates an animation that executes the supplied runnable and immediately completes.
      */
-    public Animation.Action action (Runnable action)
-    {
+    public Animation.Action action (Runnable action) {
         return add(new Animation.Action(action));
     }
 

@@ -24,8 +24,7 @@ public abstract class Animation
     }
 
     /** A base class for animations that interpolate values. */
-    public static abstract class Interped<R> extends Animation
-    {
+    public static abstract class Interped<R> extends Animation {
         /** Uses the supplied interpolator for this animation. */
         public R using (Interpolator interp) {
             _interp = interp;
@@ -70,8 +69,7 @@ public abstract class Animation
     }
 
     /** An animation that animates a single scalar value. */
-    public static class One extends Interped<One>
-    {
+    public static class One extends Interped<One> {
         public One (Value target) {
             _target = target;
         }
@@ -113,8 +111,7 @@ public abstract class Animation
     }
 
     /** An animation that animates a pair of scalar values (usually a position). */
-    public static class Two extends Interped<Two>
-    {
+    public static class Two extends Interped<Two> {
         public Two (Value x, Value y) {
             _x = x;
             _y = y;
@@ -122,16 +119,14 @@ public abstract class Animation
 
         /** Configures the starting values. Default: the values of the scalar at the time that the
          * animation begins. */
-        public Two from (float fromx, float fromy)
-        {
+        public Two from (float fromx, float fromy) {
             _fromx = fromx;
             _fromy = fromy;
             return this;
         }
 
         /** Configures the ending values. Default: (0, 0). */
-        public Two to (float tox, float toy)
-        {
+        public Two to (float tox, float toy) {
             _tox = tox;
             _toy = toy;
             return this;
@@ -164,8 +159,7 @@ public abstract class Animation
     }
 
     /** An animation that simply delays a specified number of seconds. */
-    public static class Delay extends Animation
-    {
+    public static class Delay extends Animation {
         public Delay (float duration) {
             _duration = duration;
         }
@@ -184,8 +178,7 @@ public abstract class Animation
     }
 
     /** An animation that executes an action and completes immediately. */
-    public static class Action extends Animation
-    {
+    public static class Action extends Animation {
         public Action (Runnable action) {
             _action = action;
         }
@@ -200,8 +193,7 @@ public abstract class Animation
     }
 
     /** An animation that repeats its underlying animation over and over again (until removed). */
-    public static class Repeat extends Animation
-    {
+    public static class Repeat extends Animation {
         public Repeat (Layer layer) {
             _layer = layer;
         }
@@ -221,8 +213,7 @@ public abstract class Animation
         }
 
         @Override
-        protected boolean apply (Animator animator, float time)
-        {
+        protected boolean apply (Animator animator, float time) {
             // if our current chain of animations is still running, keep going
             if (!super.apply(animator, time)) return false;
 
@@ -243,8 +234,7 @@ public abstract class Animation
      * Returns an animation factory for constructing an animation that will be queued up for
      * execution when the current animation is completes.
      */
-    public Animator then ()
-    {
+    public Animator then () {
         if (_next != null) {
             throw new IllegalStateException("This animation already has a 'then' animation.");
         }
@@ -261,8 +251,7 @@ public abstract class Animation
      * @return true if this animation was actually running and was canceled, false if it had
      * already completed.
      */
-    public boolean cancel ()
-    {
+    public boolean cancel () {
         if (_current != null) {
             _current = null;
             return true;
@@ -271,17 +260,14 @@ public abstract class Animation
         }
     }
 
-    protected Animation ()
-    {
+    protected Animation () {
     }
 
-    protected void init (float time)
-    {
+    protected void init (float time) {
         _start = time;
     }
 
-    protected boolean apply (Animator animator, float time)
-    {
+    protected boolean apply (Animator animator, float time) {
         // if we're cancelled, abandon ship now
         if (_current == null) return true;
 
@@ -306,8 +292,7 @@ public abstract class Animation
      * Returns the amount of time this animation has overrun its duration, given the supplied
      * current timestamp. The result may be negative if the animation is not complete.
      */
-    protected float overrun (float time)
-    {
+    protected float overrun (float time) {
         return 0f;
     }
 
