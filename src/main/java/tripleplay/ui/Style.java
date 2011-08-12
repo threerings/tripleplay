@@ -119,6 +119,10 @@ public abstract class Style<V>
     public static final Style<Font> FONT = newStyle(
         true, PlayN.graphics().createFont("Helvetica", Font.Style.PLAIN, 16));
 
+    /** Whether or not to allow text to wrap. When text cannot wrap and does not fit into the
+     * allowed space, it is truncated. Not inherited. */
+    public static final Style<Boolean> TEXT_WRAP = newStyle(false, false);
+
     /** The effect to use when rendering text, if any. Inherited. */
     public static final Style<TextEffect> TEXT_EFFECT = newStyle(true, TextEffect.NONE);
 
