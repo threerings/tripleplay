@@ -7,10 +7,8 @@ package tripleplay.ui;
 
 import pythagoras.f.FloatMath;
 
-import playn.core.Canvas;
 import playn.core.CanvasLayer;
 import playn.core.PlayN;
-import playn.core.Layer;
 
 /**
  * The base class for all user interface widgets. Provides helper methods for managing a canvas

@@ -8,8 +8,6 @@ package tripleplay.anim;
 import java.util.ArrayList;
 import java.util.List;
 
-import pythagoras.f.FloatMath;
-
 import playn.core.GroupLayer;
 import playn.core.Layer;
 

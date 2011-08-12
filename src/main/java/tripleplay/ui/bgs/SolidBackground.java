@@ -7,8 +7,6 @@ package tripleplay.ui.bgs;
 
 import pythagoras.f.IDimension;
 
-import playn.core.GroupLayer;
-
 import tripleplay.ui.Background;
 
 /**

@@ -5,11 +5,7 @@
 
 package tripleplay.ui;
 
-import playn.core.CanvasLayer;
 import playn.core.Image;
-import playn.core.PlayN;
-import playn.core.TextFormat;
-import playn.core.TextLayout;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IRectangle;

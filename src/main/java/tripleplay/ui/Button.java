@@ -5,12 +5,7 @@
 
 package tripleplay.ui;
 
-import playn.core.Canvas;
-import playn.core.CanvasLayer;
 import playn.core.Image;
-import playn.core.PlayN;
-import playn.core.TextFormat;
-import playn.core.TextLayout;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IRectangle;
@@ -88,7 +83,7 @@ public class Button extends TextWidget
         LayoutData ldata = computeLayout(width, height);
 
         // prepare our background
-        Background bg = _ldata.bg;
+        Background bg = ldata.bg;
         if (_bginst != null) _bginst.destroy();
         if (_size.width > 0 && _size.height > 0) {
             _bginst = bg.instantiate(_size);
@@ -98,7 +93,7 @@ public class Button extends TextWidget
         height -= bg.height();
 
         // prepare our label and icon
-        renderLayout(_ldata, bg.left, bg.top, width, height);
+        renderLayout(ldata, bg.left, bg.top, width, height);
 
         clearLayoutData(); // we no longer need our layout data
     }

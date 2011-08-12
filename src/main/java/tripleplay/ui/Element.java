@@ -15,7 +15,6 @@ import pythagoras.f.Transform;
 
 import react.Slot;
 
-import playn.core.Asserts;
 import playn.core.PlayN;
 import playn.core.GroupLayer;
 

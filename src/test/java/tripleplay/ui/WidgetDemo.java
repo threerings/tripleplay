@@ -48,7 +48,6 @@ public class WidgetDemo implements Game
         Image smiley = PlayN.assetManager().getImage("images/smiley.png");
         Image squares = PlayN.assetManager().getImage("images/squares.png");
 
-        Group bits;
         Button toggle;
         Label label2;
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));

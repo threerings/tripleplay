@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import java.util.List;
-import java.util.Map;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
