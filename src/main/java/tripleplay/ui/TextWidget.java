@@ -188,10 +188,10 @@ public abstract class TextWidget extends Widget
             if (_ilayer == null) layer.add(_ilayer = PlayN.graphics().createImageLayer(_icon));
             else _ilayer.setImage(_icon);
             if (_iregion != null) {
-                _ilayer.setWidth(_iregion.getWidth());
-                _ilayer.setHeight(_iregion.getHeight());
-                _ilayer.setSourceRect(_iregion.getX(), _iregion.getY(),
-                                      _iregion.getWidth(), _iregion.getHeight());
+                _ilayer.setWidth(_iregion.width());
+                _ilayer.setHeight(_iregion.height());
+                _ilayer.setSourceRect(_iregion.x(), _iregion.y(),
+                                      _iregion.width(), _iregion.height());
             }
             _ilayer.setTranslation(ix, iy);
         }
@@ -222,11 +222,11 @@ public abstract class TextWidget extends Widget
     }
 
     protected float iconWidth () {
-        return (_iregion == null) ? _icon.width() : _iregion.getWidth();
+        return (_iregion == null) ? _icon.width() : _iregion.width();
     }
 
     protected float iconHeight () {
-        return (_iregion == null) ? _icon.height() : _iregion.getHeight();
+        return (_iregion == null) ? _icon.height() : _iregion.height();
     }
 
     protected static class LayoutData {

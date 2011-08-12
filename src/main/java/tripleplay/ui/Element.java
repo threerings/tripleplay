@@ -5,20 +5,19 @@
 
 package tripleplay.ui;
 
-import pythagoras.f.AffineTransform;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
+import pythagoras.f.Transform;
 
 import react.Slot;
 
 import playn.core.Asserts;
 import playn.core.PlayN;
 import playn.core.GroupLayer;
-import playn.core.Transform;
 
 /**
  * The root of the interface element hierarchy. See {@link Widget} for the root of all interactive
@@ -220,11 +219,9 @@ public abstract class Element
      * element, nor its children contain the point. Also {@code point} is updated to contain the
      * hit-element-relative coordinates in the event of a hit.
      */
-    protected Element hitTest (AffineTransform xform, Point point) {
+    protected Element hitTest (Point point) {
         // transform the point into our coordinate system
-        Transform lt = layer.transform();
-        xform.setTransform(lt.m00(), lt.m10(), lt.m01(), lt.m11(), lt.tx(), lt.ty());
-        point = xform.inverseTransform(point, point);
+        point = layer.transform().inverseTransform(point, point);
         float x = point.x + layer.originX(), y = point.y + layer.originY();
         // check whether it falls within our bounds
         if (!contains(x, y)) return null;

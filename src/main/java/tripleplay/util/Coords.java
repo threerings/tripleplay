@@ -7,7 +7,6 @@ package tripleplay.util;
 
 import playn.core.Layer;
 
-import pythagoras.f.AffineTransform;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 
@@ -47,9 +46,7 @@ public class Coords
             }
             into.x -= layer.originX();
             into.y -= layer.originY();
-            playn.core.Transform lt = layer.transform();
-            _scratch.setTransform(lt.m00(), lt.m10(), lt.m01(), lt.m11(), lt.tx(), lt.ty());
-            _scratch.transform(into, into);
+            layer.transform().transform(into, into);
             layer = layer.parent();
         }
         return into;
@@ -71,9 +68,7 @@ public class Coords
     public static Point screenToLayer (Layer layer, IPoint point, Point into) {
         Layer parent = layer.parent();
         IPoint cur = (parent == null) ? point : screenToLayer(parent, point, into);
-        playn.core.Transform lt = layer.transform();
-        _scratch.setTransform(lt.m00(), lt.m10(), lt.m01(), lt.m11(), lt.tx(), lt.ty());
-        into = _scratch.inverseTransform(cur, into);
+        into = layer.transform().inverseTransform(cur, into);
         into.x += layer.originX();
         into.y += layer.originY();
         return into;
@@ -86,7 +81,4 @@ public class Coords
     public static Point screenToLayer (Layer layer, float x, float y, Point into) {
         return screenToLayer(layer, into.set(x, y), into);
     }
-
-    /** A scratch transform, used by {@link #screenToLayer} and {@link #layerToScreen}. */
-    protected static AffineTransform _scratch = new AffineTransform();
 }

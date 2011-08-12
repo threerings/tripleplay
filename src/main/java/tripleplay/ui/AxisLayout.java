@@ -125,8 +125,8 @@ public abstract class AxisLayout extends Layout
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.preferredSize(width, height); // will be cached
                 Constraint c = constraint(elem);
-                float ewidth = _offPolicy.computeSize(psize.getWidth(), m.maxWidth, width);
-                float eheight = c.computeSize(psize.getHeight(), m.totalWeight, stretchHeight);
+                float ewidth = _offPolicy.computeSize(psize.width(), m.maxWidth, width);
+                float eheight = c.computeSize(psize.height(), m.totalWeight, stretchHeight);
                 elem.setSize(ewidth, eheight);
                 elem.setLocation(left + _alignOff.computeOffset(ewidth, width), y);
                 y += (eheight + _gap);
@@ -175,8 +175,8 @@ public abstract class AxisLayout extends Layout
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.preferredSize(width, height); // will be cached
                 Constraint c = constraint(elem);
-                float ewidth = c.computeSize(psize.getWidth(), m.totalWeight, stretchWidth);
-                float eheight = _offPolicy.computeSize(psize.getHeight(), m.maxHeight, height);
+                float ewidth = c.computeSize(psize.width(), m.totalWeight, stretchWidth);
+                float eheight = _offPolicy.computeSize(psize.height(), m.maxHeight, height);
                 elem.setSize(ewidth, eheight);
                 elem.setLocation(x, top + _alignOff.computeOffset(eheight, height));
                 x += (ewidth + _gap);
@@ -273,7 +273,7 @@ public abstract class AxisLayout extends Layout
             Constraint c = constraint(elem);
             if (!c.stretch) {
                 IDimension psize = elem.preferredSize(hintX, hintY);
-                float pwidth = psize.getWidth(), pheight = psize.getHeight();
+                float pwidth = psize.width(), pheight = psize.height();
                 m.prefWidth += pwidth;
                 m.prefHeight += pheight;
                 m.maxWidth = Math.max(m.maxWidth, pwidth);
@@ -298,7 +298,7 @@ public abstract class AxisLayout extends Layout
             float ehintX = vert ? availX : c.computeSize(0, m.totalWeight, availX);
             float ehintY = vert ? c.computeSize(0, m.totalWeight, availY) : availY;
             IDimension psize = elem.preferredSize(ehintX, ehintY);
-            float pwidth = psize.getWidth(), pheight = psize.getHeight();
+            float pwidth = psize.width(), pheight = psize.height();
             m.unitWidth = Math.max(m.unitWidth, pwidth / c.weight);
             m.unitHeight = Math.max(m.unitHeight, pheight / c.weight);
             m.maxWidth = Math.max(m.maxWidth, pwidth);

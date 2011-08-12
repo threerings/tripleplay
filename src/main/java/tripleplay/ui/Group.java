@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import playn.core.Transform;
-
-import pythagoras.f.AffineTransform;
 import pythagoras.f.Dimension;
 import pythagoras.f.Point;
 
@@ -125,17 +122,15 @@ public class Group extends Element
         // if we're added again, we'll be re-laid-out
     }
 
-    @Override protected Element hitTest (AffineTransform xform, Point point) {
+    @Override protected Element hitTest (Point point) {
         // transform the point into our coordinate system
-        Transform lt = layer.transform();
-        xform.setTransform(lt.m00(), lt.m10(), lt.m01(), lt.m11(), lt.tx(), lt.ty());
-        point = xform.inverseTransform(point, point);
+        point = layer.transform().inverseTransform(point, point);
         // check whether it falls within our bounds
         float x = point.x + layer.originX(), y = point.y + layer.originY();
         if (!contains(x, y)) return null;
         // determine whether it falls within the bounds of any of our children
         for (Element child : _children) {
-            Element hit = child.hitTest(xform, point.set(x, y));
+            Element hit = child.hitTest(point.set(x, y));
             if (hit != null) return hit;
         }
         return null;

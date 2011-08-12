@@ -68,12 +68,7 @@ public abstract class Animator
     public Animation.One tweenRotation (final Layer layer) {
         return add(new Animation.One(new Animation.Value() {
             public float get () {
-                float m01 = layer.transform().m01();
-                float m11 = layer.transform().m11();
-                float rot = FloatMath.atan2(m01, m11);
-                // avoid returning +PI sometimes and -PI others
-                if (rot == FloatMath.PI) rot = -FloatMath.PI;
-                return rot;
+                return layer.transform().rotation();
             }
             public void set (float value) {
                 layer.setRotation(value);
@@ -87,7 +82,7 @@ public abstract class Animator
     public Animation.One tweenScale (final Layer layer) {
         return add(new Animation.One(new Animation.Value() {
             public float get () {
-                return layer.transform().m00(); // assume x and y scale are equal
+                return layer.transform().uniformScale();
             }
             public void set (float value) {
                 layer.setScale(value);
@@ -228,12 +223,10 @@ public abstract class Animator
     protected static Animation.Value onScaleX (final Layer layer) {
         return new Animation.Value() {
             public float get () {
-                float m00 = layer.transform().m00();
-                float m01 = layer.transform().m01();
-                return FloatMath.sqrt(m00*m00 + m01*m01);
+                return layer.transform().scaleX();
             }
             public void set (float value) {
-                layer.transform().setM00(value);
+                layer.transform().setScaleX(value);
             }
         };
     }
@@ -241,12 +234,10 @@ public abstract class Animator
     protected static Animation.Value onScaleY (final Layer layer) {
         return new Animation.Value() {
             public float get () {
-                float m10 = layer.transform().m10();
-                float m11 = layer.transform().m11();
-                return FloatMath.sqrt(m10*m10 + m11*m11);
+                return layer.transform().scaleY();
             }
             public void set (float value) {
-                layer.transform().setM11(value);
+                layer.transform().setScaleY(value);
             }
         };
     }

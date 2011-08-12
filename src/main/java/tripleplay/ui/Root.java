@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import pythagoras.f.AffineTransform;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
 
@@ -22,7 +21,7 @@ public class Root extends Group
      */
     public void pack () {
         IDimension psize = preferredSize(0, 0);
-        setSize(psize.getWidth(), psize.getHeight());
+        setSize(psize.width(), psize.height());
     }
 
     /**
@@ -30,7 +29,7 @@ public class Root extends Group
      */
     public void packToWidth (float width) {
         IDimension psize = preferredSize(width, 0);
-        setSize(width, psize.getHeight());
+        setSize(width, psize.height());
     }
 
     /**
@@ -38,7 +37,7 @@ public class Root extends Group
      */
     public void packToHeight (float height) {
         IDimension psize = preferredSize(0, height);
-        setSize(psize.getWidth(), height);
+        setSize(psize.width(), height);
     }
 
     /**
@@ -57,7 +56,7 @@ public class Root extends Group
 
     protected boolean dispatchPointerStart (float x, float y) {
         Point p = new Point(x, y);
-        _active = hitTest(new AffineTransform(), p);
+        _active = hitTest(p);
         if (_active == null) return false;
         _active.onPointerStart(p.x, p.y);
         return true;
