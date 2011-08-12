@@ -100,7 +100,7 @@ public class Button extends TextWidget
         // prepare our label and icon
         renderLayout(_ldata, bg.left, bg.top, width, height);
 
-        _ldata = null; // we no longer need our layout data
+        clearLayoutData(); // we no longer need our layout data
     }
 
     @Override protected void onPointerStart (float x, float y) {
@@ -136,6 +136,10 @@ public class Button extends TextWidget
         case DEFAULT: return isSet(Flag.DOWN) ? State.DOWN : State.DEFAULT;
         default:      return sstate;
         }
+    }
+
+    @Override protected void clearLayoutData () {
+        _ldata = null;
     }
 
     protected LayoutData computeLayout (float hintX, float hintY) {

@@ -60,7 +60,11 @@ public class Label extends TextWidget
         float width = _size.width, height = _size.height;
         LayoutData ldata = computeLayout(width, height);
         renderLayout(ldata, 0, 0, width, height);
-        _ldata = null; // no need to keep this around
+        clearLayoutData(); // no need to keep this around
+    }
+
+    @Override protected void clearLayoutData () {
+        _ldata = null;
     }
 
     protected LayoutData computeLayout (float hintX, float hintY) {

@@ -93,6 +93,7 @@ public abstract class Element
      */
     public Element setStyles (Styles styles) {
         _styles = styles;
+        clearLayoutData();
         return this;
     }
 
@@ -103,6 +104,7 @@ public abstract class Element
      */
     public Element addStyles (Styles styles) {
         _styles = _styles.merge(styles);
+        clearLayoutData();
         return this;
     }
 
@@ -120,6 +122,7 @@ public abstract class Element
     public void setEnabled (boolean enabled) {
         if (enabled != isEnabled()) {
             set(Flag.ENABLED, enabled);
+            clearLayoutData();
             invalidate();
         }
     }
@@ -338,6 +341,9 @@ public abstract class Element
     protected void setSize (float width, float height) {
         if (_size.width == width && _size.height == height) return; // NOOP
         _size.setSize(width, height);
+        // if we have a cached preferred size and this size differs from it, we need to clear our
+        // layout data as it may contain computations specific to our preferred size
+        if (_preferredSize != null && !_size.equals(_preferredSize)) clearLayoutData();
         invalidate();
     }
 
@@ -365,6 +371,14 @@ public abstract class Element
      * the widget.
      */
     protected abstract void layout ();
+
+    /**
+     * Clears out cached layout data. This can be called by methods that change the configuration
+     * of the widget when they know it will render pre-computed layout info invalid. Elements that
+     * cache layout data should override this method and clear their cached layout.
+     */
+    protected void clearLayoutData () {
+    }
 
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
     protected Group _parent;

@@ -37,6 +37,7 @@ public abstract class TextWidget extends Widget
         if (!text.equals(_text)) {
             _text = text;
             clearTextLayer();
+            clearLayoutData();
             invalidate();
         }
         return this;
@@ -62,6 +63,7 @@ public abstract class TextWidget extends Widget
             _icon = icon;
             _icon.addCallback(new ResourceCallback<Image>() {
                 public void done (Image resource) {
+                    clearLayoutData();
                     invalidate();
                 }
                 public void error (Throwable err) {
@@ -84,6 +86,7 @@ public abstract class TextWidget extends Widget
             _iregion = region;
             _icon.addCallback(new ResourceCallback<Image>() {
                 public void done (Image resource) {
+                    clearLayoutData();
                     invalidate();
                 }
                 public void error (Throwable err) {

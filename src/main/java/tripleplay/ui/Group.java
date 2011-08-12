@@ -161,6 +161,12 @@ public class Group extends Element
         for (Element child : _children) {
             child.validate();
         }
+
+        clearLayoutData();
+    }
+
+    @Override protected void clearLayoutData () {
+        _ldata = null;
     }
 
     protected LayoutData computeLayout (float hintX, float hintY) {
