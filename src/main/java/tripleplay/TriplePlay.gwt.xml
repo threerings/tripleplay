@@ -2,7 +2,7 @@
 <module>
   <inherits name="pythagoras.Pythagoras"/>
   <inherits name="playn.PlayN"/>
-  <inherits name="react.React"/>
+  <inherits name="react"/>
 
   <source path="anim"/>
   <source path="game"/>
