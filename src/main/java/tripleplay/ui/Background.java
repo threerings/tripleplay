@@ -13,6 +13,7 @@ import playn.core.ImageLayer;
 import playn.core.Layer;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.FloatMath;
 import pythagoras.f.IDimension;
 
 import tripleplay.ui.bgs.SolidBackground;
@@ -84,7 +85,7 @@ public abstract class Background
 
     protected static Layer createSolidLayer (int color, float width, float height) {
         // TODO: rewrite this as an active-rendered layer when PlayN supports such things
-        int cwidth = (int)Math.ceil(width), cheight = (int)Math.ceil(height);
+        int cwidth = FloatMath.iceil(width), cheight = FloatMath.iceil(height);
         final CanvasLayer canvas = PlayN.graphics().createCanvasLayer(cwidth, cheight);
         canvas.canvas().setFillColor(color);
         canvas.canvas().fillRect(0, 0, width, height);

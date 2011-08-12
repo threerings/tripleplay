@@ -5,6 +5,8 @@
 
 package tripleplay.ui;
 
+import pythagoras.f.FloatMath;
+
 import playn.core.Canvas;
 import playn.core.CanvasLayer;
 import playn.core.PlayN;
@@ -24,7 +26,7 @@ public abstract class Widget extends Element
      */
     protected CanvasLayer prepareCanvas (CanvasLayer cl, float width, float height) {
         // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
-        int cwidth = (int)Math.ceil(width), cheight = (int)Math.ceil(height);
+        int cwidth = FloatMath.iceil(width), cheight = FloatMath.iceil(height);
         if (cl == null || cl.canvas().width() < cwidth || cl.canvas().height() < cheight) {
             if (cl != null) cl.destroy();
             layer.add(cl = PlayN.graphics().createCanvasLayer(cwidth, cheight));
