@@ -52,7 +52,7 @@ public abstract class AxisLayout extends Layout
     public static enum Policy {
         DEFAULT {
             public float computeSize (float size, float maxSize, float extent) {
-                return size;
+                return Math.min(size, extent);
             }
         },
         STRETCH {
@@ -62,7 +62,7 @@ public abstract class AxisLayout extends Layout
         },
         EQUALIZE {
             public float computeSize (float size, float maxSize, float extent) {
-                return maxSize;
+                return Math.min(maxSize, extent);
             }
         };
 
