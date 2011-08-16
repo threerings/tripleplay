@@ -5,7 +5,10 @@
 
 package tripleplay.util;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
+
 import playn.core.Json;
 
 /**
@@ -19,6 +22,24 @@ public class JsonUtil
     public static <T extends Enum<T>> T getEnum (Json.Object json, String key, Class<T> enumType)
     {
         return Enum.valueOf(enumType, json.getString(key));
+    }
+
+    /**
+     * @return a Set<String> containing the keys for the given Json.Object
+     * (Json.Object.getKeys() returns a less-useful Json.Array)
+     */
+    public static Set<String> getKeys (Json.Object json)
+    {
+        Set<String> keys = new HashSet<String>();
+        Json.Array keysArray = json.getKeys();
+        for (int ii = 0, ll = keysArray.length(); ii < ll; ++ii) {
+            String key = keysArray.getString(ii);
+            if (key == null) {
+                throw new RuntimeException("Json.Object.getKeys() returned a null key...?");
+            }
+            keys.add(key);
+        }
+        return keys;
     }
 
     /**
