@@ -30,7 +30,16 @@ public class JsonUtil
      */
     public static Set<String> getKeys (Json.Object json)
     {
-        Json.Array keysArray = json.getKeys();
+        Json.Array keysArray = null;
+
+        // The Java implementation of Json.Object.getKeys() blows up on objects with no keys.
+        // TODO: remove this try-catch when the issue is fixed.
+        try {
+            keysArray = json.getKeys();
+        } catch (Exception e) {
+            return new HashSet<String>();
+        }
+
         int ll = keysArray.length();
         Set<String> keys = new HashSet<String>(ll);
         for (int ii = 0; ii < ll; ++ii) {
