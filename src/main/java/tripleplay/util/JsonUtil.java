@@ -64,7 +64,7 @@ public class JsonUtil
                             return _index < array.length();
                         }
                         @Override public Json.Object next () {
-                            Json.Object obj = array.getObject(_index++);
+                            Json.Object obj = array.getObject(_index);
                             if (obj == null) {
                                 throw new RuntimeException("There's no Json.Object at the given " +
                                         "index [index=" + _index + "]");
