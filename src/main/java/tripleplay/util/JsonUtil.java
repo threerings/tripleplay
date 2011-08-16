@@ -30,9 +30,10 @@ public class JsonUtil
      */
     public static Set<String> getKeys (Json.Object json)
     {
-        Set<String> keys = new HashSet<String>();
         Json.Array keysArray = json.getKeys();
-        for (int ii = 0, ll = keysArray.length(); ii < ll; ++ii) {
+        int ll = keysArray.length();
+        Set<String> keys = new HashSet<String>(ll);
+        for (int ii = 0; ii < ll; ++ii) {
             String key = keysArray.getString(ii);
             if (key == null) {
                 throw new RuntimeException("Json.Object.getKeys() returned a null key...?");
