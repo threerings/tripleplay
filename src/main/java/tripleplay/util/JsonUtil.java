@@ -5,10 +5,7 @@
 
 package tripleplay.util;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
-
 import playn.core.Json;
 
 /**
@@ -25,31 +22,44 @@ public class JsonUtil
     }
 
     /**
-     * @return a Set<String> containing the keys for the given Json.Object
+     * @return a Iterable<String> containing the keys for the given Json.Object
      * (Json.Object.getKeys() returns a less-useful Json.Array)
      */
-    public static Set<String> getKeys (Json.Object json)
+    public static Iterable<String> getKeys (Json.Object json)
     {
-        Json.Array keysArray = null;
-
         // The Java implementation of Json.Object.getKeys() blows up on objects with no keys.
         // TODO: remove this try-catch when the issue is fixed.
+        Json.Array tmp;
         try {
-            keysArray = json.getKeys();
+            tmp = json.getKeys();
         } catch (Exception e) {
-            return new HashSet<String>();
+            tmp = null;
         }
 
-        int ll = keysArray.length();
-        Set<String> keys = new HashSet<String>(ll);
-        for (int ii = 0; ii < ll; ++ii) {
-            String key = keysArray.getString(ii);
-            if (key == null) {
-                throw new RuntimeException("Json.Object.getKeys() returned a null key...?");
+        final Json.Array array = tmp;
+        return new Iterable<String>() {
+            @Override public Iterator<String> iterator () {
+                return new Iterator<String>() {
+                    @Override public boolean hasNext () {
+                        return (array != null && _index < array.length());
+                    }
+                    @Override public String next () {
+                        String str = array.getString(_index);
+                        if (str == null) {
+                            throw new RuntimeException(
+                                "Json.Object.getKeys() returned a null key...?");
+                        }
+                        ++_index;
+                        return str;
+                    }
+                    @Override public void remove () {
+                        throw new UnsupportedOperationException();
+                    }
+
+                    protected int _index;
+                };
             }
-            keys.add(key);
-        }
-        return keys;
+        };
     }
 
     /**
