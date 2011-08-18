@@ -22,6 +22,19 @@ public class JsonUtil
     }
 
     /**
+     * @return true if JSON object contains the given key
+     */
+    public static boolean containsKey (Json.Object json, String key)
+    {
+        for (String val : getKeys(json)) {
+            if (val.equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return a Iterable<String> containing the keys for the given Json.Object
      * (Json.Object.getKeys() returns a less-useful Json.Array)
      */
