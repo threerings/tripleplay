@@ -18,7 +18,18 @@ public class JsonUtil
      */
     public static <T extends Enum<T>> T getEnum (Json.Object json, String key, Class<T> enumType)
     {
-        return Enum.valueOf(enumType, json.getString(key));
+        String name = json.getString(key);
+        return (name != null ? Enum.valueOf(enumType, name) : null);
+    }
+
+    /**
+     * @return the Enum whose name corresponds to string for the given key.
+     * Throws a RuntimeException if the key doesn't exist.
+     */
+    public static <T extends Enum<T>> T requireEnum (Json.Object json, String key,
+        Class<T> enumType)
+    {
+        return Enum.valueOf(enumType, requireString(json, key));
     }
 
     /**
