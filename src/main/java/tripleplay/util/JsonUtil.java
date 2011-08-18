@@ -22,6 +22,93 @@ public class JsonUtil
     }
 
     /**
+     * @return the boolean value at the given key.
+     * Throws a RuntimeException if the key doesn't exist.
+     */
+    public static boolean requireBoolean (Json.Object json, String key)
+    {
+        boolean val = json.getBoolean(key);
+        if (val == false) {
+            requireKey(json, key);
+        }
+        return val;
+    }
+
+    /**
+     * @return the double value at the given key.
+     * Throws a RuntimeException if the key doesn't exist.
+     */
+    public static double requireNumber (Json.Object json, String key)
+    {
+        double val = json.getNumber(key);
+        if (Double.isNaN(val)) {
+            requireKey(json, key);
+        }
+        return val;
+    }
+
+    /**
+     * @return the float value at the given key.
+     * Throws a RuntimeException if the key doesn't exist.
+     */
+    public static float requireFloat (Json.Object json, String key)
+    {
+        return (float) requireNumber(json, key);
+    }
+
+    /**
+     * @return the int value at the given key.
+     * Throws a RuntimeException if the key doesn't exist.
+     */
+    public static int requireInt (Json.Object json, String key)
+    {
+        int val = json.getInt(key);
+        if (val == 0) {
+            requireKey(json, key);
+        }
+        return val;
+    }
+
+    /**
+     * @return the String value at the given key.
+     * Throws a RuntimeException if the key doesn't exist.
+     */
+    public static String requireString (Json.Object json, String key)
+    {
+        String val = json.getString(key);
+        if (val == null) {
+            requireKey(json, key);
+        }
+        return val;
+    }
+
+    /**
+     * @return the Json.Object at the given key.
+     * Throws a RuntimeException if the key doesn't exist.
+     */
+    public static Json.Object requireObject (Json.Object json, String key)
+    {
+        Json.Object val = json.getObject(key);
+        if (val == null) {
+            requireKey(json, key);
+        }
+        return val;
+    }
+
+    /**
+     * @return the Json.Array at the given key.
+     * Throws a RuntimeException if the key doesn't exist.
+     */
+    public static Json.Array requireArray (Json.Object json, String key)
+    {
+        Json.Array val = json.getArray(key);
+        if (val == null) {
+            requireKey(json, key);
+        }
+        return val;
+    }
+
+    /**
      * @return true if JSON object contains the given key
      */
     public static boolean containsKey (Json.Object json, String key)
@@ -112,6 +199,13 @@ public class JsonUtil
                     };
                 }
             };
+        }
+    }
+
+    protected static void requireKey (Json.Object json, String key)
+    {
+        if (!containsKey(json, key)) {
+            throw new RuntimeException("Missing required key [name=" + key + "]");
         }
     }
 }
