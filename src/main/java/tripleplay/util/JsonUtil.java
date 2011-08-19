@@ -213,6 +213,22 @@ public class JsonUtil
         }
     }
 
+    /**
+     * @return an Iterable<Json.Object> that iterates the Objects in the Array at the given key.
+     * Throws a RuntimeException if there's no Array at that key.
+     *
+     * The Iterable will throw an error, during iteration, if any of the items in the Array are
+     * not Json.Objects.
+     */
+    public static Iterable<Json.Object> requireArrayObjects (Json.Object json, String key)
+    {
+        Iterable<Json.Object> iter = getArrayObjects(json, key);
+        if (iter == null) {
+            throw new RuntimeException("No Array for the given key [name=" + key + "]");
+        }
+        return iter;
+    }
+
     protected static void requireKey (Json.Object json, String key)
     {
         if (!containsKey(json, key)) {
