@@ -43,7 +43,7 @@
   <dependencies>
     <dependency>
       <groupId>com.googlecode.playn</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>playn-core</artifactId>
       <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
