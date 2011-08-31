@@ -19,11 +19,6 @@ import java.util.RandomAccess;
 public class Randoms
 {
     /**
-     * A default Randoms instance.
-     */
-    public static final Randoms RAND = with(new Random());
-
-    /**
      * A factory to create a new Randoms object.
      */
     public static Randoms with (Random rand) {
