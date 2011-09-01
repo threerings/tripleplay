@@ -62,5 +62,5 @@ public class LoggerTest
         return buf;
     }
 
-        protected static final String NEWLINE = System.getProperty("line.separator");
+    protected static final String NEWLINE = System.getProperty("line.separator");
 }
