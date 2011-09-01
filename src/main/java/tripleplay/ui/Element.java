@@ -215,7 +215,6 @@ public abstract class Element
 
     /**
      * Used to determine whether a point falls in this element's bounds.
-     * @param xform a scratch transform for use by the element.
      * @param point the point to be tested in this element's parent's coordinate system.
      * @return the leaf-most element that contains the supplied point or null if neither this
      * element, nor its children contain the point. Also {@code point} is updated to contain the
