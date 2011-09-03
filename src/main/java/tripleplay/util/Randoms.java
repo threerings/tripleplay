@@ -216,7 +216,6 @@ public class Randoms
     protected <T> T pickPluck (Iterable<? extends T> iterable, T ifEmpty, boolean remove) {
         if (iterable instanceof Collection) {
             // optimized path for Collection
-            @SuppressWarnings("unchecked")
             Collection<? extends T> coll = (Collection<? extends T>)iterable;
             int size = coll.size();
             if (size == 0) {
@@ -224,7 +223,6 @@ public class Randoms
             }
             if (coll instanceof List) {
                 // extra-special optimized path for Lists
-                @SuppressWarnings("unchecked")
                 List<? extends T> list = (List<? extends T>)coll;
                 int idx = _r.nextInt(size);
                 if (remove) { // ternary conditional causes warning here with javac 1.6, :(
