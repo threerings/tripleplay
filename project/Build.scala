@@ -38,11 +38,8 @@ object TriplePlayBuild extends Build {
 
       resolvers += "Local Maven Repository" at Path.userHome.asURL + "/.m2/repository",
 
-      // this hackery causes publish-local to install to ~/.m2/repository instead of ~/.ivy
-      otherResolvers := Seq(Resolver.file("dotM2", file(Path.userHome + "/.m2/repository"))),
-      publishLocalConfiguration <<= (packagedArtifacts, deliverLocal, ivyLoggingLevel) map {
-        (arts, _, level) => new PublishConfiguration(None, "dotM2", arts, level)
-      },
+      // add our sources to the main jar file
+      unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java",
 
       autoScalaLibrary := false, // no scala-library dependency
       libraryDependencies ++= locals.libDeps ++ Seq(
