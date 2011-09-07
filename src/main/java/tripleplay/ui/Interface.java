@@ -22,19 +22,52 @@ import playn.core.Pointer;
 public class Interface
 {
     /**
+     * This pointer listener must be configure in order to make this interface active. It is
+     * exposed so that apps can manage their pointer listener stack however they like.
+     */
+    public final Pointer.Listener plistener = new Pointer.Listener() {
+        @Override public void onPointerStart (Pointer.Event event) {
+            float x = event.x(), y = event.y();
+            try {
+                // copy our roots to a separate list to avoid conflicts if a root is added or
+                // removed while dispatching an event
+                _dispatch.addAll(_roots);
+                for (Root root : _dispatch) {
+                    if (root.dispatchPointerStart(x, y)) {
+                        _active = root;
+                        return;
+                    }
+                }
+                _delegate.onPointerStart(event);
+            } finally {
+                _dispatch.clear();
+            }
+        }
+        @Override public void onPointerDrag (Pointer.Event event) {
+            if (_active != null) {
+                _active.dispatchPointerDrag(event.x(), event.y());
+            } else {
+                _delegate.onPointerDrag(event);
+            }
+        }
+        @Override public void onPointerEnd (Pointer.Event event) {
+            if (_active != null) {
+                _active.dispatchPointerEnd(event.x(), event.y());
+                _active = null;
+            } else {
+                _delegate.onPointerEnd(event);
+            }
+        }
+        protected Root _active;
+    };
+
+    /**
      * Creates an interface instance which will delegate unconsumed pointer events to the supplied
      * pointer delegate.
      */
     public Interface (Pointer.Listener delegate) {
         // if we have no delegate, use a NOOP delegate to simplify our logic
         _delegate = (delegate == null) ? new Pointer.Adapter() : delegate;
-    }
-
-    /**
-     * Activates this interface, which causes it to take control of user input.
-     */
-    public void activate () {
-        PlayN.pointer().setListener(_plistener);
     }
 
     /**
@@ -90,41 +123,7 @@ public class Interface
         _roots.remove(root);
     }
 
-    protected final Pointer.Listener _delegate, _plistener = new Pointer.Listener() {
-        @Override public void onPointerStart (Pointer.Event event) {
-            float x = event.x(), y = event.y();
-            try {
-                // copy our roots to a separate list to avoid conflicts if a root is added or
-                // removed while dispatching an event
-                _dispatch.addAll(_roots);
-                for (Root root : _dispatch) {
-                    if (root.dispatchPointerStart(x, y)) {
-                        _active = root;
-                        return;
-                    }
-                }
-                _delegate.onPointerStart(event);
-            } finally {
-                _dispatch.clear();
-            }
-        }
-        @Override public void onPointerDrag (Pointer.Event event) {
-            if (_active != null) {
-                _active.dispatchPointerDrag(event.x(), event.y());
-            } else {
-                _delegate.onPointerDrag(event);
-            }
-        }
-        @Override public void onPointerEnd (Pointer.Event event) {
-            if (_active != null) {
-                _active.dispatchPointerEnd(event.x(), event.y());
-                _active = null;
-            } else {
-                _delegate.onPointerEnd(event);
-            }
-        }
-        protected Root _active;
-    };
+    protected final Pointer.Listener _delegate;
 
     protected final List<Root> _roots = new ArrayList<Root>();
     protected final List<Root> _dispatch = new ArrayList<Root>();

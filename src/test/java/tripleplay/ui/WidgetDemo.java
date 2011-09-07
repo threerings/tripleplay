@@ -29,7 +29,7 @@ public class WidgetDemo implements Game
     @Override // from interface Game
     public void init () {
         _iface = new Interface(null);
-        _iface.activate();
+        PlayN.pointer().setListener(_iface.plistener);
 
         // define our root stylesheet
         Styles buttonStyles = Styles.none().
