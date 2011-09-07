@@ -38,6 +38,14 @@ public class Interface
     }
 
     /**
+     * Posts a runnable that will be executed after the next time the interface is validated.
+     * Processing deferred actions is not tremendously efficient, so don't call this every frame.
+     */
+    public void deferAction (Runnable action) {
+        _actions.add(action);
+    }
+
+    /**
      * Updates the elements in this interface. Must be called from {@link Game#update}.
      */
     public void update (float delta) {
@@ -50,6 +58,19 @@ public class Interface
     public void paint (float alpha) {
         for (int ii = 0, ll = _roots.size(); ii < ll; ii++) {
             _roots.get(ii).validate();
+        }
+
+        // run any deferred actions
+        if (!_actions.isEmpty()) {
+            List<Runnable> actions = new ArrayList<Runnable>(_actions);
+            _actions.clear();
+            for (Runnable action : actions) {
+                try {
+                    action.run();
+                } catch (Exception e) {
+                    Log.log.warning("Interface action failed: " + action, e);
+                }
+            }
         }
     }
 
@@ -69,8 +90,6 @@ public class Interface
         _roots.remove(root);
     }
 
-    protected final List<Root> _roots = new ArrayList<Root>();
-    protected final List<Root> _dispatch = new ArrayList<Root>();
     protected final Pointer.Listener _delegate, _plistener = new Pointer.Listener() {
         @Override public void onPointerStart (Pointer.Event event) {
             float x = event.x(), y = event.y();
@@ -106,4 +125,8 @@ public class Interface
         }
         protected Root _active;
     };
+
+    protected final List<Root> _roots = new ArrayList<Root>();
+    protected final List<Root> _dispatch = new ArrayList<Root>();
+    protected final List<Runnable> _actions = new ArrayList<Runnable>();
 }
