@@ -30,13 +30,11 @@ object TriplePlayBuild extends Build {
       crossPaths   := false,
       scalaVersion := "2.9.0-1",
 
-      javacOptions ++= Seq("-Xlint", "-Xlint:-serial"),
+      javacOptions ++= Seq("-Xlint", "-Xlint:-serial", "-source", "1.6", "-target", "1.6"),
       fork in Compile := true,
 
       // TODO: reenable doc publishing when scaladoc doesn't choke on our code
       publishArtifact in (Compile, packageDoc) := false,
-
-      resolvers += "Local Maven Repository" at Path.userHome.asURL + "/.m2/repository",
 
       // add our sources to the main jar file
       unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java",
