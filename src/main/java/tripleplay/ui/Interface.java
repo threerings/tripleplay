@@ -8,7 +8,6 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.PlayN;
 import playn.core.Game;
 import playn.core.Pointer;
 
