@@ -107,6 +107,13 @@ public class Interface
     }
 
     /**
+     * Creates a root element with the specified layout and a blank stylesheet.
+     */
+    public Root createRoot (Layout layout) {
+        return createRoot(layout, Stylesheet.builder().create());
+    }
+
+    /**
      * Creates a root element with the specified layout and stylesheet.
      */
     public Root createRoot (Layout layout, Stylesheet sheet) {
