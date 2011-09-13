@@ -21,7 +21,7 @@ import playn.core.Pointer;
 public class Interface
 {
     /**
-     * This pointer listener must be configure in order to make this interface active. It is
+     * This pointer listener must be configured in order to make this interface active. It is
      * exposed so that apps can manage their pointer listener stack however they like.
      */
     public final Pointer.Listener plistener = new Pointer.Listener() {
