@@ -16,7 +16,6 @@ class Locals (locals :(String, String, ModuleID)*) {
 
 object TriplePlayBuild extends Build {
   val locals = new Locals(
-    ("pythagoras", null,  "com.samskivert" % "pythagoras" % "1.1-SNAPSHOT"),
     ("react",      null,  "com.threerings" % "react" % "1.0-SNAPSHOT"),
     ("playn",     "core", "com.googlecode.playn" % "playn-core" % "1.0-SNAPSHOT"),
     ("playn",     "java", "com.googlecode.playn" % "playn-java" % "1.0-SNAPSHOT" % "test")
