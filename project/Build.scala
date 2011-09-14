@@ -39,6 +39,7 @@ object TriplePlayBuild extends Build {
       unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java",
 
       autoScalaLibrary := false, // no scala-library dependency
+      resolvers        += "Forplay Legacy" at "http://forplay.googlecode.com/svn/mavenrepo",
       libraryDependencies ++= locals.libDeps ++ Seq(
         // test dependencies
         "junit" % "junit" % "4.+" % "test",
