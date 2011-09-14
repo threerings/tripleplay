@@ -21,7 +21,7 @@ import react.Slot;
 /**
  * An abstract base class for widgets that contain text.
  */
-public abstract class TextWidget extends Widget
+public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 {
     /**
      * Returns the text configured for this widget.
@@ -33,14 +33,14 @@ public abstract class TextWidget extends Widget
     /**
      * Updates the text configured for this widget.
      */
-    public TextWidget setText (String text) {
+    public T setText (String text) {
         if (!text.equals(_text)) {
             _text = text;
             clearTextLayer();
             clearLayoutData();
             invalidate();
         }
-        return this;
+        return asT();
     }
 
     /**
@@ -58,7 +58,7 @@ public abstract class TextWidget extends Widget
     /**
      * Sets the icon to be displayed by this widget.
      */
-    public TextWidget setIcon (Image icon) {
+    public T setIcon (Image icon) {
         if (icon != _icon || _iregion != null) {
             _icon = icon;
             _icon.addCallback(new ResourceCallback<Image>() {
@@ -72,7 +72,7 @@ public abstract class TextWidget extends Widget
             });
             _iregion = null;
         }
-        return this;
+        return asT();
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class TextWidget extends Widget
      *
      * @param region the subregion of the supplied image to be used as the icon.
      */
-    public TextWidget setIcon (Image icon, IRectangle region) {
+    public T setIcon (Image icon, IRectangle region) {
         if (icon != _icon || !region.equals(_iregion)) {
             _icon = icon;
             _iregion = region;
@@ -94,7 +94,7 @@ public abstract class TextWidget extends Widget
                 }
             });
         }
-        return this;
+        return asT();
     }
 
     /**

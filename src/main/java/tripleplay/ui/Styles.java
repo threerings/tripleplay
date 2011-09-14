@@ -154,14 +154,14 @@ public final class Styles
         _bindings = bindings;
     }
 
-    static <V> V resolveStyle (Element element, Element.State state, Style<V> style) {
+    static <V> V resolveStyle (Element<?> element, Element.State state, Style<V> style) {
         // first check for the style configured directly on the element
         Binding<V> key = new Binding<V>(style);
         V value = element.styles().<V>get(key, state);
         if (value != null) return value;
 
         // now check for the style in the appropriate stylesheets
-        Group group = (element instanceof Group) ? (Group)element : element.parent();
+        Elements<?> group = (element instanceof Group) ? (Group)element : element.parent();
         for (; group != null; group = group.parent()) {
             Stylesheet sheet = group.stylesheet();
             if (sheet == null) continue;

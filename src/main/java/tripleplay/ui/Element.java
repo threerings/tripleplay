@@ -20,9 +20,11 @@ import playn.core.GroupLayer;
 
 /**
  * The root of the interface element hierarchy. See {@link Widget} for the root of all interactive
- * elements, and {@link Group} for the root of all grouping elements.
+ * elements, and {@link Elements} for the root of all grouping elements.<p>
+ *
+ * When subclassing element, T must be the type of the subclass.
  */
-public abstract class Element
+public abstract class Element<T extends Element<T>>
 {
     /** Defines the states that may be assumed by an element. */
     public static enum State {
@@ -75,7 +77,7 @@ public abstract class Element
     /**
      * Returns the parent of this element, or null.
      */
-    public Group parent () {
+    public Elements<?> parent () {
         return _parent;
     }
 
@@ -90,11 +92,11 @@ public abstract class Element
      * Configures the styles for this element. Any previously configured styles are overwritten.
      * @return this element for convenient call chaining.
      */
-    public Element setStyles (Styles styles) {
+    public T setStyles (Styles styles) {
         _styles = styles;
         clearLayoutData();
         invalidate();
-        return this;
+        return asT();
     }
 
     /**
@@ -102,11 +104,18 @@ public abstract class Element
      * the new styles are preferred, but non-overlapping old styles are preserved.
      * @return this element for convenient call chaining.
      */
-    public Element addStyles (Styles styles) {
+    public T addStyles (Styles styles) {
         _styles = _styles.merge(styles);
         clearLayoutData();
         invalidate();
-        return this;
+        return asT();
+    }
+
+    /**
+     * Returns <code>this</code> cast to <code>T</code>.
+     */
+    @SuppressWarnings({"unchecked", "cast"}) protected T asT () {
+        return (T)this;
     }
 
     /**
@@ -182,9 +191,9 @@ public abstract class Element
      * Configures the layout constraint on this element.
      * @return this element for call chaining.
      */
-    public Element setConstraint (Layout.Constraint constraint) {
+    public T setConstraint (Layout.Constraint constraint) {
         _constraint = constraint;
-        return this;
+        return asT();
     }
 
     /**
@@ -197,7 +206,7 @@ public abstract class Element
     /**
      * Called when this element (or its parent element) was added to the interface hierarchy.
      */
-    protected void wasAdded (Group parent) {
+    protected void wasAdded (Elements<?> parent) {
         _parent = parent;
     }
 
@@ -381,7 +390,7 @@ public abstract class Element
     }
 
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
-    protected Group _parent;
+    protected Elements<?> _parent;
     protected Dimension _preferredSize;
     protected Dimension _size = new Dimension();
     protected Styles _styles = Styles.none();

@@ -14,7 +14,7 @@ import tripleplay.util.Coords;
  * The root of a display hierarchy. An application can have one or more roots, but they should not
  * overlap and will behave as if oblivious to one another's existence.
  */
-public class Root extends Group
+public class Root extends Elements<Root>
 {
     /**
      * Sizes this root element to its preferred size.

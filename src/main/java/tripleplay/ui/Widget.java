@@ -14,7 +14,7 @@ import playn.core.PlayN;
  * The base class for all user interface widgets. Provides helper methods for managing a canvas
  * into which a widget is rendered when its state changes.
  */
-public abstract class Widget extends Element
+public abstract class Widget<T extends Widget<T>> extends Element<T>
 {
     /**
      * Prepares a canvas layer as a rendering target of the supplied dimensions. The canvas may be

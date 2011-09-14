@@ -21,8 +21,7 @@ import pythagoras.f.Rectangle;
 public class WidgetDemo implements Game
 {
     public static void main (String[] args) {
-        JavaPlatform platform = JavaPlatform.register();
-        platform.assetManager().setPathPrefix("src/test/resources");
+        JavaPlatform.register().assetManager().setPathPrefix("src/test/resources");
         PlayN.run(new WidgetDemo());
     }
 
@@ -55,7 +54,7 @@ public class WidgetDemo implements Game
                      new Label().setText(TEXT1).setConstraint(AxisLayout.stretched()),
                      new Label().setText(TEXT2).setConstraint(AxisLayout.stretched()),
                      new Label().setText(TEXT3).setConstraint(AxisLayout.stretched())),
-                 new Group(AxisLayout.horizontal().alignTop(), greenBg).add(
+                 new Group(AxisLayout.horizontal().alignTop()).setStyles(greenBg).add(
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Toggle viz:"),
                          toggle = new Button().setText("Toggle")),
@@ -63,15 +62,15 @@ public class WidgetDemo implements Game
                          new Label().setText("Label 1"),
                          label2 = new Label().setText("Label 2"),
                          new Label().setIcon(smiley).setText("Label 3"))),
-                 new Group(AxisLayout.horizontal().gap(15), greenBg).add(
-                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))
+                 new Group(AxisLayout.horizontal().gap(15)).setStyles(greenBg).add(
+                     new Label().setStyles(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))
                          ).setText("Left").setIcon(squares, getIBounds(0)),
-                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.RIGHT))
+                     new Label().setStyles(Styles.make(Style.ICON_POS.is(Style.Pos.RIGHT))
                          ).setText("Right").setIcon(squares, getIBounds(1)),
-                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.ABOVE),
+                     new Label().setStyles(Styles.make(Style.ICON_POS.is(Style.Pos.ABOVE),
                                            Style.HALIGN.is(Style.HAlign.CENTER))
                          ).setText("Above").setIcon(squares, getIBounds(2)),
-                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
+                     new Label().setStyles(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
                                            Style.HALIGN.is(Style.HAlign.CENTER))
                          ).setText("Below").setIcon(squares, getIBounds(3))));
         Signals.toggler(toggle.click, true).connect(label2.visibleSlot());

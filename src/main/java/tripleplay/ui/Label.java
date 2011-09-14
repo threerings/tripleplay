@@ -13,38 +13,10 @@ import pythagoras.f.IRectangle;
 /**
  * A widget that displays one or more lines of text and/or an icon image.
  */
-public class Label extends TextWidget
+public class Label extends TextWidget<Label>
 {
-    /**
-     * Creates a label with no custom styles.
-     */
-    public Label () {
-    }
-
-    /**
-     * Creates a label with the specified custom styles.
-     */
-    public Label (Styles styles) {
-        setStyles(styles);
-    }
-
-    @Override public Label setText (String text) {
-        super.setText(text);
-        return this;
-    }
-
-    @Override public Label setIcon (Image icon) {
-        super.setIcon(icon);
-        return this;
-    }
-
-    @Override public Label setIcon (Image icon, IRectangle region) {
-        super.setIcon(icon, region);
-        return this;
-    }
-
     @Override public String toString () {
-        return "Label(" + _text + ")";
+        return "Label(" + text() + ")";
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
@@ -60,6 +32,7 @@ public class Label extends TextWidget
     }
 
     @Override protected void clearLayoutData () {
+        super.clearLayoutData();
         _ldata = null;
     }
 
