@@ -81,12 +81,6 @@ public class Root extends Group
         return this;
     }
 
-    @Override protected void validate () {
-        if (!isSet(Flag.VALID)) {
-            super.validate();
-        }
-    }
-
     protected final Interface _iface;
     protected boolean _valid;
     protected Element _active;
