@@ -93,6 +93,7 @@ public abstract class Element
     public Element setStyles (Styles styles) {
         _styles = styles;
         clearLayoutData();
+        invalidate();
         return this;
     }
 
@@ -104,6 +105,7 @@ public abstract class Element
     public Element addStyles (Styles styles) {
         _styles = _styles.merge(styles);
         clearLayoutData();
+        invalidate();
         return this;
     }
 
