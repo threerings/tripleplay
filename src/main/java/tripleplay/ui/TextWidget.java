@@ -125,9 +125,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     protected void layoutText (LayoutData ldata, String text, float hintX, float hintY) {
         if (!isVisible()) return;
 
-        ldata.wrap = resolveStyle(state(), Style.TEXT_WRAP);
-        ldata.halign = resolveStyle(state(), Style.HALIGN);
-        ldata.valign = resolveStyle(state(), Style.VALIGN);
+        ldata.wrap = resolveStyle(Style.TEXT_WRAP);
+        ldata.halign = resolveStyle(Style.HALIGN);
+        ldata.valign = resolveStyle(Style.VALIGN);
         if (text.length() > 0) {
             TextFormat format = Style.createTextFormat(this, state());
             if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
@@ -135,8 +135,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             ldata.text = PlayN.graphics().layoutText(text, format);
         }
         if (_icon != null) {
-            ldata.iconPos = resolveStyle(state(), Style.ICON_POS);
-            ldata.iconGap = resolveStyle(state(), Style.ICON_GAP);
+            ldata.iconPos = resolveStyle(Style.ICON_POS);
+            ldata.iconGap = resolveStyle(Style.ICON_GAP);
         }
     }
 

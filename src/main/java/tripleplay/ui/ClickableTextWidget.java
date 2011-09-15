@@ -55,15 +55,15 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
 
     @Override protected void onPointerStart (float x, float y) {
         super.onPointerStart(x, y);
-        set(Flag.DOWN, true);
+        set(Flag.SELECTED, true);
         invalidate();
     }
 
     @Override protected void onPointerDrag (float x, float y) {
         super.onPointerDrag(x, y);
-        boolean down = contains(x, y);
-        if (down != isSet(Flag.DOWN)) {
-            set(Flag.DOWN, down);
+        boolean selected = contains(x, y);
+        if (selected != isSet(Flag.SELECTED)) {
+            set(Flag.SELECTED, selected);
             invalidate();
         }
     }
@@ -73,8 +73,8 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
         // we don't check whether the supplied coordinates are in our bounds or not because only
         // the drag changes result in changes to the button's visualization, and we want to behave
         // based on what the user sees
-        if (isSet(Flag.DOWN)) {
-            set(Flag.DOWN, false);
+        if (isSet(Flag.SELECTED)) {
+            set(Flag.SELECTED, false);
             invalidate();
             click.emit(asT()); // emit a click event
         }
@@ -83,7 +83,7 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
     @Override protected State state () {
         State sstate = super.state();
         switch (sstate) {
-        case DEFAULT: return isSet(Flag.DOWN) ? State.DOWN : State.DEFAULT;
+        case DEFAULT: return isSet(Flag.SELECTED) ? State.SELECTED : State.DEFAULT;
         default:      return sstate;
         }
     }
@@ -98,7 +98,7 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
         _ldata = new LayoutData();
 
         // determine our background
-        Background bg = resolveStyle(state(), Style.BACKGROUND);
+        Background bg = resolveStyle(Style.BACKGROUND);
         hintX -= bg.width();
         hintY -= bg.height();
         _ldata.bg = bg;

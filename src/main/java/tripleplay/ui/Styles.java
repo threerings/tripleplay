@@ -38,9 +38,9 @@ public final class Styles
         return make(Element.State.DISABLED, bindings);
     }
 
-    /** Creates a styles instance with the supplied style bindings in the DOWN state. */
-    public static Styles makeDown (Style.Binding<?>... bindings) {
-        return make(Element.State.DOWN, bindings);
+    /** Creates a styles instance with the supplied style bindings in the SELECTED state. */
+    public static Styles makeSelected (Style.Binding<?>... bindings) {
+        return make(Element.State.SELECTED, bindings);
     }
 
     /**
@@ -74,10 +74,10 @@ public final class Styles
 
     /**
      * Returns a new instance where the supplied bindings overwrite any previous bindings for the
-     * specified styles in the down state. The receiver is not modified.
+     * specified styles in the selected state. The receiver is not modified.
      */
-    public Styles addDown (Style.Binding<?>... bindings) {
-        return add(Element.State.DOWN, bindings);
+    public Styles addSelected (Style.Binding<?>... bindings) {
+        return add(Element.State.SELECTED, bindings);
     }
 
     /**
@@ -189,15 +189,15 @@ public final class Styles
             switch (state) {
             case DEFAULT: _defaultV = binding.value; break;
             case DISABLED: _disabledV = binding.value; break;
-            case DOWN: _downV = binding.value; break;
+            case SELECTED: _selectedV = binding.value; break;
             }
         }
 
-        public Binding (Style<V> style, V defaultV, V disabledV, V downV) {
+        public Binding (Style<V> style, V defaultV, V disabledV, V selectedV) {
             this(style);
             _defaultV = defaultV;
             _disabledV = disabledV;
-            _downV = downV;
+            _selectedV = selectedV;
         }
 
         public V get (Element.State state) {
@@ -214,14 +214,14 @@ public final class Styles
             return new Binding<V>(style,
                                   merge(_defaultV, other._defaultV),
                                   merge(_disabledV, other._disabledV),
-                                  merge(_downV, other._downV));
+                                  merge(_selectedV, other._selectedV));
         }
 
         public Binding<V> clear (Element.State state) {
             switch (state) {
-            case DEFAULT: return new Binding<V>(style, null, _disabledV, _downV);
-            case DISABLED: return new Binding<V>(style, _defaultV, null, _downV);
-            case DOWN: return new Binding<V>(style, _defaultV, _disabledV, null);
+            case DEFAULT: return new Binding<V>(style, null, _disabledV, _selectedV);
+            case DISABLED: return new Binding<V>(style, _defaultV, null, _selectedV);
+            case SELECTED: return new Binding<V>(style, _defaultV, _disabledV, null);
             default: return this;
             }
         }
@@ -237,7 +237,7 @@ public final class Styles
             switch (state) {
             case DEFAULT: return _defaultV;
             case DISABLED: return _disabledV;
-            case DOWN: return _downV;
+            case SELECTED: return _selectedV;
             default: return null;
             }
         }
@@ -247,7 +247,7 @@ public final class Styles
         }
 
         // we have so few states that it's cheaper to just switch
-        protected V _defaultV, _disabledV, _downV;
+        protected V _defaultV, _disabledV, _selectedV;
     }
 
     protected Binding<?>[] _bindings;

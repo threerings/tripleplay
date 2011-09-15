@@ -28,7 +28,7 @@ public abstract class Element<T extends Element<T>>
 {
     /** Defines the states that may be assumed by an element. */
     public static enum State {
-        DEFAULT, DISABLED, DOWN;
+        DEFAULT, DISABLED, SELECTED;
     }
 
     /** The layer associated with this element. */
@@ -360,8 +360,8 @@ public abstract class Element<T extends Element<T>>
      * Resolves the value for the supplied style. See {@link Styles#resolveStyle} for the gritty
      * details.
      */
-    protected <V> V resolveStyle (State state, Style<V> style) {
-        return Styles.resolveStyle(this, state, style);
+    protected <V> V resolveStyle (Style<V> style) {
+        return Styles.resolveStyle(this, state(), style);
     }
 
     /**
@@ -397,7 +397,7 @@ public abstract class Element<T extends Element<T>>
     protected Layout.Constraint _constraint;
 
     protected static enum Flag {
-        VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), DOWN(1 << 3);
+        VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3);
 
         public final int mask;
 

@@ -165,7 +165,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         if (_ldata == null) {
             _ldata = new LayoutData();
             // determine our background
-            _ldata.bg = resolveStyle(state(), Style.BACKGROUND);
+            _ldata.bg = resolveStyle(Style.BACKGROUND);
         }
         return _ldata;
     }
