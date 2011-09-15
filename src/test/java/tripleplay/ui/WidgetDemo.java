@@ -34,7 +34,7 @@ public class WidgetDemo implements Game
         // define our root stylesheet
         Styles buttonStyles = Styles.none().
             add(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF, 5))).
-            addDown(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 6, 4, 4, 6)));
+            addSelected(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 6, 4, 4, 6)));
         Stylesheet rootSheet = Stylesheet.builder().
             add(Button.class, buttonStyles).
             create();
@@ -47,15 +47,16 @@ public class WidgetDemo implements Game
 
         Image smiley = PlayN.assetManager().getImage("images/smiley.png");
         Image squares = PlayN.assetManager().getImage("images/squares.png");
+        Styles wrapped = Styles.none().add(Style.TEXT_WRAP.is(true));
 
         Button toggle;
         Label label2;
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
         root.add(new Group(AxisLayout.horizontal().alignTop()).add(
-                     new Label().setText(TEXT1).setConstraint(AxisLayout.stretched()),
-                     new Label().setText(TEXT2).setConstraint(AxisLayout.stretched()),
-                     new Label().setText(TEXT3).setConstraint(AxisLayout.stretched())),
-                 new Group(AxisLayout.horizontal().alignTop()).setStyles(greenBg).add(
+                     new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT1),
+                     new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT2),
+                     new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT3)),
+                 new Group(AxisLayout.horizontal().alignTop(), greenBg).add(
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Toggle viz:"),
                          toggle = new Button().setText("Toggle")),
@@ -63,17 +64,17 @@ public class WidgetDemo implements Game
                          new Label().setText("Label 1"),
                          label2 = new Label().setText("Label 2"),
                          new Label().setIcon(smiley).setText("Label 3"))),
-                 new Group(AxisLayout.horizontal().gap(15)).setStyles(greenBg).add(
-                     new Label().setStyles(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))
-                         ).setText("Left").setIcon(squares, getIBounds(0)),
-                     new Label().setStyles(Styles.make(Style.ICON_POS.is(Style.Pos.RIGHT))
-                         ).setText("Right").setIcon(squares, getIBounds(1)),
-                     new Label().setStyles(Styles.make(Style.ICON_POS.is(Style.Pos.ABOVE),
-                                           Style.HALIGN.is(Style.HAlign.CENTER))
-                         ).setText("Above").setIcon(squares, getIBounds(2)),
-                     new Label().setStyles(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
-                                           Style.HALIGN.is(Style.HAlign.CENTER))
-                         ).setText("Below").setIcon(squares, getIBounds(3))));
+                 new Group(AxisLayout.horizontal().gap(15), greenBg).add(
+                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))).
+                         setText("Left").setIcon(squares, getIBounds(0)),
+                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.RIGHT))).
+                         setText("Right").setIcon(squares, getIBounds(1)),
+                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.ABOVE),
+                                           Style.HALIGN.is(Style.HAlign.CENTER))).
+                         setText("Above").setIcon(squares, getIBounds(2)),
+                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
+                                           Style.HALIGN.is(Style.HAlign.CENTER))).
+                         setText("Below").setIcon(squares, getIBounds(3))));
         Signals.toggler(toggle.click, true).connect(label2.visibleSlot());
     }
 
