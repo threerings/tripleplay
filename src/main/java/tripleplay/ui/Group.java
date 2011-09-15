@@ -11,6 +11,14 @@ package tripleplay.ui;
 public class Group extends Elements<Group>
 {
     /**
+     * Creates a group with the specified layout and styles.
+     */
+    public Group (Layout layout, Styles styles) {
+        super(layout);
+        setStyles(styles);
+    }
+
+    /**
      * Creates a group with the specified layout.
      */
     public Group (Layout layout) {

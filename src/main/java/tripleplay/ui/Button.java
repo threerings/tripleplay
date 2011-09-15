@@ -10,6 +10,13 @@ package tripleplay.ui;
 */
 public class Button extends ClickableTextWidget<Button>
 {
+    public Button (Styles styles) {
+        setStyles(styles);
+    }
+
+    public Button () {
+    }
+
     @Override public String toString () {
         return "Button(" + text() + ")";
     }

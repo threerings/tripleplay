@@ -15,6 +15,13 @@ import pythagoras.f.IRectangle;
  */
 public class Label extends TextWidget<Label>
 {
+    public Label (Styles styles) {
+        setStyles(styles);
+    }
+
+    public Label () {
+    }
+
     @Override public String toString () {
         return "Label(" + text() + ")";
     }
