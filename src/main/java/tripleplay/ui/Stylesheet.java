@@ -48,15 +48,15 @@ public class Stylesheet
      * inherited, the style may be fetched from the configuration for a supertype of the supplied
      * element type. Returns null if no configuration can be found.
      */
-    <V> V get (Class<?> eclass, Styles.Binding<V> key, Element.State state) {
+    <V> V get (Styles.Binding<V> key, Class<?> eclass, Element elem) {
         Styles styles = _styles.get(eclass);
-        V value = (styles == null) ? null : styles.<V>get(key, state);
+        V value = (styles == null) ? null : styles.<V>get(key, elem);
         if (value != null) return value;
 
         // if we found no mapping and the style is inherited (and we're not already at the root --
         // Element), then check the parent type of this element for a mapping
         return (key.style.inherited && eclass != Element.class) ?
-            this.<V>get(eclass.getSuperclass(), key, state) : null;
+            this.<V>get(key, eclass.getSuperclass(), elem) : null;
     }
 
     private Stylesheet (Map<Class<?>, Styles> styles) {

@@ -59,7 +59,8 @@ public class WidgetDemo implements Game
                  new Group(AxisLayout.horizontal().alignTop(), greenBg).add(
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Toggle viz:"),
-                         toggle = new Button().setText("Toggle")),
+                         toggle = new Button().setText("Toggle"),
+                         new Button().setText("Disabled").setEnabled(false)),
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Label 1"),
                          label2 = new Label().setText("Label 2"),

@@ -20,6 +20,9 @@ import tripleplay.ui.bgs.NullBackground;
  */
 public abstract class Style<V>
 {
+    /** Defines element modes which can be used to modify an element's styles. */
+    public static enum Mode { DEFAULT, DISABLED, SELECTED, DISABLED_SELECTED }
+
     /** Used to configure {@link Styles} instances. See {@link Styles#set}. */
     public static class Binding<V> {
         /** The style being configured. */
@@ -88,21 +91,15 @@ public abstract class Style<V>
 
     /** The foreground color for an element. Inherited. */
     public static final Style<Integer> COLOR = new Style<Integer>(true) {
-        public Integer getDefault (Element.State state) {
-            switch (state) {
-            case DISABLED: return 0xCC000000;
-            default:       return 0xFF000000;
-            }
+        public Integer getDefault (Element elem) {
+            return elem.isEnabled() ? 0xFF000000 : 0xFFCCCCCC;
         }
     };
 
     /** The highlight color for an element. Inherited. */
     public static final Style<Integer> HIGHLIGHT = new Style<Integer>(true) {
-        public Integer getDefault (Element.State state) {
-            switch (state) {
-            case DISABLED: return 0xAACCCCCC;
-            default:       return 0xAAFFFFFF;
-            }
+        public Integer getDefault (Element elem) {
+            return elem.isEnabled() ? 0xAAFFFFFF : 0xAACCCCCC;
         }
     };
 
@@ -142,29 +139,29 @@ public abstract class Style<V>
     /**
      * Creates a text format based on the supplied element's stylings.
      */
-    public static TextFormat createTextFormat (Element elem, Element.State state) {
+    public static TextFormat createTextFormat (Element elem) {
         TextFormat format = new TextFormat().
-            withFont(Styles.resolveStyle(elem, state, Style.FONT)).
-            withTextColor(Styles.resolveStyle(elem, state, Style.COLOR)).
-            withAlignment(toAlignment(Styles.resolveStyle(elem, state, Style.HALIGN)));
-        switch (Styles.resolveStyle(elem, state, Style.TEXT_EFFECT)) {
+            withFont(Styles.resolveStyle(elem, Style.FONT)).
+            withTextColor(Styles.resolveStyle(elem, Style.COLOR)).
+            withAlignment(toAlignment(Styles.resolveStyle(elem, Style.HALIGN)));
+        switch (Styles.resolveStyle(elem, Style.TEXT_EFFECT)) {
         case OUTLINE:
             format = format.withEffect(
-                TextFormat.Effect.outline(Styles.resolveStyle(elem, state, Style.HIGHLIGHT)));
+                TextFormat.Effect.outline(Styles.resolveStyle(elem, Style.HIGHLIGHT)));
             break;
         case SHADOW:
             format = format.withEffect(
                 TextFormat.Effect.shadow(
-                    Styles.resolveStyle(elem, state, Style.SHADOW), SHADOW_X, SHADOW_Y));
+                    Styles.resolveStyle(elem, Style.SHADOW), SHADOW_X, SHADOW_Y));
             break;
         }
         return format;
     }
 
     /**
-     * Returns the default value for this style in the given state.
+     * Returns the default value for this style for the supplied element.
      */
-    public abstract V getDefault (Element.State state);
+    public abstract V getDefault (Element mode);
 
     /**
      * Returns a {@link Binding} with this style bound to the specified value.
@@ -179,7 +176,7 @@ public abstract class Style<V>
 
     protected static <V> Style<V> newStyle (boolean inherited, final V defaultValue) {
         return new Style<V>(inherited) {
-            public V getDefault (Element.State state) {
+            public V getDefault (Element elem) {
                 return defaultValue;
             }
         };

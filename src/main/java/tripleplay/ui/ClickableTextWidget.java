@@ -12,6 +12,9 @@ import pythagoras.f.IRectangle;
 
 import react.Signal;
 
+/**
+ * A text widget that provides button-like behavior.
+ */
 public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextWidget<T>
 {
     /** A signal that is emitted when this widget is clicked. */
@@ -62,7 +65,7 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
     @Override protected void onPointerDrag (float x, float y) {
         super.onPointerDrag(x, y);
         boolean selected = contains(x, y);
-        if (selected != isSet(Flag.SELECTED)) {
+        if (selected != isSelected()) {
             set(Flag.SELECTED, selected);
             invalidate();
         }
@@ -73,18 +76,10 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
         // we don't check whether the supplied coordinates are in our bounds or not because only
         // the drag changes result in changes to the button's visualization, and we want to behave
         // based on what the user sees
-        if (isSet(Flag.SELECTED)) {
+        if (isSelected()) {
             set(Flag.SELECTED, false);
             invalidate();
             click.emit(asT()); // emit a click event
-        }
-    }
-
-    @Override protected State state () {
-        State sstate = super.state();
-        switch (sstate) {
-        case DEFAULT: return isSet(Flag.SELECTED) ? State.SELECTED : State.DEFAULT;
-        default:      return sstate;
         }
     }
 

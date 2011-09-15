@@ -129,7 +129,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         ldata.halign = resolveStyle(Style.HALIGN);
         ldata.valign = resolveStyle(Style.VALIGN);
         if (text.length() > 0) {
-            TextFormat format = Style.createTextFormat(this, state());
+            TextFormat format = Style.createTextFormat(this);
             if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
             // TODO: should we do something with a y-hint?
             ldata.text = PlayN.graphics().layoutText(text, format);

@@ -20,17 +20,13 @@ import playn.core.GroupLayer;
 
 /**
  * The root of the interface element hierarchy. See {@link Widget} for the root of all interactive
- * elements, and {@link Elements} for the root of all grouping elements.<p>
+ * elements, and {@link Elements} for the root of all grouping elements.
  *
- * When subclassing element, T must be the type of the subclass.
+ * @param T used as a "self" type; when subclassing {@code Element}, T must be the type of the
+ * subclass.
  */
 public abstract class Element<T extends Element<T>>
 {
-    /** Defines the states that may be assumed by an element. */
-    public static enum State {
-        DEFAULT, DISABLED, SELECTED;
-    }
-
     /** The layer associated with this element. */
     public final GroupLayer layer = PlayN.graphics().createGroupLayer();
 
@@ -129,12 +125,13 @@ public abstract class Element<T extends Element<T>>
      * Enables or disables this element. Disabled elements are not interactive and are usually
      * rendered so as to communicate this state to the user.
      */
-    public void setEnabled (boolean enabled) {
+    public T setEnabled (boolean enabled) {
         if (enabled != isEnabled()) {
             set(Flag.ENABLED, enabled);
             clearLayoutData();
             invalidate();
         }
+        return asT();
     }
 
     /**
@@ -160,12 +157,13 @@ public abstract class Element<T extends Element<T>>
      * Configures whether this element is visible. An invisible element is not rendered and
      * consumes no space in a group.
      */
-    public void setVisible (boolean visible) {
+    public T setVisible (boolean visible) {
         if (visible != isVisible()) {
             set(Flag.VISIBLE, visible);
             layer.setVisible(visible);
             invalidate();
         }
+        return asT();
     }
 
     /**
@@ -265,10 +263,14 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Computes the style state of this element based on its flags.
+     * Returns whether this element is selected. This is only applicable for elements that maintain
+     * a selected state, but is used when computing styles for all elements (it is assumed that an
+     * element that maintains no selected state will always return false from this method).
+     * Elements that do maintain a selected state should override this method and expose it as
+     * public.
      */
-    protected State state () {
-        return isSet(Flag.ENABLED) ? State.DEFAULT : State.DISABLED;
+    protected boolean isSelected () {
+        return isSet(Flag.SELECTED);
     }
 
     /**
@@ -307,14 +309,14 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Returns whether the specified state flag is set.
+     * Returns whether the specified flag is set.
      */
     protected boolean isSet (Flag flag) {
         return (flag.mask & _flags) != 0;
     }
 
     /**
-     * Sets or clears the specified state flag.
+     * Sets or clears the specified flag.
      */
     protected void set (Flag flag, boolean on) {
         if (on) {
@@ -361,7 +363,7 @@ public abstract class Element<T extends Element<T>>
      * details.
      */
     protected <V> V resolveStyle (Style<V> style) {
-        return Styles.resolveStyle(this, state(), style);
+        return Styles.resolveStyle(this, style);
     }
 
     /**
