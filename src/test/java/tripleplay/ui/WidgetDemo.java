@@ -21,7 +21,8 @@ import pythagoras.f.Rectangle;
 public class WidgetDemo implements Game
 {
     public static void main (String[] args) {
-        JavaPlatform.register().assetManager().setPathPrefix("src/test/resources");
+        JavaPlatform platform = JavaPlatform.register();
+        platform.assetManager().setPathPrefix("src/test/resources");
         PlayN.run(new WidgetDemo());
     }
 
