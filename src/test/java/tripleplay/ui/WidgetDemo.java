@@ -47,7 +47,7 @@ public class WidgetDemo implements Game
 
         Image smiley = PlayN.assetManager().getImage("images/smiley.png");
         Image squares = PlayN.assetManager().getImage("images/squares.png");
-        Styles wrapped = Styles.none().add(Style.TEXT_WRAP.is(true));
+        Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
 
         Button toggle;
         Label label2;
