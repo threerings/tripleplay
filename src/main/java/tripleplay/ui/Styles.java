@@ -21,44 +21,9 @@ public final class Styles
         return _noneSingleton;
     }
 
-    /**
-     * Creates a styles instance with the supplied style bindings in the specified mode.
-     */
-    public static Styles make (Style.Mode mode, Style.Binding<?>... bindings) {
-        return none().add(mode, bindings);
-    }
-
     /** Creates a styles instance with the supplied style bindings in the DEFAULT mode. */
     public static Styles make (Style.Binding<?>... bindings) {
-        return make(Style.Mode.DEFAULT, bindings);
-    }
-
-    /** Creates a styles instance with the supplied style bindings in the DISABLED mode. */
-    public static Styles makeDisabled (Style.Binding<?>... bindings) {
-        return make(Style.Mode.DISABLED, bindings);
-    }
-
-    /** Creates a styles instance with the supplied style bindings in the SELECTED mode. */
-    public static Styles makeSelected (Style.Binding<?>... bindings) {
-        return make(Style.Mode.SELECTED, bindings);
-    }
-
-    /** Creates a styles instance with the supplied style bindings in the DISABLED_SELECTED mode. */
-    public static Styles makeDisabledSelected (Style.Binding<?>... bindings) {
-        return make(Style.Mode.DISABLED_SELECTED, bindings);
-    }
-
-    /**
-     * Returns a new instance where the supplied bindings overwrite any previous bindings for the
-     * specified styles (in the specified mode). The receiver is not modified.
-     */
-    public Styles add (Style.Mode mode, Style.Binding<?>... bindings) {
-        Binding<?>[] nbindings = new Binding<?>[bindings.length];
-        for (int ii = 0; ii < bindings.length; ii++) {
-            nbindings[ii] = newBinding(bindings[ii], mode);
-        }
-        // note that we take advantage of the fact that merge can handle unsorted bindings
-        return merge(nbindings);
+        return none().add(Style.Mode.DEFAULT, bindings);
     }
 
     /**
@@ -122,7 +87,20 @@ public final class Styles
         return binding.get(elem);
     }
 
-    private Styles merge (Binding<?>[] obindings) {
+   /**
+    * Returns a new instance where the supplied bindings overwrite any previous bindings for the
+    * specified styles (in the specified mode). The receiver is not modified.
+    */
+   private Styles add (Style.Mode mode, Style.Binding<?>... bindings) {
+       Binding<?>[] nbindings = new Binding<?>[bindings.length];
+       for (int ii = 0; ii < bindings.length; ii++) {
+           nbindings[ii] = newBinding(bindings[ii], mode);
+       }
+       // note that we take advantage of the fact that merge can handle unsorted bindings
+       return merge(nbindings);
+   }
+
+   private Styles merge (Binding<?>[] obindings) {
         // determine which of the to-be-merged styles also exist in our styles
         int[] dupidx = new int[obindings.length];
         int dups = 0;
