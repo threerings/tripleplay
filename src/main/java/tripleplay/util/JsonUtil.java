@@ -6,6 +6,7 @@
 package tripleplay.util;
 
 import java.util.Iterator;
+
 import playn.core.Json;
 
 /**
@@ -39,11 +40,7 @@ public class JsonUtil
      */
     public static boolean getBoolean (Json.Object json, String key, boolean defaultVal)
     {
-        boolean val = json.getBoolean(key);
-        if (val == false && !containsKey(json, key)) {
-            return defaultVal;
-        }
-        return val;
+        return (json.containsKey(key) ? json.getBoolean(key) : defaultVal);
     }
 
     /**
@@ -52,11 +49,8 @@ public class JsonUtil
      */
     public static boolean requireBoolean (Json.Object json, String key)
     {
-        boolean val = json.getBoolean(key);
-        if (val == false) {
-            requireKey(json, key);
-        }
-        return val;
+        requireKey(json, key);
+        return json.getBoolean(key);
     }
 
     /**
@@ -65,11 +59,7 @@ public class JsonUtil
      */
     public static double getNumber (Json.Object json, String key, double defaultVal)
     {
-        double val = json.getNumber(key);
-        if (Double.isNaN(val) && !containsKey(json, key)) {
-            return defaultVal;
-        }
-        return val;
+        return (json.containsKey(key) ? json.getNumber(key) : defaultVal);
     }
 
     /**
@@ -78,11 +68,8 @@ public class JsonUtil
      */
     public static double requireNumber (Json.Object json, String key)
     {
-        double val = json.getNumber(key);
-        if (Double.isNaN(val)) {
-            requireKey(json, key);
-        }
-        return val;
+        requireKey(json, key);
+        return json.getNumber(key);
     }
 
     /**
@@ -109,11 +96,7 @@ public class JsonUtil
      */
     public static int getInt (Json.Object json, String key, int defaultVal)
     {
-        int val = json.getInt(key);
-        if (val == 0 && !containsKey(json, key)) {
-            return defaultVal;
-        }
-        return val;
+        return (json.containsKey(key) ? json.getInt(key) : defaultVal);
     }
 
     /**
@@ -122,11 +105,8 @@ public class JsonUtil
      */
     public static int requireInt (Json.Object json, String key)
     {
-        int val = json.getInt(key);
-        if (val == 0) {
-            requireKey(json, key);
-        }
-        return val;
+        requireKey(json, key);
+        return json.getInt(key);
     }
 
     /**
@@ -135,11 +115,7 @@ public class JsonUtil
      */
     public static String getString (Json.Object json, String key, String defaultVal)
     {
-        String val = json.getString(key);
-        if (val == null && !containsKey(json, key)) {
-            return defaultVal;
-        }
-        return val;
+        return (json.containsKey(key) ? json.getString(key) : defaultVal);
     }
 
     /**
@@ -148,11 +124,8 @@ public class JsonUtil
      */
     public static String requireString (Json.Object json, String key)
     {
-        String val = json.getString(key);
-        if (val == null) {
-            requireKey(json, key);
-        }
-        return val;
+        requireKey(json, key);
+        return json.getString(key);
     }
 
     /**
@@ -161,11 +134,7 @@ public class JsonUtil
      */
     public static Json.Object getObject (Json.Object json, String key, Json.Object defaultVal)
     {
-        Json.Object val = json.getObject(key);
-        if (val == null && !containsKey(json, key)) {
-            return defaultVal;
-        }
-        return val;
+        return (json.containsKey(key) ? json.getObject(key) : defaultVal);
     }
 
     /**
@@ -174,11 +143,8 @@ public class JsonUtil
      */
     public static Json.Object requireObject (Json.Object json, String key)
     {
-        Json.Object val = json.getObject(key);
-        if (val == null) {
-            requireKey(json, key);
-        }
-        return val;
+        requireKey(json, key);
+        return json.getObject(key);
     }
 
     /**
@@ -187,11 +153,7 @@ public class JsonUtil
      */
     public static Json.Array getArray (Json.Object json, String key, Json.Array defaultVal)
     {
-        Json.Array val = json.getArray(key);
-        if (val == null && !containsKey(json, key)) {
-            return defaultVal;
-        }
-        return val;
+        return (json.containsKey(key) ? json.getArray(key) : defaultVal);
     }
 
     /**
@@ -200,24 +162,8 @@ public class JsonUtil
      */
     public static Json.Array requireArray (Json.Object json, String key)
     {
-        Json.Array val = json.getArray(key);
-        if (val == null) {
-            requireKey(json, key);
-        }
-        return val;
-    }
-
-    /**
-     * @return true if JSON object contains the given key
-     */
-    public static boolean containsKey (Json.Object json, String key)
-    {
-        for (String val : getKeys(json)) {
-            if (val.equals(key)) {
-                return true;
-            }
-        }
-        return false;
+        requireKey(json, key);
+        return json.getArray(key);
     }
 
     /**
@@ -319,7 +265,7 @@ public class JsonUtil
 
     protected static void requireKey (Json.Object json, String key)
     {
-        if (!containsKey(json, key)) {
+        if (!json.containsKey(key)) {
             throw new RuntimeException("Missing required key [name=" + key + "]");
         }
     }
