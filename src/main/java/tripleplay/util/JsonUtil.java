@@ -14,12 +14,13 @@ import playn.core.Json;
 public class JsonUtil
 {
     /**
-     * @return the Enum whose name corresponds to string for the given key
+     * @return the Enum whose name corresponds to string for the given key,
+     * or <code>defaultVal</code> if the key doesn't exist.
      */
-    public static <T extends Enum<T>> T getEnum (Json.Object json, String key, Class<T> enumType)
+    public static <T extends Enum<T>> T getEnum (Json.Object json, String key, Class<T> enumType,
+        T defaultVal)
     {
-        String name = json.getString(key);
-        return (name != null ? Enum.valueOf(enumType, name) : null);
+        return Enum.valueOf(enumType, getString(json, key, defaultVal.toString()));
     }
 
     /**
@@ -33,8 +34,21 @@ public class JsonUtil
     }
 
     /**
+     * @return the boolean value at the given key, or <code>defaultVal</code> if the key
+     * doesn't exist.
+     */
+    public static boolean getBoolean (Json.Object json, String key, boolean defaultVal)
+    {
+        boolean val = json.getBoolean(key);
+        if (val == false && !containsKey(json, key)) {
+            return defaultVal;
+        }
+        return val;
+    }
+
+    /**
      * @return the boolean value at the given key.
-     * Throws a RuntimeException if the key doesn't exist.
+     * @throws a RuntimeException if the key doesn't exist.
      */
     public static boolean requireBoolean (Json.Object json, String key)
     {
@@ -46,8 +60,21 @@ public class JsonUtil
     }
 
     /**
+     * @return the double value at the given key, or <code>defaultVal</code> if the key
+     * doesn't exist.
+     */
+    public static double getNumber (Json.Object json, String key, double defaultVal)
+    {
+        double val = json.getNumber(key);
+        if (Double.isNaN(val) && !containsKey(json, key)) {
+            return defaultVal;
+        }
+        return val;
+    }
+
+    /**
      * @return the double value at the given key.
-     * Throws a RuntimeException if the key doesn't exist.
+     * @throws a RuntimeException if the key doesn't exist.
      */
     public static double requireNumber (Json.Object json, String key)
     {
@@ -59,8 +86,17 @@ public class JsonUtil
     }
 
     /**
+     * @return the float value at the given key, or <code>defaultVal</code> if the key
+     * doesn't exist.
+     */
+    public static float getFloat (Json.Object json, String key, float defaultVal)
+    {
+        return (float) getNumber(json, key, defaultVal);
+    }
+
+    /**
      * @return the float value at the given key.
-     * Throws a RuntimeException if the key doesn't exist.
+     * @throws a RuntimeException if the key doesn't exist.
      */
     public static float requireFloat (Json.Object json, String key)
     {
@@ -68,8 +104,21 @@ public class JsonUtil
     }
 
     /**
+     * @return the int value at the given key, or <code>defaultVal</code> if the key
+     * doesn't exist.
+     */
+    public static int getInt (Json.Object json, String key, int defaultVal)
+    {
+        int val = json.getInt(key);
+        if (val == 0 && !containsKey(json, key)) {
+            return defaultVal;
+        }
+        return val;
+    }
+
+    /**
      * @return the int value at the given key.
-     * Throws a RuntimeException if the key doesn't exist.
+     * @throws a RuntimeException if the key doesn't exist.
      */
     public static int requireInt (Json.Object json, String key)
     {
@@ -81,8 +130,21 @@ public class JsonUtil
     }
 
     /**
+     * @return the String value at the given key, or <code>defaultVal</code> if the key
+     * doesn't exist.
+     */
+    public static String getString (Json.Object json, String key, String defaultVal)
+    {
+        String val = json.getString(key);
+        if (val == null && !containsKey(json, key)) {
+            return defaultVal;
+        }
+        return val;
+    }
+
+    /**
      * @return the String value at the given key.
-     * Throws a RuntimeException if the key doesn't exist.
+     * @throws a RuntimeException if the key doesn't exist.
      */
     public static String requireString (Json.Object json, String key)
     {
@@ -94,8 +156,21 @@ public class JsonUtil
     }
 
     /**
+     * @return the Json.Object value at the given key, or <code>defaultVal</code> if the key
+     * doesn't exist.
+     */
+    public static Json.Object getObject (Json.Object json, String key, Json.Object defaultVal)
+    {
+        Json.Object val = json.getObject(key);
+        if (val == null && !containsKey(json, key)) {
+            return defaultVal;
+        }
+        return val;
+    }
+
+    /**
      * @return the Json.Object at the given key.
-     * Throws a RuntimeException if the key doesn't exist.
+     * @throws a RuntimeException if the key doesn't exist.
      */
     public static Json.Object requireObject (Json.Object json, String key)
     {
@@ -107,8 +182,21 @@ public class JsonUtil
     }
 
     /**
+     * @return the Json.Object value at the given key, or <code>defaultVal</code> if the key
+     * doesn't exist.
+     */
+    public static Json.Array getArray (Json.Object json, String key, Json.Array defaultVal)
+    {
+        Json.Array val = json.getArray(key);
+        if (val == null && !containsKey(json, key)) {
+            return defaultVal;
+        }
+        return val;
+    }
+
+    /**
      * @return the Json.Array at the given key.
-     * Throws a RuntimeException if the key doesn't exist.
+     * @throws a RuntimeException if the key doesn't exist.
      */
     public static Json.Array requireArray (Json.Object json, String key)
     {
