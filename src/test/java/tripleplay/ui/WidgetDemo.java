@@ -76,7 +76,7 @@ public class WidgetDemo implements Game
                      new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
                                            Style.HALIGN.is(Style.HAlign.CENTER))).
                          setText("Below").setIcon(squares, getIBounds(3))));
-        Signals.toggler(toggle.click, true).connect(label2.visibleSlot());
+        Signals.toggler(toggle.clicked, true).connect(label2.visibleSlot());
     }
 
     @Override // from interface Game

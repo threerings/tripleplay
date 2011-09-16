@@ -5,10 +5,7 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
-
 import pythagoras.f.Dimension;
-import pythagoras.f.IRectangle;
 
 import react.Signal;
 
@@ -18,7 +15,7 @@ import react.Signal;
 public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextWidget<T>
 {
     /** A signal that is emitted when this widget is clicked. */
-    public final Signal<T> click = Signal.create();
+    public final Signal<T> clicked = Signal.create();
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
@@ -79,7 +76,7 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
         if (isSelected()) {
             set(Flag.SELECTED, false);
             invalidate();
-            click.emit(asT()); // emit a click event
+            clicked.emit(asT()); // emit a click event
         }
     }
 

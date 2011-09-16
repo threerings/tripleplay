@@ -7,16 +7,27 @@ package tripleplay.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.Point;
 
+import react.Signal;
+
 /**
 * Contains other elements and lays them out according to a layout policy.
 */
 public abstract class Elements<T extends Elements<T>> extends Element<T>
+    implements Iterable<Element>
 {
+    /** Emitted after a child has been added to this Elements. */
+    public final Signal<Element<?>> childAdded = Signal.create();
+
+    /** Emitted after a child has been removed from this Elements. */
+    public final Signal<Element<?>> childRemoved = Signal.create();
+
     /**
      * Creates a collection with the specified layout.
      */
@@ -83,14 +94,21 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         invalidate();
     }
 
+    /** Returns an unmodifiable iterator over the children of this Elements.  */
+    public Iterator<Element> iterator () {
+        return Collections.unmodifiableList(_children).iterator();
+    }
+
     protected void didAdd (Element<?> child) {
         layer.add(child.layer);
         if (isAdded()) child.wasAdded(this);
+        childAdded.emit(child);
     }
 
-    protected void didRemove (Element<?> child) {
+    protected void didRemove (Element child) {
         layer.remove(child.layer);
         if (isAdded()) child.wasRemoved();
+        childRemoved.emit(child);
     }
 
     @Override protected void wasAdded (Elements<?> parent) {
