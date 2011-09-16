@@ -36,27 +36,31 @@ public class Input
         }
     }
 
-    /** Encapsulates hit testing and region expiry. */
-    public interface Region {
+    /** Encapsulates enabledness, expiry, and hit testing. */
+    public static abstract class Region {
+        /** Returns true if this region can be triggered, false if it's currently invisible. */
+        public boolean canTrigger () {
+            return true;
+        }
+
         /** Returns true if this region is no longer relevant and should be removed. */
-        boolean hasExpired ();
+        public boolean hasExpired () {
+            return false;
+        }
 
         /** Returns true if the (screen-coordinates) point triggers falls in this region. */
-        boolean hitTest (IPoint p);
+        public abstract boolean hitTest (IPoint p);
     }
 
     /** A region that encompasses the entire screen. */
-    public static class ScreenRegion implements Region {
-        @Override public boolean hasExpired () {
-            return false;
-        }
+    public static class ScreenRegion extends Region {
         @Override public boolean hitTest (IPoint p) {
             return true;
         }
     }
 
     /** A region that encompasses the supplied (screen) bounds. */
-    public static class BoundsRegion extends ScreenRegion {
+    public static class BoundsRegion extends Region {
         public BoundsRegion (IRectangle bounds) {
             _bounds = bounds;
         }
@@ -72,17 +76,19 @@ public class Input
      * transform. While the layer in question is not visible, the region will match clicks. If a
      * reaction using this region is considered for processing and its layer has been removed from
      * the view hierarchy, it will automatically be canceled. */
-    public static class LayerRegion implements Region {
+    public static class LayerRegion extends Region {
         public LayerRegion (Layer layer, IRectangle bounds) {
             _layer = layer;
             _bounds = bounds;
         }
 
+        @Override public boolean canTrigger () {
+            return _layer.visible();
+        }
         @Override public boolean hasExpired () {
             return _layer.parent() == null;
         }
         @Override public boolean hitTest (IPoint p) {
-            if (!_layer.visible()) return false;
             // convert the screen coordinates into layer-relative coordinates and check that the
             // point falls within the (layer-transform-relative) bounds
             return _bounds.contains(Layer.Util.screenToLayer(_layer, p, new Point()));
@@ -96,16 +102,18 @@ public class Input
      * question is not visible, the region will not be match clicks. If a reaction using this
      * region is considered for processing and its layer has been removed from the view hierarchy,
      * it will automatically be canceled. */
-    public static class SizedLayerRegion implements Region {
+    public static class SizedLayerRegion extends Region {
         public SizedLayerRegion (Layer.HasSize layer) {
             _layer = layer;
         }
 
+        @Override public boolean canTrigger () {
+            return _layer.visible();
+        }
         @Override public boolean hasExpired () {
             return _layer.parent() == null;
         }
         @Override public boolean hitTest (IPoint p) {
-            if (!_layer.visible()) return false;
             // convert the screen coordinates into layer-relative coordinates
             Point lp = Layer.Util.screenToLayer(_layer, p, new Point());
             float x = lp.x, y = lp.y;
@@ -126,7 +134,7 @@ public class Input
                 Reaction r = snapshot.get(ii);
                 if (r.region.hasExpired()) {
                     _reactions.remove(r);
-                } else if (r.region.hitTest(p)) {
+                } else if (r.region.canTrigger() && r.region.hitTest(p)) {
                     _active = r;
                     r.listener.onPointerStart(event);
                     break;
