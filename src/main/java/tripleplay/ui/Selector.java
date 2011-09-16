@@ -18,23 +18,23 @@ public class Selector
     public Signal<Element<?>> deselected = Signal.create();
 
     public Selector (Elements<?> elements) {
-        for (Element child : elements) {
+        for (Element<?> child : elements) {
             onChildAdded(child);
         }
-        elements.childAdded.connect(new Slot<Element> () {
-            @Override public void onEmit (Element added) {
+        elements.childAdded.connect(new Slot<Element<?>> () {
+            @Override public void onEmit (Element<?> added) {
                 onChildAdded(added);
             }
         });
-        elements.childRemoved.connect(new Slot<Element> () {
-            @Override public void onEmit (Element removed) {
+        elements.childRemoved.connect(new Slot<Element<?>> () {
+            @Override public void onEmit (Element<?> removed) {
                 _connections.remove(removed).disconnect();
             }
         });
 
     }
 
-    public void setSelected (Element selected) {
+    public void setSelected (Element<?> selected) {
         if (_selected != null) {
             _selected.set(Element.Flag.SELECTED, false);
             _selected.invalidate();
@@ -46,23 +46,24 @@ public class Selector
         this.selected.emit(_selected);
     }
 
-    public Element selected () {
+    public Element<?> selected () {
         return _selected;
     }
 
-    protected void onChildAdded (Element child) {
+    protected void onChildAdded (Element<?> child) {
         if (child instanceof ClickableTextWidget) {
             _connections.put(child, ((ClickableTextWidget<?>)child).clicked.connect(_clickSlot));
         }
     }
 
-    protected Element _selected;
+    protected Element<?> _selected;
 
-    protected final Slot<Element> _clickSlot = new Slot<Element>() {
-        @Override public void onEmit (Element clicked) {
+    protected final Slot<Element<?>> _clickSlot = new Slot<Element<?>>() {
+        @Override public void onEmit (Element<?> clicked) {
             setSelected(clicked);
         }
     };
 
-    protected final Map<Element, Connection> _connections = new HashMap<Element, Connection>();
+    protected final Map<Element<?>, Connection> _connections =
+        new HashMap<Element<?>, Connection>();
 }

@@ -20,7 +20,7 @@ import react.Signal;
 * Contains other elements and lays them out according to a layout policy.
 */
 public abstract class Elements<T extends Elements<T>> extends Element<T>
-    implements Iterable<Element>
+    implements Iterable<Element<?>>
 {
     /** Emitted after a child has been added to this Elements. */
     public final Signal<Element<?>> childAdded = Signal.create();
@@ -54,20 +54,20 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         return _children.size();
     }
 
-    public Element childAt (int index) {
+    public Element<?> childAt (int index) {
         return _children.get(index);
     }
 
-    public T add (Element... children) {
+    public T add (Element<?>... children) {
         _children.addAll(Arrays.asList(children));
-        for (Element child : children) {
+        for (Element<?> child : children) {
             didAdd(child);
         }
         invalidate();
         return asT();
     }
 
-    public T add (int index, Element child) {
+    public T add (int index, Element<?> child) {
         // TODO: check if child is already added here? has parent?
         _children.add(index, child);
         didAdd(child);
@@ -75,7 +75,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         return asT();
     }
 
-    public void remove (Element child) {
+    public void remove (Element<?> child) {
         if (_children.remove(child)) {
             didRemove(child);
             invalidate();
@@ -95,7 +95,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     /** Returns an unmodifiable iterator over the children of this Elements.  */
-    public Iterator<Element> iterator () {
+    public Iterator<Element<?>> iterator () {
         return Collections.unmodifiableList(_children).iterator();
     }
 
@@ -105,7 +105,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         childAdded.emit(child);
     }
 
-    protected void didRemove (Element child) {
+    protected void didRemove (Element<?> child) {
         layer.remove(child.layer);
         if (isAdded()) child.wasRemoved();
         childRemoved.emit(child);
@@ -120,7 +120,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        for (Element child : _children) {
+        for (Element<?> child : _children) {
             child.wasRemoved();
         }
 
@@ -132,15 +132,15 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         // if we're added again, we'll be re-laid-out
     }
 
-    @Override protected Element hitTest (Point point) {
+    @Override protected Element<?> hitTest (Point point) {
         // transform the point into our coordinate system
         point = layer.transform().inverseTransform(point, point);
         // check whether it falls within our bounds
         float x = point.x + layer.originX(), y = point.y + layer.originY();
         if (!contains(x, y)) return null;
         // determine whether it falls within the bounds of any of our children
-        for (Element child : _children) {
-            Element hit = child.hitTest(point.set(x, y));
+        for (Element<?> child : _children) {
+            Element<?> hit = child.hitTest(point.set(x, y));
             if (hit != null) return hit;
         }
         return null;
@@ -168,7 +168,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
                        _size.width - ldata.bg.width(), _size.height - ldata.bg.height());
 
         // layout is only called as part of revalidation, so now we validate our children
-        for (Element child : _children) {
+        for (Element<?> child : _children) {
             child.validate();
         }
 
@@ -193,7 +193,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     protected final Layout _layout;
-    protected final List<Element> _children = new ArrayList<Element>();
+    protected final List<Element<?>> _children = new ArrayList<Element<?>>();
     protected Stylesheet _sheet;
 
     protected LayoutData _ldata;

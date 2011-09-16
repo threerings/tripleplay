@@ -48,7 +48,7 @@ public class Stylesheet
      * inherited, the style may be fetched from the configuration for a supertype of the supplied
      * element type. Returns null if no configuration can be found.
      */
-    <V> V get (Styles.Binding<V> key, Class<?> eclass, Element elem) {
+    <V> V get (Styles.Binding<V> key, Class<?> eclass, Element<?> elem) {
         Styles styles = _styles.get(eclass);
         V value = (styles == null) ? null : styles.<V>get(key, elem);
         if (value != null) return value;

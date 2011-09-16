@@ -91,14 +91,14 @@ public abstract class Style<V>
 
     /** The foreground color for an element. Inherited. */
     public static final Style<Integer> COLOR = new Style<Integer>(true) {
-        public Integer getDefault (Element elem) {
+        public Integer getDefault (Element<?> elem) {
             return elem.isEnabled() ? 0xFF000000 : 0xFFCCCCCC;
         }
     };
 
     /** The highlight color for an element. Inherited. */
     public static final Style<Integer> HIGHLIGHT = new Style<Integer>(true) {
-        public Integer getDefault (Element elem) {
+        public Integer getDefault (Element<?> elem) {
             return elem.isEnabled() ? 0xAAFFFFFF : 0xAACCCCCC;
         }
     };
@@ -139,7 +139,7 @@ public abstract class Style<V>
     /**
      * Creates a text format based on the supplied element's stylings.
      */
-    public static TextFormat createTextFormat (Element elem) {
+    public static TextFormat createTextFormat (Element<?> elem) {
         TextFormat format = new TextFormat().
             withFont(Styles.resolveStyle(elem, Style.FONT)).
             withTextColor(Styles.resolveStyle(elem, Style.COLOR)).
@@ -161,7 +161,7 @@ public abstract class Style<V>
     /**
      * Returns the default value for this style for the supplied element.
      */
-    public abstract V getDefault (Element mode);
+    public abstract V getDefault (Element<?> mode);
 
     /**
      * Returns a {@link Binding} with this style bound to the specified value.
@@ -176,7 +176,7 @@ public abstract class Style<V>
 
     protected static <V> Style<V> newStyle (boolean inherited, final V defaultValue) {
         return new Style<V>(inherited) {
-            public V getDefault (Element elem) {
+            public V getDefault (Element<?> elem) {
                 return defaultValue;
             }
         };

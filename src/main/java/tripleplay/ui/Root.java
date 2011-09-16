@@ -83,5 +83,5 @@ public class Root extends Elements<Root>
 
     protected final Interface _iface;
     protected boolean _valid;
-    protected Element _active;
+    protected Element<?> _active;
 }

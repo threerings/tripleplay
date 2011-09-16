@@ -229,7 +229,7 @@ public abstract class Element<T extends Element<T>>
      * element, nor its children contain the point. Also {@code point} is updated to contain the
      * hit-element-relative coordinates in the event of a hit.
      */
-    protected Element hitTest (Point point) {
+    protected Element<?> hitTest (Point point) {
         // transform the point into our coordinate system
         point = layer.transform().inverseTransform(point, point);
         float x = point.x + layer.originX(), y = point.y + layer.originY();

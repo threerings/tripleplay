@@ -115,7 +115,7 @@ public final class Styles
         return merge(styles._bindings);
     }
 
-    <V> V get (Binding<V> key, Element elem) {
+    <V> V get (Binding<V> key, Element<?> elem) {
         int index = Arrays.binarySearch(_bindings, key);
         if (index < 0) return null;
         @SuppressWarnings("unchecked") Binding<V> binding = (Binding<V>)_bindings[index];
@@ -201,7 +201,7 @@ public final class Styles
             _disSelectedV = disSelectedV;
         }
 
-        public V get (Element elem) {
+        public V get (Element<?> elem) {
             boolean isEnabled = elem.isEnabled(), isSelected = elem.isSelected();
             if (isEnabled && !isSelected) return _defaultV; // fast path for common case
 

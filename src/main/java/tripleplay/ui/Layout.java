@@ -23,9 +23,9 @@ public abstract class Layout
      *
      * @param elems elements to add to the newly created group.
      */
-    public Group toGroup (Element... elems) {
+    public Group toGroup (Element<?>... elems) {
         Group g = new Group(this);
-        for (Element elem : elems) {
+        for (Element<?> elem : elems) {
             g.add(elem);
         }
         return g;
@@ -36,12 +36,12 @@ public abstract class Layout
      * constraints) according to their preferred size, given the specified x and y size hints.
      * Neither {@code elems} nor {@code constraints} should be mutated.
      */
-    public abstract Dimension computeSize (List<Element> elems, float hintX, float hintY);
+    public abstract Dimension computeSize (List<Element<?>> elems, float hintX, float hintY);
 
     /**
      * Lays out the supplied elements (according to the specified constraints) into a region of the
      * specified dimensions. Neither {@code elems} nor {@code constraints} should be mutated.
      */
-    public abstract void layout (List<Element> elems,
+    public abstract void layout (List<Element<?>> elems,
                                  float left, float top, float width, float height);
 }
