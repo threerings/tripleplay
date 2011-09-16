@@ -172,16 +172,7 @@ public class JsonUtil
      */
     public static Iterable<String> getKeys (Json.Object json)
     {
-        // The Java implementation of Json.Object.getKeys() blows up on objects with no keys.
-        // TODO: remove this try-catch when the issue is fixed.
-        Json.Array tmp;
-        try {
-            tmp = json.getKeys();
-        } catch (Exception e) {
-            tmp = null;
-        }
-
-        final Json.Array array = tmp;
+        final Json.Array array = json.getKeys();
         return new Iterable<String>() {
             @Override public Iterator<String> iterator () {
                 return new Iterator<String>() {
