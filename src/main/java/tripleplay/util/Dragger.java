@@ -5,7 +5,6 @@
 
 package tripleplay.util;
 
-import playn.core.Layer;
 import playn.core.Pointer;
 
 import pythagoras.f.IPoint;

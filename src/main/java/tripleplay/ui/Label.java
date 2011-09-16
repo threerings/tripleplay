@@ -5,10 +5,7 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
-
 import pythagoras.f.Dimension;
-import pythagoras.f.IRectangle;
 
 /**
  * A widget that displays one or more lines of text and/or an icon image.
