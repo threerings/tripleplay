@@ -36,28 +36,17 @@ public class Input
         }
     }
 
-    /** Encapsulates hit testing and reactor expiry. */
-    public static abstract class Reactor {
-        /** The pointer listener that receives events for this reactor. */
-        public final Pointer.Listener listener;
+    /** Encapsulates hit testing and region expiry. */
+    public interface Region {
+        /** Returns true if this region is no longer relevant and should be removed. */
+        boolean hasExpired ();
 
-        /** Returns true if this listener is no longer relevant and should be removed. */
-        public abstract boolean hasExpired ();
-
-        /** Returns true if the (screen-coordinates) point triggers this listener. */
-        public abstract boolean hitTest (IPoint p);
-
-        public Reactor (Pointer.Listener listener) {
-            this.listener = listener;
-        }
+        /** Returns true if the (screen-coordinates) point triggers falls in this region. */
+        boolean hitTest (IPoint p);
     }
 
-    /** A reactor that responds to clicks anywhere on the entire screen. */
-    public static class ScreenReactor extends Reactor {
-        public ScreenReactor (Pointer.Listener listener) {
-            super(listener);
-        }
-
+    /** A region that encompasses the entire screen. */
+    public static class ScreenRegion implements Region {
         @Override public boolean hasExpired () {
             return false;
         }
@@ -66,10 +55,9 @@ public class Input
         }
     }
 
-    /** A reactor that responds to clicks in the supplied (screen) bounds. */
-    public static class BoundsReactor extends ScreenReactor {
-        public BoundsReactor (IRectangle bounds, Pointer.Listener listener) {
-            super(listener);
+    /** A region that encompasses the supplied (screen) bounds. */
+    public static class BoundsRegion extends ScreenRegion {
+        public BoundsRegion (IRectangle bounds) {
             _bounds = bounds;
         }
 
@@ -80,13 +68,12 @@ public class Input
         protected IRectangle _bounds;
     }
 
-    /** A reactor that responds to clicks in the supplied bounds, as transformed by the supplied
-     * layer's transform. While the layer in question is not visible, the reactor will not be
-     * notified. If this reactor is considered for processing and its layer has been removed from
+    /** A region that encompasses supplied bounds, as transformed by the supplied layer's
+     * transform. While the layer in question is not visible, the region will match clicks. If a
+     * reaction using this region is considered for processing and its layer has been removed from
      * the view hierarchy, it will automatically be canceled. */
-    public static class LayerReactor extends Reactor {
-        public LayerReactor (Layer layer, IRectangle bounds, Pointer.Listener listener) {
-            super(listener);
+    public static class LayerRegion implements Region {
+        public LayerRegion (Layer layer, IRectangle bounds) {
             _layer = layer;
             _bounds = bounds;
         }
@@ -105,13 +92,12 @@ public class Input
         protected IRectangle _bounds;
     }
 
-    /** A reactor that responds to clicks in the supplied layer's (transformed) bounds. While the
-     * layer in question is not visible, the reactor will not be notified. If this reactor is
-     * considered for processing and its layer has been removed from the view hierarchy, it will
-     * automatically be canceled. */
-    public static class SizedLayerReactor extends Reactor {
-        public SizedLayerReactor (Layer.HasSize layer, Pointer.Listener listener) {
-            super(listener);
+    /** A region that encompasses the supplied layer's (transformed) bounds. While the layer in
+     * question is not visible, the region will not be match clicks. If a reaction using this
+     * region is considered for processing and its layer has been removed from the view hierarchy,
+     * it will automatically be canceled. */
+    public static class SizedLayerRegion implements Region {
+        public SizedLayerRegion (Layer.HasSize layer) {
             _layer = layer;
         }
 
@@ -132,15 +118,15 @@ public class Input
     /** Receives input from the PlayN Pointer service. */
     public final Pointer.Listener plistener = new Pointer.Listener() {
         @Override public void onPointerStart (Pointer.Event event) {
-            // take a snapshot of the reactors list to avoid concurrent modification if reactors
+            // take a snapshot of the regions list to avoid concurrent modification if reactions
             // are added or removed during processing
-            List<Reactor> snapshot = new ArrayList<Reactor>(_reactors);
+            List<Reaction> snapshot = new ArrayList<Reaction>(_reactions);
             Point p = new Point(event.x(), event.y());
             for (int ii = snapshot.size() - 1; ii >= 0; ii--) {
-                Reactor r = snapshot.get(ii);
-                if (r.hasExpired()) {
-                    _reactors.remove(r);
-                } else if (r.hitTest(p)) {
+                Reaction r = snapshot.get(ii);
+                if (r.region.hasExpired()) {
+                    _reactions.remove(r);
+                } else if (r.region.hitTest(p)) {
                     _active = r;
                     r.listener.onPointerStart(event);
                     break;
@@ -161,61 +147,72 @@ public class Input
             }
         }
 
-        protected Reactor _active;
+        protected Reaction _active;
     };
 
     /**
-     * Configures a reactor to be notified of pointer activity. On pointer start, reactors will be
+     * Configures a reaction to be notified of pointer activity. On pointer start, reactions will be
      * scanned from most-recently-registered to least-recently-registered and hit-tested. Thus more
-     * recently registered reactors that overlap previously registered reactors will take
+     * recently registered reactions that overlap previously registered reactions will take
      * precedence. TODO: use layer depth information to hit test based on depth.
      *
-     * <p> Subsequent pointer drag and end events will be dispatched to the reactor that
+     * <p> Subsequent pointer drag and end events will be dispatched to the reaction that
      * successfully hit-tested the pointer start. </p>
      *
      * @return a handle that can be used to clear this registration.
      */
-    public Registration register (final Reactor reactor) {
-        _reactors.add(reactor);
+    public Registration register (Region region, Pointer.Listener listener) {
+        final Reaction reaction = new Reaction(region, listener);
+        _reactions.add(reaction);
         return new Registration() {
             @Override public void cancel () {
-                _reactors.remove(reactor);
+                _reactions.remove(reaction);
             }
         };
     }
 
     /**
-     * Registers a @{link ScreenReactor}.
+     * Registers a reaction using {@link ScreenRegion} and the supplied listener.
      * @return a handle that can be used to clear this registration.
      */
     public Registration register (Pointer.Listener listener) {
-        return register(new ScreenReactor(listener));
+        return register(new ScreenRegion(), listener);
     }
 
     /**
-     * Registers a @{link BoundsReactor}.
+     * Registers a reaction using {@link BoundsRegion} and the supplied listener.
      * @return a handle that can be used to clear this registration.
      */
     public Registration register (IRectangle bounds, Pointer.Listener listener) {
-        return register(new BoundsReactor(bounds, listener));
+        return register(new BoundsRegion(bounds), listener);
     }
 
     /**
-     * Registers a {@link LayerReactor}.
+     * Registers a reaction using {@link LayerRegion} and the supplied listener.
      * @return a handle that can be used to clear this registration.
      */
     public Registration register (Layer layer, IRectangle bounds, Pointer.Listener listener) {
-        return register(new LayerReactor(layer, bounds, listener));
+        return register(new LayerRegion(layer, bounds), listener);
     }
 
     /**
-     * Registers a {@link SizedLayerReactor}.
+     * Registers a reaction using {@link SizedLayerRegion} and the supplied listener.
      * @return a handle that can be used to clear this registration.
      */
     public Registration register (Layer.HasSize layer, Pointer.Listener listener) {
-        return register(new SizedLayerReactor(layer, listener));
+        return register(new SizedLayerRegion(layer), listener);
     }
 
-    /** A list of all registered reactors. */
-    protected List<Reactor> _reactors = new ArrayList<Reactor>();
+    protected final class Reaction {
+        public final Region region;
+        public final Pointer.Listener listener;
+
+        public Reaction (Region region, Pointer.Listener listener) {
+            this.region = region;
+            this.listener = listener;
+        }
+    }
+
+    /** A list of all registered reactions. */
+    protected List<Reaction> _reactions = new ArrayList<Reaction>();
 }
