@@ -28,22 +28,25 @@ public class Selector
         });
         elements.childRemoved.connect(new Slot<Element<?>> () {
             @Override public void onEmit (Element<?> removed) {
-                _connections.remove(removed).disconnect();
+                _conns.remove(removed).disconnect();
             }
         });
-
     }
 
-    public void setSelected (Element<?> selected) {
+    public Selector setSelected (Element<?> selected) {
+        if (_selected == selected) { return this; }
         if (_selected != null) {
             _selected.set(Element.Flag.SELECTED, false);
             _selected.invalidate();
             deselected.emit(_selected);
         }
         _selected = selected;
-        _selected.set(Element.Flag.SELECTED, true);
-        _selected.invalidate();
+        if (_selected != null) {
+            _selected.set(Element.Flag.SELECTED, true);
+            _selected.invalidate();
+        }
         this.selected.emit(_selected);
+        return this;
     }
 
     public Element<?> selected () {
@@ -52,7 +55,7 @@ public class Selector
 
     protected void onChildAdded (Element<?> child) {
         if (child instanceof ClickableTextWidget) {
-            _connections.put(child, ((ClickableTextWidget<?>)child).clicked.connect(_clickSlot));
+            _conns.put(child, ((ClickableTextWidget<?>)child).clicked.connect(_clickSlot));
         }
     }
 
@@ -64,6 +67,5 @@ public class Selector
         }
     };
 
-    protected final Map<Element<?>, Connection> _connections =
-        new HashMap<Element<?>, Connection>();
+    protected final Map<Element<?>, Connection> _conns = new HashMap<Element<?>, Connection>();
 }
