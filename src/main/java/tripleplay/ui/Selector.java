@@ -12,11 +12,23 @@ import react.Connection;
 import react.Signal;
 import react.Slot;
 
+/**
+ * Maintains a single selected item among the children of an <code>Elements</code>.<p>
+ *
+ * A click on a child that implements <code>Clickable</code> makes it the selected item, or
+ * <code>setSelected</code> can be used to manually control the selected item.
+ */
 public class Selector
 {
+    /** Emitted when the selection changes with the newly selected item. */
     public Signal<Element<?>> selected = Signal.create();
+
+    /** Emitted when the selection changes with the newly deselected item. */
     public Signal<Element<?>> deselected = Signal.create();
 
+    /**
+     * Creates a selector on the children of <code>elements</code>.
+     */
     public Selector (Elements<?> elements) {
         for (Element<?> child : elements) {
             onChildAdded(child);
@@ -28,11 +40,18 @@ public class Selector
         });
         elements.childRemoved.connect(new Slot<Element<?>> () {
             @Override public void onEmit (Element<?> removed) {
-                _conns.remove(removed).disconnect();
+                Connection conn = _conns.remove(removed);
+                if (conn != null) {
+                    conn.disconnect();
+                }
             }
         });
     }
 
+    /**
+     * Sets the selected item and deselects the currently selected item if there is one.
+     * <code>selected</code> may be null to select nothing.
+     */
     public Selector setSelected (Element<?> selected) {
         if (_selected == selected) { return this; }
         if (_selected != null) {
@@ -49,13 +68,14 @@ public class Selector
         return this;
     }
 
+    /** Returns the selected item. Can be null if nothing is selected. */
     public Element<?> selected () {
         return _selected;
     }
 
     protected void onChildAdded (Element<?> child) {
-        if (child instanceof ClickableTextWidget) {
-            _conns.put(child, ((ClickableTextWidget<?>)child).clicked.connect(_clickSlot));
+        if (child instanceof Clickable<?>) {
+            _conns.put(child, ((Clickable<?>)child).clicked().connect(_clickSlot));
         }
     }
 

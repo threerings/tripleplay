@@ -13,9 +13,11 @@ import react.Signal;
  * A text widget that provides button-like behavior.
  */
 public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextWidget<T>
+    implements Clickable<T>
 {
-    /** A signal that is emitted when this widget is clicked. */
-    public final Signal<T> clicked = Signal.create();
+    @Override public Signal<T> clicked () {
+        return _clicked;
+    }
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
@@ -76,7 +78,7 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
         if (isSelected()) {
             set(Flag.SELECTED, false);
             invalidate();
-            clicked.emit(asT()); // emit a click event
+            clicked().emit(asT()); // emit a click event
         }
     }
 
@@ -107,4 +109,6 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
 
     protected Background.Instance _bginst;
     protected LayoutData _ldata;
+
+    protected final Signal<T> _clicked = Signal.create();
 }
