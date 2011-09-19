@@ -5,8 +5,6 @@
 
 package tripleplay.util;
 
-import java.util.Iterator;
-
 import playn.core.Json;
 
 /**
