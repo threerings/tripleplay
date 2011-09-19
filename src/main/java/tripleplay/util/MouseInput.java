@@ -18,11 +18,11 @@ public class MouseInput extends Input<Mouse.Listener>
      * recently registered reactions that overlap previously registered reactions will take
      * precedence. TODO: use layer depth information to hit test based on depth.
      *
-     * <p> After a mouse down, subsequent move and up events will be dispatched to the reaction that
-     * successfully hit-tested the mouse start. If no mouse down reaction is active, movement is
-     * dispatched via the same hit-testing mechanism. Mouse wheel scrolls are dispatched the the
-     * active down reaction, or the most recent movement hit if there is no active down reaction.
-     * </p>
+     * <p> Mouse motion events are dispatched to the region over which the mouse is hovering, if
+     * any (with overlapping regions resolved as described above). After a mouse down, subsequent
+     * movement, up and wheel events will be dispatched to the reaction that successfully
+     * hit-tested the mouse start. In the absence of an active down reaction, mouse wheel events
+     * are dispatched to the region over which the mouse is hovering, if any. </p>
      *
      * @return a handle that can be used to clear this registration.
      */
@@ -31,39 +31,43 @@ public class MouseInput extends Input<Mouse.Listener>
     }
 
     /** Receives input from the PlayN Mouse service. */
-    protected class MouseReactor extends Reactor<Mouse.Listener>
-        implements Mouse.Listener {
+    protected class MouseReactor extends Reactor<Mouse.Listener> implements Mouse.Listener {
         @Override public void onMouseDown (Mouse.ButtonEvent event) {
-            _active = hitTest(event);
-            if (_active != null) {
-                _active.onMouseDown(event);
+            _target = hitTest(event);
+            if (_target != null) {
+                _down = true;
+                _target.onMouseDown(event);
             }
         }
         @Override public void onMouseMove (Mouse.MotionEvent event) {
-            if (_active != null) {
-                _active.onMouseMove(event);
-            } else {
-                _lastMoved = hitTest(event);
-                if (_lastMoved != null) {
-                    _lastMoved.onMouseMove(event);
-                }
+            if (!_down) {
+                _target = hitTest(event);
+            }
+            if (_target != null) {
+                _target.onMouseMove(event);
             }
         }
         @Override public void onMouseUp (Mouse.ButtonEvent event) {
-            if (_active != null) {
-                _active.onMouseUp(event);
-                _active = null;
+            if (_down) {
+                _down = false;
+                Mouse.Listener oldHover = _target;
+                // now that the mouse is released, we may be hovering over a new region; rechecking
+                // hover here ensures that subsequent mouse wheel events will be correctly
+                // dispatched even if the mouse is not moved
+                _target = hitTest(event);
+                // notify onMouseUp last so that our internal invariants are not broken if the
+                // listener decides to throw an unchecked exception
+                oldHover.onMouseUp(event);
             }
         }
         @Override public void onMouseWheelScroll (Mouse.WheelEvent event) {
-            if (_active != null) {
-                _active.onMouseWheelScroll(event);
-            } else if (_lastMoved != null) {
-                _lastMoved.onMouseWheelScroll(event);
+            if (_target != null) {
+                _target.onMouseWheelScroll(event);
             }
         }
 
-        protected Mouse.Listener _active, _lastMoved;
+        protected Mouse.Listener _target;
+        protected boolean _down;
     };
 
     protected final MouseReactor _reactor = new MouseReactor();
