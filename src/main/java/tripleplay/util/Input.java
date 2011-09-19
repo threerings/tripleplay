@@ -8,32 +8,22 @@ package tripleplay.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import playn.core.Events;
 import playn.core.Layer;
-import playn.core.Pointer;
 
 import pythagoras.f.IPoint;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Point;
 
 /**
- * Dispatches user input to the appropriate entity.
+ * Dispatches user input from a particular source.
  */
-public class Input
+public abstract class Input<L>
 {
     /** Provides a handle on a listener or action registration. */
     public interface Registration {
         /** Unregisters the action associated with this handle. */
         void cancel ();
-    }
-
-    /** A listener that will call {@link Action#onTrigger} when the pointer is pressed. */
-    public static abstract class Action extends Pointer.Adapter {
-        /** Called when the user triggers a reactor. */
-        public abstract void onTrigger ();
-
-        @Override public void onPointerStart (Pointer.Event event) {
-            onTrigger();
-        }
     }
 
     /** Encapsulates enabledness, expiry, and hit testing. */
@@ -123,41 +113,6 @@ public class Input
         protected Layer.HasSize _layer;
     }
 
-    /** Receives input from the PlayN Pointer service. */
-    public final Pointer.Listener plistener = new Pointer.Listener() {
-        @Override public void onPointerStart (Pointer.Event event) {
-            // take a snapshot of the regions list to avoid concurrent modification if reactions
-            // are added or removed during processing
-            List<Reaction> snapshot = new ArrayList<Reaction>(_reactions);
-            Point p = new Point(event.x(), event.y());
-            for (int ii = snapshot.size() - 1; ii >= 0; ii--) {
-                Reaction r = snapshot.get(ii);
-                if (r.region.hasExpired()) {
-                    _reactions.remove(r);
-                } else if (r.region.canTrigger() && r.region.hitTest(p)) {
-                    _active = r;
-                    r.listener.onPointerStart(event);
-                    break;
-                }
-            }
-        }
-
-        @Override public void onPointerDrag (Pointer.Event event) {
-            if (_active != null) {
-                _active.listener.onPointerDrag(event);
-            }
-        }
-
-        @Override public void onPointerEnd (Pointer.Event event) {
-            if (_active != null) {
-                _active.listener.onPointerEnd(event);
-                _active = null;
-            }
-        }
-
-        protected Reaction _active;
-    };
-
     /**
      * Configures a reaction to be notified of pointer activity. On pointer start, reactions will be
      * scanned from most-recently-registered to least-recently-registered and hit-tested. Thus more
@@ -169,21 +124,13 @@ public class Input
      *
      * @return a handle that can be used to clear this registration.
      */
-    public Registration register (Region region, Pointer.Listener listener) {
-        final Reaction reaction = new Reaction(region, listener);
-        _reactions.add(reaction);
-        return new Registration() {
-            @Override public void cancel () {
-                _reactions.remove(reaction);
-            }
-        };
-    }
+    public abstract Registration register (Region region, L listener);
 
     /**
      * Registers a reaction using {@link ScreenRegion} and the supplied listener.
      * @return a handle that can be used to clear this registration.
      */
-    public Registration register (Pointer.Listener listener) {
+    public Registration register (L listener) {
         return register(new ScreenRegion(), listener);
     }
 
@@ -191,7 +138,7 @@ public class Input
      * Registers a reaction using {@link BoundsRegion} and the supplied listener.
      * @return a handle that can be used to clear this registration.
      */
-    public Registration register (IRectangle bounds, Pointer.Listener listener) {
+    public Registration register (IRectangle bounds, L listener) {
         return register(new BoundsRegion(bounds), listener);
     }
 
@@ -199,7 +146,7 @@ public class Input
      * Registers a reaction using {@link LayerRegion} and the supplied listener.
      * @return a handle that can be used to clear this registration.
      */
-    public Registration register (Layer layer, IRectangle bounds, Pointer.Listener listener) {
+    public Registration register (Layer layer, IRectangle bounds, L listener) {
         return register(new LayerRegion(layer, bounds), listener);
     }
 
@@ -207,20 +154,48 @@ public class Input
      * Registers a reaction using {@link SizedLayerRegion} and the supplied listener.
      * @return a handle that can be used to clear this registration.
      */
-    public Registration register (Layer.HasSize layer, Pointer.Listener listener) {
+    public Registration register (Layer.HasSize layer, L listener) {
         return register(new SizedLayerRegion(layer), listener);
     }
 
-    protected final class Reaction {
-        public final Region region;
-        public final Pointer.Listener listener;
+    protected abstract static class Reactor<L> {
+        public L hitTest (Events.Position event) {
+            // take a snapshot of the regions list to avoid concurrent modification if reactions
+            // are added or removed during processing
+            List<Reaction<L>> snapshot = new ArrayList<Reaction<L>>(_reactions);
+            Point p = new Point(event.x(), event.y());
+            for (int ii = snapshot.size() - 1; ii >= 0; ii--) {
+                Reaction<L> r = snapshot.get(ii);
+                if (r.region.hasExpired()) {
+                    _reactions.remove(r);
+                } else if (r.region.canTrigger() && r.region.hitTest(p)) {
+                    return r.listener;
+                }
+            }
+            return null;
+        }
 
-        public Reaction (Region region, Pointer.Listener listener) {
+        public Registration register (Region region, L listener) {
+            final Reaction<L> reaction = new Reaction<L>(region, listener);
+            _reactions.add(reaction);
+            return new Registration() {
+                @Override public void cancel () {
+                    _reactions.remove(reaction);
+                }
+            };
+        }
+
+        /** A list of all registered reactions. */
+        protected List<Reaction<L>> _reactions = new ArrayList<Reaction<L>>();
+    }
+
+    protected static final class Reaction<T> {
+        public final Region region;
+        public final T listener;
+
+        public Reaction (Region region, T listener) {
             this.region = region;
             this.listener = listener;
         }
     }
-
-    /** A list of all registered reactions. */
-    protected List<Reaction> _reactions = new ArrayList<Reaction>();
 }
