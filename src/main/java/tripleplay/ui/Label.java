@@ -12,11 +12,24 @@ import pythagoras.f.Dimension;
  */
 public class Label extends TextWidget<Label>
 {
-    public Label (Styles styles) {
-        setStyles(styles);
+    /** Creates a label with no text and inherited styles. */
+    public Label () {
+        this("");
     }
 
-    public Label () {
+    /**  Creates a label with the given text and inherited styles. */
+    public Label (String text) {
+        this(text, Styles.none());
+    }
+
+    /** Creates a label with no text and inherited styles. */
+    public Label (Styles styles) {
+        this("", styles);
+    }
+
+    /** Creates a label with the given text and styles.
+    public Label (String text, Styles styles) {
+        setText(text).setStyles(styles);
     }
 
     @Override public String toString () {
