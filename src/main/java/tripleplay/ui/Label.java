@@ -27,7 +27,7 @@ public class Label extends TextWidget<Label>
         this("", styles);
     }
 
-    /** Creates a label with the given text and styles.
+    /** Creates a label with the given text and styles. */
     public Label (String text, Styles styles) {
         setText(text).setStyles(styles);
     }
