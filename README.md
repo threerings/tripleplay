@@ -2,15 +2,18 @@ Triple Play
 ===========
 
 Triple Play is a collection of game-related utility classes that can be used
-with the [PlayN](http://code.google.com/p/playn) library on all of its myriad
-platform targets.
+with the [PlayN] library on all of its myriad platform targets.
 
 Building
 --------
 
-The library is built using [Ant](http://ant.apache.org/).
+The library is built using [SBT] or [Maven].
 
-Invoke `ant -p` to see documentation on the build targets.
+Invoke `xsbt publish-local` to build and install the library to your local
+Ivy repository (i.e. `~/.ivy2/local`).
+
+Invoke `mvn install` to build and install the library to your local Maven
+repository (i.e. `~/.m2/repository`).
 
 Artifacts
 ---------
@@ -18,12 +21,6 @@ Artifacts
 To add a Triple Play dependency to a Maven project, add the following to your
 `pom.xml`:
 
-    <repositories>
-      <repository>
-        <id>ooo-repo</id>
-        <url>http://threerings.github.com/maven-repo</url>
-      </repository>
-    </repositories>
     <dependencies>
       <dependency>
         <groupId>com.threerings</groupId>
@@ -37,7 +34,16 @@ remove the vast majority of the boilerplate above.
 
 If you prefer to download pre-built binaries, those can be had here:
 
-* [tripleplay-1.0.jar](http://threerings.github.com/maven-repo/com/threerings/tripleplay/1.0/tripleplay-1.0.jar)
+* [tripleplay-1.0.jar](http://repo2.maven.org/maven2/com/threerings/tripleplay/1.0/tripleplay-1.0.jar)
+
+GWT
+---
+
+When using TriplePlay in a [PlayN] game that targets the HTML5 or Flash
+backends, you must also add a reference to the [GWT] module to your
+`FooGame.gwt.xml` file, like so:
+
+    <inherits name="tripleplay.TriplePlay"/>
 
 Distribution
 ------------
@@ -50,3 +56,8 @@ Contact
 
 Questions, comments, and other worldly endeavors can be handled via the [Three
 Rings Libraries](http://groups.google.com/group/ooo-libs) Google Group.
+
+[PlayN]: http://code.google.com/p/playn
+[SBT]: http://github.com/harrah/xsbt/wiki/Setup
+[Maven]: http://maven.apache.org/
+[GWT]: http://code.google.com/webtoolkit/
