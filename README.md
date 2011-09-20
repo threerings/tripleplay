@@ -4,6 +4,8 @@ Triple Play
 Triple Play is a collection of game-related utility classes that can be used
 with the [PlayN] library on all of its myriad platform targets.
 
+* [API documentation] is available.
+
 Building
 --------
 
@@ -58,6 +60,7 @@ Questions, comments, and other worldly endeavors can be handled via the [Three
 Rings Libraries](http://groups.google.com/group/ooo-libs) Google Group.
 
 [PlayN]: http://code.google.com/p/playn
+[API documentation]: http://threerings.github.com/tripleplay/apidocs/overview-summary.html
 [SBT]: http://github.com/harrah/xsbt/wiki/Setup
 [Maven]: http://maven.apache.org/
 [GWT]: http://code.google.com/webtoolkit/
