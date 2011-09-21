@@ -14,33 +14,55 @@ import pythagoras.f.IDimension;
  */
 public class TableLayout extends Layout
 {
+    /** A configurator for a table column. */
+    public static class Column {
+        /** Configures this column as left-aligned. */
+        public Column alignLeft () {
+            _halign = Style.HAlign.LEFT;
+            return this;
+        }
+
+        /** Configures this column as right-aligned. */
+        public Column alignRight () {
+            _halign = Style.HAlign.RIGHT;
+            return this;
+        }
+
+        /** Configures this column's width as fixed to the width of its widest element. By default
+         * columns are 'free' and may be configured as wider than their default to accommodate
+         * excess width available to the table. */
+        public Column fixed () {
+            _fixed = true;
+            return this;
+        }
+
+        /** Configures this column to stretch the width of its elements to the column width. By
+         * default elements are configured to their preferred width. */
+        public Column stretch () {
+            _stretch = true;
+            return this;
+        }
+
+        protected Style.HAlign _halign = Style.HAlign.CENTER;
+        protected boolean _fixed, _stretch;
+    }
+
     /**
      * Creates a table layout with the specified number of columns.
      */
     public TableLayout (int columns) {
-        _fixedColumns = new boolean[columns];
+        _columns = new Column[columns];
     }
 
-    // TODO: specify whether each column stretches its elems or aligns them left/right/center
-    // TODO: specify whether each row stretches its elems or aligns them top/bottom/center
-
-    // /**
-    //  * Configures a column as fixed or free. When laying out a table, the available width is
-    //  * divided up among all of the non-fixed columns. All columns are non-fixed by default.
-    //  */
-    // public TableLayout fixedColumn (int column, boolean fixed) {
-    //     _fixedColumns[column] = fixed;
-    //     return this;
-    // }
-
-    // /**
-    //  * Configures the table to force all rows to be a uniform size. Rows are sized to their
-    //  * tallest element, by default.
-    //  */
-    // public TableLayout equalRows () {
-    //     _equalRows = true;
-    //     return this;
-    // }
+    /**
+     * Returns an object that can be used to configure the behavior of the specified column.
+     */
+    public Column column (int column) {
+        if (_columns[column] == null) {
+            _columns[column] = new Column();
+        }
+        return _columns[column];
+    }
 
     /**
      * Configures the gap between successive rows and successive columns. The default gap is zero.
@@ -53,31 +75,46 @@ public class TableLayout extends Layout
 
     @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
         Metrics m = computeMetrics(elems, hintX, hintY, true);
-        return new Dimension(m.totalWidth() + (m.columns()-1) * _colgap,
-                             m.totalHeight() + (m.rows()-1) * _rowgap);
+        return new Dimension(m.totalWidth(_colgap), m.totalHeight(_rowgap));
     }
 
     @Override public void layout (Elements<?> elems,
                                   float left, float top, float width, float height) {
         Metrics m = computeMetrics(elems, width, height, false);
         int columns = m.columns(), row = 0, col = 0;
-        float x = left, y = top; // TODO: account for group halign/valign
-        Style.HAlign cellHAlign = Style.HAlign.CENTER; // TODO
+
+        float naturalWidth = m.totalWidth(_colgap);
+        int freeColumns = 0;
+        for (int ii = 0; ii < columns; ii++) {
+            if (!colcfg(ii)._fixed) freeColumns++;
+        }
+        float freeExtra = (width - naturalWidth) / freeColumns;
+        // freeExtra may end up negative; if our natural width is too wide
+
+        Style.HAlign halign = elems.resolveStyle(Style.HALIGN);
+        float startX = left + ((freeColumns == 0) ? halign.offset(naturalWidth, width) : 0);
+        float x = startX;
+
+        Style.VAlign valign = elems.resolveStyle(Style.VALIGN);
+        float y = top + valign.offset(m.totalHeight(_rowgap), height);
+
         Style.VAlign cellVAlign = Style.VAlign.CENTER; // TODO
         for (Element<?> elem : elems) {
-            float colWidth = m.columnWidths[col], rowHeight = m.rowHeights[row];
-            if (elem.isVisible()) {
-                IDimension psize = elem.preferredSize(0, 0); // will be cached
-                float elemWidth = Math.min(psize.width(), colWidth);
+            Column ccfg = colcfg(col);
+            float colWidth = Math.max(0, m.columnWidths[col] + (ccfg._fixed ? 0 : freeExtra));
+            float rowHeight = m.rowHeights[row];
+            if (colWidth > 0 && elem.isVisible()) {
+                IDimension psize = elem.preferredSize(0, 0); // will be cached, hints ignored
+                float elemWidth = ccfg._stretch ? colWidth : Math.min(psize.width(), colWidth);
                 float elemHeight = Math.min(psize.height(), rowHeight);
                 elem.setSize(elemWidth, elemHeight);
-                elem.setLocation(x + cellHAlign.offset(elemWidth, colWidth),
+                elem.setLocation(x + ccfg._halign.offset(elemWidth, colWidth),
                                  y + cellVAlign.offset(elemHeight, rowHeight));
             }
             x += (colWidth + _colgap);
             if (++col == columns) {
                 col = 0;
-                x = left;
+                x = startX;
                 y += (rowHeight + _rowgap);
                 row++;
             }
@@ -86,7 +123,7 @@ public class TableLayout extends Layout
 
     protected Metrics computeMetrics (Elements<?> elems, float hintX, float hintY,
                                       boolean preferred) {
-        int columns = _fixedColumns.length;
+        int columns = _columns.length;
         int rows = elems.childCount() / columns;
         if (elems.childCount() % columns != 0) rows++;
 
@@ -110,47 +147,12 @@ public class TableLayout extends Layout
             }
         }
 
-        // divvy up remaining space based on our preferred column widths (however, no adjusting if
-        // we're computing our preferred size)
-
-        // if (!preferred) {
-        //     float naturalWidth = metrics.totalWidth();
-
-        //     // sum the width of the non-fixed columns
-        //     float freewid = 0;
-        //     for (int ii = 0; ii < _fixedColumns.length; ii++) {
-        //         if (!_fixedColumns[ii]) freewid += metrics.columnWidths[ii];
-        //     }
-
-        //     // now divide up the extra space among said non-fixed columns
-        //     float avail = hintX - naturalWidth - (_colgap * (columns-1));
-        //     int used = 0;
-        //     for (int ii = 0; ii < metrics.columnWidths.length; ii++) {
-        //         if (_fixedColumns[ii]) {
-        //             continue;
-        //         }
-        //         float adjust = metrics.columnWidths[ii] * avail / freewid;
-        //         metrics.columnWidths[ii] += adjust;
-        //         used += adjust;
-        //     }
-
-        //     // add any rounding error to the first non-fixed column
-        //     if (metrics.columnWidths.length > 0) {
-        //         for (int ii = 0; ii < _fixedColumns.length; ii++) {
-        //             if (!_fixedColumns[ii]) {
-        //                 metrics.columnWidths[ii] += (avail - used);
-        //                 break;
-        //             }
-        //         }
-        //     }
-        // }
-
-        // // if we're equalizing rows, make all row heights the max
-        // if (_equalRows) {
-        //     Arrays.fill(metrics.rowHeights, maxrh);
-        // }
-
         return metrics;
+    }
+
+    protected Column colcfg (int index) {
+        Column col = _columns[index];
+        return (col == null) ? DEF_COLUMN : col;
     }
 
     protected static class Metrics {
@@ -163,11 +165,12 @@ public class TableLayout extends Layout
         public int rows () {
             return rowHeights.length;
         }
-        public float totalWidth () {
-            return sum(columnWidths);
+
+        public float totalWidth (float gap) {
+            return sum(columnWidths) + gap*(columns()-1);
         }
-        public float totalHeight () {
-            return sum(rowHeights);
+        public float totalHeight (float gap) {
+            return sum(rowHeights) + gap*(rows()-1);
         }
     }
 
@@ -179,7 +182,8 @@ public class TableLayout extends Layout
         return total;
     }
 
-    protected final boolean[] _fixedColumns;
-    protected boolean _equalRows;
+    protected final Column[] _columns;
     protected int _rowgap, _colgap;
+
+    protected static final Column DEF_COLUMN = new Column();
 }

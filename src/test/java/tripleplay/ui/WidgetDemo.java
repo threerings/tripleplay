@@ -60,7 +60,7 @@ public class WidgetDemo implements Game
         Group buttons = new Group(AxisLayout.horizontal(), alignLeft);
         root.add(buttons);
 
-        Page[] pages = { new MiscPage() };
+        Page[] pages = { new MiscPage(), new TablePage() };
         for (final Page page : pages) {
             Button tab = new Button().setText(page.name());
             buttons.add(tab);
@@ -71,7 +71,7 @@ public class WidgetDemo implements Game
                 }
             });
         }
-        root.add(pages[0].createInterface());
+        root.add(pages[1].createInterface());
     }
 
     @Override // from interface Game
