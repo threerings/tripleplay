@@ -149,7 +149,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     @Override protected Dimension computeSize (float hintX, float hintY) {
         LayoutData ldata = computeLayout(hintX, hintY);
         Dimension size = _layout.computeSize(
-            _children, hintX - ldata.bg.width(), hintY - ldata.bg.height());
+            this, hintX - ldata.bg.width(), hintY - ldata.bg.height());
         return ldata.bg.addInsets(size);
     }
 
@@ -164,7 +164,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         }
 
         // layout our children
-        _layout.layout(_children, ldata.bg.left, ldata.bg.top,
+        _layout.layout(this, ldata.bg.left, ldata.bg.top,
                        _size.width - ldata.bg.width(), _size.height - ldata.bg.height());
 
         // layout is only called as part of revalidation, so now we validate our children
