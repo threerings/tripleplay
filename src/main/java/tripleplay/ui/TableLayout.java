@@ -21,6 +21,9 @@ public class TableLayout extends Layout
         _fixedColumns = new boolean[columns];
     }
 
+    // TODO: specify whether each column stretches its elems or aligns them left/right/center
+    // TODO: specify whether each row stretches its elems or aligns them top/bottom/center
+
     // /**
     //  * Configures a column as fixed or free. When laying out a table, the available width is
     //  * divided up among all of the non-fixed columns. All columns are non-fixed by default.
