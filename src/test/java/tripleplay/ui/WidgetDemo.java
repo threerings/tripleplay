@@ -13,6 +13,7 @@ import playn.java.JavaPlatform;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
 
+import react.SignalView;
 import react.Signals;
 
 import static react.Functions.TO_STRING;
@@ -56,7 +57,7 @@ public class WidgetDemo implements Game
 
         Button toggle;
         Slider slider;
-        Label label2, sliderValue;
+        Label label2, iconRight, sliderValue;
 
         Styles alignTop = Styles.make(Style.VALIGN.is(Style.VAlign.TOP));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
@@ -64,7 +65,7 @@ public class WidgetDemo implements Game
                      new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT1),
                      new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT2),
                      new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT3)),
-                 new Group(AxisLayout.horizontal(), greenBg.merge(alignTop)).add(
+                 new Group(AxisLayout.horizontal().gap(15), greenBg.merge(alignTop)).add(
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Toggle viz:"),
                          toggle = new Button().setText("Toggle"),
@@ -72,22 +73,24 @@ public class WidgetDemo implements Game
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Label 1"),
                          label2 = new Label().setText("Label 2"),
-                         new Label().setIcon(smiley).setText("Label 3"))),
-                 new Group(AxisLayout.horizontal().gap(15), greenBg).add(
-                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))).
-                         setText("Left").setIcon(squares, getIBounds(0)),
-                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.RIGHT))).
-                         setText("Right").setIcon(squares, getIBounds(1)),
-                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.ABOVE),
-                                           Style.HALIGN.is(Style.HAlign.CENTER))).
-                         setText("Above").setIcon(squares, getIBounds(2)),
-                     new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
-                                           Style.HALIGN.is(Style.HAlign.CENTER))).
-                         setText("Below").setIcon(squares, getIBounds(3))),
+                         new Label().setIcon(smiley).setText("Label 3")),
+                     new Group(new TableLayout(2).gaps(10, 10)).add(
+                         new Label(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))).
+                             setText("Left").setIcon(squares, getIBounds(0)),
+                         iconRight = new Label(Styles.make(Style.ICON_POS.is(Style.Pos.RIGHT))).
+                             setText("Right").setIcon(squares, getIBounds(1)),
+                         new Label(Styles.make(Style.ICON_POS.is(Style.Pos.ABOVE),
+                                               Style.HALIGN.is(Style.HAlign.CENTER))).
+                             setText("Above").setIcon(squares, getIBounds(2)),
+                         new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
+                                               Style.HALIGN.is(Style.HAlign.CENTER))).
+                             setText("Below").setIcon(squares, getIBounds(3)))),
                  new Group(AxisLayout.vertical()).add(
                      slider = new Slider(0, -1, 1),
                      sliderValue = new Label("0")));
-        Signals.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
+        SignalView<Boolean> toggler = Signals.toggler(toggle.clicked(), true);
+        toggler.connect(label2.visibleSlot());
+        toggler.connect(iconRight.visibleSlot());
         slider.value.map(TO_STRING).connect(sliderValue.textSlot());
     }
 
