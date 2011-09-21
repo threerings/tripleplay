@@ -89,6 +89,43 @@ public abstract class Style<V>
         /** No text effect. */
         NONE };
 
+    /** Used to provide concise HAlign style declarations. */
+    public static class HAlignStyle extends Style<HAlign> {
+        public final Binding<HAlign> left = is(HAlign.LEFT);
+        public final Binding<HAlign> right = is(HAlign.RIGHT);
+        public final Binding<HAlign> center = is(HAlign.CENTER);
+        @Override public HAlign getDefault (Element<?> elem) { return HAlign.CENTER; }
+        HAlignStyle() { super(false); }
+    }
+
+    /** Used to provide concise VAlign style declarations. */
+    public static class VAlignStyle extends Style<VAlign> {
+        public final Binding<VAlign> top = is(VAlign.TOP);
+        public final Binding<VAlign> bottom = is(VAlign.BOTTOM);
+        public final Binding<VAlign> center = is(VAlign.CENTER);
+        @Override public VAlign getDefault (Element<?> elem) { return VAlign.CENTER; }
+        VAlignStyle() { super(false); }
+    }
+
+    /** Used to provide concise Pos style declarations. */
+    public static class PosStyle extends Style<Pos> {
+        public final Binding<Pos> left = is(Pos.LEFT);
+        public final Binding<Pos> above = is(Pos.ABOVE);
+        public final Binding<Pos> right = is(Pos.RIGHT);
+        public final Binding<Pos> below = is(Pos.BELOW);
+        @Override public Pos getDefault (Element<?> elem) { return Pos.LEFT; }
+        PosStyle() { super(false); }
+    }
+
+    /** Used to provide concise TextEffect style declarations. */
+    public static class TextEffectStyle extends Style<TextEffect> {
+        public final Binding<TextEffect> outline = is(TextEffect.OUTLINE);
+        public final Binding<TextEffect> shadow = is(TextEffect.SHADOW);
+        public final Binding<TextEffect> none = is(TextEffect.NONE);
+        @Override public TextEffect getDefault (Element<?> elem) { return TextEffect.NONE; }
+        TextEffectStyle() { super(true); }
+    }
+
     /** The foreground color for an element. Inherited. */
     public static final Style<Integer> COLOR = new Style<Integer>(true) {
         public Integer getDefault (Element<?> elem) {
@@ -107,10 +144,10 @@ public abstract class Style<V>
     public static final Style<Integer> SHADOW = newStyle(true, 0x55000000);
 
     /** The horizontal alignment of an element. Not inherited. */
-    public static final Style<HAlign> HALIGN = newStyle(false, HAlign.CENTER);
+    public static final HAlignStyle HALIGN = new HAlignStyle();
 
     /** The vertical alignment of an element. Not inherited. */
-    public static final Style<VAlign> VALIGN = newStyle(false, VAlign.CENTER);
+    public static final VAlignStyle VALIGN = new VAlignStyle();
 
     /** The font used to render text. Inherited. */
     public static final Style<Font> FONT = newStyle(
@@ -121,14 +158,14 @@ public abstract class Style<V>
     public static final Style<Boolean> TEXT_WRAP = newStyle(false, false);
 
     /** The effect to use when rendering text, if any. Inherited. */
-    public static final Style<TextEffect> TEXT_EFFECT = newStyle(true, TextEffect.NONE);
+    public static final TextEffectStyle TEXT_EFFECT = new TextEffectStyle();
 
     /** The background for an element. Not inherited. */
     public static final Style<Background> BACKGROUND = newStyle(
         false, (Background)new NullBackground());
 
     /** The position relative to the text to render an icon for labels, buttons, etc. */
-    public static final Style<Pos> ICON_POS = newStyle(false, Pos.LEFT);
+    public static final PosStyle ICON_POS = new PosStyle();
 
     /** The gap between the icon and text in labels, buttons, etc. */
     public static final Style<Integer> ICON_GAP = newStyle(false, 2);

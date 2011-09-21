@@ -28,7 +28,6 @@ public class MiscPage implements WidgetDemo.Page
         Image squares = PlayN.assetManager().getImage("images/squares.png");
 
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
-        Styles alignTop = Styles.make(Style.VALIGN.is(Style.VAlign.TOP));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
 
         Button toggle;
@@ -36,7 +35,7 @@ public class MiscPage implements WidgetDemo.Page
         Label label2, sliderValue;
         Group iface = new Group(AxisLayout.vertical().gap(15)).add(
             // display some wrapped text
-            new Group(AxisLayout.horizontal(), alignTop).add(
+            new Group(AxisLayout.horizontal(), Style.VALIGN.top).add(
                 new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT1),
                 new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT2),
                 new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT3)),
@@ -52,16 +51,12 @@ public class MiscPage implements WidgetDemo.Page
                     new Label().setIcon(smiley).setText("Label 3"))),
             // display some labels with varying icon alignment
             new Group(AxisLayout.horizontal().gap(10), greenBg).add(
-                new Label(Styles.make(Style.ICON_POS.is(Style.Pos.LEFT))).
-                    setText("Left").setIcon(squares, getIBounds(0)),
-                new Label(Styles.make(Style.ICON_POS.is(Style.Pos.RIGHT))).
-                    setText("Right").setIcon(squares, getIBounds(1)),
-                new Label(Styles.make(Style.ICON_POS.is(Style.Pos.ABOVE),
-                                      Style.HALIGN.is(Style.HAlign.CENTER))).
-                    setText("Above").setIcon(squares, getIBounds(2)),
-                new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
-                                      Style.HALIGN.is(Style.HAlign.CENTER))).
-                    setText("Below").setIcon(squares, getIBounds(3))),
+                new Label("Left").setStyles(Style.ICON_POS.left).setIcon(squares, getIBounds(0)),
+                new Label("Right").setStyles(Style.ICON_POS.right).setIcon(squares, getIBounds(1)),
+                new Label("Above").setStyles(Style.ICON_POS.above, Style.HALIGN.center).
+                    setIcon(squares, getIBounds(2)),
+                new Label("Below").setStyles(Style.ICON_POS.below, Style.HALIGN.center).
+                    setIcon(squares, getIBounds(3))),
             // TODO: move this to a separate slider page
             new Group(AxisLayout.vertical()).add(
                 slider = new Slider(0, -1, 1),

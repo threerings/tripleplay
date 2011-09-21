@@ -39,25 +39,20 @@ public class WidgetDemo implements Game
         PlayN.pointer().setListener(_iface.plistener);
 
         // define our root stylesheet
-        Styles buttonStyles = Styles.none().
-            add(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF, 5))).
-            addSelected(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 6, 4, 4, 6)));
-        Styles labelStyles = Styles.none().
-            add(Style.HALIGN.is(Style.HAlign.LEFT), Style.VALIGN.is(Style.VAlign.TOP));
         Stylesheet rootSheet = Stylesheet.builder().
-            add(Button.class, buttonStyles).
-            add(Label.class, labelStyles).
+            add(Button.class, Styles.none().
+                add(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF, 5))).
+                addSelected(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 6, 4, 4, 6)))).
+            add(Label.class, Style.HALIGN.left, Style.VALIGN.top).
             create();
 
         // create our demo interface
         final Root root = _iface.createRoot(AxisLayout.vertical().offStretch(), rootSheet);
         root.setSize(PlayN.graphics().width(), PlayN.graphics().height());
-        root.addStyles(Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CCFF, 5)),
-                                   Style.VALIGN.is(Style.VAlign.TOP)));
+        root.addStyles(Style.BACKGROUND.is(Background.solid(0xFF99CCFF, 5)), Style.VALIGN.top);
         PlayN.graphics().rootLayer().add(root.layer);
 
-        Styles alignLeft = Styles.make(Style.HALIGN.is(Style.HAlign.LEFT));
-        Group buttons = new Group(AxisLayout.horizontal(), alignLeft);
+        Group buttons = new Group(AxisLayout.horizontal(), Style.HALIGN.left);
         root.add(buttons);
 
         Page[] pages = { new MiscPage(), new TablePage() };
@@ -71,7 +66,7 @@ public class WidgetDemo implements Game
                 }
             });
         }
-        root.add(pages[1].createInterface());
+        root.add(pages[0].createInterface());
     }
 
     @Override // from interface Game

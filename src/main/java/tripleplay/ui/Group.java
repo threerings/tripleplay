@@ -19,6 +19,14 @@ public class Group extends Elements<Group>
     }
 
     /**
+     * Creates a group with the specified layout and styles (in the DEFAULT mode).
+     */
+    public Group (Layout layout, Style.Binding<?>... styles) {
+        super(layout);
+        setStyles(styles);
+    }
+
+    /**
      * Creates a group with the specified layout.
      */
     public Group (Layout layout) {

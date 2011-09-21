@@ -96,6 +96,15 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
+     * Configures styles for this element (in the DEFAULT mode). Any previously configured styles
+     * are overwritten.
+     * @return this element for convenient call chaining.
+     */
+    public T setStyles (Style.Binding<?>... styles) {
+        return setStyles(Styles.make(styles));
+    }
+
+    /**
      * Adds the supplied styles to this element. Where the new styles overlap with existing styles,
      * the new styles are preferred, but non-overlapping old styles are preserved.
      * @return this element for convenient call chaining.
@@ -105,6 +114,16 @@ public abstract class Element<T extends Element<T>>
         clearLayoutData();
         invalidate();
         return asT();
+    }
+
+    /**
+     * Adds the supplied styles to this element (in the DEFAULT mode). Where the new styles overlap
+     * with existing styles, the new styles are preferred, but non-overlapping old styles are
+     * preserved.
+     * @return this element for convenient call chaining.
+     */
+    public T addStyles (Style.Binding<?>... styles) {
+        return addStyles(Styles.make(styles));
     }
 
     /**
