@@ -15,36 +15,16 @@ import pythagoras.f.IDimension;
  * <p> On-axis, the available space is divided up as follows: non-stretched elements are given
  * their preferred size, and remaining space is divided up among the stretched elements
  * proportional to their configured weight (which defaults to one). If no stretched elements exist,
- * elements are aligned as specified. </p>
+ * elements are aligned per the {@link Style.HAlign} and {@link Style.VAlign} properties on the
+ * containing group. </p>
  *
  * <p> Off-axis sizing can be configured to either size elements to their preferred size, stretch
  * them all to a uniform size (equal to the preferred size of the largest element), or to stretch
  * them all to the size allotted to the container. When elements are not stretched to fill the size
- * allotted to the container, they may be aligned as desired. </p>
+ * allotted to the container, they may be aligned as above. </p>
  */
 public abstract class AxisLayout extends Layout
 {
-    /** Specifies alignments of widgets, start is left/top and end is right/bottom. */
-    public static enum Align {
-        START {
-            public float computeOffset (float size, float extent) {
-                return 0;
-            }
-        },
-        CENTER {
-            public float computeOffset (float size, float extent) {
-                return (extent - size) / 2;
-            }
-        },
-        END {
-            public float computeOffset (float size, float extent) {
-                return extent - size;
-            }
-        };
-
-        public abstract float computeOffset (float size, float extent);
-    };
-
     /** Specifies the off-axis layout policy. */
     public static enum Policy {
         DEFAULT {
@@ -83,30 +63,6 @@ public abstract class AxisLayout extends Layout
 
     /** A vertical axis layout. */
     public static class Vertical extends AxisLayout {
-        /** Configures this layout's on-axis alignment to top. */
-        public Vertical alignTop () {
-            alignOn(Align.START);
-            return this;
-        }
-
-        /** Configures this layout's on-axis alignment to bottom. */
-        public Vertical alignBottom () {
-            alignOn(Align.END);
-            return this;
-        }
-
-        /** Configures this layout's off-axis alignment to left. */
-        public Vertical alignLeft () {
-            alignOff(Align.START);
-            return this;
-        }
-
-        /** Configures this layout's off-axis alignment to right. */
-        public Vertical alignRight () {
-            alignOff(Align.END);
-            return this;
-        }
-
         @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
             Metrics m = computeMetrics(elems, hintX, hintY, true);
             return new Dimension(m.maxWidth, m.prefHeight + m.gaps(_gap));
@@ -114,10 +70,12 @@ public abstract class AxisLayout extends Layout
 
         @Override public void layout (Elements<?> elems,
                                       float left, float top, float width, float height) {
+            Style.HAlign halign = elems.resolveStyle(Style.HALIGN);
+            Style.VAlign valign = elems.resolveStyle(Style.VALIGN);
             Metrics m = computeMetrics(elems, width, height, true);
             float stretchHeight = Math.max(0, height - m.gaps(_gap) - m.fixHeight);
             float y = top + ((m.stretchers > 0) ? 0 :
-                             _alignOn.computeOffset(m.fixHeight + m.gaps(_gap), height));
+                             valign.offset(m.fixHeight + m.gaps(_gap), height));
             for (Element<?> elem : elems) {
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.preferredSize(width, height); // will be cached
@@ -125,7 +83,7 @@ public abstract class AxisLayout extends Layout
                 float ewidth = _offPolicy.computeSize(psize.width(), m.maxWidth, width);
                 float eheight = c.computeSize(psize.height(), m.totalWeight, stretchHeight);
                 elem.setSize(ewidth, eheight);
-                elem.setLocation(left + _alignOff.computeOffset(ewidth, width), y);
+                elem.setLocation(left + halign.offset(ewidth, width), y);
                 y += (eheight + _gap);
             }
         }
@@ -133,30 +91,6 @@ public abstract class AxisLayout extends Layout
 
     /** A horizontal axis layout. */
     public static class Horizontal extends AxisLayout {
-        /** Configures this layout's on-axis alignment to left. */
-        public Horizontal alignLeft () {
-            alignOn(Align.START);
-            return this;
-        }
-
-        /** Configures this layout's on-axis alignment to right. */
-        public Horizontal alignRight () {
-            alignOn(Align.END);
-            return this;
-        }
-
-        /** Configures this layout's off-axis alignment to top. */
-        public Horizontal alignTop () {
-            alignOff(Align.START);
-            return this;
-        }
-
-        /** Configures this layout's off-axis alignment to bottom. */
-        public Horizontal alignBottom () {
-            alignOff(Align.END);
-            return this;
-        }
-
         @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
             Metrics m = computeMetrics(elems, hintX, hintY, false);
             return new Dimension(m.prefWidth + m.gaps(_gap), m.maxHeight);
@@ -164,10 +98,12 @@ public abstract class AxisLayout extends Layout
 
         @Override public void layout (Elements<?> elems,
                                       float left, float top, float width, float height) {
+            Style.HAlign halign = elems.resolveStyle(Style.HALIGN);
+            Style.VAlign valign = elems.resolveStyle(Style.VALIGN);
             Metrics m = computeMetrics(elems, width, height, false);
             float stretchWidth = Math.max(0, width - m.gaps(_gap) - m.fixWidth);
             float x = left + ((m.stretchers > 0) ? 0 :
-                              _alignOn.computeOffset(m.fixWidth + m.gaps(_gap), width));
+                              halign.offset(m.fixWidth + m.gaps(_gap), width));
             for (Element<?> elem : elems) {
                 if (!elem.isVisible()) continue;
                 IDimension psize = elem.preferredSize(width, height); // will be cached
@@ -175,23 +111,23 @@ public abstract class AxisLayout extends Layout
                 float ewidth = c.computeSize(psize.width(), m.totalWeight, stretchWidth);
                 float eheight = _offPolicy.computeSize(psize.height(), m.maxHeight, height);
                 elem.setSize(ewidth, eheight);
-                elem.setLocation(x, top + _alignOff.computeOffset(eheight, height));
+                elem.setLocation(x, top + valign.offset(eheight, height));
                 x += (ewidth + _gap);
             }
         }
     }
 
     /**
-     * Creates a vertical axis layout with default alignments (center, center), gap (5), and
-     * off-axis sizing policy (preferred size).
+     * Creates a vertical axis layout with default gap (5), and off-axis sizing policy (preferred
+     * size).
      */
     public static Vertical vertical () {
         return new Vertical();
     }
 
     /**
-     * Creates a horizontal axis layout with default alignments (center, center), gap (5), and
-     * off-axis sizing policy (preferred size).
+     * Creates a horizontal axis layout with default gap (5), and off-axis sizing policy (preferred
+     * size).
      */
     public static Horizontal horizontal () {
         return new Horizontal();
@@ -211,22 +147,6 @@ public abstract class AxisLayout extends Layout
      */
     public static Constraint stretched (float weight) {
         return new Constraint(true, weight);
-    }
-
-    /**
-     * Configures the on-axis alignment of this layout.
-     */
-    public AxisLayout alignOn (Align align) {
-        _alignOn = align;
-        return this;
-    }
-
-    /**
-     * Configures the off-axis alignment of this layout.
-     */
-    public AxisLayout alignOff (Align align) {
-        _alignOff = align;
-        return this;
     }
 
     /**
@@ -336,7 +256,6 @@ public abstract class AxisLayout extends Layout
         }
     }
 
-    protected Align _alignOn = Align.CENTER, _alignOff = Align.CENTER;
     protected int _gap = 5;
     protected Policy _offPolicy = Policy.DEFAULT;
 

@@ -37,8 +37,11 @@ public class WidgetDemo implements Game
         Styles buttonStyles = Styles.none().
             add(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF, 5))).
             addSelected(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 6, 4, 4, 6)));
+        Styles labelStyles = Styles.none().
+            add(Style.HALIGN.is(Style.HAlign.LEFT), Style.VALIGN.is(Style.VAlign.TOP));
         Stylesheet rootSheet = Stylesheet.builder().
             add(Button.class, buttonStyles).
+            add(Label.class, labelStyles).
             create();
 
         // create our demo interface
@@ -55,12 +58,13 @@ public class WidgetDemo implements Game
         Slider slider;
         Label label2, sliderValue;
 
+        Styles alignTop = Styles.make(Style.VALIGN.is(Style.VAlign.TOP));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
-        root.add(new Group(AxisLayout.horizontal().alignTop()).add(
+        root.add(new Group(AxisLayout.horizontal(), alignTop).add(
                      new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT1),
                      new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT2),
                      new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT3)),
-                 new Group(AxisLayout.horizontal().alignTop(), greenBg).add(
+                 new Group(AxisLayout.horizontal(), greenBg.merge(alignTop)).add(
                      new Group(AxisLayout.vertical()).add(
                          new Label().setText("Toggle viz:"),
                          toggle = new Button().setText("Toggle"),
