@@ -15,6 +15,7 @@ import pythagoras.f.Dimension;
 import pythagoras.f.Point;
 
 import react.Signal;
+import react.SignalView;
 
 /**
 * Contains other elements and lays them out according to a layout policy.
@@ -23,10 +24,10 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     implements Iterable<Element<?>>
 {
     /** Emitted after a child has been added to this Elements. */
-    public final Signal<Element<?>> childAdded = Signal.create();
+    public final SignalView<Element<?>> childAdded = Signal.create();
 
     /** Emitted after a child has been removed from this Elements. */
-    public final Signal<Element<?>> childRemoved = Signal.create();
+    public final SignalView<Element<?>> childRemoved = Signal.create();
 
     /**
      * Creates a collection with the specified layout.
@@ -102,13 +103,13 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     protected void didAdd (Element<?> child) {
         layer.add(child.layer);
         if (isAdded()) child.wasAdded(this);
-        childAdded.emit(child);
+        ((Signal<Element<?>>)childAdded).emit(child);
     }
 
     protected void didRemove (Element<?> child) {
         layer.remove(child.layer);
         if (isAdded()) child.wasRemoved();
-        childRemoved.emit(child);
+        ((Signal<Element<?>>)childRemoved).emit(child);
     }
 
     @Override protected void wasAdded (Elements<?> parent) {
