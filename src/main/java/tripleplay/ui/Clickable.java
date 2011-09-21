@@ -5,7 +5,7 @@
 
 package tripleplay.ui;
 
-import react.Signal;
+import react.SignalView;
 
 /**
  * Implemented by <code>Element</code> that detect and emit clicks.
@@ -13,5 +13,5 @@ import react.Signal;
 public interface Clickable<T extends Element<T>>
 {
     /** A signal that is emitted when this element is clicked. */
-    Signal<T> clicked();
+    SignalView<T> clicked();
 }

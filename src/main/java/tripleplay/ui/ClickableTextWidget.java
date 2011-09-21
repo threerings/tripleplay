@@ -8,6 +8,7 @@ package tripleplay.ui;
 import pythagoras.f.Dimension;
 
 import react.Signal;
+import react.SignalView;
 
 /**
  * A text widget that provides button-like behavior.
@@ -15,7 +16,7 @@ import react.Signal;
 public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextWidget<T>
     implements Clickable<T>
 {
-    @Override public Signal<T> clicked () {
+    @Override public SignalView<T> clicked () {
         return _clicked;
     }
 
@@ -78,7 +79,7 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
         if (isSelected()) {
             set(Flag.SELECTED, false);
             invalidate();
-            clicked().emit(asT()); // emit a click event
+            _clicked.emit(asT()); // emit a click event
         }
     }
 
