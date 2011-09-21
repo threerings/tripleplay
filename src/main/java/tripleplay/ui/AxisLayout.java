@@ -5,8 +5,6 @@
 
 package tripleplay.ui;
 
-import java.util.List;
-
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 
@@ -109,12 +107,12 @@ public abstract class AxisLayout extends Layout
             return this;
         }
 
-        @Override public Dimension computeSize (List<Element<?>> elems, float hintX, float hintY) {
+        @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
             Metrics m = computeMetrics(elems, hintX, hintY, true);
             return new Dimension(m.maxWidth, m.prefHeight + m.gaps(_gap));
         }
 
-        @Override public void layout (List<Element<?>> elems,
+        @Override public void layout (Elements<?> elems,
                                       float left, float top, float width, float height) {
             Metrics m = computeMetrics(elems, width, height, true);
             float stretchHeight = Math.max(0, height - m.gaps(_gap) - m.fixHeight);
@@ -159,12 +157,12 @@ public abstract class AxisLayout extends Layout
             return this;
         }
 
-        @Override public Dimension computeSize (List<Element<?>> elems, float hintX, float hintY) {
+        @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
             Metrics m = computeMetrics(elems, hintX, hintY, false);
             return new Dimension(m.prefWidth + m.gaps(_gap), m.maxHeight);
         }
 
-        @Override public void layout (List<Element<?>> elems,
+        @Override public void layout (Elements<?> elems,
                                       float left, float top, float width, float height) {
             Metrics m = computeMetrics(elems, width, height, false);
             float stretchWidth = Math.max(0, width - m.gaps(_gap) - m.fixWidth);
@@ -262,7 +260,7 @@ public abstract class AxisLayout extends Layout
         return this;
     }
 
-    protected Metrics computeMetrics (List<Element<?>> elems, float hintX, float hintY,
+    protected Metrics computeMetrics (Elements<?> elems, float hintX, float hintY,
                                       boolean vert) {
         Metrics m = new Metrics();
         for (Element<?> elem : elems) {

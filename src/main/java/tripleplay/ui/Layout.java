@@ -18,30 +18,14 @@ public abstract class Layout
     public static interface Constraint {}
 
     /**
-     * Creates a group with this layout. This is useful after a chain of method calls that
-     * configures the layout, e.g.: {@code GroupLayout.vertical().alignTop().gap(10).toGroup()}.
-     *
-     * @param elems elements to add to the newly created group.
+     * Computes and returns the size needed to arrange children of the supplied elements according
+     * to their preferred size, given the specified x and y size hints.
      */
-    public Group toGroup (Element<?>... elems) {
-        Group g = new Group(this);
-        for (Element<?> elem : elems) {
-            g.add(elem);
-        }
-        return g;
-    }
+    public abstract Dimension computeSize (Elements<?> elems, float hintX, float hintY);
 
     /**
-     * Computes and returns the size needed to arrange the supplied children (with the specified
-     * constraints) according to their preferred size, given the specified x and y size hints.
-     * Neither {@code elems} nor {@code constraints} should be mutated.
+     * Lays out the supplied elements into a region of the specified dimensions.
      */
-    public abstract Dimension computeSize (List<Element<?>> elems, float hintX, float hintY);
-
-    /**
-     * Lays out the supplied elements (according to the specified constraints) into a region of the
-     * specified dimensions. Neither {@code elems} nor {@code constraints} should be mutated.
-     */
-    public abstract void layout (List<Element<?>> elems,
-                                 float left, float top, float width, float height);
+    public abstract void layout (Elements<?> elems, float left, float top,
+                                 float width, float height);
 }
