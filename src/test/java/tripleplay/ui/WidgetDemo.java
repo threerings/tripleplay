@@ -5,15 +5,17 @@
 
 package tripleplay.ui;
 
-import playn.core.PlayN;
-import playn.core.Image;
 import playn.core.Game;
+import playn.core.Image;
+import playn.core.PlayN;
 import playn.java.JavaPlatform;
-
-import react.Signals;
 
 import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
+
+import react.Signals;
+
+import static react.Functions.TO_STRING;
 
 /**
  * A test app for demoing the UI widgets.
@@ -50,7 +52,9 @@ public class WidgetDemo implements Game
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
 
         Button toggle;
-        Label label2;
+        Slider slider;
+        Label label2, sliderValue;
+
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
         root.add(new Group(AxisLayout.horizontal().alignTop()).add(
                      new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT1),
@@ -75,8 +79,12 @@ public class WidgetDemo implements Game
                          setText("Above").setIcon(squares, getIBounds(2)),
                      new Label(Styles.make(Style.ICON_POS.is(Style.Pos.BELOW),
                                            Style.HALIGN.is(Style.HAlign.CENTER))).
-                         setText("Below").setIcon(squares, getIBounds(3))));
+                         setText("Below").setIcon(squares, getIBounds(3))),
+                 new Group(AxisLayout.vertical()).add(
+                     slider = new Slider(0, -1, 1),
+                     sliderValue = new Label("0")));
         Signals.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
+        slider.value.map(TO_STRING).connect(sliderValue.textSlot());
     }
 
     @Override // from interface Game
