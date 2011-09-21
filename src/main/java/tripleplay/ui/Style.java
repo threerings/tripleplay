@@ -107,10 +107,10 @@ public abstract class Style<V>
     public static final Style<Integer> SHADOW = newStyle(true, 0x55000000);
 
     /** The horizontal alignment of an element. Not inherited. */
-    public static final Style<HAlign> HALIGN = newStyle(false, HAlign.LEFT);
+    public static final Style<HAlign> HALIGN = newStyle(false, HAlign.CENTER);
 
     /** The vertical alignment of an element. Not inherited. */
-    public static final Style<VAlign> VALIGN = newStyle(false, VAlign.TOP);
+    public static final Style<VAlign> VALIGN = newStyle(false, VAlign.CENTER);
 
     /** The font used to render text. Inherited. */
     public static final Style<Font> FONT = newStyle(
