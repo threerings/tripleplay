@@ -164,7 +164,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
     protected void renderLayout (LayoutData ldata, float x, float y, float width, float height) {
         float tx = x, ty = y, usedWidth = 0, usedHeight = 0;
-        if (_icon != null) {
+        if (_icon != null && ldata.iconPos != null) {
             float ix = x, iy = y;
             float iwidth = iconWidth(), iheight = iconHeight();
             switch (ldata.iconPos) {
