@@ -179,7 +179,7 @@ public class TableLayout extends Layout
         return total;
     }
 
-    // protected final boolean[] _fixedColumns;
-    // protected boolean _equalRows;
+    protected final boolean[] _fixedColumns;
+    protected boolean _equalRows;
     protected int _rowgap, _colgap;
 }
