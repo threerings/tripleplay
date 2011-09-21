@@ -262,7 +262,8 @@ public abstract class AxisLayout extends Layout
         return this;
     }
 
-    protected Metrics computeMetrics (List<Element<?>> elems, float hintX, float hintY, boolean vert) {
+    protected Metrics computeMetrics (List<Element<?>> elems, float hintX, float hintY,
+                                      boolean vert) {
         Metrics m = new Metrics();
         for (Element<?> elem : elems) {
             if (!elem.isVisible()) continue;
