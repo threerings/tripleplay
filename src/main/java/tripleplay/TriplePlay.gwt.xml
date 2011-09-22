@@ -1,6 +1,5 @@
 <!-- defines our GWT module -->
 <module>
-  <inherits name="pythagoras.Pythagoras"/>
   <inherits name="playn.PlayN"/>
   <inherits name="react"/>
 
