@@ -60,10 +60,19 @@ public class Stylesheet
         V value = (styles == null) ? null : styles.<V>get(key, elem);
         if (value != null) return value;
 
-        // if we found no mapping and the style is inherited (and we're not already at the root --
-        // Element), then check the parent type of this element for a mapping
-        return (key.style.inherited && eclass != Element.class) ?
-            this.<V>get(key, eclass.getSuperclass(), elem) : null;
+        // if the style is not inherited, or we're already checking for Element.class, then we've
+        // done all the searching we can
+        if (!key.style.inherited || eclass == Element.class) return null;
+
+        // otherwise check our parent class
+        Class<?> parent = eclass.getSuperclass();
+        if (parent == null) {
+            // TEMP: avoid confusion while PlayN POM disables class metadata by default
+            throw new RuntimeException(
+                "Your PlayN application must not be compiled with -XdisableClassMetadata. " +
+                "It breaks TriplePlay stylesheets.");
+        }
+        return this.<V>get(key, parent, elem);
     }
 
     private Stylesheet (Map<Class<?>, Styles> styles) {
