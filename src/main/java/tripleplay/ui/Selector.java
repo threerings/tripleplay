@@ -33,12 +33,12 @@ public class Selector
         for (Element<?> child : elements) {
             onChildAdded(child);
         }
-        elements.childAdded.connect(new Slot<Element<?>> () {
+        elements.childAdded().connect(new Slot<Element<?>> () {
             @Override public void onEmit (Element<?> added) {
                 onChildAdded(added);
             }
         });
-        elements.childRemoved.connect(new Slot<Element<?>> () {
+        elements.childRemoved().connect(new Slot<Element<?>> () {
             @Override public void onEmit (Element<?> removed) {
                 Connection conn = _conns.remove(removed);
                 if (conn != null) {

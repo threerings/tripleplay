@@ -23,18 +23,18 @@ import react.SignalView;
 public abstract class Elements<T extends Elements<T>> extends Element<T>
     implements Iterable<Element<?>>
 {
-    /** Emitted after a child has been added to this Elements. */
-    public final SignalView<Element<?>> childAdded = Signal.create();
-
-    /** Emitted after a child has been removed from this Elements. */
-    public final SignalView<Element<?>> childRemoved = Signal.create();
-
     /**
      * Creates a collection with the specified layout.
      */
     public Elements (Layout layout) {
         _layout = layout;
     }
+
+    /** Emitted after a child has been added to this Elements. */
+    public SignalView<Element<?>> childAdded() { return _childAdded; }
+
+    /** Emitted after a child has been removed from this Elements. */
+    public SignalView<Element<?>> childRemoved() { return _childRemoved; }
 
     /**
      * Returns the stylesheet configured for this group, or null.
@@ -103,13 +103,13 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     protected void didAdd (Element<?> child) {
         layer.add(child.layer);
         if (isAdded()) child.wasAdded(this);
-        ((Signal<Element<?>>)childAdded).emit(child);
+        _childAdded.emit(child);
     }
 
     protected void didRemove (Element<?> child) {
         layer.remove(child.layer);
         if (isAdded()) child.wasRemoved();
-        ((Signal<Element<?>>)childRemoved).emit(child);
+        _childRemoved.emit(child);
     }
 
     @Override protected void wasAdded (Elements<?> parent) {
@@ -195,6 +195,10 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
 
     protected final Layout _layout;
     protected final List<Element<?>> _children = new ArrayList<Element<?>>();
+
+    protected final Signal<Element<?>> _childAdded = Signal.create();
+    protected final Signal<Element<?>> _childRemoved = Signal.create();
+
     protected Stylesheet _sheet;
 
     protected LayoutData _ldata;
