@@ -5,87 +5,87 @@
 
 package tripleplay.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import react.Connection;
-import react.Signal;
 import react.Slot;
+import react.Value;
+import react.ValueView;
 
 /**
- * Maintains a single selected item among the children of an <code>Elements</code>.<p>
+ * Maintains a single selected item among the children of <code>Elements</code>.<p>
  *
  * A click on a child that implements <code>Clickable</code> makes it the selected item, or
  * <code>setSelected</code> can be used to manually control the selected item.
  */
 public class Selector
 {
-    /** Emitted when the selection changes with the newly selected item. */
-    public Signal<Element<?>> selected = Signal.create();
-
-    /** Emitted when the selection changes with the newly deselected item. */
-    public Signal<Element<?>> deselected = Signal.create();
-
-    /**
-     * Creates a selector on the children of <code>elements</code>.
-     */
-    public Selector (Elements<?> elements) {
-        for (Element<?> child : elements) {
-            onChildAdded(child);
-        }
-        elements.childAdded().connect(new Slot<Element<?>> () {
-            @Override public void onEmit (Element<?> added) {
-                onChildAdded(added);
-            }
-        });
-        elements.childRemoved().connect(new Slot<Element<?>> () {
-            @Override public void onEmit (Element<?> removed) {
-                Connection conn = _conns.remove(removed);
-                if (conn != null) {
-                    conn.disconnect();
+    public Selector () {
+        _selected.listen(new ValueView.Listener<Element<?>> () {
+            @Override public void onChange (Element<?> selected, Element<?> deselected) {
+                if (deselected != null) {
+                    deselected.set(Element.Flag.SELECTED, false);
+                    deselected.invalidate();
+                }
+                if (selected != null) {
+                    selected.set(Element.Flag.SELECTED, true);
+                    selected.invalidate();
                 }
             }
         });
     }
 
-    /**
-     * Sets the selected item and deselects the currently selected item if there is one.
-     * <code>selected</code> may be null to select nothing.
-     */
+    /** Returns a ValueView that emits changes when the selected item changes. */
+    public ValueView<Element<?>> selected () { return _selected; }
+
+    /** Sets the selected item. */
     public Selector setSelected (Element<?> selected) {
-        if (_selected == selected) { return this; }
-        if (_selected != null) {
-            _selected.set(Element.Flag.SELECTED, false);
-            _selected.invalidate();
-            deselected.emit(_selected);
+       _selected.update(selected);
+       return this;
+    }
+
+    /**
+     * Tracks the children of <code>elements</code> for setting the selection.
+     */
+    public Selector add (Elements<?> elements) {
+        for (Element<?> child : elements) {
+            _childAddSlot.onEmit(child);
         }
-        _selected = selected;
-        if (_selected != null) {
-            _selected.set(Element.Flag.SELECTED, true);
-            _selected.invalidate();
-        }
-        this.selected.emit(_selected);
+        elements.childAdded().connect(_childAddSlot);
+        elements.childRemoved().connect(_childRemoveSlot);
         return this;
     }
 
-    /** Returns the selected item. Can be null if nothing is selected. */
-    public Element<?> selected () {
-        return _selected;
-    }
-
-    protected void onChildAdded (Element<?> child) {
-        if (child instanceof Clickable<?>) {
-            _conns.put(child, ((Clickable<?>)child).clicked().connect(_clickSlot));
+    /**
+     * Stops tracking the children of <code>elements</code> for setting the selection.
+    */
+    public Selector remove (Elements<?> elements) {
+        for (Element<?> child : elements) {
+            _childRemoveSlot.onEmit(child);
         }
+        elements.childAdded().disconnect(_childAddSlot);
+        elements.childRemoved().disconnect(_childRemoveSlot);
+        return this;
     }
 
-    protected Element<?> _selected;
-
-    protected final Slot<Element<?>> _clickSlot = new Slot<Element<?>>() {
-        @Override public void onEmit (Element<?> clicked) {
-            setSelected(clicked);
+    protected final Slot<Element<?>> _childAddSlot = new Slot<Element<?>>() {
+        @Override public void onEmit (Element<?> child) {
+            if (child instanceof Clickable<?>) {
+                ((Clickable<?>)child).clicked().connect(_clickSlot);
+            }
         }
     };
 
-    protected final Map<Element<?>, Connection> _conns = new HashMap<Element<?>, Connection>();
+    protected final Slot<Element<?>> _childRemoveSlot = new Slot<Element<?>>() {
+        @Override public void onEmit (Element<?> removed) {
+            if (removed instanceof Clickable<?>) {
+                ((Clickable<?>)removed).clicked().disconnect(_clickSlot);
+            }
+        }
+    };
+
+    protected final Slot<Element<?>> _clickSlot = new Slot<Element<?>>() {
+        @Override public void onEmit (Element<?> clicked) {
+            _selected.update(clicked);
+        }
+    };
+
+    protected final Value<Element<?>> _selected = Value.create(null);
 }
