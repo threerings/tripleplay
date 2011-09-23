@@ -18,7 +18,7 @@ import react.ValueView;
 public class Selector
 {
     public Selector () {
-        _selected.listen(new ValueView.Listener<Element<?>> () {
+        _selected.connect(new ValueView.Listener<Element<?>> () {
             @Override public void onChange (Element<?> selected, Element<?> deselected) {
                 if (deselected != null) {
                     deselected.set(Element.Flag.SELECTED, false);
