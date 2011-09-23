@@ -12,7 +12,7 @@ import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
 
 import react.Functions;
-import react.Signals;
+import react.Values;
 
 /**
  * Displays various UI stuff.
@@ -62,7 +62,7 @@ public class MiscPage implements WidgetDemo.Page
                 slider = new Slider(0, -1, 1),
                 sliderValue = new Label("0")));
 
-        Signals.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
+        Values.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
 
         slider.value.map(Functions.TO_STRING).connect(sliderValue.textSlot());
 

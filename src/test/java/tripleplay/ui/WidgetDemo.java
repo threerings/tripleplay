@@ -6,15 +6,9 @@
 package tripleplay.ui;
 
 import playn.core.Game;
-import playn.core.Image;
 import playn.core.PlayN;
 import playn.java.JavaPlatform;
 
-import pythagoras.f.IRectangle;
-import pythagoras.f.Rectangle;
-
-import react.SignalView;
-import react.Signals;
 import react.UnitSlot;
 
 /**
