@@ -10,7 +10,7 @@ import playn.core.CanvasLayer;
 
 import pythagoras.f.Dimension;
 
-import react.Slot;
+import react.UnitSlot;
 import react.Value;
 
 public class Slider extends Widget<Slider>
@@ -22,8 +22,8 @@ public class Slider extends Widget<Slider>
         _min = min;
         _max = max;
         _range = _max - _min;
-        this.value.connect(new Slot<Float> () {
-            @Override public void onEmit (Float value) {
+        this.value.connect(new UnitSlot () {
+            @Override public void onEmit () {
                 invalidate();
             }
         });
