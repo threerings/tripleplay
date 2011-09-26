@@ -19,33 +19,46 @@ public class Root extends Elements<Root>
     /**
      * Sizes this root element to its preferred size.
      */
-    public void pack () {
+    public Root pack () {
         IDimension psize = preferredSize(0, 0);
         setSize(psize.width(), psize.height());
+        return this;
     }
 
     /**
      * Sizes this root element to the specified width and its preferred height.
      */
-    public void packToWidth (float width) {
+    public Root packToWidth (float width) {
         IDimension psize = preferredSize(width, 0);
         setSize(width, psize.height());
+        return this;
     }
 
     /**
      * Sizes this root element to the specified height and its preferred width.
      */
-    public void packToHeight (float height) {
+    public Root packToHeight (float height) {
         IDimension psize = preferredSize(0, height);
         setSize(psize.width(), height);
+        return this;
     }
 
     /**
      * Sets the size of this root element.
      */
-    public void setSize (float width, float height) {
+    public Root setSize (float width, float height) {
         _size.setSize(width, height);
         invalidate();
+        return this;
+    }
+
+    /**
+     * Sets the size of this root element and its translation from its parent.
+     */
+    public Root setBounds (float x, float y, float width, float height) {
+        setSize(width, height);
+        layer.setTranslation(x, y);
+        return this;
     }
 
     protected Root (Interface iface, Layout layout, Stylesheet sheet) {
