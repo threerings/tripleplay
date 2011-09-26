@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import playn.core.Game;
+import playn.core.GroupLayer;
+import playn.core.Layer;
 import playn.core.Pointer;
 
 /**
@@ -107,18 +109,22 @@ public class Interface
     }
 
     /**
-     * Creates a root element with the specified layout and a blank stylesheet.
-     */
-    public Root createRoot (Layout layout) {
-        return createRoot(layout, Stylesheet.builder().create());
-    }
-
-    /**
      * Creates a root element with the specified layout and stylesheet.
      */
     public Root createRoot (Layout layout, Stylesheet sheet) {
         Root root = new Root(this, layout, sheet);
         _roots.add(root);
+        return root;
+    }
+
+
+    /**
+     * Creates a root element with the specified layout and stylesheet and adds its layer to the
+     * specified parent.
+     */
+    public Root createRoot (Layout layout, Stylesheet sheet, GroupLayer parent) {
+        Root root = createRoot(layout, sheet);
+        parent.add(root.layer);
         return root;
     }
 
