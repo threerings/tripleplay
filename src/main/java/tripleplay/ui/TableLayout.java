@@ -48,6 +48,13 @@ public class TableLayout extends Layout
     }
 
     /**
+     * Creates a table layout with the specified columns.
+     */
+    public TableLayout (Column...columns) {
+        _columns = columns;
+    }
+
+    /**
      * Creates a table layout with the specified number of columns.
      */
     public TableLayout (int columns) {

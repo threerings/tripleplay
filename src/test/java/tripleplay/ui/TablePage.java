@@ -5,6 +5,8 @@
 
 package tripleplay.ui;
 
+import tripleplay.ui.TableLayout.Column;
+
 /**
  * Displays tables and their configuration options.
  */
@@ -15,13 +17,10 @@ public class TablePage implements WidgetDemo.Page
     }
 
     public Group createInterface () {
-        TableLayout main = new TableLayout(2).gaps(15, 15);
-        main.column(0).stretch();
+        TableLayout main = new TableLayout(new Column().stretch(), new Column()).gaps(15, 15);
 
-        TableLayout aligndemo = new TableLayout(3).gaps(5, 5);
-        aligndemo.column(0).alignLeft();
-        aligndemo.column(1).alignRight();
-        aligndemo.column(2).stretch();
+        TableLayout aligndemo = new TableLayout(
+            new Column().alignLeft(), new Column().alignRight(), new Column().stretch()).gaps(5, 5);
 
         TableLayout fixeddemo = new TableLayout(3).gaps(5, 5);
         fixeddemo.column(0).fixed();
