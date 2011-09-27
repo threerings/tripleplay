@@ -5,7 +5,7 @@
 
 package tripleplay.ui;
 
-import tripleplay.ui.TableLayout.Column;
+import static tripleplay.ui.TableLayout.COL;
 
 /**
  * Displays tables and their configuration options.
@@ -17,11 +17,10 @@ public class TablePage implements WidgetDemo.Page
     }
 
     public Group createInterface () {
-        TableLayout main = new TableLayout(new Column().stretch(), new Column()).gaps(15, 15);
+        TableLayout main = new TableLayout(COL.stretch(), COL).gaps(15, 15);
         TableLayout aligndemo = new TableLayout(
-            new Column().alignLeft(), new Column().alignRight(), new Column().stretch()).gaps(5, 5);
-        TableLayout fixeddemo = new TableLayout(
-            new Column().fixed(), new Column(), new Column().stretch()).gaps(5, 5);
+            COL.alignLeft(), COL.alignRight(), COL.stretch()).gaps(5, 5);
+        TableLayout fixeddemo = new TableLayout(COL.fixed(), COL, COL.stretch()).gaps(5, 5);
 
         Styles greyBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 5)));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
@@ -30,7 +29,7 @@ public class TablePage implements WidgetDemo.Page
             new Label("This column is stretched"),
             new Label("This column is not"),
 
-            new Group(new TableLayout(2).gaps(5, 5), greenBg).add(
+            new Group(new TableLayout(COL, COL).gaps(5, 5), greenBg).add(
                 new Label("Upper left"), new Label("Upper right"),
                 new Label("Lower left"), new Label("Lower right")),
 

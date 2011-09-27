@@ -14,37 +14,42 @@ import pythagoras.f.IDimension;
  */
 public class TableLayout extends Layout
 {
+    /** The default column configuration. */
+    public static final Column COL = new Column(Style.HAlign.CENTER, false, false);
+
     /** A configurator for a table column. */
     public static class Column {
+        protected Column (Style.HAlign halign, boolean fixed, boolean stretch) {
+            _halign = halign;
+            _fixed = fixed;
+            _stretch = stretch;
+        }
+
         /** Configures this column as left-aligned. */
         public Column alignLeft () {
-            _halign = Style.HAlign.LEFT;
-            return this;
+            return new Column(Style.HAlign.LEFT, _fixed, _stretch);
         }
 
         /** Configures this column as right-aligned. */
         public Column alignRight () {
-            _halign = Style.HAlign.RIGHT;
-            return this;
+            return new Column(Style.HAlign.RIGHT, _fixed, _stretch);
         }
 
         /** Configures this column's width as fixed to the width of its widest element. By default
          * columns are 'free' and may be configured as wider than their default to accommodate
          * excess width available to the table. */
         public Column fixed () {
-            _fixed = true;
-            return this;
+            return new Column(_halign, true, _stretch);
         }
 
         /** Configures this column to stretch the width of its elements to the column width. By
          * default elements are configured to their preferred width. */
         public Column stretch () {
-            _stretch = true;
-            return this;
+            return new Column(_halign, _fixed, true);
         }
 
-        protected Style.HAlign _halign = Style.HAlign.CENTER;
-        protected boolean _fixed, _stretch;
+        protected final Style.HAlign _halign;
+        protected final boolean _fixed, _stretch;
     }
 
     /**
@@ -52,23 +57,6 @@ public class TableLayout extends Layout
      */
     public TableLayout (Column...columns) {
         _columns = columns;
-    }
-
-    /**
-     * Creates a table layout with the specified number of columns.
-     */
-    public TableLayout (int columns) {
-        _columns = new Column[columns];
-    }
-
-    /**
-     * Returns an object that can be used to configure the behavior of the specified column.
-     */
-    public Column column (int column) {
-        if (_columns[column] == null) {
-            _columns[column] = new Column();
-        }
-        return _columns[column];
     }
 
     /**
@@ -93,7 +81,7 @@ public class TableLayout extends Layout
         float naturalWidth = m.totalWidth(_colgap);
         int freeColumns = 0;
         for (int ii = 0; ii < columns; ii++) {
-            if (!colcfg(ii)._fixed) freeColumns++;
+            if (!_columns[ii]._fixed) freeColumns++;
         }
         float freeExtra = (width - naturalWidth) / freeColumns;
         // freeExtra may end up negative; if our natural width is too wide
@@ -107,7 +95,7 @@ public class TableLayout extends Layout
 
         Style.VAlign cellVAlign = Style.VAlign.CENTER; // TODO
         for (Element<?> elem : elems) {
-            Column ccfg = colcfg(col);
+            Column ccfg = _columns[col];
             float colWidth = Math.max(0, m.columnWidths[col] + (ccfg._fixed ? 0 : freeExtra));
             float rowHeight = m.rowHeights[row];
             if (colWidth > 0 && elem.isVisible()) {
@@ -157,11 +145,6 @@ public class TableLayout extends Layout
         return metrics;
     }
 
-    protected Column colcfg (int index) {
-        Column col = _columns[index];
-        return (col == null) ? DEF_COLUMN : col;
-    }
-
     protected static class Metrics {
         public float[] columnWidths;
         public float[] rowHeights;
@@ -191,6 +174,4 @@ public class TableLayout extends Layout
 
     protected final Column[] _columns;
     protected int _rowgap, _colgap;
-
-    protected static final Column DEF_COLUMN = new Column();
 }
