@@ -12,22 +12,27 @@ import pythagoras.f.Dimension;
 
 import react.UnitSlot;
 import react.Value;
+import react.ValueView;
 
 public class Slider extends Widget<Slider>
 {
-    public final Value<Float> value;
-
     public Slider(float value, float min, float max) {
-        this.value = Value.create(value);
+        _value = Value.create(value);
         _min = min;
         _max = max;
         _range = _max - _min;
-        this.value.connect(new UnitSlot () {
+        _value.connect(new UnitSlot () {
             @Override public void onEmit () {
                 invalidate();
             }
         });
     }
+
+    public float value () { return _value.get(); }
+
+    public void setValue (float newValue) { _value.update(newValue); }
+
+    public ValueView<Float> valueChanged () { return _value; }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
         return new Dimension(hintX == 0 ? 100 : hintX, THUMB_HEIGHT + BAR_HEIGHT);
@@ -37,7 +42,7 @@ public class Slider extends Widget<Slider>
         float width = _size.width, height = _size.height;
 
         _sliderLayer = prepareCanvas(_sliderLayer, width, height);
-        render(_sliderLayer.canvas(), (value.get() - _min) / _range * width);
+        render(_sliderLayer.canvas(), (value() - _min) / _range * width);
     }
 
     protected void render (Canvas canvas, float thumbCenterPixel) {
@@ -63,11 +68,12 @@ public class Slider extends Widget<Slider>
 
     protected void handlePointer (float x, float y) {
         if (!contains(x, y)) { return; }
-        value.update(Math.max(x, 0) / size().width() * _range + _min);
+        setValue(Math.max(x, 0) / size().width() * _range + _min);
     }
 
     protected CanvasLayer _sliderLayer;
     protected final float _min, _max, _range;
+    protected final Value<Float> _value;
 
     protected static final float BAR_HEIGHT = 5;
     protected static final float THUMB_HEIGHT = BAR_HEIGHT * 2, THUMB_WIDTH = 4;
