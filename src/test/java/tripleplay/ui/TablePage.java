@@ -18,13 +18,10 @@ public class TablePage implements WidgetDemo.Page
 
     public Group createInterface () {
         TableLayout main = new TableLayout(new Column().stretch(), new Column()).gaps(15, 15);
-
         TableLayout aligndemo = new TableLayout(
             new Column().alignLeft(), new Column().alignRight(), new Column().stretch()).gaps(5, 5);
-
-        TableLayout fixeddemo = new TableLayout(3).gaps(5, 5);
-        fixeddemo.column(0).fixed();
-        fixeddemo.column(2).stretch();
+        TableLayout fixeddemo = new TableLayout(
+            new Column().fixed(), new Column(), new Column().stretch()).gaps(5, 5);
 
         Styles greyBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 5)));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
