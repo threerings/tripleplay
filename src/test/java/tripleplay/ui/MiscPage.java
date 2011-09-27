@@ -42,13 +42,13 @@ public class MiscPage implements WidgetDemo.Page
             // display some buttons labels and allow visibility toggling
             new Group(AxisLayout.horizontal().gap(15), greenBg).add(
                 new Group(AxisLayout.vertical()).add(
-                    new Label().setText("Toggle viz:"),
-                    toggle = new Button().setText("Toggle"),
-                    new Button().setText("Disabled").setEnabled(false)),
+                    new Label("Toggle viz:"),
+                    toggle = new Button("Toggle"),
+                    new Button("Disabled").setEnabled(false)),
                 new Group(AxisLayout.vertical()).add(
-                    new Label().setText("Label 1"),
-                    label2 = new Label().setText("Label 2"),
-                    new Label().setIcon(smiley).setText("Label 3"))),
+                    new Label("Label 1"),
+                    label2 = new Label("Label 2"),
+                    new Label("Label 3").setIcon(smiley))),
             // display some labels with varying icon alignment
             new Group(AxisLayout.horizontal().gap(10), greenBg).add(
                 new Label("Left").setStyles(Style.ICON_POS.left).setIcon(squares, getIBounds(0)),
@@ -64,7 +64,7 @@ public class MiscPage implements WidgetDemo.Page
 
         Values.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
 
-        slider.value.map(Functions.TO_STRING).connect(sliderValue.textSlot());
+        slider.valueChanged().map(Functions.TO_STRING).connect(sliderValue.textSlot());
 
         return iface;
     }

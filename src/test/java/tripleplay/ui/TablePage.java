@@ -38,20 +38,20 @@ public class TablePage implements WidgetDemo.Page
                 new Label("Lower left"), new Label("Lower right")),
 
             new Group(aligndemo, greenBg).add(
-                new Button().setText("Foo"),
-                new Button().setText("Bar"),
-                new Button().setText("Baz"),
-                new Button().setText("Foozle"),
-                new Button().setText("Barzle"),
-                new Button().setText("Bazzle")),
+                new Button("Foo"),
+                new Button("Bar"),
+                new Button("Baz"),
+                new Button("Foozle"),
+                new Button("Barzle"),
+                new Button("Bazzle")),
 
             new Group(fixeddemo, greenBg).add(
-                new Button().setText("Fixed"),
-                new Button().setText("Free"),
-                new Button().setText("Stretch+free"),
-                new Button().setText("Fixed"),
-                new Button().setText("Free"),
-                new Button().setText("Stretch+free")));
+                new Button("Fixed"),
+                new Button("Free"),
+                new Button("Stretch+free"),
+                new Button("Fixed"),
+                new Button("Free"),
+                new Button("Stretch+free")));
 
         return iface;
     }
