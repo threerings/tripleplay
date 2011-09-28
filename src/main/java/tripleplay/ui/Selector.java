@@ -33,7 +33,10 @@ public class Selector
     }
 
     /** Returns a ValueView that emits changes when the selected item changes. */
-    public ValueView<Element<?>> selected () { return _selected; }
+    public ValueView<Element<?>> selectedChanged () { return _selected; }
+
+    /** Returns the selected item or null if no item is selected. */
+    public Element<?> selected () { return _selected.get(); }
 
     /** Sets the selected item. */
     public Selector setSelected (Element<?> selected) {
