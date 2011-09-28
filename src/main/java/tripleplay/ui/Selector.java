@@ -81,6 +81,7 @@ public class Selector
             if (removed instanceof Clickable<?>) {
                 ((Clickable<?>)removed).clicked().disconnect(_clickSlot);
             }
+            if (_selected.get() == removed) _selected.update(null);
         }
     };
 
