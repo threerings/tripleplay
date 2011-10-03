@@ -64,7 +64,7 @@ public class MiscPage implements WidgetDemo.Page
 
         Values.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
 
-        slider.valueChanged().map(Functions.TO_STRING).connect(sliderValue.textSlot());
+        slider.value.map(Functions.TO_STRING).connect(sliderValue.textSlot());
 
         return iface;
     }
