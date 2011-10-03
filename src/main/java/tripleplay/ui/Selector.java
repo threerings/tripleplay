@@ -17,8 +17,12 @@ import react.ValueView;
  */
 public class Selector
 {
+    /** The selected item. May be updated to set the selection manually. */
+    public final Value<Element<?>> selected = Value.create(null);
+
+    /** Create a selector with a null initial selection. */
     public Selector () {
-        _selected.connect(new ValueView.Listener<Element<?>> () {
+        selected.connect(new ValueView.Listener<Element<?>> () {
             @Override public void onChange (Element<?> selected, Element<?> deselected) {
                 if (deselected != null) {
                     deselected.set(Element.Flag.SELECTED, false);
@@ -32,16 +36,11 @@ public class Selector
         });
     }
 
-    /** Returns a ValueView that emits changes when the selected item changes. */
-    public ValueView<Element<?>> selectedChanged () { return _selected; }
-
-    /** Returns the selected item or null if no item is selected. */
-    public Element<?> selected () { return _selected.get(); }
-
-    /** Sets the selected item. */
-    public Selector setSelected (Element<?> selected) {
-       _selected.update(selected);
-       return this;
+    /** Creates a selector containing the children of elements with initialSelection selected. */
+    public Selector (Elements<?> elements, Element<?> initialSelection) {
+        this();
+        add(elements);
+        selected.update(initialSelection);
     }
 
     /**
@@ -81,15 +80,14 @@ public class Selector
             if (removed instanceof Clickable<?>) {
                 ((Clickable<?>)removed).clicked().disconnect(_clickSlot);
             }
-            if (_selected.get() == removed) _selected.update(null);
+            if (selected.get() == removed) selected.update(null);
         }
     };
 
     protected final Slot<Element<?>> _clickSlot = new Slot<Element<?>>() {
         @Override public void onEmit (Element<?> clicked) {
-            _selected.update(clicked);
+            selected.update(clicked);
         }
     };
 
-    protected final Value<Element<?>> _selected = Value.create(null);
 }
