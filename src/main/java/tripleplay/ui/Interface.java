@@ -31,11 +31,13 @@ public class Interface
             float x = event.x(), y = event.y();
             try {
                 // copy our roots to a separate list to avoid conflicts if a root is added or
-                // removed while dispatching an event
+                // removed while dispatching an event.
                 _dispatch.addAll(_roots);
-                for (Root root : _dispatch) {
-                    if (root.dispatchPointerStart(x, y)) {
-                        _active = root;
+                // dispatch to the roots in most-recently-created order as a more recently added
+                // root is probably on top. TODO - use layer depth
+                for (int ii = _dispatch.size() - 1; ii >= 0; ii--) {
+                    if (_dispatch.get(ii).dispatchPointerStart(x, y)) {
+                        _active = _dispatch.get(ii);
                         return;
                     }
                 }
