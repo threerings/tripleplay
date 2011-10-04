@@ -131,10 +131,12 @@ public class Interface
     }
 
     /**
-     * Removes the supplied root element from this interface.
+     * Removes the supplied root element from this interface. If the root's layer has a parent, the
+     * layer will be removed from the parent as well.
      */
     public void removeRoot (Root root) {
         _roots.remove(root);
+        if (root.layer.parent() != null) root.layer.parent().remove(root.layer);
     }
 
     protected final Pointer.Listener _delegate;
