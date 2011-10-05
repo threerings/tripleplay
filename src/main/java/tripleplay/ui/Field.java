@@ -32,13 +32,16 @@ public class Field extends TextWidget<Field>
         setStyles(styles).text.update(initialText);
     }
 
+    public boolean focused () { return _listener != null; }
+
     @Override protected void onPointerEnd (float x, float y) {
         super.onPointerEnd(x, y);
         Root root = root();
         if (root == null) return;
-        root._iface._focused.update(new FieldListener());
+        root._iface._focused.update((_listener = new FieldListener()));
         root._iface._focused.connect(new UnitSlot() {
             @Override public void onEmit () {
+                _listener = null;
                 defocused.emit(Field.this);
             }
         }).once();
@@ -93,4 +96,6 @@ public class Field extends TextWidget<Field>
         protected int _cursor = text.get().length();
         protected String _initial = text.get();
     };
+
+    protected FieldListener _listener;
 }
