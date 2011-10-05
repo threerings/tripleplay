@@ -14,6 +14,8 @@ import playn.core.Keyboard;
 import playn.core.Layer;
 import playn.core.Pointer;
 
+import react.Value;
+
 /**
  * The main class that integrates the Triple Play UI with a PlayN game. This class is mainly
  * necessary to handle the proper dispatching of input events to UI elements. Create an interface
@@ -56,7 +58,7 @@ public class Interface
         }
         @Override public void onPointerEnd (Pointer.Event event) {
             // Always clear focus on a click. If it's on the focused item, it'll get focus again
-            _focused = null;
+            _focused.update(null);
             if (_active != null) {
                 _active.dispatchPointerEnd(event.x(), event.y());
                 _active = null;
@@ -73,13 +75,13 @@ public class Interface
      */
     public final Keyboard.Listener klistener = new Keyboard.Listener() {
         @Override public void onKeyDown (Keyboard.Event event) {
-            if (_focused == null) return;
-            _focused.onKeyDown(event);
+            if (_focused.get() == null) return;
+            _focused.get().onKeyDown(event);
         }
 
         @Override public void onKeyUp (Keyboard.Event event) {
-            if (_focused == null) return;
-            _focused.onKeyUp(event);
+            if (_focused.get() == null) return;
+            _focused.get().onKeyUp(event);
         }
     };
 
@@ -170,13 +172,9 @@ public class Interface
         root.layer.destroy();
     }
 
-    protected void setFocus (Keyboard.Listener listener) {
-        _focused = listener;
-    }
-
-    protected Keyboard.Listener _focused;
-
     protected final Pointer.Listener _delegate;
+
+    protected final Value<Keyboard.Listener> _focused = Value.create(null);
 
     protected final List<Root> _roots = new ArrayList<Root>();
     protected final List<Root> _dispatch = new ArrayList<Root>();

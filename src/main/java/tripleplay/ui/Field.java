@@ -7,10 +7,15 @@ package tripleplay.ui;
 
 import playn.core.Keyboard;
 
+import react.Signal;
+import react.UnitSlot;
+
 import tripleplay.util.Key;
 
 public class Field extends TextWidget<Field>
 {
+    public final Signal<Field> defocused = Signal.create();
+
     public Field () {
         this("");
     }
@@ -31,7 +36,13 @@ public class Field extends TextWidget<Field>
         super.onPointerEnd(x, y);
         Root root = root();
         if (root == null) return;
-        root._iface.setFocus(new FieldListener());
+        root._iface._focused.update(new FieldListener());
+        root._iface._focused.connect(new UnitSlot() {
+            @Override public void onEmit () {
+                defocused.emit(Field.this);
+            }
+        }).once();
+
     }
 
     protected class FieldListener implements Keyboard.Listener {
@@ -52,6 +63,11 @@ public class Field extends TextWidget<Field>
                 case SHIFT: _shift = false; return;
                 case RIGHT: _cursor = Math.min(text.get().length(), _cursor + 1); return;
                 case LEFT: _cursor = Math.max(0, _cursor - 1); return;
+                case ENTER: root()._iface._focused.update(null); return;
+                case ESCAPE:
+                    text.update(_initial);
+                    root()._iface._focused.update(null);
+                    return;
             }
 
             String precursor = text.get().substring(0, _cursor);
@@ -75,5 +91,6 @@ public class Field extends TextWidget<Field>
 
         protected boolean _shift;
         protected int _cursor = text.get().length();
+        protected String _initial = text.get();
     };
 }
