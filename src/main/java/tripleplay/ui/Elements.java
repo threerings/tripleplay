@@ -78,19 +78,40 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
 
     public void remove (Element<?> child) {
         if (_children.remove(child)) {
-            didRemove(child);
+            didRemove(child, false);
             invalidate();
         }
     }
 
+    public void destroy (Element<?> child) {
+        if (_children.remove(child)) {
+            didRemove(child, false);
+            invalidate();
+        } else {
+            child.layer.destroy();
+        }
+    }
+
     public void removeAt (int index) {
-        didRemove(_children.remove(index));
+        didRemove(_children.remove(index), false);
+        invalidate();
+    }
+
+    public void destroyAt (int index) {
+        didRemove(_children.remove(index), true);
         invalidate();
     }
 
     public void removeAll () {
         while (!_children.isEmpty()) {
             removeAt(_children.size()-1);
+        }
+        invalidate();
+    }
+
+    public void destroyAll () {
+        while (!_children.isEmpty()) {
+            destroyAt(_children.size()-1);
         }
         invalidate();
     }
@@ -106,8 +127,9 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         _childAdded.emit(child);
     }
 
-    protected void didRemove (Element<?> child) {
+    protected void didRemove (Element<?> child, boolean destroy) {
         layer.remove(child.layer);
+        if (destroy) child.layer.destroy();
         if (isAdded()) child.wasRemoved();
         _childRemoved.emit(child);
     }

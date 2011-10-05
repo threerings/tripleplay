@@ -56,7 +56,7 @@ public class WidgetDemo implements Game
             buttons.add(tab);
             tab.clicked().connect(new UnitSlot() {
                 public void onEmit () {
-                    if (root.childCount() > 1) root.removeAt(1);
+                    if (root.childCount() > 1) root.destroyAt(1);
                     root.add(page.createInterface());
                 }
             });
