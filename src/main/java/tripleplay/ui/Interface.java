@@ -10,6 +10,7 @@ import java.util.List;
 
 import playn.core.Game;
 import playn.core.GroupLayer;
+import playn.core.Keyboard;
 import playn.core.Layer;
 import playn.core.Pointer;
 
@@ -54,6 +55,8 @@ public class Interface
             }
         }
         @Override public void onPointerEnd (Pointer.Event event) {
+            // Always clear focus on a click. If it's on the focussed item, it'll get focus again
+            _focussed = null;
             if (_active != null) {
                 _active.dispatchPointerEnd(event.x(), event.y());
                 _active = null;
@@ -62,6 +65,22 @@ public class Interface
             }
         }
         protected Root _active;
+    };
+
+    /**
+     * This pointer listener must be configured in order for keyboard events to propagate to
+     * a focussed Element.
+     */
+    public final Keyboard.Listener klistener = new Keyboard.Listener() {
+        @Override public void onKeyDown (Keyboard.Event event) {
+            if (_focussed == null) return;
+            _focussed.onKeyDown(event);
+        }
+
+        @Override public void onKeyUp (Keyboard.Event event) {
+            if (_focussed == null) return;
+            _focussed.onKeyUp(event);
+        }
     };
 
     /**
@@ -150,6 +169,12 @@ public class Interface
         _roots.remove(root);
         root.layer.destroy();
     }
+
+    protected void setFocus (Keyboard.Listener listener) {
+        _focussed = listener;
+    }
+
+    protected Keyboard.Listener _focussed;
 
     protected final Pointer.Listener _delegate;
 

@@ -12,6 +12,7 @@ import playn.java.JavaPlatform;
 
 import react.UnitSlot;
 
+
 /**
  * A test app for demoing the UI widgets.
  */
@@ -32,6 +33,7 @@ public class WidgetDemo implements Game
     public void init () {
         _iface = new Interface(null);
         PlayN.pointer().setListener(_iface.plistener);
+        PlayN.keyboard().setListener(_iface.klistener);
 
         // define our root stylesheet
         Stylesheet rootSheet = Stylesheet.builder().

@@ -61,7 +61,8 @@ public class MiscPage implements WidgetDemo.Page
             // TODO: move this to a separate slider page
             new Group(AxisLayout.vertical()).add(
                 slider = new Slider(0, -1, 1),
-                sliderValue = new Label("0")));
+                sliderValue = new Label("0")),
+            new Field("Existing text"));
 
         Values.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
 
