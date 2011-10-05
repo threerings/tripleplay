@@ -56,7 +56,7 @@ public class Field extends TextWidget<Field>
         @Override public void onKeyUp (Keyboard.Event ev) {
             Key key = Key.get(ev.keyCode());
             if (key == null) {
-                System.out.println("Unknown keycode " + key.code);
+                System.out.println("Unknown keycode " + ev.keyCode());
                 return;
             }
             switch (key) {
