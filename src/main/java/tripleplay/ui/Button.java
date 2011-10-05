@@ -11,7 +11,7 @@ package tripleplay.ui;
 public class Button extends ClickableTextWidget<Button>
 {
     public Button (String text, Styles styles) {
-        setText(text).setStyles(styles);
+        setStyles(styles).text.update(text);
     }
 
     public Button (Styles styles) {
@@ -27,6 +27,6 @@ public class Button extends ClickableTextWidget<Button>
     }
 
     @Override public String toString () {
-        return "Button(" + text() + ")";
+        return "Button(" + text.get() + ")";
     }
 }

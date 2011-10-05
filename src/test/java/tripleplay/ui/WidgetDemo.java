@@ -12,7 +12,6 @@ import playn.java.JavaPlatform;
 
 import react.UnitSlot;
 
-
 /**
  * A test app for demoing the UI widgets.
  */
@@ -54,7 +53,7 @@ public class WidgetDemo implements Game
 
         Page[] pages = { new MiscPage(), new TablePage() };
         for (final Page page : pages) {
-            Button tab = new Button().setText(page.name());
+            Button tab = new Button(page.name());
             buttons.add(tab);
             tab.clicked().connect(new UnitSlot() {
                 public void onEmit () {

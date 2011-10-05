@@ -9,10 +9,22 @@ import playn.core.Keyboard;
 
 import tripleplay.util.Key;
 
-public class Field extends TextWidget
+public class Field extends TextWidget<Field>
 {
-    public Field (String text) {
-        setText(text);
+    public Field () {
+        this("");
+    }
+
+    public Field (String initialText) {
+        this(initialText, Styles.none());
+    }
+
+    public Field (Styles styles) {
+        this("", styles);
+    }
+
+    public Field (String initialText, Styles styles) {
+        setStyles(styles).text.update(initialText);
     }
 
     @Override protected void onPointerEnd (float x, float y) {
@@ -38,16 +50,16 @@ public class Field extends TextWidget
             }
             switch (key) {
                 case SHIFT: _shift = false; return;
-                case RIGHT: _cursor = Math.min(text().length(), _cursor + 1); return;
+                case RIGHT: _cursor = Math.min(text.get().length(), _cursor + 1); return;
                 case LEFT: _cursor = Math.max(0, _cursor - 1); return;
             }
 
-            String precursor = text().substring(0, _cursor);
-            String postcursor = text().substring(_cursor, text().length());
+            String precursor = text.get().substring(0, _cursor);
+            String postcursor = text.get().substring(_cursor, text.get().length());
 
             if (key == Key.BACK_SPACE) {
                 if (_cursor != 0) {
-                    setText(precursor.substring(0, precursor.length() - 1) + postcursor);
+                    text.update(precursor.substring(0, precursor.length() - 1) + postcursor);
                     _cursor--;
                 }
                 return;
@@ -56,12 +68,12 @@ public class Field extends TextWidget
                 System.out.println("Not handling " + key);
             } else {
                 char toAppend = _shift ? Character.toUpperCase(key.character) : key.character;
-                setText(precursor + toAppend + postcursor);
+                text.update(precursor + toAppend + postcursor);
                 _cursor++;
             }
         }
 
         protected boolean _shift;
-        protected int _cursor = text().length();
+        protected int _cursor = text.get().length();
     };
 }

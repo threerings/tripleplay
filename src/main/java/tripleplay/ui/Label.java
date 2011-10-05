@@ -5,8 +5,6 @@
 
 package tripleplay.ui;
 
-import pythagoras.f.Dimension;
-
 /**
  * A widget that displays one or more lines of text and/or an icon image.
  */
@@ -29,10 +27,10 @@ public class Label extends TextWidget<Label>
 
     /** Creates a label with the given text and styles. */
     public Label (String text, Styles styles) {
-        setText(text).setStyles(styles);
+        setStyles(styles).text.update(text);
     }
 
     @Override public String toString () {
-        return "Label(" + text() + ")";
+        return "Label(" + text.get() + ")";
     }
 }

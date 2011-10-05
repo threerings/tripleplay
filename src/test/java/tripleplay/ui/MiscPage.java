@@ -37,9 +37,9 @@ public class MiscPage implements WidgetDemo.Page
         Group iface = new Group(AxisLayout.vertical().gap(15)).add(
             // display some wrapped text
             new Group(AxisLayout.horizontal(), Style.VALIGN.top).add(
-                new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT1),
-                new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT2),
-                new Label(wrapped).setConstraint(AxisLayout.stretched()).setText(TEXT3)),
+                new Label(TEXT1, wrapped).setConstraint(AxisLayout.stretched()),
+                new Label(TEXT2, wrapped).setConstraint(AxisLayout.stretched()),
+                new Label(TEXT3, wrapped).setConstraint(AxisLayout.stretched())),
             // display some buttons labels and allow visibility toggling
             new Group(AxisLayout.horizontal().gap(15), greenBg).add(
                 new Group(AxisLayout.vertical()).add(
@@ -66,7 +66,7 @@ public class MiscPage implements WidgetDemo.Page
 
         Values.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
 
-        slider.value.map(Functions.TO_STRING).connect(sliderValue.textSlot());
+        slider.value.map(Functions.TO_STRING).connect(sliderValue.text.slot());
 
         return iface;
     }

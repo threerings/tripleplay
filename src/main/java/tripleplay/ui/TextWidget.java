@@ -17,6 +17,7 @@ import pythagoras.f.Dimension;
 import pythagoras.f.IRectangle;
 
 import react.Slot;
+import react.Value;
 
 /**
  * An abstract base class for widgets that contain text.
@@ -24,35 +25,18 @@ import react.Slot;
 public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 {
     /**
-     * Returns the text configured for this widget.
+     * The text configured for this widget.
      */
-    public String text () {
-        return _text;
-    }
+    public final Value<String> text = Value.create("");
 
-    /**
-     * Updates the text configured for this widget.
-     */
-    public T setText (String text) {
-        if (!text.equals(_text)) {
-            _text = text;
-            clearTextLayer();
-            clearLayoutData();
-            invalidate();
-        }
-        return asT();
-    }
-
-    /**
-     * Returns a slot which can be used to wire the text of this widget to a {@link react.Signal}
-     * or {@link react.Value}.
-     */
-    public Slot<String> textSlot () {
-        return new Slot<String>() {
-            public void onEmit (String text) {
-                setText(text);
+    protected TextWidget () {
+        text.connect(new Slot<String> () {
+            @Override public void onEmit (String newText) {
+                clearTextLayer();
+                clearLayoutData();
+                invalidate();
             }
-        };
+        });
     }
 
     /**
@@ -182,7 +166,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         _ldata.bg = bg;
 
         // layout our text
-        layoutText(_ldata, _text, hintX, hintY);
+        layoutText(_ldata, text.get(), hintX, hintY);
 
         return _ldata;
     }
@@ -301,7 +285,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     protected Background.Instance _bginst;
     protected LayoutData _ldata;
 
-    protected String _text = "";
     protected CanvasLayer _tlayer;
 
     protected Image _icon;
