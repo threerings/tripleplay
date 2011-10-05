@@ -40,17 +40,17 @@ if expected:
 
 #print skipped # Uncomment to add additional characters to meta or punc
 
-consts = ["%s('%s', %s)" % (f[0], f[1].lower(), getcode(f[1])) for f in chars]
-chars = textwrap.fill(", ".join(consts), initial_indent="    ", subsequent_indent="    ", width=99)
+def wrap(consts):
+    return textwrap.fill(", ".join(consts), initial_indent="    ",
+        subsequent_indent="    ", width=100)
 
-consts = ["%s('%s', %s)" % (nums[str(f)], f, getcode(f)) for f in range(10)]
-nums = textwrap.fill(", ".join(consts), initial_indent="    ", subsequent_indent="    ", width=95)
+chars = wrap(["%s('%s',%s)" % (f[0], f[1].lower(), getcode(f[1])) for f in chars])
 
-consts = ["%s('%s', %s)" % (f[0], f[1], getcode(f[0])) for f in punc.items()]
-punc = textwrap.fill(", ".join(consts), initial_indent="    ", subsequent_indent="    ", width=95)
+nums = wrap(["%s('%s',%s)" % (nums[str(f)], f, getcode(f)) for f in range(10)])
 
-consts = ["%s(null, %s)" % (f, getcode(f)) for f in meta]
-meta  = textwrap.fill(", ".join(consts), initial_indent="    ", subsequent_indent="    ", width=95)
+punc = wrap(sorted(["%s('%s',%s)" % (f[0], f[1], getcode(f[0])) for f in punc.items()]))
+
+meta = wrap(sorted(["%s(null,%s)" % (f, getcode(f)) for f in meta]))
 
 print """//
 // Triple Play - utilities for use in PlayN-based games
