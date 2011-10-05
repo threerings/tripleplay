@@ -132,11 +132,23 @@ public class Interface
 
     /**
      * Removes the supplied root element from this interface. If the root's layer has a parent, the
-     * layer will be removed from the parent as well.
+     * layer will be removed from the parent as well. This leaves the Root's layer in existence, so
+     * it may be used again. If you're done with the Root and all of the elements inside of it, call
+     * destroyRoot to free its resources.
      */
     public void removeRoot (Root root) {
         _roots.remove(root);
         if (root.layer.parent() != null) root.layer.parent().remove(root.layer);
+    }
+
+    /**
+     * Removes the supplied root element from this interface and destroys its layer. Destroying the
+     * layer destroys the layers of all elements contained in the root as well. Use this method if
+     * you're done with the Root. If you'd like to reuse it, call removeRoot instead.
+     */
+    public void destroyRoot (Root root) {
+        _roots.remove(root);
+        root.layer.destroy();
     }
 
     protected final Pointer.Listener _delegate;
