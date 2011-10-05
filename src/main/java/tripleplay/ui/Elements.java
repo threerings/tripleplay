@@ -85,7 +85,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
 
     public void destroy (Element<?> child) {
         if (_children.remove(child)) {
-            didRemove(child, false);
+            didRemove(child, true);
             invalidate();
         } else {
             child.layer.destroy();
