@@ -12,7 +12,6 @@ import pythagoras.f.Dimension;
 
 import react.UnitSlot;
 import react.Value;
-import react.ValueView;
 
 public class Slider extends Widget<Slider>
 {
@@ -30,6 +29,10 @@ public class Slider extends Widget<Slider>
             }
         });
     }
+
+    public float max () { return _max; }
+
+    public float min () { return _min; }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
         return new Dimension(hintX == 0 ? 100 : hintX, THUMB_HEIGHT + BAR_HEIGHT);
