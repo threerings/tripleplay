@@ -55,8 +55,8 @@ public class Interface
             }
         }
         @Override public void onPointerEnd (Pointer.Event event) {
-            // Always clear focus on a click. If it's on the focussed item, it'll get focus again
-            _focussed = null;
+            // Always clear focus on a click. If it's on the focused item, it'll get focus again
+            _focused = null;
             if (_active != null) {
                 _active.dispatchPointerEnd(event.x(), event.y());
                 _active = null;
@@ -68,18 +68,18 @@ public class Interface
     };
 
     /**
-     * This listener must be configured in order for keyboard events to propagate to a focussed
+     * This listener must be configured in order for keyboard events to propagate to a focused
      * Element.
      */
     public final Keyboard.Listener klistener = new Keyboard.Listener() {
         @Override public void onKeyDown (Keyboard.Event event) {
-            if (_focussed == null) return;
-            _focussed.onKeyDown(event);
+            if (_focused == null) return;
+            _focused.onKeyDown(event);
         }
 
         @Override public void onKeyUp (Keyboard.Event event) {
-            if (_focussed == null) return;
-            _focussed.onKeyUp(event);
+            if (_focused == null) return;
+            _focused.onKeyUp(event);
         }
     };
 
@@ -171,10 +171,10 @@ public class Interface
     }
 
     protected void setFocus (Keyboard.Listener listener) {
-        _focussed = listener;
+        _focused = listener;
     }
 
-    protected Keyboard.Listener _focussed;
+    protected Keyboard.Listener _focused;
 
     protected final Pointer.Listener _delegate;
 
