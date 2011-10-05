@@ -24,8 +24,8 @@ import playn.core.Pointer;
 public class Interface
 {
     /**
-     * This pointer listener must be configured in order to make this interface active. It is
-     * exposed so that apps can manage their pointer listener stack however they like.
+     * This listener must be configured in order to make this interface active. It is exposed so
+     * that apps can manage their pointer listener stack however they like.
      */
     public final Pointer.Listener plistener = new Pointer.Listener() {
         @Override public void onPointerStart (Pointer.Event event) {
@@ -68,8 +68,8 @@ public class Interface
     };
 
     /**
-     * This pointer listener must be configured in order for keyboard events to propagate to
-     * a focussed Element.
+     * This listener must be configured in order for keyboard events to propagate to a focussed
+     * Element.
      */
     public final Keyboard.Listener klistener = new Keyboard.Listener() {
         @Override public void onKeyDown (Keyboard.Event event) {
