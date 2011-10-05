@@ -35,30 +35,4 @@ public class Label extends TextWidget<Label>
     @Override public String toString () {
         return "Label(" + text() + ")";
     }
-
-    @Override protected Dimension computeSize (float hintX, float hintY) {
-        LayoutData ldata = computeLayout(hintX, hintY);
-        return computeTextSize(ldata, new Dimension());
-    }
-
-    @Override protected void layout () {
-        float width = _size.width, height = _size.height;
-        LayoutData ldata = computeLayout(width, height);
-        renderLayout(ldata, 0, 0, width, height);
-        clearLayoutData(); // no need to keep this around
-    }
-
-    @Override protected void clearLayoutData () {
-        super.clearLayoutData();
-        _ldata = null;
-    }
-
-    protected LayoutData computeLayout (float hintX, float hintY) {
-        if (_ldata != null) return _ldata;
-        _ldata = new LayoutData();
-        layoutText(_ldata, _text, hintX, hintY);
-        return _ldata;
-    }
-
-    protected LayoutData _ldata;
 }

@@ -29,6 +29,7 @@ public class MiscPage implements WidgetDemo.Page
 
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
+        Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000, 5)));
 
         Button toggle;
         Slider slider;
@@ -46,7 +47,7 @@ public class MiscPage implements WidgetDemo.Page
                     toggle = new Button("Toggle"),
                     new Button("Disabled").setEnabled(false)),
                 new Group(AxisLayout.vertical()).add(
-                    new Label("Label 1"),
+                    new Label("Label 1", redBg),
                     label2 = new Label("Label 2"),
                     new Label("Label 3").setIcon(smiley))),
             // display some labels with varying icon alignment
