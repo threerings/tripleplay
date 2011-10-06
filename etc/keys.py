@@ -11,10 +11,8 @@ getcode = lambda name: getattr(KeyEvent, "VK_%s" % name)
 meta = set(["ALT", "BACK_SPACE", "CAPS_LOCK", "CONTROL", "DELETE", "DOWN", "END", "ENTER",
     "ESCAPE", "LEFT", "RIGHT", "SHIFT", "UP"])
 
-punc = dict(BACK_SLASH="\\\\", COMMA=",", EQUALS="=", MINUS="-", PERIOD=".", SLASH="/", SPACE=" ")
-
-nums = dict(ZERO=0, ONE=1, TWO=2, THREE=3, FOUR=4, FIVE=5, SIX=6, SEVEN=7, EIGHT=8, NINE=9)
-nums = dict((str(v), k) for k, v in nums.iteritems())
+punc = dict(BACK_SLASH=("\\\\", "|"), COMMA=(",", "<"), EQUALS=("=", "+"),
+    MINUS=("-", "_"), PERIOD=(".", ">"), SLASH=("/", "?"), SPACE=(" ", " "))
 
 expected = meta.union(punc.keys())
 
@@ -32,7 +30,7 @@ for f in dir(KeyEvent):
             skipped.append(f)
         else:
             expected.remove(f)
-    elif f not in nums:
+    elif f not in "1234567890":
         chars.append((f, f))
 
 if expected:
@@ -44,13 +42,16 @@ def wrap(consts):
     return textwrap.fill(", ".join(consts), initial_indent="    ",
         subsequent_indent="    ", width=100)
 
-chars = wrap(["%s('%s',%s)" % (f[0], f[1].lower(), getcode(f[1])) for f in chars])
+chars = wrap(["%s('%s','%s',%s)" % (f[0], f[1].lower(), f[1], getcode(f[1])) for f in chars])
 
-nums = wrap(["%s('%s',%s)" % (nums[str(f)], f, getcode(f)) for f in range(10)])
+nums = [("ZERO", ")"), ("ONE", "!"), ("TWO", "@"), ("THREE", "#"), ("FOUR", "$"),
+("FIVE", "%"), ("SIX", "^"), ("SEVEN", "&"), ("EIGHT", "*"), ("NINE", "(")]
 
-punc = wrap(sorted(["%s('%s',%s)" % (f[0], f[1], getcode(f[0])) for f in punc.items()]))
+nums = wrap(["%s('%s','%s',%s)" % (f[0], i, f[1], getcode(i)) for i, f in enumerate(nums)])
 
-meta = wrap(sorted(["%s(null,%s)" % (f, getcode(f)) for f in meta]))
+punc = wrap(sorted(["%s('%s','%s',%s)" % (f[0], f[1][0], f[1][1], getcode(f[0])) for f in punc.items()]))
+
+meta = wrap(sorted(["%s(null,null,%s)" % (f, getcode(f)) for f in meta]))
 
 print """//
 // Triple Play - utilities for use in PlayN-based games
@@ -76,6 +77,7 @@ public enum Key
 
     public final int code;
     public final Character character;
+    public final Character upper;
 
     private static final Key[] BY_CODE = new Key[%(codearraylen)s];
     static {
@@ -88,9 +90,10 @@ public enum Key
         return code >= BY_CODE.length ? null : BY_CODE[code];
     }
 
-    private Key (Character character, int keyCode) {
+    private Key (Character character, Character upper, int keyCode) {
         code = keyCode;
         this.character = character;
+        this.upper = upper;
     }
 }""" % globals()
 

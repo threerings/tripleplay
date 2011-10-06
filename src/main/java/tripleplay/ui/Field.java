@@ -86,7 +86,7 @@ public class Field extends TextWidget<Field>
             if (key.character == null) {
                 System.out.println("Not handling " + key);
             } else {
-                char toAppend = _shift ? Character.toUpperCase(key.character) : key.character;
+                char toAppend = _shift ? key.upper : key.character;
                 text.update(precursor + toAppend + postcursor);
                 _cursor++;
             }

@@ -9,26 +9,29 @@ package tripleplay.util;
 public enum Key
 {
     // Characters
-    A('a',65), B('b',66), C('c',67), D('d',68), E('e',69), F('f',70), G('g',71), H('h',72),
-    I('i',73), J('j',74), K('k',75), L('l',76), M('m',77), N('n',78), O('o',79), P('p',80),
-    Q('q',81), R('r',82), S('s',83), T('t',84), U('u',85), V('v',86), W('w',87), X('x',88),
-    Y('y',89), Z('z',90),
+    A('a','A',65), B('b','B',66), C('c','C',67), D('d','D',68), E('e','E',69), F('f','F',70),
+    G('g','G',71), H('h','H',72), I('i','I',73), J('j','J',74), K('k','K',75), L('l','L',76),
+    M('m','M',77), N('n','N',78), O('o','O',79), P('p','P',80), Q('q','Q',81), R('r','R',82),
+    S('s','S',83), T('t','T',84), U('u','U',85), V('v','V',86), W('w','W',87), X('x','X',88),
+    Y('y','Y',89), Z('z','Z',90),
 
     // Numbers
-    ZERO('0',48), ONE('1',49), TWO('2',50), THREE('3',51), FOUR('4',52), FIVE('5',53), SIX('6',54),
-    SEVEN('7',55), EIGHT('8',56), NINE('9',57),
+    ZERO('0',')',48), ONE('1','!',49), TWO('2','@',50), THREE('3','#',51), FOUR('4','$',52),
+    FIVE('5','%',53), SIX('6','^',54), SEVEN('7','&',55), EIGHT('8','*',56), NINE('9','(',57),
 
     // Punctuation
-    BACK_SLASH('\\',92), COMMA(',',44), EQUALS('=',61), MINUS('-',45), PERIOD('.',46),
-    SLASH('/',47), SPACE(' ',32),
+    BACK_SLASH('\\','|',92), COMMA(',','<',44), EQUALS('=','+',61), MINUS('-','_',45),
+    PERIOD('.','>',46), SLASH('/','?',47), SPACE(' ',' ',32),
 
     // Meta
-    ALT(null,18), BACK_SPACE(null,8), CAPS_LOCK(null,20), CONTROL(null,17), DELETE(null,127),
-    DOWN(null,40), END(null,35), ENTER(null,10), ESCAPE(null,27), LEFT(null,37), RIGHT(null,39),
-    SHIFT(null,16), UP(null,38);
+    ALT(null,null,18), BACK_SPACE(null,null,8), CAPS_LOCK(null,null,20), CONTROL(null,null,17),
+    DELETE(null,null,127), DOWN(null,null,40), END(null,null,35), ENTER(null,null,10),
+    ESCAPE(null,null,27), LEFT(null,null,37), RIGHT(null,null,39), SHIFT(null,null,16),
+    UP(null,null,38);
 
     public final int code;
     public final Character character;
+    public final Character upper;
 
     private static final Key[] BY_CODE = new Key[128];
     static {
@@ -41,8 +44,9 @@ public enum Key
         return code >= BY_CODE.length ? null : BY_CODE[code];
     }
 
-    private Key (Character character, int keyCode) {
+    private Key (Character character, Character upper, int keyCode) {
         code = keyCode;
         this.character = character;
+        this.upper = upper;
     }
 }
