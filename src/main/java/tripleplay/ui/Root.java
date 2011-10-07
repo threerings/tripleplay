@@ -5,6 +5,8 @@
 
 package tripleplay.ui;
 
+import playn.core.Layer;
+
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
 
@@ -88,6 +90,10 @@ public class Root extends Elements<Root>
             _active.onPointerEnd(p.x, p.y);
             _active = null;
         }
+    }
+
+    @Override protected void hitToLayer (Point p) {
+        Layer.Util.screenToLayer(layer, p, p);
     }
 
     @Override protected Root root () {

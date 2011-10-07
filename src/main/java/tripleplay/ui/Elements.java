@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import playn.core.Layer;
+
 import pythagoras.f.Dimension;
 import pythagoras.f.Point;
 
@@ -157,9 +159,9 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
 
     @Override protected Element<?> hitTest (Point point) {
         // transform the point into our coordinate system
-        point = layer.transform().inverseTransform(point, point);
+        hitToLayer(point);
         // check whether it falls within our bounds
-        float x = point.x + layer.originX(), y = point.y + layer.originY();
+        float x = point.x, y = point.y;
         if (!contains(x, y)) return null;
         // determine whether it falls within the bounds of any of our children
         for (Element<?> child : _children) {
@@ -167,6 +169,10 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
             if (hit != null) return hit;
         }
         return null;
+    }
+
+    protected void hitToLayer (Point point) {
+        Layer.Util.parentToLayer(layer, point, point);
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
