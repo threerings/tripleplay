@@ -235,12 +235,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float availWidth = width-usedWidth, availHeight = height-usedHeight;
             float twidth = Math.min(availWidth, ldata.text.width());
             float theight = Math.min(availHeight, ldata.text.height());
-            _tlayer = prepareCanvas(_tlayer, twidth, theight);
-            // _tlayer.canvas().setFillColor(0xFFCCCCCC);
-            // _tlayer.canvas().fillRect(0, 0, width, height);
-            _tlayer.canvas().drawText(ldata.text, 0, 0);
-            _tlayer.setTranslation(tx + ldata.halign.offset(twidth, availWidth),
-                                   ty + ldata.valign.offset(theight, availHeight));
+            if (twidth > 0 && theight > 0) {
+                _tlayer = prepareCanvas(_tlayer, twidth, theight);
+                // _tlayer.canvas().setFillColor(0xFFCCCCCC);
+                // _tlayer.canvas().fillRect(0, 0, width, height);
+                _tlayer.canvas().drawText(ldata.text, 0, 0);
+                _tlayer.setTranslation(tx + ldata.halign.offset(twidth, availWidth),
+                                       ty + ldata.valign.offset(theight, availHeight));
+            }
         }
     }
 
