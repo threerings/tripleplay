@@ -10,8 +10,6 @@ import playn.core.Layer;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
 
-import tripleplay.util.Coords;
-
 /**
  * The root of a display hierarchy. An application can have one or more roots, but they should not
  * overlap and will behave as if oblivious to one another's existence.
@@ -79,14 +77,14 @@ public class Root extends Elements<Root>
 
     protected void dispatchPointerDrag (float x, float y) {
         if (_active != null) {
-            Point p = Coords.screenToLayer(_active.layer, x, y, new Point());
+            Point p = Layer.Util.screenToLayer(_active.layer, x, y);
             _active.onPointerDrag(p.x, p.y);
         }
     }
 
     protected void dispatchPointerEnd (float x, float y) {
         if (_active != null) {
-            Point p = Coords.screenToLayer(_active.layer, x, y, new Point());
+            Point p = Layer.Util.screenToLayer(_active.layer, x, y);
             _active.onPointerEnd(p.x, p.y);
             _active = null;
         }
