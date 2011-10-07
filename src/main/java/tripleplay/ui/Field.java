@@ -44,9 +44,7 @@ public class Field extends TextWidget<Field>
         Point parentEvent = new Point(x, y);
         float tLayerX = Layer.Util.parentToLayer(_tlayer, parentEvent, parentEvent).x();
         int cursor = 0;
-        while (cursor < text.get().length() &&
-            getCursorX(text.get().substring(0, cursor)) < tLayerX)
-            cursor++;
+        while (cursor < text.get().length() && getCursorX(cursor) < tLayerX) cursor++;
         root._iface._focused.update((_listener = new FieldListener(cursor)));
         root._iface._focused.connect(new UnitSlot() {
             @Override public void onEmit () {
@@ -64,19 +62,19 @@ public class Field extends TextWidget<Field>
         super.renderLayout(ldata, x, y, width, height);
         if (_tlayer == null || _listener == null ) return;
 
-        float cursorX = getCursorX(_listener.precursor());
+        float cursorX = getCursorX(_listener._cursor);
         _tlayer.canvas().setStrokeWidth(1).setStrokeColor(0xFF000000).
             drawLine(cursorX, 0, cursorX, _tlayer.height());
     }
 
-    protected float getCursorX (String precursor) {
-        if (precursor.length() == 0) return 0;
+    protected float getCursorX (int cursor) {
+        if (cursor == 0) return 0;
         // Get the width up to the cursor with an additional 'b' past that. If the cursor is right
         // past a space, layoutText will trim that space before getting the width. Adding in a 'b'
         // and subtracting it out later will get the width with spaces. Why 'b'? It's my favorite
         // letter, yo.
         LayoutData withBLayout = new LayoutData();
-        layoutText(withBLayout, precursor + "b", 0, 0);
+        layoutText(withBLayout, text.get().substring(0, cursor) + "b", 0, 0);
         LayoutData bLayout = new LayoutData();
         layoutText(bLayout, "b", 0, 0);
         return withBLayout.text.width() - bLayout.text.width() - 1;
@@ -87,8 +85,6 @@ public class Field extends TextWidget<Field>
         public FieldListener(int cursor) {
             _cursor = cursor;
         }
-
-        protected String precursor () { return text.get().substring(0, _cursor); }
 
         @Override public void onKeyDown (Keyboard.Event ev) {
             Key key = Key.get(ev.keyCode());
@@ -118,7 +114,7 @@ public class Field extends TextWidget<Field>
                     return;
             }
 
-            String precursor = precursor();
+            String precursor = text.get().substring(0, _cursor);
             String postcursor = text.get().substring(_cursor, text.get().length());
 
             if (key == Key.BACK_SPACE) {
