@@ -87,8 +87,7 @@ public abstract class Background
         // TODO: rewrite this as an active-rendered layer when PlayN supports such things
         int cwidth = FloatMath.iceil(width), cheight = FloatMath.iceil(height);
         CanvasLayer canvas = PlayN.graphics().createCanvasLayer(cwidth, cheight);
-        canvas.canvas().setFillColor(color);
-        canvas.canvas().fillRect(0, 0, width, height);
+        canvas.canvas().setFillColor(color).fillRect(0, 0, width, height);
         return canvas;
     }
 

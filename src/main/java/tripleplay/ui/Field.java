@@ -43,17 +43,43 @@ public class Field extends TextWidget<Field>
             @Override public void onEmit () {
                 _listener = null;
                 defocused.emit(Field.this);
+                invalidate();
             }
         }).once();
 
+        invalidate();// Redraw with our cursor
+    }
+
+    @Override protected void renderLayout (LayoutData ldata, float x, float y, float width,
+        float height) {
+        super.renderLayout(ldata, x, y, width, height);
+        if (_tlayer == null || _listener == null ) return;
+
+        float cursorX = 0;
+
+        String precursor = _listener.precursor();
+        if (precursor.length() > 0) {
+            // Get the width up to the cursor with an additional 'b' past that. If the cursor is
+            // right past a space, layoutText will trim that space before getting the width. Adding
+            // in a b and subtracting it out later will get the width with spaces.
+            LayoutData withBLayout = new LayoutData();
+            layoutText(withBLayout, precursor + "b", 0, 0);
+            LayoutData bLayout = new LayoutData();
+            layoutText(bLayout, "b", 0, 0);
+            cursorX = withBLayout.text.width() - bLayout.text.width() - 1;
+        }
+
+        _tlayer.canvas().setStrokeWidth(1).setStrokeColor(0xFF000000).
+            drawLine(cursorX, 0, cursorX, _tlayer.height());
     }
 
     protected class FieldListener implements Keyboard.Listener {
+
+        protected String precursor () { return text.get().substring(0, _cursor); }
+
         @Override public void onKeyDown (Keyboard.Event ev) {
             Key key = Key.get(ev.keyCode());
-            if (key == Key.SHIFT) {
-                _shift = true;
-            }
+            if (key == Key.SHIFT) _shift = true;
         }
 
         @Override public void onKeyUp (Keyboard.Event ev) {
@@ -64,8 +90,14 @@ public class Field extends TextWidget<Field>
             }
             switch (key) {
                 case SHIFT: _shift = false; return;
-                case RIGHT: _cursor = Math.min(text.get().length(), _cursor + 1); return;
-                case LEFT: _cursor = Math.max(0, _cursor - 1); return;
+                case RIGHT:
+                    _cursor = Math.min(text.get().length(), _cursor + 1);
+                    invalidate();// Redraw cursor
+                    return;
+                case LEFT:
+                    _cursor = Math.max(0, _cursor - 1);
+                    invalidate();// Redraw cursor
+                    return;
                 case ENTER: root()._iface._focused.update(null); return;
                 case ESCAPE:
                     text.update(_initial);
@@ -73,7 +105,7 @@ public class Field extends TextWidget<Field>
                     return;
             }
 
-            String precursor = text.get().substring(0, _cursor);
+            String precursor = precursor();
             String postcursor = text.get().substring(_cursor, text.get().length());
 
             if (key == Key.BACK_SPACE) {
@@ -94,7 +126,7 @@ public class Field extends TextWidget<Field>
 
         protected boolean _shift;
         protected int _cursor = text.get().length();
-        protected String _initial = text.get();
+        protected final String _initial = text.get();
     };
 
     protected FieldListener _listener;
