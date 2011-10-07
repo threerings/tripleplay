@@ -237,8 +237,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float theight = Math.min(availHeight, ldata.text.height());
             if (twidth > 0 && theight > 0) {
                 _tlayer = prepareCanvas(_tlayer, twidth, theight);
-                // _tlayer.canvas().setFillColor(0xFFCCCCCC);
-                // _tlayer.canvas().fillRect(0, 0, width, height);
                 _tlayer.canvas().drawText(ldata.text, 0, 0);
                 _tlayer.setTranslation(tx + ldata.halign.offset(twidth, availWidth),
                                        ty + ldata.valign.offset(theight, availHeight));
