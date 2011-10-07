@@ -6,6 +6,9 @@
 package tripleplay.ui;
 
 import playn.core.Keyboard;
+import playn.core.Layer;
+
+import pythagoras.f.Point;
 
 import react.Signal;
 import react.UnitSlot;
@@ -38,7 +41,13 @@ public class Field extends TextWidget<Field>
         super.onPointerEnd(x, y);
         Root root = root();
         if (root == null) return;
-        root._iface._focused.update((_listener = new FieldListener()));
+        Point parentEvent = new Point(x, y);
+        float tLayerX = Layer.Util.parentToLayer(_tlayer, parentEvent, parentEvent).x();
+        int cursor = 0;
+        while (cursor < text.get().length() &&
+            getCursorX(text.get().substring(0, cursor)) < tLayerX)
+            cursor++;
+        root._iface._focused.update((_listener = new FieldListener(cursor)));
         root._iface._focused.connect(new UnitSlot() {
             @Override public void onEmit () {
                 _listener = null;
@@ -55,25 +64,29 @@ public class Field extends TextWidget<Field>
         super.renderLayout(ldata, x, y, width, height);
         if (_tlayer == null || _listener == null ) return;
 
-        float cursorX = 0;
-
-        String precursor = _listener.precursor();
-        if (precursor.length() > 0) {
-            // Get the width up to the cursor with an additional 'b' past that. If the cursor is
-            // right past a space, layoutText will trim that space before getting the width. Adding
-            // in a b and subtracting it out later will get the width with spaces.
-            LayoutData withBLayout = new LayoutData();
-            layoutText(withBLayout, precursor + "b", 0, 0);
-            LayoutData bLayout = new LayoutData();
-            layoutText(bLayout, "b", 0, 0);
-            cursorX = withBLayout.text.width() - bLayout.text.width() - 1;
-        }
-
+        float cursorX = getCursorX(_listener.precursor());
         _tlayer.canvas().setStrokeWidth(1).setStrokeColor(0xFF000000).
             drawLine(cursorX, 0, cursorX, _tlayer.height());
     }
 
+    protected float getCursorX (String precursor) {
+        if (precursor.length() == 0) return 0;
+        // Get the width up to the cursor with an additional 'b' past that. If the cursor is right
+        // past a space, layoutText will trim that space before getting the width. Adding in a 'b'
+        // and subtracting it out later will get the width with spaces. Why 'b'? It's my favorite
+        // letter, yo.
+        LayoutData withBLayout = new LayoutData();
+        layoutText(withBLayout, precursor + "b", 0, 0);
+        LayoutData bLayout = new LayoutData();
+        layoutText(bLayout, "b", 0, 0);
+        return withBLayout.text.width() - bLayout.text.width() - 1;
+    }
+
     protected class FieldListener implements Keyboard.Listener {
+
+        public FieldListener(int cursor) {
+            _cursor = cursor;
+        }
 
         protected String precursor () { return text.get().substring(0, _cursor); }
 
@@ -125,7 +138,7 @@ public class Field extends TextWidget<Field>
         }
 
         protected boolean _shift;
-        protected int _cursor = text.get().length();
+        protected int _cursor;
         protected final String _initial = text.get();
     };
 
