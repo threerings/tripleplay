@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.Key;
 import playn.core.Keyboard;
 import playn.core.Layer;
 
@@ -12,8 +13,6 @@ import pythagoras.f.Point;
 
 import react.Signal;
 import react.UnitSlot;
-
-import tripleplay.util.Key;
 
 public class Field extends TextWidget<Field>
 {
@@ -80,60 +79,60 @@ public class Field extends TextWidget<Field>
         return withBLayout.text.width() - bLayout.text.width() - 1;
     }
 
-    protected class FieldListener implements Keyboard.Listener {
+    protected class FieldListener extends Keyboard.Adapter {
 
         public FieldListener(int cursor) {
             _cursor = cursor;
         }
 
         @Override public void onKeyDown (Keyboard.Event ev) {
-            Key key = Key.get(ev.keyCode());
-            if (key == Key.SHIFT) _shift = true;
-        }
-
-        @Override public void onKeyUp (Keyboard.Event ev) {
-            Key key = Key.get(ev.keyCode());
-            if (key == null) {
-                System.out.println("Unknown keycode " + ev.keyCode());
-                return;
-            }
-            switch (key) {
-                case SHIFT: _shift = false; return;
+            switch (ev.key()) {
+                case HOME:
+                    moveCursor(0);
+                    break;
+                case END:
+                    moveCursor(text.get().length());
+                    break;
                 case RIGHT:
-                    _cursor = Math.min(text.get().length(), _cursor + 1);
-                    invalidate();// Redraw cursor
-                    return;
+                    moveCursor(_cursor + 1);
+                    break;
                 case LEFT:
-                    _cursor = Math.max(0, _cursor - 1);
-                    invalidate();// Redraw cursor
-                    return;
-                case ENTER: root()._iface._focused.update(null); return;
+                    moveCursor(_cursor - 1);
+                    break;
+                case ENTER:
+                    root()._iface._focused.update(null);
+                    break;
                 case ESCAPE:
                     text.update(_initial);
                     root()._iface._focused.update(null);
-                    return;
-            }
-
-            String precursor = text.get().substring(0, _cursor);
-            String postcursor = text.get().substring(_cursor, text.get().length());
-
-            if (key == Key.BACK_SPACE) {
-                if (_cursor != 0) {
-                    text.update(precursor.substring(0, precursor.length() - 1) + postcursor);
-                    _cursor--;
+                    break;
+                case BACKSPACE: {
+                    if (_cursor != 0) {
+                        String precursor = text.get().substring(0, _cursor);
+                        String postcursor = text.get().substring(_cursor, text.get().length());
+                        text.update(precursor.substring(0, precursor.length() - 1) + postcursor);
+                        _cursor--;
+                    }
+                    break;
                 }
-                return;
-            }
-            if (key.character == null) {
-                System.out.println("Not handling " + key);
-            } else {
-                char toAppend = _shift ? key.upper : key.character;
-                text.update(precursor + toAppend + postcursor);
-                _cursor++;
             }
         }
 
-        protected boolean _shift;
+        @Override public void onKeyTyped (Keyboard.TypedEvent ev) {
+            String precursor = text.get().substring(0, _cursor);
+            String postcursor = text.get().substring(_cursor, text.get().length());
+            text.update(precursor + ev.typedChar() + postcursor);
+            _cursor++;
+        }
+
+        protected void moveCursor (int pos) {
+            int ncursor = Math.max(0, Math.min(text.get().length(), pos));
+            if (ncursor != _cursor) {
+                _cursor = ncursor;
+                invalidate();
+            }
+        }
+
         protected int _cursor;
         protected final String _initial = text.get();
     };

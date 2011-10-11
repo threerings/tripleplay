@@ -78,7 +78,10 @@ public class Interface
             if (_focused.get() == null) return;
             _focused.get().onKeyDown(event);
         }
-
+        @Override public void onKeyTyped (Keyboard.TypedEvent event) {
+            if (_focused.get() == null) return;
+            _focused.get().onKeyTyped(event);
+        }
         @Override public void onKeyUp (Keyboard.Event event) {
             if (_focused.get() == null) return;
             _focused.get().onKeyUp(event);
