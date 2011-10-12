@@ -106,12 +106,17 @@ public class Field extends TextWidget<Field>
                     text.update(_initial);
                     root()._iface._focused.update(null);
                     break;
-                case BACKSPACE: {
+                case BACKSPACE:
                     if (_cursor != 0) {
-                        String precursor = text.get().substring(0, _cursor);
-                        String postcursor = text.get().substring(_cursor, text.get().length());
-                        text.update(precursor.substring(0, precursor.length() - 1) + postcursor);
+                        String cur = text.get();
+                        text.update(cur.substring(0, _cursor-1) + cur.substring(_cursor));
                         _cursor--;
+                    }
+                    break;
+                case DELETE: {
+                    String cur = text.get();
+                    if (_cursor < cur.length()) {
+                        text.update(cur.substring(0, _cursor) + cur.substring(_cursor+1));
                     }
                     break;
                 }
@@ -119,9 +124,8 @@ public class Field extends TextWidget<Field>
         }
 
         @Override public void onKeyTyped (Keyboard.TypedEvent ev) {
-            String precursor = text.get().substring(0, _cursor);
-            String postcursor = text.get().substring(_cursor, text.get().length());
-            text.update(precursor + ev.typedChar() + postcursor);
+            String cur = text.get();
+            text.update(cur.substring(0, _cursor) + ev.typedChar() + cur.substring(_cursor));
             _cursor++;
         }
 
