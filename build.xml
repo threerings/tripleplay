@@ -1,17 +1,17 @@
 <?xml version="1.0" standalone="yes"?>
 <project name="tripleplay" default="compile" xmlns:artifact="urn:maven-artifact-ant">
-  <property name="deploy.dir"   location="target"/>
+  <property name="target.dir"   location="target"/>
   <property name="src.dir"      location="src/main/java"/>
   <property name="tsrc.dir"     location="src/test/java"/>
-  <property name="classes.dir"  location="${deploy.dir}/classes"/>
-  <property name="tclasses.dir" location="${deploy.dir}/test-classes"/>
+  <property name="classes.dir"  location="${target.dir}/classes"/>
+  <property name="tclasses.dir" location="${target.dir}/test-classes"/>
 
-  <property name="ooo-build.vers" value="2.6"/>
+  <property name="ooo-build.vers" value="2.9"/>
   <ant antfile="etc/bootstrap.xml"/>
   <import file="${user.home}/.m2/ooo-build/${ooo-build.vers}/ooo-build.xml"/>
 
   <target name="-prepare" depends="-init-ooo">
-    <mkdir dir="${deploy.dir}"/>
+    <mkdir dir="${target.dir}"/>
 
     <mavendep pom="pom.xml" id="compile"/>
 
@@ -24,7 +24,7 @@
   </target>
 
   <target name="clean" depends="-init-ooo" description="Cleans out build results">
-    <delete dir="${deploy.dir}"/>
+    <delete dir="${target.dir}"/>
   </target>
 
   <target name="compile" depends="-prepare" description="Builds the Java code.">
@@ -40,17 +40,25 @@
     <ooojavac srcdir="${tsrc.dir}" destdir="${tclasses.dir}" classpathref="test.classpath"/>
   </target>
 
+  <target name="javadoc" depends="-prepare" description="Builds the Java documentation">
+    <mkdir dir="${target.dir}/docs"/>
+    <javadoc sourcepath="${src.dir}" destdir="${target.dir}/docs"
+             additionalparam="-breakiterator" classpathref="compile.path">
+      <link href="http://download.oracle.com/javase/6/docs/api/"/>
+    </javadoc>
+  </target>
+
   <property name="test" value=""/>
   <target name="test" depends="compile"
           description="Runs unit tests. Use -Dtest=Foo to run only FooTest.">
     <taskdef name="unit" classpathref="test.path"
       classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
-    <mkdir dir="${deploy.dir}/test-reports"/>
+    <mkdir dir="${target.dir}/test-reports"/>
     <unit printsummary="off" haltonfailure="yes">
       <classpath refid="test.classpath"/>
       <formatter type="brief" usefile="false"/>
       <formatter type="xml"/>
-      <batchtest todir="${deploy.dir}/test-reports">
+      <batchtest todir="${target.dir}/test-reports">
         <fileset dir="${tsrc.dir}" includes="**/*${test}*Test.java"/>
       </batchtest>
     </unit>
@@ -61,15 +69,19 @@
   </target>
 
   <target name="package" depends="test" description="Builds jar files.">
-    <jar destfile="${deploy.dir}/${ant.project.name}.jar">
+    <jar destfile="${target.dir}/${ant.project.name}.jar">
       <fileset dir="${classes.dir}" includes="**"/>
       <!-- include the source so that our jar can be used with GWT -->
       <fileset dir="${src.dir}" includes="**"/>
     </jar>
   </target>
 
-  <target name="install" depends="package"
-          description="Deploys build artifacts to Maven repository.">
-    <mavendeploy file="${deploy.dir}/${ant.project.name}.jar" srcdir="${src.dir}" pom="pom.xml"/>
+  <target name="install" depends="package" description="Installs to local Maven repository.">
+    <maveninstall file="${target.dir}/${ant.project.name}.jar" pom="pom.xml"/>
+  </target>
+
+  <target name="deploy" depends="package,javadoc" description="Deploys to remote Maven repository.">
+    <mavendeploy file="${target.dir}/${ant.project.name}.jar" pom="pom.xml"
+                 srcdir="${src.dir}" docdir="${target.dir}/docs"/>
   </target>
 </project>
