@@ -23,7 +23,7 @@ public abstract class Style<V>
     /** Defines element modes which can be used to modify an element's styles. */
     public static enum Mode { DEFAULT, DISABLED, SELECTED, DISABLED_SELECTED }
 
-    /** Used to configure {@link Styles} instances. See {@link Styles#set}. */
+    /** Used to configure {@link Styles} instances. See {@link Styles#add}. */
     public static class Binding<V> {
         /** The style being configured. */
         public final Style<V> style;

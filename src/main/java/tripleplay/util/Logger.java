@@ -14,6 +14,7 @@ package tripleplay.util;
  * import tripleplay.util.Logger;
  * public class Log {
  *   public static final Logger log = new Logger("libident");
+ * }
  * }</pre>
  *
  * and then import {@code Log.log} statically into classes so that they can invoke {@code

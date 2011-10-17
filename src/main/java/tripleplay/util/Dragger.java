@@ -15,12 +15,14 @@ import pythagoras.f.Point;
  * like so:
  * <pre>{@code
  * input.register(new SizedLayerRegion(layer) {
- *   @Override public boolean hitTest (IPoint point) {
- *     return ..can start drag.. && super.hitTest(point);
+ *   public boolean hitTest (IPoint point) {
+ *     return can_start_drag && super.hitTest(point);
  *   }
  *   // also override hasExpired if you desire custom expiry
  * }, new Dragger() {
- *   @Override public void onDragStart (IPoint start) { ..drag bits.. }
+ *   public void onDragStart (IPoint start) {
+ *     // ..drag bits..
+ *   }
  *   // etc.
  * });
  * }</pre>
