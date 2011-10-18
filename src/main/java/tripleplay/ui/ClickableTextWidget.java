@@ -22,13 +22,14 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
 
     @Override protected void onPointerStart (float x, float y) {
         super.onPointerStart(x, y);
+        if (!isEnabled()) return;
         set(Flag.SELECTED, true);
         invalidate();
     }
 
     @Override protected void onPointerDrag (float x, float y) {
         super.onPointerDrag(x, y);
-        boolean selected = contains(x, y);
+        boolean selected = isEnabled() && contains(x, y);
         if (selected != isSelected()) {
             set(Flag.SELECTED, selected);
             invalidate();
