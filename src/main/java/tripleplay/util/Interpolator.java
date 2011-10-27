@@ -20,6 +20,10 @@ public abstract class Interpolator
     /** A linear interpolator. */
     public static Interpolator LINEAR = new Interpolator() {
         @Override public float apply (float start, float range, float dt, float t) {
+            if (t == 0) {
+                return start + range;
+            }
+
             return start + range * dt / t;
         }
     };
@@ -27,6 +31,10 @@ public abstract class Interpolator
     /** An interpolator that starts to change slowly and ramps up to full speed. */
     public static Interpolator EASE_IN = new Interpolator() {
         @Override public float apply (float start, float range, float dt, float t) {
+            if (t == 0) {
+                return start + range;
+            }
+
             float dtt = dt / t;
             return start + range * dtt * dtt * dtt;
         }
@@ -35,6 +43,10 @@ public abstract class Interpolator
     /** An interpolator that starts to change quickly and eases into the final value. */
     public static Interpolator EASE_OUT = new Interpolator() {
         @Override public float apply (float start, float range, float dt, float t) {
+            if (t == 0) {
+                return start + range;
+            }
+
             float dtt = dt / t - 1;
             return start + range * (1 + dtt * dtt * dtt);
         }
@@ -44,6 +56,10 @@ public abstract class Interpolator
      * final value. */
     public static Interpolator EASE_INOUT = new Interpolator() {
         @Override public float apply (float start, float range, float dt, float t) {
+            if (t == 0) {
+                return start + range;
+            }
+
             float hdtt = dt / (t/2);
             if (hdtt < 1) {
                 return start + range/2 * hdtt * hdtt * hdtt;
@@ -60,7 +76,8 @@ public abstract class Interpolator
      * @param start the starting value.
      * @param range the difference between the ending value and the starting value.
      * @param dt the amount of time that has elapsed.
-     * @param t the total amount of time for the interpolation.
+     * @param t the total amount of time for the interpolation. If t == 0, start+range will be
+     * returned.
      */
     public abstract float apply (float start, float range, float dt, float t);
 }
