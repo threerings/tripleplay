@@ -20,10 +20,7 @@ public abstract class Interpolator
     /** A linear interpolator. */
     public static Interpolator LINEAR = new Interpolator() {
         @Override public float apply (float start, float range, float dt, float t) {
-            if (t == 0) {
-                return start + range;
-            }
-
+            if (t == 0) return start + range;
             return start + range * dt / t;
         }
     };
@@ -31,10 +28,7 @@ public abstract class Interpolator
     /** An interpolator that starts to change slowly and ramps up to full speed. */
     public static Interpolator EASE_IN = new Interpolator() {
         @Override public float apply (float start, float range, float dt, float t) {
-            if (t == 0) {
-                return start + range;
-            }
-
+            if (t == 0) return start + range;
             float dtt = dt / t;
             return start + range * dtt * dtt * dtt;
         }
@@ -43,10 +37,7 @@ public abstract class Interpolator
     /** An interpolator that starts to change quickly and eases into the final value. */
     public static Interpolator EASE_OUT = new Interpolator() {
         @Override public float apply (float start, float range, float dt, float t) {
-            if (t == 0) {
-                return start + range;
-            }
-
+            if (t == 0) return start + range;
             float dtt = dt / t - 1;
             return start + range * (1 + dtt * dtt * dtt);
         }
@@ -56,10 +47,7 @@ public abstract class Interpolator
      * final value. */
     public static Interpolator EASE_INOUT = new Interpolator() {
         @Override public float apply (float start, float range, float dt, float t) {
-            if (t == 0) {
-                return start + range;
-            }
-
+            if (t == 0) return start + range;
             float hdtt = dt / (t/2);
             if (hdtt < 1) {
                 return start + range/2 * hdtt * hdtt * hdtt;
