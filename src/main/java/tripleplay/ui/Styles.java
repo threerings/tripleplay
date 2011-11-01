@@ -184,11 +184,8 @@ public final class Styles
             if (elem.isEnabled()) {
                 if (elem.isSelected() && _selectedV != null) return _selectedV;
             } else {
-                if (elem.isSelected()) {
-                    if (_disSelectedV != null) return _disSelectedV;
-                } else {
-                    if (_disabledV != null) return _disabledV;
-                }
+                if (elem.isSelected() && _disSelectedV != null) return _disSelectedV;
+                if (_disabledV != null) return _disabledV;
             }
             return _defaultV;
         }
