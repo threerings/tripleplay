@@ -180,18 +180,15 @@ public final class Styles
         }
 
         public V get (Element<?> elem) {
-            boolean isEnabled = elem.isEnabled(), isSelected = elem.isSelected();
-            if (isEnabled && !isSelected) return _defaultV; // fast path for common case
-
-            // otherwise prioritize as: disabled_selected, disabled, selected, default
-            if (!isEnabled) {
-                if (isSelected) {
+            // prioritize as: disabled_selected, disabled, selected, default
+            if (elem.isEnabled()) {
+                if (elem.isSelected() && _selectedV != null) return _selectedV;
+            } else {
+                if (elem.isSelected()) {
                     if (_disSelectedV != null) return _disSelectedV;
                 } else {
                     if (_disabledV != null) return _disabledV;
                 }
-            } else {
-                if (isSelected && _selectedV != null) return _selectedV;
             }
             return _defaultV;
         }
