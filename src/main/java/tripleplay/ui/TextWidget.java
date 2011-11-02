@@ -25,7 +25,7 @@ import react.Value;
 public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 {
     /**
-     * The text configured for this widget.
+     * The text displayed by this widget.
      */
     public final Value<String> text = Value.create("");
 
@@ -33,10 +33,19 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         text.connect(new Slot<String> () {
             @Override public void onEmit (String newText) {
                 clearTextLayer();
-                clearLayoutData();
-                invalidate();
             }
         });
+    }
+
+    /**
+     * Sets the widest String to be displayed by this widget. If set the widget will be sized to
+     * accomodate the text in maxText regardless of what text is being displayed. May be set to null
+     * to clear the max text and allow the widget to change size with the displayed text.
+     */
+    public T setMaxText (String maxText) {
+        _maxText = maxText;
+        clearTextLayer();
+        return asT();
     }
 
     /**
@@ -108,7 +117,10 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             _bginst = null;
         }
         clearTextLayer();
-        clearIconLayer();
+        if (_ilayer != null) {
+            _ilayer.destroy();
+            _ilayer = null;
+        }
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
@@ -137,7 +149,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         clearLayoutData(); // we no longer need our layout data
     }
 
-    protected void layoutText (LayoutData ldata, String text, float hintX, float hintY) {
+    protected void layoutText (LayoutData ldata, String text, String maxText, float hintX,
+            float hintY) {
         if (!isVisible()) return;
 
         ldata.wrap = resolveStyle(Style.TEXT_WRAP);
@@ -148,6 +161,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
             // TODO: should we do something with a y-hint?
             ldata.text = PlayN.graphics().layoutText(text, format);
+            if (maxText != null && maxText.length() > 0)
+                ldata.maxText = PlayN.graphics().layoutText(maxText, format);
         }
         if (_icon != null) {
             ldata.iconPos = resolveStyle(Style.ICON_POS);
@@ -166,13 +181,16 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         _ldata.bg = bg;
 
         // layout our text
-        layoutText(_ldata, text.get(), hintX, hintY);
+        layoutText(_ldata, text.get(), _maxText, hintX, hintY);
 
         return _ldata;
     }
 
     protected Dimension computeTextSize (LayoutData ldata, Dimension size) {
-        if (ldata.text != null) {
+        if (ldata.maxText != null) {
+            size.width += ldata.maxText.width();
+            size.height += ldata.maxText.height();
+        } else if (ldata.text != null) {
             size.width += ldata.text.width();
             size.height += ldata.text.height();
         }
@@ -254,13 +272,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             _tlayer.destroy();
             _tlayer = null;
         }
-    }
-
-    protected void clearIconLayer () {
-        if (_ilayer != null) {
-            _ilayer.destroy();
-            _ilayer = null;
-        }
+        clearLayoutData();
+        invalidate();
     }
 
     protected float iconWidth () {
@@ -272,7 +285,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     }
 
     protected static class LayoutData {
-        public TextLayout text;
+        public TextLayout text, maxText;
         public boolean wrap;
         public Style.HAlign halign;
         public Style.VAlign valign;
@@ -290,4 +303,5 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     protected Image _icon;
     protected IRectangle _iregion;
     protected ImageLayer _ilayer;
+    protected String _maxText;
 }

@@ -73,9 +73,9 @@ public class Field extends TextWidget<Field>
         // and subtracting it out later will get the width with spaces. Why 'b'? It's my favorite
         // letter, yo.
         LayoutData withBLayout = new LayoutData();
-        layoutText(withBLayout, text.get().substring(0, cursor) + "b", 0, 0);
+        layoutText(withBLayout, text.get().substring(0, cursor) + "b", null, 0, 0);
         LayoutData bLayout = new LayoutData();
-        layoutText(bLayout, "b", 0, 0);
+        layoutText(bLayout, "b", null, 0, 0);
         return withBLayout.text.width() - bLayout.text.width() - 1;
     }
 
