@@ -31,7 +31,6 @@ public class Interface
      */
     public final Pointer.Listener plistener = new Pointer.Listener() {
         @Override public void onPointerStart (Pointer.Event event) {
-            float x = event.x(), y = event.y();
             try {
                 // copy our roots to a separate list to avoid conflicts if a root is added or
                 // removed while dispatching an event.
@@ -39,7 +38,7 @@ public class Interface
                 // dispatch to the roots in most-recently-created order as a more recently added
                 // root is probably on top. TODO - use layer depth
                 for (int ii = _dispatch.size() - 1; ii >= 0; ii--) {
-                    if (_dispatch.get(ii).dispatchPointerStart(x, y)) {
+                    if (_dispatch.get(ii).dispatchPointerStart(event)) {
                         _active = _dispatch.get(ii);
                         return;
                     }
@@ -51,7 +50,7 @@ public class Interface
         }
         @Override public void onPointerDrag (Pointer.Event event) {
             if (_active != null) {
-                _active.dispatchPointerDrag(event.x(), event.y());
+                _active.dispatchPointerDrag(event);
             } else {
                 _delegate.onPointerDrag(event);
             }
@@ -60,7 +59,7 @@ public class Interface
             // Always clear focus on a click. If it's on the focused item, it'll get focus again
             _focused.update(null);
             if (_active != null) {
-                _active.dispatchPointerEnd(event.x(), event.y());
+                _active.dispatchPointerEnd(event);
                 _active = null;
             } else {
                 _delegate.onPointerEnd(event);
