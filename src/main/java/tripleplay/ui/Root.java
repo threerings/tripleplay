@@ -22,17 +22,17 @@ public class Root extends Elements<Root>
          * Called when the pointer event starts. Return true to receive drag and end events and
          * prevent propogation to other Roots.
          */
-        boolean handlePointerStart(Pointer.Event event);
+        boolean handlePointerStart (Pointer.Event event);
 
         /**
          * Called when the pointer event ends after a start for which the delegate returned true.
          */
-        void onPointerEnd(Pointer.Event event);
+        void onPointerEnd (Pointer.Event event);
 
         /**
          * Called when the pointer drags after a start for which the delegate returned true.
          */
-        void onPointerDrag(Pointer.Event event);
+        void onPointerDrag (Pointer.Event event);
     }
 
     /**
