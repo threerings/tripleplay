@@ -67,7 +67,9 @@ public class MiscPage implements WidgetDemo.Page
                 sliderValue = new Label("0").
                     setConstraint(Constraints.minSize("-000")).
                     setStyles(Style.HALIGN.right, Style.FONT.is(fixedFont))),
-            new Field("Existing text"));
+            new Group(AxisLayout.horizontal().gap(10)).add(
+                new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
+                new Field("Disabled text").setEnabled(false)));
 
         Values.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
 

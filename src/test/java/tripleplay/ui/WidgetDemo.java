@@ -35,10 +35,7 @@ public class WidgetDemo implements Game
         PlayN.keyboard().setListener(_iface.klistener);
 
         // define our root stylesheet
-        Stylesheet rootSheet = Stylesheet.builder().
-            add(Button.class, Styles.none().
-                add(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF, 5))).
-                addSelected(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 6, 4, 4, 6)))).
+        Stylesheet rootSheet = SimpleStyles.newSheetBuilder().
             add(Label.class, Style.HALIGN.left, Style.VALIGN.top).
             create();
 
