@@ -129,7 +129,7 @@ public abstract class Style<V>
     /** The foreground color for an element. Inherited. */
     public static final Style<Integer> COLOR = new Style<Integer>(true) {
         public Integer getDefault (Element<?> elem) {
-            return elem.isEnabled() ? 0xFF000000 : 0xFFCCCCCC;
+            return elem.isEnabled() ? 0xFF000000 : 0xFF666666;
         }
     };
 
