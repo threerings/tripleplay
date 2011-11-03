@@ -38,17 +38,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     }
 
     /**
-     * Sets the widest String to be displayed by this widget. If set the widget will be sized to
-     * accomodate the text in maxText regardless of what text is being displayed. May be set to null
-     * to clear the max text and allow the widget to change size with the displayed text.
-     */
-    public T setMaxText (String maxText) {
-        _maxText = maxText;
-        clearTextLayer();
-        return asT();
-    }
-
-    /**
      * Sets the icon to be displayed by this widget.
      */
     public T setIcon (Image icon) {
@@ -125,7 +114,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
     @Override protected Dimension computeSize (float hintX, float hintY) {
         LayoutData ldata = computeLayout(hintX, hintY);
-        Dimension size = computeTextSize(ldata, new Dimension());
+        Dimension size = computeContentsSize(ldata, new Dimension());
         return ldata.bg.addInsets(size);
     }
 
@@ -149,30 +138,13 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         clearLayoutData(); // we no longer need our layout data
     }
 
-    protected void layoutText (LayoutData ldata, String text, String maxText, float hintX,
-            float hintY) {
-        if (!isVisible()) return;
-
-        ldata.wrap = resolveStyle(Style.TEXT_WRAP);
-        ldata.halign = resolveStyle(Style.HALIGN);
-        ldata.valign = resolveStyle(Style.VALIGN);
-        if (text.length() > 0) {
-            TextFormat format = Style.createTextFormat(this);
-            if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
-            // TODO: should we do something with a y-hint?
-            ldata.text = PlayN.graphics().layoutText(text, format);
-            if (maxText != null && maxText.length() > 0)
-                ldata.maxText = PlayN.graphics().layoutText(maxText, format);
-        }
-        if (_icon != null) {
-            ldata.iconPos = resolveStyle(Style.ICON_POS);
-            ldata.iconGap = resolveStyle(Style.ICON_GAP);
-        }
+    protected LayoutData createLayoutData () {
+        return new LayoutData();
     }
 
     protected LayoutData computeLayout (float hintX, float hintY) {
         if (_ldata != null) return _ldata;
-        _ldata = new LayoutData();
+        _ldata = createLayoutData();
 
         // determine our background
         Background bg = resolveStyle(Style.BACKGROUND);
@@ -180,16 +152,36 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         hintY -= bg.height();
         _ldata.bg = bg;
 
-        // layout our text
-        layoutText(_ldata, text.get(), _maxText, hintX, hintY);
+        // layout our text and icon
+        layoutContents(_ldata, hintX, hintY);
 
         return _ldata;
     }
 
-    protected Dimension computeTextSize (LayoutData ldata, Dimension size) {
-        if (ldata.maxText != null) {
-            size.width += ldata.maxText.width();
-            size.height += ldata.maxText.height();
+    protected void layoutContents (LayoutData ldata, float hintX, float hintY) {
+        if (!isVisible()) return;
+
+        ldata.wrap = resolveStyle(Style.TEXT_WRAP);
+        ldata.halign = resolveStyle(Style.HALIGN);
+        ldata.valign = resolveStyle(Style.VALIGN);
+
+        String curtext = text.get();
+        if (curtext != null && curtext.length() > 0) {
+            TextFormat format = Style.createTextFormat(this);
+            if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
+            // TODO: should we do something with a y-hint?
+            ldata.text = PlayN.graphics().layoutText(curtext, format);
+        }
+
+        if (_icon != null) {
+            ldata.iconPos = resolveStyle(Style.ICON_POS);
+            ldata.iconGap = resolveStyle(Style.ICON_GAP);
+        }
+    }
+
+    protected Dimension computeContentsSize (LayoutData ldata, Dimension size) {
+        if (_constraint instanceof Constraints.TextConstraint) {
+            ((Constraints.TextConstraint)_constraint).addTextSize(size, ldata.text);
         } else if (ldata.text != null) {
             size.width += ldata.text.width();
             size.height += ldata.text.height();
@@ -293,7 +285,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public int iconGap;
         public Background bg;
     }
-
 
     protected Background.Instance _bginst;
     protected LayoutData _ldata;

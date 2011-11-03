@@ -8,6 +8,9 @@ package tripleplay.ui;
 import playn.core.Key;
 import playn.core.Keyboard;
 import playn.core.Layer;
+import playn.core.PlayN;
+import playn.core.TextFormat;
+import playn.core.TextLayout;
 
 import pythagoras.f.Point;
 
@@ -72,11 +75,11 @@ public class Field extends TextWidget<Field>
         // past a space, layoutText will trim that space before getting the width. Adding in a 'b'
         // and subtracting it out later will get the width with spaces. Why 'b'? It's my favorite
         // letter, yo.
-        LayoutData withBLayout = new LayoutData();
-        layoutText(withBLayout, text.get().substring(0, cursor) + "b", null, 0, 0);
-        LayoutData bLayout = new LayoutData();
-        layoutText(bLayout, "b", null, 0, 0);
-        return withBLayout.text.width() - bLayout.text.width() - 1;
+        TextFormat format = Style.createTextFormat(this);
+        String withB = text.get().substring(0, cursor) + "b";
+        TextLayout withBL = PlayN.graphics().layoutText(withB, format);
+        TextLayout bL = PlayN.graphics().layoutText("b", format);
+        return withBL.width() - bL.width() - 1;
     }
 
     protected class FieldListener extends Keyboard.Adapter {

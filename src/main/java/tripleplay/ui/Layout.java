@@ -15,7 +15,17 @@ import pythagoras.f.Dimension;
 public abstract class Layout
 {
     /** An abstract base class for all layout constraints. */
-    public static interface Constraint {}
+    public static abstract class Constraint {
+        /** Called by an element when it is configured with a constraint. */
+        public void setElement (Element<?> elem) {
+            // nothing needed by default
+        }
+
+        /** Allows a layout constraint to adjust an element's preferred size. */
+        public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
+            // no adjustments by default
+        }
+    }
 
     /**
      * Computes and returns the size needed to arrange children of the supplied elements according

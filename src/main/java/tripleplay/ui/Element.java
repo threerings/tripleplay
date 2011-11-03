@@ -209,6 +209,7 @@ public abstract class Element<T extends Element<T>>
      * @return this element for call chaining.
      */
     public T setConstraint (Layout.Constraint constraint) {
+        if (constraint != null) constraint.setElement(this);
         _constraint = constraint;
         return asT();
     }
@@ -354,7 +355,10 @@ public abstract class Element<T extends Element<T>>
      * direction to the specified height.
      */
     protected IDimension preferredSize (float hintX, float hintY) {
-        if (_preferredSize == null) _preferredSize = computeSize(hintX, hintY);
+        if (_preferredSize == null) {
+            _preferredSize = computeSize(hintX, hintY);
+            if (_constraint != null) _constraint.adjustPreferredSize(_preferredSize, hintX, hintY);
+        }
         return _preferredSize;
     }
 

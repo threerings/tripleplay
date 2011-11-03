@@ -5,13 +5,15 @@
 
 package tripleplay.ui;
 
+import playn.core.Font;
 import playn.core.Image;
 import playn.core.PlayN;
 
 import pythagoras.f.IRectangle;
+import pythagoras.f.MathUtil;
 import pythagoras.f.Rectangle;
 
-import react.Functions;
+import react.Function;
 import react.Values;
 
 /**
@@ -30,6 +32,8 @@ public class MiscPage implements WidgetDemo.Page
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
         Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000, 5)));
+
+        Font fixedFont = PlayN.graphics().createFont("Fixed", Font.Style.PLAIN, 16);
 
         Button toggle;
         Slider slider;
@@ -60,13 +64,15 @@ public class MiscPage implements WidgetDemo.Page
                     setIcon(squares, getIBounds(3))),
             // TODO: move this to a separate slider page
             new Group(AxisLayout.vertical()).add(
-                slider = new Slider(0, -1, 1),
-                sliderValue = new Label("0")),
+                slider = new Slider(0, -100, 100),
+                sliderValue = new Label("0").
+                    setConstraint(Constraints.minSize("+000")).
+                    setStyles(Style.HALIGN.right, Style.FONT.is(fixedFont))),
             new Field("Existing text"));
 
         Values.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
 
-        slider.value.map(Functions.TO_STRING).connect(sliderValue.text.slot());
+        slider.value.map(FORMATTER).connect(sliderValue.text.slot());
 
         return iface;
     }
@@ -75,6 +81,12 @@ public class MiscPage implements WidgetDemo.Page
         final float iwidth = 16, iheight = 16;
         return new Rectangle(index*iwidth, 0, iwidth, iheight);
     }
+
+    protected Function<Float,String> FORMATTER = new Function<Float,String>() {
+        public String apply (Float value) {
+            return MathUtil.toString(value, 0);
+        }
+    };
 
     protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
     protected static final String TEXT2 = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.";

@@ -47,7 +47,7 @@ public abstract class AxisLayout extends Layout
     };
 
     /** Defines axis layout constraints. */
-    public static final class Constraint implements Layout.Constraint {
+    public static final class Constraint extends Layout.Constraint {
         public final boolean stretch;
         public final float weight;
 
@@ -229,8 +229,8 @@ public abstract class AxisLayout extends Layout
     }
 
     protected static Constraint constraint (Element<?> elem) {
-        Constraint c = (Constraint)elem.constraint();
-        return (c == null) ? UNSTRETCHED : c;
+        Layout.Constraint c = elem.constraint();
+        return (c instanceof Constraint) ? (Constraint)c : UNSTRETCHED;
     }
 
     protected static class Metrics {
