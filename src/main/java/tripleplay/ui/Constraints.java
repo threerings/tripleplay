@@ -120,7 +120,7 @@ public class Constraints
      * needed to accommodate the supplied template text string. This is useful for configuring the
      * size of text widgets to be that of a largest-possible value.
      */
-    public static Layout.Constraint fixSize (String text) {
+    public static Layout.Constraint fixedSize (String text) {
         return new TemplateTextConstraint(text) {
             @Override protected void addTextSize (
                 Dimension tsize, TextLayout layout, TextLayout tmplLayout) {
