@@ -15,41 +15,50 @@ import pythagoras.f.IDimension;
 public class TableLayout extends Layout
 {
     /** The default column configuration. */
-    public static final Column COL = new Column(Style.HAlign.CENTER, false, false);
+    public static final Column COL = new Column(Style.HAlign.CENTER, false, false, 0);
 
     /** A configurator for a table column. */
     public static class Column {
-        protected Column (Style.HAlign halign, boolean fixed, boolean stretch) {
+        protected Column (Style.HAlign halign, boolean fixed, boolean stretch, float minWidth) {
             _halign = halign;
             _fixed = fixed;
             _stretch = stretch;
+            _minWidth = minWidth;
         }
 
         /** Configures this column as left-aligned. */
         public Column alignLeft () {
-            return new Column(Style.HAlign.LEFT, _fixed, _stretch);
+            return new Column(Style.HAlign.LEFT, _fixed, _stretch, _minWidth);
         }
 
         /** Configures this column as right-aligned. */
         public Column alignRight () {
-            return new Column(Style.HAlign.RIGHT, _fixed, _stretch);
+            return new Column(Style.HAlign.RIGHT, _fixed, _stretch, _minWidth);
         }
 
         /** Configures this column's width as fixed to the width of its widest element. By default
          * columns are 'free' and may be configured as wider than their default to accommodate
          * excess width available to the table. */
         public Column fixed () {
-            return new Column(_halign, true, _stretch);
+            return new Column(_halign, true, _stretch, _minWidth);
         }
 
         /** Configures this column to stretch the width of its elements to the column width. By
          * default elements are configured to their preferred width. */
         public Column stretch () {
-            return new Column(_halign, _fixed, true);
+            return new Column(_halign, _fixed, true, _minWidth);
+        }
+
+        /** Configures the minimum width of this column. This column will not be allowed to shrink
+         * below its minimum width unless the total table width is insufficient to satisfy the
+         * minimum width requirements of all of its columns. */
+        public Column minWidth (float minWidth) {
+            return new Column(_halign, _fixed, _stretch, minWidth);
         }
 
         protected final Style.HAlign _halign;
         protected final boolean _fixed, _stretch;
+        protected final float _minWidth;
     }
 
     /**
@@ -125,6 +134,11 @@ public class TableLayout extends Layout
         Metrics metrics = new Metrics();
         metrics.columnWidths = new float[columns];
         metrics.rowHeights = new float[rows];
+
+        // note the minimum width constraints
+        for (int ii = 0; ii < columns; ii++) {
+            metrics.columnWidths[ii] = _columns[ii]._minWidth;
+        }
 
         int row = 0, col = 0;
         float maxrh = 0;

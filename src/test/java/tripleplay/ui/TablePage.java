@@ -18,9 +18,11 @@ public class TablePage implements WidgetDemo.Page
 
     public Group createInterface () {
         TableLayout main = new TableLayout(COL.stretch(), COL).gaps(15, 15);
-        TableLayout aligndemo = new TableLayout(
+        TableLayout alignDemo = new TableLayout(
             COL.alignLeft(), COL.alignRight(), COL.stretch()).gaps(5, 5);
-        TableLayout fixeddemo = new TableLayout(COL.fixed(), COL, COL.stretch()).gaps(5, 5);
+        TableLayout fixedDemo = new TableLayout(COL.fixed(), COL, COL.stretch()).gaps(5, 5);
+        TableLayout minWidthDemo = new TableLayout(
+            COL.minWidth(100), COL.minWidth(100).stretch(), COL).gaps(5, 5);
 
         Styles greyBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 5)));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
@@ -33,7 +35,7 @@ public class TablePage implements WidgetDemo.Page
                 new Label("Upper left"), new Label("Upper right"),
                 new Label("Lower left"), new Label("Lower right")),
 
-            new Group(aligndemo, greenBg).add(
+            new Group(alignDemo, greenBg).add(
                 new Button("Foo"),
                 new Button("Bar"),
                 new Button("Baz"),
@@ -41,13 +43,21 @@ public class TablePage implements WidgetDemo.Page
                 new Button("Barzle"),
                 new Button("Bazzle")),
 
-            new Group(fixeddemo, greenBg).add(
+            new Group(fixedDemo, greenBg).add(
                 new Button("Fixed"),
                 new Button("Free"),
                 new Button("Stretch+free"),
                 new Button("Fixed"),
                 new Button("Free"),
-                new Button("Stretch+free")));
+                new Button("Stretch+free")),
+
+            new Group(minWidthDemo, greenBg).add(
+                new Button("Min"),
+                new Button("M+stretch"),
+                new Button("Free"),
+                new Button("Min"),
+                new Button("M+stretch"),
+                new Button("Free")));
 
         return iface;
     }
