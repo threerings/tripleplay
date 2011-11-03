@@ -10,7 +10,6 @@ import playn.core.Image;
 import playn.core.PlayN;
 
 import pythagoras.f.IRectangle;
-import pythagoras.f.MathUtil;
 import pythagoras.f.Rectangle;
 
 import react.Function;
@@ -66,7 +65,7 @@ public class MiscPage implements WidgetDemo.Page
             new Group(AxisLayout.vertical()).add(
                 slider = new Slider(0, -100, 100),
                 sliderValue = new Label("0").
-                    setConstraint(Constraints.minSize("+000")).
+                    setConstraint(Constraints.minSize("-000")).
                     setStyles(Style.HALIGN.right, Style.FONT.is(fixedFont))),
             new Field("Existing text"));
 
@@ -84,7 +83,7 @@ public class MiscPage implements WidgetDemo.Page
 
     protected Function<Float,String> FORMATTER = new Function<Float,String>() {
         public String apply (Float value) {
-            return MathUtil.toString(value, 0);
+            return String.valueOf(value.intValue());
         }
     };
 
