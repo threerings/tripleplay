@@ -16,6 +16,7 @@ import pythagoras.f.Dimension;
 import pythagoras.f.FloatMath;
 import pythagoras.f.IDimension;
 
+import tripleplay.ui.bgs.BeveledBackground;
 import tripleplay.ui.bgs.SolidBackground;
 
 /**
@@ -31,14 +32,14 @@ public abstract class Background
      * Creates a solid background of the specified color, with no insets.
      */
     public static Background solid (int color) {
-        return new SolidBackground(color, 0, 0, 0, 0);
+        return solid(color, 0, 0, 0, 0);
     }
 
     /**
      * Creates a solid background of the specified color and (uniform) insets.
      */
     public static Background solid (int color, float inset) {
-        return new SolidBackground(color, inset, inset, inset, inset);
+        return solid(color, inset, inset, inset, inset);
     }
 
     /**
@@ -46,6 +47,28 @@ public abstract class Background
      */
     public static Background solid (int color, float top, float right, float bottom, float left) {
         return new SolidBackground(color, top, right, bottom, left);
+    }
+
+    /**
+     * Creates a beveled background with the specified colors and no insets.
+     */
+    public static Background beveled (int bgColor, int ulColor, int brColor) {
+        return beveled(bgColor, ulColor, brColor, 0, 0, 0, 0);
+    }
+
+    /**
+     * Creates a beveled background with the specified colors and uniform insets.
+     */
+    public static Background beveled (int bgColor, int ulColor, int brColor, float inset) {
+        return beveled(bgColor, ulColor, brColor, inset, inset, inset, inset);
+    }
+
+    /**
+     * Creates a beveled background with the specified colors and insets.
+     */
+    public static Background beveled (int bgColor, int ulColor, int brColor,
+                                      float top, float right, float bottom, float left) {
+        return new BeveledBackground(bgColor, ulColor, brColor, top, left, bottom, right);
     }
 
     /** The insets of this background. */
