@@ -5,26 +5,17 @@
 
 package tripleplay.ui;
 
-import pythagoras.f.Dimension;
-
-import react.Signal;
-import react.SignalView;
-
 /**
  * A text widget that provides button-like behavior.
  */
-public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextWidget<T>
-    implements Clickable<T>
+public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextWidget<T>
 {
-    @Override public SignalView<T> clicked () {
-        return _clicked;
-    }
-
     @Override protected void onPointerStart (float x, float y) {
         super.onPointerStart(x, y);
         if (!isEnabled()) return;
         set(Flag.SELECTED, true);
         invalidate();
+        onPress();
     }
 
     @Override protected void onPointerDrag (float x, float y) {
@@ -39,14 +30,22 @@ public class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextW
     @Override protected void onPointerEnd (float x, float y) {
         super.onPointerEnd(x, y);
         // we don't check whether the supplied coordinates are in our bounds or not because only
-        // the drag changes result in changes to the button's visualization, and we want to behave
+        // the drag changes cause changes to the button's visualization, and we want to behave
         // based on what the user sees
         if (isSelected()) {
             set(Flag.SELECTED, false);
             invalidate();
-            _clicked.emit(asT()); // emit a click event
+            onClick();
         }
     }
 
-    protected final Signal<T> _clicked = Signal.create();
+    /** Called when the mouse is clicked on this widget. */
+    protected void onPress () {
+        // nada by default
+    }
+
+    /** Called when the mouse is pressed and released over this widget. */
+    protected void onClick () {
+        // nada by default
+    }
 }
