@@ -11,7 +11,7 @@ object TriplePlayBuild extends Build {
   lazy val tripleplay = locals.addDeps(Project(
     "tripleplay", file("."), settings = Defaults.defaultSettings ++ Seq(
       organization := "com.threerings",
-      version      := "1.0-SNAPSHOT",
+      version      := "1.1-SNAPSHOT",
       name         := "tripleplay",
       crossPaths   := false,
       scalaVersion := "2.9.0-1",
