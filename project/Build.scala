@@ -11,10 +11,10 @@ object TriplePlayBuild extends Build {
   lazy val tripleplay = locals.addDeps(Project(
     "tripleplay", file("."), settings = Defaults.defaultSettings ++ Seq(
       organization := "com.threerings",
-      version      := "1.1-SNAPSHOT",
       name         := "tripleplay",
+      version      := "1.1-SNAPSHOT",
       crossPaths   := false,
-      scalaVersion := "2.9.0-1",
+      scalaVersion := "2.9.1",
 
       javacOptions ++= Seq("-Xlint", "-Xlint:-serial", "-source", "1.6", "-target", "1.6"),
       fork in Compile := true,
