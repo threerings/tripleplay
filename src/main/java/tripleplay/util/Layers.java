@@ -44,7 +44,7 @@ public class Layers
         if (l instanceof Layer.HasSize) {
             Layer.HasSize lhs = (Layer.HasSize) l;
             bounds.add(
-                Layer.Util.layerToParent(l, root, loc.x + lhs.width(), loc.y + lhs.height()));
+                Layer.Util.layerToParent(l, root, t.tx() + lhs.width(), t.ty() + lhs.height()));
         }
 
         if (l instanceof GroupLayer) {
