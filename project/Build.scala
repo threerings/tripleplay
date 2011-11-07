@@ -3,9 +3,9 @@ import Keys._
 
 object TriplePlayBuild extends Build {
   val locals = com.samskivert.condep.Depends(
-    ("react",      null,  "com.threerings" % "react" % "1.1-SNAPSHOT"),
-    ("playn",     "core", "com.googlecode.playn" % "playn-core" % "1.0-SNAPSHOT"),
-    ("playn",     "java", "com.googlecode.playn" % "playn-java" % "1.0-SNAPSHOT" % "test")
+    ("react",      null,  "com.threerings" % "react" % "1.1"),
+    ("playn",     "core", "com.googlecode.playn" % "playn-core" % "1.0"),
+    ("playn",     "java", "com.googlecode.playn" % "playn-java" % "1.0" % "test")
   )
 
   lazy val tripleplay = locals.addDeps(Project(
