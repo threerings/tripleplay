@@ -32,19 +32,24 @@ public class Layers
      */
     protected static void addBounds (Layer root, Layer l, Rectangle bounds)
     {
-        Transform t = l.transform();
-        Point loc = Layer.Util.layerToParent(l, root, t.tx(), t.ty());
-        if (l == root) {
-            // initialize bounds
-            bounds.setLocation(loc);
-        } else {
-            bounds.add(loc);
-        }
-
+        float w = 0, h = 0;
         if (l instanceof Layer.HasSize) {
             Layer.HasSize lhs = (Layer.HasSize) l;
-            bounds.add(
-                Layer.Util.layerToParent(l, root, t.tx() + lhs.width(), t.ty() + lhs.height()));
+            w = lhs.width();
+            h = lhs.height();
+        }
+
+        if (l == root) {
+            // initialize bounds
+            bounds.setBounds(-l.originX(), -l.originY(), w, h);
+        } else {
+            // grow bounds
+            Transform t = l.transform();
+            Point loc = Layer.Util.layerToParent(l, root, t.tx(), t.ty());
+            bounds.add(loc);
+            if (w != 0 || h != 0) {
+                bounds.add(Layer.Util.layerToParent(l, root, t.tx() + w, t.ty() + h));
+            }
         }
 
         if (l instanceof GroupLayer) {
