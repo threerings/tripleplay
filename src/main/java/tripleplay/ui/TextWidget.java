@@ -165,7 +165,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         ldata.halign = resolveStyle(Style.HALIGN);
         ldata.valign = resolveStyle(Style.VALIGN);
 
-        String curtext = text.get();
+        String curtext = getLayoutText();
         if (curtext != null && curtext.length() > 0) {
             TextFormat format = Style.createTextFormat(this);
             if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
@@ -177,6 +177,13 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             ldata.iconPos = resolveStyle(Style.ICON_POS);
             ldata.iconGap = resolveStyle(Style.ICON_GAP);
         }
+    }
+
+    /**
+     * Returns the text used to compute our layout.
+     */
+    protected String getLayoutText () {
+        return text.get();
     }
 
     protected Dimension computeContentsSize (LayoutData ldata, Dimension size) {

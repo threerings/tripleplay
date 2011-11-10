@@ -44,7 +44,8 @@ public class Field extends TextWidget<Field>
         Root root = root();
         if (root == null) return;
         Point parentEvent = new Point(x, y);
-        float tLayerX = Layer.Util.parentToLayer(_tlayer, parentEvent, parentEvent).x();
+        float tLayerX = (_tlayer == null) ? 0 :
+            Layer.Util.parentToLayer(_tlayer, parentEvent, parentEvent).x();
         int cursor = 0;
         while (cursor < text.get().length() && getCursorX(cursor) < tLayerX) cursor++;
         root._iface._focused.update((_listener = new FieldListener(cursor)));
@@ -56,7 +57,7 @@ public class Field extends TextWidget<Field>
             }
         }).once();
 
-        invalidate();// Redraw with our cursor
+        invalidate(); // Redraw with our cursor
     }
 
     @Override protected void renderLayout (LayoutData ldata, float x, float y, float width,
@@ -82,8 +83,14 @@ public class Field extends TextWidget<Field>
         return withBL.width() - bL.width() - 1;
     }
 
-    protected class FieldListener extends Keyboard.Adapter {
+    @Override protected String getLayoutText () {
+        String ltext = text.get();
+        // we always want non-empty text so that we force ourselves to always have a text layer and
+        // sane dimensions even if the text field contains no text
+        return (ltext == null || ltext.length() == 0) ? " " : ltext;
+    }
 
+    protected class FieldListener extends Keyboard.Adapter {
         public FieldListener(int cursor) {
             _cursor = cursor;
         }
