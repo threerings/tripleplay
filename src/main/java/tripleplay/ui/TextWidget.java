@@ -252,12 +252,19 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float availWidth = width-usedWidth, availHeight = height-usedHeight;
             float twidth = Math.min(availWidth, ldata.text.width());
             float theight = Math.min(availHeight, ldata.text.height());
-            if (twidth > 0 && theight > 0) {
-                _tlayer = prepareCanvas(_tlayer, twidth, theight);
-                _tlayer.canvas().drawText(ldata.text, 0, 0);
-                _tlayer.setTranslation(tx + ldata.halign.offset(twidth, availWidth),
-                                       ty + ldata.valign.offset(theight, availHeight));
-            }
+            createTextLayer(ldata, tx, ty, twidth, theight, availWidth, availHeight);
+        }
+    }
+
+    // this is broken out so that subclasses can extend this action
+    protected void createTextLayer (LayoutData ldata, float tx, float ty,
+                                    float twidth, float theight,
+                                    float availWidth, float availHeight) {
+        if (twidth > 0 && theight > 0) {
+            _tlayer = prepareCanvas(_tlayer, twidth, theight);
+            _tlayer.canvas().drawText(ldata.text, 0, 0);
+            _tlayer.setTranslation(tx + ldata.halign.offset(twidth, availWidth),
+                                   ty + ldata.valign.offset(theight, availHeight));
         }
     }
 

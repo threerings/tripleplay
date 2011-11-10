@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.CanvasLayer;
 import playn.core.Key;
 import playn.core.Keyboard;
 import playn.core.Layer;
@@ -12,6 +13,7 @@ import playn.core.PlayN;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 
+import pythagoras.f.MathUtil;
 import pythagoras.f.Point;
 
 import react.Signal;
@@ -43,31 +45,35 @@ public class Field extends TextWidget<Field>
         super.onPointerEnd(x, y);
         Root root = root();
         if (root == null) return;
+
+        // compute the position in the text that was clicked and start the cursor there
         Point parentEvent = new Point(x, y);
-        float tLayerX = (_tlayer == null) ? 0 :
+        float clickX = (_tlayer == null) ? 0 :
             Layer.Util.parentToLayer(_tlayer, parentEvent, parentEvent).x();
         int cursor = 0;
-        while (cursor < text.get().length() && getCursorX(cursor) < tLayerX) cursor++;
+        float cx = 0;
+        while (cursor < text.get().length()) {
+            float ncx = getCursorX(cursor);
+            if (clickX > ncx) cursor++;
+            else {
+                if (clickX - cx < ncx - clickX) cursor--;
+                break;
+            }
+            cx = ncx;
+        }
+        moveCursor(cursor);
+
+        // wire up a focus listener
         root._iface._focused.update((_listener = new FieldListener(cursor)));
         root._iface._focused.connect(new UnitSlot() {
             @Override public void onEmit () {
                 _listener = null;
+                _clayer.setVisible(false);
                 defocused.emit(Field.this);
-                invalidate();
             }
         }).once();
 
-        invalidate(); // Redraw with our cursor
-    }
-
-    @Override protected void renderLayout (LayoutData ldata, float x, float y, float width,
-        float height) {
-        super.renderLayout(ldata, x, y, width, height);
-        if (_tlayer == null || _listener == null ) return;
-
-        float cursorX = getCursorX(_listener._cursor);
-        _tlayer.canvas().setStrokeWidth(1).setStrokeColor(0xFF000000).
-            drawLine(cursorX, 0, cursorX, _tlayer.height());
+        _clayer.setVisible(true);
     }
 
     protected float getCursorX (int cursor) {
@@ -88,6 +94,46 @@ public class Field extends TextWidget<Field>
         // we always want non-empty text so that we force ourselves to always have a text layer and
         // sane dimensions even if the text field contains no text
         return (ltext == null || ltext.length() == 0) ? " " : ltext;
+    }
+
+    @Override protected void createTextLayer (LayoutData ldata, float tx, float ty,
+                                              float twidth, float theight,
+                                              float availWidth, float availHeight) {
+        super.createTextLayer(ldata, tx, ty, twidth, theight, availWidth, availHeight);
+
+        // (re)create our cursor layer if needed
+        int cheight = MathUtil.iceil(theight);
+        if (_cx != tx || _cy != ty || _clayer == null || _clayer.canvas().height() != cheight) {
+            _cx = tx; _cy = ty; // save these for later
+            boolean wasVisible = (_clayer != null) && _clayer.visible();
+            if (_clayer != null) _clayer.destroy();
+            _clayer = PlayN.graphics().createCanvasLayer(2, cheight);
+            _clayer.canvas().setFillColor(Styles.resolveStyle(this, Style.COLOR)).
+                fillRect(0, 0, 2, theight);
+            _clayer.setVisible(wasVisible);
+            layer.add(_clayer);
+        }
+
+        // force the cursor to be repositioned
+        int cursor = _cursor;
+        _cursor = -1;
+        moveCursor(cursor);
+    }
+
+    protected void moveCursor (int pos) {
+        int ncursor = Math.max(0, Math.min(text.get().length(), pos));
+        if (ncursor != _cursor) {
+            _cursor = ncursor;
+            float cx, cy;
+            if (_tlayer != null) {
+                cx = _tlayer.transform().tx();
+                cy = _tlayer.transform().ty();
+            } else {
+                cx = _cx;
+                cy = _cy;
+            }
+            _clayer.setTranslation(cx + getCursorX(_cursor), cy);
+        }
     }
 
     protected class FieldListener extends Keyboard.Adapter {
@@ -139,17 +185,11 @@ public class Field extends TextWidget<Field>
             _cursor++;
         }
 
-        protected void moveCursor (int pos) {
-            int ncursor = Math.max(0, Math.min(text.get().length(), pos));
-            if (ncursor != _cursor) {
-                _cursor = ncursor;
-                invalidate();
-            }
-        }
-
-        protected int _cursor;
         protected final String _initial = text.get();
     };
 
     protected FieldListener _listener;
+    protected CanvasLayer _clayer;
+    protected float _cx, _cy;
+    protected int _cursor;
 }
