@@ -65,7 +65,7 @@
   </target>
 
   <target name="widget-demo" depends="compile" description="Runs widget demo app.">
-    <java fork="true" classpathref="test.classpath" classname="com.threerings.ui.WidgetDemo"/>
+    <java fork="true" classpathref="test.classpath" classname="tripleplay.ui.WidgetDemo"/>
   </target>
 
   <target name="package" depends="test" description="Builds jar files.">
