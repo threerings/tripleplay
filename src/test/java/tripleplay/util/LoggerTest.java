@@ -21,7 +21,7 @@ public class LoggerTest
         StringWriter buf = configWriterImpl();
         Logger log = new Logger("test");
         log.info("This is a test.");
-        assertEquals("test: This is a test.\n", buf.toString());
+        assertEquals("test: This is a test." + NEWLINE, buf.toString());
     }
 
     @Test
