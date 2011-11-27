@@ -171,6 +171,17 @@ public abstract class Animator
     }
 
     /**
+     * Sets the specified layer's depth to the specified value.
+     */
+    public Animation.Action setDepth (final Layer layer, final float depth) {
+        return action(new Runnable() {
+            public void run () {
+                layer.setDepth(depth);
+            }
+        });
+    }
+
+    /**
      * Causes this animator to delay the start of any subsequently registered animations until all
      * currently registered animations are complete.
      */
