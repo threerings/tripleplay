@@ -7,6 +7,7 @@ package tripleplay.util;
 
 import playn.core.GroupLayer;
 import playn.core.Layer;
+import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 import pythagoras.f.Transform;
@@ -16,6 +17,24 @@ import pythagoras.f.Transform;
  */
 public class Layers
 {
+    /**
+     * Transforms a point from one Layer's coordinate system to another's
+     */
+    public static Point transform (IPoint p, Layer from, Layer to, Point result)
+    {
+        Layer.Util.layerToScreen(from, p, result);
+        Layer.Util.screenToLayer(to, result, result);
+        return result;
+    }
+
+    /**
+     * Transforms a point from one Layer's coordinate system to another's
+     */
+    public static Point transform (IPoint p, Layer from, Layer to)
+    {
+        return transform(p, from, to, new Point());
+    }
+
     /**
      * Computes the total bounds of the layer hierarchy rooted at <code>root</code>.
      * The returned Rectangle will be in <code>root</code>'s coordinate system.
