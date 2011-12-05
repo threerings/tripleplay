@@ -51,22 +51,20 @@ public class Layers
      */
     protected static void addBounds (Layer root, Layer l, Rectangle bounds)
     {
-        float w = 0, h = 0;
-        if (l instanceof Layer.HasSize) {
-            Layer.HasSize lhs = (Layer.HasSize) l;
-            w = lhs.width();
-            h = lhs.height();
-        }
-
         if (l == root) {
             // initialize bounds
-            bounds.setBounds(-l.originX(), -l.originY(), w, h);
-        } else {
+            bounds.setBounds(-l.originX(), -l.originY(), 0, 0);
+        }
+
+        if (l instanceof Layer.HasSize) {
+            Layer.HasSize lhs = (Layer.HasSize) l;
+            float w = lhs.width();
+            float h = lhs.height();
+
             // grow bounds
-            Transform t = l.transform();
-            Point loc = Layer.Util.layerToParent(l, root, t.tx(), t.ty());
-            bounds.add(loc);
             if (w != 0 || h != 0) {
+                Transform t = l.transform();
+                bounds.add(Layer.Util.layerToParent(l, root, t.tx(), t.ty()));
                 bounds.add(Layer.Util.layerToParent(l, root, t.tx() + w, t.ty() + h));
             }
         }
