@@ -15,14 +15,13 @@ public class Stylesheet
 {
     /** Builds stylesheets, obtain via {@link #builder}. */
     public static class Builder {
-        /** Adds styles for the supplied element class.
-         * @throws IllegalStateException if styles already exist for said class.
+        /** Adds styles for the supplied element class. If styles exist for said class, the
+         * supplied styles will be merged with the existing styles (with the new styles taking
+         * precedence).
          * @throws NullPointerException if styles are added after {@link #create} is called. */
         public Builder add (Class<?> eclass, Styles styles) {
-            Styles ostyles = _styles.put(eclass, styles);
-            if (ostyles != null) {
-                throw new IllegalStateException("Already have style mappings for " + eclass);
-            }
+            Styles ostyles = _styles.get(eclass);
+            _styles.put(eclass, ostyles == null ? styles : ostyles.merge(styles));
             return this;
         }
 
