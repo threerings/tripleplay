@@ -53,7 +53,10 @@ public class Layers
     {
         if (l == root) {
             // initialize bounds
-            bounds.setBounds(-l.originX(), -l.originY(), 0, 0);
+            float x = l.originX();
+            float y = l.originY();
+            // avoid weird "-0, -0" rectangle origin
+            bounds.setBounds((x != 0 ? -x : 0), (y != 0 ? -y : 0), 0, 0);
         }
 
         if (l instanceof Layer.HasSize) {
