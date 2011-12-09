@@ -40,7 +40,8 @@ public class Layers
      */
     public static Rectangle totalBounds (Layer root)
     {
-        Rectangle r = new Rectangle();
+        // account for root's origin (we use 0-x rather than just -x to avoid weird -0 values)
+        Rectangle r = new Rectangle(0-root.originX(), 0-root.originY(), 0, 0);
         addBounds(root, root, r);
         return r;
     }
@@ -50,14 +51,6 @@ public class Layers
      */
     protected static void addBounds (Layer root, Layer l, Rectangle bounds)
     {
-        if (l == root) {
-            // initialize bounds
-            float x = l.originX();
-            float y = l.originY();
-            // avoid weird "-0, -0" rectangle origin
-            bounds.setBounds((x != 0 ? -x : 0), (y != 0 ? -y : 0), 0, 0);
-        }
-
         if (l instanceof Layer.HasSize) {
             Layer.HasSize lhs = (Layer.HasSize) l;
             float w = lhs.width();
