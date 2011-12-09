@@ -19,8 +19,7 @@ public class Layers
     /**
      * Transforms a point from one Layer's coordinate system to another's
      */
-    public static Point transform (IPoint p, Layer from, Layer to, Point result)
-    {
+    public static Point transform (IPoint p, Layer from, Layer to, Point result) {
         Layer.Util.layerToScreen(from, p, result);
         Layer.Util.screenToLayer(to, result, result);
         return result;
@@ -29,8 +28,7 @@ public class Layers
     /**
      * Transforms a point from one Layer's coordinate system to another's
      */
-    public static Point transform (IPoint p, Layer from, Layer to)
-    {
+    public static Point transform (IPoint p, Layer from, Layer to) {
         return transform(p, from, to, new Point());
     }
 
@@ -38,19 +36,15 @@ public class Layers
      * Computes the total bounds of the layer hierarchy rooted at <code>root</code>.
      * The returned Rectangle will be in <code>root</code>'s coordinate system.
      */
-    public static Rectangle totalBounds (Layer root)
-    {
+    public static Rectangle totalBounds (Layer root) {
         // account for root's origin (we use 0-x rather than just -x to avoid weird -0 values)
         Rectangle r = new Rectangle(0-root.originX(), 0-root.originY(), 0, 0);
         addBounds(root, root, r);
         return r;
     }
 
-    /**
-     * Helper function for totalBounds()
-     */
-    protected static void addBounds (Layer root, Layer l, Rectangle bounds)
-    {
+    /** Helper function for {@link #totalBounds}. */
+    protected static void addBounds (Layer root, Layer l, Rectangle bounds) {
         if (l instanceof Layer.HasSize) {
             Layer.HasSize lhs = (Layer.HasSize) l;
             float w = lhs.width();
