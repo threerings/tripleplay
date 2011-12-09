@@ -10,7 +10,6 @@ import playn.core.Layer;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
-import pythagoras.f.Transform;
 
 /**
  * Provides utility functions for dealing with Layers
@@ -66,9 +65,8 @@ public class Layers
 
             // grow bounds
             if (w != 0 || h != 0) {
-                Transform t = l.transform();
-                bounds.add(Layer.Util.layerToParent(l, root, t.tx(), t.ty()));
-                bounds.add(Layer.Util.layerToParent(l, root, t.tx() + w, t.ty() + h));
+                bounds.add(Layer.Util.layerToParent(l, root, 0, 0));
+                bounds.add(Layer.Util.layerToParent(l, root, w, h));
             }
         }
 
