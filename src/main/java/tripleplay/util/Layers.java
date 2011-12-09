@@ -39,28 +39,26 @@ public class Layers
     public static Rectangle totalBounds (Layer root) {
         // account for root's origin (we use 0-x rather than just -x to avoid weird -0 values)
         Rectangle r = new Rectangle(0-root.originX(), 0-root.originY(), 0, 0);
-        addBounds(root, root, r);
+        addBounds(root, root, r, new Point());
         return r;
     }
 
     /** Helper function for {@link #totalBounds}. */
-    protected static void addBounds (Layer root, Layer l, Rectangle bounds) {
+    protected static void addBounds (Layer root, Layer l, Rectangle bounds, Point scratch) {
         if (l instanceof Layer.HasSize) {
             Layer.HasSize lhs = (Layer.HasSize) l;
-            float w = lhs.width();
-            float h = lhs.height();
-
-            // grow bounds
+            float w = lhs.width(), h = lhs.height();
             if (w != 0 || h != 0) {
-                bounds.add(Layer.Util.layerToParent(l, root, 0, 0));
-                bounds.add(Layer.Util.layerToParent(l, root, w, h));
+                // grow bounds
+                bounds.add(Layer.Util.layerToParent(l, root, scratch.set(0, 0), scratch));
+                bounds.add(Layer.Util.layerToParent(l, root, scratch.set(w, h), scratch));
             }
         }
 
         if (l instanceof GroupLayer) {
             GroupLayer group = (GroupLayer) l;
             for (int ii = 0, ll = group.size(); ii < ll; ++ii) {
-                addBounds(root, group.get(ii), bounds);
+                addBounds(root, group.get(ii), bounds, scratch);
             }
         }
     }
