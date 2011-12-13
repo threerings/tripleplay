@@ -8,6 +8,8 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import pythagoras.f.Point;
+
 import playn.core.Game;
 import playn.core.GroupLayer;
 import playn.core.Keyboard;
@@ -37,17 +39,29 @@ public class Interface
                 _dispatch.addAll(_roots);
                 // dispatch to the roots in most-recently-created order as a more recently added
                 // root is probably on top. TODO - use layer depth
+                Point p = new Point();
                 for (int ii = _dispatch.size() - 1; ii >= 0; ii--) {
-                    if (_dispatch.get(ii).dispatchPointerStart(event)) {
+                    Root root = _dispatch.get(ii);
+                    // skip this root if its bounds don't contain the click
+                    root.hitToLayer(p.set(event.x(), event.y()));
+                    if (!root.contains(p.x, p.y)) continue;
+                    // if the click hit an element in this root, make it the active element
+                    if (root.dispatchPointerStart(event)) {
                         _active = _dispatch.get(ii);
                         return;
                     }
+                    // if we intersected a root, we stop our search; either roots don't overlap, in
+                    // which case further search is pointless, or they do overlap and the root we
+                    // just checked is the "highest" and its bounds contained the point, so we
+                    // dont' want to allow you to "click through" this root into another
+                    break;
                 }
                 _delegate.onPointerStart(event);
             } finally {
                 _dispatch.clear();
             }
         }
+
         @Override public void onPointerDrag (Pointer.Event event) {
             if (_active != null) {
                 _active.dispatchPointerDrag(event);
@@ -55,6 +69,7 @@ public class Interface
                 _delegate.onPointerDrag(event);
             }
         }
+
         @Override public void onPointerEnd (Pointer.Event event) {
             // Always clear focus on a click. If it's on the focused item, it'll get focus again
             _focused.update(null);
@@ -65,6 +80,7 @@ public class Interface
                 _delegate.onPointerEnd(event);
             }
         }
+
         protected Root _active;
     };
 
