@@ -250,6 +250,8 @@ public abstract class Element<T extends Element<T>>
      * hit-element-relative coordinates in the event of a hit.
      */
     protected Element<?> hitTest (Point point) {
+        // don't claim hits when we're not visible
+        if (!isVisible()) return null;
         // transform the point into our coordinate system
         point = layer.transform().inverseTransform(point, point);
         float x = point.x + layer.originX(), y = point.y + layer.originY();
