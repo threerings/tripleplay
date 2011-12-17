@@ -10,6 +10,7 @@ import playn.core.Key;
 import playn.core.Keyboard;
 import playn.core.Layer;
 import playn.core.PlayN;
+import playn.core.Pointer;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 
@@ -41,8 +42,8 @@ public class Field extends TextWidget<Field>
 
     public boolean isFocused () { return _listener != null; }
 
-    @Override protected void onPointerEnd (float x, float y) {
-        super.onPointerEnd(x, y);
+    @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
+        super.onPointerStart(event, x, y);
         Root root = root();
         if (root == null) return;
 

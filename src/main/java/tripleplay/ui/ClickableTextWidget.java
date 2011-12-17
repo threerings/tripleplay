@@ -5,21 +5,23 @@
 
 package tripleplay.ui;
 
+import playn.core.Pointer;
+
 /**
  * A text widget that provides button-like behavior.
  */
 public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextWidget<T>
 {
-    @Override protected void onPointerStart (float x, float y) {
-        super.onPointerStart(x, y);
+    @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
+        super.onPointerStart(event, x, y);
         if (!isEnabled()) return;
         set(Flag.SELECTED, true);
         invalidate();
         onPress();
     }
 
-    @Override protected void onPointerDrag (float x, float y) {
-        super.onPointerDrag(x, y);
+    @Override protected void onPointerDrag (Pointer.Event event, float x, float y) {
+        super.onPointerDrag(event, x, y);
         boolean selected = isEnabled() && contains(x, y);
         if (selected != isSelected()) {
             set(Flag.SELECTED, selected);
@@ -27,8 +29,8 @@ public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> exte
         }
     }
 
-    @Override protected void onPointerEnd (float x, float y) {
-        super.onPointerEnd(x, y);
+    @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
+        super.onPointerEnd(event, x, y);
         // we don't check whether the supplied coordinates are in our bounds or not because only
         // the drag changes cause changes to the button's visualization, and we want to behave
         // based on what the user sees

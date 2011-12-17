@@ -7,6 +7,7 @@ package tripleplay.ui;
 
 import playn.core.Canvas;
 import playn.core.CanvasLayer;
+import playn.core.Pointer;
 
 import pythagoras.f.Dimension;
 
@@ -51,18 +52,18 @@ public class Slider extends Widget<Slider>
         canvas.fillRect(thumbCenterPixel - THUMB_WIDTH / 2, 0, THUMB_WIDTH, THUMB_HEIGHT);
     }
 
-    @Override protected void onPointerStart (float x, float y) {
-        super.onPointerStart(x, y);
+    @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
+        super.onPointerStart(event, x, y);
         handlePointer(x, y);
     }
 
-    @Override protected void onPointerDrag (float x, float y) {
-        super.onPointerDrag(x, y);
+    @Override protected void onPointerDrag (Pointer.Event event, float x, float y) {
+        super.onPointerDrag(event, x, y);
         handlePointer(x, y);
     }
 
-    @Override protected void onPointerEnd (float x, float y) {
-        super.onPointerEnd(x, y);
+    @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
+        super.onPointerEnd(event, x, y);
         handlePointer(x, y);
     }
 

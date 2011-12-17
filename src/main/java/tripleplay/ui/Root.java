@@ -98,21 +98,21 @@ public class Root extends Elements<Root>
         Point p = new Point(event.x(), event.y());
         _active = hitTest(p);
         if (_active == null) return _delegate == null ? false : _delegate.handlePointerStart(event);
-        _active.onPointerStart(p.x, p.y);
+        _active.onPointerStart(event, p.x, p.y);
         return true;
     }
 
     protected void dispatchPointerDrag (Pointer.Event event) {
         if (_active != null) {
             Point p = Layer.Util.screenToLayer(_active.layer, event.x(), event.y());
-            _active.onPointerDrag(p.x, p.y);
+            _active.onPointerDrag(event, p.x, p.y);
         } else if (_delegate != null) _delegate.onPointerDrag(event);
     }
 
     protected void dispatchPointerEnd (Pointer.Event event) {
         if (_active != null) {
             Point p = Layer.Util.screenToLayer(_active.layer, event.x(), event.y());
-            _active.onPointerEnd(p.x, p.y);
+            _active.onPointerEnd(event, p.x, p.y);
             _active = null;
         } else if (_delegate != null) _delegate.onPointerEnd(event);
     }
