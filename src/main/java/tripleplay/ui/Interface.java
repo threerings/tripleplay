@@ -33,6 +33,9 @@ public class Interface
      */
     public final Pointer.Listener plistener = new Pointer.Listener() {
         @Override public void onPointerStart (Pointer.Event event) {
+            // always clear focus on a click. If it's on the focused item, it'll get focus again
+            _focused.update(null);
+
             try {
                 // copy our roots to a separate list to avoid conflicts if a root is added or
                 // removed while dispatching an event.
@@ -71,8 +74,6 @@ public class Interface
         }
 
         @Override public void onPointerEnd (Pointer.Event event) {
-            // Always clear focus on a click. If it's on the focused item, it'll get focus again
-            _focused.update(null);
             if (_active != null) {
                 _active.dispatchPointerEnd(event);
                 _active = null;
