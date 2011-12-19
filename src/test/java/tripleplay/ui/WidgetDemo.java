@@ -7,7 +7,6 @@ package tripleplay.ui;
 
 import playn.core.Game;
 import playn.core.PlayN;
-import static playn.core.PlayN.graphics;
 import playn.java.JavaPlatform;
 
 import react.UnitSlot;
@@ -18,8 +17,7 @@ import react.UnitSlot;
 public class WidgetDemo implements Game
 {
     public static void main (String[] args) {
-        JavaPlatform platform = JavaPlatform.register();
-        platform.assetManager().setPathPrefix("src/test/resources");
+        JavaPlatform.register();
         PlayN.run(new WidgetDemo());
     }
 
@@ -41,8 +39,8 @@ public class WidgetDemo implements Game
 
         // create our demo interface
         final Root root = _iface.createRoot(AxisLayout.vertical().offStretch(), rootSheet,
-                graphics().rootLayer()).
-            setSize(graphics().width(), graphics().height()).
+                                            PlayN.graphics().rootLayer()).
+            setSize(PlayN.graphics().width(), PlayN.graphics().height()).
             addStyles(Style.BACKGROUND.is(Background.solid(0xFF99CCFF, 5)), Style.VALIGN.top);
 
         Group buttons = new Group(AxisLayout.horizontal(), Style.HALIGN.left);
