@@ -10,9 +10,10 @@ javacOptions ++= Seq("-Xlint", "-Xlint:-serial", "-source", "1.6", "-target", "1
 
 fork in Compile := true
 
+// include source in our jar for GWT
 unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java"
 
-// TODO: reenable doc publishing when scaladoc doesn't choke on our code
+// disable doc publishing, TODO: reenable when scaladoc doesn't choke on our code
 publishArtifact in (Compile, packageDoc) := false
 
 // allows SBT to run junit tests
