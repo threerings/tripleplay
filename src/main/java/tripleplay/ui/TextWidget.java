@@ -165,17 +165,28 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         ldata.halign = resolveStyle(Style.HALIGN);
         ldata.valign = resolveStyle(Style.VALIGN);
 
+        if (_icon != null) {
+            ldata.iconPos = resolveStyle(Style.ICON_POS);
+            ldata.iconGap = resolveStyle(Style.ICON_GAP);
+            // remove the icon space from our hint dimensions
+            switch (ldata.iconPos) {
+            case LEFT:
+            case RIGHT:
+                hintX -= (iconWidth() + ldata.iconGap);
+                break;
+            case ABOVE:
+            case BELOW:
+                hintY -= (iconHeight() + ldata.iconGap);
+                break;
+            }
+        }
+
         String curtext = getLayoutText();
         if (curtext != null && curtext.length() > 0) {
             TextFormat format = Style.createTextFormat(this);
             if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
             // TODO: should we do something with a y-hint?
             ldata.text = PlayN.graphics().layoutText(curtext, format);
-        }
-
-        if (_icon != null) {
-            ldata.iconPos = resolveStyle(Style.ICON_POS);
-            ldata.iconGap = resolveStyle(Style.ICON_GAP);
         }
     }
 
