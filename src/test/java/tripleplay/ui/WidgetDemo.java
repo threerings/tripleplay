@@ -17,6 +17,7 @@ import react.UnitSlot;
 public class WidgetDemo implements Game
 {
     public static void main (String[] args) {
+        _mainArgs = args;
         JavaPlatform.register();
         PlayN.run(new WidgetDemo());
     }
@@ -46,7 +47,7 @@ public class WidgetDemo implements Game
         Group buttons = new Group(AxisLayout.horizontal(), Style.HALIGN.left);
         root.add(buttons);
 
-        Page[] pages = { new MiscPage(), new TablePage() };
+        Page[] pages = { new MiscPage(), new TablePage(), new LabelPage() };
         for (final Page page : pages) {
             Button tab = new Button(page.name());
             buttons.add(tab);
@@ -57,7 +58,9 @@ public class WidgetDemo implements Game
                 }
             });
         }
-        root.add(pages[0].createInterface());
+
+        int selidx = (_mainArgs.length > 0) ? Integer.parseInt(_mainArgs[0]) : 0;
+        root.add(pages[selidx].createInterface());
     }
 
     @Override // from interface Game
@@ -76,4 +79,6 @@ public class WidgetDemo implements Game
     }
 
     protected Interface _iface;
+
+    protected static String[] _mainArgs;
 }
