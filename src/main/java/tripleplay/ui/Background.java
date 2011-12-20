@@ -17,6 +17,7 @@ import pythagoras.f.FloatMath;
 import pythagoras.f.IDimension;
 
 import tripleplay.ui.bgs.BeveledBackground;
+import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.SolidBackground;
 
 /**
@@ -69,6 +70,27 @@ public abstract class Background
     public static Background beveled (int bgColor, int ulColor, int brColor,
                                       float top, float right, float bottom, float left) {
         return new BeveledBackground(bgColor, ulColor, brColor, top, left, bottom, right);
+    }
+
+    /**
+     * Creates an image background with the specified image and no insets.
+     */
+    public static Background image (Image bgimage) {
+        return image(bgimage, 0);
+    }
+
+    /**
+     * Creates an image background with the specified image and uniform insets.
+     */
+    public static Background image (Image bgimage, float inset) {
+        return image(bgimage, inset, inset, inset, inset);
+    }
+
+    /**
+     * Creates an image background with the specified image and insets.
+     */
+    public static Background image (Image bgimage, float top, float right, float bottom, float left) {
+        return new ImageBackground(bgimage, top, right, bottom, left);
     }
 
     /** The insets of this background. */
