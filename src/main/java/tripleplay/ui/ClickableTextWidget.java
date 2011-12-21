@@ -31,6 +31,8 @@ public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> exte
 
     @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
         super.onPointerEnd(event, x, y);
+        onRelease();
+
         // we don't check whether the supplied coordinates are in our bounds or not because only
         // the drag changes cause changes to the button's visualization, and we want to behave
         // based on what the user sees
@@ -43,6 +45,12 @@ public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> exte
 
     /** Called when the mouse is clicked on this widget. */
     protected void onPress () {
+        // nada by default
+    }
+
+    /** Called when the mouse is released after having been pressed on this widget. This will be
+     * called before {@link #onClick}, if the latter is called at all. */
+    protected void onRelease () {
         // nada by default
     }
 
