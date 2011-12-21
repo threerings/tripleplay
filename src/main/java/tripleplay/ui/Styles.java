@@ -87,20 +87,23 @@ public final class Styles
         return binding.get(elem);
     }
 
-   /**
-    * Returns a new instance where the supplied bindings overwrite any previous bindings for the
-    * specified styles (in the specified mode). The receiver is not modified.
-    */
-   private Styles add (Style.Mode mode, Style.Binding<?>... bindings) {
-       Binding<?>[] nbindings = new Binding<?>[bindings.length];
-       for (int ii = 0; ii < bindings.length; ii++) {
-           nbindings[ii] = newBinding(bindings[ii], mode);
-       }
-       // note that we take advantage of the fact that merge can handle unsorted bindings
-       return merge(nbindings);
-   }
+    /**
+     * Returns a new instance where the supplied bindings overwrite any previous bindings for the
+     * specified styles (in the specified mode). The receiver is not modified.
+     */
+    private Styles add (Style.Mode mode, Style.Binding<?>... bindings) {
+        if (bindings.length == 0) return this; // optimization
+        Binding<?>[] nbindings = new Binding<?>[bindings.length];
+        for (int ii = 0; ii < bindings.length; ii++) {
+            nbindings[ii] = newBinding(bindings[ii], mode);
+        }
+        // note that we take advantage of the fact that merge can handle unsorted bindings
+        return merge(nbindings);
+    }
 
-   private Styles merge (Binding<?>[] obindings) {
+    private Styles merge (Binding<?>[] obindings) {
+        if (obindings.length == 0) return this; // optimization
+
         // determine which of the to-be-merged styles also exist in our styles
         int[] dupidx = new int[obindings.length];
         int dups = 0;
