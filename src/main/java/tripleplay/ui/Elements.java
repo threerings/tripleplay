@@ -20,8 +20,8 @@ import react.Signal;
 import react.SignalView;
 
 /**
-* Contains other elements and lays them out according to a layout policy.
-*/
+ * Contains other elements and lays them out according to a layout policy.
+ */
 public abstract class Elements<T extends Elements<T>> extends Element<T>
     implements Iterable<Element<?>>
 {
