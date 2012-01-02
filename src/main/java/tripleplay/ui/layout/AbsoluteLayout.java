@@ -19,7 +19,13 @@ import tripleplay.ui.Layout;
 
 /**
  * A layout that positions elements at absolute coordinates (at either their preferred size or at a
- * manually specified size).
+ * manually specified size). Constraints are specified like so:
+ * <pre>{@code
+ * Group group = new Group(new AxisLayout()).add(
+ *     AxisLayout.at(new Label("+50+50"), 50, 50),
+ *     AxisLayout.at(new Button("100x50+25+25"), 25, 25, 100, 50)
+ * );
+ * }</pre>
  */
 public class AbsoluteLayout extends Layout
 {
