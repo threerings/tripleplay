@@ -62,6 +62,7 @@ public class LayoutPage implements WidgetDemo.Page
                     new Button("Min"),
                     new Button("M+stretch"),
                     new Button("Free"))),
+
             new Group(new AbsoluteLayout(), greyBg).add(
                 new Label("Absolute Layout").setConstraint(AbsoluteLayout.at(10, 10)),
                 new Label("+50+50").setConstraint(AbsoluteLayout.at(50, 50)),
