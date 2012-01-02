@@ -3,10 +3,15 @@
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
-package tripleplay.ui;
+package tripleplay.ui.layout;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
+
+import tripleplay.ui.Element;
+import tripleplay.ui.Elements;
+import tripleplay.ui.Layout;
+import tripleplay.ui.Style;
 
 /**
  * Lays out elements in a horizontal or vertical group. Separate policies are enforced for on-axis
@@ -70,20 +75,19 @@ public abstract class AxisLayout extends Layout
 
         @Override public void layout (Elements<?> elems,
                                       float left, float top, float width, float height) {
-            Style.HAlign halign = elems.resolveStyle(Style.HALIGN);
-            Style.VAlign valign = elems.resolveStyle(Style.VALIGN);
+            Style.HAlign halign = resolveStyle(elems, Style.HALIGN);
+            Style.VAlign valign = resolveStyle(elems, Style.VALIGN);
             Metrics m = computeMetrics(elems, width, height, true);
             float stretchHeight = Math.max(0, height - m.gaps(_gap) - m.fixHeight);
             float y = top + ((m.stretchers > 0) ? 0 :
                              valign.offset(m.fixHeight + m.gaps(_gap), height));
             for (Element<?> elem : elems) {
                 if (!elem.isVisible()) continue;
-                IDimension psize = elem.preferredSize(width, height); // will be cached
+                IDimension psize = preferredSize(elem, width, height); // will be cached
                 Constraint c = constraint(elem);
                 float ewidth = _offPolicy.computeSize(psize.width(), m.maxWidth, width);
                 float eheight = c.computeSize(psize.height(), m.totalWeight, stretchHeight);
-                elem.setSize(ewidth, eheight);
-                elem.setLocation(left + halign.offset(ewidth, width), y);
+                setBounds(elem, left + halign.offset(ewidth, width), y, ewidth, eheight);
                 y += (eheight + _gap);
             }
         }
@@ -98,20 +102,19 @@ public abstract class AxisLayout extends Layout
 
         @Override public void layout (Elements<?> elems,
                                       float left, float top, float width, float height) {
-            Style.HAlign halign = elems.resolveStyle(Style.HALIGN);
-            Style.VAlign valign = elems.resolveStyle(Style.VALIGN);
+            Style.HAlign halign = resolveStyle(elems, Style.HALIGN);
+            Style.VAlign valign = resolveStyle(elems, Style.VALIGN);
             Metrics m = computeMetrics(elems, width, height, false);
             float stretchWidth = Math.max(0, width - m.gaps(_gap) - m.fixWidth);
             float x = left + ((m.stretchers > 0) ? 0 :
                               halign.offset(m.fixWidth + m.gaps(_gap), width));
             for (Element<?> elem : elems) {
                 if (!elem.isVisible()) continue;
-                IDimension psize = elem.preferredSize(width, height); // will be cached
+                IDimension psize = preferredSize(elem, width, height); // will be cached
                 Constraint c = constraint(elem);
                 float ewidth = c.computeSize(psize.width(), m.totalWeight, stretchWidth);
                 float eheight = _offPolicy.computeSize(psize.height(), m.maxHeight, height);
-                elem.setSize(ewidth, eheight);
-                elem.setLocation(x, top + valign.offset(eheight, height));
+                setBounds(elem, x, top + valign.offset(eheight, height), ewidth, eheight);
                 x += (ewidth + _gap);
             }
         }
@@ -190,7 +193,7 @@ public abstract class AxisLayout extends Layout
             // only compute the preferred size for the fixed elements in this pass
             Constraint c = constraint(elem);
             if (!c.stretch) {
-                IDimension psize = elem.preferredSize(hintX, hintY);
+                IDimension psize = preferredSize(elem, hintX, hintY);
                 float pwidth = psize.width(), pheight = psize.height();
                 m.prefWidth += pwidth;
                 m.prefHeight += pheight;
@@ -215,7 +218,7 @@ public abstract class AxisLayout extends Layout
             float availX = hintX - m.gaps(_gap), availY = hintY - m.gaps(_gap);
             float ehintX = vert ? availX : c.computeSize(0, m.totalWeight, availX);
             float ehintY = vert ? c.computeSize(0, m.totalWeight, availY) : availY;
-            IDimension psize = elem.preferredSize(ehintX, ehintY);
+            IDimension psize = preferredSize(elem, ehintX, ehintY);
             float pwidth = psize.width(), pheight = psize.height();
             m.unitWidth = Math.max(m.unitWidth, pwidth / c.weight);
             m.unitHeight = Math.max(m.unitHeight, pheight / c.weight);

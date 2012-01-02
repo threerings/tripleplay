@@ -5,7 +5,8 @@
 
 package tripleplay.ui;
 
-import static tripleplay.ui.TableLayout.COL;
+import tripleplay.ui.layout.TableLayout;
+import static tripleplay.ui.layout.TableLayout.COL;
 
 /**
  * Displays tables and their configuration options.

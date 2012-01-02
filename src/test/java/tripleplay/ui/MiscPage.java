@@ -15,6 +15,8 @@ import pythagoras.f.Rectangle;
 import react.Function;
 import react.Values;
 
+import tripleplay.ui.layout.AxisLayout;
+
 /**
  * Displays various UI stuff.
  */

@@ -3,10 +3,15 @@
 // Copyright (c) 2011, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
-package tripleplay.ui;
+package tripleplay.ui.layout;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
+
+import tripleplay.ui.Element;
+import tripleplay.ui.Elements;
+import tripleplay.ui.Layout;
+import tripleplay.ui.Style;
 
 /**
  * Lays out elements in a simple tabular form, where each column has uniform width and each row
@@ -95,11 +100,11 @@ public class TableLayout extends Layout
         float freeExtra = (width - naturalWidth) / freeColumns;
         // freeExtra may end up negative; if our natural width is too wide
 
-        Style.HAlign halign = elems.resolveStyle(Style.HALIGN);
+        Style.HAlign halign = resolveStyle(elems, Style.HALIGN);
         float startX = left + ((freeColumns == 0) ? halign.offset(naturalWidth, width) : 0);
         float x = startX;
 
-        Style.VAlign valign = elems.resolveStyle(Style.VALIGN);
+        Style.VAlign valign = resolveStyle(elems, Style.VALIGN);
         float y = top + valign.offset(m.totalHeight(_rowgap), height);
 
         Style.VAlign cellVAlign = Style.VAlign.CENTER; // TODO
@@ -108,12 +113,11 @@ public class TableLayout extends Layout
             float colWidth = Math.max(0, m.columnWidths[col] + (ccfg._fixed ? 0 : freeExtra));
             float rowHeight = m.rowHeights[row];
             if (colWidth > 0 && elem.isVisible()) {
-                IDimension psize = elem.preferredSize(0, 0); // will be cached, hints ignored
+                IDimension psize = preferredSize(elem, 0, 0); // will be cached, hints ignored
                 float elemWidth = ccfg._stretch ? colWidth : Math.min(psize.width(), colWidth);
                 float elemHeight = Math.min(psize.height(), rowHeight);
-                elem.setSize(elemWidth, elemHeight);
-                elem.setLocation(x + ccfg._halign.offset(elemWidth, colWidth),
-                                 y + cellVAlign.offset(elemHeight, rowHeight));
+                setBounds(elem, x + ccfg._halign.offset(elemWidth, colWidth),
+                          y + cellVAlign.offset(elemHeight, rowHeight), elemWidth, elemHeight);
             }
             x += (colWidth + _colgap);
             if (++col == columns) {
@@ -145,7 +149,7 @@ public class TableLayout extends Layout
         for (Element<?> elem : elems) {
             if (elem.isVisible()) {
                 // TODO: supply sane x/y hints
-                IDimension psize = elem.preferredSize(hintX, hintY);
+                IDimension psize = preferredSize(elem, hintX, hintY);
                 metrics.rowHeights[row] = Math.max(metrics.rowHeights[row], psize.height());
                 metrics.columnWidths[col] = Math.max(metrics.columnWidths[col], psize.width());
             }

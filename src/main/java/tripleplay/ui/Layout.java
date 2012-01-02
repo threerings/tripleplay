@@ -8,6 +8,7 @@ package tripleplay.ui;
 import java.util.List;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.IDimension;
 
 /**
  * Defines the interface to layouts, which implement a particular layout policy.
@@ -38,4 +39,19 @@ public abstract class Layout
      */
     public abstract void layout (Elements<?> elems, float left, float top,
                                  float width, float height);
+
+    // make Element.resolveStyle "visible" to custom layouts
+    protected <V> V resolveStyle (Element<?> elem, Style<V> style) {
+        return elem.resolveStyle(style);
+    }
+
+    // make Element.preferredSize "visible" to custom layouts
+    protected IDimension preferredSize (Element<?> elem, float hintX, float hintY) {
+        return elem.preferredSize(hintX, hintY);
+    }
+
+    protected void setBounds (Element<?> elem, float x, float y, float width, float height) {
+        elem.setLocation(x, y);
+        elem.setSize(width, height);
+    }
 }

@@ -11,6 +11,8 @@ import playn.java.JavaPlatform;
 
 import react.UnitSlot;
 
+import tripleplay.ui.layout.AxisLayout;
+
 /**
  * A test app for demoing the UI widgets.
  */
