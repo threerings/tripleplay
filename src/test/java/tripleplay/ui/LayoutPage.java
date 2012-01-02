@@ -64,9 +64,9 @@ public class LayoutPage implements WidgetDemo.Page
                     new Button("Free"))),
 
             new Group(new AbsoluteLayout(), greyBg).add(
-                new Label("Absolute Layout").setConstraint(AbsoluteLayout.at(10, 10)),
-                new Label("+50+50").setConstraint(AbsoluteLayout.at(50, 50)),
-                new Button("150x35+150+50").setConstraint(AbsoluteLayout.at(150, 50, 150, 35))));
+                AbsoluteLayout.at(new Label("Absolute Layout"), 10, 10),
+                AbsoluteLayout.at(new Label("+50+50"), 50, 50),
+                AbsoluteLayout.at(new Button("150x35+150+50"), 150, 50, 150, 35)));
 
         return iface;
     }

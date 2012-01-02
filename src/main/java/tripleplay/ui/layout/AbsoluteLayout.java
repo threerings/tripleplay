@@ -35,35 +35,31 @@ public class AbsoluteLayout extends Layout
     }
 
     /**
-     * Creates a layout constraint that positions the element at the specified coordinates, in its
-     * preferred size.
+     * Constrains {@code elem} to the specified position, in its preferred size.
      */
-    public static Constraint at (float x, float y) {
-        return at(new Point(x, y));
+    public static <T extends Element<T>> T at (T elem, float x, float y) {
+        return at(elem, new Point(x, y));
     }
 
     /**
-     * Creates a layout constraint that positions the element at the specified coordinates, in its
-     * preferred size.
+     * Constraints {@code elem} to the specified position, in its preferred size.
      */
-    public static Constraint at (IPoint position) {
-        return at(position, new Dimension(0, 0));
+    public static <T extends Element<T>> T at (T elem, IPoint position) {
+        return at(elem, position, new Dimension(0, 0));
     }
 
     /**
-     * Creates a layout constraint that positions the element at the specified coordinates in the
-     * specified size.
+     * Constrains {@code elem} to the specified position and size.
      */
-    public static Constraint at (float x, float y, float width, float height) {
-        return at(new Point(x, y), new Dimension(width, height));
+    public static <T extends Element<T>> T at (T elem, float x, float y, float width, float height) {
+        return at(elem, new Point(x, y), new Dimension(width, height));
     }
 
     /**
-     * Creates a layout constraint that positions the element at the specified coordinates in the
-     * specified size.
+     * Constrains {@code elem} to the specified position and size.
      */
-    public static Constraint at (IPoint position, IDimension size) {
-        return new Constraint(position, size);
+    public static <T extends Element<T>> T at (T elem, IPoint position, IDimension size) {
+        return elem.setConstraint(new Constraint(position, size));
     }
 
     @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
