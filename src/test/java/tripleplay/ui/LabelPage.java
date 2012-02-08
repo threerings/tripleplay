@@ -27,7 +27,7 @@ public class LabelPage implements WidgetDemo.Page
     }
 
     public Group createInterface () {
-        Image smiley = PlayN.assetManager().getImage("images/smiley.png");
+        Image smiley = PlayN.assets().getImage("images/smiley.png");
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 0)));
         Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000, 0)));
