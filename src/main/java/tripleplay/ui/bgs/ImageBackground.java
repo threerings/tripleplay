@@ -24,7 +24,6 @@ public class ImageBackground extends Background
     }
 
     @Override protected Instance instantiate (IDimension size) {
-        // TODO: rewrite this as an active-rendered layer when PlayN supports such things
         ImageLayer layer = PlayN.graphics().createImageLayer(_image);
         layer.setSize(size.width(), size.height());
         return new LayerInstance(layer);

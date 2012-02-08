@@ -8,9 +8,9 @@ package tripleplay.ui.bgs;
 import pythagoras.f.FloatMath;
 import pythagoras.f.IDimension;
 
-import playn.core.Canvas;
-import playn.core.CanvasLayer;
+import playn.core.ImmediateLayer;
 import playn.core.PlayN;
+import playn.core.Surface;
 
 import tripleplay.ui.Background;
 
@@ -30,21 +30,19 @@ public class BeveledBackground extends Background
         _brColor = brColor;
     }
 
-    @Override protected Instance instantiate (IDimension size) {
-        // TODO: rewrite this as an active-rendered layer when PlayN supports such things
-        float width = size.width(), height = size.height();
-        int cwidth = FloatMath.iceil(width), cheight = FloatMath.iceil(height);
-        CanvasLayer layer = PlayN.graphics().createCanvasLayer(cwidth, cheight);
-        Canvas canvas = layer.canvas();
-        float bot = height-1, right=width-1;
-        canvas.setFillColor(_bgColor).fillRect(0, 0, width, height);
-        canvas.setStrokeColor(_ulColor).
-            drawLine(0, 0, right, 0).drawLine(0, 1, right-1, 1).
-            drawLine(0, 0, 0, bot).drawLine(1, 0, 1, bot-1);
-        canvas.setStrokeColor(_brColor).
-            drawLine(right, 0, right, bot).drawLine(1, bot-1, right-1, bot-1).
-            drawLine(0, bot, right, bot).drawLine(right-1, 1, right-1, bot-1);
-        return new LayerInstance(layer);
+    @Override protected Instance instantiate (final IDimension size) {
+        return new LayerInstance(PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+            public void render (Surface surf) {
+                float width = size.width(), height = size.height();
+                float bot = height-1, right=width-1;
+                surf.setFillColor(_bgColor).fillRect(0, 0, width, height);
+                surf.setFillColor(_ulColor).
+                    drawLine(0, 0, right, 0, 2).drawLine(0, 0, 0, bot, 2);
+                surf.setFillColor(_brColor).
+                    drawLine(right, 0, right, bot, 1).drawLine(1, bot-1, right-1, bot-1, 1).
+                    drawLine(0, bot, right, bot, 1).drawLine(right-1, 1, right-1, bot-1, 1);
+            }
+        }));
     }
 
     protected int _bgColor, _ulColor, _brColor;

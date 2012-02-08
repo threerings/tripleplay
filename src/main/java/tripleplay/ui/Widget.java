@@ -7,7 +7,9 @@ package tripleplay.ui;
 
 import pythagoras.f.FloatMath;
 
-import playn.core.CanvasLayer;
+import playn.core.Canvas;
+import playn.core.CanvasImage;
+import playn.core.ImageLayer;
 import playn.core.PlayN;
 
 /**
@@ -17,20 +19,45 @@ import playn.core.PlayN;
 public abstract class Widget<T extends Widget<T>> extends Element<T>
 {
     /**
-     * Prepares a canvas layer as a rendering target of the supplied dimensions. The canvas may be
-     * null, in which case a new canvas will be created. If the supplied canvas is too small, it
-     * will be destroyed and a new canvas created. Otherwise the canvas will be cleared. If a new
-     * canvas is created, it will automatically be added to this widget's {@link #layer}.
+     * Handles the maintenance of a canvas image and layer for displaying a chunk of pre-rendered
+     * graphics.
      */
-    protected CanvasLayer prepareCanvas (CanvasLayer cl, float width, float height) {
-        // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
-        int cwidth = FloatMath.iceil(width), cheight = FloatMath.iceil(height);
-        if (cl == null || cl.canvas().width() < cwidth || cl.canvas().height() < cheight) {
-            if (cl != null) cl.destroy();
-            layer.add(cl = PlayN.graphics().createCanvasLayer(cwidth, cheight));
-        } else {
-            cl.canvas().clear();
+    protected class Glyph {
+        /** Ensures that the canvas image is at least the specified dimensions and cleared to all
+         * transparent pixels. Also creates and adds the image layer to the containing widget if
+         * needed. */
+        public void prepare (float width, float height) {
+            // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
+            int cwidth = FloatMath.iceil(width), cheight = FloatMath.iceil(height);
+            if (_image == null || _image.width() < cwidth || _image.height() < cheight) {
+                _image = PlayN.graphics().createImage(cwidth, cheight);
+                if (_layer != null) _layer.setImage(_image);
+            } else {
+                _image.canvas().clear();
+            }
+            if (_layer == null) layer.add(_layer = PlayN.graphics().createImageLayer(_image));
         }
-        return cl;
+
+        /** Returns the layer that contains our glyph image. Valid after {@link #prepare}. */
+        public ImageLayer layer () {
+            return _layer;
+        }
+
+        /** Returns the canvas into which drawing may be done. Valid after {@link #prepare}. */
+        public Canvas canvas () {
+            return _image.canvas();
+        }
+
+        /** Destroys the layer and image, removing them from the containing widget. */
+        public void destroy () {
+            if (_layer != null) {
+                _layer.destroy();
+                _layer = null;
+            }
+            _image = null;
+        }
+
+        protected CanvasImage _image;
+        protected ImageLayer _layer;
     }
 }

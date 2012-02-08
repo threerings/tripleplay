@@ -6,7 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.Canvas;
-import playn.core.CanvasLayer;
+import playn.core.PlayN;
 import playn.core.Pointer;
 
 import pythagoras.f.Dimension;
@@ -19,7 +19,7 @@ public class Slider extends Widget<Slider>
     /** The value of the slider. */
     public final Value<Float> value;
 
-    public Slider(float value, float min, float max) {
+    public Slider (float value, float min, float max) {
         this.value = Value.create(value);
         _min = min;
         _max = max;
@@ -40,15 +40,14 @@ public class Slider extends Widget<Slider>
     }
 
     @Override protected void layout () {
-        float width = _size.width, height = _size.height;
-
-        _sliderLayer = prepareCanvas(_sliderLayer, width, height);
-        render(_sliderLayer.canvas(), (value.get() - _min) / _range * width);
+        float width = _size.width;
+        _sglyph.prepare(width, _size.height);
+        render(_sglyph.canvas(), (value.get() - _min) / _range * width);
     }
 
     protected void render (Canvas canvas, float thumbCenterPixel) {
         canvas.setFillColor(0xFF000000);
-        canvas.fillRect(0, THUMB_HEIGHT, _size.width(), BAR_HEIGHT);// Bar
+        canvas.fillRect(0, THUMB_HEIGHT, _size.width(), BAR_HEIGHT); // Bar
         canvas.fillRect(thumbCenterPixel - THUMB_WIDTH / 2, 0, THUMB_WIDTH, THUMB_HEIGHT);
     }
 
@@ -72,8 +71,8 @@ public class Slider extends Widget<Slider>
         value.update(Math.max(x, 0) / size().width() * _range + _min);
     }
 
-    protected CanvasLayer _sliderLayer;
     protected final float _min, _max, _range;
+    protected final Glyph _sglyph = new Glyph();
 
     protected static final float BAR_HEIGHT = 5;
     protected static final float THUMB_HEIGHT = BAR_HEIGHT * 2, THUMB_WIDTH = 4;

@@ -5,12 +5,13 @@
 
 package tripleplay.ui;
 
-import playn.core.CanvasLayer;
+import playn.core.ImmediateLayer;
 import playn.core.Key;
 import playn.core.Keyboard;
 import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Pointer;
+import playn.core.Surface;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 
@@ -38,6 +39,15 @@ public class Field extends TextWidget<Field>
 
     public Field (String initialText, Styles styles) {
         setStyles(styles).text.update(initialText);
+        // create our cursor layer
+        _clayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+            public void render (Surface surf) {
+                surf.setFillColor(_ccolor);
+                surf.fillRect(0, 0, 1, _cheight);
+            }
+        });
+        _clayer.setVisible(false);
+        layer.add(_clayer);
     }
 
     public boolean isFocused () { return _listener != null; }
@@ -49,8 +59,8 @@ public class Field extends TextWidget<Field>
 
         // compute the position in the text that was clicked and start the cursor there
         Point parentEvent = new Point(x, y);
-        float clickX = (_tlayer == null) ? 0 :
-            Layer.Util.parentToLayer(_tlayer, parentEvent, parentEvent).x();
+        float clickX = (_tglyph.layer() == null) ? 0 :
+            Layer.Util.parentToLayer(_tglyph.layer(), parentEvent, parentEvent).x();
         int cursor = 0;
         float cx = 0;
         while (cursor < text.get().length()) {
@@ -102,18 +112,10 @@ public class Field extends TextWidget<Field>
                                               float availWidth, float availHeight) {
         super.createTextLayer(ldata, tx, ty, twidth, theight, availWidth, availHeight);
 
-        // (re)create our cursor layer if needed
-        int cheight = MathUtil.iceil(theight);
-        if (_cx != tx || _cy != ty || _clayer == null || _clayer.canvas().height() != cheight) {
-            _cx = tx; _cy = ty; // save these for later
-            boolean wasVisible = (_clayer != null) && _clayer.visible();
-            if (_clayer != null) _clayer.destroy();
-            _clayer = PlayN.graphics().createCanvasLayer(2, cheight);
-            _clayer.canvas().setFillColor(Styles.resolveStyle(this, Style.COLOR)).
-                fillRect(0, 0, 2, theight);
-            _clayer.setVisible(wasVisible);
-            layer.add(_clayer);
-        }
+        // note some bits for our cursor
+        _cx = tx; _cy = ty;
+        _cheight = theight;
+        _ccolor = Styles.resolveStyle(this, Style.COLOR);
 
         // force the cursor to be repositioned
         int cursor = _cursor;
@@ -126,9 +128,9 @@ public class Field extends TextWidget<Field>
         if (ncursor != _cursor) {
             _cursor = ncursor;
             float cx, cy;
-            if (_tlayer != null) {
-                cx = _tlayer.transform().tx();
-                cy = _tlayer.transform().ty();
+            if (_tglyph.layer() != null) {
+                cx = _tglyph.layer().transform().tx();
+                cy = _tglyph.layer().transform().ty();
             } else {
                 cx = _cx;
                 cy = _cy;
@@ -198,7 +200,9 @@ public class Field extends TextWidget<Field>
     };
 
     protected FieldListener _listener;
-    protected CanvasLayer _clayer;
+    protected ImmediateLayer _clayer;
     protected float _cx, _cy;
     protected int _cursor;
+    protected float _cheight;
+    protected int _ccolor;
 }

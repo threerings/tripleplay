@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import playn.core.CanvasLayer;
 import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.PlayN;
@@ -272,10 +271,10 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                                     float twidth, float theight,
                                     float availWidth, float availHeight) {
         if (twidth > 0 && theight > 0) {
-            _tlayer = prepareCanvas(_tlayer, twidth, theight);
-            _tlayer.canvas().drawText(ldata.text, 0, 0);
-            _tlayer.setTranslation(tx + ldata.halign.offset(twidth, availWidth),
-                                   ty + ldata.valign.offset(theight, availHeight));
+            _tglyph.prepare(twidth, theight);
+            _tglyph.canvas().drawText(ldata.text, 0, 0);
+            _tglyph.layer().setTranslation(tx + ldata.halign.offset(twidth, availWidth),
+                                           ty + ldata.valign.offset(theight, availHeight));
         }
     }
 
@@ -285,10 +284,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     }
 
     protected void clearTextLayer () {
-        if (_tlayer != null) {
-            _tlayer.destroy();
-            _tlayer = null;
-        }
+        _tglyph.destroy();
         clearLayoutData();
         invalidate();
     }
@@ -314,7 +310,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     protected Background.Instance _bginst;
     protected LayoutData _ldata;
 
-    protected CanvasLayer _tlayer;
+    protected final Glyph _tglyph = new Glyph();
 
     protected Image _icon;
     protected IRectangle _iregion;

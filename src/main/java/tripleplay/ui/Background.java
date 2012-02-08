@@ -5,12 +5,13 @@
 
 package tripleplay.ui;
 
-import playn.core.CanvasLayer;
 import playn.core.GroupLayer;
 import playn.core.Image;
 import playn.core.ImageLayer;
+import playn.core.ImmediateLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
+import playn.core.Surface;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.FloatMath;
@@ -128,12 +129,12 @@ public abstract class Background
         this.left = left;
     }
 
-    protected static Layer createSolidLayer (int color, float width, float height) {
-        // TODO: rewrite this as an active-rendered layer when PlayN supports such things
-        int cwidth = FloatMath.iceil(width), cheight = FloatMath.iceil(height);
-        CanvasLayer canvas = PlayN.graphics().createCanvasLayer(cwidth, cheight);
-        canvas.canvas().setFillColor(color).fillRect(0, 0, width, height);
-        return canvas;
+    protected static Layer createSolidLayer (final int color, final float width, final float height) {
+        return PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+            public void render (Surface surf) {
+                surf.setFillColor(color).fillRect(0, 0, width, height);
+            }
+        });
     }
 
     protected static Layer createTiledLayer (Image image, float width, float height) {
