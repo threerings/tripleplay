@@ -20,8 +20,8 @@ import tripleplay.ui.Style;
  * <p> On-axis, the available space is divided up as follows: non-stretched elements are given
  * their preferred size, and remaining space is divided up among the stretched elements
  * proportional to their configured weight (which defaults to one). If no stretched elements exist,
- * elements are aligned per the {@link Style.HAlign} and {@link Style.VAlign} properties on the
- * containing group. </p>
+ * elements are aligned per the {@link tripleplay.ui.Style.HAlign} and
+ * {@link tripleplay.ui.Style.VAlign} properties on the containing group. </p>
  *
  * <p> Off-axis sizing can be configured to either size elements to their preferred size, stretch
  * them all to a uniform size (equal to the preferred size of the largest element), or to stretch
