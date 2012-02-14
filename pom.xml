@@ -122,11 +122,9 @@
         <configuration>
           <quiet>true</quiet>
           <show>public</show>
-<!-- TODO: link to playn javadocs
           <links>
-            <link>http://google-web-toolkit.googlecode.com/svn/javadoc/2.1/</link>
+            <link>http://docs.playn.googlecode.com/git/javadoc</link>
           </links>
--->
         </configuration>
       </plugin>
     </plugins>
