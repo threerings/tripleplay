@@ -33,6 +33,18 @@ public class Layers
     }
 
     /**
+     * Removes {@code layer} from its current parent and adds it to {@code target}, modifying its
+     * transform in the process so that it stays in the same position on the screen.
+     */
+    public static void reparent (Layer layer, GroupLayer target) {
+        Point pos = new Point(layer.transform().tx(), layer.transform().ty());
+        Layer.Util.layerToScreen(layer, pos, pos);
+        target.add(layer);
+        Layer.Util.screenToLayer(layer, pos, pos);
+        layer.setTranslation(pos.x, pos.y);
+    }
+
+    /**
      * Computes the total bounds of the layer hierarchy rooted at <code>root</code>.
      * The returned Rectangle will be in <code>root</code>'s coordinate system.
      */
