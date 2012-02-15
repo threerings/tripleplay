@@ -67,9 +67,26 @@ public class TableLayout extends Layout
     }
 
     /**
+     * Creates an array of {@code columns} columns, each with default configuration.
+     */
+    public static Column[] columns (int count) {
+        Column[] cols = new Column[count];
+        Arrays.fill(cols, COL);
+        return cols;
+    }
+
+    /**
+     * Creates a table layout with the specified number of columns, each with the default
+     * configuration.
+     */
+    public TableLayout (int columns) {
+        this(columns(columns));
+    }
+
+    /**
      * Creates a table layout with the specified columns.
      */
-    public TableLayout (Column...columns) {
+    public TableLayout (Column... columns) {
         _columns = columns;
     }
 
@@ -80,6 +97,13 @@ public class TableLayout extends Layout
         _rowgap = rowgap;
         _colgap = colgap;
         return this;
+    }
+
+    /**
+     * Returns the number of columns configured for this table.
+     */
+    public int columns () {
+        return _columns.length;
     }
 
     @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
