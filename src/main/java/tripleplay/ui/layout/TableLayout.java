@@ -5,6 +5,8 @@
 
 package tripleplay.ui.layout;
 
+import java.util.Arrays;
+
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 
