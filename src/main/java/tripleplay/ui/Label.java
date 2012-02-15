@@ -5,6 +5,8 @@
 
 package tripleplay.ui;
 
+import pythagoras.f.Point;
+
 /**
  * A widget that displays one or more lines of text and/or an icon image.
  */
@@ -28,6 +30,10 @@ public class Label extends TextWidget<Label>
     /** Creates a label with the given text and styles. */
     public Label (String text, Styles styles) {
         setStyles(styles).text.update(text);
+    }
+
+    @Override protected Element<?> hitTest (Point point) {
+        return null; // labels are not clickable
     }
 
     @Override public String toString () {
