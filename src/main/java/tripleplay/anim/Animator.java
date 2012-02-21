@@ -50,42 +50,42 @@ public abstract class Animator
      * Starts a tween on the supplied layer's x-translation.
      */
     public Animation.One tweenX (Layer layer) {
-        return add(new Animation.One(onX(layer)));
+        return tween(onX(layer));
     }
 
     /**
      * Starts a tween on the supplied layer's y-translation.
      */
     public Animation.One tweenY (Layer layer) {
-        return add(new Animation.One(onY(layer)));
+        return tween(onY(layer));
     }
 
     /**
      * Starts a tween on the supplied layer's rotation.
      */
     public Animation.One tweenRotation (final Layer layer) {
-        return add(new Animation.One(new Animation.Value() {
-            public float get () {
+        return tween(new Animation.Value() {
+            public float initial () {
                 return layer.transform().rotation();
             }
             public void set (float value) {
                 layer.setRotation(value);
             }
-        }));
+        });
     }
 
     /**
      * Starts a tween on the supplied layer's x/y-scale.
      */
     public Animation.One tweenScale (final Layer layer) {
-        return add(new Animation.One(new Animation.Value() {
-            public float get () {
+        return tween(new Animation.Value() {
+            public float initial () {
                 return layer.transform().uniformScale();
             }
             public void set (float value) {
                 layer.setScale(value);
             }
-        }));
+        });
     }
 
     /**
@@ -99,28 +99,37 @@ public abstract class Animator
      * Starts a tween on the supplied layer's x-scale.
      */
     public Animation.One tweenScaleX (Layer layer) {
-        return add(new Animation.One(onScaleX(layer)));
+        return tween(onScaleX(layer));
     }
 
     /**
      * Starts a tween on the supplied layer's y-scale.
      */
     public Animation.One tweenScaleY (Layer layer) {
-        return add(new Animation.One(onScaleY(layer)));
+        return tween(onScaleY(layer));
     }
 
     /**
      * Starts a tween on the supplied layer's transparency.
      */
     public Animation.One tweenAlpha (final Layer layer) {
-        return add(new Animation.One(new Animation.Value() {
-            public float get () {
+        return tween(new Animation.Value() {
+            public float initial () {
                 return layer.alpha();
             }
             public void set (float value) {
                 layer.setAlpha(value);
             }
-        }));
+        });
+    }
+
+    /**
+     * Starts a tween using the supplied custom value. {@link Animation.Value#initial} will be used
+     * (if needed) to obtain the initial value before the tween begins. {@link Animation.Value#set}
+     * will be called each time the tween is updated with the intermediate values.
+     */
+    public Animation.One tween (Animation.Value value) {
+        return add(new Animation.One(value));
     }
 
     /**
@@ -209,7 +218,7 @@ public abstract class Animator
 
     protected static Animation.Value onX (final Layer layer) {
         return new Animation.Value() {
-            public float get () {
+            public float initial () {
                 return layer.transform().tx();
             }
             public void set (float value) {
@@ -220,7 +229,7 @@ public abstract class Animator
 
     protected static Animation.Value onY (final Layer layer) {
         return new Animation.Value() {
-            public float get () {
+            public float initial () {
                 return layer.transform().ty();
             }
             public void set (float value) {
@@ -231,7 +240,7 @@ public abstract class Animator
 
     protected static Animation.Value onScaleX (final Layer layer) {
         return new Animation.Value() {
-            public float get () {
+            public float initial () {
                 return layer.transform().scaleX();
             }
             public void set (float value) {
@@ -242,7 +251,7 @@ public abstract class Animator
 
     protected static Animation.Value onScaleY (final Layer layer) {
         return new Animation.Value() {
-            public float get () {
+            public float initial () {
                 return layer.transform().scaleY();
             }
             public void set (float value) {

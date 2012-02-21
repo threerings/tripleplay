@@ -16,8 +16,8 @@ public abstract class Animation
 {
     /** Used by animations to update a target value. */
     public interface Value {
-        /** Returns the current value. */
-        float get ();
+        /** Returns the initial value. */
+        float initial ();
 
         /** Updates the value. */
         void set (float value);
@@ -90,7 +90,7 @@ public abstract class Animation
         @Override
         protected void init (float time) {
             super.init(time);
-            if (_from == Float.MIN_VALUE) _from = _target.get();
+            if (_from == Float.MIN_VALUE) _from = _target.initial();
         }
 
         @Override
@@ -135,8 +135,8 @@ public abstract class Animation
         @Override
         protected void init (float time) {
             super.init(time);
-            if (_fromx == Float.MIN_VALUE) _fromx = _x.get();
-            if (_fromy == Float.MIN_VALUE) _fromy = _y.get();
+            if (_fromx == Float.MIN_VALUE) _fromx = _x.initial();
+            if (_fromy == Float.MIN_VALUE) _fromy = _y.initial();
         }
 
         @Override
