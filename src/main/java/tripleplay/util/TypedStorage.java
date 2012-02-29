@@ -62,16 +62,55 @@ public class TypedStorage
     }
 
     /**
-     * Removes the specified key (and its value) from storage.
-     */
-    public void remove (String key) {
-        _storage.removeItem(key);
-    }
-
-    /**
      * Sets the specified property to the supplied int value.
      */
     public void set (String key, int value) {
+        _storage.setItem(key, String.valueOf(value));
+    }
+
+    /**
+     * Returns the specified property as a long. If the property does not exist, the default value
+     * will be returned. If the property cannot be parsed as a long, an error will be logged and
+     * the default value will be returned.
+     */
+    public long get (String key, long defval) {
+        String value = null;
+        try {
+            value = _storage.getItem(key);
+            return (value == null) ? defval : Long.parseLong(value);
+        } catch (Exception e) {
+            PlayN.log().warn("Failed to parse long prop [key=" + key + ", value=" + value + "]", e);
+            return defval;
+        }
+    }
+
+    /**
+     * Sets the specified property to the supplied long value.
+     */
+    public void set (String key, long value) {
+        _storage.setItem(key, String.valueOf(value));
+    }
+
+    /**
+     * Returns the specified property as a double. If the property does not exist, the default
+     * value will be returned. If the property cannot be parsed as a double, an error will be
+     * logged and the default value will be returned.
+     */
+    public double get (String key, double defval) {
+        String value = null;
+        try {
+            value = _storage.getItem(key);
+            return (value == null) ? defval : Double.parseDouble(value);
+        } catch (Exception e) {
+            PlayN.log().warn("Failed to parse double prop [key=" + key + ", value=" + value + "]", e);
+            return defval;
+        }
+    }
+
+    /**
+     * Sets the specified property to the supplied double value.
+     */
+    public void set (String key, double value) {
         _storage.setItem(key, String.valueOf(value));
     }
 
@@ -93,6 +132,13 @@ public class TypedStorage
     }
 
     /**
+     * Removes the specified key (and its value) from storage.
+     */
+    public void remove (String key) {
+        _storage.removeItem(key);
+    }
+
+    /**
      * Exposes the specified property as a {@link Value}. The supplied default value will be used
      * if the property has no current value. Updates to the value will be written back to the
      * storage system. Note that each call to this method yields a new {@link Value} and those
@@ -103,6 +149,40 @@ public class TypedStorage
         Value<Integer> value = Value.create(get(key, defval));
         value.connect(new Slot<Integer>() {
             public void onEmit (Integer value) {
+                set(key, value);
+            }
+        });
+        return value;
+    }
+
+    /**
+     * Exposes the specified property as a {@link Value}. The supplied default value will be used
+     * if the property has no current value. Updates to the value will be written back to the
+     * storage system. Note that each call to this method yields a new {@link Value} and those
+     * values will not coordinate with one another, so the caller must be sure to only call this
+     * method once for a given property and share that value properly.
+     */
+    public Value<Long> valueFor (final String key, long defval) {
+        Value<Long> value = Value.create(get(key, defval));
+        value.connect(new Slot<Long>() {
+            public void onEmit (Long value) {
+                set(key, value);
+            }
+        });
+        return value;
+    }
+
+    /**
+     * Exposes the specified property as a {@link Value}. The supplied default value will be used
+     * if the property has no current value. Updates to the value will be written back to the
+     * storage system. Note that each call to this method yields a new {@link Value} and those
+     * values will not coordinate with one another, so the caller must be sure to only call this
+     * method once for a given property and share that value properly.
+     */
+    public Value<Double> valueFor (final String key, double defval) {
+        Value<Double> value = Value.create(get(key, defval));
+        value.connect(new Slot<Double>() {
+            public void onEmit (Double value) {
                 set(key, value);
             }
         });
