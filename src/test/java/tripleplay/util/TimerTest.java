@@ -99,6 +99,55 @@ public class TimerTest
         assertEquals(2, r3[0]);
     }
 
+    @Test
+    public void testOrder () {
+        long time = 0;
+        Timer timer = new Timer(time);
+        final int[] r1 = new int[1], r2 = new int[2], r3 = new int[3];
+
+        // make sure that three timers set to expire at the same time go off in the order they were
+        // registered
+        Timer.Handle h1 = timer.every(10, new Runnable() {
+            public void run () {
+                r1[0] += 1;
+                assertTrue(r1[0] == r2[0]+1);
+                assertTrue(r1[0] == r3[0]+1);
+            }
+        });
+        Timer.Handle h2 = timer.every(10, new Runnable() {
+            public void run () {
+                assertTrue(r1[0] == r2[0]+1);
+                r2[0] += 1;
+                assertTrue(r2[0] == r3[0]+1);
+            }
+        });
+        Timer.Handle h3 = timer.every(10, new Runnable() {
+            public void run () {
+                assertTrue(r1[0] == r3[0]+1);
+                assertTrue(r2[0] == r3[0]+1);
+                r3[0] += 1;
+            }
+        });
+
+        // T=T+3: no timers have run
+        time += 3; timer.update(time);
+        assertEquals(0, r1[0]);
+        assertEquals(0, r2[0]);
+        assertEquals(0, r3[0]);
+
+        // T=T+13: all timers have run once
+        time += 10; timer.update(time);
+        assertEquals(1, r1[0]);
+        assertEquals(1, r2[0]);
+        assertEquals(1, r3[0]);
+
+        // T=T+23: all timers have run twice
+        time += 10; timer.update(time);
+        assertEquals(2, r1[0]);
+        assertEquals(2, r2[0]);
+        assertEquals(2, r3[0]);
+    }
+
     protected Runnable action (final int[] ranCount) {
         return new Runnable() {
             public void run () {
