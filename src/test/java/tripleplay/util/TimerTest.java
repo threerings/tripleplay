@@ -148,11 +148,49 @@ public class TimerTest
         assertEquals(2, r3[0]);
     }
 
+    @Test
+    public void testConcurrentReschedule () {
+        // check to make sure we can reschedule concurrently
+        new Rescheduler(true).test();
+        new Rescheduler(false).test();
+    }
+
     protected Runnable action (final int[] ranCount) {
         return new Runnable() {
             public void run () {
                 ranCount[0] += 1;
             }
         };
+    }
+
+    protected static class Rescheduler implements Runnable
+    {
+        public Timer timer = new Timer(0);
+        public Timer.Handle handle;
+        public int ran;
+        public boolean cancelBefore;
+
+        public Rescheduler (boolean cancelBefore) {
+            handle = timer.after(1, this);
+            this.cancelBefore = cancelBefore;
+        }
+
+        public void run () {
+            ran++;
+            Timer.Handle h = handle;
+            if (cancelBefore) {
+                h.cancel();
+            }
+            handle = timer.after(1, this);
+            if (!cancelBefore) {
+                h.cancel();
+            }
+        }
+
+        public void test () {
+            timer.update(1);
+            timer.update(2);
+            assertEquals(2, ran);
+        }
     }
 }
