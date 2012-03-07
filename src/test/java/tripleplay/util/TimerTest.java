@@ -155,6 +155,19 @@ public class TimerTest
         new Rescheduler(false).test();
     }
 
+    @Test
+    public void testDoubleCancel () {
+        final int[] ran = {0};
+        Timer t = new Timer(0);
+        Timer.Handle h = t.after(1, action(ran));
+        t.after(2, action(ran));
+        t.update(1);
+        h.cancel();
+        h.cancel();
+        t.update(2);
+        assertEquals(2, ran[0]);
+    }
+
     protected Runnable action (final int[] ranCount) {
         return new Runnable() {
             public void run () {
