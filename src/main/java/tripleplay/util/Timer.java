@@ -65,12 +65,13 @@ public class Timer
             } catch (Exception e) {
                 PlayN.log().warn("Action failed", e);
             }
-            if (act.repeatMillis == 0) {
-                root.next = act.next;
-                act.next = null;
-            } else {
-                act.nextExpire += act.repeatMillis;
-                root.next = insert(act, act.next);
+            if (!act.cancelled()) {
+                if (act.repeatMillis == 0) {
+                    act.cancel();
+                } else {
+                    act.nextExpire += act.repeatMillis;
+                    root.next = insert(act, act.next);
+                }
             }
         }
     }
@@ -110,8 +111,16 @@ public class Timer
             this.action = action;
         }
 
+        public boolean cancelled () {
+            return nextExpire == -1;
+        }
+
         @Override public void cancel () {
-            _root.next = remove(this, _root.next);
+            if (!cancelled()) {
+                _root.next = remove(this, _root.next);
+                nextExpire = -1;
+                next = null;
+            }
         }
 
         @Override public String toString () {
