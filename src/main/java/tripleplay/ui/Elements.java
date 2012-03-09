@@ -158,6 +158,8 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     @Override protected Element<?> hitTest (Point point) {
+        // don't respond to hits if we're not visible; TODO: also require isEnabled?
+        if (!isVisible()) return null;
         // transform the point into our coordinate system
         hitToLayer(point);
         // check whether it falls within our bounds
