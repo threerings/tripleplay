@@ -23,6 +23,8 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
      * graphics.
      */
     protected class Glyph {
+        public Glyph () {
+        }
         /** Ensures that the canvas image is at least the specified dimensions and cleared to all
          * transparent pixels. Also creates and adds the image layer to the containing widget if
          * needed. */
