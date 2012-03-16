@@ -20,6 +20,18 @@ public class NullBackground extends Background
         super(0, 0, 0, 0);
     }
 
+    public NullBackground (float inset) {
+        super(inset, inset, inset, inset);
+    }
+
+    public NullBackground (float horizontalInset, float verticalInset) {
+        super(verticalInset, horizontalInset, verticalInset, horizontalInset);
+    }
+
+    public NullBackground (float top, float right, float bottom, float left) {
+        super(top, right, bottom, left);
+    }
+
     @Override protected Instance instantiate (IDimension size) {
         return SINGLETON;
     }
