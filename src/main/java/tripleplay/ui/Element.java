@@ -13,6 +13,8 @@ import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 import pythagoras.f.Transform;
 
+import react.Signal;
+import react.SignalView;
 import react.Slot;
 
 import playn.core.PlayN;
@@ -76,6 +78,18 @@ public abstract class Element<T extends Element<T>>
      */
     public Elements<?> parent () {
         return _parent;
+    }
+
+    /**
+     * Returns a signal that will dispatch when this element is added or removed from the
+     * hierarchy. The emitted value is true if the element was just added to the hierarchy, false
+     * if removed.
+     */
+    public SignalView<Boolean> hierarchyChanged () {
+        if (_hierarchyChanged == null) {
+            _hierarchyChanged = Signal.create();
+        }
+        return _hierarchyChanged;
     }
 
     /**
@@ -227,6 +241,9 @@ public abstract class Element<T extends Element<T>>
      */
     protected void wasAdded (Elements<?> parent) {
         _parent = parent;
+        if (_hierarchyChanged != null) {
+            _hierarchyChanged.emit(Boolean.TRUE);
+        }
     }
 
     /**
@@ -234,6 +251,9 @@ public abstract class Element<T extends Element<T>>
      */
     protected void wasRemoved () {
         _parent = null;
+        if (_hierarchyChanged != null) {
+            _hierarchyChanged.emit(Boolean.FALSE);
+        }
     }
 
     /**
@@ -436,6 +456,7 @@ public abstract class Element<T extends Element<T>>
     protected Dimension _size = new Dimension();
     protected Styles _styles = Styles.none();
     protected Layout.Constraint _constraint;
+    protected Signal<Boolean> _hierarchyChanged;
 
     protected static enum Flag {
         VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3);
