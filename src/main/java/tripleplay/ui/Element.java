@@ -86,9 +86,7 @@ public abstract class Element<T extends Element<T>>
      * if removed.
      */
     public SignalView<Boolean> hierarchyChanged () {
-        if (_hierarchyChanged == null) {
-            _hierarchyChanged = Signal.create();
-        }
+        if (_hierarchyChanged == null) _hierarchyChanged = Signal.create();
         return _hierarchyChanged;
     }
 
@@ -241,9 +239,7 @@ public abstract class Element<T extends Element<T>>
      */
     protected void wasAdded (Elements<?> parent) {
         _parent = parent;
-        if (_hierarchyChanged != null) {
-            _hierarchyChanged.emit(Boolean.TRUE);
-        }
+        if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.TRUE);
     }
 
     /**
@@ -251,9 +247,7 @@ public abstract class Element<T extends Element<T>>
      */
     protected void wasRemoved () {
         _parent = null;
-        if (_hierarchyChanged != null) {
-            _hierarchyChanged.emit(Boolean.FALSE);
-        }
+        if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.FALSE);
     }
 
     /**
