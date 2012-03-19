@@ -72,13 +72,6 @@ public class MiscPage implements WidgetDemo.Page
         return new Rectangle(index*iwidth, 0, iwidth, iheight);
     }
 
-    protected Button configureImageButton (Button button, Image source) {
-        //button.addStyles(Styles.make(Style.BACKGROUND.is(Background.image(source))).
-        //    addSelected(Style.BACKGROUND.is(Background.solid(0x00000000))));
-        button.setIcon(source);
-        return button;
-    }
-
     protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
     protected static final String TEXT2 = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.";
     protected static final String TEXT3 = "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.";
