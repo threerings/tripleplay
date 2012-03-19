@@ -5,14 +5,12 @@
 
 package tripleplay.ui;
 
-import playn.core.Font;
 import playn.core.Image;
 import playn.core.PlayN;
 
 import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
 
-import react.Function;
 import react.Values;
 
 import tripleplay.ui.layout.AxisLayout;
@@ -34,11 +32,8 @@ public class MiscPage implements WidgetDemo.Page
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
         Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000, 5)));
 
-        Font fixedFont = PlayN.graphics().createFont("Fixed", Font.Style.PLAIN, 16);
-
         Button toggle;
-        Slider slider;
-        Label label2, sliderValue;
+        Label label2;
         Group iface = new Group(AxisLayout.vertical().gap(15)).add(
             // display some wrapped text
             new Group(AxisLayout.horizontal(), Style.VALIGN.top).add(
@@ -63,19 +58,11 @@ public class MiscPage implements WidgetDemo.Page
                     setIcon(squares, getIBounds(2)),
                 new Label("Below").setStyles(Style.ICON_POS.below, Style.HALIGN.center).
                     setIcon(squares, getIBounds(3))),
-            // TODO: move this to a separate slider page
-            new Group(AxisLayout.vertical()).add(
-                slider = new Slider(0, -100, 100),
-                sliderValue = new Label("0").
-                    setConstraint(Constraints.minSize("-000")).
-                    setStyles(Style.HALIGN.right, Style.FONT.is(fixedFont))),
             new Group(AxisLayout.horizontal().gap(10)).add(
                 new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
                 new Field("Disabled text").setEnabled(false)));
 
         Values.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
-
-        slider.value.map(FORMATTER).connect(sliderValue.text.slot());
 
         return iface;
     }
@@ -85,11 +72,12 @@ public class MiscPage implements WidgetDemo.Page
         return new Rectangle(index*iwidth, 0, iwidth, iheight);
     }
 
-    protected Function<Float,String> FORMATTER = new Function<Float,String>() {
-        public String apply (Float value) {
-            return String.valueOf(value.intValue());
-        }
-    };
+    protected Button configureImageButton (Button button, Image source) {
+        //button.addStyles(Styles.make(Style.BACKGROUND.is(Background.image(source))).
+        //    addSelected(Style.BACKGROUND.is(Background.solid(0x00000000))));
+        button.setIcon(source);
+        return button;
+    }
 
     protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
     protected static final String TEXT2 = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.";
