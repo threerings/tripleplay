@@ -49,7 +49,8 @@ public class WidgetDemo implements Game
         Group buttons = new Group(AxisLayout.horizontal(), Style.HALIGN.left);
         root.add(buttons);
 
-        Page[] pages = { new MiscPage(), new LayoutPage(), new LabelPage(), new SliderPage() };
+        Page[] pages = { new MiscPage(), new LayoutPage(), new LabelPage(), new SliderPage(),
+            new BackgroundPage() };
         for (final Page page : pages) {
             Button tab = new Button(page.name());
             buttons.add(tab);

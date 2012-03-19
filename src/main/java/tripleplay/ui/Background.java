@@ -18,6 +18,7 @@ import pythagoras.f.FloatMath;
 import pythagoras.f.IDimension;
 
 import tripleplay.ui.bgs.BeveledBackground;
+import tripleplay.ui.bgs.BorderedBackground;
 import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.SolidBackground;
 
@@ -71,6 +72,28 @@ public abstract class Background
     public static Background beveled (int bgColor, int ulColor, int brColor,
                                       float top, float right, float bottom, float left) {
         return new BeveledBackground(bgColor, ulColor, brColor, top, left, bottom, right);
+    }
+
+    /**
+     * Creates a bordered background with the specified colors and thickness and no insets.
+     */
+    public static Background bordered (int bgColor, int color, int thickness) {
+        return bordered(bgColor, color, thickness, 0, 0, 0, 0);
+    }
+
+    /**
+     * Creates a bordered background with the specified colors, thickness and uniform insets.
+     */
+    public static Background bordered (int bgColor, int color, int thickness, float inset) {
+        return bordered(bgColor, color, thickness, inset, inset, inset, inset);
+    }
+
+    /**
+     * Creates a bordered background with the specified colors, thickness and insets.
+     */
+    public static Background bordered (int bgColor, int color, int thickness,
+                                      float top, float right, float bottom, float left) {
+        return new BorderedBackground(bgColor, color, thickness, top, left, bottom, right);
     }
 
     /**
