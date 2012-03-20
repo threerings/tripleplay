@@ -8,6 +8,7 @@ package tripleplay.ui;
 import playn.core.Image;
 import playn.core.PlayN;
 import tripleplay.ui.bgs.NullBackground;
+import tripleplay.ui.bgs.Scale9Background;
 import tripleplay.ui.layout.AxisLayout;
 
 public class BackgroundPage implements WidgetDemo.Page
@@ -18,6 +19,7 @@ public class BackgroundPage implements WidgetDemo.Page
 
     public Group createInterface () {
         Image testBg = PlayN.assets().getImage("images/background.png");
+        Image scale9Bg = PlayN.assets().getImage("images/scale9.png");
         return new Group(AxisLayout.vertical()).add(
             new Group(AxisLayout.horizontal()).add(
                 new Group(AxisLayout.horizontal(), Styles.make(Style.BACKGROUND.is(
@@ -42,6 +44,13 @@ public class BackgroundPage implements WidgetDemo.Page
                     Background.image(testBg, 10)))).add(new Label("Image")),
                 new Group(AxisLayout.horizontal(), Styles.make(Style.BACKGROUND.is(
                     Background.image(testBg, 0)))).add(new Label("Image (no inset)"))),
+            new Group(AxisLayout.horizontal()).add(
+                new Group(AxisLayout.horizontal(), Styles.make(Style.BACKGROUND.is(
+                    Background.scale9(scale9Bg, 5)))).add(new Label("Scale 9")),
+                new Group(AxisLayout.horizontal(), Styles.make(Style.BACKGROUND.is(
+                    Background.scale9(scale9Bg, 5)))).add(
+                        new Label("Scale 9\nSomewhat\nTaller\nAnd\nWider",
+                            Styles.make(Style.HALIGN.center)))),
             new Group(AxisLayout.horizontal()).add(
                 new Group(AxisLayout.horizontal(), Styles.make(Style.BACKGROUND.is(
                     Background.bordered(0xFFEEEEEE, 0xFFFFFF00, 2, 10)))).add(

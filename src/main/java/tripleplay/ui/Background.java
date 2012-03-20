@@ -20,6 +20,7 @@ import pythagoras.f.IDimension;
 import tripleplay.ui.bgs.BeveledBackground;
 import tripleplay.ui.bgs.BorderedBackground;
 import tripleplay.ui.bgs.ImageBackground;
+import tripleplay.ui.bgs.Scale9Background;
 import tripleplay.ui.bgs.SolidBackground;
 
 /**
@@ -115,6 +116,31 @@ public abstract class Background
      */
     public static Background image (Image bgimage, float top, float right, float bottom, float left) {
         return new ImageBackground(bgimage, top, right, bottom, left);
+    }
+
+    /**
+     * Creates a scale9 background with the specified image and no insets.
+     * @see Scale9Background
+     */
+    public static Background scale9 (Image scale9Image) {
+        return scale9(scale9Image, 0);
+    }
+
+    /**
+     * Creates a scale9 background with the specified image and uniform insets.
+     * @see Scale9Background
+     */
+    public static Background scale9 (Image scale9Image, float inset) {
+        return scale9(scale9Image, inset, inset, inset, inset);
+    }
+
+    /**
+     * Creates a scale9 background with the specified image and insets.
+     * @see Scale9Background
+     */
+    public static Background scale9 (Image scale9Image,
+                                     float top, float right, float bottom, float left) {
+        return new Scale9Background(scale9Image, top, right, bottom, left);
     }
 
     /** The insets of this background. */
