@@ -67,37 +67,6 @@ public class Root extends Elements<Root>
         super(layout);
         setStylesheet(sheet);
         _iface = iface;
-
-        // we receive all pointer events for a root in that root and then dispatch events via our
-        // custom mechanism from there on down
-        layer.setHitTester(new Layer.HitTester() {
-            public Layer hitTest (Layer layer, Point p) {
-                return (isVisible() && contains(p.x, p.y)) ? layer : null;
-            }
-        });
-
-        // add a pointer listener for handling mouse events
-        PlayN.pointer().addListener(layer, new Pointer.Listener() {
-            public void onPointerStart (Pointer.Event event) {
-                // clear focus; if the click is on the focused item, it'll get focus again
-                _iface.clearFocus();
-                // dispatch the event to the appropriate hit element
-                Point p = new Point(event.localX(), event.localY());
-                _active = hitTest(p);
-                if (_active != null) _active.onPointerStart(event, p.x, p.y);
-            }
-            public void onPointerDrag (Pointer.Event event) {
-                if (_active == null) return;
-                Point p = Layer.Util.screenToLayer(_active.layer, event.localX(), event.localY());
-                _active.onPointerDrag(event, p.x, p.y);
-            }
-            public void onPointerEnd (Pointer.Event event) {
-                if (_active == null) return;
-                Point p = Layer.Util.screenToLayer(_active.layer, event.localX(), event.localY());
-                _active.onPointerEnd(event, p.x, p.y);
-                _active = null;
-            }
-        });
     }
 
     @Override protected Root root () {

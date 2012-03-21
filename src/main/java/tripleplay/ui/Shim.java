@@ -25,9 +25,5 @@ public class Shim extends Element<Shim>
     @Override protected void layout () {
     }
 
-    @Override protected Element<?> hitTest (Point point) {
-        return null; // don't intercept clicks by default
-    }
-
     protected final float _shimWidth, _shimHeight;
 }

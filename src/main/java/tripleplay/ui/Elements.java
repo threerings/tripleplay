@@ -30,6 +30,13 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
      */
     public Elements (Layout layout) {
         _layout = layout;
+
+        // optimize hit testing by checking our bounds first
+        layer.setHitTester(new Layer.HitTester() {
+            public Layer hitTest (Layer layer, Point p) {
+                return (isVisible() && contains(p.x, p.y)) ? layer.hitTestDefault(p) : null;
+            }
+        });
     }
 
     /** Emitted after a child has been added to this Elements. */
@@ -155,22 +162,6 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
             _bginst = null;
         }
         // if we're added again, we'll be re-laid-out
-    }
-
-    @Override protected Element<?> hitTest (Point point) {
-        // make sure our element hit test requirements are met
-        if (super.hitTest(point) == null) return null;
-        // determine whether it falls within the bounds of any of our children
-        float x = point.x, y = point.y;
-        for (Element<?> child : _children) {
-            // transform the point into our child's coordinate system
-            child.layer.transform().inverseTransform(point.set(x, y), point);
-            point.x += child.layer.originX();
-            point.y += child.layer.originY();
-            Element<?> hit = child.hitTest(point);
-            if (hit != null) return hit;
-        }
-        return null;
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {

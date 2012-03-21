@@ -32,10 +32,6 @@ public class Label extends TextWidget<Label>
         setStyles(styles).text.update(text);
     }
 
-    @Override protected Element<?> hitTest (Point point) {
-        return null; // labels are not clickable
-    }
-
     @Override public String toString () {
         return "Label(" + text.get() + ")";
     }

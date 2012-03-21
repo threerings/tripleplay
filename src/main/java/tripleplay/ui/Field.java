@@ -38,6 +38,7 @@ public class Field extends TextWidget<Field>
     }
 
     public Field (String initialText, Styles styles) {
+        enableInteraction();
         setStyles(styles).text.update(initialText);
         // create our cursor layer
         _clayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {

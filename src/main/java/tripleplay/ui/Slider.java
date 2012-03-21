@@ -20,6 +20,7 @@ public class Slider extends Widget<Slider>
     public final Value<Float> value;
 
     public Slider (float value, float min, float max) {
+        enableInteraction();
         this.value = Value.create(value);
         _min = min;
         _max = max;

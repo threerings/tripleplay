@@ -12,6 +12,10 @@ import playn.core.Pointer;
  */
 public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> extends TextWidget<T>
 {
+    protected ClickableTextWidget () {
+        enableInteraction();
+    }
+
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
         super.onPointerStart(event, x, y);
         if (!isEnabled()) return;
