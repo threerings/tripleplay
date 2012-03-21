@@ -38,7 +38,6 @@ public class BackgroundPage implements WidgetDemo.Page
                     new NullBackground(10)))).add(new Label("Null")),
                 new Group(AxisLayout.horizontal(), Styles.make(Style.BACKGROUND.is(
                     new NullBackground()))).add(new Label("Null (no inset)"))),
-            // TODO: is there a convenient way to clip the group or the backgrounds? they bleed out
             new Group(AxisLayout.horizontal()).add(
                 new Group(AxisLayout.horizontal(), Styles.make(Style.BACKGROUND.is(
                     Background.image(testBg, 10)))).add(new Label("Image")),
