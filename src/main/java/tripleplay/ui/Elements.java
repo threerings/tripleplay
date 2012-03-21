@@ -158,23 +158,19 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     @Override protected Element<?> hitTest (Point point) {
-        // don't respond to hits if we're not visible; TODO: also require isEnabled?
-        if (!isVisible()) return null;
-        // transform the point into our coordinate system
-        hitToLayer(point);
-        // check whether it falls within our bounds
-        float x = point.x, y = point.y;
-        if (!contains(x, y)) return null;
+        // make sure our element hit test requirements are met
+        if (super.hitTest(point) == null) return null;
         // determine whether it falls within the bounds of any of our children
+        float x = point.x, y = point.y;
         for (Element<?> child : _children) {
-            Element<?> hit = child.hitTest(point.set(x, y));
+            // transform the point into our child's coordinate system
+            child.layer.transform().inverseTransform(point.set(x, y), point);
+            point.x += child.layer.originX();
+            point.y += child.layer.originY();
+            Element<?> hit = child.hitTest(point);
             if (hit != null) return hit;
         }
         return null;
-    }
-
-    protected void hitToLayer (Point point) {
-        Layer.Util.parentToLayer(layer, point, point);
     }
 
     @Override protected Dimension computeSize (float hintX, float hintY) {

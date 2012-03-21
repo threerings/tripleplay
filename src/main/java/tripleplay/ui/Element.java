@@ -17,8 +17,9 @@ import react.Signal;
 import react.SignalView;
 import react.Slot;
 
-import playn.core.PlayN;
 import playn.core.GroupLayer;
+import playn.core.Layer;
+import playn.core.PlayN;
 import playn.core.Pointer;
 
 /**
@@ -259,22 +260,13 @@ public abstract class Element<T extends Element<T>>
 
     /**
      * Used to determine whether a point falls in this element's bounds.
-     * @param point the point to be tested in this element's parent's coordinate system.
+     * @param point the point to be tested in this element's coordinate system.
      * @return the leaf-most element that contains the supplied point or null if neither this
      * element, nor its children contain the point. Also {@code point} is updated to contain the
      * hit-element-relative coordinates in the event of a hit.
      */
     protected Element<?> hitTest (Point point) {
-        // don't claim hits when we're not visible
-        if (!isVisible()) return null;
-        // transform the point into our coordinate system
-        point = layer.transform().inverseTransform(point, point);
-        float x = point.x + layer.originX(), y = point.y + layer.originY();
-        // check whether it falls within our bounds
-        if (!contains(x, y)) return null;
-        // if we're the hit component, update the supplied point
-        point.set(x, y);
-        return this;
+        return (isVisible() && contains(point.x, point.y)) ? this : null;
     }
 
     /**

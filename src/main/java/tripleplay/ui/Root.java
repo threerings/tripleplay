@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.Layer;
+import playn.core.PlayN;
 import playn.core.Pointer;
 
 import pythagoras.f.IDimension;
@@ -17,24 +18,6 @@ import pythagoras.f.Point;
  */
 public class Root extends Elements<Root>
 {
-    public interface PointerDelegate {
-        /**
-         * Called when the pointer event starts. Return true to receive drag and end events and
-         * prevent propogation to other Roots.
-         */
-        boolean handlePointerStart (Pointer.Event event);
-
-        /**
-         * Called when the pointer event ends after a start for which the delegate returned true.
-         */
-        void onPointerEnd (Pointer.Event event);
-
-        /**
-         * Called when the pointer drags after a start for which the delegate returned true.
-         */
-        void onPointerDrag (Pointer.Event event);
-    }
-
     /**
      * Sizes this root element to its preferred size.
      */
@@ -80,45 +63,41 @@ public class Root extends Elements<Root>
         return this;
     }
 
-    /**
-     * Sets the delegate to receive pointer events that hit no Elements in this Root. May be null to
-     * clear the current delegate.
-     */
-    public void setPointerDelegate (PointerDelegate delegate) {
-        _delegate = delegate;
-    }
-
     protected Root (Interface iface, Layout layout, Stylesheet sheet) {
         super(layout);
         setStylesheet(sheet);
         _iface = iface;
-    }
 
-    protected boolean dispatchPointerStart (Pointer.Event event) {
-        Point p = new Point(event.x(), event.y());
-        _active = hitTest(p);
-        if (_active == null) return _delegate == null ? false : _delegate.handlePointerStart(event);
-        _active.onPointerStart(event, p.x, p.y);
-        return true;
-    }
+        // we receive all pointer events for a root in that root and then dispatch events via our
+        // custom mechanism from there on down
+        layer.setHitTester(new Layer.HitTester() {
+            public Layer hitTest (Layer layer, Point p) {
+                return (isVisible() && contains(p.x, p.y)) ? layer : null;
+            }
+        });
 
-    protected void dispatchPointerDrag (Pointer.Event event) {
-        if (_active != null) {
-            Point p = Layer.Util.screenToLayer(_active.layer, event.x(), event.y());
-            _active.onPointerDrag(event, p.x, p.y);
-        } else if (_delegate != null) _delegate.onPointerDrag(event);
-    }
-
-    protected void dispatchPointerEnd (Pointer.Event event) {
-        if (_active != null) {
-            Point p = Layer.Util.screenToLayer(_active.layer, event.x(), event.y());
-            _active.onPointerEnd(event, p.x, p.y);
-            _active = null;
-        } else if (_delegate != null) _delegate.onPointerEnd(event);
-    }
-
-    @Override protected void hitToLayer (Point p) {
-        Layer.Util.screenToLayer(layer, p, p);
+        // add a pointer listener for handling mouse events
+        PlayN.pointer().addListener(layer, new Pointer.Listener() {
+            public void onPointerStart (Pointer.Event event) {
+                // clear focus; if the click is on the focused item, it'll get focus again
+                _iface.clearFocus();
+                // dispatch the event to the appropriate hit element
+                Point p = new Point(event.x(), event.y());
+                _active = hitTest(p);
+                if (_active != null) _active.onPointerStart(event, p.x, p.y);
+            }
+            public void onPointerDrag (Pointer.Event event) {
+                if (_active == null) return;
+                Point p = Layer.Util.screenToLayer(_active.layer, event.x(), event.y());
+                _active.onPointerDrag(event, p.x, p.y);
+            }
+            public void onPointerEnd (Pointer.Event event) {
+                if (_active == null) return;
+                Point p = Layer.Util.screenToLayer(_active.layer, event.x(), event.y());
+                _active.onPointerEnd(event, p.x, p.y);
+                _active = null;
+            }
+        });
     }
 
     @Override protected Root root () {
@@ -128,5 +107,4 @@ public class Root extends Elements<Root>
     protected final Interface _iface;
     protected boolean _valid;
     protected Element<?> _active;
-    protected PointerDelegate _delegate;
 }

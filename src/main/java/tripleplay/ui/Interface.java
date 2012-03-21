@@ -28,66 +28,8 @@ import react.Value;
 public class Interface
 {
     /**
-     * This listener must be configured in order to make this interface active. It is exposed so
-     * that apps can manage their pointer listener stack however they like.
-     */
-    public final Pointer.Listener plistener = new Pointer.Listener() {
-        @Override public void onPointerStart (Pointer.Event event) {
-            // always clear focus on a click. If it's on the focused item, it'll get focus again
-            _focused.update(null);
-
-            try {
-                // copy our roots to a separate list to avoid conflicts if a root is added or
-                // removed while dispatching an event.
-                _dispatch.addAll(_roots);
-                // dispatch to the roots in most-recently-created order as a more recently added
-                // root is probably on top. TODO - use layer depth
-                Point p = new Point();
-                for (int ii = _dispatch.size() - 1; ii >= 0; ii--) {
-                    Root root = _dispatch.get(ii);
-                    // skip this root if its bounds don't contain the click
-                    root.hitToLayer(p.set(event.x(), event.y()));
-                    if (!root.contains(p.x, p.y)) continue;
-                    // if the click hit an element in this root, make it the active element
-                    if (root.dispatchPointerStart(event)) {
-                        _active = _dispatch.get(ii);
-                        return;
-                    }
-                    // if we intersected a root, we stop our search; either roots don't overlap, in
-                    // which case further search is pointless, or they do overlap and the root we
-                    // just checked is the "highest" and its bounds contained the point, so we
-                    // dont' want to allow you to "click through" this root into another
-                    break;
-                }
-                _delegate.onPointerStart(event);
-            } finally {
-                _dispatch.clear();
-            }
-        }
-
-        @Override public void onPointerDrag (Pointer.Event event) {
-            if (_active != null) {
-                _active.dispatchPointerDrag(event);
-            } else {
-                _delegate.onPointerDrag(event);
-            }
-        }
-
-        @Override public void onPointerEnd (Pointer.Event event) {
-            if (_active != null) {
-                _active.dispatchPointerEnd(event);
-                _active = null;
-            } else {
-                _delegate.onPointerEnd(event);
-            }
-        }
-
-        protected Root _active;
-    };
-
-    /**
-     * This listener must be configured in order for keyboard events to propagate to a focused
-     * Element.
+     * This listener must be configured in order for keyboard events to be dispatched to focused
+     * {@link Element}s.
      */
     public final Keyboard.Listener klistener = new Keyboard.Listener() {
         @Override public void onKeyDown (Keyboard.Event event) {
@@ -103,15 +45,6 @@ public class Interface
             _focused.get().onKeyUp(event);
         }
     };
-
-    /**
-     * Creates an interface instance which will delegate unconsumed pointer events to the supplied
-     * pointer delegate.
-     */
-    public Interface (Pointer.Listener delegate) {
-        // if we have no delegate, use a NOOP delegate to simplify our logic
-        _delegate = (delegate == null) ? new Pointer.Adapter() : delegate;
-    }
 
     /**
      * Posts a runnable that will be executed after the next time the interface is validated.
@@ -148,6 +81,13 @@ public class Interface
                 }
             }
         }
+    }
+
+    /**
+     * Clears out the current focused component, if any.
+     */
+    public void clearFocus () {
+        _focused.update(null);
     }
 
     /**
@@ -190,8 +130,6 @@ public class Interface
         _roots.remove(root);
         root.layer.destroy();
     }
-
-    protected final Pointer.Listener _delegate;
 
     protected final Value<Keyboard.Listener> _focused = Value.create(null);
 

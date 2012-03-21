@@ -31,8 +31,7 @@ public class WidgetDemo implements Game
 
     @Override // from interface Game
     public void init () {
-        _iface = new Interface(null);
-        PlayN.pointer().setListener(_iface.plistener);
+        _iface = new Interface();
         PlayN.keyboard().setListener(_iface.klistener);
 
         // define our root stylesheet
