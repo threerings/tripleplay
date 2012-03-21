@@ -34,7 +34,7 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
         });
 
         // add a pointer listener for handling mouse events
-        PlayN.pointer().addListener(layer, new Pointer.Listener() {
+        layer.addListener(new Pointer.Listener() {
             public void onPointerStart (Pointer.Event event) {
                 // clear focus; if the click is on the focused item, it'll get focus again
                 root()._iface.clearFocus();
