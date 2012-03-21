@@ -52,6 +52,17 @@ public class Field extends TextWidget<Field>
 
     public boolean isFocused () { return _listener != null; }
 
+    /**
+     * Sets the focus to this field.
+     */
+    public void focus () {
+        Root root = root();
+        if (root == null) return;
+        int cursor = Math.max(0, text.get().length() - 1);
+        moveCursor(cursor);
+        startFocus(root, cursor);
+    }
+
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
         super.onPointerStart(event, x, y);
         Root root = root();
@@ -73,7 +84,10 @@ public class Field extends TextWidget<Field>
             cx = ncx;
         }
         moveCursor(cursor);
+        startFocus(root, cursor);
+    }
 
+    protected void startFocus (Root root, int cursor) {
         // wire up a focus listener
         root._iface._focused.update((_listener = new FieldListener(cursor)));
         root._iface._focused.connect(new UnitSlot() {
