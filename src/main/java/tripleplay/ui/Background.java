@@ -18,6 +18,7 @@ import pythagoras.f.FloatMath;
 import pythagoras.f.IDimension;
 
 import tripleplay.ui.bgs.BeveledBackground;
+import tripleplay.ui.bgs.BlankBackground;
 import tripleplay.ui.bgs.BorderedBackground;
 import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.Scale9Background;
@@ -31,6 +32,20 @@ public abstract class Background
 {
     /** The (highest) depth at which background layers are rendered. May range from (-11, 10]. */
     public static final float BACKGROUND_DEPTH = -10f;
+
+    /**
+     * Creates a null background (transparent) with the specified insets.
+     */
+    public static Background blank (float inset) {
+        return blank(inset, inset, inset, inset);
+    }
+
+    /**
+     * Creates a null background (transparent) with the specified insets.
+     */
+    public static Background blank (float top, float right, float bottom, float left) {
+        return new BlankBackground(top, right, bottom, left);
+    }
 
     /**
      * Creates a solid background of the specified color, with no insets.

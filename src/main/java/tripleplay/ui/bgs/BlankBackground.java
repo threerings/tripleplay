@@ -14,21 +14,21 @@ import tripleplay.ui.Background;
 /**
  * A background that displays nothing. This is the default for groups.
  */
-public class NullBackground extends Background
+public class BlankBackground extends Background
 {
-    public NullBackground () {
+    public BlankBackground () {
         super(0, 0, 0, 0);
     }
 
-    public NullBackground (float inset) {
+    public BlankBackground (float inset) {
         super(inset, inset, inset, inset);
     }
 
-    public NullBackground (float horizontalInset, float verticalInset) {
+    public BlankBackground (float horizontalInset, float verticalInset) {
         super(verticalInset, horizontalInset, verticalInset, horizontalInset);
     }
 
-    public NullBackground (float top, float right, float bottom, float left) {
+    public BlankBackground (float top, float right, float bottom, float left) {
         super(top, right, bottom, left);
     }
 

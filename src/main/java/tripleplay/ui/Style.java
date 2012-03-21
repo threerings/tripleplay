@@ -9,7 +9,7 @@ import playn.core.Font;
 import playn.core.PlayN;
 import playn.core.TextFormat;
 
-import tripleplay.ui.bgs.NullBackground;
+import tripleplay.ui.bgs.BlankBackground;
 
 /**
  * Defines style properties for interface elements. Some style properties are inherited, such that
@@ -161,8 +161,7 @@ public abstract class Style<V>
     public static final TextEffectStyle TEXT_EFFECT = new TextEffectStyle();
 
     /** The background for an element. Not inherited. */
-    public static final Style<Background> BACKGROUND = newStyle(
-        false, (Background)new NullBackground());
+    public static final Style<Background> BACKGROUND = newStyle(false, Background.blank(0));
 
     /** The position relative to the text to render an icon for labels, buttons, etc. */
     public static final PosStyle ICON_POS = new PosStyle();
