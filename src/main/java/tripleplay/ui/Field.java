@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import playn.core.ImmediateLayer;
-import playn.core.Key;
 import playn.core.Keyboard;
 import playn.core.Layer;
 import playn.core.PlayN;
@@ -15,7 +14,6 @@ import playn.core.Surface;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 
-import pythagoras.f.MathUtil;
 import pythagoras.f.Point;
 
 import react.Signal;

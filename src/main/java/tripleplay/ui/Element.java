@@ -18,9 +18,7 @@ import react.SignalView;
 import react.Slot;
 
 import playn.core.GroupLayer;
-import playn.core.Layer;
 import playn.core.PlayN;
-import playn.core.Pointer;
 
 /**
  * The root of the interface element hierarchy. See {@link Widget} for the root of all interactive

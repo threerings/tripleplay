@@ -5,12 +5,9 @@
 
 package tripleplay.ui;
 
-import playn.core.Layer;
 import playn.core.PlayN;
-import playn.core.Pointer;
 
 import pythagoras.f.IDimension;
-import pythagoras.f.Point;
 
 /**
  * The root of a display hierarchy. An application can have one or more roots, but they should not

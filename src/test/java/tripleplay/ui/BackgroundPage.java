@@ -7,7 +7,6 @@ package tripleplay.ui;
 
 import playn.core.Image;
 import playn.core.PlayN;
-import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
 
 public class BackgroundPage implements WidgetDemo.Page

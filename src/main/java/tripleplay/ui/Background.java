@@ -14,7 +14,6 @@ import playn.core.PlayN;
 import playn.core.Surface;
 
 import pythagoras.f.Dimension;
-import pythagoras.f.FloatMath;
 import pythagoras.f.IDimension;
 
 import tripleplay.ui.bgs.BeveledBackground;

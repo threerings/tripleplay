@@ -8,13 +8,9 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import pythagoras.f.Point;
-
 import playn.core.Game;
 import playn.core.GroupLayer;
 import playn.core.Keyboard;
-import playn.core.Layer;
-import playn.core.Pointer;
 
 import react.Value;
 

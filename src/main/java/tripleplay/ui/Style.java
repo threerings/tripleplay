@@ -9,8 +9,6 @@ import playn.core.Font;
 import playn.core.PlayN;
 import playn.core.TextFormat;
 
-import tripleplay.ui.bgs.BlankBackground;
-
 /**
  * Defines style properties for interface elements. Some style properties are inherited, such that
  * a property not specified in a leaf element will be inherited by the nearest parent for which the

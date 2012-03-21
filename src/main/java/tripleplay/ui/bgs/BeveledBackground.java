@@ -5,7 +5,6 @@
 
 package tripleplay.ui.bgs;
 
-import pythagoras.f.FloatMath;
 import pythagoras.f.IDimension;
 
 import playn.core.ImmediateLayer;

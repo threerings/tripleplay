@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import pythagoras.f.Dimension;
-import pythagoras.f.Point;
 
 /**
  * An invisible widget that simply requests a fixed amount of space.

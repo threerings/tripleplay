@@ -5,8 +5,6 @@
 
 package tripleplay.ui;
 
-import pythagoras.f.Point;
-
 /**
  * A widget that displays one or more lines of text and/or an icon image.
  */

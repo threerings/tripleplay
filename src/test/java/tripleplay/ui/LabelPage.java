@@ -5,15 +5,8 @@
 
 package tripleplay.ui;
 
-import playn.core.Font;
 import playn.core.Image;
 import playn.core.PlayN;
-
-import pythagoras.f.IRectangle;
-import pythagoras.f.Rectangle;
-
-import react.Function;
-import react.Values;
 
 import tripleplay.ui.layout.AxisLayout;
 
