@@ -82,18 +82,18 @@ public class Root extends Elements<Root>
                 // clear focus; if the click is on the focused item, it'll get focus again
                 _iface.clearFocus();
                 // dispatch the event to the appropriate hit element
-                Point p = new Point(event.x(), event.y());
+                Point p = new Point(event.localX(), event.localY());
                 _active = hitTest(p);
                 if (_active != null) _active.onPointerStart(event, p.x, p.y);
             }
             public void onPointerDrag (Pointer.Event event) {
                 if (_active == null) return;
-                Point p = Layer.Util.screenToLayer(_active.layer, event.x(), event.y());
+                Point p = Layer.Util.screenToLayer(_active.layer, event.localX(), event.localY());
                 _active.onPointerDrag(event, p.x, p.y);
             }
             public void onPointerEnd (Pointer.Event event) {
                 if (_active == null) return;
-                Point p = Layer.Util.screenToLayer(_active.layer, event.x(), event.y());
+                Point p = Layer.Util.screenToLayer(_active.layer, event.localX(), event.localY());
                 _active.onPointerEnd(event, p.x, p.y);
                 _active = null;
             }
