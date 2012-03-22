@@ -11,6 +11,8 @@ import java.util.List;
 import playn.core.GroupLayer;
 import playn.core.Layer;
 
+import tripleplay.util.Layers;
+
 /**
  * Handles creation and management of animations. Animations may involve the tweening of a
  * geometric property of a layer (x, y, rotation, scale, alpha), or simple delays, or performing
@@ -163,6 +165,21 @@ public abstract class Animator
         return action(new Runnable() {
             public void run () {
                 parent.add(child);
+            }
+        });
+    }
+
+    /**
+     * Reparents the supplied child to the supplied new parent. This involves translating the
+     * child's current coordinates to screen coordinates, moving it to its new parent layer and
+     * translating its coordinates into the coordinate space of the new parent. Thus the child does
+     * not change screen position, even though its coordinates relative to its parent will most
+     * likely have changed.
+     */
+    public Animation.Action reparent(final GroupLayer newParent, final Layer child) {
+        return action(new Runnable() {
+            public void run () {
+                Layers.reparent(child, newParent);
             }
         });
     }
