@@ -164,6 +164,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         ldata.halign = resolveStyle(Style.HALIGN);
         ldata.valign = resolveStyle(Style.VALIGN);
 
+        String curtext = getLayoutText();
+        boolean haveText = (curtext != null && curtext.length() > 0);
+
         if (_icon != null) {
             ldata.iconPos = resolveStyle(Style.ICON_POS);
             ldata.iconGap = resolveStyle(Style.ICON_GAP);
@@ -171,17 +174,18 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             switch (ldata.iconPos) {
             case LEFT:
             case RIGHT:
-                hintX -= (iconWidth() + ldata.iconGap);
+                hintX -= iconWidth();
+                if (haveText) hintX -= ldata.iconGap;
                 break;
             case ABOVE:
             case BELOW:
-                hintY -= (iconHeight() + ldata.iconGap);
+                hintY -= iconHeight();
+                if (haveText) hintX -= ldata.iconGap;
                 break;
             }
         }
 
-        String curtext = getLayoutText();
-        if (curtext != null && curtext.length() > 0) {
+        if (haveText) {
             TextFormat format = Style.createTextFormat(this);
             if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
             // TODO: should we do something with a y-hint?
@@ -207,13 +211,15 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             switch (ldata.iconPos) {
             case LEFT:
             case RIGHT:
-                size.width += (iconWidth() + ldata.iconGap);
+                size.width += iconWidth();
+                if (ldata.text != null) size.width += ldata.iconGap;
                 size.height = Math.max(size.height, iconHeight());
                 break;
             case ABOVE:
             case BELOW:
                 size.width = Math.max(size.width, iconWidth());
-                size.height += (iconHeight() + ldata.iconGap);
+                size.height += iconHeight();
+                if (ldata.text != null) size.height += ldata.iconGap;
                 break;
             }
         }
