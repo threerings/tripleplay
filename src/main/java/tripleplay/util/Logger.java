@@ -5,6 +5,8 @@
 
 package tripleplay.util;
 
+import playn.core.PlayN;
+
 /**
  * Provides logging services that are routed to the appropriate logging destination on the client
  * or server. A useful usage pattern is for a library or game to define a shared {@code Log} class
@@ -29,6 +31,24 @@ public class Logger
         void debug (String message, Throwable t);
         void info (String message, Throwable t);
         void warning (String message, Throwable t);
+    }
+
+    /**
+     * A logging back-end that writes to PlayN.
+     */
+    public static class PlayNImpl implements Impl {
+        public void debug (String message, Throwable t) {
+            if (t != null) PlayN.log().debug(message, t);
+            else PlayN.log().debug(message);
+        }
+        public void info (String message, Throwable t) {
+            if (t != null) PlayN.log().info(message, t);
+            else PlayN.log().info(message);
+        }
+        public void warning (String message, Throwable t) {
+            if (t != null) PlayN.log().warn(message, t);
+            else PlayN.log().warn(message);
+        }
     }
 
     /**
