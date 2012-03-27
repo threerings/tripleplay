@@ -5,10 +5,9 @@
 
 package tripleplay.ui.layout;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
@@ -182,7 +181,7 @@ public class BorderLayout extends Layout
 
     protected class Slots
     {
-        final Map<Position, Element<?>> elements = Maps.newHashMap();
+        final Map<Position, Element<?>> elements = new HashMap<Position, Element<?>>();
 
         Slots (Elements<?> elems) {
             for (Element<?> elem : elems) {
