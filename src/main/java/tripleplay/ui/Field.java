@@ -36,6 +36,10 @@ public class Field extends TextWidget<Field>
     }
 
     public Field (String initialText, Styles styles) {
+        if (!PlayN.keyboard().hasHardwareKeyboard()) {
+            PlayN.log().warn("Without a hardware keyboard, Field will not function properly");
+        }
+
         enableInteraction();
         setStyles(styles).text.update(initialText);
         // create our cursor layer
