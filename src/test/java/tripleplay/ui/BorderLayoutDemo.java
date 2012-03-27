@@ -82,7 +82,7 @@ public class BorderLayoutDemo implements Game
         });
 
         _root.add(_butts);
-        setPanel(true, 0);
+        setPanel(false, 0);
     }
 
     @Override
