@@ -92,6 +92,12 @@ public class Field extends TextWidget<Field>
 
     protected void startFocus (Root root, int cursor) {
         // wire up a focus listener
+        setFocused();
+
+        _clayer.setVisible(true);
+    }
+
+    public void setFocused() {
         root._iface._focused.update((_listener = new FieldListener(cursor)));
         root._iface._focused.connect(new UnitSlot() {
             @Override public void onEmit () {
@@ -100,8 +106,6 @@ public class Field extends TextWidget<Field>
                 defocused.emit(Field.this);
             }
         }).once();
-
-        _clayer.setVisible(true);
     }
 
     protected float getCursorX (int cursor) {
