@@ -145,11 +145,28 @@ public abstract class AxisLayout extends Layout
     }
 
     /**
+     * Returns a layout constraint indicating that the associated element should not be stretched.
+     */
+    public static Constraint fixed () {
+        return UNSTRETCHED;
+    }
+
+    /**
      * Returns a layout constraint indicating that the associated element should be stretched to
      * consume extra space, with the specified weight.
      */
     public static Constraint stretched (float weight) {
         return new Constraint(true, weight);
+    }
+
+    /**
+     * Configures the default constraint for elements added to this layout to be stretched. This
+     * is equivalent to calling {@link Element#setConstraint()} with {@link #stretched()} for each
+     * element added to the parent container.
+     */
+    public AxisLayout stretchByDefault () {
+        _stretchByDefault = true;
+        return this;
     }
 
     /**
@@ -231,9 +248,10 @@ public abstract class AxisLayout extends Layout
         return m;
     }
 
-    protected static Constraint constraint (Element<?> elem) {
+    protected Constraint constraint (Element<?> elem) {
         Layout.Constraint c = elem.constraint();
-        return (c instanceof Constraint) ? (Constraint)c : UNSTRETCHED;
+        return (c instanceof Constraint) ? (Constraint)c :
+            _stretchByDefault ? UNIFORM_STRETCHED : UNSTRETCHED;
     }
 
     protected static class Metrics {
@@ -260,6 +278,7 @@ public abstract class AxisLayout extends Layout
     }
 
     protected int _gap = 5;
+    protected boolean _stretchByDefault;
     protected Policy _offPolicy = Policy.DEFAULT;
 
     protected static final Constraint UNSTRETCHED = new Constraint(false, 1);
