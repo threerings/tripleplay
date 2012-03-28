@@ -90,9 +90,7 @@ public class Field extends TextWidget<Field>
      * without a hardware keyboard, it is a NOOP to avoid popping a dialog for text entry.
      */
     public void maybeFocus () {
-        if (PlayN.keyboard().hasHardwareKeyboard()) {
-            focus();
-        }
+        if (PlayN.keyboard().hasHardwareKeyboard()) focus();
     }
 
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
@@ -130,16 +128,13 @@ public class Field extends TextWidget<Field>
                     defocused.emit(Field.this);
                 }
             }).once();
-
             _clayer.setVisible(true);
 
         } else {
             PlayN.keyboard().getText(_textType, _popupLabel, text.get(), new Callback<String>() {
                 @Override public void onSuccess (String result) {
                     // null result is a canceled entry dialog.
-                    if (result != null) {
-                        text.update(result);
-                    }
+                    if (result != null) text.update(result);
                 }
                 @Override public void onFailure (Throwable cause) { /* noop */ }
             });
@@ -183,11 +178,7 @@ public class Field extends TextWidget<Field>
     }
 
     protected void moveCursor (int pos) {
-        if (!PlayN.keyboard().hasHardwareKeyboard()) {
-            // no hardware keyboard, no cursor layer.
-            return;
-        }
-
+        if (_clayer == null) return; // if we have no cursor layer, there's nothing to move
         int ncursor = Math.max(0, Math.min(text.get().length(), pos));
         if (ncursor != _cursor) {
             _cursor = ncursor;
