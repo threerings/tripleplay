@@ -7,6 +7,7 @@ package tripleplay.ui;
 
 import playn.core.ImmediateLayer;
 import playn.core.Keyboard;
+import playn.core.Keyboard.TextType;
 import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Pointer;
@@ -14,6 +15,7 @@ import playn.core.Surface;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 
+import playn.core.util.Callback;
 import pythagoras.f.Point;
 
 import react.Signal;
@@ -36,27 +38,43 @@ public class Field extends TextWidget<Field>
     }
 
     public Field (String initialText, Styles styles) {
-        if (!PlayN.keyboard().hasHardwareKeyboard()) {
-            PlayN.log().warn("Without a hardware keyboard, Field will not function properly");
-        }
+        this (initialText, styles, "", TextType.DEFAULT);
+    }
 
+    public Field (String initialText, Styles styles, String label, TextType type) {
         enableInteraction();
         setStyles(styles).text.update(initialText);
-        // create our cursor layer
-        _clayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-            public void render (Surface surf) {
-                surf.setFillColor(_ccolor);
-                surf.fillRect(0, 0, 1, _cheight);
-            }
-        });
-        _clayer.setVisible(false);
-        layer.add(_clayer);
+
+        _label = label;
+        _type = type;
+        if (PlayN.keyboard().hasHardwareKeyboard()) {
+            // create our cursor layer
+            _clayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+                public void render (Surface surf) {
+                    surf.setFillColor(_ccolor);
+                    surf.fillRect(0, 0, 1, _cheight);
+                }
+            });
+            _clayer.setVisible(false);
+            layer.add(_clayer);
+        }
+    }
+
+    public Field setType (TextType type) {
+        _type = type;
+        return this;
+    }
+
+    public Field setLabel (String label) {
+        _label = label;
+        return this;
     }
 
     public boolean isFocused () { return _listener != null; }
 
     /**
-     * Sets the focus to this field.
+     * Sets the focus to this field. On platforms without a hardware keyboard, a dialog will get
+     * popped up for text entry.
      */
     public void focus () {
         Root root = root();
@@ -64,6 +82,16 @@ public class Field extends TextWidget<Field>
         int cursor = Math.max(0, text.get().length() - 1);
         moveCursor(cursor);
         startFocus(root, cursor);
+    }
+
+    /**
+     * On platforms with a hardware keyboard, this will give the Field keyboard focus. On platforms
+     * without a hardware keyboard, it is a NOOP to avoid popping a dialog for text entry.
+     */
+    public void maybeFocus () {
+        if (PlayN.keyboard().hasHardwareKeyboard()) {
+            focus();
+        }
     }
 
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
@@ -91,17 +119,30 @@ public class Field extends TextWidget<Field>
     }
 
     protected void startFocus (Root root, int cursor) {
-        // wire up a focus listener
-        root._iface._focused.update((_listener = new FieldListener(cursor)));
-        root._iface._focused.connect(new UnitSlot() {
-            @Override public void onEmit () {
-                _listener = null;
-                _clayer.setVisible(false);
-                defocused.emit(Field.this);
-            }
-        }).once();
+        if (PlayN.keyboard().hasHardwareKeyboard()) {
+            // wire up a focus listener
+            root._iface._focused.update((_listener = new FieldListener(cursor)));
+            root._iface._focused.connect(new UnitSlot() {
+                @Override public void onEmit () {
+                    _listener = null;
+                    _clayer.setVisible(false);
+                    defocused.emit(Field.this);
+                }
+            }).once();
 
-        _clayer.setVisible(true);
+            _clayer.setVisible(true);
+
+        } else {
+            PlayN.keyboard().getText(_type, _label, text.get(), new Callback<String>() {
+                @Override public void onSuccess (String result) {
+                    // nll result is a canceled entry dialog.
+                    if (result != null) {
+                        text.update(result);
+                    }
+                }
+                @Override public void onFailure (Throwable cause) { /* noop */ }
+            });
+        }
     }
 
     protected float getCursorX (int cursor) {
@@ -222,4 +263,6 @@ public class Field extends TextWidget<Field>
     protected int _cursor;
     protected float _cheight;
     protected int _ccolor;
+    protected TextType _type;
+    protected String _label;
 }
