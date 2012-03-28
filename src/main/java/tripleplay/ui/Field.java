@@ -7,7 +7,6 @@ package tripleplay.ui;
 
 import playn.core.ImmediateLayer;
 import playn.core.Keyboard;
-import playn.core.Keyboard.TextType;
 import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Pointer;
@@ -38,15 +37,9 @@ public class Field extends TextWidget<Field>
     }
 
     public Field (String initialText, Styles styles) {
-        this (initialText, styles, "", TextType.DEFAULT);
-    }
-
-    public Field (String initialText, Styles styles, String label, TextType type) {
         enableInteraction();
         setStyles(styles).text.update(initialText);
 
-        _label = label;
-        _type = type;
         if (PlayN.keyboard().hasHardwareKeyboard()) {
             // create our cursor layer
             _clayer = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
@@ -60,13 +53,21 @@ public class Field extends TextWidget<Field>
         }
     }
 
-    public Field setType (TextType type) {
-        _type = type;
+    /**
+     * Configures the keyboard type to use when text is requested via a popup. This is used for
+     * text entry on non-hardware-keyboard-having mobile platforms.
+     */
+    public Field setTextType (Keyboard.TextType type) {
+        _textType = type;
         return this;
     }
 
-    public Field setLabel (String label) {
-        _label = label;
+    /**
+     * Configures the label to be displayed when text is requested via a popup. This is used for
+     * text entry on non-hardware-keyboard-having mobile platforms.
+     */
+    public Field setPopupLabel (String label) {
+        _popupLabel = label;
         return this;
     }
 
@@ -133,9 +134,9 @@ public class Field extends TextWidget<Field>
             _clayer.setVisible(true);
 
         } else {
-            PlayN.keyboard().getText(_type, _label, text.get(), new Callback<String>() {
+            PlayN.keyboard().getText(_textType, _popupLabel, text.get(), new Callback<String>() {
                 @Override public void onSuccess (String result) {
-                    // nll result is a canceled entry dialog.
+                    // null result is a canceled entry dialog.
                     if (result != null) {
                         text.update(result);
                     }
@@ -257,12 +258,15 @@ public class Field extends TextWidget<Field>
         protected final String _initial = text.get();
     };
 
+    // used to manage the cursor and text input
     protected FieldListener _listener;
     protected ImmediateLayer _clayer;
     protected float _cx, _cy;
     protected int _cursor;
     protected float _cheight;
     protected int _ccolor;
-    protected TextType _type;
-    protected String _label;
+
+    // used when popping up a text entry interface on mobile platforms
+    protected Keyboard.TextType _textType = Keyboard.TextType.DEFAULT;
+    protected String _popupLabel;
 }
