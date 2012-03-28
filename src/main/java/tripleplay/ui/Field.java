@@ -183,6 +183,11 @@ public class Field extends TextWidget<Field>
     }
 
     protected void moveCursor (int pos) {
+        if (!PlayN.keyboard().hasHardwareKeyboard()) {
+            // no hardware keyboard, no cursor layer.
+            return;
+        }
+
         int ncursor = Math.max(0, Math.min(text.get().length(), pos));
         if (ncursor != _cursor) {
             _cursor = ncursor;
