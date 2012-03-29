@@ -17,6 +17,7 @@ import pythagoras.f.IRectangle;
 
 import react.Slot;
 import react.Value;
+import tripleplay.util.Objects;
 
 /**
  * An abstract base class for widgets that contain text.
@@ -39,21 +40,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     /**
      * Sets the icon to be displayed by this widget.
      */
-    public T setIcon (Image icon) {
-        if (icon != _icon || _iregion != null) {
-            _icon = icon;
-            _icon.addCallback(new ResourceCallback<Image>() {
-                public void done (Image resource) {
-                    clearLayoutData();
-                    invalidate();
-                }
-                public void error (Throwable err) {
-                    // noop!
-                }
-            });
-            _iregion = null;
-        }
-        return asT();
+    public T setIcon (Image image) {
+        return setIcon(image == null ? null : new Icon(image));
     }
 
     /**
@@ -61,19 +49,30 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
      *
      * @param region the subregion of the supplied image to be used as the icon.
      */
-    public T setIcon (Image icon, IRectangle region) {
-        if (icon != _icon || !region.equals(_iregion)) {
+    public T setIcon (Image image, IRectangle region) {
+        return setIcon(new Icon(image, region));
+    }
+
+    /**
+     * Sets the icon to be displayed by this widget. The icon may be an entire image or a
+     * rectangle subregion of an image.
+     */
+    public T setIcon (Icon icon) {
+        if (!Objects.equal(_icon, icon)) {
             _icon = icon;
-            _iregion = region;
-            _icon.addCallback(new ResourceCallback<Image>() {
-                public void done (Image resource) {
-                    clearLayoutData();
-                    invalidate();
-                }
-                public void error (Throwable err) {
-                    // noop!
-                }
-            });
+            if (_icon == null) {
+                invalidate();
+            } else {
+                _icon.image.addCallback(new ResourceCallback<Image>() {
+                    public void done (Image resource) {
+                        clearLayoutData();
+                        invalidate();
+                    }
+                    public void error (Throwable err) {
+                        // noop!
+                    }
+                });
+            }
         }
         return asT();
     }
@@ -81,7 +80,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     /**
      * Returns the icon displayed by this widget, or null.
      */
-    public Image icon () {
+    public Icon icon () {
         return _icon;
     }
 
@@ -89,9 +88,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
      * Returns a slot which can be used to wire the icon of this widget to a {@link react.Signal}
      * or {@link react.Value}.
      */
-    public Slot<Image> iconSlot () {
-        return new Slot<Image>() {
-            public void onEmit (Image icon) {
+    public Slot<Icon> iconSlot () {
+        return new Slot<Icon>() {
+            public void onEmit (Icon icon) {
                 setIcon(icon);
             }
         };
@@ -174,12 +173,12 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             switch (ldata.iconPos) {
             case LEFT:
             case RIGHT:
-                hintX -= iconWidth();
+                hintX -= _icon.width();
                 if (haveText) hintX -= ldata.iconGap;
                 break;
             case ABOVE:
             case BELOW:
-                hintY -= iconHeight();
+                hintY -= _icon.height();
                 if (haveText) hintX -= ldata.iconGap;
                 break;
             }
@@ -211,14 +210,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             switch (ldata.iconPos) {
             case LEFT:
             case RIGHT:
-                size.width += iconWidth();
+                size.width += _icon.width();
                 if (ldata.text != null) size.width += ldata.iconGap;
-                size.height = Math.max(size.height, iconHeight());
+                size.height = Math.max(size.height, _icon.height());
                 break;
             case ABOVE:
             case BELOW:
-                size.width = Math.max(size.width, iconWidth());
-                size.height += iconHeight();
+                size.width = Math.max(size.width, _icon.width());
+                size.height += _icon.height();
                 if (ldata.text != null) size.height += ldata.iconGap;
                 break;
             }
@@ -230,7 +229,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         float tx = x, ty = y, usedWidth = 0, usedHeight = 0;
         if (_icon != null && ldata.iconPos != null) {
             float ix = x, iy = y;
-            float iwidth = iconWidth(), iheight = iconHeight();
+            float iwidth = _icon.width(), iheight = _icon.height();
             switch (ldata.iconPos) {
             case LEFT:
                 tx += iwidth + ldata.iconGap;
@@ -253,15 +252,11 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 usedHeight = iheight;
                 break;
             }
-            if (_ilayer == null) layer.add(_ilayer = PlayN.graphics().createImageLayer(_icon));
-            else _ilayer.setImage(_icon);
-            if (_iregion != null) {
-                _ilayer.setWidth(_iregion.width());
-                _ilayer.setHeight(_iregion.height());
-                _ilayer.setSourceRect(_iregion.x(), _iregion.y(),
-                                      _iregion.width(), _iregion.height());
-            }
+            _ilayer = _icon.createLayer(_ilayer);
             _ilayer.setTranslation(ix, iy);
+        } else if (_icon == null && _ilayer != null) {
+            layer.remove(_ilayer);
+            _ilayer = null;
         }
 
         if (ldata.text != null) {
@@ -295,14 +290,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         invalidate();
     }
 
-    protected float iconWidth () {
-        return (_iregion == null) ? _icon.width() : _iregion.width();
-    }
-
-    protected float iconHeight () {
-        return (_iregion == null) ? _icon.height() : _iregion.height();
-    }
-
     protected static class LayoutData {
         public TextLayout text, maxText;
         public boolean wrap;
@@ -318,8 +305,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
     protected final Glyph _tglyph = new Glyph();
 
-    protected Image _icon;
-    protected IRectangle _iregion;
+    protected Icon _icon;
     protected ImageLayer _ilayer;
     protected String _maxText;
 }
