@@ -57,6 +57,7 @@ public class BorderLayoutPage implements WidgetDemo.Page
             }
         });
 
+        _root = new Group(AxisLayout.vertical().offStretch()).setConstraint(AxisLayout.stretched());
         _root.add(buttons);
         setPanel(false, 0);
         return _root;
@@ -114,8 +115,6 @@ public class BorderLayoutPage implements WidgetDemo.Page
         }
     }
 
-    protected final Group _root = new Group(AxisLayout.vertical().offStretch()).
-        setConstraint(AxisLayout.stretched());
-
+    protected Group _root;
     protected Panel _panel;
 }
