@@ -11,7 +11,7 @@ import playn.core.PlayN;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
 
-import react.Values;
+import react.Slot;
 
 import tripleplay.ui.layout.AxisLayout;
 
@@ -44,7 +44,7 @@ public class MiscPage implements WidgetDemo.Page
             new Group(AxisLayout.horizontal().gap(15), greenBg).add(
                 new Group(AxisLayout.vertical()).add(
                     new Label("Toggle viz:"),
-                    toggle = new Button("Toggle"),
+                    toggle = new Button("Toggle").withToggleBehavior(),
                     new Button("Disabled").setEnabled(false)),
                 new Group(AxisLayout.vertical()).add(
                     new Label("Label 1", redBg),
@@ -62,7 +62,12 @@ public class MiscPage implements WidgetDemo.Page
                 new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
                 new Field("Disabled text").setEnabled(false)));
 
-        Values.toggler(toggle.clicked(), true).connect(label2.visibleSlot());
+        final Label flabel2 = label2;
+        toggle.setSelected(true).clicked().connect(new Slot<Button>() {
+            public void onEmit (Button b) {
+                flabel2.setVisible(b.isSelected());
+            }
+        });
 
         return iface;
     }
