@@ -252,7 +252,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 usedHeight = iheight;
                 break;
             }
-            _ilayer = _icon.createLayer(_ilayer);
+            layer.add(_ilayer = _icon.createLayer(_ilayer));
             _ilayer.setTranslation(ix, iy);
         } else if (_icon == null && _ilayer != null) {
             layer.remove(_ilayer);

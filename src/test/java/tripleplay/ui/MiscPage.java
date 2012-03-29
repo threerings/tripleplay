@@ -8,7 +8,6 @@ package tripleplay.ui;
 import playn.core.Image;
 import playn.core.PlayN;
 
-import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
 
 import react.Slot;
@@ -26,13 +25,13 @@ public class MiscPage implements WidgetDemo.Page
 
     public Group createInterface () {
         Image smiley = PlayN.assets().getImage("images/smiley.png");
-        Image squares = PlayN.assets().getImage("images/squares.png");
+        final Image squares = PlayN.assets().getImage("images/squares.png");
 
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
         Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000, 5)));
 
-        Button toggle;
+        Button toggle, toggle2;
         Label label2;
         Group iface = new Group(AxisLayout.vertical().gap(15)).add(
             // display some wrapped text
@@ -43,8 +42,8 @@ public class MiscPage implements WidgetDemo.Page
             // display some buttons labels and allow visibility toggling
             new Group(AxisLayout.horizontal().gap(15), greenBg).add(
                 new Group(AxisLayout.vertical()).add(
-                    new Label("Toggle viz:"),
-                    toggle = new Button("Toggle").withToggleBehavior(),
+                    toggle = new Button("Toggle Viz").withToggleBehavior(),
+                    toggle2 = new Button("Toggle Icon").withToggleBehavior(),
                     new Button("Disabled").setEnabled(false)),
                 new Group(AxisLayout.vertical()).add(
                     new Label("Label 1", redBg),
@@ -52,12 +51,12 @@ public class MiscPage implements WidgetDemo.Page
                     new Label("Label 3").setIcon(smiley))),
             // display some labels with varying icon alignment
             new Group(AxisLayout.horizontal().gap(10), greenBg).add(
-                new Label("Left").setStyles(Style.ICON_POS.left).setIcon(squares, getIBounds(0)),
-                new Label("Right").setStyles(Style.ICON_POS.right).setIcon(squares, getIBounds(1)),
+                new Label("Left").setStyles(Style.ICON_POS.left).setIcon(tile(squares, 0)),
+                new Label("Right").setStyles(Style.ICON_POS.right).setIcon(tile(squares, 1)),
                 new Label("Above").setStyles(Style.ICON_POS.above, Style.HALIGN.center).
-                    setIcon(squares, getIBounds(2)),
+                    setIcon(tile(squares, 2)),
                 new Label("Below").setStyles(Style.ICON_POS.below, Style.HALIGN.center).
-                    setIcon(squares, getIBounds(3))),
+                    setIcon(tile(squares, 3))),
             new Group(AxisLayout.horizontal().gap(10)).add(
                 new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
                 new Field("Disabled text").setEnabled(false)));
@@ -68,13 +67,18 @@ public class MiscPage implements WidgetDemo.Page
                 flabel2.setVisible(b.isSelected());
             }
         });
+        toggle2.clicked().connect(new Slot<Button>() {
+            public void onEmit (Button b) {
+                flabel2.setIcon(b.isSelected() ? tile(squares, 0) : null);
+            }
+        });
 
         return iface;
     }
 
-    protected IRectangle getIBounds (int index) {
+    protected Icon tile (Image image, int index) {
         final float iwidth = 16, iheight = 16;
-        return new Rectangle(index*iwidth, 0, iwidth, iheight);
+        return new Icon(image, new Rectangle(index*iwidth, 0, iwidth, iheight));
     }
 
     protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
