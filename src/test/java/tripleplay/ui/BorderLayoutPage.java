@@ -10,101 +10,60 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import playn.core.Color;
-import playn.core.Game;
-import playn.core.PlayN;
-import playn.java.JavaPlatform;
+
 import react.UnitSlot;
-import tripleplay.ui.Background;
-import tripleplay.ui.Button;
-import tripleplay.ui.Element;
-import tripleplay.ui.Group;
-import tripleplay.ui.Interface;
-import tripleplay.ui.Label;
-import tripleplay.ui.Layout;
-import tripleplay.ui.Root;
-import tripleplay.ui.SimpleStyles;
-import tripleplay.ui.Style;
-import tripleplay.ui.Styles;
-import tripleplay.ui.Stylesheet;
+
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.BorderLayout;
 
-public class BorderLayoutDemo implements Game
+/**
+ * Displays BorderLayout stuff.
+ */
+public class BorderLayoutPage implements WidgetDemo.Page
 {
-    public static void main (String[] args) {
-        JavaPlatform.register();
-        PlayN.run(new BorderLayoutDemo());
+    public String name () {
+        return "BorderLayout";
     }
 
-    public final Interface iface = new Interface();
-
-    @Override
-    public void init () {
-        // define our root stylesheet
-        Stylesheet rootSheet = SimpleStyles.newSheetBuilder().
-            add(Label.class, Style.HALIGN.center, Style.VALIGN.center).
-            create();
-
-        // create our demo interface
-        _root = iface.createRoot(AxisLayout.vertical().offStretch(), rootSheet,
-                                 PlayN.graphics().rootLayer()).
-            setSize(PlayN.graphics().width(), PlayN.graphics().height()).
-            addStyles(Style.BACKGROUND.is(Background.solid(0xff000000)), Style.VALIGN.top);
+    public Group createInterface () {
+        Group buttons = new Group(
+            AxisLayout.horizontal(),
+            Styles.make(Style.BACKGROUND.is(Background.solid(Color.rgb(255, 255, 255), 5))));
 
         for (String edge : Panel.EDGES) {
             Button butt = new Button(edge);
-            _butts.add(butt);
+            buttons.add(butt);
             final String fedge = edge;
             butt.clicked().connect(new UnitSlot() {
-                @Override
-                public void onEmit () {
+                @Override public void onEmit () {
                     _panel.toggleEdge(fedge);
                 }
             });
         }
 
         Button gaps = new Button("Toggle Gaps");
-        _butts.add(new Shim(10, 1)).add(gaps);
+        buttons.add(new Shim(10, 1)).add(gaps);
         gaps.clicked().connect(new UnitSlot() {
-            @Override
-            public void onEmit () {
+            @Override public void onEmit () {
                 setPanel(_panel.useGroups, _panel.gaps == 0 ? 5 : 0);
             }
         });
 
         Button useGroups = new Button("Toggle Groups");
-        _butts.add(new Shim(10, 1)).add(useGroups);
+        buttons.add(new Shim(10, 1)).add(useGroups);
         useGroups.clicked().connect(new UnitSlot() {
-            @Override
-            public void onEmit () {
+            @Override public void onEmit () {
                 setPanel(!_panel.useGroups, _panel.gaps);
             }
         });
 
-        _root.add(_butts);
+        _root.add(buttons);
         setPanel(false, 0);
-    }
-
-    @Override
-    public void update (float delta) {
-        iface.update(delta);
-    }
-
-    @Override
-    public void paint (float alpha) {
-        iface.paint(alpha);
-    }
-
-    @Override
-    public int updateRate () {
-        return 30;
+        return _root;
     }
 
     protected void setPanel (boolean useGroups, float gaps) {
-        if (_panel != null) {
-            _root.remove(_panel);
-            _panel = null;
-        }
+        if (_panel != null) _root.remove(_panel);
         _panel = new Panel(useGroups, gaps);
         _panel.setConstraint(AxisLayout.stretched());
         _root.add(0, _panel);
@@ -155,8 +114,8 @@ public class BorderLayoutDemo implements Game
         }
     }
 
-    protected Root _root;
+    protected final Group _root = new Group(AxisLayout.vertical().offStretch()).
+        setConstraint(AxisLayout.stretched());
+
     protected Panel _panel;
-    protected Group _butts = new Group(AxisLayout.horizontal(),
-        Styles.make(Style.BACKGROUND.is(Background.solid(Color.rgb(255, 255, 255), 5))));
 }

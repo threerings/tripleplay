@@ -49,7 +49,7 @@ public class WidgetDemo implements Game
         root.add(buttons);
 
         Page[] pages = { new MiscPage(), new LayoutPage(), new LabelPage(), new SliderPage(),
-            new BackgroundPage() };
+                         new BackgroundPage(), new BorderLayoutPage() };
         for (final Page page : pages) {
             Button tab = new Button(page.name());
             buttons.add(tab);
