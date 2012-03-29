@@ -23,15 +23,17 @@ public class SimpleStyles
      */
     public static Stylesheet.Builder newSheetBuilder () {
         int bgColor = 0xFFCCCCCC, ulColor = 0xFFEEEEEE, brColor = 0xFFAAAAAA;
+        Styles buttonStyles = Styles.none().
+            add(Style.BACKGROUND.is(Background.beveled(bgColor, ulColor, brColor, 5))).
+            addSelected(
+                Style.BACKGROUND.is(Background.beveled(bgColor, brColor, ulColor, 6, 4, 4, 6)));
         return Stylesheet.builder().
             add(Field.class, Styles.none().
                 // flip ul and br to appear recessed
                 add(Style.BACKGROUND.is(Background.beveled(0xFFFFFFFF, brColor, ulColor, 5))).
                 addDisabled(
                     Style.BACKGROUND.is(Background.beveled(0xFFCCCCCC, brColor, ulColor, 5)))).
-            add(Button.class, Styles.none().
-                add(Style.BACKGROUND.is(Background.beveled(bgColor, ulColor, brColor, 5))).
-                addSelected(
-                    Style.BACKGROUND.is(Background.beveled(bgColor, brColor, ulColor, 6, 4, 4, 6))));
+            add(Button.class, buttonStyles).
+            add(ToggleButton.class, buttonStyles);
     }
 }

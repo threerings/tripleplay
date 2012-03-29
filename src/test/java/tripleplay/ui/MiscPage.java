@@ -31,7 +31,7 @@ public class MiscPage implements WidgetDemo.Page
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
         Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000, 5)));
 
-        Button toggle, toggle2;
+        ToggleButton toggle, toggle2;
         Label label2;
         Group iface = new Group(AxisLayout.vertical().gap(15)).add(
             // display some wrapped text
@@ -42,8 +42,8 @@ public class MiscPage implements WidgetDemo.Page
             // display some buttons labels and allow visibility toggling
             new Group(AxisLayout.horizontal().gap(15), greenBg).add(
                 new Group(AxisLayout.vertical()).add(
-                    toggle = new Button("Toggle Viz").withToggleBehavior(),
-                    toggle2 = new Button("Toggle Icon").withToggleBehavior(),
+                    toggle = new ToggleButton("Toggle Viz").setSelected(true),
+                    toggle2 = new ToggleButton("Toggle Icon"),
                     new Button("Disabled").setEnabled(false)),
                 new Group(AxisLayout.vertical()).add(
                     new Label("Label 1", redBg),
@@ -62,13 +62,13 @@ public class MiscPage implements WidgetDemo.Page
                 new Field("Disabled text").setEnabled(false)));
 
         final Label flabel2 = label2;
-        toggle.setSelected(true).clicked().connect(new Slot<Button>() {
-            public void onEmit (Button b) {
+        toggle.clicked().connect(new Slot<ToggleButton>() {
+            public void onEmit (ToggleButton b) {
                 flabel2.setVisible(b.isSelected());
             }
         });
-        toggle2.clicked().connect(new Slot<Button>() {
-            public void onEmit (Button b) {
+        toggle2.clicked().connect(new Slot<ToggleButton>() {
+            public void onEmit (ToggleButton b) {
                 flabel2.setIcon(b.isSelected() ? tile(squares, 0) : null);
             }
         });
