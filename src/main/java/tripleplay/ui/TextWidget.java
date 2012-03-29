@@ -17,6 +17,7 @@ import pythagoras.f.IRectangle;
 
 import react.Slot;
 import react.Value;
+
 import tripleplay.util.Objects;
 
 /**

@@ -8,7 +8,9 @@ package tripleplay.ui;
 import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.PlayN;
+
 import pythagoras.f.IRectangle;
+
 import tripleplay.util.Objects;
 
 /**
@@ -35,16 +37,6 @@ public class Icon
     public Icon (Image image, IRectangle bounds) {
         this.image = image;
         this.bounds = bounds;
-    }
-
-    public boolean equals (Object o) {
-        if (!(o instanceof Icon)) return false;
-        Icon oicon = (Icon)o;
-        return Objects.equal(image, oicon.image) && Objects.equal(bounds, oicon.bounds);
-    }
-
-    public int hashCode () {
-        return bounds == null ? image.hashCode() : image.hashCode() + bounds.hashCode();
     }
 
     /**
@@ -84,5 +76,15 @@ public class Icon
         if (layer == null) layer = PlayN.graphics().createImageLayer();
         setToLayer(layer);
         return layer;
+    }
+
+    @Override public boolean equals (Object o) {
+        if (!(o instanceof Icon)) return false;
+        Icon oicon = (Icon)o;
+        return Objects.equal(image, oicon.image) && Objects.equal(bounds, oicon.bounds);
+    }
+
+    @Override public int hashCode () {
+        return image.hashCode() ^ (bounds == null ? 0 : bounds.hashCode());
     }
 }
