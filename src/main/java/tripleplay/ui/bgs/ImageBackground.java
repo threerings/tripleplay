@@ -33,10 +33,8 @@ public class ImageBackground extends Background
         if (_sourceRect != null) {
             layer.setSourceRect(_sourceRect.x(), _sourceRect.y(),
                                 _sourceRect.width(), _sourceRect.height());
-            layer.setSize(_sourceRect.width(), _sourceRect.height());
-        } else {
-            layer.setSize(size.width(), size.height());
         }
+        layer.setSize(size.width(), size.height());
         return new LayerInstance(layer);
     }
 
