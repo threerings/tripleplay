@@ -159,7 +159,7 @@ public abstract class Style<V>
     public static final TextEffectStyle TEXT_EFFECT = new TextEffectStyle();
 
     /** The background for an element. Not inherited. */
-    public static final Style<Background> BACKGROUND = newStyle(false, Background.blank(0));
+    public static final Style<Background> BACKGROUND = newStyle(false, Background.blank());
 
     /** The position relative to the text to render an icon for labels, buttons, etc. */
     public static final PosStyle ICON_POS = new PosStyle();

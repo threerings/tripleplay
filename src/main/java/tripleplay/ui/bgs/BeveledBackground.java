@@ -18,12 +18,7 @@ import tripleplay.ui.Background;
  */
 public class BeveledBackground extends Background
 {
-    /**
-     * Creates a beveled background with the specified colors and insets.
-     */
-    public BeveledBackground (int bgColor, int ulColor, int brColor,
-                              float top, float right, float bottom, float left) {
-        super(top, right, bottom, left);
+    public BeveledBackground (int bgColor, int ulColor, int brColor) {
         _bgColor = bgColor;
         _ulColor = ulColor;
         _brColor = brColor;
@@ -44,5 +39,5 @@ public class BeveledBackground extends Background
         }));
     }
 
-    protected int _bgColor, _ulColor, _brColor;
+    protected final int _bgColor, _ulColor, _brColor;
 }

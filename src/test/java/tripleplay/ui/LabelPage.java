@@ -22,8 +22,8 @@ public class LabelPage implements WidgetDemo.Page
     public Group createInterface () {
         Image smiley = PlayN.assets().getImage("images/smiley.png");
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
-        Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 0)));
-        Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000, 0)));
+        Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99)));
+        Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000)));
         Group iface = new Group(AxisLayout.vertical().gap(15), redBg).add(
             // display some wrapped text
             new Group(AxisLayout.horizontal(), greenBg.add(Style.VALIGN.top)).add(

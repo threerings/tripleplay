@@ -28,7 +28,7 @@ public class BorderLayoutPage implements WidgetDemo.Page
     public Group createInterface () {
         Group buttons = new Group(
             AxisLayout.horizontal(),
-            Styles.make(Style.BACKGROUND.is(Background.solid(Color.rgb(255, 255, 255), 5))));
+            Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF).inset(5))));
 
         for (String edge : Panel.EDGES) {
             Button butt = new Button(edge);
@@ -101,14 +101,14 @@ public class BorderLayoutPage implements WidgetDemo.Page
         protected Element<?> newSection (String text, Layout.Constraint constraint, int bgColor) {
             Element<?> e;
             if (useGroups) {
-                Label l = new Label(text, Styles.make(Style.BACKGROUND.is(
-                    Background.solid(Color.rgb(255, 255, 255), 5))));
-
-                e = new Group(AxisLayout.vertical().offStretch(), Style.BACKGROUND.is(
-                    Background.solid(bgColor))).add(l).setConstraint(constraint);
+                Background whiteBg = Background.solid(0xFFFFFFFF).inset(5);
+                Label l = new Label(text, Styles.make(Style.BACKGROUND.is(whiteBg)));
+                Background colorBg = Background.solid(bgColor);
+                e = new Group(AxisLayout.vertical().offStretch(), Style.BACKGROUND.is(colorBg)).
+                    add(l).setConstraint(constraint);
             } else {
-                e = new Label(text, Styles.make(Style.BACKGROUND.is(
-                    Background.solid(bgColor, 5)))).setConstraint(constraint);
+                Background colorBg = Background.solid(bgColor).inset(5);
+                e = new Label(text).addStyles(Style.BACKGROUND.is(colorBg)).setConstraint(constraint);
             }
             edges.put(text, e);
             return e;

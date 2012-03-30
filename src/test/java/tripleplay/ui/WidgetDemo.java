@@ -43,7 +43,7 @@ public class WidgetDemo implements Game
         final Root root = _iface.createRoot(AxisLayout.vertical().offStretch(), rootSheet,
                                             PlayN.graphics().rootLayer()).
             setSize(PlayN.graphics().width(), PlayN.graphics().height()).
-            addStyles(Style.BACKGROUND.is(Background.solid(0xFF99CCFF, 5)), Style.VALIGN.top);
+            addStyles(Style.BACKGROUND.is(Background.solid(0xFF99CCFF).inset(5)), Style.VALIGN.top);
 
         Group buttons = new Group(AxisLayout.horizontal(), Style.HALIGN.left);
         root.add(buttons);

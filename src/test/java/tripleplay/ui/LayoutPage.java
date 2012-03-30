@@ -27,8 +27,8 @@ public class LayoutPage implements WidgetDemo.Page
         TableLayout minWidthDemo = new TableLayout(
             COL.minWidth(100), COL.minWidth(100).stretch(), COL).gaps(5, 5);
 
-        Styles greyBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC, 5)));
-        Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
+        Styles greyBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCCCCC).inset(5)));
+        Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99).inset(5)));
 
         Group iface = new Group(AxisLayout.vertical().offStretch()).add(
             new Group(main, greyBg).add(

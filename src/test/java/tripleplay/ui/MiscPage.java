@@ -28,8 +28,8 @@ public class MiscPage implements WidgetDemo.Page
         final Image squares = PlayN.assets().getImage("images/squares.png");
 
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
-        Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99, 5)));
-        Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000, 5)));
+        Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99).inset(5)));
+        Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFF0000).inset(5)));
 
         ToggleButton toggle, toggle2;
         Label label2;

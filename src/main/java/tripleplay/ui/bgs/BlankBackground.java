@@ -16,22 +16,6 @@ import tripleplay.ui.Background;
  */
 public class BlankBackground extends Background
 {
-    public BlankBackground () {
-        super(0, 0, 0, 0);
-    }
-
-    public BlankBackground (float inset) {
-        super(inset, inset, inset, inset);
-    }
-
-    public BlankBackground (float horizontalInset, float verticalInset) {
-        super(verticalInset, horizontalInset, verticalInset, horizontalInset);
-    }
-
-    public BlankBackground (float top, float right, float bottom, float left) {
-        super(top, right, bottom, left);
-    }
-
     @Override protected Instance instantiate (IDimension size) {
         return SINGLETON;
     }

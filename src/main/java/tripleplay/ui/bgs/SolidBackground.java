@@ -14,11 +14,7 @@ import tripleplay.ui.Background;
  */
 public class SolidBackground extends Background
 {
-    /**
-     * Creates a solid background with the specified color and insets.
-     */
-    public SolidBackground (int color, float top, float right, float bottom, float left) {
-        super(top, right, bottom, left);
+    public SolidBackground (int color) {
         _color = color;
     }
 
@@ -26,5 +22,5 @@ public class SolidBackground extends Background
         return new LayerInstance(createSolidLayer(_color, size.width(), size.height()));
     }
 
-    protected int _color;
+    protected final int _color;
 }

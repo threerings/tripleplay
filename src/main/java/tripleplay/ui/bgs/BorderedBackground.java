@@ -16,12 +16,7 @@ import tripleplay.ui.Background;
  */
 public class BorderedBackground extends Background
 {
-    /**
-     * Creates a bordered background with the specified colors, thickness and insets.
-     */
-    public BorderedBackground (int bgColor, int borderColor, int thickness,
-                             float top, float right, float bottom, float left) {
-        super(top, right, bottom, left);
+    public BorderedBackground (int bgColor, int borderColor, int thickness) {
         _bgColor = bgColor;
         _borderColor = borderColor;
         _thickness = thickness;
@@ -43,5 +38,5 @@ public class BorderedBackground extends Background
         }));
     }
 
-    protected int _bgColor, _borderColor, _thickness;
+    protected final int _bgColor, _borderColor, _thickness;
 }

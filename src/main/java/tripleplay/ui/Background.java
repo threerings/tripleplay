@@ -15,6 +15,7 @@ import playn.core.Surface;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
+import pythagoras.f.Rectangle;
 
 import tripleplay.ui.bgs.BeveledBackground;
 import tripleplay.ui.bgs.BlankBackground;
@@ -33,132 +34,56 @@ public abstract class Background
     public static final float BACKGROUND_DEPTH = -10f;
 
     /**
-     * Creates a null background (transparent) with the specified insets.
+     * Creates a null background (transparent).
      */
-    public static Background blank (float inset) {
-        return blank(inset, inset, inset, inset);
+    public static Background blank () {
+        return new BlankBackground();
     }
 
     /**
-     * Creates a null background (transparent) with the specified insets.
-     */
-    public static Background blank (float top, float right, float bottom, float left) {
-        return new BlankBackground(top, right, bottom, left);
-    }
-
-    /**
-     * Creates a solid background of the specified color, with no insets.
+     * Creates a solid background of the specified color.
      */
     public static Background solid (int color) {
-        return solid(color, 0, 0, 0, 0);
+        return new SolidBackground(color);
     }
 
     /**
-     * Creates a solid background of the specified color and (uniform) insets.
-     */
-    public static Background solid (int color, float inset) {
-        return solid(color, inset, inset, inset, inset);
-    }
-
-    /**
-     * Creates a solid background of the specified color and insets.
-     */
-    public static Background solid (int color, float top, float right, float bottom, float left) {
-        return new SolidBackground(color, top, right, bottom, left);
-    }
-
-    /**
-     * Creates a beveled background with the specified colors and no insets.
+     * Creates a beveled background with the specified colors.
      */
     public static Background beveled (int bgColor, int ulColor, int brColor) {
-        return beveled(bgColor, ulColor, brColor, 0, 0, 0, 0);
+        return new BeveledBackground(bgColor, ulColor, brColor);
     }
 
     /**
-     * Creates a beveled background with the specified colors and uniform insets.
-     */
-    public static Background beveled (int bgColor, int ulColor, int brColor, float inset) {
-        return beveled(bgColor, ulColor, brColor, inset, inset, inset, inset);
-    }
-
-    /**
-     * Creates a beveled background with the specified colors and insets.
-     */
-    public static Background beveled (int bgColor, int ulColor, int brColor,
-                                      float top, float right, float bottom, float left) {
-        return new BeveledBackground(bgColor, ulColor, brColor, top, left, bottom, right);
-    }
-
-    /**
-     * Creates a bordered background with the specified colors and thickness and no insets.
+     * Creates a bordered background with the specified colors and thickness.
      */
     public static Background bordered (int bgColor, int color, int thickness) {
-        return bordered(bgColor, color, thickness, 0, 0, 0, 0);
+        return new BorderedBackground(bgColor, color, thickness);
     }
 
     /**
-     * Creates a bordered background with the specified colors, thickness and uniform insets.
-     */
-    public static Background bordered (int bgColor, int color, int thickness, float inset) {
-        return bordered(bgColor, color, thickness, inset, inset, inset, inset);
-    }
-
-    /**
-     * Creates a bordered background with the specified colors, thickness and insets.
-     */
-    public static Background bordered (int bgColor, int color, int thickness,
-                                      float top, float right, float bottom, float left) {
-        return new BorderedBackground(bgColor, color, thickness, top, left, bottom, right);
-    }
-
-    /**
-     * Creates an image background with the specified image and no insets.
+     * Creates an image background with the specified image.
      */
     public static Background image (Image bgimage) {
-        return image(bgimage, 0);
+        return new ImageBackground(bgimage);
     }
 
     /**
-     * Creates an image background with the specified image and uniform insets.
+     * Creates an image background with the specified region of the supplied image.
      */
-    public static Background image (Image bgimage, float inset) {
-        return image(bgimage, inset, inset, inset, inset);
+    public static Background subImage (Image bgimage, float sx, float sy, float swid, float shei) {
+        return new ImageBackground(bgimage, new Rectangle(sx, sy, swid, shei));
     }
 
     /**
-     * Creates an image background with the specified image and insets.
-     */
-    public static Background image (Image bgimage, float top, float right, float bottom, float left) {
-        return new ImageBackground(bgimage, top, right, bottom, left);
-    }
-
-    /**
-     * Creates a scale9 background with the specified image and no insets.
-     * @see Scale9Background
+     * Creates a scale9 background with the specified image. See {@link Scale9Background}.
      */
     public static Background scale9 (Image scale9Image) {
-        return scale9(scale9Image, 0);
-    }
-
-    /**
-     * Creates a scale9 background with the specified image and uniform insets.
-     * @see Scale9Background
-     */
-    public static Background scale9 (Image scale9Image, float inset) {
-        return scale9(scale9Image, inset, inset, inset, inset);
-    }
-
-    /**
-     * Creates a scale9 background with the specified image and insets.
-     * @see Scale9Background
-     */
-    public static Background scale9 (Image scale9Image,
-                                     float top, float right, float bottom, float left) {
-        return new Scale9Background(scale9Image, top, right, bottom, left);
+        return new Scale9Background(scale9Image);
     }
 
     /** The insets of this background. */
-    public final float top, right, bottom, left;
+    public float top, right, bottom, left;
 
     /** Returns this background's adjustment to an element's width. */
     public float width () {
@@ -171,9 +96,31 @@ public abstract class Background
     }
 
     /**
+     * Configures uniform insets on this background.
+     */
+    public Background inset (float uniformInset) {
+        this.top = uniformInset;
+        this.right = uniformInset;
+        this.bottom = uniformInset;
+        this.left = uniformInset;
+        return this;
+    }
+
+    /**
+     * Configures non-uniform insets on this background.
+     */
+    public Background inset (float top, float right, float bottom, float left) {
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+        this.left = left;
+        return this;
+    }
+
+    /**
      * Adds this background's insests to the supplied dimensions. Returns {@code size} for chaning.
      */
-    public Dimension addInsets (Dimension size) {
+    Dimension addInsets (Dimension size) {
         size.width += width();
         size.height += height();
         return size;
@@ -184,13 +131,6 @@ public abstract class Background
      * include the insets defined for this backround.
      */
     protected abstract Instance instantiate (IDimension size);
-
-    protected Background (float top, float right, float bottom, float left) {
-        this.top = top;
-        this.right = right;
-        this.bottom = bottom;
-        this.left = left;
-    }
 
     protected static Layer createSolidLayer (final int color, final float width, final float height) {
         return PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
