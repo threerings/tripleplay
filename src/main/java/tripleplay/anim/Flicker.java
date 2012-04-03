@@ -99,7 +99,7 @@ public class Flicker extends Pointer.Adapter
      * Extracts the desired position from the pointer event. The default is to use the y-position.
      */
     protected float getPosition (Pointer.Event event) {
-        return event.y();
+        return event.localY();
     }
 
     /**
