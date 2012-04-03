@@ -303,7 +303,7 @@ public abstract class Animator
 
             // now process all of our registered animations
             for (int ii = 0, ll = _anims.size(); ii < ll; ii++) {
-                if (_anims.get(ii).apply(this, time)) {
+                if (_anims.get(ii).apply(this, time) <= 0) {
                     _anims.remove(ii--);
                     ll -= 1;
                 }

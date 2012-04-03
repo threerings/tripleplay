@@ -59,11 +59,6 @@ public abstract class Animation
             return tthis;
         }
 
-        @Override
-        protected float overrun (float time) {
-            return (time - _start) - _duration;
-        }
-
         protected Interpolator _interp = Interpolator.LINEAR;
         protected float _duration = 1;
     }
@@ -94,15 +89,14 @@ public abstract class Animation
         }
 
         @Override
-        protected boolean apply (float time) {
+        protected float apply (float time) {
             float dt = time-_start;
-            if (dt < _duration) {
-                _target.set(_interp.apply(_from, _to-_from, dt, _duration));
-                return false;
-            } else {
-                _target.set(_to);
-                return true;
-            }
+            _target.set((dt < _duration) ? _interp.apply(_from, _to-_from, dt, _duration) : _to);
+            return _duration - dt;
+        }
+
+        @Override public String toString () {
+            return getClass().getName() + " start:" + _start + " to " + _to;
         }
 
         protected final Value _target;
@@ -140,17 +134,16 @@ public abstract class Animation
         }
 
         @Override
-        protected boolean apply (float time) {
+        protected float apply (float time) {
             float dt = time-_start;
             if (dt < _duration) {
                 _x.set(_interp.apply(_fromx, _tox-_fromx, dt, _duration));
                 _y.set(_interp.apply(_fromy, _toy-_fromy, dt, _duration));
-                return false;
             } else {
                 _x.set(_tox);
                 _y.set(_toy);
-                return true;
             }
+            return _duration - dt;
         }
 
         protected final Value _x, _y;
@@ -165,13 +158,8 @@ public abstract class Animation
         }
 
         @Override
-        protected boolean apply (float time) {
-            return (time-_start >= _duration);
-        }
-
-        @Override
-        protected float overrun (float time) {
-            return (time - _start) - _duration;
+        protected float apply (float time) {
+            return _start + _duration - time;
         }
 
         protected final float _duration;
@@ -184,9 +172,9 @@ public abstract class Animation
         }
 
         @Override
-        protected boolean apply (float time) {
+        protected float apply (float time) {
             _action.run();
-            return true;
+            return 0;
         }
 
         protected Runnable _action;
@@ -208,23 +196,23 @@ public abstract class Animation
         }
 
         @Override
-        protected boolean apply (float time) {
-            return false; // not used
+        protected float apply (float time) {
+            return 0; // not used
         }
 
         @Override
-        protected boolean apply (Animator animator, float time) {
+        protected float apply (Animator animator, float time) {
             // if our current chain of animations is still running, keep going
-            if (!super.apply(animator, time)) return false;
+            float remain = super.apply(animator, time);
+            if (remain > 0) return remain;
 
             // if our target layer is no longer active, we're done
-            if (_layer.parent() == null) return true;
+            if (_layer.parent() == null) return 0;
 
             // otherwise, reset to the head of the chain and keep going
-            float overrun = _current.overrun(time);
             _current = _next;
-            _current.init(time-overrun);
-            return false;
+            _current.init(time+remain);
+            return 1; // return > zero remaining time to indicate that we're not done
         }
 
         protected Layer _layer;
@@ -267,34 +255,24 @@ public abstract class Animation
         _start = time;
     }
 
-    protected boolean apply (Animator animator, float time) {
+    protected float apply (Animator animator, float time) {
         // if we're cancelled, abandon ship now
-        if (_current == null) return true;
+        if (_current == null) return 0;
 
-        // if the current animation is still running, keep going
-        if (!_current.apply(time)) return false;
+        // if the current animation has completed, move the next one in our chain
+        float remain = _current.apply(time);
+        if (remain > 0) return remain;
 
-        // initialize our next animation if we have one (accounting for any overrun on our current
-        // animation) and keep going
-        float overrun = _current.overrun(time);
+        // if we have no next animation, return our overflow
         _current = _current._next;
-        if (_current != null) {
-            _current.init(time-overrun);
-            return false;
-        } else {
-            return true; // no next animation, so we're done
-        }
+        if (_current == null) return remain;
+
+        // otherwise init our next animation (accounting for overflow)
+        _current.init(time+remain);
+        return 1; // return > zero to indicate that we're not done
     }
 
-    protected abstract boolean apply (float time);
-
-    /**
-     * Returns the amount of time this animation has overrun its duration, given the supplied
-     * current timestamp. The result may be negative if the animation is not complete.
-     */
-    protected float overrun (float time) {
-        return 0f;
-    }
+    protected abstract float apply (float time);
 
     @Override public String toString () {
         return getClass().getName() + " start:" + _start;
