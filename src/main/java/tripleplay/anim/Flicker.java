@@ -143,11 +143,10 @@ public class Flicker extends Pointer.Adapter
         return 5;
     }
 
-    protected float _min, _max;
+    protected final float _min, _max;
 
     protected float _vel, _accel;
-    protected float _origPos, _start;
-    protected float _cur, _prev;
-    protected float _maxDelta;
+    protected float _origPos, _start, _cur, _prev;
     protected double _curStamp, _prevStamp;
+    protected float _maxDelta;
 }
