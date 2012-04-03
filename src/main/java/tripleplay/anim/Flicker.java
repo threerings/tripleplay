@@ -65,7 +65,7 @@ public class Flicker extends Pointer.Adapter
         _vel = 0;
         _maxDelta = 0;
         _origPos = position;
-        _start = _cur = _prev = getPosition(event);
+        _start = _prev = _cur = getPosition(event);
         _curStamp = _prevStamp = event.time();
     }
 
@@ -81,9 +81,7 @@ public class Flicker extends Pointer.Adapter
 
     @Override public void onPointerEnd (Pointer.Event event) {
         // check whether we should call onClick
-        if (_maxDelta < maxClickDelta()) {
-            clicked.emit(event);
-        }
+        if (_maxDelta < maxClickDelta()) clicked.emit(event);
         // if not, determine whether we should impart velocity to the tower
         else {
             float dragTime = (float)(_curStamp - _prevStamp);
