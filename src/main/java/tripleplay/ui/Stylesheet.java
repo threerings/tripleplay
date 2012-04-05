@@ -26,10 +26,15 @@ public class Stylesheet
         }
 
         /** Adds styles for the supplied element class (in the DEFAULT mode).
-         * @throws IllegalStateException if styles already exist for said class.
          * @throws NullPointerException if styles are added after {@link #create} is called. */
         public Builder add (Class<?> eclass, Style.Binding<?>... styles) {
             return add(eclass, Styles.make(styles));
+        }
+
+        /** Adds styles for the supplied element class (in the specified mode).
+         * @throws NullPointerException if styles are added after {@link #create} is called. */
+        public Builder add (Class<?> eclass, Style.Mode mode, Style.Binding<?>... styles) {
+            return add(eclass, Styles.none().add(mode, styles));
         }
 
         /** Creates a stylesheet with the previously configured style mappings. */

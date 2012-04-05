@@ -59,6 +59,20 @@ public final class Styles
     }
 
     /**
+     * Returns a new instance where the supplied bindings overwrite any previous bindings for the
+     * specified styles (in the specified mode). The receiver is not modified.
+     */
+    public Styles add (Style.Mode mode, Style.Binding<?>... bindings) {
+        if (bindings.length == 0) return this; // optimization
+        Binding<?>[] nbindings = new Binding<?>[bindings.length];
+        for (int ii = 0; ii < bindings.length; ii++) {
+            nbindings[ii] = newBinding(bindings[ii], mode);
+        }
+        // note that we take advantage of the fact that merge can handle unsorted bindings
+        return merge(nbindings);
+    }
+
+    /**
      * Returns a new instance where no binding exists for the specified style in the specified
      * state. The receiver is not modified.
      */
@@ -85,20 +99,6 @@ public final class Styles
         if (index < 0) return null;
         @SuppressWarnings("unchecked") Binding<V> binding = (Binding<V>)_bindings[index];
         return binding.get(elem);
-    }
-
-    /**
-     * Returns a new instance where the supplied bindings overwrite any previous bindings for the
-     * specified styles (in the specified mode). The receiver is not modified.
-     */
-    private Styles add (Style.Mode mode, Style.Binding<?>... bindings) {
-        if (bindings.length == 0) return this; // optimization
-        Binding<?>[] nbindings = new Binding<?>[bindings.length];
-        for (int ii = 0; ii < bindings.length; ii++) {
-            nbindings[ii] = newBinding(bindings[ii], mode);
-        }
-        // note that we take advantage of the fact that merge can handle unsorted bindings
-        return merge(nbindings);
     }
 
     private Styles merge (Binding<?>[] obindings) {
