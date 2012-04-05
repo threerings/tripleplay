@@ -107,6 +107,17 @@ public abstract class Background
     }
 
     /**
+     * Configures horizontal and vertical insets on this background.
+     */
+    public Background inset (float horiz, float vert) {
+        this.top = vert;
+        this.right = horiz;
+        this.bottom = vert;
+        this.left = horiz;
+        return this;
+    }
+
+    /**
      * Configures non-uniform insets on this background.
      */
     public Background inset (float top, float right, float bottom, float left) {
