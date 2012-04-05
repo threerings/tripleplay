@@ -106,7 +106,7 @@ public class Flicker extends Pointer.Adapter
      * Returns the deceleration (in pixels per ms per ms) applied to non-zero velocity.
      */
     protected float friction () {
-        return 0.004f;
+        return 0.003f;
     }
 
     /**
