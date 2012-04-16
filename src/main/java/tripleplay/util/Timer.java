@@ -95,7 +95,10 @@ public class Timer
     protected Action remove (Action target, Action tail) {
         if (target == tail) return tail.next;
         else if (tail == null) return null;
-        else return remove(target, tail.next);
+        else {
+            tail.next = remove(target, tail.next);
+            return tail;
+        }
     }
 
     protected class Action implements Handle {
