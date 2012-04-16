@@ -156,6 +156,41 @@ public class TimerTest
     }
 
     @Test
+    public void testRescheduler () {
+        final Timer timer = new Timer(0);
+
+        // a sub task that may be rescheduled
+        final Counter sub = new Counter();
+
+        // a timer task that schedules the sub
+        Counter main = new Counter() {
+            @Override public void run () {
+                super.run();
+                sub.cancel();
+                sub.handle = timer.after(2, sub);
+            }
+        };
+
+        // queue up the subtask for tick 2
+        timer.after(0, main);
+        timer.update(0);
+        assertEquals(1, main.ranCount);
+        assertEquals(0, sub.ranCount);
+
+        // dequeue and queue the subtask for tick 3
+        timer.after(0, main);
+        timer.update(1);
+        assertEquals(2, main.ranCount);
+        assertEquals(0, sub.ranCount);
+
+        // process to tick 3, it should run the subtask once
+        timer.update(2);
+        timer.update(3);
+        assertEquals(2, main.ranCount);
+        assertEquals(1, sub.ranCount);
+    }
+
+    @Test
     public void testDoubleCancel () {
         final Counter ran1 = new Counter();
         final Counter ran2 = new Counter();
