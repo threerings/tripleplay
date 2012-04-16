@@ -82,20 +82,20 @@ public class Timer
         return act;
     }
 
-    protected Action insert (Action target, Action next) {
-        if (next == null || next.nextExpire > target.nextExpire) {
-            target.next = next;
+    protected Action insert (Action target, Action tail) {
+        if (tail == null || tail.nextExpire > target.nextExpire) {
+            target.next = tail;
             return target;
         } else {
-            next.next = insert(target, next.next);
-            return next;
+            tail.next = insert(target, tail.next);
+            return tail;
         }
     }
 
-    protected Action remove (Action target, Action next) {
-        if (target == next) return target.next;
-        else if (next == null) return null;
-        else return remove(target, next.next);
+    protected Action remove (Action target, Action tail) {
+        if (target == tail) return tail.next;
+        else if (tail == null) return null;
+        else return remove(target, tail.next);
     }
 
     protected class Action implements Handle {
