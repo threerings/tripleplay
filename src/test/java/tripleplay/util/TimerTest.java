@@ -13,97 +13,97 @@ public class TimerTest
     @Test
     public void testOneShot () {
         Timer timer = new Timer(0);
-        int[] r1 = new int[1];
-        Timer.Handle h1 = timer.after(10, action(r1));
+        Counter r1 = new Counter();
+        Timer.Handle h1 = timer.after(10, r1);
         // make sure the timer hasn't run yet
         timer.update(3);
-        assertEquals(0, r1[0]);
+        assertEquals(0, r1.ranCount);
         // elapse time past our expirey and make sure it has run
         timer.update(15);
-        assertEquals(1, r1[0]);
+        assertEquals(1, r1.ranCount);
     }
 
     @Test
     public void testCancelBefore () {
         Timer timer = new Timer(0);
-        int[] r1 = new int[1];
-        Timer.Handle h1 = timer.after(10, action(r1));
+        Counter r1 = new Counter();
+        Timer.Handle h1 = timer.after(10, r1);
         // make sure the timer hasn't run yet
         timer.update(3);
-        assertEquals(0, r1[0]);
+        assertEquals(0, r1.ranCount);
         h1.cancel();
         // elapse time past our expirey and make sure our canceled timer did not run
         timer.update(15);
-        assertEquals(0, r1[0]);
+        assertEquals(0, r1.ranCount);
     }
 
     @Test
     public void testRepeat () {
         long time = 25;
         Timer timer = new Timer(time);
-        int[] r1 = new int[1];
-        Timer.Handle h1 = timer.every(10, action(r1));
+        Counter r1 = new Counter();
+        Timer.Handle h1 = timer.every(10, r1);
         // make sure the timer hasn't run yet
         timer.update(time += 3);
-        assertEquals(0, r1[0]);
+        assertEquals(0, r1.ranCount);
         // elapse time past our expirey and make sure our action ran
         timer.update(time += 10);
-        assertEquals(1, r1[0]);
+        assertEquals(1, r1.ranCount);
         // elapse time past our expirey again and make sure our action ran again
         timer.update(time += 10);
-        assertEquals(2, r1[0]);
+        assertEquals(2, r1.ranCount);
         // cancel our timer and make sure it ceases to run
         h1.cancel();
         timer.update(time += 10);
-        assertEquals(2, r1[0]);
+        assertEquals(2, r1.ranCount);
     }
 
     @Test
     public void testMultiple () {
         long time = 0;
         Timer timer = new Timer(time);
-        int[] r1 = new int[1], r2 = new int[2], r3 = new int[3];
+        Counter r1 = new Counter(), r2 = new Counter(), r3 = new Counter();
         // set up timers to expire after 10, 10, and 25, the latter two repeating every 10 and 15
-        Timer.Handle h1 = timer.after(10, action(r1));
-        Timer.Handle h2 = timer.every(10, action(r2));
-        Timer.Handle h3 = timer.atThenEvery(25, 15, action(r3));
+        Timer.Handle h1 = timer.after(10, r1);
+        Timer.Handle h2 = timer.every(10, r2);
+        Timer.Handle h3 = timer.atThenEvery(25, 15, r3);
 
         // T=T+3: no timers have run
         time += 3; timer.update(time);
-        assertEquals(0, r1[0]);
-        assertEquals(0, r2[0]);
-        assertEquals(0, r3[0]);
+        assertEquals(0, r1.ranCount);
+        assertEquals(0, r2.ranCount);
+        assertEquals(0, r3.ranCount);
 
         // T=T+13; h1 and h2 expire, h3 doesn't
         time += 10; timer.update(time);
-        assertEquals(1, r1[0]);
-        assertEquals(1, r2[0]);
-        assertEquals(0, r3[0]);
+        assertEquals(1, r1.ranCount);
+        assertEquals(1, r2.ranCount);
+        assertEquals(0, r3.ranCount);
 
         // T=T+23; h1 is gone, h2 expires again, h3 not yet
         time += 10; timer.update(time);
-        assertEquals(1, r1[0]);
-        assertEquals(2, r2[0]);
-        assertEquals(0, r3[0]);
+        assertEquals(1, r1.ranCount);
+        assertEquals(2, r2.ranCount);
+        assertEquals(0, r3.ranCount);
 
         // T=T+33; h1 is gone, h2 expires again, h3 expires once
         time += 10; timer.update(time);
-        assertEquals(1, r1[0]);
-        assertEquals(3, r2[0]);
-        assertEquals(1, r3[0]);
+        assertEquals(1, r1.ranCount);
+        assertEquals(3, r2.ranCount);
+        assertEquals(1, r3.ranCount);
 
         // T=T+43; h2 expires again, h3 expires again
         time += 10; timer.update(time);
-        assertEquals(1, r1[0]);
-        assertEquals(4, r2[0]);
-        assertEquals(2, r3[0]);
+        assertEquals(1, r1.ranCount);
+        assertEquals(4, r2.ranCount);
+        assertEquals(2, r3.ranCount);
     }
 
     @Test
     public void testOrder () {
         long time = 0;
         Timer timer = new Timer(time);
-        final int[] r1 = new int[1], r2 = new int[2], r3 = new int[3];
+        final int[] r1 = new int[1], r2 = new int[1], r3 = new int[1];
 
         // make sure that three timers set to expire at the same time go off in the order they were
         // registered
@@ -157,23 +157,34 @@ public class TimerTest
 
     @Test
     public void testDoubleCancel () {
-        final int[] ran = {0};
+        final Counter ran1 = new Counter();
+        final Counter ran2 = new Counter();
         Timer t = new Timer(0);
-        Timer.Handle h = t.after(1, action(ran));
-        t.after(2, action(ran));
+        Timer.Handle h = t.after(1, ran1);
+        t.after(2, ran2);
         t.update(1);
         h.cancel();
         h.cancel();
         t.update(2);
-        assertEquals(2, ran[0]);
+        assertEquals(1, ran1.ranCount);
+        assertEquals(1, ran2.ranCount);
     }
 
-    protected Runnable action (final int[] ranCount) {
-        return new Runnable() {
-            public void run () {
-                ranCount[0] += 1;
+    protected static class Counter implements Runnable
+    {
+        public int ranCount;
+        public Timer.Handle handle;
+
+        public void run () {
+            ++ranCount;
+        }
+
+        public void cancel () {
+            if (handle != null) {
+                handle.cancel();
+                handle = null;
             }
-        };
+        }
     }
 
     protected static class Rescheduler implements Runnable
