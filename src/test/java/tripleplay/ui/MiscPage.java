@@ -76,9 +76,9 @@ public class MiscPage implements WidgetDemo.Page
         return iface;
     }
 
-    protected Icon tile (Image image, int index) {
+    protected Image tile (Image image, int index) {
         final float iwidth = 16, iheight = 16;
-        return new Icon(image, new Rectangle(index*iwidth, 0, iwidth, iheight));
+        return image.subImage(index*iwidth, 0, iwidth, iheight);
     }
 
     protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";

@@ -41,37 +41,18 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     /**
      * Sets the icon to be displayed by this widget.
      */
-    public T setIcon (Image image) {
-        return setIcon(image == null ? null : new Icon(image));
-    }
-
-    /**
-     * Sets the icon to be displayed by this widget.
-     *
-     * @param region the subregion of the supplied image to be used as the icon.
-     */
-    public T setIcon (Image image, IRectangle region) {
-        return setIcon(new Icon(image, region));
-    }
-
-    /**
-     * Sets the icon to be displayed by this widget. The icon may be an entire image or a
-     * rectangle subregion of an image.
-     */
-    public T setIcon (Icon icon) {
+    public T setIcon (Image icon) {
         if (!Objects.equal(_icon, icon)) {
             _icon = icon;
             if (_icon == null) {
                 invalidate();
             } else {
-                _icon.image.addCallback(new ResourceCallback<Image>() {
+                _icon.addCallback(new ResourceCallback<Image>() {
                     public void done (Image resource) {
                         clearLayoutData();
                         invalidate();
                     }
-                    public void error (Throwable err) {
-                        // noop!
-                    }
+                    public void error (Throwable err) {} // noop!
                 });
             }
         }
@@ -81,7 +62,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     /**
      * Returns the icon displayed by this widget, or null.
      */
-    public Icon icon () {
+    public Image icon () {
         return _icon;
     }
 
@@ -89,9 +70,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
      * Returns a slot which can be used to wire the icon of this widget to a {@link react.Signal}
      * or {@link react.Value}.
      */
-    public Slot<Icon> iconSlot () {
-        return new Slot<Icon>() {
-            public void onEmit (Icon icon) {
+    public Slot<Image> iconSlot () {
+        return new Slot<Image>() {
+            public void onEmit (Image icon) {
                 setIcon(icon);
             }
         };
@@ -253,7 +234,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 usedHeight = iheight;
                 break;
             }
-            layer.add(_ilayer = _icon.createLayer(_ilayer));
+            if (_ilayer == null) layer.add(_ilayer = PlayN.graphics().createImageLayer(_icon));
+            else _ilayer.setImage(_icon);
             _ilayer.setTranslation(ix, iy);
         } else if (_icon == null && _ilayer != null) {
             layer.remove(_ilayer);
@@ -306,7 +288,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
     protected final Glyph _tglyph = new Glyph();
 
-    protected Icon _icon;
+    protected Image _icon;
     protected ImageLayer _ilayer;
     protected String _maxText;
 }

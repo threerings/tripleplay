@@ -69,13 +69,6 @@ public abstract class Background
     }
 
     /**
-     * Creates an image background with the specified region of the supplied image.
-     */
-    public static Background subImage (Image bgimage, float sx, float sy, float swid, float shei) {
-        return new ImageBackground(bgimage, new Rectangle(sx, sy, swid, shei));
-    }
-
-    /**
      * Creates a scale9 background with the specified image. See {@link Scale9Background}.
      */
     public static Background scale9 (Image scale9Image) {
