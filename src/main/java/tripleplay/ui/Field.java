@@ -71,6 +71,7 @@ public class Field extends TextWidget<Field>
         return this;
     }
 
+    /** Returns true if this field has the focus, false otherwise. */
     public boolean isFocused () { return _listener != null; }
 
     /**
@@ -95,6 +96,8 @@ public class Field extends TextWidget<Field>
 
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
         super.onPointerStart(event, x, y);
+        if (!isEnabled()) return;
+
         Root root = root();
         if (root == null) return;
 
