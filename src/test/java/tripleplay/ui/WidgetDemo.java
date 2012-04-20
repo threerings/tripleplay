@@ -20,7 +20,8 @@ public class WidgetDemo implements Game
 {
     public static void main (String[] args) {
         _mainArgs = args;
-        JavaPlatform.register();
+        JavaPlatform platform = JavaPlatform.register();
+        platform.assets().setPathPrefix("images");
         PlayN.run(new WidgetDemo());
     }
 

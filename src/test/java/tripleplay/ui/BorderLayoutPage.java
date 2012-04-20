@@ -87,11 +87,11 @@ public class BorderLayoutPage implements WidgetDemo.Page
             this.useGroups = useGroups;
             this.gaps = gaps;
 
-            add(newSection(NORTH, BorderLayout.NORTH, Color.rgb(255, 255, 0)));
-            add(newSection(SOUTH, BorderLayout.SOUTH, Color.rgb(255, 200, 0)));
-            add(newSection(WEST, BorderLayout.WEST, Color.rgb(128, 128, 128)));
-            add(newSection(EAST, BorderLayout.EAST, Color.rgb(0, 0, 255)));
-            add(newSection(CENTER, BorderLayout.CENTER, Color.rgb(255, 175, 175)));
+            add(newSection(NORTH, BorderLayout.NORTH, 0xFFFFFF00));
+            add(newSection(SOUTH, BorderLayout.SOUTH, 0xFFFFCC33));
+            add(newSection(WEST, BorderLayout.WEST, 0xFF666666));
+            add(newSection(EAST, BorderLayout.EAST, 0xFF6699CC));
+            add(newSection(CENTER, BorderLayout.CENTER, 0xFFFFCCCC));
         }
 
         public void toggleEdge (String name) {

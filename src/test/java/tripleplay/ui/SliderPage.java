@@ -24,6 +24,8 @@ public class SliderPage implements WidgetDemo.Page
         Slider slider;
         Label sliderValue;
         Group iface = new Group(AxisLayout.vertical().gap(15)).add(
+            new Shim(15, 15),
+            new Label("Click and drag the slider to change the value:"),
             slider = new Slider(0, -100, 100),
             sliderValue = new Label("0").
                 setConstraint(Constraints.minSize("-000")).

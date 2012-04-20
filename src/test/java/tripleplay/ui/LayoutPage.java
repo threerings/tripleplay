@@ -31,6 +31,8 @@ public class LayoutPage implements WidgetDemo.Page
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCCFF99).inset(5)));
 
         Group iface = new Group(AxisLayout.vertical().offStretch()).add(
+            new Shim(15, 15),
+            new Label("Table Layout"),
             new Group(main, greyBg).add(
                 new Label("This column is stretched"),
                 new Label("This column is not"),
@@ -63,9 +65,10 @@ public class LayoutPage implements WidgetDemo.Page
                     new Button("M+stretch"),
                     new Button("Free"))),
 
+            new Shim(15, 15),
+            new Label("Absolute Layout"),
             new Group(new AbsoluteLayout(), greyBg).add(
-                AbsoluteLayout.at(new Label("Absolute Layout"), 10, 10),
-                AbsoluteLayout.at(new Label("+50+50"), 50, 50),
+                AbsoluteLayout.at(new Label("+50+20"), 50, 20),
                 AbsoluteLayout.at(new Button("150x35+150+50"), 150, 50, 150, 35)));
 
         return iface;
