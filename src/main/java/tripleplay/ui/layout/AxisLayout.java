@@ -160,6 +160,20 @@ public abstract class AxisLayout extends Layout
     }
 
     /**
+     * Configures the supplied element with a {@link #stretched} constraint.
+     */
+    public static <T extends Element<T>> T stretch (T elem) {
+        return elem.setConstraint(stretched());
+    }
+
+    /**
+     * Configures the supplied element with a weighted {@link #stretched(float)} constraint.
+     */
+    public static <T extends Element<T>> T stretch (T elem, float weight) {
+        return elem.setConstraint(stretched(weight));
+    }
+
+    /**
      * Configures the default constraint for elements added to this layout to be stretched. This
      * is equivalent to calling {@link Element#setConstraint()} with {@link #stretched()} for each
      * element added to the parent container.
