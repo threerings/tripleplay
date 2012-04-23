@@ -109,5 +109,4 @@ public class FlowLayout extends Layout
 
     protected float _hgap = DEFAULT_GAP, _vgap = DEFAULT_GAP;
     protected Style.VAlign _valign = Style.VAlign.CENTER;
-    protected static final float LARGE_FLOAT = 1e10f;
 }
