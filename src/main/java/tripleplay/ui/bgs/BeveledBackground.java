@@ -25,10 +25,11 @@ public class BeveledBackground extends Background
     }
 
     @Override protected Instance instantiate (final IDimension size) {
-        return new LayerInstance(PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+        return new LayerInstance(
+            PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 float width = size.width(), height = size.height();
-                float bot = height-1, right=width-1;
+                float bot = height, right=width;
                 surf.setFillColor(_bgColor).fillRect(0, 0, width, height);
                 surf.setFillColor(_ulColor).
                     drawLine(0, 0, right, 0, 2).drawLine(0, 0, 0, bot, 2);
