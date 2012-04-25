@@ -1,4 +1,4 @@
-seq(samskivert.POMUtil.pomToSettings("pom.xml") :_*)
+seq(samskivert.POMUtil.pomToSettings("pom.xml") ++ LWJGLPlugin.lwjglSettings :_*)
 
 crossPaths := false
 
