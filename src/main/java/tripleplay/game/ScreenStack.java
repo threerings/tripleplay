@@ -74,7 +74,7 @@ public abstract class ScreenStack
      * {@link Game#update}.
      */
     public void update (float delta) {
-        top().update(delta);
+        if (!_screens.isEmpty()) top().update(delta);
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class ScreenStack
      * {@link Game#paint}.
      */
     public void paint (float alpha) {
-        top().paint(alpha);
+        if (!_screens.isEmpty()) top().paint(alpha);
     }
 
     protected Screen top () {
