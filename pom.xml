@@ -44,7 +44,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <playn.version>1.2</playn.version>
+    <playn.version>1.3-SNAPSHOT</playn.version>
   </properties>
 
   <dependencies>
@@ -126,6 +126,27 @@
           <links>
             <link>http://docs.playn.googlecode.com/git/javadoc</link>
           </links>
+        </configuration>
+      </plugin>
+      <!-- fiddling to unpack and use LWJGL when running the unit tests -->
+      <plugin>
+        <groupId>com.googlecode.mavennatives</groupId>
+        <artifactId>maven-nativedependencies-plugin</artifactId>
+        <version>0.0.6</version>
+        <executions>
+          <execution>
+            <id>unpacknatives</id>
+            <phase>test-compile</phase>
+            <goals><goal>copy</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.12</version>
+        <configuration>
+          <argLine>-Djava.library.path=${basedir}/target/natives</argLine>
         </configuration>
       </plugin>
     </plugins>
