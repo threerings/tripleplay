@@ -102,7 +102,7 @@ public class BorderLayoutPage implements WidgetDemo.Page
             Element<?> e;
             if (useGroups) {
                 Background whiteBg = Background.solid(0xFFFFFFFF).inset(5);
-                Label l = new Label(text, Styles.make(Style.BACKGROUND.is(whiteBg)));
+                Label l = new Label(text).addStyles(Style.BACKGROUND.is(whiteBg));
                 Background colorBg = Background.solid(bgColor);
                 e = new Group(AxisLayout.vertical().offStretch(), Style.BACKGROUND.is(colorBg)).
                     add(l).setConstraint(constraint);

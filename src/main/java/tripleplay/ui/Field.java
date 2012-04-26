@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.Image;
 import playn.core.ImmediateLayer;
 import playn.core.Keyboard;
 import playn.core.Layer;
@@ -19,9 +20,14 @@ import pythagoras.f.Point;
 
 import react.Signal;
 import react.UnitSlot;
+import react.Value;
 
 public class Field extends TextWidget<Field>
 {
+    /** The text displayed by this widget. */
+    public final Value<String> text = Value.create("");
+
+    /** A signal emitted when this field loses focus. */
     public final Signal<Field> defocused = Signal.create();
 
     public Field () {
@@ -38,7 +44,9 @@ public class Field extends TextWidget<Field>
 
     public Field (String initialText, Styles styles) {
         enableInteraction();
-        setStyles(styles).text.update(initialText);
+        setStyles(styles);
+        this.text.update(initialText);
+        this.text.connect(textDidChange());
 
         if (PlayN.keyboard().hasHardwareKeyboard()) {
             // create our cursor layer
@@ -92,6 +100,17 @@ public class Field extends TextWidget<Field>
      */
     public void maybeFocus () {
         if (PlayN.keyboard().hasHardwareKeyboard()) focus();
+    }
+
+    @Override protected String text () {
+        String ctext = text.get();
+        // we always want non-empty text so that we force ourselves to always have a text layer and
+        // sane dimensions even if the text field contains no text
+        return (ctext == null || ctext.length() == 0) ? " " : ctext;
+    }
+
+    @Override protected Image icon () {
+        return null; // fields never have an icon
     }
 
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
@@ -155,13 +174,6 @@ public class Field extends TextWidget<Field>
         TextLayout withBL = PlayN.graphics().layoutText(withB, format);
         TextLayout bL = PlayN.graphics().layoutText("b", format);
         return withBL.width() - bL.width() - 1;
-    }
-
-    @Override protected String getLayoutText () {
-        String ltext = text.get();
-        // we always want non-empty text so that we force ourselves to always have a text layer and
-        // sane dimensions even if the text field contains no text
-        return (ltext == null || ltext.length() == 0) ? " " : ltext;
     }
 
     @Override protected void createTextLayer (LayoutData ldata, float tx, float ty,

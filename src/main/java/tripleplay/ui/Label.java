@@ -5,32 +5,62 @@
 
 package tripleplay.ui;
 
+import playn.core.Image;
+
+import react.Value;
+
 /**
  * A widget that displays one or more lines of text and/or an icon image.
  */
 public class Label extends TextWidget<Label>
 {
-    /** Creates a label with no text and inherited styles. */
+    /** The text displayed by this widget, or null. */
+    public final Value<String> text = Value.create((String)null);
+
+    /** The icon displayed by this widget, or null. */
+    public final Value<Image> icon = Value.<Image>create(null);
+
+    /** Creates a label with no text or icon. */
     public Label () {
-        this("");
+        this(null, null);
     }
 
-    /**  Creates a label with the given text and inherited styles. */
+    /**  Creates a label with the supplied text. */
     public Label (String text) {
-        this(text, Styles.none());
+        this(text, null);
     }
 
-    /** Creates a label with no text and inherited styles. */
-    public Label (Styles styles) {
-        this("", styles);
+    /** Creates a label with the supplied icon. */
+    public Label (Image icon) {
+        this(null, icon);
     }
 
-    /** Creates a label with the given text and styles. */
-    public Label (String text, Styles styles) {
-        setStyles(styles).text.update(text);
+    /** Creates a label with the supplied text and icon. */
+    public Label (String text, Image icon) {
+        this.text.update(text);
+        this.icon.update(icon);
+        this.text.connect(textDidChange());
+        this.icon.connect(iconDidChange());
+    }
+
+    /** @deprecated Call {@code label.icon.update(icon)} or pass your icon to the ctor. */
+    @Deprecated
+    public Label setIcon (Image icon) {
+        this.icon.update(icon);
+        return this;
     }
 
     @Override public String toString () {
         return "Label(" + text.get() + ")";
     }
+
+    @Override protected String text () {
+        return text.get();
+    }
+
+    @Override protected Image icon () {
+        return icon.get();
+    }
+
+    protected Image _icon;
 }

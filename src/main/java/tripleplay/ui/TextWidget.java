@@ -16,7 +16,6 @@ import pythagoras.f.Dimension;
 import pythagoras.f.IRectangle;
 
 import react.Slot;
-import react.Value;
 
 import tripleplay.util.Objects;
 
@@ -26,66 +25,56 @@ import tripleplay.util.Objects;
 public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 {
     /**
-     * The text displayed by this widget.
+     * Returns the current text displayed by this widget, or null if it has no text.
      */
-    public final Value<String> text = Value.create("");
+    protected abstract String text ();
 
-    protected TextWidget () {
-        text.connect(new Slot<String> () {
+    /**
+     * Returns the current icon displayed by this widget, or null if it has no icon.
+     */
+    protected abstract Image icon ();
+
+    /**
+     * Returns a slot that subclasses should wire up to their text {@code Value}.
+     */
+    protected Slot<String> textDidChange () {
+        return new Slot<String> () {
             @Override public void onEmit (String newText) {
-                clearTextLayer();
-            }
-        });
-    }
-
-    /**
-     * Sets the icon to be displayed by this widget.
-     */
-    public T setIcon (Image icon) {
-        if (!Objects.equal(_icon, icon)) {
-            _icon = icon;
-            if (_icon == null) {
+                clearLayoutData();
                 invalidate();
-            } else {
-                _icon.addCallback(new ResourceCallback<Image>() {
-                    public void done (Image resource) {
-                        clearLayoutData();
-                        invalidate();
-                    }
-                    public void error (Throwable err) {} // noop!
-                });
             }
-        }
-        return asT();
+        };
     }
 
     /**
-     * Returns the icon displayed by this widget, or null.
+     * Returns a slot that subclasses should wire up to their icon {@code Value}.
      */
-    public Image icon () {
-        return _icon;
-    }
-
-    /**
-     * Returns a slot which can be used to wire the icon of this widget to a {@link react.Signal}
-     * or {@link react.Value}.
-     */
-    public Slot<Image> iconSlot () {
+    protected Slot<Image> iconDidChange() {
         return new Slot<Image>() {
-            public void onEmit (Image icon) {
-                setIcon(icon);
+            @Override public void onEmit (Image icon) {
+                if (icon == null) {
+                    clearLayoutData();
+                    invalidate();
+                } else {
+                    icon.addCallback(new ResourceCallback<Image>() {
+                        public void done (Image resource) {
+                            clearLayoutData();
+                            invalidate();
+                        }
+                        public void error (Throwable err) {} // noop!
+                    });
+                }
             }
         };
     }
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        // clear out our background instance
         if (_bginst != null) {
             _bginst.destroy();
             _bginst = null;
         }
-        clearTextLayer();
+        _tglyph.destroy();
         if (_ilayer != null) {
             _ilayer.destroy();
             _ilayer = null;
@@ -118,6 +107,11 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         clearLayoutData(); // we no longer need our layout data
     }
 
+    @Override protected void clearLayoutData () {
+        super.clearLayoutData();
+        _ldata = null;
+    }
+
     protected LayoutData createLayoutData () {
         return new LayoutData();
     }
@@ -145,22 +139,23 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         ldata.halign = resolveStyle(Style.HALIGN);
         ldata.valign = resolveStyle(Style.VALIGN);
 
-        String curtext = getLayoutText();
+        String curtext = text();
         boolean haveText = (curtext != null && curtext.length() > 0);
 
-        if (_icon != null) {
+        Image icon = icon();
+        if (icon != null) {
             ldata.iconPos = resolveStyle(Style.ICON_POS);
             ldata.iconGap = resolveStyle(Style.ICON_GAP);
             // remove the icon space from our hint dimensions
             switch (ldata.iconPos) {
             case LEFT:
             case RIGHT:
-                hintX -= _icon.width();
+                hintX -= icon.width();
                 if (haveText) hintX -= ldata.iconGap;
                 break;
             case ABOVE:
             case BELOW:
-                hintY -= _icon.height();
+                hintY -= icon.height();
                 if (haveText) hintX -= ldata.iconGap;
                 break;
             }
@@ -174,13 +169,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         }
     }
 
-    /**
-     * Returns the text used to compute our layout.
-     */
-    protected String getLayoutText () {
-        return text.get();
-    }
-
     protected Dimension computeContentsSize (LayoutData ldata, Dimension size) {
         if (_constraint instanceof Constraints.TextConstraint) {
             ((Constraints.TextConstraint)_constraint).addTextSize(size, ldata.text);
@@ -188,18 +176,19 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             size.width += ldata.text.width();
             size.height += ldata.text.height();
         }
-        if (_icon != null) {
+        Image icon = icon();
+        if (icon != null) {
             switch (ldata.iconPos) {
             case LEFT:
             case RIGHT:
-                size.width += _icon.width();
+                size.width += icon.width();
                 if (ldata.text != null) size.width += ldata.iconGap;
-                size.height = Math.max(size.height, _icon.height());
+                size.height = Math.max(size.height, icon.height());
                 break;
             case ABOVE:
             case BELOW:
-                size.width = Math.max(size.width, _icon.width());
-                size.height += _icon.height();
+                size.width = Math.max(size.width, icon.width());
+                size.height += icon.height();
                 if (ldata.text != null) size.height += ldata.iconGap;
                 break;
             }
@@ -209,9 +198,10 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
     protected void renderLayout (LayoutData ldata, float x, float y, float width, float height) {
         float tx = x, ty = y, usedWidth = 0, usedHeight = 0;
-        if (_icon != null && ldata.iconPos != null) {
+        Image icon = icon();
+        if (icon != null && ldata.iconPos != null) {
             float ix = x, iy = y;
-            float iwidth = _icon.width(), iheight = _icon.height();
+            float iwidth = icon.width(), iheight = icon.height();
             switch (ldata.iconPos) {
             case LEFT:
                 tx += iwidth + ldata.iconGap;
@@ -234,10 +224,10 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 usedHeight = iheight;
                 break;
             }
-            if (_ilayer == null) layer.add(_ilayer = PlayN.graphics().createImageLayer(_icon));
-            else _ilayer.setImage(_icon);
+            if (_ilayer == null) layer.add(_ilayer = PlayN.graphics().createImageLayer(icon));
+            else _ilayer.setImage(icon);
             _ilayer.setTranslation(ix, iy);
-        } else if (_icon == null && _ilayer != null) {
+        } else if (icon == null && _ilayer != null) {
             layer.remove(_ilayer);
             _ilayer = null;
         }
@@ -247,6 +237,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float twidth = Math.min(availWidth, ldata.text.width());
             float theight = Math.min(availHeight, ldata.text.height());
             createTextLayer(ldata, tx, ty, twidth, theight, availWidth, availHeight);
+        } else {
+            _tglyph.destroy();
         }
     }
 
@@ -260,17 +252,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             _tglyph.layer().setTranslation(tx + ldata.halign.offset(twidth, availWidth),
                                            ty + ldata.valign.offset(theight, availHeight));
         }
-    }
-
-    @Override protected void clearLayoutData () {
-        super.clearLayoutData();
-        _ldata = null;
-    }
-
-    protected void clearTextLayer () {
-        _tglyph.destroy();
-        clearLayoutData();
-        invalidate();
     }
 
     protected static class LayoutData {
@@ -288,7 +269,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
     protected final Glyph _tglyph = new Glyph();
 
-    protected Image _icon;
     protected ImageLayer _ilayer;
     protected String _maxText;
 }

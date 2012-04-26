@@ -33,6 +33,10 @@ public class SimpleStyles
                 add(Style.BACKGROUND.is(Background.beveled(0xFFFFFFFF, brColor, ulColor).inset(5))).
                 addDisabled(Style.BACKGROUND.is(Background.beveled(0xFFCCCCCC, brColor, ulColor).
                                                 inset(5)))).
+            add(CheckBox.class, Styles.none().
+                add(Style.BACKGROUND.is(Background.beveled(bgColor, ulColor, brColor).inset(2))).
+                addSelected(Style.BACKGROUND.is(Background.beveled(bgColor, brColor, ulColor).
+                                                inset(2)))).
             add(Button.class, buttonStyles).
             add(ToggleButton.class, buttonStyles);
     }

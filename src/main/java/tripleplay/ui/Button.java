@@ -5,8 +5,11 @@
 
 package tripleplay.ui;
 
+import playn.core.Image;
+
 import react.Signal;
 import react.SignalView;
+import react.Value;
 
 /**
 * A button that displays text, or an icon, or both.
@@ -14,20 +17,40 @@ import react.SignalView;
 public class Button extends ClickableTextWidget<Button>
     implements Clickable<Button>
 {
-    public Button (String text, Styles styles) {
-        setStyles(styles).text.update(text);
-    }
+    /** The text displayed by this widget, or null. */
+    public final Value<String> text = Value.create((String)null);
 
-    public Button (Styles styles) {
-        this("", styles);
-    }
+    /** The icon displayed by this widget, or null. */
+    public final Value<Image> icon = Value.<Image>create(null);
 
-    public Button (String text) {
-        this(text, Styles.none());
-    }
-
+    /** Creates a button with no text or icon. */
     public Button () {
-        this("");
+        this(null, null);
+    }
+
+    /**  Creates a button with the supplied text. */
+    public Button (String text) {
+        this(text, null);
+    }
+
+    /** Creates a button with the supplied icon. */
+    public Button (Image icon) {
+        this(null, icon);
+    }
+
+    /** Creates a button with the supplied text and icon. */
+    public Button (String text, Image icon) {
+        this.text.update(text);
+        this.icon.update(icon);
+        this.text.connect(textDidChange());
+        this.icon.connect(iconDidChange());
+    }
+
+    /** @deprecated Call {@code button.icon.update(icon)} or pass your icon to the ctor. */
+    @Deprecated
+    public Button setIcon (Image icon) {
+        this.icon.update(icon);
+        return this;
     }
 
     @Override public SignalView<Button> clicked () {
@@ -40,6 +63,14 @@ public class Button extends ClickableTextWidget<Button>
 
     @Override protected void onClick () {
         _clicked.emit(this); // emit a click event
+    }
+
+    @Override protected String text () {
+        return text.get();
+    }
+
+    @Override protected Image icon () {
+        return icon.get();
     }
 
     protected final Signal<Button> _clicked = Signal.create();

@@ -10,6 +10,7 @@ import playn.core.PlayN;
 
 import pythagoras.f.Rectangle;
 
+import react.Function;
 import react.Slot;
 
 import tripleplay.ui.layout.AxisLayout;
@@ -31,7 +32,7 @@ public class MiscPage implements WidgetDemo.Page
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CC66).inset(5)));
         Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCC6666).inset(5)));
 
-        ToggleButton toggle, toggle2;
+        CheckBox toggle, toggle2;
         Label label2;
         Group iface = new Group(AxisLayout.vertical()).add(
             // display some buttons labels and allow visibility toggling
@@ -39,23 +40,27 @@ public class MiscPage implements WidgetDemo.Page
             new Label("Toggling visibility"),
             new Group(AxisLayout.horizontal().gap(15), greenBg).add(
                 new Group(AxisLayout.vertical()).add(
-                    toggle = new ToggleButton("Toggle Viz").setSelected(true),
-                    toggle2 = new ToggleButton("Toggle Icon"),
+                    new Group(AxisLayout.horizontal()).add(
+                        toggle = new CheckBox(),
+                        new Label("Toggle Viz")),
+                    new Group(AxisLayout.horizontal()).add(
+                        toggle2 = new CheckBox(),
+                        new Label("Toggle Icon")),
                     new Button("Disabled").setEnabled(false)),
                 new Group(AxisLayout.vertical()).add(
-                    new Label("Label 1", redBg),
+                    new Label("Label 1").addStyles(redBg),
                     label2 = new Label("Label 2"),
-                    new Label("Label 3").setIcon(smiley))),
+                    new Label("Label 3", smiley))),
             // display some labels with varying icon alignment
             new Shim(15, 15),
             new Label("Icon positioning"),
             new Group(AxisLayout.horizontal().gap(10), greenBg).add(
-                new Label("Left").setStyles(Style.ICON_POS.left).setIcon(tile(squares, 0)),
-                new Label("Right").setStyles(Style.ICON_POS.right).setIcon(tile(squares, 1)),
-                new Label("Above").setStyles(Style.ICON_POS.above, Style.HALIGN.center).
-                    setIcon(tile(squares, 2)),
-                new Label("Below").setStyles(Style.ICON_POS.below, Style.HALIGN.center).
-                    setIcon(tile(squares, 3))),
+                new Label("Left", tile(squares, 0)).setStyles(Style.ICON_POS.left),
+                new Label("Right", tile(squares, 1)).setStyles(Style.ICON_POS.right),
+                new Label("Above", tile(squares, 2)).setStyles(Style.ICON_POS.above,
+                                                               Style.HALIGN.center),
+                new Label("Below", tile(squares, 3)).setStyles(Style.ICON_POS.below,
+                                                               Style.HALIGN.center)),
             // display an editable text field
             new Shim(15, 15),
             new Label("Text editing"),
@@ -63,17 +68,13 @@ public class MiscPage implements WidgetDemo.Page
                 new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
                 new Field("Disabled text").setEnabled(false)));
 
-        final Label flabel2 = label2;
-        toggle.clicked().connect(new Slot<ToggleButton>() {
-            public void onEmit (ToggleButton b) {
-                flabel2.setVisible(b.isSelected());
+        toggle.checked.update(true);
+        toggle.checked.connect(label2.visibleSlot());
+        toggle2.checked.map(new Function<Boolean,Image>() {
+            public Image apply (Boolean checked) {
+                return checked ? tile(squares, 0) : null;
             }
-        });
-        toggle2.clicked().connect(new Slot<ToggleButton>() {
-            public void onEmit (ToggleButton b) {
-                flabel2.setIcon(b.isSelected() ? tile(squares, 0) : null);
-            }
-        });
+        }).connect(label2.icon.slot());
 
         return iface;
     }

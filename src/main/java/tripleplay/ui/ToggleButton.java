@@ -5,8 +5,11 @@
 
 package tripleplay.ui;
 
+import playn.core.Image;
+
 import react.Signal;
 import react.SignalView;
+import react.Value;
 
 /**
  * A toggle button that displays text, or an icon, or both. Clicking the button toggles it from
@@ -15,20 +18,33 @@ import react.SignalView;
 public class ToggleButton extends TogglableTextWidget<ToggleButton>
     implements Clickable<ToggleButton>
 {
-    public ToggleButton (String text, Styles styles) {
-        setStyles(styles).text.update(text);
-    }
+    /** The text displayed by this widget, or null. */
+    public final Value<String> text = Value.create((String)null);
 
-    public ToggleButton (Styles styles) {
-        this("", styles);
-    }
+    /** The icon displayed by this widget, or null. */
+    public final Value<Image> icon = Value.<Image>create(null);
 
-    public ToggleButton (String text) {
-        this(text, Styles.none());
-    }
-
+    /** Creates a button with no text or icon. */
     public ToggleButton () {
-        this("");
+        this(null, null);
+    }
+
+    /**  Creates a button with the supplied text. */
+    public ToggleButton (String text) {
+        this(text, null);
+    }
+
+    /** Creates a button with the supplied icon. */
+    public ToggleButton (Image icon) {
+        this(null, icon);
+    }
+
+    /** Creates a button with the supplied text and icon. */
+    public ToggleButton (String text, Image icon) {
+        this.text.update(text);
+        this.icon.update(icon);
+        this.text.connect(textDidChange());
+        this.icon.connect(iconDidChange());
     }
 
     @Override public SignalView<ToggleButton> clicked () {
@@ -37,6 +53,14 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
 
     @Override public String toString () {
         return "ToggleButton(" + text.get() + ")";
+    }
+
+    @Override protected String text () {
+        return text.get();
+    }
+
+    @Override protected Image icon () {
+        return icon.get();
     }
 
     @Override protected void onClick () {

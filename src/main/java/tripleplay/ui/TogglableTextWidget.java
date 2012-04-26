@@ -8,7 +8,8 @@ package tripleplay.ui;
 /**
  * Extends the {@link ClickableTextWidget} with toggling behavior.
  */
-public class TogglableTextWidget<T extends TogglableTextWidget<T>> extends ClickableTextWidget<T>
+public abstract class TogglableTextWidget<T extends TogglableTextWidget<T>>
+    extends ClickableTextWidget<T>
 {
     /**
      * Returns true if this widget is currently selected.

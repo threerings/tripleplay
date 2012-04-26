@@ -66,8 +66,8 @@ public class FlowLayoutPage implements WidgetDemo.Page
 
     public Element<?> create (ElemType type) {
         switch (type) {
-        case SMILE: return new Label().setIcon(_smiley);
-        case SMILE_TEXT: return new Label("Some Text").setIcon(_smiley);
+        case SMILE: return new Label(_smiley);
+        case SMILE_TEXT: return new Label("Some Text", _smiley);
         case TEXT: return new Label("Blah blah blah");
         case BUTTON: return new Button("Click to Foo");
         default: throw new AssertionError();
