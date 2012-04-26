@@ -52,12 +52,59 @@ public class Logger
     }
 
     /**
+     * Log implementation that delegates handling to another if filter conditions are met.
+     * TODO: extend more, perhaps a Map<String, DebugLevel>
+     */
+    public static class FilterImpl implements Impl {
+        /** The implementation to receive filtered calls. */
+        public final Impl impl;
+
+        /** Whether we are hiding debug messages. */
+        public boolean hideDebugMessages;
+
+        /** Creates a new filter impl based on the one given .*/
+        public FilterImpl (Impl impl) {
+            this.impl = impl;
+        }
+
+        /** Sets this filter to hide debug messages.
+         * @return this for chaining */
+        public FilterImpl hideDebugMessages () {
+            hideDebugMessages = true;
+            return this;
+        }
+
+        @Override public void debug (String ident, String message, Throwable t) {
+            if (hideDebugMessages) return;
+            impl.debug(ident,  message, t);
+        }
+
+        @Override public void info (String ident, String message, Throwable t) {
+            impl.info(ident,  message, t);
+        }
+
+        @Override public void warning (String ident, String message, Throwable t) {
+            impl.warning(ident,  message, t);
+        }
+    };
+
+    /**
      * Configures the logging back-end. This should be called before any code that makes use of the
      * logging services. The default back-end logs to {@code stderr}, which is useful when running
      * in unit tests.
      */
     public static void setImpl (Impl impl) {
         _impl = impl;
+    }
+
+    /**
+     * Configures the logging backed to filter messages. Further filtering configuration can be
+     * chained onto the returned <code>FilterImpl</code>.
+     */
+    public static FilterImpl filter () {
+        FilterImpl filter = new FilterImpl(_impl);
+        _impl = filter;
+        return filter;
     }
 
     /**
