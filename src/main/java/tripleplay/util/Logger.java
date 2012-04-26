@@ -28,24 +28,24 @@ public class Logger
      * Wires the logging front-end to the logging back-end. See {@link #setImpl}.
      */
     public interface Impl {
-        void debug (String message, Throwable t);
-        void info (String message, Throwable t);
-        void warning (String message, Throwable t);
+        void debug (String ident, String message, Throwable t);
+        void info (String ident, String message, Throwable t);
+        void warning (String ident, String message, Throwable t);
     }
 
     /**
      * A logging back-end that writes to PlayN.
      */
     public static class PlayNImpl implements Impl {
-        public void debug (String message, Throwable t) {
+        public void debug (String ident, String message, Throwable t) {
             if (t != null) PlayN.log().debug(message, t);
             else PlayN.log().debug(message);
         }
-        public void info (String message, Throwable t) {
+        public void info (String ident, String message, Throwable t) {
             if (t != null) PlayN.log().info(message, t);
             else PlayN.log().info(message);
         }
-        public void warning (String message, Throwable t) {
+        public void warning (String ident, String message, Throwable t) {
             if (t != null) PlayN.log().warn(message, t);
             else PlayN.log().warn(message);
         }
@@ -132,41 +132,41 @@ public class Logger
             sb.append("]");
         }
         Object error = (args.length % 2 == 1) ? args[args.length-1] : null;
-        target.log(sb.toString(), (Throwable)error);
+        target.log(ident, sb.toString(), (Throwable)error);
     }
 
     protected static interface Target {
-        void log (String message, Throwable t);
+        void log (String ident, String message, Throwable t);
     }
 
     protected static Target DEBUG_TARGET = new Target() {
-        public void log (String message, Throwable t) {
-            _impl.debug(message, t);
+        public void log (String ident, String message, Throwable t) {
+            _impl.debug(ident, message, t);
         }
     };
     protected static Target INFO_TARGET = new Target() {
-        public void log (String message, Throwable t) {
-            _impl.info(message, t);
+        public void log (String ident, String message, Throwable t) {
+            _impl.info(ident, message, t);
         }
     };
     protected static Target WARNING_TARGET = new Target() {
-        public void log (String message, Throwable t) {
-            _impl.warning(message, t);
+        public void log (String ident, String message, Throwable t) {
+            _impl.warning(ident, message, t);
         }
     };
 
     protected static Impl _impl = new Impl() {
-        public void debug (String message, Throwable t) {
-            info(message, t);
+        public void debug (String ident, String message, Throwable t) {
+            info(ident, message, t);
         }
-        public void info (String message, Throwable t) {
+        public void info (String ident, String message, Throwable t) {
             System.out.println(message);
             if (t != null) {
                 t.printStackTrace(System.out);
             }
         }
-        public void warning (String message, Throwable t) {
-            info(message, t);
+        public void warning (String ident, String message, Throwable t) {
+            info(ident, message, t);
         }
     };
 }

@@ -46,15 +46,15 @@ public class LoggerTest
         StringWriter buf = new StringWriter();
         final PrintWriter out = new PrintWriter(buf);
         Logger.setImpl(new Logger.Impl() {
-            public void debug (String message, Throwable t) {
+            public void debug (String ident, String message, Throwable t) {
                 out.println(message);
                 if (t != null) t.printStackTrace(out);
             }
-            public void info (String message, Throwable t) {
+            public void info (String ident, String message, Throwable t) {
                 out.println(message);
                 if (t != null) t.printStackTrace(out);
             }
-            public void warning (String message, Throwable t) {
+            public void warning (String ident, String message, Throwable t) {
                 out.println(message);
                 if (t != null) t.printStackTrace(out);
             }
