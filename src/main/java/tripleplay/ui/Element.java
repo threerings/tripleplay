@@ -9,6 +9,7 @@ import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.IRectangle;
+import pythagoras.f.MathUtil;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 import pythagoras.f.Transform;
@@ -352,7 +353,7 @@ public abstract class Element<T extends Element<T>>
      * Configures the location of this element, relative to its parent.
      */
     protected void setLocation (float x, float y) {
-        layer.transform().setTranslation(x, y);
+        layer.transform().setTranslation(MathUtil.ifloor(x), MathUtil.ifloor(y));
     }
 
     /**

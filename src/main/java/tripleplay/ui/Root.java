@@ -56,7 +56,7 @@ public class Root extends Elements<Root>
      */
     public Root setBounds (float x, float y, float width, float height) {
         setSize(width, height);
-        layer.setTranslation(x, y);
+        setLocation(x, y);
         return this;
     }
 
