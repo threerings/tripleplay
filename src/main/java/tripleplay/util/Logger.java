@@ -5,6 +5,9 @@
 
 package tripleplay.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import playn.core.PlayN;
 
 /**
@@ -24,32 +27,82 @@ import playn.core.PlayN;
  */
 public class Logger
 {
+    /** Tags a log message with a particular severity level. */
+    public enum Level { DEBUG, INFO, WARNING, OFF; }
+
     /**
      * Wires the logging front-end to the logging back-end. See {@link #setImpl}.
      */
     public interface Impl {
-        void debug (String ident, String message, Throwable t);
-        void info (String ident, String message, Throwable t);
-        void warning (String ident, String message, Throwable t);
+        /** Logs the supplied message at the supplied level. */
+        void log (Level level, String ident, String message, Throwable t);
+    }
+
+    /** Manages the target log levels for a given ident. */
+    public static class Levels {
+        /** Configures the default log level. Messages with severity lower than this level will not
+         * be logged unless a specific level is set for their identifier. */
+        public Levels setDefault (Level level) {
+            _defaultLevel = level;
+            return this;
+        }
+
+        /** Configures the log level for messages with the supplied identifier. Messages with the
+         * supplied identifier with severity lower than this level will not be logged regardless of
+         * the default log level. Pass null to clear any level cutoff for {@code ident}. */
+        public Levels set (String ident, Level level) {
+            _levels.put(ident, level);
+            return this;
+        }
+
+        /** Returns the current default log level. */
+        public Level defaultLevel () {
+            return _defaultLevel;
+        }
+
+        /** Returns the current log level for the specified identifier, or null if no level is
+         * configured for that identifier. */
+        public Level level (String ident) {
+            return _levels.get(ident);
+        }
+
+        /** Returns true if a message with the specified level and ident should be logged. */
+        public boolean shouldLog (Level level, String ident) {
+            Level ilevel = _levels.get(ident);
+            if (ilevel != null) return level.ordinal() >= ilevel.ordinal();
+            return level.ordinal() >= _defaultLevel.ordinal();
+        }
+
+        protected Level _defaultLevel = Level.DEBUG;
+        protected Map<String,Level> _levels = new HashMap<String,Level>();
     }
 
     /**
      * A logging back-end that writes to PlayN.
      */
     public static class PlayNImpl implements Impl {
-        public void debug (String ident, String message, Throwable t) {
-            if (t != null) PlayN.log().debug(message, t);
-            else PlayN.log().debug(message);
-        }
-        public void info (String ident, String message, Throwable t) {
-            if (t != null) PlayN.log().info(message, t);
-            else PlayN.log().info(message);
-        }
-        public void warning (String ident, String message, Throwable t) {
-            if (t != null) PlayN.log().warn(message, t);
-            else PlayN.log().warn(message);
+        public void log (Level level, String ident, String message, Throwable t) {
+            String msg = ident + ": " + message;
+            switch (level) {
+            case DEBUG:
+                if (t != null) PlayN.log().debug(msg, t);
+                else PlayN.log().debug(msg);
+                break;
+            default:
+            case INFO:
+                if (t != null) PlayN.log().info(msg, t);
+                else PlayN.log().info(msg);
+                break;
+            case WARNING:
+                if (t != null) PlayN.log().warn(msg, t);
+                else PlayN.log().warn(msg);
+                break;
+            }
         }
     }
+
+    /** Log levels can be configured via this instance. */
+    public static Levels levels = new Levels();
 
     /**
      * Configures the logging back-end. This should be called before any code that makes use of the
@@ -97,7 +150,9 @@ public class Logger
      * Throwable} cause.
      */
     public void debug (String message, Object... args) {
-        log(DEBUG_TARGET, _ident, message, args);
+        if (levels.shouldLog(Level.DEBUG, _ident)) {
+            log(Level.DEBUG, _ident, message, args);
+        }
     }
 
     /**
@@ -108,7 +163,9 @@ public class Logger
      * Throwable} cause.
      */
     public void info (String message, Object... args) {
-        log(INFO_TARGET, _ident, message, args);
+        if (levels.shouldLog(Level.INFO, _ident)) {
+            log(Level.INFO, _ident, message, args);
+        }
     }
 
     /**
@@ -119,54 +176,30 @@ public class Logger
      * Throwable} cause.
      */
     public void warning (String message, Object... args) {
-        log(WARNING_TARGET, _ident, message, args);
+        if (levels.shouldLog(Level.WARNING, _ident)) {
+            log(Level.WARNING, _ident, message, args);
+        }
     }
 
     protected final String _ident;
 
-    protected static void log (Target target, String ident, String message, Object... args) {
-        StringBuilder sb = new StringBuilder().append(ident).append(": ").append(message);
+    protected void log (Level level, String ident, String message, Object... args) {
+        StringBuilder sb = new StringBuilder().append(message);
         if (args.length > 1) {
             sb.append(" [");
             format(sb, args);
             sb.append("]");
         }
         Object error = (args.length % 2 == 1) ? args[args.length-1] : null;
-        target.log(ident, sb.toString(), (Throwable)error);
+        _impl.log(level, ident, sb.toString(), (Throwable)error);
     }
-
-    protected static interface Target {
-        void log (String ident, String message, Throwable t);
-    }
-
-    protected static Target DEBUG_TARGET = new Target() {
-        public void log (String ident, String message, Throwable t) {
-            _impl.debug(ident, message, t);
-        }
-    };
-    protected static Target INFO_TARGET = new Target() {
-        public void log (String ident, String message, Throwable t) {
-            _impl.info(ident, message, t);
-        }
-    };
-    protected static Target WARNING_TARGET = new Target() {
-        public void log (String ident, String message, Throwable t) {
-            _impl.warning(ident, message, t);
-        }
-    };
 
     protected static Impl _impl = new Impl() {
-        public void debug (String ident, String message, Throwable t) {
-            info(ident, message, t);
-        }
-        public void info (String ident, String message, Throwable t) {
-            System.out.println(message);
+        @Override public void log (Level level, String ident, String message, Throwable t) {
+            System.out.println(ident + ": " + message);
             if (t != null) {
                 t.printStackTrace(System.out);
             }
-        }
-        public void warning (String ident, String message, Throwable t) {
-            info(ident, message, t);
         }
     };
 }

@@ -21,7 +21,7 @@ public class LoggerTest
         StringWriter buf = configWriterImpl();
         Logger log = new Logger("test");
         log.info("This is a test.");
-        assertEquals("test: This is a test." + NEWLINE, buf.toString());
+        assertEquals("This is a test." + NEWLINE, buf.toString());
     }
 
     @Test
@@ -29,7 +29,31 @@ public class LoggerTest
         StringWriter buf = configWriterImpl();
         Logger log = new Logger("test");
         log.info("Foo.", "bar", "baz", "one", 1, "null", null);
-        assertEquals("test: Foo. [bar=baz, one=1, null=null]" + NEWLINE, buf.toString());
+        assertEquals("Foo. [bar=baz, one=1, null=null]" + NEWLINE, buf.toString());
+    }
+
+    @Test
+    public void testDefaultLevel () {
+        StringWriter buf = configWriterImpl();
+        Logger.levels.setDefault(Logger.Level.WARNING);
+        Logger log = new Logger("test");
+        log.debug("Debug");
+        log.info("Info");
+        log.warning("Warning");
+        assertEquals("Warning" + NEWLINE, buf.toString());
+        Logger.levels.setDefault(Logger.Level.DEBUG);
+    }
+
+    @Test
+    public void testLevels () {
+        StringWriter buf = configWriterImpl();
+        Logger.levels.set("test", Logger.Level.WARNING);
+        Logger log = new Logger("test");
+        log.debug("Debug");
+        log.info("Info");
+        log.warning("Warning");
+        assertEquals("Warning" + NEWLINE, buf.toString());
+        Logger.levels.set("test", null);
     }
 
     @Test
@@ -38,7 +62,7 @@ public class LoggerTest
         Logger log = new Logger("test");
         log.info("Foo.", "bar", "baz", new Exception());
         String[] lines = buf.toString().split(NEWLINE);
-        assertEquals("test: Foo. [bar=baz]", lines[0]);
+        assertEquals("Foo. [bar=baz]", lines[0]);
         assertEquals("java.lang.Exception", lines[1]);
     }
 
@@ -46,15 +70,7 @@ public class LoggerTest
         StringWriter buf = new StringWriter();
         final PrintWriter out = new PrintWriter(buf);
         Logger.setImpl(new Logger.Impl() {
-            public void debug (String ident, String message, Throwable t) {
-                out.println(message);
-                if (t != null) t.printStackTrace(out);
-            }
-            public void info (String ident, String message, Throwable t) {
-                out.println(message);
-                if (t != null) t.printStackTrace(out);
-            }
-            public void warning (String ident, String message, Throwable t) {
+            public void log (Logger.Level level, String ident, String message, Throwable t) {
                 out.println(message);
                 if (t != null) t.printStackTrace(out);
             }
