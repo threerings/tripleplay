@@ -14,7 +14,7 @@ import playn.core.Image;
  * Displays a checkbox which can be toggled. The checkbox must be configured with either a
  * font-based checkmark, or a checkmark icon, which will be shown when it is checked.
  */
-public class CheckBox extends TogglableTextWidget<CheckBox>
+public class CheckBox extends ClickableTextWidget<CheckBox>
 {
     /** The checked status of this widget. */
     public final Value<Boolean> checked = Value.create(false);
@@ -38,7 +38,6 @@ public class CheckBox extends TogglableTextWidget<CheckBox>
         _checkIcon = checkIcon;
         checked.connect(new Slot<Boolean> () {
             @Override public void onEmit (Boolean checked) {
-                set(Flag.SELECTED, checked);
                 updateCheckViz();
             }
         });
@@ -53,7 +52,7 @@ public class CheckBox extends TogglableTextWidget<CheckBox>
     }
 
     @Override protected void onClick () {
-        checked.update(isSet(Flag.SELECTED));
+        checked.update(!checked.get());
     }
 
     @Override protected void layout () {
@@ -62,9 +61,9 @@ public class CheckBox extends TogglableTextWidget<CheckBox>
     }
 
     protected void updateCheckViz () {
-        boolean checked = isSelected();
-        if (_tglyph.layer() != null) _tglyph.layer().setVisible(checked);
-        if (_ilayer != null) _ilayer.setVisible(checked);
+        boolean isChecked = checked.get();
+        if (_tglyph.layer() != null) _tglyph.layer().setVisible(isChecked);
+        if (_ilayer != null) _ilayer.setVisible(isChecked);
     }
 
     protected final String _checkStr;
