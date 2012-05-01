@@ -66,7 +66,8 @@ public class Flicker extends Pointer.Adapter
         _maxDelta = 0;
         _origPos = position;
         _start = _prev = _cur = getPosition(event);
-        _curStamp = _prevStamp = event.time();
+        _prevStamp = 0;
+        _curStamp = event.time();
     }
 
     @Override public void onPointerDrag (Pointer.Event event) {
@@ -88,7 +89,7 @@ public class Flicker extends Pointer.Adapter
             float delta = _cur - _prev;
             float signum = Math.signum(delta);
             float dragVel = Math.abs(delta) / dragTime;
-            if (dragVel > flickVelThresh()) {
+            if (dragVel > flickVelThresh() && delta > minFlickDelta()) {
                 _vel = signum * Math.min(maxFlickVel(), dragVel * flickXfer());
                 _accel = -signum * friction();
             }
@@ -139,6 +140,13 @@ public class Flicker extends Pointer.Adapter
      */
     protected float maxClickDelta () {
         return 5;
+    }
+
+    /**
+     * Returns the minimum distance (in pixels) the pointer must have moved to register as a flick.
+     */
+    protected float minFlickDelta () {
+        return 10;
     }
 
     protected final float _min, _max;
