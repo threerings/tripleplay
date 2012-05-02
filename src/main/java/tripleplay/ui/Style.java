@@ -141,6 +141,12 @@ public abstract class Style<V>
     /** The shadow color for an element. Inherited. */
     public static final Style<Integer> SHADOW = newStyle(true, 0x55000000);
 
+    /** The shadow offset in pixels. Inherited. */
+    public static final Style<Float> SHADOW_X = newStyle(true, 2f);
+
+    /** The shadow offset in pixels. Inherited. */
+    public static final Style<Float> SHADOW_Y = newStyle(true, 2f);
+
     /** The horizontal alignment of an element. Not inherited. */
     public static final HAlignStyle HALIGN = new HAlignStyle();
 
@@ -186,7 +192,9 @@ public abstract class Style<V>
         case SHADOW:
             format = format.withEffect(
                 TextFormat.Effect.shadow(
-                    Styles.resolveStyle(elem, Style.SHADOW), SHADOW_X, SHADOW_Y));
+                    Styles.resolveStyle(elem, Style.SHADOW),
+                    Styles.resolveStyle(elem, Style.SHADOW_X),
+                    Styles.resolveStyle(elem, Style.SHADOW_Y)));
             break;
         }
         return format;
@@ -224,7 +232,4 @@ public abstract class Style<V>
         case CENTER: return TextFormat.Alignment.CENTER;
         }
     }
-
-    // TODO: make these configurable somehow/where
-    protected static final int SHADOW_X = 2, SHADOW_Y = 2;
 }
