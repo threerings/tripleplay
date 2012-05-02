@@ -14,6 +14,7 @@ import playn.core.TextLayout;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IRectangle;
+import pythagoras.f.MathUtil;
 
 import react.Slot;
 
@@ -249,8 +250,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         if (twidth > 0 && theight > 0) {
             _tglyph.prepare(twidth, theight);
             _tglyph.canvas().drawText(ldata.text, 0, 0);
-            _tglyph.layer().setTranslation(tx + ldata.halign.offset(twidth, availWidth),
-                                           ty + ldata.valign.offset(theight, availHeight));
+            _tglyph.layer().setTranslation(
+                MathUtil.ifloor(tx + ldata.halign.offset(twidth, availWidth)),
+                MathUtil.ifloor(ty + ldata.valign.offset(theight, availHeight)));
         }
     }
 
