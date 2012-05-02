@@ -5,6 +5,8 @@
 
 package tripleplay.anim;
 
+import pythagoras.f.IPoint;
+
 import playn.core.Layer;
 
 import tripleplay.util.Interpolator;
@@ -119,11 +121,22 @@ public abstract class Animation
             return this;
         }
 
+        /** Configures the starting values. Default: the values of the scalar at the time that the
+         * animation begins. */
+        public Two from (IPoint pos) {
+            return from(pos.x(), pos.y());
+        }
+
         /** Configures the ending values. Default: (0, 0). */
         public Two to (float tox, float toy) {
             _tox = tox;
             _toy = toy;
             return this;
+        }
+
+        /** Configures the ending values. Default: (0, 0). */
+        public Two to (IPoint pos) {
+            return to(pos.x(), pos.y());
         }
 
         @Override
