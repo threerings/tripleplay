@@ -131,12 +131,21 @@ public abstract class Background
     }
 
     /**
+     * Instantiates a delegate background at the supplied size. This allows one to make a composite
+     * background which consists of multiple backgrounds arranged in concert.
+     */
+    protected Instance instantiate (Background delegate, IDimension size) {
+        return delegate.instantiate(size);
+    }
+
+    /**
      * Instantiates this background using the supplied widget size. The supplied size should
      * include the insets defined for this backround.
      */
     protected abstract Instance instantiate (IDimension size);
 
-    protected static Layer createSolidLayer (final int color, final float width, final float height) {
+    protected static Layer createSolidLayer (
+        final int color, final float width, final float height) {
         return PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 surf.setFillColor(color).fillRect(0, 0, width, height);
