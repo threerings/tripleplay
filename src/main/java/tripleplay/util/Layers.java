@@ -38,9 +38,9 @@ public class Layers
      */
     public static void reparent (Layer layer, GroupLayer target) {
         Point pos = new Point(layer.transform().tx(), layer.transform().ty());
-        Layer.Util.layerToScreen(layer, pos, pos);
+        Layer.Util.layerToScreen(layer.parent(), pos, pos);
         target.add(layer);
-        Layer.Util.screenToLayer(layer, pos, pos);
+        Layer.Util.screenToLayer(layer.parent(), pos, pos);
         layer.setTranslation(pos.x, pos.y);
     }
 
