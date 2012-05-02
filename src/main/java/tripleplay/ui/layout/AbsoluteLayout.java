@@ -43,29 +43,30 @@ public class AbsoluteLayout extends Layout
     /**
      * Constrains {@code elem} to the specified position, in its preferred size.
      */
-    public static <T extends Element<T>> T at (T elem, float x, float y) {
+    public static <T extends Element<?>> T at (T elem, float x, float y) {
         return at(elem, new Point(x, y));
     }
 
     /**
      * Constraints {@code elem} to the specified position, in its preferred size.
      */
-    public static <T extends Element<T>> T at (T elem, IPoint position) {
+    public static <T extends Element<?>> T at (T elem, IPoint position) {
         return at(elem, position, new Dimension(0, 0));
     }
 
     /**
      * Constrains {@code elem} to the specified position and size.
      */
-    public static <T extends Element<T>> T at (T elem, float x, float y, float width, float height) {
+    public static <T extends Element<?>> T at (T elem, float x, float y, float width, float height) {
         return at(elem, new Point(x, y), new Dimension(width, height));
     }
 
     /**
      * Constrains {@code elem} to the specified position and size.
      */
-    public static <T extends Element<T>> T at (T elem, IPoint position, IDimension size) {
-        return elem.setConstraint(new Constraint(position, size));
+    public static <T extends Element<?>> T at (T elem, IPoint position, IDimension size) {
+        elem.setConstraint(new Constraint(position, size));
+        return elem;
     }
 
     @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
