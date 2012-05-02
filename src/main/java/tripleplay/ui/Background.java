@@ -15,7 +15,6 @@ import playn.core.Surface;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
-import pythagoras.f.Rectangle;
 
 import tripleplay.ui.bgs.BeveledBackground;
 import tripleplay.ui.bgs.BlankBackground;
@@ -122,7 +121,7 @@ public abstract class Background
     }
 
     /**
-     * Adds this background's insests to the supplied dimensions. Returns {@code size} for chaning.
+     * Adds this background's insets to the supplied dimensions. Returns {@code size} for chaining.
      */
     Dimension addInsets (Dimension size) {
         size.width += width();
@@ -140,7 +139,7 @@ public abstract class Background
 
     /**
      * Instantiates this background using the supplied widget size. The supplied size should
-     * include the insets defined for this backround.
+     * include the insets defined for this background.
      */
     protected abstract Instance instantiate (IDimension size);
 
