@@ -69,6 +69,14 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     public T add (Element<?>... children) {
+        // remove the children from existing parents, if any
+        for (Element<?> child : children) {
+            Elements<?> parent = child.parent();
+            if (parent != null) {
+                parent.remove(child);
+            }
+        }
+
         _children.addAll(Arrays.asList(children));
         for (Element<?> child : children) {
             didAdd(child);
@@ -78,7 +86,12 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     public T add (int index, Element<?> child) {
-        // TODO: check if child is already added here? has parent?
+        // remove the child from an existing parent, if it has one
+        Elements<?> parent = child.parent();
+        if (parent != null) {
+            parent.remove(child);
+        }
+
         _children.add(index, child);
         didAdd(child);
         invalidate();
