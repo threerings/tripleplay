@@ -58,10 +58,11 @@ public class AnimTests implements Game
 
     @Override // from interface Game
     public int updateRate () {
-        return 30;
+        return 60;
     }
 
     protected Test[] _tests = {
+        new FramesTest(),
         new RepeatTest()
     };
 

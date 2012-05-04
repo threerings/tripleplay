@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import playn.core.GroupLayer;
+import playn.core.ImageLayer;
 import playn.core.Layer;
 
+import tripleplay.util.Frames;
 import tripleplay.util.Layers;
 
 /**
@@ -126,6 +128,50 @@ public abstract class Animator
     }
 
     /**
+     * Starts a flipbook animation that displays {@code frames} in {@code layer}. The frames will
+     * be played in order, each for the specified duration. Note that the image layer in question
+     * will have its translation adjusted based on the offset of the current frame. Thus it should
+     * be placed into a {@link GroupLayer} if it is to be positioned and animated separately.
+     * @param secsPerFrame the number of seconds to display each frame.
+     */
+    public Animation.Flip flipbook (ImageLayer layer, Frames frames, float secsPerFrame) {
+        float[] times = new float[frames.count()];
+        times[0] = secsPerFrame;
+        for (int ii = 1, ll = times.length; ii < ll; ii++) times[ii] = times[ii-1] + secsPerFrame;
+        return flipbook(layer, frames, times);
+    }
+
+    /**
+     * Starts a flipbook animation that displays {@code frames} in {@code layer}. The frames will
+     * be played in order, each for its associated duration in {@code frameEnds}. Note that the
+     * image layer in question will have its translation adjusted based on the offset of the
+     * current frame. Thus it should be placed into a {@link GroupLayer} if it is to be positioned
+     * and animated separately.
+     * @param frameEnds the time (in seconds since animation start) at which each frame ends.
+     * The values must be monotonically increasing (e.g. {@code (1.5f, 2f, 2.5f, 4f)}.
+     */
+    public Animation.Flip flipbook (ImageLayer layer, Frames frames, float[] frameEnds) {
+        int[] frameIndexes = new int[frames.count()];
+        for (int ii = 1, ll = frameIndexes.length; ii < ll; ii++) frameIndexes[ii] = ii;
+        return flipbook(layer, frames, frameIndexes, frameEnds);
+    }
+
+    /**
+     * Starts a flipbook animation that displays {@code frames} in {@code layer}. Note that the
+     * image layer in question will have its translation adjusted based on the offset of the
+     * current frame. Thus it should be placed into a {@link GroupLayer} if it is to be positioned
+     * and animated separately.
+     * @param frameIndex the index of the frame to play.
+     * @param frameEnds the time (in seconds since animation start) at which the frame specified
+     * at the corresponding position in {@code frameIndex} ends. The values must be monotonically
+     * increasing (e.g. {@code (1.5f, 2f, 2.5f, 4f)}.
+     */
+    public Animation.Flip flipbook (ImageLayer layer, Frames frames, int[] frameIndexes,
+                                       float[] frameEnds) {
+        return add(new Animation.Flip(layer, frames, frameIndexes, frameEnds));
+    }
+
+    /**
      * Starts a tween using the supplied custom value. {@link Animation.Value#initial} will be used
      * (if needed) to obtain the initial value before the tween begins. {@link Animation.Value#set}
      * will be called each time the tween is updated with the intermediate values.
@@ -228,6 +274,7 @@ public abstract class Animator
 
     /**
      * Performs per-frame animation processing.
+     * @param time a monotonically increasing seconds value.
      */
     public void update (float time) {
         // nada by default

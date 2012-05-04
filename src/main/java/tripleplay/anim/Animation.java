@@ -7,8 +7,10 @@ package tripleplay.anim;
 
 import pythagoras.f.IPoint;
 
+import playn.core.ImageLayer;
 import playn.core.Layer;
 
+import tripleplay.util.Frames;
 import tripleplay.util.Interpolator;
 
 /**
@@ -23,6 +25,42 @@ public abstract class Animation
 
         /** Updates the value. */
         void set (float value);
+    }
+
+    public static class Flip extends Animation {
+        public Flip (ImageLayer target, Frames frames, int[] frameIndices, float[] frameEnds) {
+            _target = target;
+            _frames = frames;
+            _frameIndices = frameIndices;
+            _frameEnds = frameEnds;
+        }
+
+        @Override
+        protected void init (float time) {
+            super.init(time);
+            setFrame(0);
+        }
+
+        protected float apply (float time) {
+            float dt = time - _start;
+            int newIdx = _curIdx;
+            float remain = _frameEnds[_frameEnds.length-1] - dt;
+            if (remain < 0) return remain;
+            while (_frameEnds[newIdx] < dt) newIdx++;
+            if (newIdx != _curIdx) setFrame(newIdx);
+            return remain;
+        }
+
+        protected void setFrame (int idx) {
+            _frames.apply(idx, _target);
+            _curIdx = idx;
+        }
+
+        protected final ImageLayer _target;
+        protected final Frames _frames;
+        protected final int[] _frameIndices;
+        protected final float[] _frameEnds;
+        protected int _curIdx;
     }
 
     /** A base class for animations that interpolate values. */

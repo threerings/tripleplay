@@ -6,8 +6,8 @@
 package tripleplay.anim;
 
 import playn.core.CanvasImage;
-import static playn.core.PlayN.*;
 import playn.core.ImageLayer;
+import static playn.core.PlayN.*;
 
 class RepeatTest extends AnimTests.Test
 {
