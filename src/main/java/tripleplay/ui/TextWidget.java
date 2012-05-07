@@ -69,6 +69,11 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         };
     }
 
+    @Override protected void wasAdded (Elements<?> parent) {
+        super.wasAdded(parent);
+        invalidate();
+    }
+
     @Override protected void wasRemoved () {
         super.wasRemoved();
         if (_bginst != null) {
