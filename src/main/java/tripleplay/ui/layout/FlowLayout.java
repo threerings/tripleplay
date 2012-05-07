@@ -11,12 +11,24 @@ import tripleplay.ui.Layout;
 import tripleplay.ui.Style;
 
 /**
- * Lays out elements in horizontal rows, breaking rows when the width limit is reached.
+ * Lays out elements in horizontal rows, starting a new row when a width limit is reached. By
+ * default, the hint width is used as the limit; this can be overridden with a fixed value.
+ * <p>TODO: vertical</p>
  */
 public class FlowLayout extends Layout
 {
     /** The default gap between rows and elements in a row. */
     public static final float DEFAULT_GAP = 5;
+
+    /**
+     * Sets the maximum width of a row of elements. This should normally be used whenever a flow
+     * layout governs {@code Elements} that have horizontal siblings. By default, the hint width
+     * is used.
+     */
+    public FlowLayout wrapAt (float width) {
+        _wrapWidth = width;
+        return this;
+    }
 
     /**
      * Sets the gap, in pixels, to use between rows and between elements within a row.
@@ -41,8 +53,7 @@ public class FlowLayout extends Layout
      * Sets the alignment used for positioning elements within their row. By default, elements
      * are centered vertically: {@link Style.VAlign#CENTER}.
      */
-    public FlowLayout align (Style.VAlign align)
-    {
+    public FlowLayout align (Style.VAlign align) {
         _valign = align;
         return this;
     }
@@ -73,6 +84,9 @@ public class FlowLayout extends Layout
 
     protected Metrics computeMetrics (Elements<?> elems, float width, float height) {
         Metrics m = new Metrics();
+
+        // adjust our maximum width if appropriate
+        if (_wrapWidth != null) width = _wrapWidth;
 
         // fill in components horizontally, breaking rows as needed
         Dimension rowSize = new Dimension();
@@ -108,5 +122,6 @@ public class FlowLayout extends Layout
     }
 
     protected float _hgap = DEFAULT_GAP, _vgap = DEFAULT_GAP;
+    protected Float _wrapWidth;
     protected Style.VAlign _valign = Style.VAlign.CENTER;
 }
