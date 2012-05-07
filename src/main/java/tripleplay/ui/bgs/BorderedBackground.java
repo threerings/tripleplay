@@ -27,7 +27,7 @@ public class BorderedBackground extends Background
         return new LayerInstance(PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 float width = size.width(), height = size.height();
-                float bot = height, right = width;
+                float bot = height-1, right = width-1;
                 surf.setFillColor(_bgColor).fillRect(0, 0, width, height);
                 surf.setFillColor(_borderColor).
                     drawLine(0, 0, right, 0, _thickness).
