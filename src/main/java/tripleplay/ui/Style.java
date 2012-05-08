@@ -81,7 +81,9 @@ public abstract class Style<V>
     /** Defines supported text effects. */
     public static enum TextEffect {
         /** Outlines the text in the highlight color. */
-        OUTLINE,
+        PIXEL_OUTLINE,
+        /** Outlines the text in the highlight color. */
+        VECTOR_OUTLINE,
         /** Draws a shadow below and to the right of the text in the shadow color. */
         SHADOW,
         /** No text effect. */
@@ -117,7 +119,10 @@ public abstract class Style<V>
 
     /** Used to provide concise TextEffect style declarations. */
     public static class TextEffectStyle extends Style<TextEffect> {
-        public final Binding<TextEffect> outline = is(TextEffect.OUTLINE);
+        /** @deprecated Use {@link #pixelOutline}. */
+        @Deprecated public final Binding<TextEffect> outline = is(TextEffect.PIXEL_OUTLINE);
+        public final Binding<TextEffect> pixelOutline = is(TextEffect.PIXEL_OUTLINE);
+        public final Binding<TextEffect> vectorOutline = is(TextEffect.VECTOR_OUTLINE);
         public final Binding<TextEffect> shadow = is(TextEffect.SHADOW);
         public final Binding<TextEffect> none = is(TextEffect.NONE);
         @Override public TextEffect getDefault (Element<?> elem) { return TextEffect.NONE; }
@@ -146,6 +151,9 @@ public abstract class Style<V>
 
     /** The shadow offset in pixels. Inherited. */
     public static final Style<Float> SHADOW_Y = newStyle(true, 2f);
+
+    /** The stroke width of the outline, when using a vector outline. */
+    public static final Style<Float> OUTLINE_WIDTH = newStyle(true, 1f);
 
     /** The horizontal alignment of an element. Not inherited. */
     public static final HAlignStyle HALIGN = new HAlignStyle();
@@ -185,9 +193,14 @@ public abstract class Style<V>
             withTextColor(Styles.resolveStyle(elem, Style.COLOR)).
             withAlignment(toAlignment(Styles.resolveStyle(elem, Style.HALIGN)));
         switch (Styles.resolveStyle(elem, Style.TEXT_EFFECT)) {
-        case OUTLINE:
+        case PIXEL_OUTLINE:
             format = format.withEffect(
-                TextFormat.Effect.outline(Styles.resolveStyle(elem, Style.HIGHLIGHT)));
+                TextFormat.Effect.pixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT)));
+            break;
+        case VECTOR_OUTLINE:
+            format = format.withEffect(
+                TextFormat.Effect.vectorOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT),
+                                                Styles.resolveStyle(elem, Style.OUTLINE_WIDTH)));
             break;
         case SHADOW:
             format = format.withEffect(
