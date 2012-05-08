@@ -5,9 +5,11 @@
 
 package tripleplay.ui;
 
-import playn.core.PlayN;
-
 import pythagoras.f.IDimension;
+import pythagoras.f.Point;
+
+import playn.core.Layer;
+import playn.core.PlayN;
 
 /**
  * The root of a display hierarchy. An application can have one or more roots, but they should not
@@ -64,10 +66,31 @@ public class Root extends Elements<Root>
         super(layout);
         setStylesheet(sheet);
         _iface = iface;
+
+        if (absorbsClicks()) {
+            layer.setHitTester(new Layer.HitTester() {
+                public Layer hitTest (Layer layer, Point p) {
+                    if (!isVisible() || !contains(p.x, p.y)) return null;
+                    // if this click doesn't hit anything else, it hits us
+                    Layer hit = layer.hitTestDefault(p);
+                    return (hit != null) ? hit : Root.this.layer;
+                }
+            });
+        }
     }
 
     @Override protected Root root () {
         return this;
+    }
+
+    /**
+     * By default, all clicks that fall within a root's bounds are dispatched to the root's layer
+     * if they do not land on an interactive child element. This prevents clicks from "falling
+     * through" to lower roots, which are visually obscured by this root. Override this method and
+     * return false if you want this root not to absorb clicks (if it's "transparent").
+     */
+    protected boolean absorbsClicks () {
+        return true;
     }
 
     protected final Interface _iface;
