@@ -240,9 +240,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         if (ldata.text != null) {
             float availWidth = width-usedWidth, availHeight = height-usedHeight;
-            float twidth = Math.min(availWidth, ldata.text.width());
-            float theight = Math.min(availHeight, ldata.text.height());
-            createTextLayer(ldata, tx, ty, twidth, theight, availWidth, availHeight);
+            createTextLayer(ldata, tx, ty, ldata.text.width(), ldata.text.height(),
+                            availWidth, availHeight);
         } else {
             _tglyph.destroy();
         }
@@ -254,10 +253,20 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                                     float availWidth, float availHeight) {
         if (twidth > 0 && theight > 0) {
             _tglyph.prepare(twidth, theight);
-            _tglyph.canvas().drawText(ldata.text, 0, 0);
+            // we do some extra fiddling here because one may want to constrain the height of a
+            // button such that the text is actually cut off on the top and/or bottom because fonts
+            // may have lots of whitespace above or below and you're trying to squeeze the text
+            // snugly into your button
+            float oy = ldata.valign.offset(theight, availHeight);
+            if (oy >= 0) {
+                _tglyph.canvas().drawText(ldata.text, 0, 0);
+            } else {
+                _tglyph.canvas().drawText(ldata.text, 0, oy);
+                oy = 0;
+            }
             _tglyph.layer().setTranslation(
                 MathUtil.ifloor(tx + ldata.halign.offset(twidth, availWidth)),
-                MathUtil.ifloor(ty + ldata.valign.offset(theight, availHeight)));
+                MathUtil.ifloor(ty + oy));
         }
     }
 
