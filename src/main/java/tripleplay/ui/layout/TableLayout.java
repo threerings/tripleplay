@@ -63,6 +63,13 @@ public class TableLayout extends Layout
             return new Column(_halign, _fixed, _stretch, minWidth);
         }
 
+        /** Returns {@code count} copies of this column. */
+        public Column[] copy (int count) {
+            Column[] cols = new Column[count];
+            Arrays.fill(cols, this);
+            return cols;
+        }
+
         protected final Style.HAlign _halign;
         protected final boolean _fixed, _stretch;
         protected final float _minWidth;
@@ -72,9 +79,7 @@ public class TableLayout extends Layout
      * Creates an array of {@code columns} columns, each with default configuration.
      */
     public static Column[] columns (int count) {
-        Column[] cols = new Column[count];
-        Arrays.fill(cols, COL);
-        return cols;
+        return COL.copy(count);
     }
 
     /**
