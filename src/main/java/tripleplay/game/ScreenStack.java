@@ -37,6 +37,17 @@ public abstract class ScreenStack
     }
 
     /**
+     * Pops the top screen from the stack until the specified screen has become the
+     * topmost/visible screen.  If newTopScreen is null or is not on the stack, this will remove
+     * all screens.
+     */
+    public void popTo (Screen newTopScreen) {
+        while (!_screens.isEmpty() && top() != newTopScreen) {
+            removeTop();
+        }
+    }
+
+    /**
      * Pops the current screen from the top of the stack and pushes the supplied screen on as its
      * replacement.
      * @throws IllegalArgumentException if the supplied screen is already in the stack.
