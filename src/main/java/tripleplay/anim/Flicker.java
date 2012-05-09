@@ -86,10 +86,10 @@ public class Flicker extends Pointer.Adapter
         // if not, determine whether we should impart velocity to the tower
         else {
             float dragTime = (float)(_curStamp - _prevStamp);
-            float delta = _cur - _prev;
+            float delta = _cur - _prev, absDelta = Math.abs(delta);
             float signum = Math.signum(delta);
-            float dragVel = Math.abs(delta) / dragTime;
-            if (dragVel > flickVelThresh() && delta > minFlickDelta()) {
+            float dragVel = absDelta / dragTime;
+            if (dragVel > flickVelThresh() && absDelta > minFlickDelta()) {
                 _vel = signum * Math.min(maxFlickVel(), dragVel * flickXfer());
                 _accel = -signum * friction();
             }
@@ -107,7 +107,7 @@ public class Flicker extends Pointer.Adapter
      * Returns the deceleration (in pixels per ms per ms) applied to non-zero velocity.
      */
     protected float friction () {
-        return 0.003f;
+        return 0.002f;
     }
 
     /**
@@ -123,7 +123,7 @@ public class Flicker extends Pointer.Adapter
      * and 1).
      */
     protected float flickXfer () {
-        return 0.7f;
+        return 0.9f;
     }
 
     /**
@@ -131,7 +131,7 @@ public class Flicker extends Pointer.Adapter
      * flick velocity at time of release. This value is not adjusted by {@link #flickXfer}.
      */
     protected float maxFlickVel () {
-        return 1.2f; // pixels/ms
+        return 1.4f; // pixels/ms
     }
 
     /**
