@@ -32,7 +32,7 @@ class FramesTest extends AnimTests.Test
 
         ImageLayer layer = graphics().createImageLayer(frames.frame(0));
         // ImageLayer layer = graphics().createImageLayer(image);
-        _anim.repeat(layer).flipbook(layer, frames, 66);
+        _anim.repeat(layer).flipbook(layer, new Flipbook(frames, 66));
 
         GroupLayer box = graphics().createGroupLayer();
         box.add(layer);

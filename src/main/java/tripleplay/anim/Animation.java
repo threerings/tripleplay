@@ -28,11 +28,9 @@ public abstract class Animation
     }
 
     public static class Flip extends Animation {
-        public Flip (ImageLayer target, Frames frames, int[] frameIndices, float[] frameEnds) {
+        public Flip (ImageLayer target, Flipbook book) {
             _target = target;
-            _frames = frames;
-            _frameIndices = frameIndices;
-            _frameEnds = frameEnds;
+            _book = book;
         }
 
         @Override
@@ -44,22 +42,21 @@ public abstract class Animation
         protected float apply (float time) {
             float dt = time - _start;
             int newIdx = _curIdx;
-            float remain = _frameEnds[_frameEnds.length-1] - dt;
+            float[] frameEnds = _book.frameEnds;
+            float remain = frameEnds[frameEnds.length-1] - dt;
             if (remain < 0) return remain;
-            while (_frameEnds[newIdx] < dt) newIdx++;
+            while (frameEnds[newIdx] < dt) newIdx++;
             if (newIdx != _curIdx) setFrame(newIdx);
             return remain;
         }
 
         protected void setFrame (int idx) {
-            _frames.apply(idx, _target);
+            _book.frames.apply(_book.frameIndexes[idx], _target);
             _curIdx = idx;
         }
 
         protected final ImageLayer _target;
-        protected final Frames _frames;
-        protected final int[] _frameIndices;
-        protected final float[] _frameEnds;
+        protected final Flipbook _book;
         protected int _curIdx;
     }
 
