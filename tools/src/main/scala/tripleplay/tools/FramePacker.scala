@@ -217,18 +217,24 @@ class FramePacker (_source :File, _frame :Dimension) {
 object FramePacker {
   def main (args :Array[String]) {
     if (args.length != 2) {
-      System.err.println("Usage: FramePacker source target")
+      System.err.println("Usage: FramePacker (source target) or (srcdir tgtdir)")
       System.exit(255)
     }
-    new FramePacker(new File(args(0))).pack(new File(args(1)))
+    val (src, dst) = (new File(args(0)), new File(args(1)))
+    val size = decodeFrameSize(src.getName)
+    if (src.isDirectory) {
+      src.listFiles.foreach { f => new FramePacker(f, size).pack(new File(dst, f.getName)) }
+    } else {
+      new FramePacker(src).pack(dst)
+    }
   }
 
   def decodeFrameSize (name :String) :Dimension = {
     val didx = name.lastIndexOf(".")
-    if (didx == -1) throw new IllegalArgumentException(ERR_INVALID_FILENAME + name)
-    val uidx = name.lastIndexOf("_", didx)
+    val bname = if (didx == -1) name else name.substring(0, didx)
+    val uidx = bname.lastIndexOf("_")
     if (uidx == -1) throw new IllegalArgumentException(ERR_INVALID_FILENAME + name)
-    val bits = name.substring(uidx+1, didx).split("x")
+    val bits = bname.substring(uidx+1).split("x")
     if (bits.length != 2) throw new IllegalArgumentException(ERR_INVALID_FILENAME + name)
     try {
       new Dimension(Integer.parseInt(bits(0)), Integer.parseInt(bits(1)))
