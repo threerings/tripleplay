@@ -31,8 +31,8 @@ public class PackedFrames implements Frames
         this(source, meta.getInt("width"), meta.getInt("height"), parseFrames(meta));
     }
 
-    public PackedFrames (Image source, int[][] meta) {
-        this(source, meta[0][0], meta[0][1], parseFrames(meta));
+    public PackedFrames (Image source, float[][] meta) {
+        this(source, (int)meta[0][0], (int)meta[0][1], parseFrames(meta));
     }
 
     public PackedFrames (Image source, int width, int height, Frame[] frames) {
@@ -97,9 +97,9 @@ public class PackedFrames implements Frames
     }
 
     /**
-     * Parses custom int[][] array generated the {@code FramePacker} tool.
+     * Parses custom float[][] array generated the {@code FramePacker} tool.
      */
-    protected static Frame[] parseFrames (int[][] meta) {
+    protected static Frame[] parseFrames (float[][] meta) {
         Frame[] frames = new Frame[(meta.length-1)/2];
         for (int ii = 0, mm = 1; ii < frames.length; ii++) {
             frames[ii] = new Frame(new Point(meta[mm][0], meta[mm++][1]),
