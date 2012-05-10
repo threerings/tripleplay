@@ -215,14 +215,20 @@ class FramePacker (_source :File, _frame :Dimension) {
 }
 
 object FramePacker {
+  val usage = """Usage: FramePacker (source target) or (srcdir tgtdir)
+  |""" stripMargin('|') dropRight(1) // drop final \n
+  // |  -Djpga=quality system property causes packer to emit JPEGs with the
+  // |                 specified quality (0-100) along with an image_alpha.png
+  // |                 8-bit alpha mask image
+
   def main (args :Array[String]) {
     if (args.length != 2) {
-      System.err.println("Usage: FramePacker (source target) or (srcdir tgtdir)")
+      System.err.println(usage)
       System.exit(255)
     }
     val (src, dst) = (new File(args(0)), new File(args(1)))
-    val size = decodeFrameSize(src.getName)
     if (src.isDirectory) {
+      val size = decodeFrameSize(src.getName)
       src.listFiles.foreach { f => new FramePacker(f, size).pack(new File(dst, f.getName)) }
     } else {
       new FramePacker(src).pack(dst)
@@ -243,12 +249,6 @@ object FramePacker {
         throw new IllegalArgumentException(ERR_INVALID_FILENAME + name)
     }
   }
-
-  // def nextPowerOfTwo (value :Int) = {
-  //   var pow2 = 2
-  //   while (pow2 < value) pow2 *= 2
-  //   pow2
-  // }
 
   final val ERR_INVALID_FILENAME = "File name must be of the form 'foo_WIDTHxHEIGHT.ext': "
 }
