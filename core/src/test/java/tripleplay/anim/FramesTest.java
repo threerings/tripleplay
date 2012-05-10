@@ -10,8 +10,10 @@ import playn.core.ImageLayer;
 import playn.core.Image;
 import playn.core.ImmediateLayer;
 import playn.core.Surface;
+import playn.core.ResourceCallback;
 import static playn.core.PlayN.*;
 
+import tripleplay.util.PackedFrames;
 import tripleplay.util.SimpleFrames;
 
 class FramesTest extends AnimTests.Test
@@ -27,18 +29,35 @@ class FramesTest extends AnimTests.Test
         bg.setDepth(-1);
         graphics().rootLayer().add(bg);
 
+        // test our simple frames
         Image image = assets().getImage("images/spritesheet.png");
-        SimpleFrames frames = new SimpleFrames(image, 60, 60, 60);
 
-        ImageLayer layer = graphics().createImageLayer(frames.frame(0));
+        ImageLayer layer = graphics().createImageLayer();
         // ImageLayer layer = graphics().createImageLayer(image);
+        SimpleFrames frames = new SimpleFrames(image, 60, 60, 60);
         _anim.repeat(layer).flipbook(layer, new Flipbook(frames, 66));
 
         GroupLayer box = graphics().createGroupLayer();
         box.add(layer);
         graphics().rootLayer().addAt(box, 0, 100);
 
-        _anim.repeat(box).tweenX(box).to(width-layer.width()).in(2000).easeInOut().then().
+        _anim.repeat(box).tweenX(box).to(width-frames.width()).in(2000).easeInOut().then().
             tweenX(box).to(0).in(2000).easeInOut();
+
+        // test our packed frames
+        assets().getText("images/packed.json", new ResourceCallback<String>() {
+            public void done (String json) {
+                GroupLayer box = graphics().createGroupLayer();
+                graphics().rootLayer().addAt(box, 200, 200);
+                Image image = assets().getImage("images/packed.png");
+                _anim.repeat(box).flipbook(
+                    box, new Flipbook(new PackedFrames(image, json().parse(json)), 99)).then().
+                    setVisible(box, false).then().delay(500).then().setVisible(box, true);
+            }
+
+            public void error (Throwable t) {
+                t.printStackTrace(System.err);
+            }
+        });
     }
 }
