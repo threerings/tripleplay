@@ -247,6 +247,16 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
+     * Returns the class of this element for use in computing its style. By default this is the
+     * actual class, but you may wish to, for example, extend {@link Label} with some customization
+     * and override this method to return {@code Label.class} so that your extension has the same
+     * styles as Label applied to it.
+     */
+    protected Class<?> getStyleClass () {
+        return getClass();
+    }
+
+    /**
      * Called when this element (or its parent element) was added to the interface hierarchy.
      */
     protected void wasAdded (Elements<?> parent) {

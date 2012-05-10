@@ -145,7 +145,7 @@ public final class Styles
         for (; group != null; group = group.parent()) {
             Stylesheet sheet = group.stylesheet();
             if (sheet == null) continue;
-            value = sheet.<V>get(key, element.getClass(), element);
+            value = sheet.<V>get(key, element.getStyleClass(), element);
             if (value != null) return value;
         }
 
