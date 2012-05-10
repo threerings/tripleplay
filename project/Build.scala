@@ -1,6 +1,7 @@
 import sbt._
 import Keys._
 import samskivert.ProjectBuilder
+import ProguardPlugin._
 
 object TriplePlayBuild extends Build {
   val builder = new ProjectBuilder("pom.xml") {
@@ -27,11 +28,10 @@ object TriplePlayBuild extends Build {
 	        "com.novocode" % "junit-interface" % "0.7" % "test->default"
         )
       )
-      // case "tools" => seq(
-      //   libraryDependencies ++= Seq(
-      //     "com.novocode" % "junit-interface" % "0.7" % "test->default"
-      //   )
-      // )
+      case "tools" => proguardSettings ++ seq(
+        proguardOptions += keepMain("tripleplay.tools.FramePacker"),
+        proguardOptions += "-dontnote scala.Enumeration"
+      )
       case _ => Nil
     }
   }
