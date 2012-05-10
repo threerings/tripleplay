@@ -10,7 +10,7 @@
   <artifactId>tripleplay-tools</artifactId>
   <packaging>jar</packaging>
 
-  <name>tripleplay</name>
+  <name>tripleplay-tools</name>
   <description>Build-time tools for use with Triple Play.</description>
 
   <dependencies>
