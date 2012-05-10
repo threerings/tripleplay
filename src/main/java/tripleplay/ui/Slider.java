@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import playn.core.Canvas;
-import playn.core.PlayN;
 import playn.core.Pointer;
 
 import pythagoras.f.Dimension;
@@ -27,9 +26,16 @@ public class Slider extends Widget<Slider>
         _range = _max - _min;
         this.value.connect(new UnitSlot () {
             @Override public void onEmit () {
-                invalidate();
+                if (isAdded()) {
+                    render();
+                }
             }
         });
+    }
+
+    public Slider setIncrement (float increment) {
+        _increment = increment;
+        return this;
     }
 
     public float max () { return _max; }
@@ -41,9 +47,12 @@ public class Slider extends Widget<Slider>
     }
 
     @Override protected void layout () {
-        float width = _size.width;
-        _sglyph.prepare(width, _size.height);
-        render(_sglyph.canvas(), (value.get() - _min) / _range * width);
+        render();
+    }
+
+    protected void render () {
+        _sglyph.prepare(_size.width, _size.height);
+        render(_sglyph.canvas(), (value.get() - _min) / _range * _size.width);
     }
 
     protected void render (Canvas canvas, float thumbCenterPixel) {
@@ -69,11 +78,18 @@ public class Slider extends Widget<Slider>
 
     protected void handlePointer (float x, float y) {
         if (!contains(x, y)) { return; }
-        value.update(Math.max(x, 0) / size().width() * _range + _min);
+        float pos = Math.max(x, 0) / size().width() * _range;
+        if (_increment != null) {
+            float i = _increment;
+            pos = i * Math.round(pos / i);
+        }
+        value.update(_min + pos);
     }
 
     protected final float _min, _max, _range;
     protected final Glyph _sglyph = new Glyph();
+
+    protected Float _increment;
 
     protected static final float BAR_HEIGHT = 5;
     protected static final float THUMB_HEIGHT = BAR_HEIGHT * 2, THUMB_WIDTH = 4;
