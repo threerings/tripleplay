@@ -61,6 +61,4 @@ public class Label extends TextWidget<Label>
     @Override protected Image icon () {
         return icon.get();
     }
-
-    protected Image _icon;
 }
