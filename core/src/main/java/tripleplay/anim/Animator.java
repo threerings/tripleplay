@@ -139,6 +139,19 @@ public abstract class Animator
     }
 
     /**
+     * Starts a flipbook animation in a new image layer which is created and added to {@code box}.
+     * When the flipbook animation is complete, the newly created image layer will not be destroyed
+     * automatically. This allows the animation to be repeated, if desired. The caller must destroy
+     * eventually the image layer, or more likely, destroy {@code box} which will cause the created
+     * image layer to be destroyed.
+     */
+    public Animation.Flip flipbook (GroupLayer box, Flipbook book) {
+        ImageLayer image = PlayN.graphics().createImageLayer();
+        box.add(image);
+        return flipbook(image, book);
+    }
+
+    /**
      * Starts a flipbook animation that displays the supplied {@code book} at the specified
      * position in the supplied parent. The intermediate layers created to display the flipbook
      * animation will be destroyed on completion.
@@ -146,9 +159,7 @@ public abstract class Animator
     public Animation flipbookAt (GroupLayer parent, float x, float y, Flipbook book) {
         GroupLayer box = PlayN.graphics().createGroupLayer();
         box.setTranslation(x, y);
-        ImageLayer image = PlayN.graphics().createImageLayer();
-        box.add(image);
-        return add(parent, box).then().add(new Animation.Flip(image, book)).then().destroy(box);
+        return add(parent, box).then().flipbook(box, book).then().destroy(box);
     }
 
     /**
@@ -229,6 +240,17 @@ public abstract class Animator
         return action(new Runnable() {
             public void run () {
                 layer.setDepth(depth);
+            }
+        });
+    }
+
+    /**
+     * Sets the specified layer to visible or not.
+     */
+    public Animation.Action setVisible (final Layer layer, final boolean visible) {
+        return action(new Runnable() {
+            public void run () {
+                layer.setVisible(visible);
             }
         });
     }
