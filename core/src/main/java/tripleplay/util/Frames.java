@@ -5,7 +5,7 @@
 
 package tripleplay.util;
 
-import pythagoras.f.Point;
+import pythagoras.f.IPoint;
 
 import playn.core.Image;
 import playn.core.ImageLayer;
@@ -28,9 +28,8 @@ public interface Frames
     /** Returns the image for the specified frame. */
     Image frame (int index);
 
-    /** Writes the offset (into the logical bounds) of the specified frame into {@code offset}.
-     * @return {@code offset} for call chaining. */
-    Point offset (int index, Point offset);
+    /** Returns the offset (into the logical bounds) of the specified frame. */
+    IPoint offset (int index);
 
     /** Configures the supplied image layer with the specified frame. The layer's image will be
      * updated and the layer's translation will be adjusted to the requested frame's offset */

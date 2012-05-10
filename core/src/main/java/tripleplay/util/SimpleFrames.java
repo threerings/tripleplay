@@ -5,7 +5,8 @@
 
 package tripleplay.util;
 
-import pythagoras.f.Point;
+import pythagoras.f.IPoint;
+import pythagoras.f.Points;
 
 import playn.core.Image;
 import playn.core.ImageLayer;
@@ -65,8 +66,8 @@ public class SimpleFrames implements Frames
         return _source.subImage(_width * row, _height * col, _width, _height);
     }
 
-    @Override public Point offset (int index, Point offset) {
-        return offset.set(0, 0); // we have no offsets
+    @Override public IPoint offset (int index) {
+        return Points.ZERO; // we have no offsets
     }
 
     @Override public void apply (int index, ImageLayer layer) {
