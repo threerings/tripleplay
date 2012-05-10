@@ -10,6 +10,8 @@ import java.io.{BufferedWriter, FileWriter, File, IOException, PrintWriter}
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
+import scala.collection.mutable.ArrayBuffer
+
 import pythagoras.i.{Dimension, Rectangle}
 
 import playn.core.json.JsonImpl
@@ -87,6 +89,16 @@ class FramePacker (_source :File, _frame :Dimension) {
     }
     val node = findPacking(math.max(side, max.width), math.max(side, max.height))
 
+    // writes data to an associated metadata file
+    val troot = target.getName.reverse.dropWhile(_ != '.').drop(1).reverse
+    def writeTo(suff :String, text :String) = {
+      val name = troot + "." + suff
+      val file = new File(target.getParentFile, name)
+      val out = new PrintWriter(new BufferedWriter(new FileWriter(file)))
+      out.println(text)
+      out.close
+    }
+
     // generate the atlas image
     val nsize = node.size
     val atlas = new BufferedImage(nsize.width, nsize.height, _image.getType)
@@ -97,7 +109,7 @@ class FramePacker (_source :File, _frame :Dimension) {
     }
     ImageIO.write(atlas, "PNG", target)
 
-    // generate the associated json file
+    // generate the associated json snippet
     val json = new JsonImpl().newWriter
     json.`object`
     json.value("width", _frame.width).value("height", _frame.height)
@@ -111,11 +123,18 @@ class FramePacker (_source :File, _frame :Dimension) {
       json.end
     }
     json.end.end
-    val jname = target.getName.reverse.dropWhile(_ != '.').reverse + "json"
-    val jfile = new File(target.getParentFile, jname)
-    val jout = new PrintWriter(new BufferedWriter(new FileWriter(jfile)))
-    jout.println(json.write)
-    jout.close
+    writeTo("json", json.write)
+
+    // generate the associated java snippet
+    val jbits = new StringBuilder
+    jbits.append("{{").append(_frame.width).append(",").append(_frame.height).append("}}")
+    val frags = new ArrayBuffer[(Int,String)]
+    node.apply { n =>
+      val (f, b) = (n.frame, n.frame.bounds)
+      frags += (f.index -> "{%3d,%3d}, {%3d,%3d,%3d,%3d}".format(b.x, b.y, n.x, n.y, b.width, b.height))
+    }
+    val base = "int[][] %s = {\n{%3d,%3d},\n".format(troot.toUpperCase, _frame.width, _frame.height)
+    writeTo("java", base + frags.sortBy(_._1).map(_._2).mkString(",\n") + "};")
   }
 
   def computeTrimmedBounds (idx :Int) :Rectangle = {

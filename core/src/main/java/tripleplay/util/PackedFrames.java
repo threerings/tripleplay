@@ -18,23 +18,28 @@ import playn.core.Json;
  */
 public class PackedFrames implements Frames
 {
-    public PackedFrames (Image source, Json.Object meta) {
-        _source = source;
-        _width = meta.getInt("width");
-        _height = meta.getInt("height");
-
-        // TODO: support skipping frames (right now we assume the frames in the json array are
-        // exactly frames 0 to length-1)
-        Json.Array frames = meta.getArray("frames");
-        _frames = new Frame[frames.length()];
-        for (int ii = 0; ii < _frames.length; ii++) {
-            Json.Object frame = frames.getObject(ii);
-            Json.TypedArray<Float> off = frame.getArray("off", Float.class);
-            Json.TypedArray<Float> src = frame.getArray("src", Float.class);
-            _frames[frame.getInt("idx")] = new Frame(
-                new Point(off.get(0), off.get(1)),
-                new Rectangle(src.get(0), src.get(1), src.get(2), src.get(3)));
+    public static class Frame {
+        public final Point offset;
+        public final Rectangle bounds;
+        public Frame (Point offset, Rectangle bounds) {
+            this.offset = offset;
+            this.bounds = bounds;
         }
+    }
+
+    public PackedFrames (Image source, Json.Object meta) {
+        this(source, meta.getInt("width"), meta.getInt("height"), parseFrames(meta));
+    }
+
+    public PackedFrames (Image source, int[][] meta) {
+        this(source, meta[0][0], meta[0][1], parseFrames(meta));
+    }
+
+    public PackedFrames (Image source, int width, int height, Frame[] frames) {
+        _source = source;
+        _width = width;
+        _height = height;
+        _frames = frames;
     }
 
     @Override public int width () {
@@ -72,14 +77,36 @@ public class PackedFrames implements Frames
         layer.setImage(frame(index));
     }
 
-    protected static class Frame {
-        public final Point offset;
-        public final Rectangle bounds;
-
-        public Frame (Point offset, Rectangle bounds) {
-            this.offset = offset;
-            this.bounds = bounds;
+    /**
+     * Parses JSON generated the {@code FramePacker} tool.
+     */
+    protected static Frame[] parseFrames (Json.Object meta) {
+        // TODO: support skipping frames (right now we assume the frames in the json array are
+        // exactly frames 0 to length-1)
+        Json.Array jframes = meta.getArray("frames");
+        Frame[] frames = new Frame[jframes.length()];
+        for (int ii = 0; ii < frames.length; ii++) {
+            Json.Object frame = jframes.getObject(ii);
+            Json.TypedArray<Float> off = frame.getArray("off", Float.class);
+            Json.TypedArray<Float> src = frame.getArray("src", Float.class);
+            frames[frame.getInt("idx")] = new Frame(
+                new Point(off.get(0), off.get(1)),
+                new Rectangle(src.get(0), src.get(1), src.get(2), src.get(3)));
         }
+        return frames;
+    }
+
+    /**
+     * Parses custom int[][] array generated the {@code FramePacker} tool.
+     */
+    protected static Frame[] parseFrames (int[][] meta) {
+        Frame[] frames = new Frame[(meta.length-1)/2];
+        for (int ii = 0, mm = 1; ii < frames.length; ii++) {
+            frames[ii] = new Frame(new Point(meta[mm][0], meta[mm++][1]),
+                                   new Rectangle(meta[mm][0], meta[mm][1],
+                                                 meta[mm][2], meta[mm++][3]));
+        }
+        return frames;
     }
 
     protected final Image _source;
