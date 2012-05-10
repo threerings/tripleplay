@@ -42,22 +42,56 @@ public class Slider extends Widget<Slider>
 
     public float min () { return _min; }
 
+    @Override protected void wasAdded (Elements<?> parent) {
+        super.wasAdded(parent);
+        invalidate();
+    }
+
+    @Override protected void wasRemoved () {
+        super.wasRemoved();
+        if (_bginst != null) {
+            _bginst.destroy();
+            _bginst = null;
+        }
+        _sglyph.destroy();
+        _bg = null;
+    }
+
     @Override protected Dimension computeSize (float hintX, float hintY) {
-        return new Dimension(hintX == 0 ? 100 : hintX, THUMB_HEIGHT + BAR_HEIGHT);
+        Dimension dim = new Dimension(hintX, THUMB_HEIGHT + BAR_HEIGHT);
+        if (dim.width == 0) dim.width = 100;
+
+        // determine our background
+        return resolveStyle(Style.BACKGROUND).addInsets(dim);
     }
 
     @Override protected void layout () {
+        // determine our background
+        _bg = resolveStyle(Style.BACKGROUND);
+        if (_bginst != null) _bginst.destroy();
+        if (_size.width > 0 && _size.height > 0) {
+            _bginst = _bg.instantiate(_size);
+            _bginst.addTo(layer);
+        }
+
         render();
+        _sglyph.layer().setTranslation(_bg.left, _bg.top);
     }
 
     protected void render () {
-        _sglyph.prepare(_size.width, _size.height);
-        render(_sglyph.canvas(), (value.get() - _min) / _range * _size.width);
+        if (_bg == null) {
+            // not laid out yet, can't render
+            return;
+        }
+
+        float width = _size.width - _bg.width();
+        _sglyph.prepare(width, _size.height - _bg.height());
+        render(_sglyph.canvas(), (value.get() - _min) / _range * width);
     }
 
     protected void render (Canvas canvas, float thumbCenterPixel) {
         canvas.setFillColor(0xFF000000);
-        canvas.fillRect(0, THUMB_HEIGHT, _size.width(), BAR_HEIGHT); // Bar
+        canvas.fillRect(0, THUMB_HEIGHT, _size.width - _bg.width(), BAR_HEIGHT); // Bar
         canvas.fillRect(thumbCenterPixel - THUMB_WIDTH / 2, 0, THUMB_WIDTH, THUMB_HEIGHT);
     }
 
@@ -77,8 +111,10 @@ public class Slider extends Widget<Slider>
     }
 
     protected void handlePointer (float x, float y) {
-        if (!contains(x, y)) { return; }
-        float pos = Math.max(x, 0) / size().width() * _range;
+        if (_bg == null || !contains(x, y)) { return; }
+        float width = _size.width - _bg.width();
+        x = Math.min(width,  x - _bg.left);
+        float pos = Math.max(x, 0) / width * _range;
         if (_increment != null) {
             float i = _increment;
             pos = i * Math.round(pos / i);
@@ -88,6 +124,8 @@ public class Slider extends Widget<Slider>
 
     protected final float _min, _max, _range;
     protected final Glyph _sglyph = new Glyph();
+    protected Background _bg;
+    protected Background.Instance _bginst;
 
     protected Float _increment;
 
