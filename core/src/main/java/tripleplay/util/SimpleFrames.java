@@ -21,7 +21,7 @@ public class SimpleFrames implements Frames
      * single row, thus the height of the image defines the height of the frame.
      * @param width the width of each frame.
      */
-    public SimpleFrames (Image source, int width) {
+    public SimpleFrames (Image source, float width) {
         this(source, width, source.height());
     }
 
@@ -31,8 +31,8 @@ public class SimpleFrames implements Frames
      * @param width the width of each frame.
      * @param height the width of each frame.
      */
-    public SimpleFrames (Image source, int width, int height) {
-        this(source, width, height, source.height()/height * source.width()/width);
+    public SimpleFrames (Image source, float width, float height) {
+        this(source, width, height, (int)(source.height()/height) * (int)(source.width()/width));
     }
 
     /**
@@ -42,18 +42,18 @@ public class SimpleFrames implements Frames
      * @param width the width of each frame.
      * @param height the width of each frame.
      */
-    public SimpleFrames (Image source, int width, int height, int count) {
+    public SimpleFrames (Image source, float width, float height, int count) {
         _source = source;
         _width = width;
         _height = height;
         _count = count;
     }
 
-    @Override public int width () {
+    @Override public float width () {
         return _width;
     }
 
-    @Override public int height () {
+    @Override public float height () {
         return _height;
     }
 
@@ -85,9 +85,10 @@ public class SimpleFrames implements Frames
     }
 
     protected int cols () {
-        return _source.width() / _width;
+        return (int)(_source.width() / _width);
     }
 
     protected final Image _source;
-    protected final int _width, _height, _count;
+    protected final float _width, _height;
+    protected final int _count;
 }

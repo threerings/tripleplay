@@ -17,10 +17,10 @@ import playn.core.ImageLayer;
 public interface Frames
 {
     /** Returns the width of a logical frame. */
-    int width ();
+    float width ();
 
     /** Returns the height of a logical frame. */
-    int height ();
+    float height ();
 
     /** Returns the number of frames available. */
     int count ();

@@ -111,12 +111,11 @@ class FramePacker (_source :File, _frame :Dimension) {
 
     // if the source image contains @2x then scale everything by half for iOS fun
     val scaleFactor = if (_source.getName.contains("@2x")) 2f else 1f
-    val (swidth, sheight) = ((_frame.width/scaleFactor).toInt, (_frame.height/scaleFactor).toInt)
 
     // generate the associated json snippet
     val json = new JsonImpl().newWriter
     json.`object`
-    json.value("width", swidth).value("height", sheight)
+    json.value("width", _frame.width/scaleFactor).value("height", _frame.height/scaleFactor)
     json.array("frames")
     node.apply { n =>
       val (f, b) = (n.frame, n.frame.bounds)
@@ -134,11 +133,12 @@ class FramePacker (_source :File, _frame :Dimension) {
     val frags = new ArrayBuffer[(Int,String)]
     node.apply { n =>
       val (f, b) = (n.frame, n.frame.bounds)
-      frags += (f.index -> "{%4.1ff, %4.1ff}, {%5.1ff, %5.1ff, %5.1ff, %5.1ff}".format(
+      frags += (f.index -> "{ %5.1ff, %5.1ff }, { %5.1ff, %5.1ff, %5.1ff, %5.1ff }".format(
                 b.x/scaleFactor, b.y/scaleFactor,
                 n.x/scaleFactor, n.y/scaleFactor, b.width/scaleFactor, b.height/scaleFactor))
     }
-    val base = "float[][] %s = {\n{%5d, %5d},\n".format(troot.toUpperCase, swidth, swidth)
+    val base = "float[][] %s = {\n{ %5.1ff, %5.1ff },\n".format(
+      troot.toUpperCase, _frame.width/scaleFactor, _frame.height/scaleFactor)
     writeTo("java", base + frags.sortBy(_._1).map(_._2).mkString(",\n") + "};")
   }
 

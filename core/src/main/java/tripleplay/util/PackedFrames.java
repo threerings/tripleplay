@@ -28,25 +28,25 @@ public class PackedFrames implements Frames
     }
 
     public PackedFrames (Image source, Json.Object meta) {
-        this(source, meta.getInt("width"), meta.getInt("height"), parseFrames(meta));
+        this(source, meta.getNumber("width"), meta.getNumber("height"), parseFrames(meta));
     }
 
     public PackedFrames (Image source, float[][] meta) {
-        this(source, (int)meta[0][0], (int)meta[0][1], parseFrames(meta));
+        this(source, meta[0][0], meta[0][1], parseFrames(meta));
     }
 
-    public PackedFrames (Image source, int width, int height, Frame[] frames) {
+    public PackedFrames (Image source, float width, float height, Frame[] frames) {
         _source = source;
         _width = width;
         _height = height;
         _frames = frames;
     }
 
-    @Override public int width () {
+    @Override public float width () {
         return _width;
     }
 
-    @Override public int height () {
+    @Override public float height () {
         return _height;
     }
 
@@ -110,6 +110,6 @@ public class PackedFrames implements Frames
     }
 
     protected final Image _source;
-    protected final int _width, _height;
+    protected final float _width, _height;
     protected final Frame[] _frames;
 }
