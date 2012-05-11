@@ -5,7 +5,7 @@
 
 package tripleplay.anim;
 
-import pythagoras.f.IPoint;
+import pythagoras.f.XY;
 
 import playn.core.ImageLayer;
 import playn.core.Layer;
@@ -158,7 +158,7 @@ public abstract class Animation
 
         /** Configures the starting values. Default: the values of the scalar at the time that the
          * animation begins. */
-        public Two from (IPoint pos) {
+        public Two from (XY pos) {
             return from(pos.x(), pos.y());
         }
 
@@ -170,7 +170,7 @@ public abstract class Animation
         }
 
         /** Configures the ending values. Default: (0, 0). */
-        public Two to (IPoint pos) {
+        public Two to (XY pos) {
             return to(pos.x(), pos.y());
         }
 
