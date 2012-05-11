@@ -236,6 +236,7 @@ public abstract class Element<T extends Element<T>>
     public T setConstraint (Layout.Constraint constraint) {
         if (constraint != null) constraint.setElement(this);
         _constraint = constraint;
+        invalidate();
         return asT();
     }
 
