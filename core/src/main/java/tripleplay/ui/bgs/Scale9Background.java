@@ -34,8 +34,8 @@ public class Scale9Background extends Background
     public static class Axis3
     {
         /** Creates a new axis equally splitting the given length. */
-        public Axis3 (int length) {
-            int d = length / 3;
+        public Axis3 (float length) {
+            float d = length / 3;
             _lengths = new float[] {d, length - 2 * d, d};
             _offsets = new float[] {0, _lengths[0], _lengths[0] + _lengths[1]};
         }
