@@ -222,7 +222,7 @@ public abstract class Animation
         @Override
         protected float apply (float time) {
             _action.run();
-            return 0;
+            return _start - time;
         }
 
         protected Runnable _action;
@@ -260,7 +260,7 @@ public abstract class Animation
             // otherwise, reset to the head of the chain and keep going
             _current = _next;
             _current.init(time+remain);
-            return 1; // return > zero remaining time to indicate that we're not done
+            return _current.apply(time);
         }
 
         protected Layer _layer;
@@ -311,13 +311,16 @@ public abstract class Animation
         float remain = _current.apply(time);
         if (remain > 0) return remain;
 
-        // if we have no next animation, return our overflow
-        _current = _current._next;
-        if (_current == null) return remain;
+        while (remain <= 0) {
+            // if we have no next animation, return our overflow
+            _current = _current._next;
+            if (_current == null) return remain;
 
-        // otherwise init our next animation (accounting for overflow)
-        _current.init(time+remain);
-        return 1; // return > zero to indicate that we're not done
+            // otherwise init and apply our next animation (accounting for overflow)
+            _current.init(time+remain);
+            remain = _current.apply(time);
+        }
+        return remain;
     }
 
     protected abstract float apply (float time);
