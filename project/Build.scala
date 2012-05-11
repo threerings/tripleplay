@@ -29,6 +29,7 @@ object TriplePlayBuild extends Build {
         )
       )
       case "tools" => proguardSettings ++ seq(
+        mainClass in (Compile, run) := Some("tripleplay.tools.FramePacker"),
         proguardOptions += keepMain("tripleplay.tools.FramePacker"),
         proguardOptions += "-dontnote scala.Enumeration"
       )
