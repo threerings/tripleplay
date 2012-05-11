@@ -10,7 +10,6 @@ import playn.core.CanvasImage;
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.PlayN;
-import pythagoras.f.FloatMath;
 
 /**
  * Handles the maintenance of a canvas image and layer for displaying a chunk of pre-rendered
@@ -27,9 +26,8 @@ public class Glyph
      * needed. */
     public void prepare (float width, float height) {
         // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
-        int cwidth = FloatMath.iceil(width), cheight = FloatMath.iceil(height);
-        if (_image == null || _image.width() < cwidth || _image.height() < cheight) {
-            _image = PlayN.graphics().createImage(cwidth, cheight);
+        if (_image == null || _image.width() < width || _image.height() < height) {
+            _image = PlayN.graphics().createImage(width, height);
             if (_layer != null) _layer.setImage(_image);
         } else {
             _image.canvas().clear();

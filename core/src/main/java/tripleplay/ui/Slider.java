@@ -55,7 +55,7 @@ public class Slider extends Widget<Slider>
         if (image == null) {
             return setThumb(image, 0, 0);
         }
-        return setThumb(image, (float)image.width() / 2, (float)image.height() / 2);
+        return setThumb(image, image.width() / 2, image.height() / 2);
     }
 
     /**
