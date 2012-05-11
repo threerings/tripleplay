@@ -254,6 +254,10 @@ object FramePacker {
     if (src.isDirectory) {
       val size = decodeFrameSize(src.getName)
       src.listFiles.foreach { f => new FramePacker(f, size).pack(new File(dst, f.getName)) }
+    } else if (dst.isDirectory) {
+      // strip the framesize info from the source and use that file name in the specified
+      // destination directory as the destination
+      new FramePacker(src).pack(new File(dst, stripFrameSize(src.getName)))
     } else {
       new FramePacker(src).pack(dst)
     }
@@ -272,6 +276,14 @@ object FramePacker {
       case nfe :NumberFormatException =>
         throw new IllegalArgumentException(ERR_INVALID_FILENAME + name)
     }
+  }
+
+  def stripFrameSize (name :String) = {
+    val didx = name.lastIndexOf(".")
+    if (didx == -1) throw new IllegalArgumentException(ERR_INVALID_FILENAME + name)
+    val uidx = name.lastIndexOf("_")
+    if (uidx == -1) throw new IllegalArgumentException(ERR_INVALID_FILENAME + name)
+    name.substring(0, uidx) + name.substring(didx)
   }
 
   final val ERR_INVALID_FILENAME = "File name must be of the form 'foo_WIDTHxHEIGHT.ext': "
