@@ -8,6 +8,8 @@ package tripleplay.anim;
 import java.util.ArrayList;
 import java.util.List;
 
+import pythagoras.f.XY;
+
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.Layer;
@@ -163,6 +165,15 @@ public abstract class Animator
     }
 
     /**
+     * Starts a flipbook animation that displays the supplied {@code book} at the specified
+     * position in the supplied parent. The intermediate layers created to display the flipbook
+     * animation will be destroyed on completion.
+     */
+    public Animation flipbookAt (GroupLayer parent, XY pos, Flipbook book) {
+        return flipbookAt(parent, pos.x(), pos.y(), book);
+    }
+
+    /**
      * Starts a tween using the supplied custom value. {@link Animation.Value#initial} will be used
      * (if needed) to obtain the initial value before the tween begins. {@link Animation.Value#set}
      * will be called each time the tween is updated with the intermediate values.
@@ -202,6 +213,29 @@ public abstract class Animator
         return action(new Runnable() {
             public void run () {
                 parent.add(child);
+            }
+        });
+    }
+
+    /**
+     * Adds the supplied child to the supplied parent at the specified translation. This is
+     * generally done as the beginning of a chain of animations, which itself may be delayed or
+     * subject to animation barriers.
+     */
+    public Animation.Action addAt (GroupLayer parent, Layer child, XY pos) {
+        return addAt(parent, child, pos.x(), pos.y());
+    }
+
+    /**
+     * Adds the supplied child to the supplied parent at the specified translation. This is
+     * generally done as the beginning of a chain of animations, which itself may be delayed or
+     * subject to animation barriers.
+     */
+    public Animation.Action addAt (final GroupLayer parent,
+                                   final Layer child, final float x, final float y) {
+        return action(new Runnable() {
+            public void run () {
+                parent.addAt(child, x, y);
             }
         });
     }
