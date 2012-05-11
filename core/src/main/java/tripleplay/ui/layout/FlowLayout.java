@@ -73,6 +73,7 @@ public class FlowLayout extends Layout
             float x = left + halign.offset(rowSize.width, width);
             for (; elemIdx < m.rowBreaks.get(row).intValue(); ++elemIdx) {
                 Element<?> elem = elems.childAt(elemIdx);
+                if (!elem.isVisible()) continue;
                 IDimension esize = preferredSize(elem, width, height);
                 setBounds(elem, x, y + _valign.offset(esize.height(), rowSize.height()),
                     esize.width(), esize.height());
