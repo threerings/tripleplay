@@ -101,7 +101,7 @@ public abstract class ScreenStack
 
         protected Dir _dir = Dir.LEFT;
         protected Interpolator _interp = Interpolator.EASE_INOUT;
-        protected float _duration = 1000;
+        protected float _duration = 500;
         protected float _odx, _ody, _nsx, _nsy;
     }
 
@@ -130,13 +130,13 @@ public abstract class ScreenStack
         if (_screens.contains(screen)) {
             throw new IllegalArgumentException("Cannot add screen to stack twice.");
         }
-        if (!_screens.isEmpty()) {
+        if (_screens.isEmpty()) {
+            add(screen);
+        } else {
             final Screen otop = top();
             transition(new Transitor(otop, screen, trans) {
                 protected void onComplete() { hide(otop); }
             });
-        } else {
-            add(screen);
         }
     }
 
@@ -153,13 +153,12 @@ public abstract class ScreenStack
      * all screens.
      */
     public void popTo (Screen newTopScreen, Transition trans) {
-        // TODO
-        while (!_screens.isEmpty() && top() != newTopScreen) {
-            hide(top());
-            Screen screen = _screens.remove(0);
-            try { screen.wasRemoved(); }
-            catch (RuntimeException e) { handleError(e); }
+        // remove all intervening screens
+        while (_screens.size() > 1 && _screens.get(1) != newTopScreen) {
+            removeNonTop(_screens.get(1));
         }
+        // now just pop the top screen
+        remove(top(), trans);
     }
 
     /**
@@ -178,13 +177,17 @@ public abstract class ScreenStack
         if (_screens.contains(screen)) {
             throw new IllegalArgumentException("Cannot add screen to stack twice.");
         }
-        if (!_screens.isEmpty()) {
+        if (_screens.isEmpty()) {
+            add(screen);
+        } else {
             final Screen otop = top();
             transition(new Transitor(otop, screen, trans) {
-                protected void onComplete () { remove(otop); }
+                protected void onComplete () {
+                    hide(otop);
+                    remove(otop);
+                }
             });
         }
-        add(screen);
     }
 
     /**

@@ -26,7 +26,7 @@ public class ScreenTests implements Game
 
     @Override // from interface Game
     public void init () {
-        _stack.push(createScreen(0));
+        _stack.push(_top = createScreen(0));
     }
 
     @Override // from interface Game
@@ -46,25 +46,41 @@ public class ScreenTests implements Game
 
     protected Screen createScreen (final int depth) {
         return new IfaceScreen() {
-            protected void createIface () {
+            @Override public String toString () {
+                return "Screen" + depth;
+            }
+            @Override protected void createIface () {
                 _root.add(new Label("Screen " + depth));
-                if (depth > 0) {
-                    Button back = new Button("Back");
-                    final IfaceScreen screen = this;
-                    back.clicked().connect(new UnitSlot() { public void onEmit () {
-                        _stack.remove(screen, _stack.slide().right());
-                    }});
-                    _root.add(back);
-                }
-                Button slide = new Button("Slide");
-                slide.clicked().connect(new UnitSlot() { public void onEmit () {
+
+                addButton("Slide", new UnitSlot() { public void onEmit () {
                     _stack.push(createScreen(depth+1), _stack.slide());
                 }});
-                _root.add(slide);
+
+                if (depth > 0) {
+                    addButton("Replace", new UnitSlot() { public void onEmit () {
+                        _stack.replace(createScreen(depth+1), _stack.slide().left());
+                    }});
+
+                    final IfaceScreen screen = this;
+                    addButton("Back", new UnitSlot() { public void onEmit () {
+                        _stack.remove(screen, _stack.slide().right());
+                    }});
+
+                    addButton("Top", new UnitSlot() { public void onEmit () {
+                        _stack.popTo(_top, _stack.slide().right());
+                    }});
+                }
+            }
+
+            protected void addButton (String label, UnitSlot onClick) {
+                Button button = new Button(label);
+                button.clicked().connect(onClick);
+                _root.add(button);
             }
         };
     }
 
+    protected Screen _top;
     protected final ScreenStack _stack = new ScreenStack() {
         protected void handleError (RuntimeException error) {
             PlayN.log().warn("Screen failure", error);
