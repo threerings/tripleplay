@@ -86,6 +86,7 @@ public abstract class ScreenStack
                 _nsx = originX-nscreen.width(); _nsy = originY;
                 break;
             }
+            nscreen.layer.setTranslation(_nsx, _nsy);
         }
 
         @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
@@ -114,9 +115,7 @@ public abstract class ScreenStack
     public SlideTransition slide () { return new SlideTransition(); }
 
     /**
-     * Pushes the supplied screen onto the stack, making it the visible screen. The currently
-     * visible screen will be hidden.
-     * @throws IllegalArgumentException if the supplied screen is already in the stack.
+     * {@link #push(Screen,Transition)} with an immediate transition.
      */
     public void push (Screen screen) {
         push(screen, NOOP);
@@ -132,9 +131,9 @@ public abstract class ScreenStack
             throw new IllegalArgumentException("Cannot add screen to stack twice.");
         }
         if (!_screens.isEmpty()) {
-            final Screen top = top();
-            transition(new Transitor(top, screen, trans) {
-                protected void onComplete() { hide(top); }
+            final Screen otop = top();
+            transition(new Transitor(otop, screen, trans) {
+                protected void onComplete() { hide(otop); }
             });
         } else {
             add(screen);
@@ -142,14 +141,32 @@ public abstract class ScreenStack
     }
 
     /**
+     * {@link #popTo(Screen,Transition)} with an immediate transition.
+     */
+    public void popTo (Screen newTopScreen) {
+        popTo(newTopScreen, NOOP);
+    }
+
+    /**
      * Pops the top screen from the stack until the specified screen has become the
      * topmost/visible screen.  If newTopScreen is null or is not on the stack, this will remove
      * all screens.
      */
-    public void popTo (Screen newTopScreen) {
+    public void popTo (Screen newTopScreen, Transition trans) {
+        // TODO
         while (!_screens.isEmpty() && top() != newTopScreen) {
-            removeTop();
+            hide(top());
+            Screen screen = _screens.remove(0);
+            try { screen.wasRemoved(); }
+            catch (RuntimeException e) { handleError(e); }
         }
+    }
+
+    /**
+     * {@link #replace(Screen,Transition)} with an immediate transition.
+     */
+    public void replace (Screen screen) {
+        replace(screen, NOOP);
     }
 
     /**
@@ -157,31 +174,42 @@ public abstract class ScreenStack
      * replacement.
      * @throws IllegalArgumentException if the supplied screen is already in the stack.
      */
-    public void replace (Screen screen) {
+    public void replace (Screen screen, Transition trans) {
         if (_screens.contains(screen)) {
             throw new IllegalArgumentException("Cannot add screen to stack twice.");
         }
-        if (!_screens.isEmpty()) removeTop();
+        if (!_screens.isEmpty()) {
+            final Screen otop = top();
+            transition(new Transitor(otop, screen, trans) {
+                protected void onComplete () { remove(otop); }
+            });
+        }
         add(screen);
+    }
+
+    /**
+     * {@link #remove(Screen,Transition)} with an immediate transition.
+     */
+    public boolean remove (Screen screen) {
+        return remove(screen, NOOP);
     }
 
     /**
      * Removes the specified screen from the stack. If it is the currently visible screen, it will
      * first be hidden, and the next screen below in the stack will be made visible.
      */
-    public boolean remove (Screen screen) {
+    public boolean remove (Screen screen, Transition trans) {
         if (top() == screen) {
-            removeTop();
-            show(top());
+            transition(new Untransitor(screen, _screens.get(1), trans) {
+                protected void onComplete () {
+                    hide(_oscreen);
+                    removeNonTop(_oscreen);
+                }
+            });
             return true;
 
         } else {
-            boolean removed = _screens.remove(screen);
-            if (removed) {
-                try { screen.wasRemoved(); }
-                catch (RuntimeException e) { handleError(e); }
-            }
-            return removed;
+            return removeNonTop(screen);
         }
     }
 
@@ -199,7 +227,8 @@ public abstract class ScreenStack
      * {@link Game#paint}.
      */
     public void paint (float alpha) {
-        if (!_screens.isEmpty()) top().paint(alpha);
+        if (_transitor != null) _transitor.paint(alpha);
+        else if (!_screens.isEmpty()) top().paint(alpha);
     }
 
     protected Screen top () {
@@ -225,11 +254,13 @@ public abstract class ScreenStack
         catch (RuntimeException e) { handleError(e); }
     }
 
-    protected void removeTop () {
-        hide(top());
-        Screen screen = _screens.remove(0);
-        try { screen.wasRemoved(); }
-        catch (RuntimeException e) { handleError(e); }
+    protected boolean removeNonTop (Screen screen) {
+        boolean removed = _screens.remove(screen);
+        if (removed) {
+            try { screen.wasRemoved(); }
+            catch (RuntimeException e) { handleError(e); }
+        }
+        return removed;
     }
 
     protected void transition (Transitor transitor) {
@@ -242,6 +273,8 @@ public abstract class ScreenStack
             _oscreen = oscreen;
             _nscreen = nscreen;
             _trans = trans;
+            _trans.init(oscreen, nscreen);
+            didInit();
         }
 
         public void update (float delta) {
@@ -253,6 +286,11 @@ public abstract class ScreenStack
             }
         }
 
+        public void paint (float alpha) {
+            _oscreen.paint(alpha);
+            _nscreen.paint(alpha);
+        }
+
         public void complete () {
             _transitor = null;
             // make sure the new screen is in the right position
@@ -260,11 +298,25 @@ public abstract class ScreenStack
             onComplete();
         }
 
+        protected void didInit () {
+            add(_nscreen);
+        }
+
         protected void onComplete () {}
 
         protected final Screen _oscreen, _nscreen;
         protected final Transition _trans;
         protected float _elapsed;
+    }
+
+    protected class Untransitor extends Transitor {
+        public Untransitor (Screen oscreen, Screen nscreen, Transition trans) {
+            super(oscreen, nscreen, trans);
+        }
+
+        @Override protected void didInit () {
+            show(_nscreen);
+        }
     }
 
     /** Called if any exceptions are thrown by the screen callback functions. */
