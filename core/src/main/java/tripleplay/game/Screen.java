@@ -21,6 +21,18 @@ public abstract class Screen
     // the following methods provide hooks into the visibility lifecycle of a screen, which takes
     // the form: added -> shown -> { hidden -> shown -> ... } -> hidden -> removed
 
+    /** Returns the width of this screen. This is used for transitions.
+     * Defaults to the width of the entire view. */
+    public float width () {
+        return PlayN.graphics().width();
+    }
+
+    /** Returns the height of this screen. This is used for transitions.
+     * Defaults to the height of the entire view. */
+    public float height () {
+        return PlayN.graphics().height();
+    }
+
     /** Called when a screen is added to the screen stack for the first time. */
     public void wasAdded () {
     }

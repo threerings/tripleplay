@@ -11,6 +11,8 @@ import java.util.List;
 import playn.core.PlayN;
 import playn.core.Game;
 
+import tripleplay.util.Interpolator;
+
 /**
  * Manages a stack of screens. The stack supports useful manipulations: pushing a new screen onto
  * the stack, replacing the screen at the top of the stack with a new screen, popping a screen from
@@ -23,17 +25,120 @@ import playn.core.Game;
  */
 public abstract class ScreenStack
 {
+    /** Direction constants, used by transitions. */
+    public static enum Dir { UP, DOWN, LEFT, RIGHT; };
+
+    /** Implements a particular screen transition. */
+    public interface Transition {
+        /** Allows the transition to pre-compute useful values. This will immediately be followed
+         * by call to {@link #update} with an elapsed time of zero. */
+        void init (Screen oscreen, Screen nscreen);
+
+        /** Called every frame to update the transition
+         * @param oscreen the outgoing screen.
+         * @param nscreen the incoming screen.
+         * @param elapsed the elapsed time since the transition started (in millis if that's what
+         * your game is sending to {@link ScreenStack#update}).
+         * @return false if the transition is not yet complete, true when it is complete. The stack
+         * will automatically destroy/hide the old screen when the transition returns true.
+         */
+        boolean update (Screen oscreen, Screen nscreen, float elapsed);
+    }
+
+    /** Simply puts the new screen in place and removes the old screen. */
+    public static final Transition NOOP = new Transition() {
+        public void init (Screen oscreen, Screen nscreen) {} // noopski!
+        public boolean update (Screen oscreen, Screen nscreen, float elapsed) { return true; }
+    };
+
+    /** Slides the old screen off, and the new screen on right behind. */
+    public class SlideTransition implements Transition {
+        public SlideTransition dir (Dir dir) { _dir = dir; return this; }
+        public SlideTransition up () { return dir(Dir.UP); }
+        public SlideTransition down () { return dir(Dir.DOWN); }
+        public SlideTransition left () { return dir(Dir.LEFT); }
+        public SlideTransition right () { return dir(Dir.RIGHT); }
+
+        public SlideTransition interp (Interpolator interp) { _interp = interp; return this; }
+        public SlideTransition linear () { return interp(Interpolator.LINEAR); }
+        public SlideTransition easeIn () { return interp(Interpolator.EASE_IN); }
+        public SlideTransition easeOut () { return interp(Interpolator.EASE_OUT); }
+        public SlideTransition easeInOut () { return interp(Interpolator.EASE_INOUT); }
+
+        public SlideTransition duration (float duration) { _duration = duration; return this; }
+
+        @Override public void init (Screen oscreen, Screen nscreen) {
+            switch (_dir) {
+            case UP:
+                _odx = originX; _ody = originY-oscreen.height();
+                _nsx = originX; _nsy = originY+nscreen.height();
+                break;
+            case DOWN:
+                _odx = originX; _ody = originY+oscreen.height();
+                _nsx = originX; _nsy = originY-nscreen.height();
+                break;
+            case LEFT: default:
+                _odx = originX-oscreen.width(); _ody = originY;
+                _nsx = originX+nscreen.width(); _nsy = originY;
+                break;
+            case RIGHT:
+                _odx = originX+oscreen.width(); _ody = originY;
+                _nsx = originX-nscreen.width(); _nsy = originY;
+                break;
+            }
+        }
+
+        @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
+            float ox = _interp.apply(originX, _odx-originX, elapsed, _duration);
+            float oy = _interp.apply(originY, _ody-originY, elapsed, _duration);
+            oscreen.layer.setTranslation(ox, oy);
+            float nx = _interp.apply(_nsx, originX-_nsx, elapsed, _duration);
+            float ny = _interp.apply(_nsy, originY-_nsy, elapsed, _duration);
+            nscreen.layer.setTranslation(nx, ny);
+            return elapsed >= _duration;
+        }
+
+        protected Dir _dir = Dir.LEFT;
+        protected Interpolator _interp = Interpolator.EASE_INOUT;
+        protected float _duration = 1000;
+        protected float _odx, _ody, _nsx, _nsy;
+    }
+
+    /** The x-coordinate at which screens are located. Defaults to 0. */
+    public float originX = 0;
+
+    /** The y-coordinate at which screens are located. Defaults to 0. */
+    public float originY = 0;
+
+    /** Creates a slide transition. */
+    public SlideTransition slide () { return new SlideTransition(); }
+
     /**
      * Pushes the supplied screen onto the stack, making it the visible screen. The currently
      * visible screen will be hidden.
      * @throws IllegalArgumentException if the supplied screen is already in the stack.
      */
     public void push (Screen screen) {
+        push(screen, NOOP);
+    }
+
+    /**
+     * Pushes the supplied screen onto the stack, making it the visible screen. The currently
+     * visible screen will be hidden.
+     * @throws IllegalArgumentException if the supplied screen is already in the stack.
+     */
+    public void push (Screen screen, Transition trans) {
         if (_screens.contains(screen)) {
             throw new IllegalArgumentException("Cannot add screen to stack twice.");
         }
-        if (!_screens.isEmpty()) hide(top());
-        add(screen);
+        if (!_screens.isEmpty()) {
+            final Screen top = top();
+            transition(new Transitor(top, screen, trans) {
+                protected void onComplete() { hide(top); }
+            });
+        } else {
+            add(screen);
+        }
     }
 
     /**
@@ -85,7 +190,8 @@ public abstract class ScreenStack
      * {@link Game#update}.
      */
     public void update (float delta) {
-        if (!_screens.isEmpty()) top().update(delta);
+        if (_transitor != null) _transitor.update(delta);
+        else if (!_screens.isEmpty()) top().update(delta);
     }
 
     /**
@@ -126,8 +232,46 @@ public abstract class ScreenStack
         catch (RuntimeException e) { handleError(e); }
     }
 
+    protected void transition (Transitor transitor) {
+        if (_transitor != null) _transitor.complete();
+        _transitor = transitor;
+    }
+
+    protected class Transitor {
+        public Transitor (Screen oscreen, Screen nscreen, Transition trans) {
+            _oscreen = oscreen;
+            _nscreen = nscreen;
+            _trans = trans;
+        }
+
+        public void update (float delta) {
+            _oscreen.update(delta);
+            _nscreen.update(delta);
+            _elapsed += delta;
+            if (_trans.update(_oscreen, _nscreen, _elapsed)) {
+                complete();
+            }
+        }
+
+        public void complete () {
+            _transitor = null;
+            // make sure the new screen is in the right position
+            _nscreen.layer.setTranslation(originX, originY);
+            onComplete();
+        }
+
+        protected void onComplete () {}
+
+        protected final Screen _oscreen, _nscreen;
+        protected final Transition _trans;
+        protected float _elapsed;
+    }
+
     /** Called if any exceptions are thrown by the screen callback functions. */
     protected abstract void handleError (RuntimeException error);
+
+    /** The currently executing transition, or null. */
+    protected Transitor _transitor;
 
     /** Containts the stacked screens from top-most, to bottom-most. */
     protected final List<Screen> _screens = new ArrayList<Screen>();
