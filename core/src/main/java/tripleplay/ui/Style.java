@@ -190,27 +190,27 @@ public abstract class Style<V>
     public static TextFormat createTextFormat (Element<?> elem) {
         TextFormat format = new TextFormat().
             withFont(Styles.resolveStyle(elem, Style.FONT)).
-            withTextColor(Styles.resolveStyle(elem, Style.COLOR)).
             withAlignment(toAlignment(Styles.resolveStyle(elem, Style.HALIGN)));
+        return format;
+    }
+
+    /**
+     * Creates an effect renderer based on the supplied element's stylings.
+     */
+    public static EffectRenderer createEffectRenderer (Element<?> elem) {
         switch (Styles.resolveStyle(elem, Style.TEXT_EFFECT)) {
         case PIXEL_OUTLINE:
-            format = format.withEffect(
-                TextFormat.Effect.pixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT)));
-            break;
+            return new EffectRenderer.PixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT));
         case VECTOR_OUTLINE:
-            format = format.withEffect(
-                TextFormat.Effect.vectorOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT),
-                                                Styles.resolveStyle(elem, Style.OUTLINE_WIDTH)));
-            break;
+            return new EffectRenderer.VectorOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT),
+                                                    Styles.resolveStyle(elem, Style.OUTLINE_WIDTH));
         case SHADOW:
-            format = format.withEffect(
-                TextFormat.Effect.shadow(
-                    Styles.resolveStyle(elem, Style.SHADOW),
-                    Styles.resolveStyle(elem, Style.SHADOW_X),
-                    Styles.resolveStyle(elem, Style.SHADOW_Y)));
-            break;
+            return new EffectRenderer.Shadow(Styles.resolveStyle(elem, Style.SHADOW),
+                                             Styles.resolveStyle(elem, Style.SHADOW_X),
+                                             Styles.resolveStyle(elem, Style.SHADOW_Y));
+        default:
+            return EffectRenderer.NONE;
         }
-        return format;
     }
 
     /**

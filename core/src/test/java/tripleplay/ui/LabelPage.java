@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.Font;
 import playn.core.Image;
 import playn.core.PlayN;
 
@@ -23,16 +24,29 @@ public class LabelPage implements WidgetDemo.Page
         Image smiley = PlayN.assets().getImage("smiley.png");
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CC66).inset(5)));
-        Group iface = new Group(AxisLayout.vertical()).add(
+        Styles bigLabel = Styles.make(
+            Style.FONT.is(PlayN.graphics().createFont("Times New Roman", Font.Style.PLAIN, 24)),
+            Style.HALIGN.center);
+        Group iface = new Group(AxisLayout.vertical().offStretch()).add(
             // display some wrapped text
             new Shim(15, 15),
-            new Label("Wrapped text"),
+            new Label("Wrapped text").addStyles(Style.HALIGN.center),
             new Group(AxisLayout.horizontal(), greenBg.add(Style.VALIGN.top)).add(
                 AxisLayout.stretch(new Label(TEXT1, smiley).
                                    addStyles(wrapped.add(Style.ICON_GAP.is(5)))),
                 AxisLayout.stretch(new Label(TEXT2).addStyles(wrapped)),
-                AxisLayout.stretch(new Label(TEXT3).addStyles(wrapped)))
-            );
+                AxisLayout.stretch(new Label(TEXT3).addStyles(wrapped))),
+            new Shim(15, 15),
+            new Label("Styled text").addStyles(Style.HALIGN.center),
+            new Group(AxisLayout.horizontal()).add(
+                AxisLayout.stretch(new Label("Plain").addStyles(bigLabel)),
+                AxisLayout.stretch(new Label("Pixel Outline").addStyles(
+                                       bigLabel.add(Style.TEXT_EFFECT.pixelOutline))),
+                AxisLayout.stretch(new Label("Vector Outline").addStyles(
+                                       bigLabel.add(Style.TEXT_EFFECT.vectorOutline,
+                                                    Style.OUTLINE_WIDTH.is(2f)))),
+                AxisLayout.stretch(new Label("Shadow").addStyles(
+                                       bigLabel.add(Style.TEXT_EFFECT.shadow)))));
 
         return iface;
     }

@@ -168,6 +168,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         }
 
         if (haveText) {
+            ldata.color = resolveStyle(Style.COLOR);
+            ldata.renderer = Style.createEffectRenderer(this);
             TextFormat format = Style.createTextFormat(this);
             if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
             // TODO: should we do something with a y-hint?
@@ -179,8 +181,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         if (_constraint instanceof Constraints.TextConstraint) {
             ((Constraints.TextConstraint)_constraint).addTextSize(size, ldata.text);
         } else if (ldata.text != null) {
-            size.width += ldata.text.width();
-            size.height += ldata.text.height();
+            size.width += ldata.renderer.adjustWidth(ldata.text.width());
+            size.height += ldata.renderer.adjustHeight(ldata.text.height());
         }
         Image icon = icon();
         if (icon != null) {
@@ -240,7 +242,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         if (ldata.text != null) {
             float availWidth = width-usedWidth, availHeight = height-usedHeight;
-            createTextLayer(ldata, tx, ty, ldata.text.width(), ldata.text.height(),
+            createTextLayer(ldata, tx, ty,
+                            ldata.renderer.adjustWidth(ldata.text.width()),
+                            ldata.renderer.adjustHeight(ldata.text.height()),
                             availWidth, availHeight);
         } else {
             _tglyph.destroy();
@@ -259,9 +263,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             // snugly into your button
             float oy = ldata.valign.offset(theight, availHeight);
             if (oy >= 0) {
-                _tglyph.canvas().drawText(ldata.text, 0, 0);
+                ldata.renderer.render(_tglyph.canvas(), ldata.text, ldata.color, 0, 0);
             } else {
-                _tglyph.canvas().drawText(ldata.text, 0, oy);
+                ldata.renderer.render(_tglyph.canvas(), ldata.text, ldata.color, 0, oy);
                 oy = 0;
             }
             _tglyph.layer().setTranslation(
@@ -272,6 +276,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
     protected static class LayoutData {
         public TextLayout text, maxText;
+        public EffectRenderer renderer;
+        public int color;
         public boolean wrap;
         public Style.HAlign halign;
         public Style.VAlign valign;
