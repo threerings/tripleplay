@@ -54,10 +54,19 @@ public abstract class EffectRenderer
     public static class VectorOutline extends EffectRenderer {
         public final int outlineColor;
         public final float outlineWidth;
+        public final Canvas.LineCap outlineCap;
+        public final Canvas.LineJoin outlineJoin;
 
         public VectorOutline (int outlineColor, float outlineWidth) {
+            this(outlineColor, outlineWidth, Canvas.LineCap.ROUND, Canvas.LineJoin.ROUND);
+        }
+
+        public VectorOutline (int outlineColor, float outlineWidth,
+                              Canvas.LineCap cap, Canvas.LineJoin join) {
             this.outlineColor = outlineColor;
             this.outlineWidth = outlineWidth;
+            this.outlineCap = cap;
+            this.outlineJoin = join;
         }
 
         public float adjustWidth (float width) { return width + 2*outlineWidth; }
@@ -66,6 +75,8 @@ public abstract class EffectRenderer
         public void render (Canvas canvas, TextLayout text, int textColor, float x, float y) {
             canvas.setStrokeColor(outlineColor);
             canvas.setStrokeWidth(outlineWidth*2);
+            canvas.setLineCap(outlineCap);
+            canvas.setLineJoin(outlineJoin);
             canvas.strokeText(text, x+outlineWidth, y+outlineWidth);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+outlineWidth, y+outlineWidth);

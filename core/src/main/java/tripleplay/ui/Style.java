@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.Canvas;
 import playn.core.Font;
 import playn.core.PlayN;
 import playn.core.TextFormat;
@@ -155,6 +156,12 @@ public abstract class Style<V>
     /** The stroke width of the outline, when using a vector outline. */
     public static final Style<Float> OUTLINE_WIDTH = newStyle(true, 1f);
 
+    /** The line cap for the outline, when using a vector outline. */
+    public static final Style<Canvas.LineCap> OUTLINE_CAP = newStyle(true, Canvas.LineCap.ROUND);
+
+    /** The line join for the outline, when using a vector outline. */
+    public static final Style<Canvas.LineJoin> OUTLINE_JOIN = newStyle(true, Canvas.LineJoin.ROUND);
+
     /** The horizontal alignment of an element. Not inherited. */
     public static final HAlignStyle HALIGN = new HAlignStyle();
 
@@ -203,7 +210,9 @@ public abstract class Style<V>
             return new EffectRenderer.PixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT));
         case VECTOR_OUTLINE:
             return new EffectRenderer.VectorOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT),
-                                                    Styles.resolveStyle(elem, Style.OUTLINE_WIDTH));
+                                                    Styles.resolveStyle(elem, Style.OUTLINE_WIDTH),
+                                                    Styles.resolveStyle(elem, Style.OUTLINE_CAP),
+                                                    Styles.resolveStyle(elem, Style.OUTLINE_JOIN));
         case SHADOW:
             return new EffectRenderer.Shadow(Styles.resolveStyle(elem, Style.SHADOW),
                                              Styles.resolveStyle(elem, Style.SHADOW_X),
