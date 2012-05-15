@@ -36,7 +36,10 @@ public class BackgroundPage implements WidgetDemo.Page
             new Label(),
             label("Bordered (inset 10)", Background.bordered(0xFFEEEEEE, 0xFFFFFF00, 2).inset(10)),
             label("Bordered (inset 2)", Background.bordered(0xFFEEEEEE, 0xFFFFFF00, 2).inset(2)),
-            label("Bordered (no inset)", Background.bordered(0xFFEEEEEE, 0xFFFFFF, 2)));
+            label("Bordered (no inset)", Background.bordered(0xFFEEEEEE, 0xFFFFFF00, 2)),
+            label("Round rect", Background.roundRect(0xFFEEEEEE, 10, 0xFFFFFF00, 5).inset(10)),
+            label("Round rect (no inset)", Background.roundRect(0xFFEEEEEE, 10, 0xFFFFFF00, 5)),
+            label("Round rect (no border)", Background.roundRect(0xFFEEEEEE, 10).inset(10)));
     }
 
     protected Label label (String text, Background bg) {

@@ -20,6 +20,7 @@ import tripleplay.ui.bgs.BeveledBackground;
 import tripleplay.ui.bgs.BlankBackground;
 import tripleplay.ui.bgs.BorderedBackground;
 import tripleplay.ui.bgs.ImageBackground;
+import tripleplay.ui.bgs.RoundRectBackground;
 import tripleplay.ui.bgs.Scale9Background;
 import tripleplay.ui.bgs.SolidBackground;
 
@@ -58,6 +59,21 @@ public abstract class Background
      */
     public static Background bordered (int bgColor, int color, float thickness) {
         return new BorderedBackground(bgColor, color, thickness);
+    }
+
+    /**
+     * Creates a round rect background with the specified color and corner radius.
+     */
+    public static Background roundRect (int bgColor, float cornerRadius) {
+        return new RoundRectBackground(bgColor, cornerRadius);
+    }
+
+    /**
+     * Creates a round rect background with the specified colors, border width and corner radius.
+     */
+    public static Background roundRect (int bgColor, float cornerRadius,
+                                        int borderColor, float borderWidth) {
+        return new RoundRectBackground(bgColor, cornerRadius, borderColor, borderWidth);
     }
 
     /**
