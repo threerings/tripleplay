@@ -56,7 +56,7 @@ public abstract class Background
     /**
      * Creates a bordered background with the specified colors and thickness.
      */
-    public static Background bordered (int bgColor, int color, int thickness) {
+    public static Background bordered (int bgColor, int color, float thickness) {
         return new BorderedBackground(bgColor, color, thickness);
     }
 

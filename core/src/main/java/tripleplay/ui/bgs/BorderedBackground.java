@@ -5,10 +5,12 @@
 
 package tripleplay.ui.bgs;
 
-import playn.core.ImmediateLayer;
-import playn.core.PlayN;
-import playn.core.Surface;
 import pythagoras.f.IDimension;
+
+import playn.core.ImmediateLayer;
+import playn.core.Surface;
+import static playn.core.PlayN.graphics;
+
 import tripleplay.ui.Background;
 
 /**
@@ -16,7 +18,7 @@ import tripleplay.ui.Background;
  */
 public class BorderedBackground extends Background
 {
-    public BorderedBackground (int bgColor, int borderColor, int thickness) {
+    public BorderedBackground (int bgColor, int borderColor, float thickness) {
         _bgColor = bgColor;
         _borderColor = borderColor;
         _thickness = thickness;
@@ -24,7 +26,7 @@ public class BorderedBackground extends Background
 
     @Override
     protected Instance instantiate (final IDimension size) {
-        return new LayerInstance(PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+        return new LayerInstance(graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 float width = size.width(), height = size.height();
                 float bot = height-1, right = width-1;
@@ -38,5 +40,6 @@ public class BorderedBackground extends Background
         }));
     }
 
-    protected final int _bgColor, _borderColor, _thickness;
+    protected final int _bgColor, _borderColor;
+    protected final float _thickness;
 }
