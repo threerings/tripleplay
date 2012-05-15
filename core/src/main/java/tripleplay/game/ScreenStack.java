@@ -118,7 +118,7 @@ public abstract class ScreenStack
      * {@link #push(Screen,Transition)} with an immediate transition.
      */
     public void push (Screen screen) {
-        push(screen, NOOP);
+        push(screen, defaultPushTransition());
     }
 
     /**
@@ -144,7 +144,7 @@ public abstract class ScreenStack
      * {@link #popTo(Screen,Transition)} with an immediate transition.
      */
     public void popTo (Screen newTopScreen) {
-        popTo(newTopScreen, NOOP);
+        popTo(newTopScreen, defaultPopTransition());
     }
 
     /**
@@ -165,7 +165,7 @@ public abstract class ScreenStack
      * {@link #replace(Screen,Transition)} with an immediate transition.
      */
     public void replace (Screen screen) {
-        replace(screen, NOOP);
+        replace(screen, defaultPushTransition());
     }
 
     /**
@@ -194,7 +194,7 @@ public abstract class ScreenStack
      * {@link #remove(Screen,Transition)} with an immediate transition.
      */
     public boolean remove (Screen screen) {
-        return remove(screen, NOOP);
+        return remove(screen, defaultPopTransition());
     }
 
     /**
@@ -232,6 +232,14 @@ public abstract class ScreenStack
     public void paint (float alpha) {
         if (_transitor != null) _transitor.paint(alpha);
         else if (!_screens.isEmpty()) top().paint(alpha);
+    }
+
+    protected Transition defaultPushTransition () {
+        return NOOP;
+    }
+
+    protected Transition defaultPopTransition () {
+        return NOOP;
     }
 
     protected Screen top () {
