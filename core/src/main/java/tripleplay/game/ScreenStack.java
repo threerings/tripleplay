@@ -202,7 +202,7 @@ public abstract class ScreenStack
      * first be hidden, and the next screen below in the stack will be made visible.
      */
     public boolean remove (Screen screen, Transition trans) {
-        if (top() == screen) {
+        if (top() == screen && _screens.size() > 1) {
             transition(new Untransitor(screen, _screens.get(1), trans) {
                 protected void onComplete () {
                     hide(_oscreen);
