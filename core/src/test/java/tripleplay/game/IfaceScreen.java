@@ -46,6 +46,14 @@ public abstract class IfaceScreen extends Screen
         iface.destroyRoot(_root);
     }
 
+    @Override public void showTransitionCompleted () {
+        PlayN.log().info(this + ".showTransitionCompleted()");
+    }
+
+    @Override public void hideTransitionStarted () {
+        PlayN.log().info(this + ".hideTransitionStarted()");
+    }
+
     @Override public void update (float delta) {
         iface.update(delta);
     }

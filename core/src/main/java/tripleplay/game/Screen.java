@@ -51,6 +51,16 @@ public abstract class Screen
     public void wasRemoved () {
     }
 
+    /** Called when this screen's transition into view has completed. {@link #wasShown} is called
+     * immediately before the transition begins, and this method is called when it ends. */
+    public void showTransitionCompleted () {
+    }
+
+    /** Called when this screen's transition out of view has started. {@link #wasHidden} is called
+     * when the hide transition completes. */
+    public void hideTransitionStarted () {
+    }
+
     /** Called every frame while a screen is visible. */
     public void update (float delta) {
     }

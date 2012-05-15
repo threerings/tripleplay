@@ -298,10 +298,12 @@ public abstract class ScreenStack
             _transitor = null;
             // make sure the new screen is in the right position
             _nscreen.layer.setTranslation(originX, originY);
+            _nscreen.showTransitionCompleted();
             onComplete();
         }
 
         protected void didInit () {
+            _oscreen.hideTransitionStarted();
             add(_nscreen);
         }
 
