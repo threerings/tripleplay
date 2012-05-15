@@ -23,21 +23,25 @@ public class SimpleStyles
      */
     public static Stylesheet.Builder newSheetBuilder () {
         int bgColor = 0xFFCCCCCC, ulColor = 0xFFEEEEEE, brColor = 0xFFAAAAAA;
-        Styles buttonStyles = Styles.none().
-            add(Style.BACKGROUND.is(Background.beveled(bgColor, ulColor, brColor).inset(5))).
-            addSelected(Style.BACKGROUND.is(Background.beveled(bgColor, brColor, ulColor).
-                                            inset(6, 4, 4, 6)));
+        Background butBg = Background.roundRect(bgColor, 5, ulColor, 2).inset(5, 6, 2, 6);
+        Background butSelBg = Background.roundRect(bgColor, 5, brColor, 2).inset(6, 5, 1, 7);
         return Stylesheet.builder().
-            add(Field.class, Styles.none().
-                // flip ul and br to appear recessed
-                add(Style.BACKGROUND.is(Background.beveled(0xFFFFFFFF, brColor, ulColor).inset(5))).
-                addDisabled(Style.BACKGROUND.is(Background.beveled(0xFFCCCCCC, brColor, ulColor).
-                                                inset(5)))).
-            add(CheckBox.class, Styles.none().
-                add(Style.BACKGROUND.is(Background.beveled(bgColor, ulColor, brColor).inset(2))).
-                addSelected(Style.BACKGROUND.is(Background.beveled(bgColor, brColor, ulColor).
-                                                inset(2)))).
-            add(Button.class, buttonStyles).
-            add(ToggleButton.class, buttonStyles);
+            add(Button.class,
+                Style.BACKGROUND.is(butBg)).
+            add(Button.class, Style.Mode.SELECTED,
+                Style.BACKGROUND.is(butSelBg)).
+            add(ToggleButton.class,
+                Style.BACKGROUND.is(butBg)).
+            add(ToggleButton.class, Style.Mode.SELECTED,
+                Style.BACKGROUND.is(butSelBg)).
+            add(CheckBox.class,
+                Style.BACKGROUND.is(Background.roundRect(bgColor, 5, ulColor, 2).inset(3, 2, 0, 3))).
+            add(CheckBox.class, Style.Mode.SELECTED,
+                Style.BACKGROUND.is(Background.roundRect(bgColor, 5, brColor, 2).inset(3, 2, 0, 3))).
+            // flip ul and br to make Field appear recessed
+            add(Field.class,
+                Style.BACKGROUND.is(Background.beveled(0xFFFFFFFF, brColor, ulColor).inset(5))).
+            add(Field.class, Style.Mode.DISABLED,
+                Style.BACKGROUND.is(Background.beveled(0xFFCCCCCC, brColor, ulColor).inset(5)));
     }
 }
