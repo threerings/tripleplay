@@ -61,6 +61,13 @@ public class Interface
     }
 
     /**
+     * Returns an iterable over the current roots. Don't delete from this iterable!
+     */
+    public Iterable<Root> roots () {
+        return _roots;
+    }
+
+    /**
      * Creates a root element with the specified layout and stylesheet.
      */
     public Root createRoot (Layout layout, Stylesheet sheet) {
