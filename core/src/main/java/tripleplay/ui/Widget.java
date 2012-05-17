@@ -36,8 +36,6 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
         // add a pointer listener for handling mouse events
         layer.addListener(new Pointer.Listener() {
             public void onPointerStart (Pointer.Event event) {
-                // clear focus; if the click is on the focused item, it'll get focus again
-                root()._iface.clearFocus();
                 Widget.this.onPointerStart(event, event.localX(), event.localY());
             }
             public void onPointerDrag (Pointer.Event event) {

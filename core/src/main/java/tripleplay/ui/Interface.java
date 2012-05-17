@@ -24,25 +24,6 @@ import react.Value;
 public class Interface
 {
     /**
-     * This listener must be configured in order for keyboard events to be dispatched to focused
-     * {@link Element}s.
-     */
-    public final Keyboard.Listener klistener = new Keyboard.Listener() {
-        @Override public void onKeyDown (Keyboard.Event event) {
-            if (_focused.get() == null) return;
-            _focused.get().onKeyDown(event);
-        }
-        @Override public void onKeyTyped (Keyboard.TypedEvent event) {
-            if (_focused.get() == null) return;
-            _focused.get().onKeyTyped(event);
-        }
-        @Override public void onKeyUp (Keyboard.Event event) {
-            if (_focused.get() == null) return;
-            _focused.get().onKeyUp(event);
-        }
-    };
-
-    /**
      * Posts a runnable that will be executed after the next time the interface is validated.
      * Processing deferred actions is not tremendously efficient, so don't call this every frame.
      */
@@ -77,13 +58,6 @@ public class Interface
                 }
             }
         }
-    }
-
-    /**
-     * Clears out the current focused component, if any.
-     */
-    public void clearFocus () {
-        _focused.update(null);
     }
 
     /**
@@ -126,8 +100,6 @@ public class Interface
         _roots.remove(root);
         root.layer.destroy();
     }
-
-    protected final Value<Keyboard.Listener> _focused = Value.create(null);
 
     protected final List<Root> _roots = new ArrayList<Root>();
     protected final List<Root> _dispatch = new ArrayList<Root>();
