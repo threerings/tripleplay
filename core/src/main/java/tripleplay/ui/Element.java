@@ -214,7 +214,7 @@ public abstract class Element<T extends Element<T>>
      * Returns true only if this element and all its parents' {#isVisible()} return true.
      */
     public boolean isShowing () {
-        Elements parent;
+        Elements<?> parent;
         return isVisible() && ((parent = parent()) != null) && parent.isShowing();
     }
 
