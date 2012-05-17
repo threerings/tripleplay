@@ -79,6 +79,10 @@ public class Root extends Elements<Root>
         }
     }
 
+    @Override public boolean isShowing () {
+        return isVisible();
+    }
+
     @Override protected Root root () {
         return this;
     }
