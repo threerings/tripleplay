@@ -5,8 +5,6 @@
 
 package tripleplay.game;
 
-import playn.core.Game;
-
 import tripleplay.anim.Animator;
 
 /**
@@ -28,13 +26,11 @@ public abstract class AnimScreen extends Screen
 
     @Override public void paint (float alpha) {
         super.paint(alpha);
-        anim.update(_elapsed + alpha * _game.updateRate());
+        anim.update(_elapsed + alpha * updateRate());
     }
 
-    protected AnimScreen (Game game) {
-        _game = game;
-    }
+    /** Returns your game's update rate. */
+    protected abstract float updateRate ();
 
     protected float _elapsed;
-    protected final Game _game;
 }

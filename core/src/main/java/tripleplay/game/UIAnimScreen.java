@@ -5,14 +5,12 @@
 
 package tripleplay.game;
 
-import playn.core.Game;
-
 import tripleplay.ui.Interface;
 
 /**
  * An abstract screen that contains UI and animations.
  */
-public class UIAnimScreen extends AnimScreen
+public abstract class UIAnimScreen extends AnimScreen
 {
     /** Manages our user interface roots. */
     public final Interface iface = new Interface();
@@ -40,9 +38,5 @@ public class UIAnimScreen extends AnimScreen
     @Override public void paint (float alpha) {
         super.paint(alpha);
         iface.paint(alpha);
-    }
-
-    protected UIAnimScreen (Game game) {
-        super(game);
     }
 }
