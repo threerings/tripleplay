@@ -5,7 +5,7 @@
 
 package tripleplay.game;
 
-import playn.core.PlayN;
+import static playn.core.PlayN.log;
 
 import tripleplay.ui.Background;
 import tripleplay.ui.Interface;
@@ -19,13 +19,10 @@ import tripleplay.ui.layout.AxisLayout;
 /**
  * A screen that contains UI elements.
  */
-public abstract class IfaceScreen extends Screen
+public abstract class TestScreen extends UIScreen
 {
-    /** Manages our user interfaces. */
-    public final Interface iface = new Interface();
-
     @Override public void wasAdded () {
-        PlayN.log().info(this + ".wasAdded()");
+        super.wasAdded();
         _root = iface.createRoot(createLayout(), stylesheet(), layer);
         _root.addStyles(Style.BACKGROUND.is(background()));
         _root.setSize(width(), height());
@@ -33,33 +30,30 @@ public abstract class IfaceScreen extends Screen
     }
 
     @Override public void wasShown () {
-        PlayN.log().info(this + ".wasShown()");
+        super.wasShown();
+        log().info(this + ".wasShown()");
     }
 
     @Override public void wasHidden () {
-        PlayN.log().info(this + ".wasHidden()");
+        super.wasHidden();
+        log().info(this + ".wasHidden()");
     }
 
     @Override public void wasRemoved () {
-        PlayN.log().info(this + ".wasRemoved()");
+        super.wasRemoved();
+        log().info(this + ".wasRemoved()");
         layer.destroy();
         iface.destroyRoot(_root);
     }
 
     @Override public void showTransitionCompleted () {
-        PlayN.log().info(this + ".showTransitionCompleted()");
+        super.showTransitionCompleted();
+        log().info(this + ".showTransitionCompleted()");
     }
 
     @Override public void hideTransitionStarted () {
-        PlayN.log().info(this + ".hideTransitionStarted()");
-    }
-
-    @Override public void update (float delta) {
-        iface.update(delta);
-    }
-
-    @Override public void paint (float alpha) {
-        iface.paint(alpha);
+        super.hideTransitionStarted();
+        log().info(this + ".hideTransitionStarted()");
     }
 
     /** Returns the stylesheet to use for this screen. */

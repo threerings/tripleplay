@@ -19,6 +19,8 @@ import tripleplay.ui.Label;
  */
 public class ScreenTests implements Game
 {
+    public static final int UPDATE_RATE = 17;
+
     public static void main (String[] args) {
         JavaPlatform.register();
         PlayN.run(new ScreenTests());
@@ -41,11 +43,11 @@ public class ScreenTests implements Game
 
     @Override // from interface Game
     public int updateRate () {
-        return 17;
+        return UPDATE_RATE;
     }
 
     protected Screen createScreen (final int depth) {
-        return new IfaceScreen() {
+        return new TestScreen() {
             @Override public String toString () {
                 return "Screen" + depth;
             }
@@ -61,7 +63,7 @@ public class ScreenTests implements Game
                         _stack.replace(createScreen(depth+1), _stack.slide().left());
                     }});
 
-                    final IfaceScreen screen = this;
+                    final TestScreen screen = this;
                     addButton("Back", new UnitSlot() { public void onEmit () {
                         _stack.remove(screen, _stack.slide().right());
                     }});
