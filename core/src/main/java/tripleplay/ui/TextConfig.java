@@ -69,14 +69,14 @@ public class TextConfig
     /**
      * Returns a new text config which uses a pixel outline effect.
      */
-    public TextConfig withOutline(int outlineColor) {
+    public TextConfig withOutline (int outlineColor) {
         return new TextConfig(format, textColor, new EffectRenderer.PixelOutline(outlineColor));
     }
 
     /**
      * Returns a new text config which uses a vector outline effect.
      */
-    public TextConfig withOutline(int outlineColor, float outlineWidth) {
+    public TextConfig withOutline (int outlineColor, float outlineWidth) {
         return new TextConfig(format, textColor,
                               new EffectRenderer.VectorOutline(outlineColor, outlineWidth));
     }
