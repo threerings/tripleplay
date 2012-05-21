@@ -115,7 +115,7 @@ public abstract class ScreenStack
     public SlideTransition slide () { return new SlideTransition(); }
 
     /**
-     * {@link #push(Screen,Transition)} with an immediate transition.
+     * {@link #push(Screen,Transition)} with the default transition.
      */
     public void push (Screen screen) {
         push(screen, defaultPushTransition());
@@ -127,11 +127,8 @@ public abstract class ScreenStack
      * @throws IllegalArgumentException if the supplied screen is already in the stack.
      */
     public void push (Screen screen, Transition trans) {
-        if (_screens.contains(screen)) {
-            throw new IllegalArgumentException("Cannot add screen to stack twice.");
-        }
         if (_screens.isEmpty()) {
-            add(screen);
+            addAndShow(screen);
         } else {
             final Screen otop = top();
             transition(new Transitor(otop, screen, trans) {
@@ -141,7 +138,39 @@ public abstract class ScreenStack
     }
 
     /**
-     * {@link #popTo(Screen,Transition)} with an immediate transition.
+     * {@link #push(Iterable,Transition)} with the default transition.
+     */
+    public void push (Iterable<? extends Screen> screens) {
+        push(screens, defaultPushTransition());
+    }
+
+    /**
+     * Pushes the supplied set of screens onto the stack, in order. The last screen to be pushed
+     * will also be shown, using the supplied transition. Note that the transition will be from the
+     * screen that was on top prior to this call.
+     */
+    public void push (Iterable<? extends Screen> screens, Transition trans) {
+        if (!screens.iterator().hasNext()) {
+            throw new IllegalArgumentException("Cannot push empty list of screens.");
+        }
+        if (_screens.isEmpty()) {
+            for (Screen screen : screens) add(screen);
+            show(top());
+        } else {
+            final Screen otop = top();
+            Screen last = null;
+            for (Screen screen : screens) {
+                if (last != null) add(last);
+                last = screen;
+            }
+            transition(new Transitor(otop, last, trans) {
+                protected void onComplete() { hide(otop); }
+            });
+        }
+    }
+
+    /**
+     * {@link #popTo(Screen,Transition)} with the default transition.
      */
     public void popTo (Screen newTopScreen) {
         popTo(newTopScreen, defaultPopTransition());
@@ -162,7 +191,7 @@ public abstract class ScreenStack
     }
 
     /**
-     * {@link #replace(Screen,Transition)} with an immediate transition.
+     * {@link #replace(Screen,Transition)} with the default transition.
      */
     public void replace (Screen screen) {
         replace(screen, defaultPushTransition());
@@ -174,11 +203,8 @@ public abstract class ScreenStack
      * @throws IllegalArgumentException if the supplied screen is already in the stack.
      */
     public void replace (Screen screen, Transition trans) {
-        if (_screens.contains(screen)) {
-            throw new IllegalArgumentException("Cannot add screen to stack twice.");
-        }
         if (_screens.isEmpty()) {
-            add(screen);
+            addAndShow(screen);
         } else {
             final Screen otop = top();
             transition(new Transitor(otop, screen, trans) {
@@ -191,7 +217,7 @@ public abstract class ScreenStack
     }
 
     /**
-     * {@link #remove(Screen,Transition)} with an immediate transition.
+     * {@link #remove(Screen,Transition)} with the default transition.
      */
     public boolean remove (Screen screen) {
         return remove(screen, defaultPopTransition());
@@ -247,9 +273,16 @@ public abstract class ScreenStack
     }
 
     protected void add (Screen screen) {
+        if (_screens.contains(screen)) {
+            throw new IllegalArgumentException("Cannot add screen to stack twice.");
+        }
         _screens.add(0, screen);
         try { screen.wasAdded(); }
         catch (RuntimeException e) { handleError(e); }
+    }
+
+    protected void addAndShow (Screen screen) {
+        add(screen);
         show(screen);
     }
 
@@ -312,7 +345,7 @@ public abstract class ScreenStack
 
         protected void didInit () {
             _oscreen.hideTransitionStarted();
-            add(_nscreen);
+            addAndShow(_nscreen);
         }
 
         protected void onComplete () {}
