@@ -145,6 +145,23 @@ public class TypedStorage
      * values will not coordinate with one another, so the caller must be sure to only call this
      * method once for a given property and share that value properly.
      */
+    public Value<String> valueFor (final String key, String defval) {
+        Value<String> value = Value.create(get(key, defval));
+        value.connect(new Slot<String>() {
+            public void onEmit (String value) {
+                set(key, value);
+            }
+        });
+        return value;
+    }
+
+    /**
+     * Exposes the specified property as a {@link Value}. The supplied default value will be used
+     * if the property has no current value. Updates to the value will be written back to the
+     * storage system. Note that each call to this method yields a new {@link Value} and those
+     * values will not coordinate with one another, so the caller must be sure to only call this
+     * method once for a given property and share that value properly.
+     */
     public Value<Integer> valueFor (final String key, int defval) {
         Value<Integer> value = Value.create(get(key, defval));
         value.connect(new Slot<Integer>() {
