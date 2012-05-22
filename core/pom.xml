@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.threerings</groupId>
     <artifactId>tripleplay-parent</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
   </parent>
 
   <artifactId>tripleplay</artifactId>
@@ -138,9 +138,9 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <execute >
+                    <execute>
                       <runOnIncremental>false</runOnIncremental>
-                    </execute >
+                    </execute>
                   </action>
                 </pluginExecution>
               </pluginExecutions>

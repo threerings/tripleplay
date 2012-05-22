@@ -10,7 +10,7 @@
   <groupId>com.threerings</groupId>
   <artifactId>tripleplay-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.3</version>
 
   <name>tripleplay-parent</name>
   <description>Utilities for use in PlayN-based games.</description>
