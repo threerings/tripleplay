@@ -361,6 +361,7 @@ public abstract class ScreenStack
         }
 
         @Override protected void didInit () {
+            _oscreen.hideTransitionStarted();
             show(_nscreen);
         }
     }
