@@ -141,6 +141,7 @@ public class TypedStorage
     /**
      * Returns the specified property as an enum. If the property does not exist, the default value
      * will be returned.
+     * @throws NullPointerException if {@code defval} is null.
      */
     public <E extends Enum<E>> E get (String key, E defval) {
         @SuppressWarnings("unchecked") Class<E> eclass = (Class<E>)defval.getClass();
