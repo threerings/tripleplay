@@ -8,8 +8,8 @@ package tripleplay.util;
 import react.Slot;
 import react.Value;
 
-import playn.core.PlayN;
 import playn.core.Storage;
+import static playn.core.PlayN.log;
 
 /**
  * Makes using PlayN {@link Storage} more civilized. Provides getting and setting of typed values
@@ -56,7 +56,7 @@ public class TypedStorage
             value = _storage.getItem(key);
             return (value == null) ? defval : Integer.parseInt(value);
         } catch (Exception e) {
-            PlayN.log().warn("Failed to parse int prop [key=" + key + ", value=" + value + "]", e);
+            log().warn("Failed to parse int prop [key=" + key + ", value=" + value + "]", e);
             return defval;
         }
     }
@@ -79,7 +79,7 @@ public class TypedStorage
             value = _storage.getItem(key);
             return (value == null) ? defval : Long.parseLong(value);
         } catch (Exception e) {
-            PlayN.log().warn("Failed to parse long prop [key=" + key + ", value=" + value + "]", e);
+            log().warn("Failed to parse long prop [key=" + key + ", value=" + value + "]", e);
             return defval;
         }
     }
@@ -102,7 +102,7 @@ public class TypedStorage
             value = _storage.getItem(key);
             return (value == null) ? defval : Double.parseDouble(value);
         } catch (Exception e) {
-            PlayN.log().warn("Failed to parse double prop [key=" + key + ", value=" + value + "]", e);
+            log().warn("Failed to parse double prop [key=" + key + ", value=" + value + "]", e);
             return defval;
         }
     }
@@ -125,10 +125,33 @@ public class TypedStorage
     }
 
     /**
-     * Sets the specified property to the supplied int value.
+     * Sets the specified property to the supplied boolean value.
      */
     public void set (String key, boolean value) {
         _storage.setItem(key, value ? "t" : "f");
+    }
+
+    /**
+     * Returns the specified property as an enum. If the property does not exist, the default value
+     * will be returned.
+     */
+    public <E extends Enum<E>> E get (String key, E defval) {
+        String value = null;
+        try {
+            value = _storage.getItem(key);
+            @SuppressWarnings("unchecked") Class<E> eclass = (Class<E>)defval.getClass();
+            return (value == null) ? defval : Enum.valueOf(eclass, value);
+        } catch (Exception e) {
+            log().warn("Failed to parse enum prop [key=" + key + ", value=" + value + "]", e);
+            return defval;
+        }
+    }
+
+    /**
+     * Sets the specified property to the supplied enum value.
+     */
+    public void set (String key, Enum<?> value) {
+        _storage.setItem(key, value.name());
     }
 
     /**
