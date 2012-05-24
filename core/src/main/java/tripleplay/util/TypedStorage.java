@@ -23,6 +23,13 @@ public class TypedStorage
     }
 
     /**
+     * Returns whether the specified key is mapped to some value.
+     */
+    public boolean contains (String key) {
+        return _storage.getItem(key) != null;
+    }
+
+    /**
      * Returns the specified property as a string, returning null if the property does not exist.
      */
     public String get (String key) {
