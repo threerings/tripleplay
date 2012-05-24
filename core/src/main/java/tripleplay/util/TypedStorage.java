@@ -143,10 +143,10 @@ public class TypedStorage
      * will be returned.
      */
     public <E extends Enum<E>> E get (String key, E defval) {
+        @SuppressWarnings("unchecked") Class<E> eclass = (Class<E>)defval.getClass();
         String value = null;
         try {
             value = _storage.getItem(key);
-            @SuppressWarnings("unchecked") Class<E> eclass = (Class<E>)defval.getClass();
             return (value == null) ? defval : Enum.valueOf(eclass, value);
         } catch (Exception e) {
             log().warn("Failed to parse enum prop [key=" + key + ", value=" + value + "]", e);
