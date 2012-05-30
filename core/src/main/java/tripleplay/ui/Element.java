@@ -409,6 +409,32 @@ public abstract class Element<T extends Element<T>>
     protected void clearLayoutData () {
     }
 
+    /**
+     * Manages the instantiation of a background. This is primarily here to provide {@code Element}
+     * subclasses outside of our package with a simple way to use backgrounds.
+     */
+    protected class BackgroundProxy
+    {
+        /** Publish the constructor. */
+        public BackgroundProxy () {}
+
+        /** Updates the background instance using the element's current size and adds to the
+         * element's layer. */
+        public void update (Background bg) {
+            if (_instance != null) {
+                _instance.destroy();
+                _instance = null;
+            }
+            if (bg != null && _size.width > 0 || _size.height > 0) {
+                _instance = bg.instantiate(_size);
+                _instance.addTo(layer);
+            }
+        }
+
+        /** The background instance, if any. */
+        protected Background.Instance _instance;
+    }
+
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
     protected Elements<?> _parent;
     protected Dimension _preferredSize;
