@@ -8,7 +8,6 @@ package tripleplay.game;
 import static playn.core.PlayN.log;
 
 import tripleplay.ui.Background;
-import tripleplay.ui.Interface;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Root;
 import tripleplay.ui.SimpleStyles;

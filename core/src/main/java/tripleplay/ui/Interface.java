@@ -10,9 +10,6 @@ import java.util.List;
 
 import playn.core.Game;
 import playn.core.GroupLayer;
-import playn.core.Keyboard;
-
-import react.Value;
 
 /**
  * The main class that integrates the Triple Play UI with a PlayN game. This class is mainly

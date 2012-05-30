@@ -6,7 +6,6 @@
 package tripleplay.anim;
 
 import playn.core.GroupLayer;
-import playn.core.ImageLayer;
 import playn.core.Image;
 import playn.core.ImmediateLayer;
 import playn.core.Surface;

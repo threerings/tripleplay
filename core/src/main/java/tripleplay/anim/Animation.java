@@ -10,7 +10,6 @@ import pythagoras.f.XY;
 import playn.core.ImageLayer;
 import playn.core.Layer;
 
-import tripleplay.util.Frames;
 import tripleplay.util.Interpolator;
 
 /**

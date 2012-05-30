@@ -15,7 +15,6 @@ import playn.core.ImageLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
 
-import tripleplay.util.Frames;
 import tripleplay.util.Layers;
 
 /**

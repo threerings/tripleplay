@@ -9,8 +9,6 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import playn.core.Color;
-
 import react.UnitSlot;
 
 import tripleplay.ui.layout.AxisLayout;

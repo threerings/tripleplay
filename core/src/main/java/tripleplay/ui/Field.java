@@ -7,7 +7,6 @@ package tripleplay.ui;
 
 import playn.core.Image;
 import playn.core.Keyboard;
-import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Pointer;
 import playn.core.util.Callback;
