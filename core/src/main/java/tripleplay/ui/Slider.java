@@ -12,6 +12,7 @@ import playn.core.PlayN;
 import playn.core.Pointer;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.Rectangle;
 
 import react.UnitSlot;
 import react.Value;
@@ -78,8 +79,10 @@ public class Slider extends Widget<Slider>
         return this;
     }
 
+    /** Returns our maximum allowed value. */
     public float max () { return _max; }
 
+    /** Returns our minimum allowed value. */
     public float min () { return _min; }
 
     @Override protected void wasAdded (Elements<?> parent) {
@@ -89,58 +92,42 @@ public class Slider extends Widget<Slider>
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        if (_bginst != null) {
-            _bginst.destroy();
-            _bginst = null;
-        }
         _sglyph.destroy();
-        _bg = null;
-
         // the thumb is just an image layer and will be destroyed when we are
     }
 
-    @Override protected Dimension computeSize (float hintX, float hintY) {
-        Dimension dim = new Dimension(
-            hintX == 0 ? 100 : hintX,
-            _thumb == null ? THUMB_HEIGHT + BAR_HEIGHT : Math.max(BAR_HEIGHT, _thumb.height()));
+    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
+        return new LayoutData() {
+            @Override public Dimension computeSize (float hintX, float hintY) {
+                return new Dimension(
+                    hintX == 0 ? 100 : hintX,
+                    _thumb == null ? THUMB_HEIGHT + BAR_HEIGHT :
+                    Math.max(BAR_HEIGHT, _thumb.height()));
+            }
 
-        // determine our background
-        return resolveStyle(Style.BACKGROUND).addInsets(dim);
-    }
+            @Override public void layout (float left, float top, float width, float height) {
+                _tbounds = new Rectangle(left, top, width, height);
+                render(); // render the bar and thumb
 
-    @Override protected void layout () {
-        // determine our background
-        _bg = resolveStyle(Style.BACKGROUND);
-        if (_bginst != null) _bginst.destroy();
-        if (_size.width > 0 && _size.height > 0) {
-            _bginst = _bg.instantiate(_size);
-            _bginst.addTo(layer);
-        }
-
-        // render the bar and thumb
-        render();
-
-        // position the glyph
-        float y = _bg.top;
-        if (_thumb != null) y += (_thumb.height() - BAR_HEIGHT) / 2;
-        _sglyph.layer().setTranslation(_bg.left, y);
+                // position the glyph
+                float y = top;
+                if (_thumb != null) y += (_thumb.height() - BAR_HEIGHT) / 2;
+                _sglyph.layer().setTranslation(left, y);
+            }
+        };
     }
 
     protected void render () {
-        if (_bg == null) {
-            // not laid out yet, can't render
-            return;
-        }
+        if (_tbounds == null) return; // not laid out yet, can't render
 
-        float width = _size.width - _bg.width();
+        float width = _tbounds.width;
         float thumb = (value.get() - _min) / _range * width;
         if (_thumb != null) {
             _sglyph.prepare(width, BAR_HEIGHT);
             renderBar(_sglyph.canvas(), 0);
-            _thumb.setTranslation(_bg.left + thumb,
-                _bg.top + (_size.height - _bg.height()) / 2);
+            _thumb.setTranslation(_tbounds.x + thumb, _tbounds.y + (_tbounds.height) / 2);
         } else {
-            _sglyph.prepare(width, _size.height - _bg.height());
+            _sglyph.prepare(width, _tbounds.height);
             render(_sglyph.canvas(), thumb);
         }
     }
@@ -155,7 +142,7 @@ public class Slider extends Widget<Slider>
     /** Renders the bar at the given offset. */
     protected void renderBar (Canvas canvas, float y) {
         canvas.setFillColor(0xFF000000);
-        canvas.fillRect(0, y, _size.width - _bg.width(), BAR_HEIGHT); // Bar
+        canvas.fillRect(0, y, _tbounds.width, BAR_HEIGHT); // Bar
     }
 
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
@@ -174,9 +161,9 @@ public class Slider extends Widget<Slider>
     }
 
     protected void handlePointer (float x, float y) {
-        if (_bg == null || !contains(x, y)) { return; }
-        float width = _size.width - _bg.width();
-        x = Math.min(width,  x - _bg.left);
+        if (_tbounds == null || !contains(x, y)) { return; }
+        float width = _tbounds.width;
+        x = Math.min(width,  x - _tbounds.x);
         float pos = Math.max(x, 0) / width * _range;
         if (_increment != null) {
             float i = _increment;
@@ -189,9 +176,7 @@ public class Slider extends Widget<Slider>
     protected final Glyph _sglyph = new Glyph();
 
     protected ImageLayer _thumb;
-    protected Background _bg;
-    protected Background.Instance _bginst;
-
+    protected Rectangle _tbounds;
     protected Float _increment;
 
     protected static final float BAR_HEIGHT = 5;

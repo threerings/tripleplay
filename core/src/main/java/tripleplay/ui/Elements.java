@@ -168,59 +168,22 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         for (Element<?> child : _children) {
             child.wasRemoved();
         }
-
-        // clear out our background instance
-        if (_bginst != null) {
-            _bginst.destroy();
-            _bginst = null;
-        }
         // if we're added again, we'll be re-laid-out
     }
 
-    @Override protected Dimension computeSize (float hintX, float hintY) {
-        LayoutData ldata = computeLayout(hintX, hintY);
-        Dimension size = _layout.computeSize(
-            this, hintX - ldata.bg.width(), hintY - ldata.bg.height());
-        return ldata.bg.addInsets(size);
-    }
+    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
+        return new LayoutData() {
+            @Override public Dimension computeSize (float hintX, float hintY) {
+                return _layout.computeSize(Elements.this, hintX, hintY);
+            }
 
-    @Override protected void layout () {
-        LayoutData ldata = computeLayout(_size.width, _size.height);
-
-        // prepare our background
-        if (_bginst != null) _bginst.destroy();
-        if (_size.width > 0 && _size.height > 0) {
-            _bginst = ldata.bg.instantiate(_size);
-            _bginst.addTo(layer);
-        }
-
-        // layout our children
-        _layout.layout(this, ldata.bg.left, ldata.bg.top,
-                       _size.width - ldata.bg.width(), _size.height - ldata.bg.height());
-
-        // layout is only called as part of revalidation, so now we validate our children
-        for (Element<?> child : _children) {
-            child.validate();
-        }
-
-        clearLayoutData();
-    }
-
-    @Override protected void clearLayoutData () {
-        _ldata = null;
-    }
-
-    protected LayoutData computeLayout (float hintX, float hintY) {
-        if (_ldata == null) {
-            _ldata = new LayoutData();
-            // determine our background
-            _ldata.bg = resolveStyle(Style.BACKGROUND);
-        }
-        return _ldata;
-    }
-
-    protected static class LayoutData {
-        public Background bg;
+            @Override public void layout (float left, float top, float width, float height) {
+                // layout our children
+                _layout.layout(Elements.this, left, top, width, height);
+                // layout is only called as part of revalidation, so now we validate our children
+                for (Element<?> child : _children) child.validate();
+            }
+        };
     }
 
     protected final Layout _layout;
@@ -230,7 +193,4 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     protected final Signal<Element<?>> _childRemoved = Signal.create();
 
     protected Stylesheet _sheet;
-
-    protected LayoutData _ldata;
-    protected Background.Instance _bginst;
 }

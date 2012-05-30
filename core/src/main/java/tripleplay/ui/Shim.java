@@ -17,11 +17,12 @@ public class Shim extends Element<Shim>
         _shimHeight = height;
     }
 
-    @Override protected Dimension computeSize (float hintX, float hintY) {
-        return new Dimension(_shimWidth, _shimHeight);
-    }
-
-    @Override protected void layout () {
+    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
+        return new LayoutData() {
+            @Override public Dimension computeSize (float hintX, float hintY) {
+                return new Dimension(_shimWidth, _shimHeight);
+            }
+        };
     }
 
     protected final float _shimWidth, _shimHeight;

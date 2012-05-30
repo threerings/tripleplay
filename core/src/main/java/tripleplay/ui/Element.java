@@ -266,6 +266,10 @@ public abstract class Element<T extends Element<T>>
      */
     protected void wasRemoved () {
         _parent = null;
+        if (_bginst != null) {
+            _bginst.destroy();
+            _bginst = null;
+        }
         if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.FALSE);
     }
 
@@ -392,47 +396,69 @@ public abstract class Element<T extends Element<T>>
      * @param hintY if non-zero, an indication that the element will be constrained in the y
      * direction to the specified height.
      */
-    protected abstract Dimension computeSize (float hintX, float hintY);
-
-    /**
-     * Rebuilds this element's visualization. Called when this element's size has changed. In the
-     * case of groups, this will relayout its children, in the case of widgets, this will rerender
-     * the widget.
-     */
-    protected abstract void layout ();
-
-    /**
-     * Clears out cached layout data. This can be called by methods that change the configuration
-     * of the widget when they know it will render pre-computed layout info invalid. Elements that
-     * cache layout data should override this method and clear their cached layout.
-     */
-    protected void clearLayoutData () {
+    protected Dimension computeSize (float hintX, float hintY) {
+        LayoutData ldata = _ldata = createLayoutData(hintX, hintY);
+        Dimension size = ldata.computeSize(hintX - ldata.bg.width(), hintY - ldata.bg.height());
+        return ldata.bg.addInsets(size);
     }
 
     /**
-     * Manages the instantiation of a background. This is primarily here to provide {@code Element}
-     * subclasses outside of our package with a simple way to use backgrounds.
+     * Handles common element layout (background), then calls {@link LayoutData#layout} to do the
+     * actual layout.
      */
-    protected class BackgroundProxy
-    {
-        /** Publish the constructor. */
-        public BackgroundProxy () {}
+    protected void layout () {
+        if (!isVisible()) return;
 
-        /** Updates the background instance using the element's current size and adds to the
-         * element's layer. */
-        public void update (Background bg) {
-            if (_instance != null) {
-                _instance.destroy();
-                _instance = null;
-            }
-            if (bg != null && _size.width > 0 || _size.height > 0) {
-                _instance = bg.instantiate(_size);
-                _instance.addTo(layer);
-            }
+        float width = _size.width, height = _size.height;
+        LayoutData ldata = (_ldata != null) ? _ldata : createLayoutData(width, height);
+
+        // prepare our background
+        if (_bginst != null) _bginst.destroy();
+        if (width > 0 && height > 0) {
+            _bginst = ldata.bg.instantiate(_size);
+            _bginst.addTo(layer);
         }
 
-        /** The background instance, if any. */
-        protected Background.Instance _instance;
+        // do our actual layout
+        ldata.layout(ldata.bg.left, ldata.bg.top,
+                     width - ldata.bg.width(), height - ldata.bg.height());
+
+        // finally clear our cached layout data
+        clearLayoutData();
+    }
+
+    /**
+     * Creates the layout data record used by this element. This record temporarily holds resolved
+     * style information between the time that an element has its preferred size computed, and the
+     * time that the element is subsequently laid out.
+     */
+    protected abstract LayoutData createLayoutData (float hintX, float hintY);
+
+    /**
+     * Clears out cached layout data. This can be called by methods that change the configuration
+     * of the element when they know it will render pre-computed layout info invalid.
+     */
+    protected void clearLayoutData () {
+        _ldata = null;
+    }
+
+    protected abstract class LayoutData {
+        public final Background bg = resolveStyle(Style.BACKGROUND);
+
+        /**
+         * Computes this element's preferred size, given the supplied hints. The background insets
+         * will be automatically added to the returned size.
+         */
+        public abstract Dimension computeSize (float hintX, float hintY);
+
+        /**
+         * Rebuilds this element's visualization. Called when this element's size has changed. In
+         * the case of groups, this will relayout its children, in the case of widgets, this will
+         * rerender the widget.
+         */
+        public void layout (float left, float top, float width, float height) {
+            // noop!
+        }
     }
 
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
@@ -442,6 +468,9 @@ public abstract class Element<T extends Element<T>>
     protected Styles _styles = Styles.none();
     protected Layout.Constraint _constraint;
     protected Signal<Boolean> _hierarchyChanged;
+
+    protected LayoutData _ldata;
+    protected Background.Instance _bginst;
 
     protected static enum Flag {
         VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3);

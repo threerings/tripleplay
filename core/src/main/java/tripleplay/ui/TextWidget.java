@@ -5,20 +5,17 @@
 
 package tripleplay.ui;
 
+import pythagoras.f.Dimension;
+import pythagoras.f.MathUtil;
+
 import playn.core.Image;
 import playn.core.ImageLayer;
-import playn.core.PlayN;
 import playn.core.ResourceCallback;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
-
-import pythagoras.f.Dimension;
-import pythagoras.f.IRectangle;
-import pythagoras.f.MathUtil;
+import static playn.core.PlayN.graphics;
 
 import react.Slot;
-
-import tripleplay.util.Objects;
 
 /**
  * An abstract base class for widgets that contain text.
@@ -76,10 +73,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        if (_bginst != null) {
-            _bginst.destroy();
-            _bginst = null;
-        }
         _tglyph.destroy();
         if (_ilayer != null) {
             _ilayer.destroy();
@@ -87,210 +80,153 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         }
     }
 
-    @Override protected Dimension computeSize (float hintX, float hintY) {
-        LayoutData ldata = computeLayout(hintX, hintY);
-        Dimension size = computeContentsSize(ldata, new Dimension());
-        return ldata.bg.addInsets(size);
+    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
+        return new TextLayoutData(hintX, hintY);
     }
 
-    @Override protected void layout () {
-        float width = _size.width, height = _size.height;
-        LayoutData ldata = computeLayout(width, height);
+    protected class TextLayoutData extends LayoutData {
+        public final Style.HAlign halign = resolveStyle(Style.HALIGN);
+        public final Style.VAlign valign = resolveStyle(Style.VALIGN);
+        public final Style.Pos iconPos = resolveStyle(Style.ICON_POS);
+        public final int iconGap = resolveStyle(Style.ICON_GAP);
+        public final int color = resolveStyle(Style.COLOR);
+        public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
 
-        // prepare our background
-        Background bg = ldata.bg;
-        if (_bginst != null) _bginst.destroy();
-        if (_size.width > 0 && _size.height > 0) {
-            _bginst = bg.instantiate(_size);
-            _bginst.addTo(layer);
-        }
-        width -= bg.width();
-        height -= bg.height();
+        public final TextLayout text;
+        public final EffectRenderer renderer;
 
-        // prepare our label and icon
-        renderLayout(ldata, bg.left, bg.top, width, height);
+        public TextLayoutData (float hintX, float hintY) {
+            String curtext = text();
+            boolean haveText = (curtext != null && curtext.length() > 0);
 
-        clearLayoutData(); // we no longer need our layout data
-    }
+            Image icon = icon();
+            if (icon != null) {
+                // remove the icon space from our hint dimensions
+                switch (iconPos) {
+                case LEFT:
+                case RIGHT:
+                    hintX -= icon.width();
+                    if (haveText) hintX -= iconGap;
+                    break;
+                case ABOVE:
+                case BELOW:
+                    hintY -= icon.height();
+                    if (haveText) hintX -= iconGap;
+                    break;
+                }
+            }
 
-    @Override protected void clearLayoutData () {
-        super.clearLayoutData();
-        _ldata = null;
-    }
-
-    protected LayoutData createLayoutData () {
-        return new LayoutData();
-    }
-
-    protected LayoutData computeLayout (float hintX, float hintY) {
-        if (_ldata != null) return _ldata;
-        _ldata = createLayoutData();
-
-        // determine our background
-        Background bg = resolveStyle(Style.BACKGROUND);
-        hintX -= bg.width();
-        hintY -= bg.height();
-        _ldata.bg = bg;
-
-        // layout our text and icon
-        layoutContents(_ldata, hintX, hintY);
-
-        return _ldata;
-    }
-
-    protected void layoutContents (LayoutData ldata, float hintX, float hintY) {
-        if (!isVisible()) return;
-
-        ldata.wrap = resolveStyle(Style.TEXT_WRAP);
-        ldata.halign = resolveStyle(Style.HALIGN);
-        ldata.valign = resolveStyle(Style.VALIGN);
-
-        String curtext = text();
-        boolean haveText = (curtext != null && curtext.length() > 0);
-
-        Image icon = icon();
-        if (icon != null) {
-            ldata.iconPos = resolveStyle(Style.ICON_POS);
-            ldata.iconGap = resolveStyle(Style.ICON_GAP);
-            // remove the icon space from our hint dimensions
-            switch (ldata.iconPos) {
-            case LEFT:
-            case RIGHT:
-                hintX -= icon.width();
-                if (haveText) hintX -= ldata.iconGap;
-                break;
-            case ABOVE:
-            case BELOW:
-                hintY -= icon.height();
-                if (haveText) hintX -= ldata.iconGap;
-                break;
+            if (haveText) {
+                renderer = Style.createEffectRenderer(TextWidget.this);
+                TextFormat format = Style.createTextFormat(TextWidget.this);
+                if (hintX > 0 && wrap) format = format.withWrapWidth(hintX);
+                // TODO: should we do something with a y-hint?
+                text = graphics().layoutText(curtext, format);
+            } else {
+                renderer = null;
+                text = null;
             }
         }
 
-        if (haveText) {
-            ldata.color = resolveStyle(Style.COLOR);
-            ldata.renderer = Style.createEffectRenderer(this);
-            TextFormat format = Style.createTextFormat(this);
-            if (hintX > 0 && ldata.wrap) format = format.withWrapWidth(hintX);
-            // TODO: should we do something with a y-hint?
-            ldata.text = PlayN.graphics().layoutText(curtext, format);
-        }
-    }
+        @Override public Dimension computeSize (float hintX, float hintY) {
+            Dimension size = new Dimension();
+            if (_constraint instanceof Constraints.TextConstraint) {
+                ((Constraints.TextConstraint)_constraint).addTextSize(size, text);
+            } else if (text != null) {
+                size.width += renderer.adjustWidth(text.width());
+                size.height += renderer.adjustHeight(text.height());
+            }
 
-    protected Dimension computeContentsSize (LayoutData ldata, Dimension size) {
-        if (_constraint instanceof Constraints.TextConstraint) {
-            ((Constraints.TextConstraint)_constraint).addTextSize(size, ldata.text);
-        } else if (ldata.text != null) {
-            size.width += ldata.renderer.adjustWidth(ldata.text.width());
-            size.height += ldata.renderer.adjustHeight(ldata.text.height());
+            Image icon = icon();
+            if (icon != null) {
+                switch (iconPos) {
+                case LEFT:
+                case RIGHT:
+                    size.width += icon.width();
+                    if (text != null) size.width += iconGap;
+                    size.height = Math.max(size.height, icon.height());
+                    break;
+                case ABOVE:
+                case BELOW:
+                    size.width = Math.max(size.width, icon.width());
+                    size.height += icon.height();
+                    if (text != null) size.height += iconGap;
+                    break;
+                }
+            }
+            return size;
         }
-        Image icon = icon();
-        if (icon != null) {
-            switch (ldata.iconPos) {
-            case LEFT:
-            case RIGHT:
-                size.width += icon.width();
-                if (ldata.text != null) size.width += ldata.iconGap;
-                size.height = Math.max(size.height, icon.height());
-                break;
-            case ABOVE:
-            case BELOW:
-                size.width = Math.max(size.width, icon.width());
-                size.height += icon.height();
-                if (ldata.text != null) size.height += ldata.iconGap;
-                break;
+
+        @Override public void layout (float left, float top, float width, float height) {
+            float tx = left, ty = top, usedWidth = 0, usedHeight = 0;
+
+            Image icon = icon();
+            if (icon != null && iconPos != null) {
+                float ix = left, iy = top;
+                float iwidth = icon.width(), iheight = icon.height();
+                switch (iconPos) {
+                case LEFT:
+                    tx += iwidth + iconGap;
+                    iy += valign.offset(iheight, height);
+                    usedWidth = iwidth;
+                    break;
+                case ABOVE:
+                    ty += iheight + iconGap;
+                    ix += halign.offset(iwidth, width);
+                    usedHeight = iheight;
+                    break;
+                case RIGHT:
+                    ix += width - iwidth;
+                    iy += valign.offset(iheight, height);
+                    usedWidth = iwidth;
+                    break;
+                case BELOW:
+                    iy += height - iheight;
+                    ix += halign.offset(iwidth, width);
+                    usedHeight = iheight;
+                    break;
+                }
+                if (_ilayer == null) layer.add(_ilayer = graphics().createImageLayer(icon));
+                else _ilayer.setImage(icon);
+                _ilayer.setTranslation(ix, iy);
+
+            } else if (icon == null && _ilayer != null) {
+                layer.remove(_ilayer);
+                _ilayer = null;
+            }
+
+            if (text != null) {
+                float availWidth = width-usedWidth, availHeight = height-usedHeight;
+                createTextLayer(tx, ty,
+                                renderer.adjustWidth(text.width()),
+                                renderer.adjustHeight(text.height()),
+                                availWidth, availHeight);
+            } else {
+                _tglyph.destroy();
             }
         }
-        return size;
-    }
 
-    protected void renderLayout (LayoutData ldata, float x, float y, float width, float height) {
-        float tx = x, ty = y, usedWidth = 0, usedHeight = 0;
-        Image icon = icon();
-        if (icon != null && ldata.iconPos != null) {
-            float ix = x, iy = y;
-            float iwidth = icon.width(), iheight = icon.height();
-            switch (ldata.iconPos) {
-            case LEFT:
-                tx += iwidth + ldata.iconGap;
-                iy += ldata.valign.offset(iheight, height);
-                usedWidth = iwidth;
-                break;
-            case ABOVE:
-                ty += iheight + ldata.iconGap;
-                ix += ldata.halign.offset(iwidth, width);
-                usedHeight = iheight;
-                break;
-            case RIGHT:
-                ix += width - iwidth;
-                iy += ldata.valign.offset(iheight, height);
-                usedWidth = iwidth;
-                break;
-            case BELOW:
-                iy += height - iheight;
-                ix += ldata.halign.offset(iwidth, width);
-                usedHeight = iheight;
-                break;
-            }
-            if (_ilayer == null) layer.add(_ilayer = PlayN.graphics().createImageLayer(icon));
-            else _ilayer.setImage(icon);
-            _ilayer.setTranslation(ix, iy);
-        } else if (icon == null && _ilayer != null) {
-            layer.remove(_ilayer);
-            _ilayer = null;
-        }
-
-        if (ldata.text != null) {
-            float availWidth = width-usedWidth, availHeight = height-usedHeight;
-            createTextLayer(ldata, tx, ty,
-                            ldata.renderer.adjustWidth(ldata.text.width()),
-                            ldata.renderer.adjustHeight(ldata.text.height()),
-                            availWidth, availHeight);
-        } else {
-            _tglyph.destroy();
-        }
-    }
-
-    // this is broken out so that subclasses can extend this action
-    protected void createTextLayer (LayoutData ldata, float tx, float ty,
-                                    float twidth, float theight,
-                                    float availWidth, float availHeight) {
-        if (twidth > 0 && theight > 0) {
+        // this is broken out so that subclasses can extend this action
+        protected void createTextLayer (float tx, float ty, float twidth, float theight,
+                                        float availWidth, float availHeight) {
+            if (twidth <= 0 || theight <= 0) return;
             _tglyph.prepare(twidth, theight);
             // we do some extra fiddling here because one may want to constrain the height of a
             // button such that the text is actually cut off on the top and/or bottom because fonts
             // may have lots of whitespace above or below and you're trying to squeeze the text
             // snugly into your button
-            float oy = ldata.valign.offset(theight, availHeight);
+            float oy = valign.offset(theight, availHeight);
             if (oy >= 0) {
-                ldata.renderer.render(_tglyph.canvas(), ldata.text, ldata.color, 0, 0);
+                renderer.render(_tglyph.canvas(), text, color, 0, 0);
             } else {
-                ldata.renderer.render(_tglyph.canvas(), ldata.text, ldata.color, 0, oy);
+                renderer.render(_tglyph.canvas(), text, color, 0, oy);
                 oy = 0;
             }
-            _tglyph.layer().setTranslation(
-                MathUtil.ifloor(tx + ldata.halign.offset(twidth, availWidth)),
-                MathUtil.ifloor(ty + oy));
+            _tglyph.layer().setTranslation(MathUtil.ifloor(tx + halign.offset(twidth, availWidth)),
+                                           MathUtil.ifloor(ty + oy));
         }
     }
 
-    protected static class LayoutData {
-        public TextLayout text, maxText;
-        public EffectRenderer renderer;
-        public int color;
-        public boolean wrap;
-        public Style.HAlign halign;
-        public Style.VAlign valign;
-        public Style.Pos iconPos;
-        public int iconGap;
-        public Background bg;
-    }
-
-    protected Background.Instance _bginst;
-    protected LayoutData _ldata;
-
     protected final Glyph _tglyph = new Glyph();
-
     protected ImageLayer _ilayer;
-    protected String _maxText;
 }
