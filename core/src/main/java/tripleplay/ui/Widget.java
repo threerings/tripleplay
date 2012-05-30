@@ -5,14 +5,9 @@
 
 package tripleplay.ui;
 
-import pythagoras.f.FloatMath;
 import pythagoras.f.Point;
 
-import playn.core.Canvas;
-import playn.core.CanvasImage;
-import playn.core.ImageLayer;
 import playn.core.Layer;
-import playn.core.PlayN;
 import playn.core.Pointer;
 
 /**
@@ -82,7 +77,7 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
     }
 
     /**
-     * Extends base Glyph to automatically wire up to this Widget's {{@link #layer}.
+     * Extends base Glyph to automatically wire up to this Widget's {@link #layer}.
      */
     protected class Glyph extends tripleplay.util.Glyph {
         public Glyph () {
