@@ -430,7 +430,9 @@ public abstract class Element<T extends Element<T>>
     /**
      * Creates the layout data record used by this element. This record temporarily holds resolved
      * style information between the time that an element has its preferred size computed, and the
-     * time that the element is subsequently laid out.
+     * time that the element is subsequently laid out. Note: {@code hintX} and {@code hintY} <em>do
+     * not</em> yet have the background insets subtracted from them, because the creation of the
+     * LayoutData is what resolves the background in the first place.
      */
     protected abstract LayoutData createLayoutData (float hintX, float hintY);
 

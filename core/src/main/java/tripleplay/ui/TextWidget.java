@@ -99,6 +99,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             String curtext = text();
             boolean haveText = (curtext != null && curtext.length() > 0);
 
+            // remove our background insets from the hint
+            hintX -= bg.width(); hintY -= bg.height();
+
             Image icon = icon();
             if (icon != null) {
                 // remove the icon space from our hint dimensions
