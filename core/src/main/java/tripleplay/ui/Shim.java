@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.IDimension;
 
 /**
  * An invisible widget that simply requests a fixed amount of space.
@@ -13,17 +14,20 @@ import pythagoras.f.Dimension;
 public class Shim extends Element<Shim>
 {
     public Shim (float width, float height) {
-        _shimWidth = width;
-        _shimHeight = height;
+        _size = new Dimension(width, height);
+    }
+
+    public Shim (IDimension size) {
+        _size = new Dimension(size);
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         return new LayoutData() {
             @Override public Dimension computeSize (float hintX, float hintY) {
-                return new Dimension(_shimWidth, _shimHeight);
+                return new Dimension(_size);
             }
         };
     }
 
-    protected final float _shimWidth, _shimHeight;
+    protected final Dimension _size;
 }
