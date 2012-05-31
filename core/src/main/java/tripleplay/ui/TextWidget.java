@@ -130,12 +130,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         @Override public Dimension computeSize (float hintX, float hintY) {
             Dimension size = new Dimension();
-            if (_constraint instanceof Constraints.TextConstraint) {
-                ((Constraints.TextConstraint)_constraint).addTextSize(size, text);
-            } else if (text != null) {
-                size.width += renderer.adjustWidth(text.width());
-                size.height += renderer.adjustHeight(text.height());
-            }
+            addTextSize(size);
 
             Image icon = icon();
             if (icon != null) {
@@ -196,21 +191,31 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             }
 
             if (text != null) {
-                float availWidth = width-usedWidth, availHeight = height-usedHeight;
-                createTextLayer(tx, ty,
-                                renderer.adjustWidth(text.width()),
-                                renderer.adjustHeight(text.height()),
-                                availWidth, availHeight);
+                updateTextGlyph(tx, ty, width-usedWidth, height-usedHeight);
             } else {
                 _tglyph.destroy();
             }
         }
 
         // this is broken out so that subclasses can extend this action
-        protected void createTextLayer (float tx, float ty, float twidth, float theight,
-                                        float availWidth, float availHeight) {
+        protected void addTextSize (Dimension size) {
+            if (_constraint instanceof Constraints.TextConstraint) {
+                ((Constraints.TextConstraint)_constraint).addTextSize(size, text);
+            } else if (text != null) {
+                size.width += renderer.adjustWidth(text.width());
+                size.height += renderer.adjustHeight(text.height());
+            }
+        }
+
+        // this is broken out so that subclasses can extend this action
+        protected void updateTextGlyph (float tx, float ty, float availWidth, float availHeight) {
+            float twidth = renderer.adjustWidth(text.width());
+            float theight = renderer.adjustHeight(text.height());
             if (twidth <= 0 || theight <= 0) return;
+
+            // make sure our canvas layer is big enough to hold our text
             _tglyph.prepare(twidth, theight);
+
             // we do some extra fiddling here because one may want to constrain the height of a
             // button such that the text is actually cut off on the top and/or bottom because fonts
             // may have lots of whitespace above or below and you're trying to squeeze the text
