@@ -24,6 +24,7 @@ public class ImageBackground extends Background
 
     @Override protected Instance instantiate (IDimension size) {
         ImageLayer layer = PlayN.graphics().createImageLayer(_image);
+        layer.setAlpha(alpha);
         layer.setSize(size.width(), size.height());
         return new LayerInstance(layer);
     }

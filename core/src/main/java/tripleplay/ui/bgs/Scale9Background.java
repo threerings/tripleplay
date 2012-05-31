@@ -9,8 +9,8 @@ import pythagoras.f.IDimension;
 
 import playn.core.Image;
 import playn.core.ImmediateLayer;
-import playn.core.PlayN;
 import playn.core.Surface;
+import static playn.core.PlayN.graphics;
 
 import tripleplay.ui.Background;
 
@@ -106,41 +106,30 @@ public class Scale9Background extends Background
         yaxis = new Axis3(image.height());
     }
 
-    /** Sets the alpha value to use when rendering this background's images. */
-    public Scale9Background alpha (float alpha) {
-        _alpha = alpha;
-        return this;
-    }
-
     @Override
     protected Instance instantiate (final IDimension size) {
-        return new LayerInstance(PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+        return new LayerInstance(graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             // The axes of our destination surface.
             Axis3 dx = new Axis3(size.width(), xaxis), dy = new Axis3(size.height(), yaxis);
             public void render (Surface surf) {
                 surf.save();
-                surf.setAlpha(_alpha);
+                surf.setAlpha(alpha);
                 // issue the 9 draw calls
-                for (int yy = 0; yy < 3; ++yy) {
-                    for (int xx = 0; xx < 3; ++xx) {
-                        drawPart(surf, xx, yy);
-                    }
+                for (int yy = 0; yy < 3; ++yy) for (int xx = 0; xx < 3; ++xx) {
+                    drawPart(surf, xx, yy);
                 }
+                surf.setAlpha(1); // alpha is not part of save/restore
                 surf.restore();
             }
 
             protected void drawPart (Surface surf, int x, int y) {
-                if (dx.size(x) ==0 || dy.size(y) == 0) {
-                    return;
-                }
-
+                if (dx.size(x) ==0 || dy.size(y) == 0) return;
                 surf.drawImage(_image,
-                    dx.coord(x), dy.coord(y), dx.size(x), dy.size(y),
-                    xaxis.coord(x), yaxis.coord(y), xaxis.size(x), yaxis.size(y));
+                               dx.coord(x), dy.coord(y), dx.size(x), dy.size(y),
+                               xaxis.coord(x), yaxis.coord(y), xaxis.size(x), yaxis.size(y));
             }
         }));
     }
 
     protected Image _image;
-    protected float _alpha = 1f;
 }

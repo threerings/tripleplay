@@ -8,6 +8,7 @@ package tripleplay.ui.bgs;
 import pythagoras.f.IDimension;
 
 import playn.core.CanvasImage;
+import playn.core.ImageLayer;
 import static playn.core.PlayN.graphics;
 
 import tripleplay.ui.Background;
@@ -50,7 +51,9 @@ public class RoundRectBackground extends Background
             image.canvas().setFillColor(_bgColor);
             image.canvas().fillRoundRect(0, 0, size.width(), size.height(), _radius);
         }
-        return new LayerInstance(graphics().createImageLayer(image));
+        ImageLayer layer = graphics().createImageLayer(image);
+        layer.setAlpha(alpha);
+        return new LayerInstance(layer);
     }
 
     protected final int _bgColor, _borderColor;

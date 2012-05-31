@@ -30,12 +30,14 @@ public class BorderedBackground extends Background
             public void render (Surface surf) {
                 float width = size.width(), height = size.height();
                 float bot = height-1, right = width-1;
+                surf.setAlpha(alpha);
                 surf.setFillColor(_bgColor).fillRect(0, 0, width, height);
                 surf.setFillColor(_borderColor).
                     drawLine(0, 0, right, 0, _thickness).
                     drawLine(right, 0, right, bot, _thickness).
                     drawLine(right, bot, 0, bot, _thickness).
                     drawLine(0, bot, 0, 0, _thickness);
+                surf.setAlpha(1);
             }
         }));
     }

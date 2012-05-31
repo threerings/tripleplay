@@ -10,8 +10,8 @@ import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.ImmediateLayer;
 import playn.core.Layer;
-import playn.core.PlayN;
 import playn.core.Surface;
+import static playn.core.PlayN.graphics;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
@@ -93,6 +93,9 @@ public abstract class Background
     /** The insets of this background. */
     public float top, right, bottom, left;
 
+    /** The alpha transparency of this background. */
+    public float alpha = 1;
+
     /** Returns this background's adjustment to an element's width. */
     public float width () {
         return left + right;
@@ -137,6 +140,14 @@ public abstract class Background
     }
 
     /**
+     * Configures the alpha transparency of this background.
+     */
+    public Background alpha (float alpha) {
+        this.alpha = alpha;
+        return this;
+    }
+
+    /**
      * Adds this background's insets to the supplied dimensions. Returns {@code size} for chaining.
      */
     Dimension addInsets (Dimension size) {
@@ -159,19 +170,21 @@ public abstract class Background
      */
     protected abstract Instance instantiate (IDimension size);
 
-    protected static Layer createSolidLayer (
-        final int color, final float width, final float height) {
-        return PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+    protected Layer createSolidLayer (final int color, final float width, final float height) {
+        return graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
+                surf.setAlpha(alpha);
                 surf.setFillColor(color).fillRect(0, 0, width, height);
+                surf.setAlpha(1);
             }
         });
     }
 
-    protected static Layer createTiledLayer (Image image, float width, float height) {
-        ImageLayer layer = PlayN.graphics().createImageLayer(image);
+    protected Layer createTiledLayer (Image image, float width, float height) {
+        ImageLayer layer = graphics().createImageLayer(image);
         layer.setRepeatX(true);
         layer.setRepeatY(true);
+        layer.setAlpha(alpha);
         return layer;
     }
 
