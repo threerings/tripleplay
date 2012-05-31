@@ -202,15 +202,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             if (_constraint instanceof Constraints.TextConstraint) {
                 ((Constraints.TextConstraint)_constraint).addTextSize(size, text);
             } else if (text != null) {
-                size.width += renderer.adjustWidth(text.width());
-                size.height += renderer.adjustHeight(text.height());
+                size.width += textWidth();
+                size.height += textHeight();
             }
         }
 
         // this is broken out so that subclasses can extend this action
         protected void updateTextGlyph (float tx, float ty, float availWidth, float availHeight) {
-            float twidth = renderer.adjustWidth(text.width());
-            float theight = renderer.adjustHeight(text.height());
+            float twidth = textWidth(), theight = textHeight();
             if (twidth <= 0 || theight <= 0) return;
 
             // make sure our canvas layer is big enough to hold our text
@@ -230,6 +229,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             _tglyph.layer().setTranslation(MathUtil.ifloor(tx + halign.offset(twidth, availWidth)),
                                            MathUtil.ifloor(ty + oy));
         }
+
+        protected float textWidth () { return renderer.adjustWidth(text.width()); }
+        protected float textHeight () { return renderer.adjustHeight(text.height()); }
     }
 
     protected final Glyph _tglyph = new Glyph();
