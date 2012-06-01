@@ -85,6 +85,7 @@ public class Slider extends Widget<Slider>
     /** Sets the unstretched width of this slider, in pixels. By default, the width is 100. */
     public Slider setWidth (float width) {
         _width = width;
+        invalidate();
         return this;
     }
 
