@@ -8,8 +8,12 @@ package tripleplay.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.PlayN;
+import pythagoras.f.MathUtil;
+
 import playn.core.Game;
+import playn.core.ImmediateLayer;
+import playn.core.Surface;
+import static playn.core.PlayN.graphics;
 
 import tripleplay.util.Interpolator;
 
@@ -105,6 +109,58 @@ public abstract class ScreenStack
         protected float _odx, _ody, _nsx, _nsy;
     }
 
+    /** Peels the current screen off like the page of a book, revealing the new screen beneath. */
+    public class PageFlipTransition implements Transition {
+        public PageFlipTransition duration (float duration) { _duration = duration; return this; }
+        public PageFlipTransition unflip () { _unflip = true; return this; }
+
+        @Override public void init (Screen oscreen, Screen nscreen) {
+            nscreen.layer.setDepth(_unflip ? 1 : -1);
+            _toflip = _unflip ? nscreen : oscreen;
+            _osx = _toflip.layer.transform().scaleX();
+            _osy = _toflip.layer.transform().scaleY();
+            if (_unflip) {
+                _ss = 0.00001f; _sr = 1;
+                _sa = 0; _ar = 0.5f;
+            } else {
+                _ss = 1; _sr = -1;
+                _sa = 0.5f; _ar = -0.5f;
+            }
+            final float fwidth = _toflip.width(), fheight = _toflip.height();
+            _shadow = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+                public void render (Surface surf) {
+                    surf.setAlpha(_alpha);
+                    surf.setFillColor(0xFF000000);
+                    surf.fillRect(0, 0, fwidth, fheight);
+                }
+            });
+            _toflip.layer.addAt(_shadow, fwidth, 0);
+        }
+
+        @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
+            if (elapsed >= _duration) {
+                _shadow.destroy();
+                nscreen.layer.setDepth(0);
+                _toflip.layer.setScale(_osx, _osy);
+                return true;
+            }
+            float scale = MathUtil.clamp(_interp.apply(_ss, _sr, elapsed, _duration), 0, 1);
+            _alpha = MathUtil.clamp(_interp.apply(_sa, _ar, elapsed, _duration), 0, 1);
+            _toflip.layer.setScale(_osx * scale, _osy);
+            return false;
+        }
+
+        protected float _duration = 1000;
+        protected Interpolator _interp = Interpolator.EASE_INOUT;
+        protected float _alpha;
+        protected boolean _unflip;
+
+        protected Screen _toflip;
+        protected float _ss, _sr, _sa, _ar;
+        protected float _osx, _osy;
+        protected ImmediateLayer _shadow;
+    }
+
     /** The x-coordinate at which screens are located. Defaults to 0. */
     public float originX = 0;
 
@@ -113,6 +169,9 @@ public abstract class ScreenStack
 
     /** Creates a slide transition. */
     public SlideTransition slide () { return new SlideTransition(); }
+
+    /** Creates a page flip transition. */
+    public PageFlipTransition pageFlip () { return new PageFlipTransition(); }
 
     /**
      * {@link #push(Screen,Transition)} with the default transition.
@@ -287,13 +346,13 @@ public abstract class ScreenStack
     }
 
     protected void show (Screen screen) {
-        PlayN.graphics().rootLayer().add(screen.layer);
+        graphics().rootLayer().add(screen.layer);
         try { screen.wasShown(); }
         catch (RuntimeException e) { handleError(e); }
     }
 
     protected void hide (Screen screen) {
-        PlayN.graphics().rootLayer().remove(screen.layer);
+        graphics().rootLayer().remove(screen.layer);
         try { screen.wasHidden(); }
         catch (RuntimeException e) { handleError(e); }
     }
