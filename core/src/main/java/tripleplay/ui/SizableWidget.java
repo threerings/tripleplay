@@ -52,7 +52,7 @@ public class SizableWidget<T extends Widget<T>> extends Widget<T>
 
     /** Sets the preferred size of this widget to the given dimension. Returns the widget for
      * chaining. */
-    public T setPreferredSize (Dimension size) {
+    public T setPreferredSize (IDimension size) {
         _preferredSize.setSize(size);
         invalidate();
         return asT();
