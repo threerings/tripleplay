@@ -19,6 +19,9 @@ import react.Value;
 
 public class Slider extends Widget<Slider>
 {
+    /** The width of an unstretched slider. Use {@link #setWidth(float)} to override. */
+    public static final float DEFAULT_WIDTH = 100;
+
     /** The value of the slider. */
     public final Value<Float> value;
 
@@ -79,6 +82,12 @@ public class Slider extends Widget<Slider>
         return this;
     }
 
+    /** Sets the unstretched width of this slider, in pixels. By default, the width is 100. */
+    public Slider setWidth (float width) {
+        _width = width;
+        return this;
+    }
+
     /** Returns our maximum allowed value. */
     public float max () { return _max; }
 
@@ -99,9 +108,7 @@ public class Slider extends Widget<Slider>
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         return new LayoutData() {
             @Override public Dimension computeSize (float hintX, float hintY) {
-                return new Dimension(
-                    hintX == 0 ? 100 : hintX,
-                    _thumb == null ? THUMB_HEIGHT + BAR_HEIGHT :
+                return new Dimension(_width, _thumb == null ? THUMB_HEIGHT + BAR_HEIGHT :
                     Math.max(BAR_HEIGHT, _thumb.height()));
             }
 
@@ -178,6 +185,7 @@ public class Slider extends Widget<Slider>
     protected ImageLayer _thumb;
     protected Rectangle _tbounds;
     protected Float _increment;
+    protected float _width = DEFAULT_WIDTH;
 
     protected static final float BAR_HEIGHT = 5;
     protected static final float THUMB_HEIGHT = BAR_HEIGHT * 2, THUMB_WIDTH = 4;
