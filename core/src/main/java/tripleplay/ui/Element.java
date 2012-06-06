@@ -31,7 +31,7 @@ import playn.core.PlayN;
 public abstract class Element<T extends Element<T>>
 {
     /** The layer associated with this element. */
-    public final GroupLayer layer = PlayN.graphics().createGroupLayer();
+    public final GroupLayer layer = createLayer();
 
     /**
      * Returns this element's x offset relative to its parent.
@@ -442,6 +442,13 @@ public abstract class Element<T extends Element<T>>
      */
     protected void clearLayoutData () {
         _ldata = null;
+    }
+
+    /**
+     * Creates the layer to be used by this element. Subclasses may override to use a clipped one.
+     */
+    protected GroupLayer createLayer () {
+        return PlayN.graphics().createGroupLayer();
     }
 
     protected abstract class LayoutData {
