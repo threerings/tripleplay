@@ -5,6 +5,7 @@
 
   <source path="anim"/>
   <source path="game"/>
+  <source path="shaders"/>
   <source path="ui"/>
   <source path="util"/>
 </module>
