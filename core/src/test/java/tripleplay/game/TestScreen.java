@@ -20,6 +20,10 @@ import tripleplay.ui.layout.AxisLayout;
  */
 public abstract class TestScreen extends UIScreen
 {
+    public TestScreen (int depth) {
+        _depth = depth;
+    }
+
     @Override public void wasAdded () {
         super.wasAdded();
         _root = iface.createRoot(createLayout(), stylesheet(), layer);
@@ -67,11 +71,13 @@ public abstract class TestScreen extends UIScreen
 
     /** Returns the background to use for this screen. */
     protected Background background () {
-        return Background.solid(0xFFCCCCCC).inset(15, 10);
+        int borderColor = (_depth % 2 == 0) ? 0xFF99CCFF : 0xFFCC99FF;
+        return Background.bordered(0xFFCCCCCC, borderColor, 15).inset(15, 10);
     }
 
     /** Override this method and create your UI in it. Add elements to {@link #_root}. */
     protected abstract void createIface ();
 
+    protected final int _depth;
     protected Root _root;
 }

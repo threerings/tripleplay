@@ -47,7 +47,7 @@ public class ScreenTests implements Game
     }
 
     protected Screen createScreen (final int depth) {
-        return new TestScreen() {
+        return new TestScreen(depth) {
             @Override public String toString () {
                 return "Screen" + depth;
             }
