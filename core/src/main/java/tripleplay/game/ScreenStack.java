@@ -8,6 +8,7 @@ package tripleplay.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import pythagoras.f.FloatMath;
 import pythagoras.f.MathUtil;
 
 import playn.core.Game;
@@ -15,6 +16,7 @@ import playn.core.ImmediateLayer;
 import playn.core.Surface;
 import static playn.core.PlayN.graphics;
 
+import tripleplay.shaders.RotateYShader;
 import tripleplay.util.Interpolator;
 
 /**
@@ -90,6 +92,8 @@ public abstract class ScreenStack
                 _nsx = originX-nscreen.width(); _nsy = originY;
                 break;
             }
+            _osx = oscreen.layer.transform().tx();
+            _osy = oscreen.layer.transform().ty();
             nscreen.layer.setTranslation(_nsx, _nsy);
         }
 
@@ -100,13 +104,15 @@ public abstract class ScreenStack
             float nx = _interp.apply(_nsx, originX-_nsx, elapsed, _duration);
             float ny = _interp.apply(_nsy, originY-_nsy, elapsed, _duration);
             nscreen.layer.setTranslation(nx, ny);
-            return elapsed >= _duration;
+            if (elapsed < _duration) return false;
+            oscreen.layer.setTranslation(_osx, _osy);
+            return true;
         }
 
         protected Dir _dir = Dir.LEFT;
         protected Interpolator _interp = Interpolator.EASE_INOUT;
         protected float _duration = 500;
-        protected float _odx, _ody, _nsx, _nsy;
+        protected float _osx, _osy, _odx, _ody, _nsx, _nsy;
     }
 
     /** Peels the current screen off like the page of a book, revealing the new screen beneath. */
@@ -117,21 +123,15 @@ public abstract class ScreenStack
         @Override public void init (Screen oscreen, Screen nscreen) {
             nscreen.layer.setDepth(_unflip ? 1 : -1);
             _toflip = _unflip ? nscreen : oscreen;
-            _osx = _toflip.layer.transform().scaleX();
-            _osy = _toflip.layer.transform().scaleY();
-            if (_unflip) {
-                _ss = 0.00001f; _sr = 1;
-                _sa = 0; _ar = 0.5f;
-            } else {
-                _ss = 1; _sr = -1;
-                _sa = 0.5f; _ar = -0.5f;
-            }
+            _interp = _unflip ? Interpolator.EASE_INOUT : Interpolator.EASE_IN;
+            _shader = new RotateYShader(graphics().ctx(), 0f, 0.5f);
+            _toflip.layer.setShader(_shader);
             final float fwidth = _toflip.width(), fheight = _toflip.height();
             _shadow = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
                 public void render (Surface surf) {
                     surf.setAlpha(_alpha);
                     surf.setFillColor(0xFF000000);
-                    surf.fillRect(0, 0, fwidth, fheight);
+                    surf.fillRect(0, 0, fwidth/4, fheight);
                 }
             });
             _toflip.layer.addAt(_shadow, fwidth, 0);
@@ -141,24 +141,24 @@ public abstract class ScreenStack
             if (elapsed >= _duration) {
                 _shadow.destroy();
                 nscreen.layer.setDepth(0);
-                _toflip.layer.setScale(_osx, _osy);
+                _toflip.layer.setShader(null);
                 return true;
             }
-            float scale = MathUtil.clamp(_interp.apply(_ss, _sr, elapsed, _duration), 0, 1);
-            _alpha = MathUtil.clamp(_interp.apply(_sa, _ar, elapsed, _duration), 0, 1);
-            _toflip.layer.setScale(_osx * scale, _osy);
+            float pct = MathUtil.clamp(_interp.apply(0, 0.5f, elapsed, _duration), 0, 0.5f);
+            if (_unflip) pct = 0.5f - pct;
+            _alpha = pct;
+            _shader.angle = FloatMath.PI * pct;
             return false;
         }
 
-        protected float _duration = 1000;
-        protected Interpolator _interp = Interpolator.EASE_INOUT;
+        protected float _duration = 1500;
+        protected Interpolator _interp;
         protected float _alpha;
         protected boolean _unflip;
 
         protected Screen _toflip;
-        protected float _ss, _sr, _sa, _ar;
-        protected float _osx, _osy;
         protected ImmediateLayer _shadow;
+        protected RotateYShader _shader;
     }
 
     /** The x-coordinate at which screens are located. Defaults to 0. */
