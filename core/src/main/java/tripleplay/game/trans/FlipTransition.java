@@ -25,30 +25,29 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
     public FlipTransition unflip () { _unflip = true; return this; }
 
     @Override public void init (Screen oscreen, Screen nscreen) {
-        nscreen.layer.setVisible(false);
-        _shader = new RotateYShader(graphics().ctx(), 0.5f, 0.5f, 1);
-        oscreen.layer.setShader(_shader);
+        nscreen.layer.setDepth(-1);
+        _oshader = new RotateYShader(graphics().ctx(), 0.5f, 0.5f, 1);
+        oscreen.layer.setShader(_oshader);
+        _nshader = new RotateYShader(graphics().ctx(), 0.5f, 0.5f, 1);
+        nscreen.layer.setShader(_nshader);
     }
 
     @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
         float pct = _interp.apply(0, 1, elapsed, _duration);
         if (pct >= 0.5f && !_flipped) {
-            nscreen.layer.setShader(_shader);
-            nscreen.layer.setVisible(true);
-            oscreen.layer.setVisible(false);
-            oscreen.layer.setShader(null);
-            _flipped = true;
+            nscreen.layer.setDepth(0);
+            oscreen.layer.setDepth(-1);
         }
         if (_unflip) pct = -pct;
-        if (_flipped) pct -= 1;
-        _shader.angle = FloatMath.PI * pct;
+        _oshader.angle = FloatMath.PI * pct;
+        _nshader.angle = FloatMath.PI * (pct - 1);
         return elapsed >= _duration;
     }
 
     @Override public void complete (Screen oscreen, Screen nscreen) {
-        oscreen.layer.setVisible(true);
-        nscreen.layer.setVisible(true);
+        oscreen.layer.setDepth(0);
         oscreen.layer.setShader(null);
+        nscreen.layer.setDepth(0);
         nscreen.layer.setShader(null);
     }
 
@@ -57,5 +56,5 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
     }
 
     protected boolean _flipped, _unflip;
-    protected RotateYShader _shader;
+    protected RotateYShader _oshader, _nshader;
 }
