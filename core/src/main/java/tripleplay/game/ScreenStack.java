@@ -8,16 +8,11 @@ package tripleplay.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import pythagoras.f.FloatMath;
-import pythagoras.f.MathUtil;
-
 import playn.core.Game;
-import playn.core.ImmediateLayer;
-import playn.core.Surface;
 import static playn.core.PlayN.graphics;
 
-import tripleplay.shaders.RotateYShader;
-import tripleplay.util.Interpolator;
+import tripleplay.game.trans.PageTurnTransition;
+import tripleplay.game.trans.SlideTransition;
 
 /**
  * Manages a stack of screens. The stack supports useful manipulations: pushing a new screen onto
@@ -31,11 +26,11 @@ import tripleplay.util.Interpolator;
  */
 public abstract class ScreenStack
 {
-    /** Direction constants, used by transitions. */
-    public static enum Dir { UP, DOWN, LEFT, RIGHT; };
-
     /** Implements a particular screen transition. */
     public interface Transition {
+        /** Direction constants, used by transitions. */
+        enum Dir { UP, DOWN, LEFT, RIGHT; };
+
         /** Allows the transition to pre-compute useful values. This will immediately be followed
          * by call to {@link #update} with an elapsed time of zero. */
         void init (Screen oscreen, Screen nscreen);
@@ -64,112 +59,6 @@ public abstract class ScreenStack
         public void complete (Screen oscreen, Screen nscreen) {} // noopski!
     };
 
-    /** Slides the old screen off, and the new screen on right behind. */
-    public class SlideTransition implements Transition {
-        public SlideTransition dir (Dir dir) { _dir = dir; return this; }
-        public SlideTransition up () { return dir(Dir.UP); }
-        public SlideTransition down () { return dir(Dir.DOWN); }
-        public SlideTransition left () { return dir(Dir.LEFT); }
-        public SlideTransition right () { return dir(Dir.RIGHT); }
-
-        public SlideTransition interp (Interpolator interp) { _interp = interp; return this; }
-        public SlideTransition linear () { return interp(Interpolator.LINEAR); }
-        public SlideTransition easeIn () { return interp(Interpolator.EASE_IN); }
-        public SlideTransition easeOut () { return interp(Interpolator.EASE_OUT); }
-        public SlideTransition easeInOut () { return interp(Interpolator.EASE_INOUT); }
-
-        public SlideTransition duration (float duration) { _duration = duration; return this; }
-
-        @Override public void init (Screen oscreen, Screen nscreen) {
-            switch (_dir) {
-            case UP:
-                _odx = originX; _ody = originY-oscreen.height();
-                _nsx = originX; _nsy = originY+nscreen.height();
-                break;
-            case DOWN:
-                _odx = originX; _ody = originY+oscreen.height();
-                _nsx = originX; _nsy = originY-nscreen.height();
-                break;
-            case LEFT: default:
-                _odx = originX-oscreen.width(); _ody = originY;
-                _nsx = originX+nscreen.width(); _nsy = originY;
-                break;
-            case RIGHT:
-                _odx = originX+oscreen.width(); _ody = originY;
-                _nsx = originX-nscreen.width(); _nsy = originY;
-                break;
-            }
-            _osx = oscreen.layer.transform().tx();
-            _osy = oscreen.layer.transform().ty();
-            nscreen.layer.setTranslation(_nsx, _nsy);
-        }
-
-        @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
-            float ox = _interp.apply(originX, _odx-originX, elapsed, _duration);
-            float oy = _interp.apply(originY, _ody-originY, elapsed, _duration);
-            oscreen.layer.setTranslation(ox, oy);
-            float nx = _interp.apply(_nsx, originX-_nsx, elapsed, _duration);
-            float ny = _interp.apply(_nsy, originY-_nsy, elapsed, _duration);
-            nscreen.layer.setTranslation(nx, ny);
-            return elapsed >= _duration;
-        }
-
-        @Override public void complete (Screen oscreen, Screen nscreen) {
-            oscreen.layer.setTranslation(_osx, _osy);
-        }
-
-        protected Dir _dir = Dir.LEFT;
-        protected Interpolator _interp = Interpolator.EASE_INOUT;
-        protected float _duration = 500;
-        protected float _osx, _osy, _odx, _ody, _nsx, _nsy;
-    }
-
-    /** Peels the current screen off like the page of a book, revealing the new screen beneath. */
-    public class PageFlipTransition implements Transition {
-        public PageFlipTransition duration (float duration) { _duration = duration; return this; }
-        public PageFlipTransition unflip () { _unflip = true; return this; }
-
-        @Override public void init (Screen oscreen, Screen nscreen) {
-            nscreen.layer.setDepth(_unflip ? 1 : -1);
-            _toflip = _unflip ? nscreen : oscreen;
-            _interp = _unflip ? Interpolator.EASE_INOUT : Interpolator.EASE_IN;
-            _shader = new RotateYShader(graphics().ctx(), 0f, 0.5f);
-            _toflip.layer.setShader(_shader);
-            final float fwidth = _toflip.width(), fheight = _toflip.height();
-            _shadow = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-                public void render (Surface surf) {
-                    surf.setAlpha(_alpha);
-                    surf.setFillColor(0xFF000000);
-                    surf.fillRect(0, 0, fwidth/4, fheight);
-                }
-            });
-            _toflip.layer.addAt(_shadow, fwidth, 0);
-        }
-
-        @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
-            float pct = MathUtil.clamp(_interp.apply(0, 0.5f, elapsed, _duration), 0, 0.5f);
-            if (_unflip) pct = 0.5f - pct;
-            _alpha = pct;
-            _shader.angle = FloatMath.PI * pct;
-            return elapsed >= _duration;
-        }
-
-        @Override public void complete (Screen oscreen, Screen nscreen) {
-            _shadow.destroy();
-            nscreen.layer.setDepth(0);
-            _toflip.layer.setShader(null);
-        }
-
-        protected float _duration = 1500;
-        protected Interpolator _interp;
-        protected float _alpha;
-        protected boolean _unflip;
-
-        protected Screen _toflip;
-        protected ImmediateLayer _shadow;
-        protected RotateYShader _shader;
-    }
-
     /** The x-coordinate at which screens are located. Defaults to 0. */
     public float originX = 0;
 
@@ -177,10 +66,10 @@ public abstract class ScreenStack
     public float originY = 0;
 
     /** Creates a slide transition. */
-    public SlideTransition slide () { return new SlideTransition(); }
+    public SlideTransition slide () { return new SlideTransition(this); }
 
-    /** Creates a page flip transition. */
-    public PageFlipTransition pageFlip () { return new PageFlipTransition(); }
+    /** Creates a page turn transition. */
+    public PageTurnTransition pageTurn () { return new PageTurnTransition(); }
 
     /**
      * {@link #push(Screen,Transition)} with the default transition.
