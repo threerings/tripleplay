@@ -11,6 +11,7 @@ import java.util.List;
 import playn.core.Game;
 import static playn.core.PlayN.graphics;
 
+import tripleplay.game.trans.FlipTransition;
 import tripleplay.game.trans.PageTurnTransition;
 import tripleplay.game.trans.SlideTransition;
 
@@ -70,6 +71,9 @@ public abstract class ScreenStack
 
     /** Creates a page turn transition. */
     public PageTurnTransition pageTurn () { return new PageTurnTransition(); }
+
+    /** Creates a flip transition. */
+    public FlipTransition flip () { return new FlipTransition(); }
 
     /**
      * {@link #push(Screen,Transition)} with the default transition.

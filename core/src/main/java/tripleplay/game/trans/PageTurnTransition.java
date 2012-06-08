@@ -20,19 +20,23 @@ import tripleplay.util.Interpolator;
 /**
  * Opens the current screen like the page of a book, revealing the new screen beneath.
  */
-public class PageTurnTransition implements ScreenStack.Transition
+public class PageTurnTransition extends InterpedTransition<PageTurnTransition>
 {
-    /** Configures the duration of the transition. */
-    public PageTurnTransition duration (float duration) { _duration = duration; return this; }
-
-    /** Reverses this transition, making it a page close instead of open. */
-    public PageTurnTransition close () { _close = true; return this; }
+    /**
+     * Reverses this transition, making it a page close instead of open. Note that this changes the
+     * interpolator, so if you want a custom interpolator, configure it <em>after</em> calling this
+     * method.
+     */
+    public PageTurnTransition close () {
+        _close = true;
+        _interp = Interpolator.EASE_INOUT;
+        return this;
+    }
 
     @Override public void init (Screen oscreen, Screen nscreen) {
         nscreen.layer.setDepth(_close ? 1 : -1);
         _toflip = _close ? nscreen : oscreen;
-        _interp = _close ? Interpolator.EASE_INOUT : Interpolator.EASE_IN;
-        _shader = new RotateYShader(graphics().ctx(), 0f, 0.5f);
+        _shader = new RotateYShader(graphics().ctx(), 0f, 0.5f, 1.5f);
         _toflip.layer.setShader(_shader);
         final float fwidth = _toflip.width(), fheight = _toflip.height();
         _shadow = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
@@ -59,8 +63,14 @@ public class PageTurnTransition implements ScreenStack.Transition
         _toflip.layer.setShader(null);
     }
 
-    protected float _duration = 1500;
-    protected Interpolator _interp;
+    @Override protected float defaultDuration () {
+        return 1500;
+    }
+
+    @Override protected Interpolator defaultInterpolator () {
+        return Interpolator.EASE_IN;
+    }
+
     protected float _alpha;
     protected boolean _close;
 

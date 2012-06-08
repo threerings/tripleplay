@@ -57,8 +57,11 @@ public class ScreenTests implements Game
                 addButton("Slide", new UnitSlot() { public void onEmit () {
                     _stack.push(createScreen(depth+1), _stack.slide());
                 }});
+                addButton("Turn", new UnitSlot() { public void onEmit () {
+                    _stack.push(createScreen(depth+1), _stack.pageTurn());
+                }});
                 addButton("Flip", new UnitSlot() { public void onEmit () {
-                    _stack.push(createScreen(depth+1), _stack.pageFlip());
+                    _stack.push(createScreen(depth+1), _stack.flip());
                 }});
 
                 if (depth > 0) {
@@ -68,7 +71,7 @@ public class ScreenTests implements Game
 
                     final TestScreen screen = this;
                     addButton("Back", new UnitSlot() { public void onEmit () {
-                        _stack.remove(screen, _stack.pageFlip().unflip());
+                        _stack.remove(screen, _stack.flip().unflip());
                     }});
 
                     addButton("Top", new UnitSlot() { public void onEmit () {

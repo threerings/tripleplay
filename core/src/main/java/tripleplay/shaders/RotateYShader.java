@@ -23,10 +23,14 @@ public class RotateYShader extends IndexedTrisShader
     /** The y-coordinate of the eye (as a fraction of the screen height). */
     public final float eyeY;
 
-    public RotateYShader (GLContext ctx, float eyeX, float eyeY) {
+    /** The multiple of the screen width by which to scale z (usually either 1 or 0.5). */
+    public final float zScale;
+
+    public RotateYShader (GLContext ctx, float eyeX, float eyeY, float zScale) {
         super(ctx);
         this.eyeX = eyeX;
         this.eyeY = eyeY;
+        this.zScale = zScale;
     }
 
     @Override protected String vertexShader() {
@@ -71,10 +75,10 @@ public class RotateYShader extends IndexedTrisShader
             // Finally convert the coordinates into OpenGL space
             "  pos.x /= (u_ScreenSize.x / 2.0);\n" +
             "  pos.y /= (u_ScreenSize.y / 2.0);\n" +
-            "  pos.z /= u_ScreenSize.x;\n" +
+            "  pos.z /= (u_ScreenSize.x * " + zScale + ");\n" +
             "  pos.x -= 1.0;\n" +
             "  pos.y = 1.0 - pos.y;\n" +
-            "  pos.z -= 1.0;\n" +
+            // z may already be rotated into negative space so we don't shift it
             "  gl_Position = pos;\n" +
 
             "  v_TexCoord = a_TexCoord;\n" +

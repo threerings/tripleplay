@@ -12,22 +12,13 @@ import tripleplay.util.Interpolator;
 /**
  * Slides the old screen off, and the new screen on right behind.
  */
-public class SlideTransition implements ScreenStack.Transition
+public class SlideTransition extends InterpedTransition<SlideTransition>
 {
     public SlideTransition up () { return dir(Dir.UP); }
     public SlideTransition down () { return dir(Dir.DOWN); }
     public SlideTransition left () { return dir(Dir.LEFT); }
     public SlideTransition right () { return dir(Dir.RIGHT); }
     public SlideTransition dir (Dir dir) { _dir = dir; return this; }
-
-    public SlideTransition interp (Interpolator interp) { _interp = interp; return this; }
-    public SlideTransition linear () { return interp(Interpolator.LINEAR); }
-    public SlideTransition easeIn () { return interp(Interpolator.EASE_IN); }
-    public SlideTransition easeOut () { return interp(Interpolator.EASE_OUT); }
-    public SlideTransition easeInOut () { return interp(Interpolator.EASE_INOUT); }
-
-    /** Configures the duration of the transition. */
-    public SlideTransition duration (float duration) { _duration = duration; return this; }
 
     public SlideTransition (ScreenStack stack) {
         _originX = stack.originX;
@@ -72,9 +63,11 @@ public class SlideTransition implements ScreenStack.Transition
         oscreen.layer.setTranslation(_osx, _osy);
     }
 
+    @Override protected float defaultDuration () {
+        return 500;
+    }
+
     protected final float _originX, _originY;
     protected Dir _dir = Dir.LEFT;
-    protected Interpolator _interp = Interpolator.EASE_INOUT;
-    protected float _duration = 500;
     protected float _osx, _osy, _odx, _ody, _nsx, _nsy;
 }
