@@ -86,8 +86,8 @@ public class RotateYShader extends IndexedTrisShader
     }
 
     @Override
-    protected Core createTextureCore(GLContext ctx) {
-        return new ITCore(ctx, vertexShader(), textureFragmentShader()) {
+    protected Core createTextureCore() {
+        return new ITCore(this, vertexShader(), textureFragmentShader()) {
             private final Uniform1f uAngle = prog.getUniform1f("u_Angle");
             private final Uniform2f uEye = prog.getUniform2f("u_Eye");
 
@@ -101,8 +101,8 @@ public class RotateYShader extends IndexedTrisShader
     }
 
     @Override
-    protected Core createColorCore(GLContext ctx) {
-        return new ITCore(ctx, vertexShader(), colorFragmentShader()) {
+    protected Core createColorCore() {
+        return new ITCore(this, vertexShader(), colorFragmentShader()) {
             private final Uniform1f uAngle = prog.getUniform1f("u_Angle");
             private final Uniform2f uEye = prog.getUniform2f("u_Eye");
 
