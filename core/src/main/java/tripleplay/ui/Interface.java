@@ -92,6 +92,7 @@ public class Interface
      */
     public void removeRoot (Root root) {
         _roots.remove(root);
+        root.wasRemoved();
         if (root.layer.parent() != null) root.layer.parent().remove(root.layer);
     }
 
@@ -102,6 +103,7 @@ public class Interface
      */
     public void destroyRoot (Root root) {
         _roots.remove(root);
+        root.wasRemoved();
         root.layer.destroy();
     }
 
