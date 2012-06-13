@@ -48,6 +48,14 @@ public class Flicker extends Pointer.Adapter
         _max = max;
     }
 
+    /** Returns the position of this flicker as an animation value. */
+    public Animation.Value posValue () {
+        return new Animation.Value() {
+            public float initial () { return position; };
+            public void set (float value) { position = value; }
+        };
+    }
+
     /** This must be called every frame with {@link Game#update}'s delta. */
     public void update (float delta) {
         if (_vel != 0) {
