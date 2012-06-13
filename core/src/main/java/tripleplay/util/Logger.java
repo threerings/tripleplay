@@ -143,6 +143,13 @@ public class Logger
     }
 
     /**
+     * Tests if this logger will output messages of the given level.
+     */
+    public boolean shouldLog (Level level) {
+        return levels.shouldLog(level, _ident);
+    }
+
+    /**
      * Logs a debug message.
      *
      * @param message the text of the message.
