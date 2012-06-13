@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pythagoras.f.XY;
+import react.Value;
 
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
@@ -284,6 +285,18 @@ public abstract class Animator
         return action(new Runnable() {
             public void run () {
                 layer.setVisible(visible);
+            }
+        });
+    }
+
+    /**
+     * Sets a boolean value to true or false, usually to simplify the enabling/disabling of UI
+     * components during an animation.
+     */
+    public Animation.Action setAnimating (final Value<Boolean> anim, final boolean animating) {
+        return action(new Runnable() {
+            public void run () {
+                anim.update(animating);
             }
         });
     }
