@@ -69,8 +69,8 @@ public class Library
             public void done (String text) {
                 try {
                     callback.done(new Library(PlayN.json().parse(text), baseDir));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception err) {
+                    callback.error(err);
                 }
             }
             public void error (Throwable cause) {
