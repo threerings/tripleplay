@@ -16,7 +16,7 @@ public class LayerData
     /**
      * The keyframes in this layer.
      */
-    public List<KeyframeData> keyframes;
+    public final List<KeyframeData> keyframes;
 
     protected LayerData (Json.Object json) {
         name = json.getString("name");
