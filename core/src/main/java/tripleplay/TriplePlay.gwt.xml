@@ -8,4 +8,5 @@
   <source path="shaders"/>
   <source path="ui"/>
   <source path="util"/>
+  <source path="flump"/>
 </module>
