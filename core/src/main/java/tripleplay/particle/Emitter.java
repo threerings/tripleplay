@@ -8,12 +8,14 @@ package tripleplay.particle;
 import java.util.ArrayList;
 import java.util.List;
 
+import react.Connection;
+import react.Signal;
+import react.UnitSlot;
+
 import playn.core.Image;
 import playn.core.ImmediateLayer;
 import playn.core.Surface;
-import playn.core.gl.GLContext;
 import static playn.core.PlayN.graphics;
-import playn.core.gl.IndexedTrisShader;
 
 /**
  * Emits and updates particles according to a particle system configuration.
@@ -24,7 +26,7 @@ public class Emitter
     public final ImmediateLayer layer;
 
     /** The generator that adds new particles to this emitter. */
-    public Generator generator = Generator.NOOP;
+    public Generator generator;
 
     /** The initializers used by this emitter. */
     public final List<Initializer> initters = new ArrayList<Initializer>();
@@ -32,52 +34,61 @@ public class Emitter
     /** The effectors used by this emitter. */
     public final List<Effector> effectors = new ArrayList<Effector>();
 
-    /**
-     * Creates an emitter that supports up to {@code maxParticles} particles at any one time.
-     *
-     * @param image the image to use for each particle.
-     */
-    public Emitter (final int maxParticles, Image image) {
-        this.layer = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-            @Override public void render (Surface surface) {
-                int tex = _image.ensureTexture(false, false);
-                _buffer.render(_shader.prepareTexture(tex, 1), _image.width(), _image.height());
-            }
-        });
-        _buffer = new ParticleBuffer(maxParticles);
-        _image = image;
-        _shader = new IndexedTrisShader(graphics().ctx()) {
-            @Override protected int startVerts () { return maxParticles * 4; }
-        };
-    }
+    /** A signal emitted when the generator for this emitter is exhausted. */
+    public final Signal<Emitter> onExhausted = Signal.create();
+
+    /** A signal emitted when this emitter has no live particles and no generator. */
+    public final Signal<Emitter> onEmpty = Signal.create();
 
     /**
-     * Updates this emitter. Call this from {@link Game#update} or thereabouts.
-     *
-     * @param delta the time that has elapsed since the last frame, in milliseconds.
-     */
-    public void update (float delta) {
-        float secs = delta/1000;
-        _now += secs;
-        // TODO: update and cache our layer's local transform?
-        if (generator.generate(this, _now, secs)) {
-            generator = Generator.NOOP;
-            // TODO: emit generator exhausted event
-        }
-        _buffer.apply(effectors, _now, secs);
-    }
-
-    /**
-     * Adds the specified number of particles.
+     * Adds the specified number of particles. One usually does not call this manually, but rather
+     * configures {@link #generator} with a generator that adds particles as desired.
      */
     public void addParticles (int count) {
         for (int ii = 0, ll = initters.size(); ii < ll; ii++) initters.get(ii).willInit(count);
-        _buffer.add(count, _now, initters);
+        _buffer.add(count, _parts.now(), initters);
     }
 
-    protected final ParticleBuffer _buffer;
-    protected final Image _image;
-    protected final IndexedTrisShader _shader;
+    /**
+     * Unregisters this emitter from the particles manager.
+     */
+    public void destroy () {
+        _conn.disconnect();
+    }
 
-    protected float _now;
+    /**
+     * Configures this emitter to self-destruct when it runs out of particles.
+     */
+    public void destroyOnEmpty () {
+        onEmpty.connect(new UnitSlot() { public void onEmit () { destroy(); }});
+    }
+
+    Emitter (Particles parts, final int maxParticles, final Image image) {
+        this.layer = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+            @Override public void render (Surface surface) {
+                int tex = image.ensureTexture(false, false);
+                _buffer.render(_parts._shader.prepareTexture(tex, 1, maxParticles),
+                               image.width(), image.height());
+            }
+        });
+        _parts = parts;
+        _buffer = new ParticleBuffer(maxParticles);
+    }
+
+    void update (float now, float dt) {
+        // TODO: update and cache our layer's local transform?
+        if (generator != null && generator.generate(this, now, dt)) {
+            generator = null;
+            onExhausted.emit(this);
+        }
+        if (_buffer.apply(effectors, now, dt) == 0 && generator == null) {
+            onEmpty.emit(this);
+        }
+    }
+
+    protected final Particles _parts;
+    protected final ParticleBuffer _buffer;
+
+    /** Our connection to our {@link Particles} (filled in by same). */
+    protected Connection _conn;
 }

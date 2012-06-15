@@ -26,16 +26,16 @@ import tripleplay.util.Randoms;
 public class ParticleDemo implements Game
 {
     public interface Test {
-        Emitter create (Randoms rando);
+        Emitter create (Particles parts, Randoms rando);
     }
 
     public static Test[] TESTS = {
-        new Test() { public Emitter create (Randoms rando) {
+        new Test() { public Emitter create (Particles parts, Randoms rando) {
             CanvasImage image = graphics().createImage(5, 5);
             image.canvas().setFillColor(0xFFFFCC99);
             image.canvas().fillRect(0, 0, 5, 5);
 
-            Emitter emitter = new Emitter(5000, image);
+            Emitter emitter = parts.createEmitter(5000, image);
             emitter.generator = Generator.constant(1000);
             emitter.initters.add(Lifespan.constant(5));
             emitter.initters.add(Transform.emitter(emitter));
@@ -48,7 +48,6 @@ public class ParticleDemo implements Game
     };
 
     public static void main (String[] args) {
-        _mainArgs = args;
         JavaPlatform.register();
         PlayN.run(new ParticleDemo());
     }
@@ -66,7 +65,7 @@ public class ParticleDemo implements Game
 
     @Override // from interface Game
     public void update (float delta) {
-        _emitter.update(delta);
+        _parts.update(delta);
     }
 
     @Override // from interface Game
@@ -80,14 +79,16 @@ public class ParticleDemo implements Game
     }
 
     protected void advanceTest (int dt) {
+        if (_emitter != null) _emitter.destroy();
         _testIdx = (_testIdx + TESTS.length + dt) % TESTS.length;
         graphics().rootLayer().clear();
-        _emitter = TESTS[_testIdx].create(_rando);
+        _emitter = TESTS[_testIdx].create(_parts, _rando);
         graphics().rootLayer().add(_emitter.layer);
     }
 
+    protected final Randoms _rando = Randoms.with(new Random());
+    protected final Particles _parts = new Particles();
+
     protected int _testIdx;
     protected Emitter _emitter;
-    protected final Randoms _rando = Randoms.with(new Random());
-    protected static String[] _mainArgs;
 }

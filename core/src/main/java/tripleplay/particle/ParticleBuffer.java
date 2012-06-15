@@ -96,9 +96,13 @@ public class ParticleBuffer
         }
     }
 
-    /** Applies the supplied effectors to all (live) particles in this buffer. */
-    public void apply (List<? extends Effector> effectors, float now, float dt) {
-        int pp = 0, ppos = 0, ecount = effectors.size(), death = 0;
+    /**
+     * Applies the supplied effectors to all (live) particles in this buffer.
+     *
+     * @return the number of live particles to which the effectors were applied.
+     */
+    public int apply (List<? extends Effector> effectors, float now, float dt) {
+        int pp = 0, ppos = 0, ecount = effectors.size(), death = 0, living = 0;
         for (int aa = 0; aa < alive.length; aa++) {
             int live = alive[aa], mask = 1, died = 0;
             for (int end = pp+32; pp < end; pp++, ppos += NUM_FIELDS, mask <<= 1) {
@@ -115,6 +119,7 @@ public class ParticleBuffer
                 // the particle lives, apply the effectors
                 for (int ee = 0; ee < ecount; ee++)
                     effectors.get(ee).apply(pp, data, ppos, dt);
+                living++;
             }
 
             // if we killed off any particles, update the liveness array
@@ -123,6 +128,7 @@ public class ParticleBuffer
                 death += died;
             }
         }
+        return living;
     }
 
     /** Renders the particles to the supplied surface. */
