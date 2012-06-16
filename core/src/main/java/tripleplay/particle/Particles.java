@@ -31,6 +31,7 @@ public class Particles
         emitter._conn = _onUpdate.connect(new Slot<Now>() { public void onEmit (Now now) {
             emitter.update(now.time, now.dt);
         }});
+        graphics().rootLayer().add(emitter.layer);
         return emitter;
     }
 

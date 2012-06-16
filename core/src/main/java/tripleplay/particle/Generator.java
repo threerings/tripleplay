@@ -32,14 +32,20 @@ public abstract class Generator
 
     /**
      * Returns a generator that emits the specified number of particles per second, and is never
-     * exhausted.
+     * exhausted. The number of particles may be fractional if you wish to emit one particle every
+     * N seconds where N is greater than 1.
      */
-    public static Generator constant (final int particlesPerSecond) {
+    public static Generator constant (final float particlesPerSecond) {
         return new Generator() {
             @Override public boolean generate (Emitter emitter, float now, float dt) {
-                emitter.addParticles(Math.round(particlesPerSecond * dt));
+                _accum += dt;
+                int particles = (int)(_accum / _secondsPerParticle);
+                _accum -= particles * _secondsPerParticle;
+                emitter.addParticles(particles);
                 return false;
             }
+            protected final float _secondsPerParticle = 1 / particlesPerSecond;
+            protected float _accum;
         };
     }
 

@@ -9,10 +9,6 @@ import java.util.List;
 
 import pythagoras.f.FloatMath;
 
-import playn.core.Image;
-import playn.core.Surface;
-import playn.core.gl.GLShader;
-
 /**
  * Contains the basic metadata for an array of particles: position, velocity, scale, rotation,
  * birth time, lifespan.
@@ -22,22 +18,31 @@ public class ParticleBuffer
     /** The offset of the x coordinate of the position in the particle buffer. */
     public static final int POS_X = 0;
     /** The offset of the y coordinate of the position in the particle buffer. */
-    public static final int POS_Y = 1;
+    public static final int POS_Y = POS_X+1;
 
     /** The offset of the x coordinate of the velocity in the particle buffer. */
-    public static final int VEL_X = 2;
+    public static final int VEL_X = POS_Y+1;
     /** The offset of the y coordinate of the velocity in the particle buffer. */
-    public static final int VEL_Y = 3;
+    public static final int VEL_Y = VEL_X+1;
 
     /** The offset of the (uniform) scale in the particle buffer. */
-    public static final int SCALE = 4;
+    public static final int SCALE = VEL_Y+1;
     /** The offset of the rotation in the particle buffer. */
-    public static final int ROT = 5;
+    public static final int ROT = SCALE+1;
+
+    /** The offset of the red in the particle buffer. */
+    public static final int RED = ROT+1;
+    /** The offset of the green in the particle buffer. */
+    public static final int GREEN = RED+1;
+    /** The offset of the blue in the particle buffer. */
+    public static final int BLUE = GREEN+1;
+    /** The offset of the alpha in the particle buffer. */
+    public static final int ALPHA = BLUE+1;
 
     /** The offset of the birth time in the particle buffer. */
-    public static final int BIRTH = 6;
+    public static final int BIRTH = ALPHA+1;
     /** The offset of the lifespan in the particle buffer. */
-    public static final int LIFESPAN = 7;
+    public static final int LIFESPAN = BIRTH+1;
 
     /** The total number of fields per particle. */
     public static final int NUM_FIELDS = LIFESPAN+1;
@@ -118,7 +123,7 @@ public class ParticleBuffer
 
                 // the particle lives, apply the effectors
                 for (int ee = 0; ee < ecount; ee++)
-                    effectors.get(ee).apply(pp, data, ppos, dt);
+                    effectors.get(ee).apply(pp, data, ppos, now, dt);
                 living++;
             }
 
@@ -131,23 +136,15 @@ public class ParticleBuffer
         return living;
     }
 
-    /** Renders the particles to the supplied surface. */
-    public void render (GLShader shader, float width, float height) {
+    /** Renders the particles to the supplied shader. */
+    public void render (ParticleShader shader, float width, float height) {
         float ql = -width/2, qt = -height/2, qr = width/2, qb = height/2;
         int pp = 0, ppos = 0, rendered = 0;
         for (int aa = 0; aa < alive.length; aa++) {
             int live = alive[aa], mask = 1;
             for (int end = pp+32; pp < end; pp++, ppos += NUM_FIELDS, mask <<= 1) {
                 if ((live & mask) == 0) continue;
-                float scale = data[ppos + SCALE], angle = data[ppos + ROT];
-                float sina = 0, cosa = 1;
-                if (angle != 0) {
-                    sina = FloatMath.sin(angle);
-                    cosa = FloatMath.cos(angle);
-                }
-                float x = data[ppos + POS_X], y = data[ppos + POS_Y];
-                shader.addQuad(cosa * scale, sina * scale, -sina * scale, cosa * scale, x, y,
-                               ql, qt, qr, qb, 0, 0, 1, 1);
+                shader.core.addQuad(ql, qt, qr, qb, data, ppos);
                 rendered++;
             }
         }

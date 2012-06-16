@@ -53,6 +53,7 @@ public class Emitter
      * Unregisters this emitter from the particles manager.
      */
     public void destroy () {
+        layer.destroy();
         _conn.disconnect();
     }
 
@@ -67,7 +68,7 @@ public class Emitter
         this.layer = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             @Override public void render (Surface surface) {
                 int tex = image.ensureTexture(false, false);
-                _buffer.render(_parts._shader.prepareTexture(tex, 1, maxParticles),
+                _buffer.render(_parts._shader.prepare(tex, maxParticles),
                                image.width(), image.height());
             }
         });

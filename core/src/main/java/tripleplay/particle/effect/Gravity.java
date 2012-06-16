@@ -31,7 +31,7 @@ public class Gravity extends Effector
         _accel = accel;
     }
 
-    @Override public void apply (int index, float[] data, int start, float dt) {
+    @Override public void apply (int index, float[] data, int start, float now, float dt) {
         data[start + ParticleBuffer.VEL_Y] += _accel * dt;
     }
 

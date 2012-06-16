@@ -20,8 +20,10 @@ public abstract class Effector
      * data arrays.
      * @param data the particle field data.
      * @param start the offset into {@code data} at which the particle's fields start.
+     * @param now the number of seconds elapsed since the emitter came into being. Can be used to
+     * compute a particle's age.
      * @param dt the amount of time (in fractions of a second) that has elapsed since the last
      * update.
      */
-    public abstract void apply (int index, float[] data, int start, float dt);
+    public abstract void apply (int index, float[] data, int start, float now, float dt);
 }

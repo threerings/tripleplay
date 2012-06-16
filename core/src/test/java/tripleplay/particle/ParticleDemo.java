@@ -5,7 +5,13 @@
 
 package tripleplay.particle;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import pythagoras.f.Vector;
+
+import react.UnitSlot;
 
 import playn.core.CanvasImage;
 import playn.core.Game;
@@ -14,10 +20,9 @@ import playn.core.PlayN;
 import playn.java.JavaPlatform;
 import static playn.core.PlayN.*;
 
-import pythagoras.f.Vector;
-
 import tripleplay.particle.effect.Gravity;
 import tripleplay.particle.effect.Move;
+import tripleplay.particle.init.Color;
 import tripleplay.particle.init.Lifespan;
 import tripleplay.particle.init.Transform;
 import tripleplay.particle.init.Velocity;
@@ -26,11 +31,12 @@ import tripleplay.util.Randoms;
 public class ParticleDemo implements Game
 {
     public interface Test {
-        Emitter create (Particles parts, Randoms rando);
+        void create (Particles parts, Randoms rando, List<Emitter> emitters);
     }
 
     public static Test[] TESTS = {
-        new Test() { public Emitter create (Particles parts, Randoms rando) {
+        // a standard continuous fountain of particles; spew!
+        new Test() { public void create (Particles parts, Randoms rando, List<Emitter> emitters) {
             CanvasImage image = graphics().createImage(5, 5);
             image.canvas().setFillColor(0xFFFFCC99);
             image.canvas().fillRect(0, 0, 5, 5);
@@ -38,12 +44,39 @@ public class ParticleDemo implements Game
             Emitter emitter = parts.createEmitter(5000, image);
             emitter.generator = Generator.constant(1000);
             emitter.initters.add(Lifespan.constant(5));
-            emitter.initters.add(Transform.emitter(emitter));
+            emitter.initters.add(Color.constant(0xFFFFFFFF));
+            emitter.initters.add(Transform.layer(emitter.layer));
             emitter.initters.add(Velocity.random(rando, -20, 20, -100, 0));
             emitter.effectors.add(new Gravity(30));
             emitter.effectors.add(new Move());
             emitter.layer.setTranslation(graphics().width()/2, graphics().height()/2);
-            return emitter;
+            emitters.add(emitter);
+        }},
+
+        new Test() { public void create (Particles parts, final Randoms rando,
+                                         List<Emitter> emitters) {
+            CanvasImage image = graphics().createImage(5, 5);
+            image.canvas().setFillColor(0xFFFFCC99);
+            image.canvas().fillRect(0, 0, 5, 5);
+
+            final Emitter explode = parts.createEmitter(500, image);
+            explode.generator = Generator.impulse(500);
+            explode.initters.add(Lifespan.random(rando, 1, 2f));
+            explode.initters.add(Color.constant(0xFFFFFFFF));
+            explode.initters.add(Transform.layer(explode.layer));
+            explode.initters.add(Velocity.random(rando, 100));
+            explode.initters.add(Velocity.increment(0, -50));
+            explode.effectors.add(new Gravity(30));
+            explode.effectors.add(new Move());
+            explode.layer.setTranslation(100 + rando.getFloat(graphics().width()-200),
+                                         100 + rando.getFloat(graphics().height()-200));
+
+            explode.onEmpty.connect(new UnitSlot() { public void onEmit () {
+                explode.layer.setTranslation(100 + rando.getFloat(graphics().width()-200),
+                                             100 + rando.getFloat(graphics().height()-200));
+                explode.generator = Generator.impulse(500);
+            }});
+            emitters.add(explode);
         }},
     };
 
@@ -79,16 +112,16 @@ public class ParticleDemo implements Game
     }
 
     protected void advanceTest (int dt) {
-        if (_emitter != null) _emitter.destroy();
+        for (Emitter emitter : _emitters) emitter.destroy();
+        _emitters.clear();
         _testIdx = (_testIdx + TESTS.length + dt) % TESTS.length;
         graphics().rootLayer().clear();
-        _emitter = TESTS[_testIdx].create(_parts, _rando);
-        graphics().rootLayer().add(_emitter.layer);
+        TESTS[_testIdx].create(_parts, _rando, _emitters);
     }
 
     protected final Randoms _rando = Randoms.with(new Random());
     protected final Particles _parts = new Particles();
 
     protected int _testIdx;
-    protected Emitter _emitter;
+    protected List<Emitter> _emitters = new ArrayList<Emitter>();
 }

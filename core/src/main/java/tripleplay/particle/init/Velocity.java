@@ -5,6 +5,7 @@
 
 package tripleplay.particle.init;
 
+import pythagoras.f.FloatMath;
 import pythagoras.f.Vector;
 
 import tripleplay.util.Randoms;
@@ -50,6 +51,34 @@ public class Velocity
             @Override public void init (int index, float[] data, int start) {
                 data[start + ParticleBuffer.VEL_X] = rando.getInRange(minX, maxX);
                 data[start + ParticleBuffer.VEL_Y] = rando.getInRange(minY, maxY);
+            }
+        };
+    }
+
+    /**
+     * Returns an initializer that provides a velocity in a random direction with the specified
+     * maximum magnitude.
+     */
+    public static Initializer random (final Randoms rando, final float maximum) {
+        return new Initializer() {
+            @Override public void init (int index, float[] data, int start) {
+                float angle = rando.getFloat(FloatMath.TWO_PI);
+                float magnitude = rando.getFloat(maximum);
+                data[start + ParticleBuffer.VEL_X] = FloatMath.sin(angle)*magnitude;
+                data[start + ParticleBuffer.VEL_Y] = FloatMath.cos(angle)*magnitude;
+            }
+        };
+    }
+
+    /**
+     * Returns an initializer that increments the previously assigned velocity by the specified
+     * amounts.
+     */
+    public static Initializer increment (final float dx, final float dy) {
+        return new Initializer() {
+            @Override public void init (int index, float[] data, int start) {
+                data[start + ParticleBuffer.VEL_X] += dx;
+                data[start + ParticleBuffer.VEL_Y] += dy;
             }
         };
     }
