@@ -15,23 +15,31 @@ import pythagoras.f.FloatMath;
  */
 public class ParticleBuffer
 {
-    /** The offset of the x coordinate of the position in the particle buffer. */
-    public static final int POS_X = 0;
-    /** The offset of the y coordinate of the position in the particle buffer. */
-    public static final int POS_Y = POS_X+1;
+    /** The offset of the birth time in the particle buffer. */
+    public static final int BIRTH = 0;
+    /** The offset of the lifespan in the particle buffer. */
+    public static final int LIFESPAN = BIRTH+1;
 
     /** The offset of the x coordinate of the velocity in the particle buffer. */
-    public static final int VEL_X = POS_Y+1;
+    public static final int VEL_X = LIFESPAN+1;
     /** The offset of the y coordinate of the velocity in the particle buffer. */
     public static final int VEL_Y = VEL_X+1;
 
-    /** The offset of the (uniform) scale in the particle buffer. */
-    public static final int SCALE = VEL_Y+1;
-    /** The offset of the rotation in the particle buffer. */
-    public static final int ROT = SCALE+1;
+    /** The offset of the m00 transform element in the particle buffer. */
+    public static final int M00 = VEL_Y+1;
+    /** The offset of the m01 transform element in the particle buffer. */
+    public static final int M01 = M00+1;
+    /** The offset of the m10 transform element in the particle buffer. */
+    public static final int M10 = M01+1;
+    /** The offset of the m11 transform element in the particle buffer. */
+    public static final int M11 = M10+1;
+    /** The offset of the tx trasform element in the particle buffer. */
+    public static final int TX = M11+1;
+    /** The offset of the ty trasform element in the particle buffer. */
+    public static final int TY = TX+1;
 
     /** The offset of the red in the particle buffer. */
-    public static final int RED = ROT+1;
+    public static final int RED = TY+1;
     /** The offset of the green in the particle buffer. */
     public static final int GREEN = RED+1;
     /** The offset of the blue in the particle buffer. */
@@ -39,13 +47,8 @@ public class ParticleBuffer
     /** The offset of the alpha in the particle buffer. */
     public static final int ALPHA = BLUE+1;
 
-    /** The offset of the birth time in the particle buffer. */
-    public static final int BIRTH = ALPHA+1;
-    /** The offset of the lifespan in the particle buffer. */
-    public static final int LIFESPAN = BIRTH+1;
-
     /** The total number of fields per particle. */
-    public static final int NUM_FIELDS = LIFESPAN+1;
+    public static final int NUM_FIELDS = ALPHA+1;
 
     /** The particle data. */
     public final float[] data;

@@ -19,8 +19,8 @@ public class Color
     public static Initializer constant (int argb) {
         return constant(((argb >> 16) & 0xFF) / 255f,
                         ((argb >>  8) & 0xFF) / 255f,
-                        ( argb        & 0xFF) / 255f,
-                        (argb >> 24) / 255f);
+                        ((argb >>  0) & 0xFF) / 255f,
+                        ((argb >> 24) & 0xFF) / 255f);
     }
 
     /**

@@ -14,7 +14,7 @@ import static tripleplay.particle.ParticleBuffer.*;
 public class Move extends Effector
 {
     @Override public void apply (int index, float[] data, int start, float now, float dt) {
-        data[start + POS_X] += data[start + VEL_X] * dt;
-        data[start + POS_Y] += data[start + VEL_Y] * dt;
+        data[start + TX] += data[start + VEL_X] * dt;
+        data[start + TY] += data[start + VEL_Y] * dt;
     }
 }

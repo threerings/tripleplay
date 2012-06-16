@@ -20,12 +20,14 @@ import playn.core.PlayN;
 import playn.java.JavaPlatform;
 import static playn.core.PlayN.*;
 
+import tripleplay.particle.effect.Alpha;
 import tripleplay.particle.effect.Gravity;
 import tripleplay.particle.effect.Move;
 import tripleplay.particle.init.Color;
 import tripleplay.particle.init.Lifespan;
 import tripleplay.particle.init.Transform;
 import tripleplay.particle.init.Velocity;
+import tripleplay.util.Interpolator;
 import tripleplay.util.Randoms;
 
 public class ParticleDemo implements Game
@@ -37,18 +39,19 @@ public class ParticleDemo implements Game
     public static Test[] TESTS = {
         // a standard continuous fountain of particles; spew!
         new Test() { public void create (Particles parts, Randoms rando, List<Emitter> emitters) {
-            CanvasImage image = graphics().createImage(5, 5);
-            image.canvas().setFillColor(0xFFFFCC99);
-            image.canvas().fillRect(0, 0, 5, 5);
+            CanvasImage image = graphics().createImage(7, 7);
+            image.canvas().setFillColor(0xFFFFFFFF);
+            image.canvas().fillCircle(3, 3, 3);
 
             Emitter emitter = parts.createEmitter(5000, image);
-            emitter.generator = Generator.constant(1000);
+            emitter.generator = Generator.constant(100);
             emitter.initters.add(Lifespan.constant(5));
-            emitter.initters.add(Color.constant(0xFFFFFFFF));
+            emitter.initters.add(Color.constant(0xFF99CCFF));
             emitter.initters.add(Transform.layer(emitter.layer));
             emitter.initters.add(Velocity.random(rando, -20, 20, -100, 0));
             emitter.effectors.add(new Gravity(30));
             emitter.effectors.add(new Move());
+            emitter.effectors.add(Alpha.byAge(Interpolator.EASE_OUT, 1, 0));
             emitter.layer.setTranslation(graphics().width()/2, graphics().height()/2);
             emitters.add(emitter);
         }},

@@ -7,6 +7,7 @@ package tripleplay.particle.init;
 
 import playn.core.Layer;
 
+import pythagoras.f.FloatMath;
 import pythagoras.f.Point;
 
 import tripleplay.particle.Initializer;
@@ -38,14 +39,17 @@ public class Transform
     /**
      * Returns an initializer that configures a particle with a constant transform.
      */
-    public static Initializer constant (final float scale, final float rotation,
-                                        final float tx, final float ty) {
+    public static Initializer constant (float scale, float rot, final float tx, final float ty) {
+        float sina = FloatMath.sin(rot), cosa = FloatMath.cos(rot);
+        final float m00 = cosa * scale, m01 = sina * scale, m10 = -sina * scale, m11 = cosa * scale;
         return new Initializer() {
             @Override public void init (int index, float[] data, int start) {
-                data[start + ParticleBuffer.POS_X] = tx;
-                data[start + ParticleBuffer.POS_Y] = ty;
-                data[start + ParticleBuffer.SCALE] = scale;
-                data[start + ParticleBuffer.ROT] = rotation;
+                data[start + ParticleBuffer.M00] = m00;
+                data[start + ParticleBuffer.M01] = m01;
+                data[start + ParticleBuffer.M10] = m10;
+                data[start + ParticleBuffer.M11] = m11;
+                data[start + ParticleBuffer.TX] = tx;
+                data[start + ParticleBuffer.TY] = ty;
             }
         };
     }
@@ -58,15 +62,17 @@ public class Transform
     public static Initializer layer (final Layer layer) {
         return new Initializer() {
             @Override public void willInit (int count) {
+                // TODO: we want the concatenation of all transforms from the root to this layer
+                layer.transform().get(_matrix);
                 Layer.Util.layerToScreen(layer, _pos.set(0, 0), _pos);
+                _matrix[4] = _pos.x;
+                _matrix[5] = _pos.y;
             }
             @Override public void init (int index, float[] data, int start) {
-                data[start + ParticleBuffer.POS_X] = _pos.x;
-                data[start + ParticleBuffer.POS_Y] = _pos.y;
-                data[start + ParticleBuffer.SCALE] = 1; // TODO
-                data[start + ParticleBuffer.ROT] = 0; // TODO
+                System.arraycopy(_matrix, 0, data, start + ParticleBuffer.M00, 6);
             }
             protected final Point _pos = new Point();
+            protected final float[] _matrix = new float[6];
         };
     }
 
@@ -78,8 +84,8 @@ public class Transform
                                          final float width, final float height) {
         return new Initializer() {
             @Override public void init (int index, float[] data, int start) {
-                data[start + ParticleBuffer.POS_X] = x + rando.getFloat(width);
-                data[start + ParticleBuffer.POS_Y] = y + rando.getFloat(height);
+                data[start + ParticleBuffer.TX] = x + rando.getFloat(width);
+                data[start + ParticleBuffer.TY] = y + rando.getFloat(height);
             }
             protected final Point _pos = new Point();
         };

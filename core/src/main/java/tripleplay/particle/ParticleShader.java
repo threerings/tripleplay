@@ -13,8 +13,6 @@ import playn.core.gl.GLContext;
 import playn.core.gl.GLProgram;
 import playn.core.gl.GLShader;
 
-import static tripleplay.particle.ParticleBuffer.*;
-
 /**
  * A custom shader designed for shading particles.
  */
@@ -34,7 +32,7 @@ public class ParticleShader extends GLShader
 
     @Override
     protected Core createTextureCore () {
-        return core = new ParticleCore(this, VERTEX_SHADER, TEXTURE_FRAG_SHADER);
+        return core = new ParticleCore(VERTEX_SHADER, TEXTURE_FRAG_SHADER);
     }
 
     @Override
@@ -51,9 +49,9 @@ public class ParticleShader extends GLShader
         "uniform vec2 u_ScreenSize;\n" +
         "attribute vec4 a_Matrix;\n" +
         "attribute vec2 a_Translation;\n" +
+        "attribute vec4 a_Color;\n" +
         "attribute vec2 a_Position;\n" +
         "attribute vec2 a_TexCoord;\n" +
-        "attribute vec4 a_Color;\n" +
         "varying vec2 v_TexCoord;\n" +
         "varying vec4 v_Color;\n" +
 
@@ -86,13 +84,11 @@ public class ParticleShader extends GLShader
 
         "void main(void) {\n" +
         "  vec4 texcol = texture2D(u_Texture, v_TexCoord);\n" +
-        // "  vec4 tinted = vec4(texcol.rgb * (v_Color.rgb * texcol.a + (1.0 - texcol.a)), 1);\n" +
-        "  gl_FragColor = texcol * v_Color.a;\n" +
-        // "  gl_FragColor = u_Color * u_Alpha;\n" +
-        // "  gl_FragColor = textureColor * u_Alpha;\n" +
+        "  vec4 tinted = vec4(texcol.rgb * (v_Color.rgb * texcol.a + (1.0 - texcol.a)), texcol.a);\n" +
+        "  gl_FragColor = tinted * v_Color.a;\n" +
         "}";
 
-    protected static final int VERTEX_SIZE = 14; // 10 floats per vertex
+    protected static final int VERTEX_SIZE = 14; // 14 floats per vertex
     protected static final int START_VERTS = 16*4;
     protected static final int EXPAND_VERTS = 16*4;
     protected static final int START_ELEMS = 6*START_VERTS/4;
@@ -102,25 +98,25 @@ public class ParticleShader extends GLShader
 
     protected class ParticleCore extends Core {
         private final Uniform2f uScreenSize;
-        private final Attrib aMatrix, aTranslation, aPosition, aTexCoord, aColor;
+        private final Attrib aMatrix, aTranslation, aColor, aPosition, aTexCoord;
 
         private final GLBuffer.Float vertices;
         private final GLBuffer.Short elements;
 
-        public ParticleCore (GLShader shader, String vertShader, String fragShader) {
-            super(shader, shader.ctx.createProgram(vertShader, fragShader));
+        public ParticleCore (String vertShader, String fragShader) {
+            super(vertShader, fragShader);
 
             // determine our various shader program locations
             uScreenSize = prog.getUniform2f("u_ScreenSize");
             aMatrix = prog.getAttrib("a_Matrix", 4, GL20.GL_FLOAT);
             aTranslation = prog.getAttrib("a_Translation", 2, GL20.GL_FLOAT);
+            aColor = prog.getAttrib("a_Color", 4, GL20.GL_FLOAT);
             aPosition = prog.getAttrib("a_Position", 2, GL20.GL_FLOAT);
             aTexCoord = prog.getAttrib("a_TexCoord", 2, GL20.GL_FLOAT);
-            aColor = prog.getAttrib("a_Color", 4, GL20.GL_FLOAT);
 
             // create our vertex and index buffers
-            vertices = shader.ctx.createFloatBuffer(START_VERTS*VERTEX_SIZE);
-            elements = shader.ctx.createShortBuffer(START_ELEMS);
+            vertices = ctx.createFloatBuffer(START_VERTS*VERTEX_SIZE);
+            elements = ctx.createShortBuffer(START_ELEMS);
         }
 
         public void ensureCapacity (int maxQuads) {
@@ -135,9 +131,9 @@ public class ParticleShader extends GLShader
             vertices.bind(GL20.GL_ARRAY_BUFFER);
             aMatrix.bind(VERTEX_STRIDE, 0);
             aTranslation.bind(VERTEX_STRIDE, 16);
-            aPosition.bind(VERTEX_STRIDE, 24);
-            aTexCoord.bind(VERTEX_STRIDE, 32);
-            aColor.bind(VERTEX_STRIDE, 34);
+            aColor.bind(VERTEX_STRIDE, 24);
+            aPosition.bind(VERTEX_STRIDE, 40);
+            aTexCoord.bind(VERTEX_STRIDE, 48);
 
             elements.bind(GL20.GL_ELEMENT_ARRAY_BUFFER);
         }
@@ -159,27 +155,14 @@ public class ParticleShader extends GLShader
 
         public void addQuad (float left, float top, float right, float bottom,
                              float[] data, int ppos) {
-            float scale = data[ppos+SCALE], angle = data[ppos+ROT];
-            float sina = 0, cosa = 1;
-            if (angle != 0) {
-                sina = FloatMath.sin(angle);
-                cosa = FloatMath.cos(angle);
-            }
-
-            float m00 = cosa * scale, m01 = sina * scale, m10 = -sina * scale, m11 = cosa * scale;
-            float tx = data[ppos+POS_X], ty = data[ppos+POS_Y];
-            float r = data[ppos+RED], g = data[ppos+GREEN], b = data[ppos+BLUE], a = data[ppos+ALPHA];
-            // curCore.addQuad(m00, m01, m10, m11, tx, ty,
-            //                 left,  top,    sl, st,
-            //                 right, top,    sr, st,
-            //                 left,  bottom, sl, sb,
-            //                 right, bottom, sr, sb);
-
             int vertIdx = beginPrimitive(4, 6);
-            vertices.add(m00, m01, m10, m11, tx, ty).add(left, top).add(0, 0).add(r, g).add(b, a);
-            vertices.add(m00, m01, m10, m11, tx, ty).add(right, top).add(1, 0).add(r, g).add(b, a);
-            vertices.add(m00, m01, m10, m11, tx, ty).add(left, bottom).add(0, 1).add(r, g).add(b, a);
-            vertices.add(m00, m01, m10, m11, tx, ty).add(right, bottom).add(1, 1).add(r, g).add(b, a);
+
+            // bulk copy m00,m01,m10,m11,tx,ty,r,g,b,a
+            int pstart = ppos + ParticleBuffer.M00;
+            vertices.add(data, pstart, 10).add(left, top).add(0, 0);
+            vertices.add(data, pstart, 10).add(right, top).add(1, 0);
+            vertices.add(data, pstart, 10).add(left, bottom).add(0, 1);
+            vertices.add(data, pstart, 10).add(right, bottom).add(1, 1);
 
             elements.add(vertIdx+0);
             elements.add(vertIdx+1);
@@ -206,7 +189,7 @@ public class ParticleShader extends GLShader
             int verts = vertIdx + vertexCount, elems = elements.position() + elemCount;
             int availVerts = vertices.capacity() / VERTEX_SIZE, availElems = elements.capacity();
             if ((verts > availVerts) || (elems > availElems)) {
-                shader.flush();
+                ParticleShader.this.flush();
                 if (vertexCount > availVerts)
                     expandVerts(vertexCount);
                 if (elemCount > availElems)
