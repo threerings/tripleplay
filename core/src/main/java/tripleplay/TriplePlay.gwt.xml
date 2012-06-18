@@ -4,9 +4,10 @@
   <inherits name="react"/>
 
   <source path="anim"/>
+  <source path="flump"/>
   <source path="game"/>
+  <source path="particle"/>
   <source path="shaders"/>
   <source path="ui"/>
   <source path="util"/>
-  <source path="flump"/>
 </module>

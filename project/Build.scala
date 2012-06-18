@@ -14,17 +14,15 @@ object TriplePlayBuild extends Build {
       fork in Compile := true
     )
     override def projectSettings (name :String) = name match {
-      case "core" => LWJGLPlugin.lwjglSettings ++ seq(
+      case "core" => seq(
         // no scala-library dependency here
         autoScalaLibrary := false,
         // include source in our jar for GWT
         unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java",
         // disable doc publishing, TODO: reenable when scaladoc doesn't choke on our code
         publishArtifact in (Compile, packageDoc) := false,
+        // wire junit into SBT
         libraryDependencies ++= Seq(
-          // TODO: this shouldn't be necessary
-          // "com.googlecode.playn" % "playn-java" % "1.2-SNAPSHOT",
-          // scala test dependencies
 	        "com.novocode" % "junit-interface" % "0.7" % "test->default"
         )
       )
@@ -33,13 +31,21 @@ object TriplePlayBuild extends Build {
         proguardOptions += keepMain("tripleplay.tools.FramePacker"),
         proguardOptions += "-dontnote scala.Enumeration"
       )
+      case "demo-core" => Seq(
+        // copy resources from playn/tests/resources
+        unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java",
+        excludeFilter in unmanagedResources ~= { _ || "*.java" }
+      )
+      case "demo-java" => LWJGLPlugin.lwjglSettings
       case _ => Nil
     }
   }
 
   lazy val core = builder("core")
   lazy val tools = builder("tools")
+  lazy val demoCore = builder("demo-core")
+  lazy val demoJava = builder("demo-java")
 
   // one giant fruit roll-up to bring them all together
-  lazy val tripleplay = Project("tripleplay", file(".")) aggregate(core, tools)
+  lazy val tripleplay = Project("tripleplay", file(".")) aggregate(core, tools, demoCore, demoJava)
 }

@@ -2,8 +2,6 @@
 .project
 *.iml
 .settings/
-playn
-pythagoras
-react
 target
-wiki
+demo/ios/bin
+demo/ios/obj

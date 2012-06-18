@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.threerings</groupId>
+    <artifactId>tripleplay-demo</artifactId>
+    <version>1.4-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>tripleplay-demo-html</artifactId>
+  <packaging>war</packaging>
+  <name>TripleDemo HTML</name>
+
+  <properties>
+    <gwt.module>tripleplay.TripleDemo</gwt.module>
+    <gwt.name>tripledemo</gwt.name>
+    <!-- Desired Google App Engine SDK version -->
+    <gae.version>1.6.1</gae.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay-demo-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.googlecode.playn</groupId>
+      <artifactId>playn-html</artifactId>
+      <version>${playn.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-gwt</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <!-- we need class metadata, override PlayN's disabling of such -->
+        <configuration>
+          <disableClassMetadata>false</disableClassMetadata>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- allows testing of HTML backend via: mvn integration-test -Phtml -->
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>8.0.0.v20110901</version>
+        <configuration>
+          <webApp>
+            ${project.basedir}/target/${project.artifactId}-${project.version}
+          </webApp>
+        </configuration>
+        <executions>
+          <execution>
+            <id>test-html</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>run-exploded</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <downloadSources>true</downloadSources>
+          <downloadJavadocs>false</downloadJavadocs>
+          <wtpversion>2.0</wtpversion>
+          <additionalBuildcommands>
+            <buildCommand>
+              <name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
+            </buildCommand>
+          </additionalBuildcommands>
+          <additionalProjectnatures>
+            <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
+          </additionalProjectnatures>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
