@@ -65,6 +65,9 @@ public class DemoMenuScreen extends UIScreen
                                    TableLayout.COL.stretch()).gaps(10, 10));
         _root.add(grid);
 
+        int shown = 0, toShow = (TripleDemo.mainArgs.length == 0) ? -1 :
+            Integer.parseInt(TripleDemo.mainArgs[0]);
+
         for (int ii = 0; ii < _screens.length; ii++) {
             if (ii%3 == 0) grid.add(new Label(_rlabels[ii/3]));
             final DemoScreen screen = _screens[ii];
@@ -80,6 +83,8 @@ public class DemoMenuScreen extends UIScreen
                     }});
                 }});
                 grid.add(button);
+                // push this screen immediately if it was specified on the command line
+                if (shown++ == toShow) _stack.push(screen, ScreenStack.NOOP);
             }
         }
     }
