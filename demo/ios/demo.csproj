@@ -77,7 +77,7 @@
     <None Include="pom.xml">
       <Visible>False</Visible>
     </None>
-    <None Include="tripleplay-demo.userprefs">
+    <None Include="demo.userprefs">
       <Visible>False</Visible>
     </None>
   </ItemGroup>
