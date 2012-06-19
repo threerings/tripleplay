@@ -34,9 +34,14 @@ object TriplePlayBuild extends Build {
       case "demo-core" => Seq(
         // copy resources from playn/tests/resources
         unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java",
-        excludeFilter in unmanagedResources ~= { _ || "*.java" }
+        excludeFilter in unmanagedResources ~= { _ || "*.java" },
+        publish := false,
+        publishLocal := false
       )
-      case "demo-java" => LWJGLPlugin.lwjglSettings
+      case "demo-java" => LWJGLPlugin.lwjglSettings ++ Seq(
+        publish := false,
+        publishLocal := false
+      )
       case _ => Nil
     }
   }
