@@ -6,6 +6,7 @@
 package tripleplay.game;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import playn.core.Game;
@@ -51,6 +52,12 @@ public abstract class ScreenStack
          * method may be called <em>before</em> the transition signals completion, if a new
          * transition is started and this transition needs be aborted. */
         void complete (Screen oscreen, Screen nscreen);
+    }
+
+    /** Used to operate on screens. See {@link #remove(Predicate)}. */
+    public interface Predicate {
+        /** Returns true if the screen matches the predicate. */
+        boolean apply (Screen screen);
     }
 
     /** Simply puts the new screen in place and removes the old screen. */
@@ -207,6 +214,32 @@ public abstract class ScreenStack
             justRemove(screen);
         }
         return true;
+    }
+
+    /**
+     * {@link #remove(Predicte,Transition)} with the default transition.
+     */
+    public void remove (Predicate pred) {
+        remove(pred, defaultPopTransition());
+    }
+
+    /**
+     * Removes all screens that match the supplied predicate, from lowest in the stack to highest.
+     * If the top screen is removed (as the last action), the supplied transition will be used.
+     */
+    public void remove (Predicate pred, Transition trans) {
+        Screen top = top();
+        for (Iterator<Screen> iter = _screens.iterator(); iter.hasNext(); ) {
+            Screen screen = iter.next();
+            if (!pred.apply(screen)) continue;
+            if (screen != top) {
+                iter.remove();
+                justRemove(screen);
+            } else {
+                // our loop is done, let remove() handle this final removal
+                remove(screen, trans);
+            }
+        }
     }
 
     /**
