@@ -8,6 +8,8 @@ package tripleplay.particle.init;
 import pythagoras.f.FloatMath;
 import pythagoras.f.Vector;
 
+import static playn.core.PlayN.graphics;
+
 import tripleplay.util.Randoms;
 
 import tripleplay.particle.Initializer;
@@ -22,10 +24,9 @@ public class Velocity
      * Returns an initializer that provides a constant velocity.
      */
     public static Initializer constant (final Vector velocity) {
-        return new Initializer() {
-            public void init (int index, float[] data, int start) {
-                data[start + ParticleBuffer.VEL_X] = velocity.x;
-                data[start + ParticleBuffer.VEL_Y] = velocity.y;
+        return new VelocityInitializer() {
+            protected void initVelocity (Vector vel) {
+                vel.set(velocity);
             }
         };
     }
@@ -47,10 +48,9 @@ public class Velocity
     public static Initializer randomSquare (final Randoms rando,
                                             final float minX, final float maxX,
                                             final float minY, final float maxY) {
-        return new Initializer() {
-            @Override public void init (int index, float[] data, int start) {
-                data[start + ParticleBuffer.VEL_X] = rando.getInRange(minX, maxX);
-                data[start + ParticleBuffer.VEL_Y] = rando.getInRange(minY, maxY);
+        return new VelocityInitializer() {
+            protected void initVelocity (Vector vel) {
+                vel.set(rando.getInRange(minX, maxX), rando.getInRange(minY, maxY));
             }
         };
     }
@@ -70,10 +70,9 @@ public class Velocity
     public static Initializer randomNormal (final Randoms rando,
                                             final float xMean, final float xDev,
                                             final float yMean, final float yDev) {
-        return new Initializer() {
-            @Override public void init (int index, float[] data, int start) {
-                data[start + ParticleBuffer.VEL_X] = rando.getNormal(xMean, xDev);
-                data[start + ParticleBuffer.VEL_Y] = rando.getNormal(yMean, yDev);
+        return new VelocityInitializer() {
+            protected void initVelocity (Vector vel) {
+                vel.set(rando.getNormal(xMean, xDev), rando.getNormal(yMean, yDev));
             }
         };
     }
@@ -91,12 +90,11 @@ public class Velocity
      * minimum and maximum magnitude.
      */
     public static Initializer randomCircle (final Randoms rando, final float min, final float max) {
-        return new Initializer() {
-            @Override public void init (int index, float[] data, int start) {
+        return new VelocityInitializer() {
+            protected void initVelocity (Vector vel) {
                 float angle = rando.getFloat(FloatMath.TWO_PI);
                 float magnitude = min + rando.getFloat(max-min);
-                data[start + ParticleBuffer.VEL_X] = FloatMath.sin(angle)*magnitude;
-                data[start + ParticleBuffer.VEL_Y] = FloatMath.cos(angle)*magnitude;
+                vel.set(FloatMath.sin(angle)*magnitude, FloatMath.cos(angle)*magnitude);
             }
         };
     }
@@ -108,9 +106,22 @@ public class Velocity
     public static Initializer increment (final float dx, final float dy) {
         return new Initializer() {
             @Override public void init (int index, float[] data, int start) {
-                data[start + ParticleBuffer.VEL_X] += dx;
-                data[start + ParticleBuffer.VEL_Y] += dy;
+                float scale = graphics().ctx().scale.factor;
+                data[start + ParticleBuffer.VEL_X] += dx * scale;
+                data[start + ParticleBuffer.VEL_Y] += dy * scale;
             }
         };
+    }
+
+    protected static abstract class VelocityInitializer extends Initializer {
+        @Override public void init (int index, float[] data, int start) {
+            initVelocity(_vel);
+            float scale = graphics().ctx().scale.factor;
+            // TODO: account for device orientation
+            data[start + ParticleBuffer.VEL_X] += _vel.x * scale;
+            data[start + ParticleBuffer.VEL_Y] += _vel.y * scale;
+        }
+        protected abstract void initVelocity (Vector vel);
+        protected final Vector _vel = new Vector();
     }
 }
