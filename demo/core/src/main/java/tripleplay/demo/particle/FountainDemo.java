@@ -43,7 +43,7 @@ public class FountainDemo extends ParticleDemo
         emitter.initters.add(Lifespan.constant(5));
         emitter.initters.add(Color.constant(0xFF99CCFF));
         emitter.initters.add(Transform.layer(emitter.layer));
-        emitter.initters.add(Velocity.random(rando, -20, 20, -100, 0));
+        emitter.initters.add(Velocity.randomSquare(rando, -20, 20, -100, 0));
         emitter.effectors.add(new Gravity(30));
         emitter.effectors.add(new Move());
         emitter.effectors.add(Alpha.byAge(Interpolator.EASE_OUT, 1, 0));
