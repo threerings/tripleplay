@@ -228,18 +228,20 @@ public abstract class ScreenStack
      * If the top screen is removed (as the last action), the supplied transition will be used.
      */
     public void remove (Predicate pred, Transition trans) {
-        Screen top = top();
-        for (Iterator<Screen> iter = _screens.iterator(); iter.hasNext(); ) {
-            Screen screen = iter.next();
-            if (!pred.apply(screen)) continue;
-            if (screen != top) {
-                iter.remove();
-                justRemove(screen);
-            } else {
-                // our loop is done, let remove() handle this final removal
-                remove(screen, trans);
+        // first, remove any non-top screens that match the predicate
+        if (_screens.size() > 1) {
+            Iterator<Screen> iter = _screens.iterator();
+            iter.next(); // skip top
+            while (iter.hasNext()) {
+                Screen screen = iter.next();
+                if (pred.apply(screen)) {
+                    iter.remove();
+                    justRemove(screen);
+                }
             }
         }
+        // last, remove the top screen if it matches the predicate
+        if (_screens.size() > 0 && pred.apply(top())) remove(top(), trans);
     }
 
     /**
