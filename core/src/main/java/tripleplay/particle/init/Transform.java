@@ -5,7 +5,9 @@
 
 package tripleplay.particle.init;
 
+import playn.core.InternalTransform;
 import playn.core.Layer;
+import static playn.core.PlayN.graphics;
 
 import pythagoras.f.FloatMath;
 import pythagoras.f.Point;
@@ -62,11 +64,16 @@ public class Transform
     public static Initializer layer (final Layer layer) {
         return new Initializer() {
             @Override public void willInit (int count) {
-                // TODO: we want the concatenation of all transforms from the root to this layer
-                layer.transform().get(_matrix);
-                Layer.Util.layerToScreen(layer, _pos.set(0, 0), _pos);
-                _matrix[4] = _pos.x;
-                _matrix[5] = _pos.y;
+                // concatenate the transform of all layers above our target layer
+                InternalTransform xform = graphics().ctx().createTransform();
+                Layer xlayer = layer;
+                while (xlayer != null) {
+                    xform.preConcatenate((InternalTransform)xlayer.transform());
+                    xlayer = xlayer.parent();
+                }
+                // finally pre-concatenate the root transform as we're bypassing normal rendering
+                xform.preConcatenate(graphics().ctx().rootTransform());
+                xform.get(_matrix);
             }
             @Override public void init (int index, float[] data, int start) {
                 System.arraycopy(_matrix, 0, data, start + ParticleBuffer.M00, 6);
