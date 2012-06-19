@@ -14,11 +14,21 @@ import static tripleplay.particle.ParticleBuffer.*;
  */
 public class Alpha
 {
-    public static Effector fade (Interpolator interp, float duration) {
-        return null; // TODO
+    /**
+     * Returns an effector that updates the particle's alpha based on its age, as adjusted by the
+     * supplied interpolator. The particle will be faded from alpha of one to zero.
+     */
+    public static Effector byAge (Interpolator interp) {
+        return byAge(interp, 1, 0);
     }
 
-    public static Effector byAge (final Interpolator interp, final float startAlpha, float endAlpha) {
+    /**
+     * Returns an effector that updates the particle's alpha based on its age, as adjusted by the
+     * supplied interpolator. In general you'd use {@code startAlpha} of 1 and {@code endAlpha} of
+     * 0, but if you are doing uncommon things, you might use different values.
+     */
+    public static Effector byAge (final Interpolator interp,
+                                  final float startAlpha, float endAlpha) {
         final float rangeAlpha = endAlpha - startAlpha;
         return new Effector() {
             @Override public void apply (int index, float[] data, int start, float now, float dt) {

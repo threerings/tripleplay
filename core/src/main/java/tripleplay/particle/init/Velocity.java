@@ -31,22 +31,22 @@ public class Velocity
     }
 
     /**
-     * Returns an initializer that provides a random velocity.
+     * Returns an initializer that provides a uniformly distributed random velocity.
      *
      * @param xRange x velocity will range from -xRange/2 to xRange/2.
      * @param yRange y velocity will range from -yRange/2 to yRange/2.
      */
-    public static Initializer random (Randoms rando, float xRange, float yRange) {
-        return random(rando, -xRange/2, xRange/2, -yRange/2, yRange/2);
+    public static Initializer randomSquare (Randoms rando, float xRange, float yRange) {
+        return randomSquare(rando, -xRange/2, xRange/2, -yRange/2, yRange/2);
     }
 
     /**
-     * Returns an initializer that provides a random velocity in the range {@code minX} to {@link
-     * maxX} and similarly for the y direction.
+     * Returns an initializer that provides a uniformly distribted random velocity in the range
+     * {@code minX} to {@link maxX} and similarly for the y direction.
      */
-    public static Initializer random (final Randoms rando,
-                                      final float minX, final float maxX,
-                                      final float minY, final float maxY) {
+    public static Initializer randomSquare (final Randoms rando,
+                                            final float minX, final float maxX,
+                                            final float minY, final float maxY) {
         return new Initializer() {
             @Override public void init (int index, float[] data, int start) {
                 data[start + ParticleBuffer.VEL_X] = rando.getInRange(minX, maxX);
@@ -56,14 +56,45 @@ public class Velocity
     }
 
     /**
+     * Returns an initializer that provides a normally distributed random velocity with the
+     * specified mean and standard deviation parameters.
+     */
+    public static Initializer randomNormal (Randoms rando, float mean, float dev) {
+        return randomNormal(rando, mean, dev, mean, dev);
+    }
+
+    /**
+     * Returns an initializer that provides a normally distributed random velocity with the
+     * specified mean and standard deviation parameters.
+     */
+    public static Initializer randomNormal (final Randoms rando,
+                                            final float xMean, final float xDev,
+                                            final float yMean, final float yDev) {
+        return new Initializer() {
+            @Override public void init (int index, float[] data, int start) {
+                data[start + ParticleBuffer.VEL_X] = rando.getNormal(xMean, xDev);
+                data[start + ParticleBuffer.VEL_Y] = rando.getNormal(yMean, yDev);
+            }
+        };
+    }
+
+    /**
      * Returns an initializer that provides a velocity in a random direction with the specified
      * maximum magnitude.
      */
-    public static Initializer random (final Randoms rando, final float maximum) {
+    public static Initializer randomCircle (Randoms rando, float maximum) {
+        return randomCircle(rando, 0, maximum);
+    }
+
+    /**
+     * Returns an initializer that provides a velocity in a random direction with the specified
+     * minimum and maximum magnitude.
+     */
+    public static Initializer randomCircle (final Randoms rando, final float min, final float max) {
         return new Initializer() {
             @Override public void init (int index, float[] data, int start) {
                 float angle = rando.getFloat(FloatMath.TWO_PI);
-                float magnitude = rando.getFloat(maximum);
+                float magnitude = min + rando.getFloat(max-min);
                 data[start + ParticleBuffer.VEL_X] = FloatMath.sin(angle)*magnitude;
                 data[start + ParticleBuffer.VEL_Y] = FloatMath.cos(angle)*magnitude;
             }
