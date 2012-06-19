@@ -65,7 +65,7 @@ public class Transform
         return new Initializer() {
             @Override public void willInit (int count) {
                 // concatenate the transform of all layers above our target layer
-                InternalTransform xform = graphics().ctx().createTransform();
+                xform.setTransform(1, 0, 0, 1, 0, 0);
                 Layer xlayer = layer;
                 while (xlayer != null) {
                     xform.preConcatenate((InternalTransform)xlayer.transform());
@@ -78,6 +78,7 @@ public class Transform
             @Override public void init (int index, float[] data, int start) {
                 System.arraycopy(_matrix, 0, data, start + ParticleBuffer.M00, 6);
             }
+            protected final InternalTransform xform = graphics().ctx().createTransform();
             protected final Point _pos = new Point();
             protected final float[] _matrix = new float[6];
         };
