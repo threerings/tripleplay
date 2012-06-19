@@ -113,12 +113,12 @@ public class Scale9Background extends Background
             Axis3 dx = new Axis3(size.width(), xaxis), dy = new Axis3(size.height(), yaxis);
             public void render (Surface surf) {
                 surf.save();
-                surf.setAlpha(alpha);
+                if (alpha != null) surf.setAlpha(alpha);
                 // issue the 9 draw calls
                 for (int yy = 0; yy < 3; ++yy) for (int xx = 0; xx < 3; ++xx) {
                     drawPart(surf, xx, yy);
                 }
-                surf.setAlpha(1); // alpha is not part of save/restore
+                if (alpha != null) surf.setAlpha(1); // alpha is not part of save/restore
                 surf.restore();
             }
 

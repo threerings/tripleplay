@@ -52,7 +52,7 @@ public class RoundRectBackground extends Background
             image.canvas().fillRoundRect(0, 0, size.width(), size.height(), _radius);
         }
         ImageLayer layer = graphics().createImageLayer(image);
-        layer.setAlpha(alpha);
+        if (alpha != null) layer.setAlpha(alpha);
         return new LayerInstance(layer);
     }
 

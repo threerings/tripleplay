@@ -29,14 +29,14 @@ public class BorderedBackground extends Background
         return new LayerInstance(graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 float width = size.width(), height = size.height();
-                surf.setAlpha(alpha);
+                if (alpha != null) surf.setAlpha(alpha);
                 surf.setFillColor(_bgColor).fillRect(0, 0, width, height);
                 surf.setFillColor(_borderColor).
                     fillRect(0, 0, width, _thickness).
                     fillRect(0, 0, _thickness, height).
                     fillRect(width-_thickness, 0, _thickness, height).
                     fillRect(0, height-_thickness, width, _thickness);
-                surf.setAlpha(1);
+                if (alpha != null) surf.setAlpha(1);
             }
         }));
     }

@@ -93,8 +93,8 @@ public abstract class Background
     /** The insets of this background. */
     public float top, right, bottom, left;
 
-    /** The alpha transparency of this background. */
-    public float alpha = 1;
+    /** The alpha transparency of this background (or null if no alpha has been configured). */
+    public Float alpha;
 
     /** Returns this background's adjustment to an element's width. */
     public float width () {
@@ -173,9 +173,9 @@ public abstract class Background
     protected Layer createSolidLayer (final int color, final float width, final float height) {
         return graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
-                surf.setAlpha(alpha);
+                if (alpha != null) surf.setAlpha(alpha);
                 surf.setFillColor(color).fillRect(0, 0, width, height);
-                surf.setAlpha(1);
+                if (alpha != null) surf.setAlpha(1);
             }
         });
     }
@@ -184,7 +184,7 @@ public abstract class Background
         ImageLayer layer = graphics().createImageLayer(image);
         layer.setRepeatX(true);
         layer.setRepeatY(true);
-        layer.setAlpha(alpha);
+        if (alpha != null) layer.setAlpha(alpha);
         return layer;
     }
 

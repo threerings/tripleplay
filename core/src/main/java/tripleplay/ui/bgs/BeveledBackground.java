@@ -28,14 +28,14 @@ public class BeveledBackground extends Background
         return new LayerInstance(graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 float width = size.width(), height = size.height(), bot = height, right = width;
-                surf.setAlpha(alpha);
+                if (alpha != null) surf.setAlpha(alpha);
                 surf.setFillColor(_bgColor).fillRect(0, 0, width, height);
                 surf.setFillColor(_ulColor).
                     drawLine(0, 0, right, 0, 2).drawLine(0, 0, 0, bot, 2);
                 surf.setFillColor(_brColor).
                     drawLine(right, 0, right, bot, 1).drawLine(1, bot-1, right-1, bot-1, 1).
                     drawLine(0, bot, right, bot, 1).drawLine(right-1, 1, right-1, bot-1, 1);
-                surf.setAlpha(1);
+                if (alpha != null) surf.setAlpha(1);
             }
         }));
     }
