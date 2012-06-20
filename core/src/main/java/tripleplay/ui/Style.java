@@ -9,6 +9,7 @@ import playn.core.Canvas;
 import playn.core.Font;
 import playn.core.PlayN;
 import playn.core.TextFormat;
+import tripleplay.util.EffectRenderer;
 
 /**
  * Defines style properties for interface elements. Some style properties are inherited, such that

@@ -16,6 +16,7 @@ import playn.core.TextLayout;
 import static playn.core.PlayN.graphics;
 
 import react.Slot;
+import tripleplay.util.EffectRenderer;
 
 /**
  * An abstract base class for widgets that contain text.
