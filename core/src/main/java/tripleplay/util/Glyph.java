@@ -10,6 +10,7 @@ import playn.core.CanvasImage;
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.PlayN;
+import playn.core.TextLayout;
 
 /**
  * Handles the maintenance of a canvas image and layer for displaying a chunk of pre-rendered
@@ -22,7 +23,7 @@ public class Glyph
     }
 
     /** Ensures that the canvas image is at least the specified dimensions and cleared to all
-     * transparent pixels. Also creates and adds the image layer to the containing widget if
+     * transparent pixels. Also creates and adds the image layer to the parent layer if
      * needed. */
     public void prepare (float width, float height) {
         // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
@@ -33,6 +34,8 @@ public class Glyph
             _image.canvas().clear();
         }
         if (_layer == null) _parent.add(_layer = PlayN.graphics().createImageLayer(_image));
+        _preparedWidth = width;
+        _preparedHeight = height;
     }
 
     /** Returns the layer that contains our glyph image. Valid after {@link #prepare}. */
@@ -54,7 +57,40 @@ public class Glyph
         _image = null;
     }
 
+    /**
+     * Returns the width of the last call to {@link #prepare}, or zero if the glyph is not
+     * prepared. The canvas should be at least this width, or null if the glyph is not prepared.
+     */
+    public float preparedWidth () {
+        return _preparedWidth;
+    }
+
+    /**
+     * Returns the height of the last call to {@link #prepare}, or zero if the glyph is not
+     * prepared. The canvas should be at least this height, or null if the glyph is not prepared.
+     */
+    public float preparedHeight () {
+        return _preparedHeight;
+    }
+
+    /**
+     * Prepares the canvas and renders the supplied text at 0, 0 using the given config.
+     */
+    public void renderText (TextConfig config, String text) {
+        renderText(config, config.layout(text));
+    }
+
+    /**
+     * Prepares the canvas and renders the supplied layout at 0, 0 using the given config.
+     */
+    public void renderText (TextConfig config, TextLayout layout) {
+        prepare(config.effect.adjustWidth(layout.width()),
+            config.effect.adjustHeight(layout.height()));
+        config.render(canvas(), layout, 0, 0);
+    }
+
     protected final GroupLayer _parent;
     protected CanvasImage _image;
     protected ImageLayer _layer;
+    protected float _preparedWidth, _preparedHeight;
 }
