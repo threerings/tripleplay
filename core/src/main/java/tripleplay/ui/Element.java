@@ -296,10 +296,11 @@ public abstract class Element<T extends Element<T>>
      * requires it to recreate its visualization.
      */
     protected void invalidate () {
+        // note that our preferred size and background are no longer valid
+        _preferredSize = null;
+
         if (isSet(Flag.VALID)) {
             set(Flag.VALID, false);
-            // note that our preferred size and background are no longer valid
-            _preferredSize = null;
             // invalidate our parent if we've got one
             if (_parent != null) {
                 _parent.invalidate();
