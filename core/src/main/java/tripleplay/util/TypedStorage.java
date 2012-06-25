@@ -5,6 +5,8 @@
 
 package tripleplay.util;
 
+import react.Function;
+import react.RSet;
 import react.Slot;
 import react.Value;
 
@@ -269,6 +271,46 @@ public class TypedStorage
             }
         });
         return value;
+    }
+
+    /**
+     * Exposes the specified property as an {@link RSet}. The contents of the set will be encoded
+     * as a comma separated string and the supplied {@code toFunc} and {@code fromFunc} will be
+     * used to convert an individual set item to and from a string. The to and from functions
+     * should perform escaping and unescaping of commas if the encoded representation of the items
+     * might naturally contain commas.
+     *
+     * <p>Any modifications to the set will be immediately persisted back to storage. Note that
+     * each call to this method yields a new {@link RSet} and those sets will not coordinate with
+     * one another, so the caller must be sure to only call this method once for a given property
+     * and share that set properly. Changes to the underlying persistent value that do not take
+     * place through the returned set will <em>not</em> be reflected in the set and will be
+     * overwritten if the set changes.</p>
+     */
+    public <E> RSet<E> setFor (final String key, Function<String,E> toFunc,
+                               final Function<E,String> fromFunc) {
+        final RSet<E> rset = RSet.create();
+        String data = get(key, (String)null);
+        if (data != null) {
+            for (String value : data.split(",")) {
+                try {
+                    rset.add(toFunc.apply(value));
+                } catch (Exception e) {
+                    log().warn("Invalid value (key=" + key + "): " + value, e);
+                }
+            }
+        }
+        rset.connect(new RSet.Listener<E>() {
+            @Override public void onAdd (E unused) {
+                StringBuilder buf = new StringBuilder();
+                for (E value : rset) {
+                    if (buf.length() > 0) buf.append(",");
+                    buf.append(fromFunc.apply(value));
+                }
+                set(key, buf.toString());
+            }
+        });
+        return rset;
     }
 
     protected final Storage _storage;
