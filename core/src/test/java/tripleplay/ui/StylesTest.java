@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 public class StylesTest
 {
     static {
-        JavaPlatform.register();
+        JavaPlatform.registerHeadless();
     }
 
     @Test public void testEmpty () {

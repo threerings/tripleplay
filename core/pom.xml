@@ -94,60 +94,6 @@
           </links>
         </configuration>
       </plugin>
-      <!-- fiddling to unpack and use LWJGL when running the unit tests -->
-      <plugin>
-        <groupId>com.googlecode.mavennatives</groupId>
-        <artifactId>maven-nativedependencies-plugin</artifactId>
-        <version>0.0.6</version>
-        <executions>
-          <execution>
-            <id>unpacknatives</id>
-            <phase>test-compile</phase>
-            <goals><goal>copy</goal></goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.12</version>
-        <configuration>
-          <argLine>-Djava.library.path=${basedir}/target/natives</argLine>
-        </configuration>
-      </plugin>
     </plugins>
-    <pluginManagement>
-      <plugins>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>com.googlecode.mavennatives</groupId>
-                    <artifactId>
-                      maven-nativedependencies-plugin
-                    </artifactId>
-                    <versionRange>[0.0.6,)</versionRange>
-                    <goals>
-                      <goal>copy</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <execute>
-                      <runOnIncremental>false</runOnIncremental>
-                    </execute>
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 </project>
