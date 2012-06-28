@@ -1,9 +1,9 @@
-function widgetdemo(){
+function tripledemo(){
   var $wnd_0 = window, $doc_0 = document, $stats = $wnd_0.__gwtStatsEvent?function(a){
     return $wnd_0.__gwtStatsEvent(a);
   }
   :null, $sessionId_0 = $wnd_0.__gwtStatsSessionId?$wnd_0.__gwtStatsSessionId:null, scriptsDone, loadDone, bodyDone, base = '', metaProps = {}, values = [], providers = [], answers = [], softPermutationId = 0, onLoadErrorFunc, propertyErrorFunc;
-  $stats && $stats({moduleName:'widgetdemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'begin'});
+  $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'begin'});
   if (!$wnd_0.__gwt_stylesLoaded) {
     $wnd_0.__gwt_stylesLoaded = {};
   }
@@ -27,7 +27,7 @@ function widgetdemo(){
 
   function maybeStartModule(){
     if (scriptsDone && loadDone) {
-      var iframe = $doc_0.getElementById('widgetdemo');
+      var iframe = $doc_0.getElementById('tripledemo');
       var frameWnd = iframe.contentWindow;
       if (isHostedMode()) {
         frameWnd.__gwt_getProperty = function(name_0){
@@ -35,9 +35,9 @@ function widgetdemo(){
         }
         ;
       }
-      widgetdemo = null;
-      frameWnd.gwtOnLoad(onLoadErrorFunc, 'widgetdemo', base, softPermutationId);
-      $stats && $stats({moduleName:'widgetdemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'moduleStartup', millis:(new Date).getTime(), type:'end'});
+      tripledemo = null;
+      frameWnd.gwtOnLoad(onLoadErrorFunc, 'tripledemo', base, softPermutationId);
+      $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'moduleStartup', millis:(new Date).getTime(), type:'end'});
     }
   }
 
@@ -77,7 +77,7 @@ function widgetdemo(){
     function tryNocacheJsTag(){
       var scriptTags = $doc_0.getElementsByTagName('script');
       for (var i = 0; i < scriptTags.length; ++i) {
-        if (scriptTags[i].src.indexOf('widgetdemo.nocache.js') != -1) {
+        if (scriptTags[i].src.indexOf('tripledemo.nocache.js') != -1) {
           return getDirectoryOfFile(scriptTags[i].src);
         }
       }
@@ -87,7 +87,7 @@ function widgetdemo(){
     function tryMarkerScript(){
       var thisScript;
       if (typeof isBodyLoaded == 'undefined' || !isBodyLoaded()) {
-        var markerId = '__gwt_marker_widgetdemo';
+        var markerId = '__gwt_marker_tripledemo';
         var markerScript;
         $doc_0.write('<script id="' + markerId + '"><\/script>');
         markerScript = $doc_0.getElementById(markerId);
@@ -136,7 +136,7 @@ function widgetdemo(){
     for (var i = 0, n = metas.length; i < n; ++i) {
       var meta = metas[i], name_0 = meta.getAttribute('name'), content_0;
       if (name_0) {
-        name_0 = name_0.replace('widgetdemo::', '');
+        name_0 = name_0.replace('tripledemo::', '');
         if (name_0.indexOf('::') >= 0) {
           continue;
         }
@@ -207,25 +207,25 @@ function widgetdemo(){
       frameInjected = true;
       var iframe = $doc_0.createElement('iframe');
       iframe.src = "javascript:''";
-      iframe.id = 'widgetdemo';
+      iframe.id = 'tripledemo';
       iframe.style.cssText = 'position:absolute;width:0;height:0;border:none';
       iframe.tabIndex = -1;
       $doc_0.body.appendChild(iframe);
-      $stats && $stats({moduleName:'widgetdemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'moduleStartup', millis:(new Date).getTime(), type:'moduleRequested'});
+      $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'moduleStartup', millis:(new Date).getTime(), type:'moduleRequested'});
       iframe.contentWindow.location.replace(base + initialHtml);
     }
   }
 
-  widgetdemo.onScriptLoad = function(){
+  tripledemo.onScriptLoad = function(){
     if (frameInjected) {
       loadDone = true;
       maybeStartModule();
     }
   }
   ;
-  widgetdemo.onInjectionDone = function(){
+  tripledemo.onInjectionDone = function(){
     scriptsDone = true;
-    $stats && $stats({moduleName:'widgetdemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'loadExternalRefs', millis:(new Date).getTime(), type:'end'});
+    $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'loadExternalRefs', millis:(new Date).getTime(), type:'end'});
     maybeStartModule();
   }
   ;
@@ -234,17 +234,17 @@ function widgetdemo(){
   var strongName;
   var initialHtml;
   if (isHostedMode()) {
-    if ($wnd_0.external && ($wnd_0.external.initModule && $wnd_0.external.initModule('widgetdemo'))) {
+    if ($wnd_0.external && ($wnd_0.external.initModule && $wnd_0.external.initModule('tripledemo'))) {
       $wnd_0.location.reload();
       return;
     }
-    initialHtml = 'hosted.html?widgetdemo';
+    initialHtml = 'hosted.html?tripledemo';
     strongName = '';
   }
-  $stats && $stats({moduleName:'widgetdemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'selectingPermutation'});
+  $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'selectingPermutation'});
   if (!isHostedMode()) {
     try {
-      strongName = '5E6EB1F3EF78FC78ECDDEB36E7E32B30';
+      strongName = 'AADB404400C6251BBB6F3B08B2A634EB';
       var idx = strongName.indexOf(':');
       if (idx != -1) {
         softPermutationId = Number(strongName.substring(idx + 1));
@@ -284,9 +284,9 @@ function widgetdemo(){
     }
   }
   , 50);
-  $stats && $stats({moduleName:'widgetdemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'end'});
-  $stats && $stats({moduleName:'widgetdemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'loadExternalRefs', millis:(new Date).getTime(), type:'begin'});
-  $doc_0.write('<script defer="defer">widgetdemo.onInjectionDone(\'widgetdemo\')<\/script>');
+  $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'end'});
+  $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'loadExternalRefs', millis:(new Date).getTime(), type:'begin'});
+  $doc_0.write('<script defer="defer">tripledemo.onInjectionDone(\'tripledemo\')<\/script>');
 }
 
-widgetdemo();
+tripledemo();
