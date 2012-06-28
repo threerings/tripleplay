@@ -58,7 +58,6 @@
               <target>
                 <java fork="true" classname="${mainClass}" classpathref="maven.test.classpath">
                   <sysproperty key="java.library.path" value="target/natives"/>
-                  <arg value="${scaleFactor}"/>
                 </java>
               </target>
             </configuration>
