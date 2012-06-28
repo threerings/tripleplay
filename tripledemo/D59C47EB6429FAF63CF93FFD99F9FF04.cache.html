@@ -4,7 +4,7 @@ var $gwt_version = "2.4.0";
 var $wnd = parent;
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
-var $strongName = 'AADB404400C6251BBB6F3B08B2A634EB';
+var $strongName = 'D59C47EB6429FAF63CF93FFD99F9FF04';
 var $stats = $wnd.__gwtStatsEvent ? function(a) {return $wnd.__gwtStatsEvent(a);} : null,
 $sessionId = $wnd.__gwtStatsSessionId ? $wnd.__gwtStatsSessionId : null;
 $stats && $stats({moduleName:'tripledemo',sessionId:$sessionId,subSystem:'startup',evtGroup:'moduleStartup',millis:(new Date()).getTime(),type:'moduleEvalStart'});
@@ -2808,6 +2808,19 @@ _.toString$ = function toString_5(){
 _.castableTypeMap$ = makeCastMap([Q$Serializable, Q$Boolean, Q$Comparable]);
 _.value = false;
 var FALSE, TRUE;
+function digit(c){
+  if (c >= 48 && c < 58) {
+    return c - 48;
+  }
+  if (c >= 97 && c < 97) {
+    return c - 97 + 10;
+  }
+  if (c >= 65 && c < 65) {
+    return c - 65 + 10;
+  }
+  return -1;
+}
+
 function Class_0(){
 }
 
@@ -2880,8 +2893,26 @@ function __parseAndValidateDouble(s){
   return toReturn;
 }
 
-function __parseAndValidateInt(){
-  throw new NumberFormatException_0('null');
+function __parseAndValidateInt(s){
+  var i, length_0, startIndex, toReturn;
+  if (s == null) {
+    throw new NumberFormatException_0('null');
+  }
+  length_0 = s.length;
+  startIndex = length_0 > 0 && s.charCodeAt(0) == 45?1:0;
+  for (i = startIndex; i < length_0; ++i) {
+    if (digit(s.charCodeAt(i)) == -1) {
+      throw new NumberFormatException_0('For input string: "' + s + '"');
+    }
+  }
+  toReturn = parseInt(s, 10);
+  if (isNaN(toReturn)) {
+    throw new NumberFormatException_0('For input string: "' + s + '"');
+  }
+   else if (toReturn < -2147483648 || toReturn > 2147483647) {
+    throw new NumberFormatException_0('For input string: "' + s + '"');
+  }
+  return toReturn;
 }
 
 function __parseDouble(str){
@@ -3196,6 +3227,8 @@ function $charAt(this$static, index){
   return this$static.charCodeAt(index);
 }
 
+--></script>
+<script><!--
 function $equals(this$static, other){
   if (!instanceOf(other, Q$String)) {
     return false;
@@ -3226,8 +3259,6 @@ function $replace_1(this$static, from, to){
   return $replaceAll(this$static, regex, replacement);
 }
 
---></script>
-<script><!--
 function $replaceAll(this$static, regex, replace){
   replace = __translateReplaceString(replace);
   return this$static.replace(RegExp(regex, 'g'), replace);
@@ -4300,6 +4331,8 @@ _.this$0 = null;
 function AbstractMapEntry(){
 }
 
+--></script>
+<script><!--
 _ = AbstractMapEntry.prototype = new Object_0;
 _.equals$ = function equals_12(other){
   var entry;
@@ -4329,8 +4362,6 @@ _.toString$ = function toString_18(){
   return this.getKey() + '=' + this.getValue();
 }
 ;
---></script>
-<script><!--
 _.castableTypeMap$ = makeCastMap([Q$Map$Entry]);
 function AbstractHashMap$MapEntryNull_0(this$0){
   this.this$0 = this$0;
@@ -5491,6 +5522,8 @@ _.getClass$ = function getClass_130(){
 ;
 _.log_0 = null;
 _.runQueue = null;
+--></script>
+<script><!--
 function $clinit_Canvas$LineCap(){
   $clinit_Canvas$LineCap = nullMethod;
   BUTT_0 = new Canvas$LineCap_0('BUTT', 0);
@@ -5518,8 +5551,6 @@ _.getClass$ = function getClass_131(){
 ;
 _.castableTypeMap$ = makeCastMap([Q$Serializable, Q$Comparable, Q$Enum, Q$Canvas$LineCap]);
 var $VALUES_11, BUTT_0, ROUND_1, SQUARE_0;
---></script>
-<script><!--
 function $clinit_Canvas$LineJoin(){
   $clinit_Canvas$LineJoin = nullMethod;
   BEVEL_0 = new Canvas$LineJoin_0('BEVEL', 0);
@@ -6544,6 +6575,8 @@ _.getX = function getX_1(textWidth, lineWidth){
 }
 ;
 _.castableTypeMap$ = makeCastMap([Q$Serializable, Q$Comparable, Q$Enum, Q$TextFormat$Alignment]);
+--></script>
+<script><!--
 function $localize_2(this$static, layer){
   var local;
   local = screenToLayer_0(layer, this$static.x, this$static.y);
@@ -6567,8 +6600,6 @@ _.addFields = function addFields_3(builder){
   $append_11($append_14($append_11($append_14($append_12((builder.impl.string += ', id=' , builder), this.id), ', pressure='), this.pressure), ', size='), this.size);
 }
 ;
---></script>
-<script><!--
 _.getClass$ = function getClass_161(){
   return Lplayn_core_Touch$Event$Impl_2_classLit;
 }
@@ -7517,6 +7548,8 @@ function GLShader$TextureExtras(){
 }
 
 _ = GLShader$TextureExtras_0.prototype = GLShader$TextureExtras.prototype = new GLShader$Extras;
+--></script>
+<script><!--
 _.getClass$ = function getClass_183(){
   return Lplayn_core_gl_GLShader$TextureExtras_2_classLit;
 }
@@ -7547,8 +7580,6 @@ _.lastTex = 0;
 _.this$0 = null;
 _.uAlpha = null;
 _.uTexture = null;
---></script>
-<script><!--
 function nextPowerOfTwo(x){
   var bit, count, highest, i;
   bit = 32768;
@@ -8473,6 +8504,8 @@ function JsonTypedArray$6(){
 }
 
 _ = JsonTypedArray$6_0.prototype = JsonTypedArray$6.prototype = new Object_0;
+--></script>
+<script><!--
 _.get_2 = function get_10(array, index, dflt){
   return array[index] instanceof Array?array[index]:dflt;
 }
@@ -8512,8 +8545,6 @@ _.getClass$ = function getClass_207(){
 }
 ;
 _.head = null;
---></script>
-<script><!--
 function $init_0(this$static){
   this$static.random_0 = getRandom();
   $sendToConsole(($clinit_HtmlPlatform() , 'DEBUG: Analytics random = ' + this$static.random_0), null);
@@ -12807,7 +12838,7 @@ _.wasShown = function wasShown_0(){
   grid = new Group_2($gaps_0(new TableLayout_1(initValues(_3Ltripleplay_ui_layout_TableLayout$Column_2_classLit, makeCastMap([Q$Serializable]), Q$TableLayout$Column, [$alignRight(($clinit_TableLayout() , COL)), $stretch(COL), $stretch(COL), $stretch(COL)])), 10, 10));
   $add_12(this._root, initValues(_3Ltripleplay_ui_Element_2_classLit, makeCastMap([Q$Serializable]), Q$Element, [grid]));
   shown = 0;
-  toShow = mainArgs.length == 0?-1:__parseAndValidateInt(mainArgs[0]);
+  toShow = ($clinit_TripleDemo() , mainArgs).length == 0?-1:__parseAndValidateInt(mainArgs[0]);
   for (ii = 0; ii < this._screens.length; ++ii) {
     ii % 3 == 0 && $add_12(grid, initValues(_3Ltripleplay_ui_Element_2_classLit, makeCastMap([Q$Serializable]), Q$Element, [new Label_1(this._rlabels[~~(ii / 3)])]));
     screen_0 = this._screens[ii];
@@ -12947,11 +12978,17 @@ _.castableTypeMap$ = makeCastMap([Q$DemoScreen, Q$AnimScreen, Q$Screen, Q$UIAnim
 _._root_0 = null;
 _.back_0 = null;
 var TITLE_FONT;
+function $clinit_TripleDemo(){
+  $clinit_TripleDemo = nullMethod;
+  mainArgs = initValues(_3Ljava_lang_String_2_classLit, makeCastMap([Q$Serializable]), Q$String, []);
+}
+
 function $update_3(this$static, delta){
   $update_4(this$static._screens, delta);
 }
 
 function TripleDemo_0(){
+  $clinit_TripleDemo();
   this._screens = new TripleDemo$1_0;
 }
 
@@ -12963,7 +13000,7 @@ _.getClass$ = function getClass_322(){
   return Ltripleplay_demo_TripleDemo_2_classLit;
 }
 ;
-var mainArgs = null;
+var mainArgs;
 function $clinit_ScreenStack(){
   $clinit_ScreenStack = nullMethod;
   NOOP = new ScreenStack$1_0;

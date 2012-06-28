@@ -244,7 +244,7 @@ function tripledemo(){
   $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'selectingPermutation'});
   if (!isHostedMode()) {
     try {
-      strongName = 'AADB404400C6251BBB6F3B08B2A634EB';
+      strongName = 'D59C47EB6429FAF63CF93FFD99F9FF04';
       var idx = strongName.indexOf(':');
       if (idx != -1) {
         softPermutationId = Number(strongName.substring(idx + 1));
