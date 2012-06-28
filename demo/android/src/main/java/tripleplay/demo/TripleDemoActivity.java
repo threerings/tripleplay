@@ -11,7 +11,7 @@ import playn.core.PlayN;
 public class TripleDemoActivity extends GameActivity
 {
     @Override public void main () {
-        platform().assets().setPathPrefix("tripleplay/demo");
+        platform().assets().setPathPrefix("tripleplay/rsrc");
         PlayN.run(new TripleDemo());
     }
 }

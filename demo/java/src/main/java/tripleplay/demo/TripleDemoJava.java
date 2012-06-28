@@ -12,7 +12,7 @@ public class TripleDemoJava
 {
     public static void main (String[] args) {
         JavaPlatform platform = JavaPlatform.register();
-        platform.assets().setPathPrefix("tripleplay/demo");
+        platform.assets().setPathPrefix("tripleplay/rsrc");
         TripleDemo.mainArgs = args;
         PlayN.run(new TripleDemo());
     }
