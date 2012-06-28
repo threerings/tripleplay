@@ -4,7 +4,7 @@ var $gwt_version = "2.4.0";
 var $wnd = parent;
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
-var $strongName = 'D59C47EB6429FAF63CF93FFD99F9FF04';
+var $strongName = '325E871A8D08E1715675565EAB0FD206';
 var $stats = $wnd.__gwtStatsEvent ? function(a) {return $wnd.__gwtStatsEvent(a);} : null,
 $sessionId = $wnd.__gwtStatsSessionId ? $wnd.__gwtStatsSessionId : null;
 $stats && $stats({moduleName:'tripledemo',sessionId:$sessionId,subSystem:'startup',evtGroup:'moduleStartup',millis:(new Date()).getTime(),type:'moduleEvalStart'});
@@ -13553,7 +13553,10 @@ function ParticleDemo(){
 
 _ = ParticleDemo.prototype = new DemoScreen;
 _.createIface = function createIface_2(){
-  return new Group_1(($clinit_AxisLayout() , new AxisLayout$Vertical_0), initValues(_3Ltripleplay_ui_Style$Binding_2_classLit, makeCastMap([Q$Serializable]), Q$Style$Binding, [new Style$Binding_0(($clinit_Style() , BACKGROUND), new SolidBackground_0(-16777216))]));
+  var group;
+  group = new Group_1(($clinit_AxisLayout() , new AxisLayout$Vertical_0), initValues(_3Ltripleplay_ui_Style$Binding_2_classLit, makeCastMap([Q$Serializable]), Q$Style$Binding, [new Style$Binding_0(($clinit_Style() , BACKGROUND), new SolidBackground_0(-16777216))]));
+  !platform_1.graphics.ctx_1() && $add_12(group, initValues(_3Ltripleplay_ui_Element_2_classLit, makeCastMap([Q$Serializable]), Q$Element, [$addStyles(new Label_1('Particles are only supported with GL/WebGL.'), make(initValues(_3Ltripleplay_ui_Style$Binding_2_classLit, makeCastMap([Q$Serializable]), Q$Style$Binding, [new Style$Binding_0(COLOR, valueOf(-1))])))]));
+  return group;
 }
 ;
 _.getClass$ = function getClass_338(){
@@ -13571,7 +13574,7 @@ _.hideTransitionStarted = function hideTransitionStarted_1(){
 }
 ;
 _.showTransitionCompleted = function showTransitionCompleted_1(){
-  this.createParticles(this._parts, this._rando);
+  !!platform_1.graphics.ctx_1() && this.createParticles(this._parts, this._rando);
 }
 ;
 _.update_0 = function update_5(delta){
@@ -13579,9 +13582,9 @@ _.update_0 = function update_5(delta){
   $update_7(this._parts, delta);
 }
 ;
-_.castableTypeMap$ = makeCastMap([Q$DemoScreen, Q$AnimScreen, Q$Screen, Q$UIAnimScreen]);
 --></script>
 <script><!--
+_.castableTypeMap$ = makeCastMap([Q$DemoScreen, Q$AnimScreen, Q$Screen, Q$UIAnimScreen]);
 function $createEmitter(parts, rando, image, color, drag){
   var explode;
   explode = $createEmitter_0(parts, 200, image);
