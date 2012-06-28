@@ -9,10 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static playn.core.PlayN.graphics;
+
 import tripleplay.particle.Emitter;
 import tripleplay.particle.Particles;
 import tripleplay.ui.Background;
 import tripleplay.ui.Group;
+import tripleplay.ui.Label;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.util.Randoms;
@@ -23,7 +26,9 @@ public abstract class ParticleDemo extends DemoScreen
 {
     @Override public void showTransitionCompleted () {
         super.showTransitionCompleted();
-        createParticles(_parts, _rando);
+        if (graphics().ctx() != null) {
+            createParticles(_parts, _rando);
+        }
     }
 
     @Override public void hideTransitionStarted () {
@@ -38,7 +43,13 @@ public abstract class ParticleDemo extends DemoScreen
     }
 
     @Override protected Group createIface () {
-        return new Group(AxisLayout.vertical(), Style.BACKGROUND.is(Background.solid(0xFF000000)));
+        Group group = new Group(AxisLayout.vertical(),
+                                Style.BACKGROUND.is(Background.solid(0xFF000000)));
+        if (graphics().ctx() == null) {
+            group.add(new Label("Particles are only supported with GL/WebGL.").
+                      addStyles(Style.COLOR.is(0xFFFFFFFF)));
+        }
+        return group;
     }
 
     protected abstract void createParticles (Particles parts, Randoms rando);
