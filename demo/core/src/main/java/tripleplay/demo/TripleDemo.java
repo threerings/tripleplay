@@ -13,7 +13,7 @@ import tripleplay.game.ScreenStack;
 public class TripleDemo implements Game
 {
     /** Args from the Java bootstrap class. */
-    public static String[] mainArgs;
+    public static String[] mainArgs = {};
 
     @Override public void init () {
         _screens.push(new DemoMenuScreen(_screens));
