@@ -11,7 +11,7 @@ import pythagoras.f.IDimension;
  * have its size configured, depending on the application
  * TODO: a better name
  */
-public class SizableWidget<T extends Widget<T>> extends Widget<T>
+public class SizableWidget<T extends SizableWidget<T>> extends Widget<T>
 {
     /** Creates the sizable widget with preferred width and height of 0. */
     public SizableWidget () {
