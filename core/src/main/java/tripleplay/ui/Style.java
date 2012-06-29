@@ -8,6 +8,7 @@ package tripleplay.ui;
 import playn.core.Canvas;
 import playn.core.Font;
 import playn.core.PlayN;
+import playn.core.Sound;
 import playn.core.TextFormat;
 import tripleplay.util.EffectRenderer;
 
@@ -188,6 +189,9 @@ public abstract class Style<V>
 
     /** The gap between the icon and text in labels, buttons, etc. */
     public static final Style<Integer> ICON_GAP = newStyle(false, 2);
+
+    /** The sound to be played when this element's action is triggered. */
+    public static final Style<Sound> ACTION_SOUND = newStyle(false, (Sound)null);
 
     /** Indicates whether or not this style property is inherited. */
     public final boolean inherited;

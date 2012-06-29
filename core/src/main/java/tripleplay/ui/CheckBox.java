@@ -9,6 +9,7 @@ import react.Slot;
 import react.Value;
 
 import playn.core.Image;
+import playn.core.Sound;
 
 /**
  * Displays a checkbox which can be toggled. The checkbox must be configured with either a
@@ -52,11 +53,13 @@ public class CheckBox extends ClickableTextWidget<CheckBox>
     }
 
     @Override protected void onClick () {
+        if (_actionSound != null) _actionSound.play();
         checked.update(!checked.get());
     }
 
     @Override protected void layout () {
         super.layout();
+        _actionSound = resolveStyle(Style.ACTION_SOUND);
         updateCheckViz();
     }
 
@@ -68,4 +71,5 @@ public class CheckBox extends ClickableTextWidget<CheckBox>
 
     protected final String _checkStr;
     protected final Image _checkIcon;
+    protected Sound _actionSound;
 }
