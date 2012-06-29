@@ -15,7 +15,9 @@ import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
+import playn.core.Sound;
 
+import tripleplay.sound.MultiSound;
 import tripleplay.util.Layers;
 
 /**
@@ -297,6 +299,28 @@ public abstract class Animator
         return action(new Runnable() {
             public void run () {
                 anim.update(animating);
+            }
+        });
+    }
+
+    /**
+     * Plays the supplied sound.
+     */
+    public Animation.Action play (final Sound sound) {
+        return action(new Runnable() {
+            public void run () {
+                sound.play();
+            }
+        });
+    }
+
+    /**
+     * Plays the supplied sound.
+     */
+    public Animation.Action play (final MultiSound.Copy sound) {
+        return action(new Runnable() {
+            public void run () {
+                sound.play();
             }
         });
     }

@@ -8,6 +8,7 @@
   <source path="game"/>
   <source path="particle"/>
   <source path="shaders"/>
+  <source path="sound"/>
   <source path="ui"/>
   <source path="util"/>
 </module>
