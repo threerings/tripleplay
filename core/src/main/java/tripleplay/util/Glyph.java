@@ -20,6 +20,12 @@ public class Glyph
 {
     public Glyph (GroupLayer parent) {
         _parent = parent;
+        _depth = null;
+    }
+
+    public Glyph (GroupLayer parent, float depth) {
+        _parent = parent;
+        _depth = depth;
     }
 
     /** Ensures that the canvas image is at least the specified dimensions and cleared to all
@@ -33,7 +39,11 @@ public class Glyph
         } else {
             _image.canvas().clear();
         }
-        if (_layer == null) _parent.add(_layer = PlayN.graphics().createImageLayer(_image));
+        if (_layer == null) {
+            _layer = PlayN.graphics().createImageLayer(_image);
+            if (_depth != null) _layer.setDepth(_depth);
+            _parent.add(_layer);
+        }
         _preparedWidth = width;
         _preparedHeight = height;
     }
@@ -90,6 +100,7 @@ public class Glyph
     }
 
     protected final GroupLayer _parent;
+    protected final Float _depth;
     protected CanvasImage _image;
     protected ImageLayer _layer;
     protected float _preparedWidth, _preparedHeight;
