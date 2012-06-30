@@ -49,7 +49,7 @@ public class MultiSound
         double now = PlayN.currentTime();
         for (int ii = 0, ll = _copies.size(); ii < ll; ii++) {
             CopyImpl copy = _copies.get(ii);
-            if (copy.releaseTime > now) {
+            if (copy.releaseTime < now) {
                 return _copies.remove(ii);
             }
         }
