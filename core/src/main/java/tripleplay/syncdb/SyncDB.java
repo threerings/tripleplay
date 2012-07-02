@@ -76,7 +76,6 @@ public abstract class SyncDB
     protected SyncDB (Storage storage) {
         _storage = storage;
         _version = get(SYNC_VERS_KEY, 0, Codec.INT);
-
         // read the current unsynced key set
         _mods = toSet(_storage.getItem(SYNC_MODS_KEY), Codec.STRING);
     }
