@@ -13,5 +13,5 @@ import tripleplay.util.Logger;
 class Log
 {
     /** Provides logging for the TriplePlay UI package. */
-    public static final Logger log = new Logger("tripleplay.ui");
+    public static final Logger log = new Logger("tpui");
 }
