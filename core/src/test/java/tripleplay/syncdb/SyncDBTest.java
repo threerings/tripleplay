@@ -13,12 +13,13 @@ import react.RSet;
 import react.Value;
 
 import playn.core.Storage;
+import playn.core.util.Callback;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
-
 import org.junit.*;
 import static org.junit.Assert.*;
+
 
 public class SyncDBTest
 {
@@ -63,91 +64,35 @@ public class SyncDBTest
         }
     }
 
-    public static class Server {
-        public static class Result {
-            public final int version;
-            public final Map<String,String> delta;
-            public final boolean cleanSync;
-            public Result (int version) {
-                this(version, new HashMap<String,String>(), true);
-            }
-            public Result (int version, Map<String,String> delta) {
-                this(version, delta, false);
-            }
-            protected Result (int version, Map<String,String> delta, boolean cleanSync) {
-                this.version = version;
-                this.delta = delta;
-                this.cleanSync = cleanSync;
-            }
-        }
-
-        public Result sync (int clientVers, Map<String,String> delta) {
-            if (clientVers > _version) {
-                throw new IllegalStateException("So impossible! " + clientVers + " > " + _version);
-            } else if (clientVers < _version) {
-                return needSync(clientVers);
-            } else if (delta.size() == 0) {
-                return new Result(_version);
-            } else {
-                _version += 1;
-                for (Map.Entry<String,String> entry : delta.entrySet()) {
-                    _data.put(entry.getKey(), new Datum(_version, entry.getValue()));
-                }
-                return new Result(_version);
-            }
-        }
-
-        protected Result needSync (int clientVers) {
-            Map<String,String> delta = new HashMap<String,String>();
-            for (Map.Entry<String,Datum> entry : _data.entrySet()) {
-                Datum d = entry.getValue();
-                if (d.version > clientVers) delta.put(entry.getKey(), d.value);
-            }
-            return new Result(_version, delta);
-        }
-
-        protected static class Datum {
-            public final int version;
-            public final String value;
-            public Datum (int version, String value) {
-                this.version = version;
-                this.value = value;
-            }
-        }
-
-        protected int _version;
-        protected Map<String,Datum> _data = new HashMap<String,Datum>();
-    }
-
     @Test public void testSimpleSync () {
-        Server server = new Server();
+        Protocol.Session session = testSession();
         TestDB one = new TestDB(), two = new TestDB();
         makeTestChanges1(one);
-        sync(one, server);
-        sync(two, server);
+        session.sync(one);
+        session.sync(two);
         one.assertEquals(two);
     }
 
     @Test public void testMaxing () {
-        Server server = new Server();
+        Protocol.Session session = testSession();
         TestDB one = new TestDB();
         TestDB two = new TestDB();
 
         // start with some synced changes
         one.maxInt.update(42);
         one.maxLong.update(60L);
-        sync(one, server);
-        sync(two, server);
+        session.sync(one);
+        session.sync(two);
 
         // now make conflicting changes to both client one and two and resync
         one.maxInt.update(40);
         one.maxLong.update(65L);
         two.maxInt.update(45);
         two.maxLong.update(30L);
-        sync(one, server); // this will go through no questions asked
-        sync(two, server); // this will sync one's changes into two and overwrite some of one's
+        session.sync(one); // this will go through no questions asked
+        session.sync(two); // this will sync one's changes into two and overwrite some of one's
                            // changes with the merged data from two
-        sync(one, server); // this will sync two's merged data back to one
+        session.sync(one); // this will sync two's merged data back to one
 
         one.assertEquals(two);
         assertEquals(45, one.maxInt.get().intValue());
@@ -155,27 +100,27 @@ public class SyncDBTest
     }
 
     @Test public void testUseServer () {
-        Server server = new Server();
+        Protocol.Session session = testSession();
         TestDB one = new TestDB();
         TestDB two = new TestDB();
 
         // start with some synced changes
         one.serverString.update("foo");
-        sync(one, server);
-        sync(two, server);
+        session.sync(one);
+        session.sync(two);
 
         // now make conflicting changes to both client one and two and resync
         one.serverString.update("bar");
         two.serverString.update("baz");
-        sync(one, server); // this will go through no questions asked
-        sync(two, server); // this will sync one's changes into two
+        session.sync(one); // this will go through no questions asked
+        session.sync(two); // this will sync one's changes into two
 
         one.assertEquals(two);
         assertEquals("bar", two.serverString.get());
     }
 
     @Test public void testSets () {
-        Server server = new Server();
+        Protocol.Session session = testSession();
         TestDB one = new TestDB();
         TestDB two = new TestDB();
 
@@ -186,8 +131,8 @@ public class SyncDBTest
         one.interSet.add("2");
         one.serverSet.add("a");
         one.serverSet.add("b");
-        sync(one, server);
-        sync(two, server);
+        session.sync(one);
+        session.sync(two);
 
         // now make conflicting changes to both client one and two and resync
         one.unionSet.add("three");
@@ -196,10 +141,10 @@ public class SyncDBTest
         two.interSet.add("3");
         one.serverSet.add("c");
         two.serverSet.remove("b");
-        sync(one, server); // this will go through no questions asked
-        sync(two, server); // this will sync one's changes into two and overwrite some of one's
+        session.sync(one); // this will go through no questions asked
+        session.sync(two); // this will sync one's changes into two and overwrite some of one's
                            // changes with the merged data from two
-        sync(one, server); // this will sync two's merged data back to one
+        session.sync(one); // this will sync two's merged data back to one
 
         one.assertEquals(two);
         assertEquals(Sets.newHashSet("one", "two", "three", "four"), two.unionSet);
@@ -211,40 +156,31 @@ public class SyncDBTest
     }
 
     @Test public void testMap () {
-        Server server = new Server();
+        Protocol.Session session = testSession();
         TestDB one = new TestDB();
         TestDB two = new TestDB();
 
         // start with some synced changes
         one.maxMap.put("one", 1);
         one.maxMap.put("two", 2);
-        sync(one, server);
-        sync(two, server);
+        session.sync(one);
+        session.sync(two);
 
         // now make conflicting changes to both client one and two and resync
         one.maxMap.put("three", 3);
         one.maxMap.put("four", 4);
         one.maxMap.remove("one");
         two.maxMap.put("four", 44);
-        sync(one, server); // this will go through no questions asked
-        sync(two, server); // this will sync one's changes into two and overwrite some of one's
+        session.sync(one); // this will go through no questions asked
+        session.sync(two); // this will sync one's changes into two and overwrite some of one's
                            // changes with the merged data from two
-        sync(one, server); // this will sync two's merged data back to one
+        session.sync(one); // this will sync two's merged data back to one
 
         one.assertEquals(two);
         assertEquals(ImmutableMap.of("two", 2, "three", 3, "four", 44), two.maxMap);
 
         // make sure we reread our data from storage properly
         one.assertEquals(one.clone());
-    }
-
-    protected void sync (TestDB db, Server server) {
-        Server.Result result;
-        do {
-            result = server.sync(db.version(), db.getDelta());
-            if (result.cleanSync) db.noteSync(result.version);
-            else db.applyDelta(result.version, result.delta);
-        } while (db.hasUnsyncedChanges());
     }
 
     protected void makeTestChanges1 (TestDB db) {
@@ -268,6 +204,54 @@ public class SyncDBTest
         db.unionSet.add("five");
         db.interSet.add("one");
         db.serverSet.add("six");
+    }
+
+    protected static class Datum {
+        public final int version;
+        public final String value;
+        public Datum (int version, String value) {
+            this.version = version;
+            this.value = value;
+        }
+    }
+
+    protected static class TestServer implements Protocol.Server {
+        @Override public void sendSync (int version, Map<String,String> delta,
+                                        Callback<Protocol.Result> onResult) {
+            if (version > _version) {
+                throw new IllegalStateException("So impossible! " + version + " > " + _version);
+            } else if (version < _version) {
+                onResult.onSuccess(needSync(version));
+            } else if (delta.size() == 0) {
+                onResult.onSuccess(new Protocol.Result(_version));
+            } else {
+                _version += 1;
+                for (Map.Entry<String,String> entry : delta.entrySet()) {
+                    _data.put(entry.getKey(), new Datum(_version, entry.getValue()));
+                }
+                onResult.onSuccess(new Protocol.Result(_version));
+            }
+        }
+
+        protected Protocol.Result needSync (int clientVers) {
+            Map<String,String> delta = new HashMap<String,String>();
+            for (Map.Entry<String,Datum> entry : _data.entrySet()) {
+                Datum d = entry.getValue();
+                if (d.version > clientVers) delta.put(entry.getKey(), d.value);
+            }
+            return new Protocol.Result(_version, delta);
+        }
+
+        protected int _version;
+        protected Map<String,Datum> _data = new HashMap<String,Datum>();
+    }
+
+    protected static Protocol.Session testSession () {
+        return new Protocol.Session(new TestServer()) {
+            protected void onSyncFailure (SyncDB db, Throwable cause) {
+                System.err.println("Sync failure " + cause);
+            }
+        };
     }
 
     protected static Storage testStorage () {

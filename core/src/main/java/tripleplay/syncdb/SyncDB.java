@@ -81,6 +81,15 @@ public abstract class SyncDB
     }
 
     /**
+     * Returns whether the supplied delta contains changes to any properties for which unsynced
+     * changes also exist.
+     */
+    public boolean containsMerges (Map<String,String> delta) {
+        for (String key : delta.keySet()) if (_mods.contains(key)) return true;
+        return false;
+    }
+
+    /**
      * Applies the supplied changes to this database. Any conflicts will be resolved according to
      * the configured policies. If the resolved value differs from the supplied value, the property
      * will remain marked as locally modified. Thus changes may need to be flushed again after
