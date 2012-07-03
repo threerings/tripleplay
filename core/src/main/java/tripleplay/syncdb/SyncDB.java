@@ -39,17 +39,50 @@ import static tripleplay.syncdb.Log.log;
 public abstract class SyncDB
 {
     /**
-     * Applies the supplied server changes to our local store. Any conflicts will be resolved
-     * according to the configured policies. If the resolved value differs from the server value,
-     * the property will be marked as locally modified. Thus changes may need to be flushed to the
-     * server again after calling this method. After applying the server delta and resolving
-     * conflicts, the local version will be updated to the supplied server version.
-     *
-     * @param version the latest server version.
-     * @param serverDelta the modifications from our local version to the latest server version.
+     * Returns the version at which this database was last synced.
      */
-    public void applyServerDelta (int version, Map<String,String> serverDelta) {
-        for (Map.Entry<String,String> entry : serverDelta.entrySet()) {
+    public int version () {
+        return _version;
+    }
+
+    /**
+     * Returns true if this database contains changes that have not been synced.
+     */
+    public boolean hasUnsyncedChanges () {
+        return !_mods.isEmpty();
+    }
+
+    /**
+     * Returns a map of properties that have changed since our last sync. These can be sent to the
+     * server (along with our current version) to sync our state with the server.
+     */
+    public Map<String,String> getDelta () {
+        Map<String,String> delta = new HashMap<String,String>();
+        for (String name : _mods) delta.put(name, _storage.getItem(name));
+        return delta;
+    }
+
+    /**
+     * Notes that we synced cleanly with the server. Updates our local version to the latest sync
+     * version and notes that we no longer have unsynced modifications.
+     */
+    public void noteSync (int version) {
+        _mods.clear();
+        updateVersion(version);
+    }
+
+    /**
+     * Applies the supplied changes to this database. Any conflicts will be resolved according to
+     * the configured policies. If the resolved value differs from the supplied value, the property
+     * will remain marked as locally modified. Thus changes may need to be flushed again after
+     * calling this method. After applying the delta and resolving conflicts, the local version
+     * will be updated to the supplied version.
+     *
+     * @param version the latest version.
+     * @param delta the modifications from our local version to the latest version.
+     */
+    public void applyDelta (int version, Map<String,String> delta) {
+        for (Map.Entry<String,String> entry : delta.entrySet()) {
             String name = entry.getKey();
             Property prop = _props.get(name);
             if (prop == null) {
@@ -58,19 +91,12 @@ public abstract class SyncDB
                 if (prop.merge(entry.getValue())) _mods.remove(name);
             } else {
                 prop.update(entry.getValue());
+                _mods.remove(name); // updating will cause the property to be marked as locally
+                                    // changed, but it's not really locally changed, it's been set
+                                    // to the latest synced value, so clear the mod flag
             }
         }
-        set(SYNC_VERS_KEY, version, Codec.INT);
-    }
-
-    /**
-     * Returns a map of properties that have changed since our last sync with the server. These can
-     * be sent to the server (along with our current version) to sync our state with the server.
-     */
-    public Map<String,String> getDelta () {
-        Map<String,String> delta = new HashMap<String,String>();
-        for (String name : _mods) delta.put(name, _storage.getItem(name));
-        return delta;
+        updateVersion(version);
     }
 
     protected SyncDB (Storage storage) {
@@ -183,6 +209,10 @@ public abstract class SyncDB
             for (String edata : data.split("\t")) set.add(codec.decode(edata));
         }
         return set;
+    }
+
+    protected void updateVersion (int version) {
+        set(SYNC_VERS_KEY, _version = version, Codec.INT);
     }
 
     protected void noteModified (String name) {

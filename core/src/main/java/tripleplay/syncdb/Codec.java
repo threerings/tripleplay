@@ -37,6 +37,15 @@ public interface Codec<T>
         }
     };
 
+    Codec<Boolean> BOOLEAN = new Codec<Boolean>() {
+        public String encode (Boolean value) {
+            return String.valueOf(value);
+        }
+        public Boolean decode (String data) {
+            return Boolean.parseBoolean(data);
+        }
+    };
+
     /** Encodes the supplied value to a string. */
     String encode (T value);
 
