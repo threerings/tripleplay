@@ -13,6 +13,8 @@ import react.Value;
 
 import playn.core.Storage;
 
+import com.google.common.collect.Sets;
+
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -135,6 +137,61 @@ public class SyncDBTest
         sync(one, server); // this will sync two's merged data back to one
 
         one.assertEquals(two);
+        assertEquals(45, one.maxInt.get().intValue());
+        assertEquals(65L, one.maxLong.get().longValue());
+    }
+
+    @Test public void testUseServer () {
+        Server server = new Server();
+        TestDB one = new TestDB();
+        TestDB two = new TestDB();
+
+        // start with some synced changes
+        one.serverString.update("foo");
+        sync(one, server);
+        sync(two, server);
+
+        // now make conflicting changes to both client one and two and resync
+        one.serverString.update("bar");
+        two.serverString.update("baz");
+        sync(one, server); // this will go through no questions asked
+        sync(two, server); // this will sync one's changes into two
+
+        one.assertEquals(two);
+        assertEquals("bar", two.serverString.get());
+    }
+
+    @Test public void testSets () {
+        Server server = new Server();
+        TestDB one = new TestDB();
+        TestDB two = new TestDB();
+
+        // start with some synced changes
+        one.unionSet.add("one");
+        one.unionSet.add("two");
+        one.interSet.add("1");
+        one.interSet.add("2");
+        one.serverSet.add("a");
+        one.serverSet.add("b");
+        sync(one, server);
+        sync(two, server);
+
+        // now make conflicting changes to both client one and two and resync
+        one.unionSet.add("three");
+        two.unionSet.add("four");
+        one.interSet.remove("1");
+        two.interSet.add("3");
+        one.serverSet.add("c");
+        two.serverSet.remove("b");
+        sync(one, server); // this will go through no questions asked
+        sync(two, server); // this will sync one's changes into two and overwrite some of one's
+                           // changes with the merged data from two
+        sync(one, server); // this will sync two's merged data back to one
+
+        one.assertEquals(two);
+        assertEquals(Sets.newHashSet("one", "two", "three", "four"), two.unionSet);
+        assertEquals(Sets.newHashSet("2"), two.interSet);
+        assertEquals(Sets.newHashSet("a", "b", "c"), two.serverSet);
     }
 
     protected void sync (TestDB db, Server server) {
