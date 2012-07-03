@@ -8,11 +8,13 @@ package tripleplay.syncdb;
 import java.util.HashMap;
 import java.util.Map;
 
+import react.RMap;
 import react.RSet;
 import react.Value;
 
 import playn.core.Storage;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 
 import org.junit.*;
@@ -33,9 +35,19 @@ public class SyncDBTest
         public final RSet<String> interSet = set(
             "interSet", Codec.STRING, SetResolver.INTERSECTION);
         public final RSet<String> serverSet = set("serverSet", Codec.STRING, SetResolver.SERVER);
+        public final RMap<String,Integer> maxMap = map(
+            "maxMap", Codec.STRING, Codec.INT, Resolver.INTMAX);
 
         public TestDB () {
-            super(testStorage());
+            this(testStorage());
+        }
+
+        public TestDB (Storage storage) {
+            super(storage);
+        }
+
+        public TestDB clone () {
+            return new TestDB(_storage);
         }
 
         public void assertEquals (TestDB other) {
@@ -47,6 +59,7 @@ public class SyncDBTest
             Assert.assertEquals(unionSet, other.unionSet);
             Assert.assertEquals(interSet, other.interSet);
             Assert.assertEquals(serverSet, other.serverSet);
+            Assert.assertEquals(maxMap, other.maxMap);
         }
     }
 
@@ -192,6 +205,37 @@ public class SyncDBTest
         assertEquals(Sets.newHashSet("one", "two", "three", "four"), two.unionSet);
         assertEquals(Sets.newHashSet("2"), two.interSet);
         assertEquals(Sets.newHashSet("a", "b", "c"), two.serverSet);
+
+        // make sure we reread our data from storage properly
+        one.assertEquals(one.clone());
+    }
+
+    @Test public void testMap () {
+        Server server = new Server();
+        TestDB one = new TestDB();
+        TestDB two = new TestDB();
+
+        // start with some synced changes
+        one.maxMap.put("one", 1);
+        one.maxMap.put("two", 2);
+        sync(one, server);
+        sync(two, server);
+
+        // now make conflicting changes to both client one and two and resync
+        one.maxMap.put("three", 3);
+        one.maxMap.put("four", 4);
+        one.maxMap.remove("one");
+        two.maxMap.put("four", 44);
+        sync(one, server); // this will go through no questions asked
+        sync(two, server); // this will sync one's changes into two and overwrite some of one's
+                           // changes with the merged data from two
+        sync(one, server); // this will sync two's merged data back to one
+
+        one.assertEquals(two);
+        assertEquals(ImmutableMap.of("two", 2, "three", 3, "four", 44), two.maxMap);
+
+        // make sure we reread our data from storage properly
+        one.assertEquals(one.clone());
     }
 
     protected void sync (TestDB db, Server server) {

@@ -5,14 +5,20 @@
 
 package tripleplay.syncdb;
 
+import java.util.AbstractMap;
+import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import react.AbstractValue;
+import react.RMap;
 import react.RSet;
 import react.Slot;
 import react.Value;
@@ -31,13 +37,16 @@ import static tripleplay.syncdb.Log.log;
  *   public final Value<Integer> xp = value("xp", 0, Codec.INT, Resolver.INTMAX);
  *   public final Value<Integer> difficultyLevel = value("diff", 0, Codec.INT, Resolver.SERVER);
  *   public final RSet<String> badges = set("badges", Codec.STRING, SetResolver.UNION);
- *   public final RMap<String,Integer> items = set("items", Codec.INT, Resolver.INTMAX);
+ *   public final RMap<String,Integer> items = map("it", Codec.STRING, Codec.INT, Resolver.INTMAX);
  *   // etc.
  * }
  * }</pre>
  */
 public abstract class SyncDB
 {
+    /** The separator used in a prefixed key. This character must not appear in a normal key. */
+    public static final String PREFIXED_KEY_SEP = ".";
+
     /**
      * Returns the version at which this database was last synced.
      */
@@ -84,13 +93,16 @@ public abstract class SyncDB
     public void applyDelta (int version, Map<String,String> delta) {
         for (Map.Entry<String,String> entry : delta.entrySet()) {
             String name = entry.getKey();
-            Property prop = _props.get(name);
+            Property prop;
+            int pidx = name.indexOf(PREFIXED_KEY_SEP);
+            if (pidx == -1) prop = _props.get(name);
+            else prop = _props.get(name.substring(0, pidx));
             if (prop == null) {
                 log.warning("No local property defined", "name", name);
             } else if (_mods.contains(name)) {
-                if (prop.merge(entry.getValue())) _mods.remove(name);
+                if (prop.merge(name, entry.getValue())) _mods.remove(name);
             } else {
-                prop.update(entry.getValue());
+                prop.update(name, entry.getValue());
                 _mods.remove(name); // updating will cause the property to be marked as locally
                                     // changed, but it's not really locally changed, it's been set
                                     // to the latest synced value, so clear the mod flag
@@ -103,7 +115,7 @@ public abstract class SyncDB
         _storage = storage;
         _version = get(SYNC_VERS_KEY, 0, Codec.INT);
         // read the current unsynced key set
-        _mods = toSet(_storage.getItem(SYNC_MODS_KEY), Codec.STRING);
+        _mods = sget(SYNC_MODS_KEY, Codec.STRING);
     }
 
     /**
@@ -135,12 +147,12 @@ public abstract class SyncDB
             }
         };
         _props.put(name, new Property() {
-            public boolean merge (String data) {
+            public boolean merge (String name, String data) {
                 T svalue = codec.decode(data), nvalue = resolver.resolve(value.get(), svalue);
                 value.update(nvalue);
                 return nvalue.equals(svalue);
             }
-            public void update (String data) {
+            public void update (String name, String data) {
                 value.update(codec.decode(data));
             }
         });
@@ -158,31 +170,175 @@ public abstract class SyncDB
      */
     protected <E> RSet<E> set (final String name, final Codec<E> codec, final SetResolver resolver) {
         Asserts.checkArgument(!SYNC_KEYS.contains(name), name + " is a reserved name.");
-        final RSet<E> rset = new RSet<E>(toSet(_storage.getItem(name), codec)) {
+        final RSet<E> rset = new RSet<E>(sget(name, codec)) {
             @Override protected void emitAdd (E elem) {
                 super.emitAdd(elem);
-                set(name, _impl, codec);
+                sset(name, _impl, codec);
                 noteModified(name);
             }
             @Override protected void emitRemove (E elem) {
                 super.emitRemove(elem);
-                set(name, _impl, codec);
+                sset(name, _impl, codec);
                 noteModified(name);
             }
         };
         _props.put(name, new Property() {
-            public boolean merge (String data) {
+            public boolean merge (String name, String data) {
                 Set<E> sset = toSet(data, codec);
                 resolver.resolve(rset, sset);
                 return rset.equals(sset);
             }
-            public void update (String data) {
+            public void update (String name, String data) {
                 Set<E> sset = toSet(data, codec);
                 rset.retainAll(sset);
                 rset.addAll(sset);
             }
         });
         return rset;
+    }
+
+    /**
+     * Creates a synced map with the specified configuration. Note that deletions take precedence
+     * over additions or modifications. If any client deletes a key, the deletion will be
+     * propagated to all clients, regardless of whether another client updates or reinstates the
+     * mapping in the meanwhile. Thus, you must avoid structuring your storage such that keys are
+     * deleted and later re-added. Instead use a "deleted" sentinal value for keys that may once
+     * again map to valid values.
+     *
+     * <em>Note:</em> the returned map <em>will not</em> tolerate ill-typed keys. Passing a key
+     * that is not an instance of {@code K} to any method that accepts a key will result in a
+     * ClassCastException. Also {@link Map#containsValue} is not supported by the returned map.
+     *
+     * @param prefix a string prefix prepended to the keys to create the storage key for each
+     * individual map entry. A '.' will be placed in between the prefix and the string value of the
+     * map key. For example: a prefix of {@code foo} and a map key of {@code 1} will result in a
+     * storage key of {@code foo.1}. Additionally, the {@code prefix_keys} storage cell will be used
+     * to track the current set of keys in the map.
+     * @param keyCodec the codec to use when converting a key to/from string.
+     * @param valCodec the codec to use when converting a value to/from string for storage.
+     * @param resolver the conflict resolution policy to use when conflicting changes have been
+     * made to a single mapping.
+     */
+    protected <K,V> RMap<K,V> map (final String prefix, final Codec<K> keyCodec,
+                                   final Codec<V> valCodec, final Resolver<? super V> resolver) {
+        class StorageMap extends AbstractMap<K,V> {
+            @Override public int size () {
+                return _keys.size();
+            }
+
+            @Override public boolean containsKey (Object key) {
+                return _keys.contains(key);
+            }
+            @Override public V get (Object rawKey) {
+                String value = _storage.getItem(skey(rawKey));
+                return value == null ? null : valCodec.decode(value);
+            }
+
+            @Override public V put (K key, V value) {
+                _keys.add(key);
+                String skey = skey(key);
+                String ovalstr = _storage.getItem(skey);
+                _storage.setItem(skey, valCodec.encode(value));
+                noteModified(skey);
+                return ovalstr == null ? null : valCodec.decode(ovalstr);
+            }
+            @Override public V remove (Object rawKey) {
+                String ovalue = _storage.getItem(skey(rawKey));
+                _keys.remove(rawKey);
+                return (ovalue == null) ? null : valCodec.decode(ovalue);
+            }
+
+            @Override public Set<K> keySet () {
+                return Collections.unmodifiableSet(_keys);
+            }
+            @Override public Set<Map.Entry<K,V>> entrySet () {
+                return new AbstractSet<Map.Entry<K,V>>() {
+                    @Override public Iterator<Map.Entry<K,V>> iterator () {
+                        return new Iterator<Map.Entry<K,V>>() {
+                            public boolean hasNext () {
+                                return _keysIter.hasNext();
+                            }
+                            public Map.Entry<K,V> next () {
+                                final K key = _keysIter.next();
+                                return new Map.Entry<K,V>() {
+                                    @Override public K getKey () { return key; }
+                                    @Override public V getValue () {
+                                        return StorageMap.this.get(key);
+                                    }
+                                    @Override public V setValue (V value) {
+                                        return StorageMap.this.put(key, value);
+                                    }
+                                };
+                            }
+                            public void remove () {
+                                _keysIter.remove();
+                            }
+                            protected Iterator<K> _keysIter = _keys.iterator();
+                        };
+                    }
+                    @Override public int size () {
+                        return _keys.size();
+                    }
+                };
+            }
+
+            protected String skey (Object rawKey) {
+                @SuppressWarnings("unchecked") K key = (K)rawKey;
+                return prefix + PREFIXED_KEY_SEP + keyCodec.encode(key);
+            }
+
+            protected final Set<K> _keys = new HashSet<K>(sget(prefix + "_keys", keyCodec)) {
+                @Override public boolean add (K elem) {
+                    if (!super.add(elem)) return false;
+                    sset(prefix + "_keys", this, keyCodec);
+                    return true;
+                }
+                @Override public boolean remove (Object elem) {
+                    if (!super.remove(elem)) return false;
+                    @SuppressWarnings("unchecked") K key = (K)elem;
+                    removeStorage(key);
+                    sset(prefix + "_keys", this, keyCodec);
+                    return true;
+                }
+                @Override public Iterator<K> iterator () {
+                    final Iterator<K> iter = super.iterator();
+                    return new Iterator<K>() {
+                        @Override public boolean hasNext () { return iter.hasNext(); }
+                        @Override public K next () { return _current = iter.next(); }
+                        @Override public void remove () {
+                            iter.remove();
+                            removeStorage(_current);
+                        }
+                        protected K _current;
+                    };
+                }
+                protected void removeStorage (K key) {
+                    String skey = skey(key);
+                    _storage.removeItem(skey);
+                    noteModified(skey);
+                }
+            };
+        }
+
+        final RMap<K,V> map = new RMap<K,V>(new StorageMap());
+        _props.put(prefix, new Property() {
+            public boolean merge (String name, String data) {
+                K skey = keyCodec.decode(name.substring(prefix.length()+1));
+                if (data == null) {
+                    map.remove(skey);
+                    return true;
+                }
+                V svalue = valCodec.decode(data), nvalue = resolver.resolve(map.get(skey), svalue);
+                map.put(skey, nvalue);
+                return nvalue.equals(svalue);
+            }
+            public void update (String name, String data) {
+                K skey = keyCodec.decode(name.substring(prefix.length()+1));
+                if (data == null) map.remove(skey);
+                else map.put(skey, valCodec.decode(data));
+            }
+        });
+        return map;
     }
 
     protected <T> T get (String name, T defval, Codec<T> codec) {
@@ -194,13 +350,17 @@ public abstract class SyncDB
         _storage.setItem(name, codec.encode(value));
     }
 
-    protected <E> void set (String name, Set<E> set, Codec<E> codec) {
+    protected <E> void sset (String name, Set<E> set, Codec<E> codec) {
         StringBuilder buf = new StringBuilder();
         for (E elem : set) {
             if (buf.length() > 0) buf.append("\t");
             buf.append(codec.encode(elem));
         }
         _storage.setItem(name, buf.toString());
+    }
+
+    protected <E> Set<E> sget (String name, Codec<E> codec) {
+        return toSet(_storage.getItem(name), codec);
     }
 
     protected <E> Set<E> toSet (String data, Codec<E> codec) {
@@ -220,8 +380,8 @@ public abstract class SyncDB
     }
 
     protected interface Property {
-        boolean merge (String data);
-        void update (String data);
+        boolean merge (String name, String data);
+        void update (String name, String data);
     }
 
     protected final Storage _storage;
