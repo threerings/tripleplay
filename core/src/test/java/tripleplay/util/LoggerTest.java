@@ -22,6 +22,7 @@ public class LoggerTest
         Logger log = new Logger("test");
         log.info("This is a test.");
         assertEquals("This is a test." + NEWLINE, buf.toString());
+        Logger.setImpl(null);
     }
 
     @Test
@@ -30,6 +31,7 @@ public class LoggerTest
         Logger log = new Logger("test");
         log.info("Foo.", "bar", "baz", "one", 1, "null", null);
         assertEquals("Foo. [bar=baz, one=1, null=null]" + NEWLINE, buf.toString());
+        Logger.setImpl(null);
     }
 
     @Test
@@ -42,6 +44,7 @@ public class LoggerTest
         log.warning("Warning");
         assertEquals("Warning" + NEWLINE, buf.toString());
         Logger.levels.setDefault(Logger.Level.DEBUG);
+        Logger.setImpl(null);
     }
 
     @Test
@@ -54,6 +57,7 @@ public class LoggerTest
         log.warning("Warning");
         assertEquals("Warning" + NEWLINE, buf.toString());
         Logger.levels.set("test", null);
+        Logger.setImpl(null);
     }
 
     @Test
@@ -64,6 +68,7 @@ public class LoggerTest
         String[] lines = buf.toString().split(NEWLINE);
         assertEquals("Foo. [bar=baz]", lines[0]);
         assertEquals("java.lang.Exception", lines[1]);
+        Logger.setImpl(null);
     }
 
     protected static StringWriter configWriterImpl () {

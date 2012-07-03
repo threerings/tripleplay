@@ -107,10 +107,10 @@ public class Logger
     /**
      * Configures the logging back-end. This should be called before any code that makes use of the
      * logging services. The default back-end logs to {@code stderr}, which is useful when running
-     * in unit tests.
+     * in unit tests. {@code null} may be supplied to restore the default (stderr) back-end.
      */
     public static void setImpl (Impl impl) {
-        _impl = impl;
+        _impl = (impl == null) ? DEFAULT : impl;
     }
 
     /**
@@ -201,7 +201,7 @@ public class Logger
         _impl.log(level, ident, sb.toString(), (Throwable)error);
     }
 
-    protected static Impl _impl = new Impl() {
+    protected static final Impl DEFAULT = new Impl() {
         @Override public void log (Level level, String ident, String message, Throwable t) {
             System.out.println(ident + ": " + message);
             if (t != null) {
@@ -209,4 +209,6 @@ public class Logger
             }
         }
     };
+
+    protected static Impl _impl = DEFAULT;
 }
