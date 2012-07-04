@@ -17,9 +17,9 @@ import playn.core.util.Callback;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+
 import org.junit.*;
 import static org.junit.Assert.*;
-
 
 public class SyncDBTest
 {
@@ -217,29 +217,29 @@ public class SyncDBTest
 
     protected static class TestServer implements Protocol.Server {
         @Override public void sendSync (int version, Map<String,String> delta,
-                                        Callback<Protocol.Result> onResult) {
+                                        Callback<Protocol.Response> onResponse) {
             if (version > _version) {
                 throw new IllegalStateException("So impossible! " + version + " > " + _version);
             } else if (version < _version) {
-                onResult.onSuccess(needSync(version));
+                onResponse.onSuccess(needSync(version));
             } else if (delta.size() == 0) {
-                onResult.onSuccess(new Protocol.Result(_version));
+                onResponse.onSuccess(new Protocol.Response(_version));
             } else {
                 _version += 1;
                 for (Map.Entry<String,String> entry : delta.entrySet()) {
                     _data.put(entry.getKey(), new Datum(_version, entry.getValue()));
                 }
-                onResult.onSuccess(new Protocol.Result(_version));
+                onResponse.onSuccess(new Protocol.Response(_version));
             }
         }
 
-        protected Protocol.Result needSync (int clientVers) {
+        protected Protocol.Response needSync (int clientVers) {
             Map<String,String> delta = new HashMap<String,String>();
             for (Map.Entry<String,Datum> entry : _data.entrySet()) {
                 Datum d = entry.getValue();
                 if (d.version > clientVers) delta.put(entry.getKey(), d.value);
             }
-            return new Protocol.Result(_version, delta);
+            return new Protocol.Response(_version, delta);
         }
 
         protected int _version;
