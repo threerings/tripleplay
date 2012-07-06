@@ -26,10 +26,10 @@ public class RepeatDemo extends DemoScreen
         image.canvas().setFillColor(0xFFFFCC99);
         image.canvas().fillCircle(50, 50, 50);
         ImageLayer layer = graphics().createImageLayer(image);
-        this.layer.addAt(layer, 0, 100);
 
         float width = graphics().width();
-        anim.repeat(layer).tweenX(layer).to(width-100).in(1000).easeInOut().then().
+        anim.addAt(this.layer, layer, 0, 100).then().
+            repeat(layer).tweenX(layer).to(width-100).in(1000).easeInOut().then().
             tweenX(layer).to(0).in(1000).easeInOut();
 
         return null;

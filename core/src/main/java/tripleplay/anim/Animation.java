@@ -234,32 +234,26 @@ public abstract class Animation
         }
 
         @Override
-        protected void init (float time) {
-            // a normal animation will have _current initialized to itself; we want to skip
-            // ourselves and go right to our to-be-repeated animation, and initialize it
-            // immediately
-            _current = _next;
-            _current.init(time);
+        public Animator then () {
+            return new Animator() {
+                @Override public <T extends Animation> T add (T anim) {
+                    // set ourselves as the repeat target of this added animation
+                    anim._next = Repeat.this;
+                    _next = anim;
+                    return anim;
+                }
+            };
         }
 
         @Override
         protected float apply (float time) {
-            return 0; // not used
+            return _start - time; // immediately move to our next animation
         }
 
         @Override
-        protected float apply (Animator animator, float time) {
-            // if our current chain of animations is still running, keep going
-            float remain = super.apply(animator, time);
-            if (remain > 0) return remain;
-
+        protected Animation next () {
             // if our target layer is no longer active, we're done
-            if (_layer.parent() == null) return 0;
-
-            // otherwise, reset to the head of the chain and keep going
-            _current = _next;
-            _current.init(time+remain);
-            return _current.apply(time);
+            return (_layer.parent() == null) ? null : _next;
         }
 
         protected Layer _layer;
@@ -270,11 +264,12 @@ public abstract class Animation
      * execution when the current animation is completes.
      */
     public Animator then () {
-        if (_next != null) {
-            throw new IllegalStateException("This animation already has a 'then' animation.");
-        }
         return new Animator() {
             @Override public <T extends Animation> T add (T anim) {
+                // our _next is either null, or it points to the animation to which we should
+                // repeat when we reach the end of this chain; so pass the null or the repeat
+                // target down to our new next animation
+                anim._next = _next;
                 _next = anim;
                 return anim;
             }
@@ -312,7 +307,7 @@ public abstract class Animation
 
         while (remain <= 0) {
             // if we have no next animation, return our overflow
-            _current = _current._next;
+            _current = _current.next();
             if (_current == null) return remain;
 
             // otherwise init and apply our next animation (accounting for overflow)
@@ -323,6 +318,10 @@ public abstract class Animation
     }
 
     protected abstract float apply (float time);
+
+    protected Animation next () {
+        return _next;
+    }
 
     @Override public String toString () {
         return getClass().getName() + " start:" + _start;
