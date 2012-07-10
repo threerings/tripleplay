@@ -26,6 +26,7 @@ public class SlideTransition extends InterpedTransition<SlideTransition>
     }
 
     @Override public void init (Screen oscreen, Screen nscreen) {
+        super.init(oscreen, nscreen);
         switch (_dir) {
         case UP:
             _odx = _originX; _ody = _originY-oscreen.height();
@@ -60,6 +61,7 @@ public class SlideTransition extends InterpedTransition<SlideTransition>
     }
 
     @Override public void complete (Screen oscreen, Screen nscreen) {
+        super.complete(oscreen, nscreen);
         oscreen.layer.setTranslation(_osx, _osy);
     }
 

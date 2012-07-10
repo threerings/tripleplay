@@ -25,6 +25,7 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
     public FlipTransition unflip () { _unflip = true; return this; }
 
     @Override public void init (Screen oscreen, Screen nscreen) {
+        super.init(oscreen, nscreen);
         nscreen.layer.setDepth(-1);
         _oshader = new RotateYShader(graphics().ctx(), 0.5f, 0.5f, 1);
         oscreen.layer.setShader(_oshader);
@@ -45,6 +46,7 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
     }
 
     @Override public void complete (Screen oscreen, Screen nscreen) {
+        super.complete(oscreen, nscreen);
         oscreen.layer.setDepth(0);
         oscreen.layer.setShader(null);
         nscreen.layer.setDepth(0);

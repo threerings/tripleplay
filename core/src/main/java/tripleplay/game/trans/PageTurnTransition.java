@@ -34,6 +34,7 @@ public class PageTurnTransition extends InterpedTransition<PageTurnTransition>
     }
 
     @Override public void init (Screen oscreen, Screen nscreen) {
+        super.init(oscreen, nscreen);
         nscreen.layer.setDepth(_close ? 1 : -1);
         _toflip = _close ? nscreen : oscreen;
         _shader = new RotateYShader(graphics().ctx(), 0f, 0.5f, 1.5f);
@@ -58,6 +59,7 @@ public class PageTurnTransition extends InterpedTransition<PageTurnTransition>
     }
 
     @Override public void complete (Screen oscreen, Screen nscreen) {
+        super.complete(oscreen, nscreen);
         _shadow.destroy();
         nscreen.layer.setDepth(0);
         _toflip.layer.setShader(null);

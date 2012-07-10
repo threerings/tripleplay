@@ -5,6 +5,9 @@
 
 package tripleplay.game.trans;
 
+import playn.core.Asserts;
+
+import tripleplay.game.Screen;
 import tripleplay.game.ScreenStack;
 
 /**
@@ -20,6 +23,32 @@ public abstract class AbstractTransition<T extends AbstractTransition>
         return asT();
     }
 
+    /** Configures an action to be executed when this transition starts. */
+    public T onStart (Runnable action) {
+        Asserts.checkState(_onStart == null, "onStart action already configured.");
+        _onStart = action;
+        return asT();
+    }
+
+    /** Configures an action to be executed when this transition completes. */
+    public T onComplete (Runnable action) {
+        Asserts.checkState(_onComplete == null, "onComplete action already configured.");
+        _onComplete = action;
+        return asT();
+    }
+
+    @Override public void init (Screen oscreen, Screen nscreen) {
+        if (_onStart != null) {
+            _onStart.run();
+        }
+    }
+
+    @Override public void complete (Screen oscreen, Screen nscreen) {
+        if (_onComplete != null) {
+            _onComplete.run();
+        }
+    }
+
     /**
      * Returns <code>this</code> cast to <code>T</code>.
      */
@@ -32,4 +61,5 @@ public abstract class AbstractTransition<T extends AbstractTransition>
     }
 
     protected float _duration = defaultDuration();
+    protected Runnable _onStart, _onComplete;
 }
