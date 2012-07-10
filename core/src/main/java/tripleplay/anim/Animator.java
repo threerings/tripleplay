@@ -315,7 +315,18 @@ public abstract class Animator
     }
 
     /**
-     * Plays the supplied sound.
+     * Stops the supplied sound from playing.
+     */
+    public Animation.Action stop (final Sound sound) {
+        return action(new Runnable() {
+            public void run () {
+                sound.stop();
+            }
+        });
+    }
+
+    /**
+     * Plays the supplied multisound.
      */
     public Animation.Action play (final MultiSound.Copy sound) {
         return action(new Runnable() {
