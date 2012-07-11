@@ -1,5 +1,13 @@
 tripleplay.anim
+tripleplay.flump
 tripleplay.game
+tripleplay.game.trans
+tripleplay.particle
+tripleplay.particle.effect
+tripleplay.particle.init
+tripleplay.shaders
+tripleplay.sound
+tripleplay.syncdb
 tripleplay.ui
 tripleplay.ui.bgs
 tripleplay.ui.layout
