@@ -124,10 +124,7 @@ public class TableLayout extends Layout
         int columns = m.columns(), row = 0, col = 0;
 
         float naturalWidth = m.totalWidth(_colgap);
-        int freeColumns = 0;
-        for (int ii = 0; ii < columns; ii++) {
-            if (!_columns[ii]._fixed) freeColumns++;
-        }
+        int freeColumns = freeColumns();
         float freeExtra = (width - naturalWidth) / freeColumns;
         // freeExtra may end up negative; if our natural width is too wide
 
@@ -160,6 +157,14 @@ public class TableLayout extends Layout
         }
     }
 
+    protected int freeColumns () {
+        int freeColumns = 0;
+        for (int ii = 0; ii < _columns.length; ii++) {
+            if (!_columns[ii]._fixed) freeColumns++;
+        }
+        return freeColumns;
+    }
+
     protected Metrics computeMetrics (Elements<?> elems, float hintX, float hintY,
                                       boolean preferred) {
         int columns = _columns.length;
@@ -171,24 +176,38 @@ public class TableLayout extends Layout
         metrics.rowHeights = new float[rows];
 
         // note the minimum width constraints
-        for (int ii = 0; ii < columns; ii++) {
-            metrics.columnWidths[ii] = _columns[ii]._minWidth;
-        }
+        for (int cc = 0; cc < columns; cc++) metrics.columnWidths[cc] = _columns[cc]._minWidth;
 
-        int row = 0, col = 0;
-        float maxrh = 0;
+        // compute the preferred size of the fixed columns
+        int ii = 0;
         for (Element<?> elem : elems) {
-            if (elem.isVisible()) {
-                // TODO: supply sane x/y hints
+            int col = ii % columns, row = ii / columns;
+            if (elem.isVisible() && _columns[col]._fixed) {
                 IDimension psize = preferredSize(elem, hintX, hintY);
                 metrics.rowHeights[row] = Math.max(metrics.rowHeights[row], psize.height());
                 metrics.columnWidths[col] = Math.max(metrics.columnWidths[col], psize.width());
             }
-            if (++col == columns) {
-                maxrh = Math.max(maxrh, metrics.rowHeights[row]);
-                col = 0;
-                row++;
+            ii++;
+        }
+
+        // determine the total width needed by the fixed columns, then compute the hint given to
+        // free columns based on the remaining space
+        int freeColumns = freeColumns(), fixedColumns = columns - freeColumns;
+        float fixedWidth = _colgap*(columns-1); // start with gaps, add fixed col widths
+        for (int cc = 0; cc < columns; cc++) fixedWidth += metrics.columnWidths[cc];
+        float freeHintX = (hintX - fixedWidth) / freeColumns(), maxrh = 0;
+
+        ii = 0;
+        for (Element<?> elem : elems) {
+            int col = ii % columns, row = ii / columns;
+            if (elem.isVisible() && !_columns[col]._fixed) {
+                // TODO: supply sane y hint?
+                IDimension psize = preferredSize(elem, freeHintX, hintY);
+                metrics.rowHeights[row] = Math.max(metrics.rowHeights[row], psize.height());
+                metrics.columnWidths[col] = Math.max(metrics.columnWidths[col], psize.width());
             }
+            if (col == columns-1) maxrh = Math.max(maxrh, metrics.rowHeights[row]);
+            ii++;
         }
 
         return metrics;
