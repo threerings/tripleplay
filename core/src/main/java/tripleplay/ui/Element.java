@@ -263,6 +263,12 @@ public abstract class Element<T extends Element<T>>
 
     /**
      * Called when this element (or its parent element) was removed from the interface hierarchy.
+     * Also, if the element was removed directly from its parent, then the layer is orphaned
+     * prior to this call. Furthermore, if the element is being destroyed (see
+     * {@link Elements#destroy(Element)} and other methods), the destruction of the layer will
+     * occur <b>after</b> this method returns. This allows subclasses to manage resources as
+     * needed. <p><b>NOTE</b>: the base class method must <b>always</b> be called for correct
+     * operation.</p>
      */
     protected void wasRemoved () {
         _parent = null;
