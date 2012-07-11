@@ -86,13 +86,10 @@ public class AbsoluteLayout extends Layout
         for (Element<?> elem : elems) {
             if (!elem.isVisible()) continue;
             Constraint c = constraint(elem);
-            if (c.size.width() == 0) {
-                // this should return a cached size
-                IDimension psize = preferredSize(elem, 0, 0);
-                setBounds(elem, c.position.x(), c.position.y(), psize.width(), psize.height());
-            } else {
-                setBounds(elem, c.position.x(), c.position.y(), c.size.width(), c.size.height());
-            }
+            // this should return a cached size
+            IDimension psize = c.size.width() == 0 ? preferredSize(elem, 0, 0) : c.size;
+            setBounds(elem, left + c.position.x(), top + c.position.y(),
+                      psize.width(), psize.height());
         }
     }
 
