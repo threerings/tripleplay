@@ -107,6 +107,22 @@ public class TableLayout extends Layout
     }
 
     /**
+     * Configures the vertical alignment of cells to the top of their row.
+     */
+    public TableLayout alignTop () {
+        _rowVAlign = Style.VAlign.TOP;
+        return this;
+    }
+
+    /**
+     * Configures the vertical alignment of cells to the bottom of their row.
+     */
+    public TableLayout alignBottom () {
+        _rowVAlign = Style.VAlign.BOTTOM;
+        return this;
+    }
+
+    /**
      * Returns the number of columns configured for this table.
      */
     public int columns () {
@@ -135,7 +151,6 @@ public class TableLayout extends Layout
         Style.VAlign valign = resolveStyle(elems, Style.VALIGN);
         float y = top + valign.offset(m.totalHeight(_rowgap), height);
 
-        Style.VAlign cellVAlign = Style.VAlign.CENTER; // TODO
         for (Element<?> elem : elems) {
             Column ccfg = _columns[col];
             float colWidth = Math.max(0, m.columnWidths[col] + (ccfg._fixed ? 0 : freeExtra));
@@ -145,7 +160,7 @@ public class TableLayout extends Layout
                 float elemWidth = ccfg._stretch ? colWidth : Math.min(psize.width(), colWidth);
                 float elemHeight = Math.min(psize.height(), rowHeight);
                 setBounds(elem, x + ccfg._halign.offset(elemWidth, colWidth),
-                          y + cellVAlign.offset(elemHeight, rowHeight), elemWidth, elemHeight);
+                          y + _rowVAlign.offset(elemHeight, rowHeight), elemWidth, elemHeight);
             }
             x += (colWidth + _colgap);
             if (++col == columns) {
@@ -242,4 +257,5 @@ public class TableLayout extends Layout
 
     protected final Column[] _columns;
     protected int _rowgap, _colgap;
+    protected Style.VAlign _rowVAlign = Style.VAlign.CENTER;
 }
