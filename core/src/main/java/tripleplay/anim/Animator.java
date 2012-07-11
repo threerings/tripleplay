@@ -11,6 +11,7 @@ import java.util.List;
 import pythagoras.f.XY;
 import react.Value;
 
+import playn.core.Asserts;
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.Layer;
@@ -73,6 +74,7 @@ public abstract class Animator
      * Starts a tween on the supplied layer's rotation.
      */
     public Animation.One tweenRotation (final Layer layer) {
+        Asserts.checkNotNull(layer);
         return tween(new Animation.Value() {
             public float initial () {
                 return layer.transform().rotation();
@@ -87,6 +89,7 @@ public abstract class Animator
      * Starts a tween on the supplied layer's x/y-scale.
      */
     public Animation.One tweenScale (final Layer layer) {
+        Asserts.checkNotNull(layer);
         return tween(new Animation.Value() {
             public float initial () {
                 return layer.transform().uniformScale();
@@ -122,6 +125,7 @@ public abstract class Animator
      * Starts a tween on the supplied layer's transparency.
      */
     public Animation.One tweenAlpha (final Layer layer) {
+        Asserts.checkNotNull(layer);
         return tween(new Animation.Value() {
             public float initial () {
                 return layer.alpha();
@@ -319,6 +323,7 @@ public abstract class Animator
      * not play or stop the sound, those must be enacted separately.
      */
     public Animation.One tweenVolume (final Sound sound) {
+        Asserts.checkNotNull(sound);
         return tween(new Animation.Value() {
             public float initial () {
                 return sound.volume();
@@ -379,6 +384,7 @@ public abstract class Animator
     }
 
     protected static Animation.Value onX (final Layer layer) {
+        Asserts.checkNotNull(layer);
         return new Animation.Value() {
             public float initial () {
                 return layer.transform().tx();
@@ -390,6 +396,7 @@ public abstract class Animator
     }
 
     protected static Animation.Value onY (final Layer layer) {
+        Asserts.checkNotNull(layer);
         return new Animation.Value() {
             public float initial () {
                 return layer.transform().ty();
@@ -401,6 +408,7 @@ public abstract class Animator
     }
 
     protected static Animation.Value onScaleX (final Layer layer) {
+        Asserts.checkNotNull(layer);
         return new Animation.Value() {
             public float initial () {
                 return layer.transform().scaleX();
@@ -412,6 +420,7 @@ public abstract class Animator
     }
 
     protected static Animation.Value onScaleY (final Layer layer) {
+        Asserts.checkNotNull(layer);
         return new Animation.Value() {
             public float initial () {
                 return layer.transform().scaleY();
