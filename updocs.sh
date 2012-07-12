@@ -2,6 +2,7 @@
 
 GROUP=com/threerings
 ARTIFACT=tripleplay
+DOCDIR=apidocs
 
 if [ -z "$1" ]; then
     echo "Usage: $0 M.N"
@@ -17,7 +18,7 @@ if [ ! -d $COREDIR ]; then
 fi
 
 echo "Unpacking $ARTIFACT-$1-javadoc.jar..."
-cd javadoc
+cd $DOCDIR
 jar xf $COREDIR/$ARTIFACT-$1-javadoc.jar
 rm -rf META-INF
 
