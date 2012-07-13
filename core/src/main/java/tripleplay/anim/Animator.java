@@ -19,6 +19,7 @@ import playn.core.PlayN;
 import playn.core.Sound;
 
 import tripleplay.sound.MultiSound;
+import tripleplay.sound.SoundBoard;
 import tripleplay.util.Layers;
 
 /**
@@ -311,6 +312,17 @@ public abstract class Animator
      * Plays the supplied sound.
      */
     public Animation.Action play (final Sound sound) {
+        return action(new Runnable() {
+            public void run () {
+                sound.play();
+            }
+        });
+    }
+
+    /**
+     * Plays the supplied clip or loop.
+     */
+    public Animation.Action play (final SoundBoard.Playable sound) {
         return action(new Runnable() {
             public void run () {
                 sound.play();
