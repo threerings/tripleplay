@@ -5,42 +5,39 @@
 
 package tripleplay.ui;
 
+import react.Slot;
+import react.Value;
+import react.ValueView;
+
 /**
  * Extends the {@link ClickableTextWidget} with toggling behavior.
  */
 public abstract class TogglableTextWidget<T extends TogglableTextWidget<T>>
     extends ClickableTextWidget<T>
 {
-    /**
-     * Returns true if this widget is currently selected.
-     */
-    public boolean isSelected () {
-        return super.isSelected();
-    }
+    /** Indicates whether this widget is selected. It may be listened to, and updated. */
+    public final Value<Boolean> selected = Value.create(false);
 
-    /**
-     * Sets the selection state of this widget.
-     */
-    public T setSelected (boolean value) {
-        set(Flag.SELECTED, value);
-        invalidate();
-        return asT();
+    protected TogglableTextWidget () {
+        selected.connect(new Slot<Boolean>() {
+            public void onEmit (Boolean selected) {
+                if (selected != isSelected()) {
+                    set(Flag.SELECTED, selected);
+                    invalidate();
+                }
+            }
+        });
     }
 
     /** Called when the mouse is clicked on this widget. */
     protected void onPress () {
         _anchorState = isSelected();
-        set(Flag.SELECTED, !_anchorState);
-        invalidate();
+        selected.update(!_anchorState);
     }
 
     /** Called as the user drags the pointer around with the widget depressed. */
     protected void onHover (boolean inBounds) {
-        boolean selected = inBounds ? !_anchorState : _anchorState;
-        if (selected != isSelected()) {
-            set(Flag.SELECTED, selected);
-            invalidate();
-        }
+        selected.update(inBounds ? !_anchorState : _anchorState);
     }
 
     /** Called when the mouse is released after having been pressed on this widget. This should

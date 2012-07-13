@@ -20,7 +20,9 @@ import tripleplay.ui.Label;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
+import tripleplay.ui.ToggleButton;
 import tripleplay.ui.layout.AxisLayout;
+import tripleplay.ui.layout.TableLayout;
 
 import tripleplay.demo.DemoScreen;
 
@@ -45,11 +47,13 @@ public class MiscDemo extends DemoScreen
         Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCC6666).inset(5)));
 
         CheckBox toggle, toggle2;
+        ToggleButton toggle3;
+        Button disabled;
         Label label2;
-        Group iface = new Group(AxisLayout.vertical()).add(
-            // display some buttons labels and allow visibility toggling
-            new Shim(15, 15),
+        Group iface = new Group(new TableLayout(2).gaps(10, 10)).add(
             new Label("Toggling visibility"),
+            new Label("Buttons"),
+            // labels, visibility and icon toggling
             new Group(AxisLayout.horizontal().gap(15), greenBg).add(
                 new Group(AxisLayout.vertical()).add(
                     new Group(AxisLayout.horizontal()).add(
@@ -57,15 +61,18 @@ public class MiscDemo extends DemoScreen
                         new Label("Toggle Viz")),
                     new Group(AxisLayout.horizontal()).add(
                         toggle2 = new CheckBox(),
-                        new Label("Toggle Icon")),
-                    new Button("Disabled").setEnabled(false)),
+                        new Label("Toggle Icon"))),
                 new Group(AxisLayout.vertical()).add(
                     new Label("Label 1").addStyles(redBg),
                     label2 = new Label("Label 2"),
                     new Label("Label 3", smiley))),
-            // display some labels with varying icon alignment
-            new Shim(15, 15),
+            // buttons, toggle buttons, wirey uppey
+            new Group(AxisLayout.horizontal().gap(15), greenBg).add(
+                toggle3 = new ToggleButton("Toggle Enabled"),
+                disabled = new Button("Disabled")),
             new Label("Icon positioning"),
+            new Label("Text editing"),
+            // labels with varying icon alignment
             new Group(AxisLayout.horizontal().gap(10), greenBg).add(
                 new Label("Left", tile(squares, 0)).setStyles(Style.ICON_POS.left),
                 new Label("Right", tile(squares, 1)).setStyles(Style.ICON_POS.right),
@@ -73,9 +80,7 @@ public class MiscDemo extends DemoScreen
                                                                Style.HALIGN.center),
                 new Label("Below", tile(squares, 3)).setStyles(Style.ICON_POS.below,
                                                                Style.HALIGN.center)),
-            // display an editable text field
-            new Shim(15, 15),
-            new Label("Text editing"),
+            // an editable text field
             new Group(AxisLayout.horizontal().gap(10)).add(
                 new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
                 new Field("Disabled text").setEnabled(false)));
@@ -87,6 +92,11 @@ public class MiscDemo extends DemoScreen
                 return checked ? tile(squares, 0) : null;
             }
         }).connect(label2.icon.slot());
+
+        toggle3.selected.connectNotify(disabled.enabledSlot());
+        toggle3.selected.map(new Function<Boolean,String>() {
+            public String apply (Boolean selected) { return selected ? "Enabled" : "Disabled"; }
+        }).connectNotify(disabled.text.slot());
 
         return iface;
     }
