@@ -20,7 +20,7 @@ import playn.core.Sound;
 public class MultiSound
 {
     /** A handle on a copy of a sound. Used to play it. */
-    public interface Copy extends SoundBoard.Playable {
+    public interface Copy extends Playable {
         /** Plays this copy of the sound and then releases it. */
         void play ();
         /** Releases this copy of the sound without playing it. */

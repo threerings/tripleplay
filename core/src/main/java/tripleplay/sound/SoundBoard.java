@@ -27,33 +27,6 @@ import tripleplay.util.Interpolator;
  */
 public class SoundBoard
 {
-    /** Shared controls for clips and loops. */
-    public interface Playable {
-        /** Starts this clip or loop playing. If the sound data is not yet loaded it will be loaded
-         * and then played. */
-        void play ();
-
-        /** Stops this clip or loop (fading it out over one second). */
-        void stop ();
-    }
-
-    /** Represents a one-shot clip. */
-    public interface Clip extends Playable {
-        /** Preloads this clip's underlying audio data. */
-        void preload ();
-
-        /** Views this clip as a {@link Sound}. Only the {@link Sound#play} and {@link Sound#stop}
-         * methods can be used. This is useful for passing a clip into code that expects {@link
-         * Sound}. */
-        Sound asSound ();
-    }
-
-    /** Represents a looped sound (i.e. music). */
-    public interface Loop extends Playable {
-        /** Returns whether this loop is currently playing. */
-        boolean isPlaying ();
-    }
-
     /**
      * Returns the master volume for this sound board. The value will be between 0 and 1.
      */
