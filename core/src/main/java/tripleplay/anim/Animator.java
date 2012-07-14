@@ -292,6 +292,15 @@ public abstract class Animator
     }
 
     /**
+     * Stops the supplied clip or loop.
+     */
+    public Animation.Action stop (final SoundBoard.Playable sound) {
+        return action(new Runnable() { public void run () {
+            sound.stop();
+        }});
+    }
+
+    /**
      * Plays the supplied sound.
      */
     public Animation.Action play (final Sound sound) {
