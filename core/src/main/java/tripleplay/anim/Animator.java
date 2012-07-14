@@ -309,9 +309,9 @@ public abstract class Animator
     }
 
     /**
-     * Plays the supplied sound.
+     * Plays the supplied clip or loop.
      */
-    public Animation.Action play (final Sound sound) {
+    public Animation.Action play (final SoundBoard.Playable sound) {
         return action(new Runnable() {
             public void run () {
                 sound.play();
@@ -320,9 +320,9 @@ public abstract class Animator
     }
 
     /**
-     * Plays the supplied clip or loop.
+     * Plays the supplied sound.
      */
-    public Animation.Action play (final SoundBoard.Playable sound) {
+    public Animation.Action play (final Sound sound) {
         return action(new Runnable() {
             public void run () {
                 sound.play();
@@ -353,17 +353,6 @@ public abstract class Animator
         return action(new Runnable() {
             public void run () {
                 sound.stop();
-            }
-        });
-    }
-
-    /**
-     * Plays the supplied multisound.
-     */
-    public Animation.Action play (final MultiSound.Copy sound) {
-        return action(new Runnable() {
-            public void run () {
-                sound.play();
             }
         });
     }

@@ -20,7 +20,7 @@ import playn.core.Sound;
 public class MultiSound
 {
     /** A handle on a copy of a sound. Used to play it. */
-    public interface Copy {
+    public interface Copy extends SoundBoard.Playable {
         /** Plays this copy of the sound and then releases it. */
         void play ();
         /** Releases this copy of the sound without playing it. */
@@ -60,7 +60,7 @@ public class MultiSound
         public final Sound sound = PlayN.assets().getSound(_path);
         public double releaseTime;
 
-        public void play () {
+        @Override public void play () {
             sound.play();
             if (_copies.size() < _reserveCopies) {
                 releaseTime = PlayN.currentTime() + _duration;
@@ -68,11 +68,16 @@ public class MultiSound
             }
         }
 
-        public void release () {
+        @Override public void release () {
             if (_copies.size() < _reserveCopies) {
                 releaseTime = PlayN.currentTime();
                 _copies.add(this);
             }
+        }
+
+        @Override public void stop () {
+            sound.stop();
+            releaseTime = 0; // release immediately
         }
     }
 
