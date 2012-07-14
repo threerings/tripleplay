@@ -77,12 +77,8 @@ public abstract class Animator
     public Animation.One tweenRotation (final Layer layer) {
         Asserts.checkNotNull(layer);
         return tween(new Animation.Value() {
-            public float initial () {
-                return layer.transform().rotation();
-            }
-            public void set (float value) {
-                layer.setRotation(value);
-            }
+            public float initial () { return layer.transform().rotation(); }
+            public void set (float value) { layer.setRotation(value); }
         });
     }
 
@@ -92,12 +88,8 @@ public abstract class Animator
     public Animation.One tweenScale (final Layer layer) {
         Asserts.checkNotNull(layer);
         return tween(new Animation.Value() {
-            public float initial () {
-                return layer.transform().uniformScale();
-            }
-            public void set (float value) {
-                layer.setScale(value);
-            }
+            public float initial () { return layer.transform().uniformScale(); }
+            public void set (float value) { layer.setScale(value); }
         });
     }
 
@@ -128,12 +120,8 @@ public abstract class Animator
     public Animation.One tweenAlpha (final Layer layer) {
         Asserts.checkNotNull(layer);
         return tween(new Animation.Value() {
-            public float initial () {
-                return layer.alpha();
-            }
-            public void set (float value) {
-                layer.setAlpha(value);
-            }
+            public float initial () { return layer.alpha(); }
+            public void set (float value) { layer.setAlpha(value); }
         });
     }
 
@@ -217,11 +205,9 @@ public abstract class Animator
      * chain of animations, which itself may be delayed or subject to animation barriers.
      */
     public Animation.Action add (final GroupLayer parent, final Layer child) {
-        return action(new Runnable() {
-            public void run () {
-                parent.add(child);
-            }
-        });
+        return action(new Runnable() { public void run () {
+            parent.add(child);
+        }});
     }
 
     /**
@@ -240,11 +226,9 @@ public abstract class Animator
      */
     public Animation.Action addAt (final GroupLayer parent,
                                    final Layer child, final float x, final float y) {
-        return action(new Runnable() {
-            public void run () {
-                parent.addAt(child, x, y);
-            }
-        });
+        return action(new Runnable() { public void run () {
+            parent.addAt(child, x, y);
+        }});
     }
 
     /**
@@ -255,11 +239,9 @@ public abstract class Animator
      * likely have changed.
      */
     public Animation.Action reparent(final GroupLayer newParent, final Layer child) {
-        return action(new Runnable() {
-            public void run () {
-                Layers.reparent(child, newParent);
-            }
-        });
+        return action(new Runnable() { public void run () {
+            Layers.reparent(child, newParent);
+        }});
     }
 
     /**
@@ -267,33 +249,27 @@ public abstract class Animator
      * which culminate in the removal (destruction) of the target layer.
      */
     public Animation.Action destroy (final Layer layer) {
-        return action(new Runnable() {
-            public void run () {
-                layer.destroy();
-            }
-        });
+        return action(new Runnable() { public void run () {
+            layer.destroy();
+        }});
     }
 
     /**
      * Sets the specified layer's depth to the specified value.
      */
     public Animation.Action setDepth (final Layer layer, final float depth) {
-        return action(new Runnable() {
-            public void run () {
-                layer.setDepth(depth);
-            }
-        });
+        return action(new Runnable() { public void run () {
+            layer.setDepth(depth);
+        }});
     }
 
     /**
      * Sets the specified layer to visible or not.
      */
     public Animation.Action setVisible (final Layer layer, final boolean visible) {
-        return action(new Runnable() {
-            public void run () {
-                layer.setVisible(visible);
-            }
-        });
+        return action(new Runnable() { public void run () {
+            layer.setVisible(visible);
+        }});
     }
 
     /**
@@ -301,33 +277,27 @@ public abstract class Animator
      * components during an animation.
      */
     public Animation.Action setAnimating (final Value<Boolean> anim, final boolean animating) {
-        return action(new Runnable() {
-            public void run () {
-                anim.update(animating);
-            }
-        });
+        return action(new Runnable() { public void run () {
+            anim.update(animating);
+        }});
     }
 
     /**
      * Plays the supplied clip or loop.
      */
     public Animation.Action play (final SoundBoard.Playable sound) {
-        return action(new Runnable() {
-            public void run () {
-                sound.play();
-            }
-        });
+        return action(new Runnable() { public void run () {
+            sound.play();
+        }});
     }
 
     /**
      * Plays the supplied sound.
      */
     public Animation.Action play (final Sound sound) {
-        return action(new Runnable() {
-            public void run () {
-                sound.play();
-            }
-        });
+        return action(new Runnable() { public void run () {
+            sound.play();
+        }});
     }
 
     /**
@@ -337,12 +307,8 @@ public abstract class Animator
     public Animation.One tweenVolume (final Sound sound) {
         Asserts.checkNotNull(sound);
         return tween(new Animation.Value() {
-            public float initial () {
-                return sound.volume();
-            }
-            public void set (float value) {
-                sound.setVolume(value);
-            }
+            public float initial () { return sound.volume(); }
+            public void set (float value) { sound.setVolume(value); }
         });
     }
 
@@ -350,11 +316,9 @@ public abstract class Animator
      * Stops the supplied sound from playing.
      */
     public Animation.Action stop (final Sound sound) {
-        return action(new Runnable() {
-            public void run () {
-                sound.stop();
-            }
-        });
+        return action(new Runnable() { public void run () {
+            sound.stop();
+        }});
     }
 
     /**
@@ -387,48 +351,32 @@ public abstract class Animator
     protected static Animation.Value onX (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
-            public float initial () {
-                return layer.transform().tx();
-            }
-            public void set (float value) {
-                layer.transform().setTx(value);
-            }
+            public float initial () { return layer.transform().tx(); }
+            public void set (float value) { layer.transform().setTx(value); }
         };
     }
 
     protected static Animation.Value onY (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
-            public float initial () {
-                return layer.transform().ty();
-            }
-            public void set (float value) {
-                layer.transform().setTy(value);
-            }
+            public float initial () { return layer.transform().ty(); }
+            public void set (float value) { layer.transform().setTy(value); }
         };
     }
 
     protected static Animation.Value onScaleX (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
-            public float initial () {
-                return layer.transform().scaleX();
-            }
-            public void set (float value) {
-                layer.transform().setScaleX(value);
-            }
+            public float initial () { return layer.transform().scaleX(); }
+            public void set (float value) { layer.transform().setScaleX(value); }
         };
     }
 
     protected static Animation.Value onScaleY (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
-            public float initial () {
-                return layer.transform().scaleY();
-            }
-            public void set (float value) {
-                layer.transform().setScaleY(value);
-            }
+            public float initial () { return layer.transform().scaleY(); }
+            public void set (float value) { layer.transform().setScaleY(value); }
         };
     }
 
