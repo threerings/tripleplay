@@ -10,6 +10,13 @@ package tripleplay.sound;
  */
 public interface Loop extends Playable
 {
+    /** A noop loop. */
+    class Silence implements Loop {
+        @Override public void play () {}
+        @Override public void stop () {}
+        @Override public boolean isPlaying () { return false; }
+    }
+
     /** Returns whether this loop is currently playing. */
     boolean isPlaying ();
 }

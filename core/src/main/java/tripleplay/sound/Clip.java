@@ -12,6 +12,14 @@ import playn.core.Sound;
  */
 public interface Clip extends Playable
 {
+    /** A noop clip. */
+    class Silence implements Clip {
+        @Override public void preload () {}
+        @Override public void play () {}
+        @Override public void stop () {}
+        @Override public Sound asSound () { return new Sound.Silence(); }
+    }
+
     /** Preloads this clip's underlying audio data. */
     void preload ();
 
