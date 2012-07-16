@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.IPoint;
 import pythagoras.f.Rectangle;
 
 import react.Signal;
@@ -14,15 +15,37 @@ import react.UnitSlot;
 import react.Value;
 
 import playn.core.Canvas;
+import playn.core.CanvasImage;
 import playn.core.Image;
 import playn.core.ImageLayer;
-import playn.core.PlayN;
 import playn.core.Pointer;
+import static playn.core.PlayN.graphics;
 
+/**
+ * Displays a bar and a thumb that can be slid along the bar, representing a floating point value
+ * between some minimum and maximum.
+ */
 public class Slider extends Widget<Slider>
 {
-    /** The width of an unstretched slider. Use {@link #setWidth(float)} to override. */
-    public static final float DEFAULT_WIDTH = 100;
+    /** The width of the bar of an unstretched slider. The slider's preferred width will be this
+     * width plus the width of the thumb image (which can extend past the left edge of the bar by
+     * half its width and the right edge of the bar by half its width). Inherited. */
+    public static Style<Float> BAR_WIDTH = Style.newStyle(true, 100f);
+
+    /** The height of the bar. The slider's preferred height will be the larger of this height and
+     * the height of the thumb image. Inherited. */
+    public static Style<Float> BAR_HEIGHT = Style.newStyle(true, 5f);
+
+    /** The background that renders the bar (defaults to a black rectangle). Inherited. */
+    public static Style<Background> BAR_BACKGROUND =
+        Style.newStyle(true, Background.solid(0xFF000000));
+
+    /** The image to use for the slider thumb. Inherited. */
+    public static Style<Image> THUMB_IMAGE = Style.newStyle(true, createDefaultThumbImage());
+
+    /** The origin of the thumb image (used to center the thumb image over the tray). If left as
+     * the default (null), the center of the thumb image will be used as its origin. Inherited. */
+    public static Style<IPoint> THUMB_ORIGIN = Style.newStyle(false, (IPoint)null);
 
     /** The value of the slider. */
     public final Value<Float> value;
@@ -33,61 +56,21 @@ public class Slider extends Widget<Slider>
         _min = min;
         _max = max;
         _range = _max - _min;
-        this.value.connect(new UnitSlot () {
-            @Override public void onEmit () {
-                if (isAdded()) {
-                    render();
-                }
-            }
-        });
+        // set up our thumb layer
+        layer.add(_thumb = graphics().createImageLayer());
+        _thumb.setDepth(1);
+        // update our display if the slider value is changed externally
+        this.value.connect(new UnitSlot () { @Override public void onEmit () { updateThumb(); }});
     }
 
     /**
-     * Constrains the possible slider values to the given increment. For example, an increment of
-     * 1 would mean the possible sliders values are {@link #min()}, {@code min() + 1}, etc, up to
-     * {@link #max()}. Note this only affects internal updates from pointer or mouse handling.
-     * The underlying {@link #value} may be updated arbitrarily.
+     * Constrains the possible slider values to the given increment. For example, an increment of 1
+     * would mean the possible sliders values are {@link #min()}, {@code min() + 1}, etc, up to
+     * {@link #max()}. Note this only affects internal updates from pointer or mouse handling. The
+     * underlying {@link #value} may be updated arbitrarily.
      */
     public Slider setIncrement (float increment) {
         _increment = increment;
-        return this;
-    }
-
-    /**
-     * Sets an image to use as a thumb. The center of the image will be placed on the value of the
-     * slider. This will suppress the rendering of the default thumb (a black box).
-     */
-    public Slider setThumb (Image image) {
-        if (image == null) {
-            return setThumb(image, 0, 0);
-        }
-        return setThumb(image, image.width() / 2, image.height() / 2);
-    }
-
-    /**
-     * Sets an image to use as a thumb, with the given hot spot coordinates. The hot spot of the
-     * image will be placed on the value of ths slider. This will suppress the rendering of the
-     * default thumb (a black box).
-     */
-    public Slider setThumb (Image image, float hotspotX, float hotspotY) {
-        if (_thumb != null) {
-            _thumb.destroy();
-            _thumb = null;
-        }
-        if (image != null) {
-            _thumb = PlayN.graphics().createImageLayer(image);
-            _thumb.setOrigin(hotspotX, hotspotY);
-            layer.add(_thumb);
-            _thumb.setDepth(1);
-        }
-        invalidate();
-        return this;
-    }
-
-    /** Sets the unstretched width of this slider, in pixels. By default, the width is 100. */
-    public Slider setWidth (float width) {
-        _width = width;
-        invalidate();
         return this;
     }
 
@@ -104,62 +87,17 @@ public class Slider extends Widget<Slider>
     /** Returns our minimum allowed value. */
     public float min () { return _min; }
 
-    @Override protected void wasAdded (Elements<?> parent) {
-        super.wasAdded(parent);
-        invalidate();
-    }
-
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        _sglyph.destroy();
+        if (_barInst != null) {
+            _barInst.destroy();
+            _barInst = null;
+        }
         // the thumb is just an image layer and will be destroyed when we are
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new LayoutData() {
-            @Override public Dimension computeSize (float hintX, float hintY) {
-                return new Dimension(_width, _thumb == null ? THUMB_HEIGHT + BAR_HEIGHT :
-                    Math.max(BAR_HEIGHT, _thumb.height()));
-            }
-
-            @Override public void layout (float left, float top, float width, float height) {
-                _tbounds = new Rectangle(left, top, width, height);
-                render(); // render the bar and thumb
-
-                // position the glyph
-                float y = top;
-                if (_thumb != null) y += (_thumb.height() - BAR_HEIGHT) / 2;
-                _sglyph.layer().setTranslation(left, y);
-            }
-        };
-    }
-
-    protected void render () {
-        if (_tbounds == null) return; // not laid out yet, can't render
-
-        float width = _tbounds.width;
-        float thumb = (value.get() - _min) / _range * width;
-        if (_thumb != null) {
-            _sglyph.prepare(width, BAR_HEIGHT);
-            renderBar(_sglyph.canvas(), 0);
-            _thumb.setTranslation(_tbounds.x + thumb, _tbounds.y + (_tbounds.height) / 2);
-        } else {
-            _sglyph.prepare(width, _tbounds.height);
-            render(_sglyph.canvas(), thumb);
-        }
-    }
-
-    /** Renders the bar and default thumb. */
-    protected void render (Canvas canvas, float thumbCenterPixel) {
-        renderBar(canvas, THUMB_HEIGHT);
-        canvas.setFillColor(0xFF000000);
-        canvas.fillRect(thumbCenterPixel - THUMB_WIDTH / 2, 0, THUMB_WIDTH, THUMB_HEIGHT);
-    }
-
-    /** Renders the bar at the given offset. */
-    protected void renderBar (Canvas canvas, float y) {
-        canvas.setFillColor(0xFF000000);
-        canvas.fillRect(0, y, _tbounds.width, BAR_HEIGHT); // Bar
+        return new SliderLayoutData();
     }
 
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
@@ -178,10 +116,14 @@ public class Slider extends Widget<Slider>
         _clicked.emit(this);
     }
 
+    protected void updateThumb () {
+        float thumbPct = (value.get() - _min) / _range;
+        _thumb.setTranslation(_thumbLeft + _thumbRange * thumbPct, _thumbY);
+    }
+
     protected void handlePointer (float x, float y) {
-        if (_tbounds == null) return;
-        float width = _tbounds.width;
-        x = Math.min(width,  x - _tbounds.x);
+        float width = _thumbRange;
+        x = Math.min(width,  x - _thumbLeft);
         float pos = Math.max(x, 0) / width * _range;
         if (_increment != null) {
             float i = _increment;
@@ -190,15 +132,58 @@ public class Slider extends Widget<Slider>
         value.update(_min + pos);
     }
 
+    protected static Image createDefaultThumbImage () {
+        float size = 24;
+        CanvasImage image = graphics().createImage(size, size);
+        image.canvas().setFillColor(0xFF000000);
+        image.canvas().fillCircle(size/2, size/2, size/2-1);
+        return image;
+    }
+
+    protected class SliderLayoutData extends LayoutData {
+        public final float barWidth = resolveStyle(BAR_WIDTH);
+        public final float barHeight = resolveStyle(BAR_HEIGHT);
+        public final Background barBG = resolveStyle(BAR_BACKGROUND);
+        public final Image thumbImage = resolveStyle(THUMB_IMAGE);
+        public final IPoint thumbOrigin = resolveStyle(THUMB_ORIGIN);
+
+        @Override public Dimension computeSize (float hintX, float hintY) {
+            return new Dimension(barWidth + thumbImage.width(),
+                                 Math.max(barHeight, thumbImage.height()));
+        }
+
+        @Override public void layout (float left, float top, float width, float height) {
+            // note our thumb metrics
+            float thumbWidth = thumbImage.width(), thumbHeight = thumbImage.height();
+            _thumbRange = width - thumbWidth;
+            _thumbLeft = left + thumbWidth/2;
+            _thumbY = top + height/2;
+
+            // configure our thumb layer
+            _thumb.setImage(thumbImage);
+            if (thumbOrigin == null) {
+                _thumb.setOrigin(thumbWidth/2, thumbHeight/2);
+            } else {
+                _thumb.setOrigin(thumbOrigin.x(), thumbOrigin.y());
+            }
+
+            // configure our bar background instance
+            if (_barInst != null) _barInst.destroy();
+            if (width > 0 && height > 0) {
+                _barInst = barBG.instantiate(new Dimension(width-thumbWidth, barHeight));
+                _barInst.addTo(layer, _thumbLeft, top + (height - barHeight)/2, 1);
+            }
+
+            // finally update the thumb position
+            updateThumb();
+        }
+    }
+
     protected final Signal<Slider> _clicked = Signal.create();
     protected final float _min, _max, _range;
-    protected final Glyph _sglyph = new Glyph();
+    protected final ImageLayer _thumb;
 
-    protected ImageLayer _thumb;
-    protected Rectangle _tbounds;
+    protected Background.Instance _barInst;
+    protected float _thumbLeft, _thumbRange, _thumbY;
     protected Float _increment;
-    protected float _width = DEFAULT_WIDTH;
-
-    protected static final float BAR_HEIGHT = 5;
-    protected static final float THUMB_HEIGHT = BAR_HEIGHT * 2, THUMB_WIDTH = 4;
 }

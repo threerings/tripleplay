@@ -33,7 +33,6 @@ public class SliderDemo extends DemoScreen
 
     @Override protected Group createIface () {
         Font fixedFont = PlayN.graphics().createFont("Fixed", Font.Style.PLAIN, 16);
-        Background bg = Background.solid(0xffffffff).inset(4, 14, 4, 14);
 
         Slider sliders[] = {null, null, null};
         Label sliderValues[] = {null, null, null};
@@ -51,10 +50,12 @@ public class SliderDemo extends DemoScreen
                 setConstraint(Constraints.minSize("-00")).
                 setStyles(Style.HALIGN.right, Style.FONT.is(fixedFont)),
             new Shim(15, 15),
-            new Label("With a background and thumb image:"),
+            new Label("With a background, custom bar and thumb image:"),
             sliders[2] = new Slider(0, -50, 50).
-                setThumb(PlayN.assets().getImage("images/smiley.png")).
-                addStyles(Style.BACKGROUND.is(bg)),
+                addStyles(Style.BACKGROUND.is(Background.roundRect(0xFFFFFFFF, 16).inset(4)),
+                          Slider.THUMB_IMAGE.is(PlayN.assets().getImage("images/smiley.png")),
+                          Slider.BAR_HEIGHT.is(18f),
+                          Slider.BAR_BACKGROUND.is(Background.roundRect(0xFFFF0000, 9))),
             sliderValues[2] = new Label("0").
                 setConstraint(Constraints.minSize("-00")).
                 setStyles(Style.HALIGN.right, Style.FONT.is(fixedFont)));
