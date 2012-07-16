@@ -5,17 +5,19 @@
 
 package tripleplay.ui;
 
+import pythagoras.f.Dimension;
+import pythagoras.f.Rectangle;
+
+import react.Signal;
+import react.SignalView;
+import react.UnitSlot;
+import react.Value;
+
 import playn.core.Canvas;
 import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.PlayN;
 import playn.core.Pointer;
-
-import pythagoras.f.Dimension;
-import pythagoras.f.Rectangle;
-
-import react.UnitSlot;
-import react.Value;
 
 public class Slider extends Widget<Slider>
 {
@@ -87,6 +89,13 @@ public class Slider extends Widget<Slider>
         _width = width;
         invalidate();
         return this;
+    }
+
+    /** A signal that is emitted when the user has released their finger/pointer after having
+     * started adjusting the slider. {@link #value} will contain the correct current value at the
+     * time this signal is emitted. */
+    public SignalView<Slider> clicked () {
+        return _clicked;
     }
 
     /** Returns our maximum allowed value. */
@@ -166,6 +175,7 @@ public class Slider extends Widget<Slider>
     @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
         super.onPointerEnd(event, x, y);
         handlePointer(x, y);
+        _clicked.emit(this);
     }
 
     protected void handlePointer (float x, float y) {
@@ -180,6 +190,7 @@ public class Slider extends Widget<Slider>
         value.update(_min + pos);
     }
 
+    protected final Signal<Slider> _clicked = Signal.create();
     protected final float _min, _max, _range;
     protected final Glyph _sglyph = new Glyph();
 
