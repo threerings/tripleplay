@@ -7,8 +7,10 @@ package tripleplay.sound;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import pythagoras.f.MathUtil;
 import react.Slot;
@@ -115,13 +117,11 @@ public class SoundBoard
 
     protected abstract class LoopImpl extends LazySound implements Loop {
         @Override public void play () {
-            if (!shouldPlay() || isPlaying()) return;
-            prepareAndPlay();
-            _active.add(this);
+            if (!_active.add(this)) return;
+            if (shouldPlay() && !isPlaying()) prepareAndPlay();
         }
         @Override public void stop () {
-            _active.remove(this);
-            fadeOut();
+            if (_active.remove(this)) fadeOut();
         }
         public void fadeIn (float toVolume) {
             if (!isPlaying()) prepareAndPlay();
@@ -151,6 +151,15 @@ public class SoundBoard
 
         public boolean isPlaying () {
             return (sound == null) ? false : sound.isPlaying();
+        }
+
+        @Override public int hashCode () {
+            return path().hashCode();
+        }
+        @Override public boolean equals (Object other) {
+            return (other == this) ? true :
+                (other != null) && other.getClass() == getClass() &&
+                path().equals(((LazySound)other).path());
         }
 
         protected Sound prepareSound () {
@@ -187,6 +196,6 @@ public class SoundBoard
         protected static final float FADE_DURATION = 1000;
     }
 
-    protected final List<LoopImpl> _active = new ArrayList<LoopImpl>();
+    protected final Set<LoopImpl> _active = new HashSet<LoopImpl>();
     protected final List<Fader> _faders = new ArrayList<Fader>();
 }
