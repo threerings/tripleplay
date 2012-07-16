@@ -21,7 +21,7 @@ public class BlankBackground extends Background
     }
 
     protected static final Instance SINGLETON = new Instance() {
-        @Override public void addTo (GroupLayer parent) {
+        @Override public void addTo (GroupLayer parent, float x, float y) {
             // noop!
         }
         @Override public void destroy () {

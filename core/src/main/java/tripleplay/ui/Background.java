@@ -192,7 +192,7 @@ public abstract class Background
      * property; elements instantiate them at specific dimensions when they are actually used.*/
     protected static abstract class Instance {
         /** Adds this background's layers to the specified group. */
-        public abstract void addTo (GroupLayer parent);
+        public abstract void addTo (GroupLayer parent, float x, float y);
 
         /** Disposes of this background instance when it is no longer valid/needed. */
         public abstract void destroy ();
@@ -205,9 +205,9 @@ public abstract class Background
                 layer.setDepth(BACKGROUND_DEPTH);
             }
         }
-        @Override public void addTo (GroupLayer parent) {
+        @Override public void addTo (GroupLayer parent, float x, float y) {
             for (Layer layer : _layers) {
-                parent.add(layer);
+                parent.addAt(layer, x, y);
             }
         }
         @Override public void destroy () {

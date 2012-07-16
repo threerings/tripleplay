@@ -423,7 +423,7 @@ public abstract class Element<T extends Element<T>>
         if (_bginst != null) _bginst.destroy();
         if (width > 0 && height > 0) {
             _bginst = ldata.bg.instantiate(_size);
-            _bginst.addTo(layer);
+            _bginst.addTo(layer, 0, 0);
         }
 
         // do our actual layout
