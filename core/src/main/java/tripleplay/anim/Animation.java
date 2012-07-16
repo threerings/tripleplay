@@ -26,6 +26,15 @@ public abstract class Animation
         void set (float value);
     }
 
+    /** Used to cancel animations after they've been started. See {@link #handle}. */
+    public interface Handle {
+        /** Cancels this animation. It will remove itself from its animator the next frame.
+         * @return true if this animation was actually running and was canceled, false if it had
+         * already completed. */
+        boolean cancel ();
+    }
+
+    /** Processes a {@link Flipbook}. */
     public static class Flip extends Animation {
         public Flip (ImageLayer target, Flipbook book) {
             _target = target;
@@ -99,7 +108,7 @@ public abstract class Animation
         protected float _duration = 1;
     }
 
-    /** An animation that animates a single scalar value. */
+    /** Animates a single scalar value. */
     public static class One extends Interped<One> {
         public One (Value target) {
             _target = target;
@@ -140,7 +149,7 @@ public abstract class Animation
         protected float _to;
     }
 
-    /** An animation that animates a pair of scalar values (usually a position). */
+    /** Animates a pair of scalar values (usually a position). */
     public static class Two extends Interped<Two> {
         public Two (Value x, Value y) {
             _x = x;
@@ -198,7 +207,7 @@ public abstract class Animation
         protected float _tox, _toy;
     }
 
-    /** An animation that simply delays a specified number of seconds. */
+    /** Delays a specified number of seconds. */
     public static class Delay extends Animation {
         public Delay (float duration) {
             _duration = duration;
@@ -212,7 +221,7 @@ public abstract class Animation
         protected final float _duration;
     }
 
-    /** An animation that executes an action and completes immediately. */
+    /** Executes an action and completes immediately. */
     public static class Action extends Animation {
         public Action (Runnable action) {
             _action = action;
@@ -227,7 +236,7 @@ public abstract class Animation
         protected Runnable _action;
     }
 
-    /** An animation that repeats its underlying animation over and over again (until removed). */
+    /** Repeats its underlying animation over and over again (until removed). */
     public static class Repeat extends Animation {
         public Repeat (Layer layer) {
             _layer = layer;
@@ -269,6 +278,7 @@ public abstract class Animation
                 // our _next is either null, or it points to the animation to which we should
                 // repeat when we reach the end of this chain; so pass the null or the repeat
                 // target down to our new next animation
+                anim._root = _root;
                 anim._next = _next;
                 _next = anim;
                 return anim;
@@ -277,17 +287,16 @@ public abstract class Animation
     }
 
     /**
-     * Cancels this animation. It will remove itself from its animator the next frame.
-     * @return true if this animation was actually running and was canceled, false if it had
-     * already completed.
+     * Returns a handle on this collection of animations which can be used to cancel the animation.
+     * This handle references the root animation in this chain of animations, and will cancel all
+     * (as yet uncompleted) animations in the chain.
      */
-    public boolean cancel () {
-        if (_current != null) {
-            _current = null;
-            return true;
-        } else {
-            return false;
-        }
+    public Handle handle () {
+        return new Handle() {
+            @Override public boolean cancel () {
+                return _root.cancel();
+            }
+        };
     }
 
     protected Animation () {
@@ -317,6 +326,12 @@ public abstract class Animation
         return remain;
     }
 
+    protected boolean cancel () {
+        if (_current == null) return false;
+        _current = null;
+        return true;
+    }
+
     protected abstract float apply (float time);
 
     protected Animation next () {
@@ -328,6 +343,7 @@ public abstract class Animation
     }
 
     protected float _start;
+    protected Animation _root = this;
     protected Animation _current = this;
     protected Animation _next;
 }
