@@ -169,7 +169,7 @@ public class Slider extends Widget<Slider>
     }
 
     protected void handlePointer (float x, float y) {
-        if (_tbounds == null || !contains(x, y)) { return; }
+        if (_tbounds == null) return;
         float width = _tbounds.width;
         x = Math.min(width,  x - _tbounds.x);
         float pos = Math.max(x, 0) / width * _range;
