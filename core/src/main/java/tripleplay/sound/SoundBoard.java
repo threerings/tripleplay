@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import pythagoras.f.MathUtil;
+import react.Slot;
+import react.Value;
 
 import playn.core.Game;
 import playn.core.Sound;
@@ -27,23 +29,24 @@ import tripleplay.util.Interpolator;
  */
 public class SoundBoard
 {
-    /**
-     * Returns the master volume for this sound board. The value will be between 0 and 1.
-     */
-    public float volume () {
-        return _volume;
-    }
+    /** Controls the volume of this sound board. */
+    public Value<Float> volume = new Value<Float>(1f) {
+        @Override protected Float updateAndNotifyIf (Float value) {
+            return super.updateAndNotifyIf(MathUtil.clamp(value, 0, 1));
+        }
+    };
 
-    /**
-     * Configures the volume for all sounds in this board. If a zero volume is supplied, the board
-     * will be disabled. Any currently playing loops will have their volume adjusted.
-     *
-     * @param volume a value between 0 and 1.
-     */
-    public void setVolume (float volume) {
-        _volume = MathUtil.clamp(volume, 0, 1);
-        // adjust the volume of any currently playing loops
-        for (LoopImpl active : _active) active.setVolume(_volume);
+    /** Controls whether this sound board is muted. When muted, no sounds will play. */
+    public Value<Boolean> muted = Value.create(false);
+
+    public SoundBoard () {
+        volume.connect(new Slot<Float>() { public void onEmit (Float volume) {
+            for (LoopImpl active : _active) active.setVolume(volume);
+        }});
+        muted.connect(new Slot<Boolean>() { public void onEmit (Boolean muted) {
+            if (muted) for (LoopImpl active : _active) active.fadeOut();
+            else for (LoopImpl active : _active) active.fadeIn(volume.get());
+        }});
     }
 
     /**
@@ -83,12 +86,16 @@ public class SoundBoard
         };
     }
 
+    protected boolean shouldPlay () {
+        return !muted.get() && volume.get() > 0;
+    }
+
     protected abstract class ClipImpl extends LazySound implements Clip {
         @Override public void preload () {
-            if (_volume > 0) prepareSound();
+            if (shouldPlay()) prepareSound();
         }
         @Override public void play () {
-            if (_volume > 0) prepareSound().play();
+            if (shouldPlay()) prepareSound().play();
         }
         @Override public void stop () {
             if (isPlaying()) _faders.add(new Fader(sound));
@@ -108,12 +115,20 @@ public class SoundBoard
 
     protected abstract class LoopImpl extends LazySound implements Loop {
         @Override public void play () {
-            if (isPlaying()) return;
+            if (!shouldPlay() || isPlaying()) return;
             prepareAndPlay();
             _active.add(this);
         }
         @Override public void stop () {
             _active.remove(this);
+            fadeOut();
+        }
+        public void fadeIn (float toVolume) {
+            if (!isPlaying()) prepareAndPlay();
+            // TODO: actually fade this in
+            sound.setVolume(toVolume);
+        }
+        public void fadeOut () {
             if (isPlaying()) _faders.add(new Fader(sound));
         }
         public void setVolume (float volume) {
@@ -140,7 +155,7 @@ public class SoundBoard
 
         protected Sound prepareSound () {
             if (sound == null) sound = assets().getSound(path());
-            sound.setVolume(_volume);
+            sound.setVolume(volume.get());
             return sound;
         }
 
@@ -151,6 +166,7 @@ public class SoundBoard
         public Fader (Sound sound) {
             _sound = sound;
             _start = _sound.volume();
+            System.err.println("Fading from " + _start);
         }
 
         public boolean update (float delta) {
@@ -173,5 +189,4 @@ public class SoundBoard
 
     protected final List<LoopImpl> _active = new ArrayList<LoopImpl>();
     protected final List<Fader> _faders = new ArrayList<Fader>();
-    protected float _volume;
 }
