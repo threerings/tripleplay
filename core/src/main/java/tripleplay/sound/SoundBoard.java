@@ -180,7 +180,7 @@ public class SoundBoard
 
         public boolean update (float delta) {
             _elapsed += delta;
-            float vol = Interpolator.EASE_IN.apply(_start, -_start, _elapsed, FADE_DURATION);
+            float vol = Interpolator.LINEAR.apply(_start, -_start, _elapsed, FADE_DURATION);
             if (vol > 0) {
                 _sound.setVolume(vol);
                 return false;
