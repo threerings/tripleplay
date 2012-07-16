@@ -18,7 +18,6 @@ import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Sound;
 
-import tripleplay.sound.MultiSound;
 import tripleplay.sound.Playable;
 import tripleplay.util.Layers;
 

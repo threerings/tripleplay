@@ -12,14 +12,14 @@ import playn.core.PlayN;
 import playn.core.Sound;
 
 /**
- * Provides a sound that can be played multiple times. Callers tell the multisound to prepare a
- * copy which may result in loading a copy of the sound from {@link Assets} if no reserves are
- * available to play it, they then play the sound, and after a configured duration that sound
+ * Provides a sound clip that can be played multiple times. Callers tell the multiclip to prepare a
+ * copy which may result in loading a copy of the sound from a {@link SoundBoard} if no reserves
+ * are available to play it, they then play the sound, and after a configured duration that sound
  * either goes back into the reserves, or is disposed, if the reserves are already full.
  */
-public class MultiSound
+public class MultiClip
 {
-    /** A handle on a copy of a sound. Used to play it. */
+    /** A handle on a copy of a clip. Used to play it. */
     public interface Copy extends Playable {
         /** Plays this copy of the sound and then releases it. */
         void play ();
@@ -28,14 +28,16 @@ public class MultiSound
     }
 
     /**
-     * Creates a multisound with the supplied configuration.
+     * Creates a multiclip with the supplied configuration.
      *
+     * @param board the soundboard from which to obtain clips.
      * @param path the path to the underlying sound.
      * @param reserveCopies the minimum number of copies of the sound to keep in memory.
      * @param duration the duration of the sound (in seconds). This will be used to determine when
      * it is safe to reuse a copy of the sound.
      */
-    public MultiSound (String path, int reserveCopies, float duration) {
+    public MultiClip (SoundBoard board, String path, int reserveCopies, float duration) {
+        _board = board;
         _path = path;
         _reserveCopies = reserveCopies;
         _duration = duration * 1000;
@@ -57,7 +59,7 @@ public class MultiSound
     }
 
     protected class CopyImpl implements Copy {
-        public final Sound sound = PlayN.assets().getSound(_path);
+        public final Clip sound = _board.getClip(_path); { sound.preload(); }
         public double releaseTime;
 
         @Override public void play () {
@@ -81,6 +83,7 @@ public class MultiSound
         }
     }
 
+    protected final SoundBoard _board;
     protected final String _path;
     protected final int _reserveCopies;
     protected final float _duration;
