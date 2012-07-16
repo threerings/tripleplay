@@ -191,8 +191,11 @@ public abstract class Background
     /** An instantiation of a particular background template. Backgrounds are configured as a style
      * property; elements instantiate them at specific dimensions when they are actually used.*/
     protected static abstract class Instance {
-        /** Adds this background's layers to the specified group. */
-        public abstract void addTo (GroupLayer parent, float x, float y);
+        /** Adds this background's layers to the specified group at the specified x/y offset.
+         * @param depthAdjust an adjustment to the standard depth at which backgrounds are added.
+         * This adjustment is added to the standard background depth (-10). This allows one to
+         * control the rendering order of multiple backgrounds on a single widget. */
+        public abstract void addTo (GroupLayer parent, float x, float y, float depthAdjust);
 
         /** Disposes of this background instance when it is no longer valid/needed. */
         public abstract void destroy ();
@@ -201,12 +204,10 @@ public abstract class Background
     protected static class LayerInstance extends Instance {
         public LayerInstance (Layer... layers) {
             _layers = layers;
-            for (Layer layer : _layers) {
-                layer.setDepth(BACKGROUND_DEPTH);
-            }
         }
-        @Override public void addTo (GroupLayer parent, float x, float y) {
+        @Override public void addTo (GroupLayer parent, float x, float y, float depthAdjust) {
             for (Layer layer : _layers) {
+                layer.setDepth(BACKGROUND_DEPTH + depthAdjust);
                 parent.addAt(layer, x, y);
             }
         }
