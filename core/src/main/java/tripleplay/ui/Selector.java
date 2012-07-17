@@ -10,10 +10,12 @@ import react.Value;
 import react.ValueView;
 
 /**
- * Maintains a single selected item among the children of <code>Elements</code>.<p>
+ * Maintains a single selected item among a specified set of <code>Element</code> instances. The
+ * elements may be added individually, or the children of an <code>Elements</code> may be tracked
+ * automatically.
  *
- * A click on a child that implements <code>Clickable</code> makes it the selected item, or
- * <code>selected</code> can be used to manually control the selected item.
+ * <p>A click on a tracked element that implements <code>Clickable</code> makes it the selected
+ * item, or <code>selected</code> can be used to manually control the selected item.</p>
  */
 public class Selector
 {
@@ -24,12 +26,8 @@ public class Selector
     public Selector () {
         selected.connect(new ValueView.Listener<Element<?>> () {
             @Override public void onChange (Element<?> selected, Element<?> deselected) {
-                if (deselected != null) {
-                    doSelect(deselected, false);
-                }
-                if (selected != null) {
-                    doSelect(selected, true);
-                }
+                setSelected(deselected, false);
+                setSelected(selected, true);
             }
         });
     }
@@ -42,31 +40,61 @@ public class Selector
     }
 
     /**
-     * Tracks the children of <code>elements</code> for setting the selection.
+     * Tracks the children of <code>elements</code> for setting the selection. Children
+     * subsequently added or removed from <code>elements</code> are automatically handled
+     * appropriately.
      */
     public Selector add (Elements<?> elements) {
         for (Element<?> child : elements) {
-            _childAddSlot.onEmit(child);
+            _addSlot.onEmit(child);
         }
-        elements.childAdded().connect(_childAddSlot);
-        elements.childRemoved().connect(_childRemoveSlot);
+        elements.childAdded().connect(_addSlot);
+        elements.childRemoved().connect(_removeSlot);
         return this;
     }
 
     /**
      * Stops tracking the children of <code>elements</code> for setting the selection.
-    */
+     */
     public Selector remove (Elements<?> elements) {
         for (Element<?> child : elements) {
-            _childRemoveSlot.onEmit(child);
+            _removeSlot.onEmit(child);
         }
-        elements.childAdded().disconnect(_childAddSlot);
-        elements.childRemoved().disconnect(_childRemoveSlot);
+        elements.childAdded().disconnect(_addSlot);
+        elements.childRemoved().disconnect(_removeSlot);
         return this;
     }
 
-    protected void doSelect (Element<?> elem, boolean state) {
-        // TODO: do we need a Selectable interface to better abstract this kind of signal?
+    /**
+     * Tracks one or more elements.
+     */
+    public Selector add (Element<?> elem, Element<?>... more) {
+        _addSlot.onEmit(elem);
+        for (Element<?> e : more) {
+            _addSlot.onEmit(e);
+        }
+        return this;
+    }
+
+    /**
+     * Stops tracking one or more elements.
+     */
+    public Selector remove (Element<?> elem, Element<?>... more) {
+        _removeSlot.onEmit(elem);
+        for (Element<?> e : more) {
+            _removeSlot.onEmit(e);
+        }
+        return this;
+    }
+
+    /**
+     * Internal method to update the selection state of an element.
+     */
+    protected void setSelected (Element<?> elem, boolean state) {
+        if (elem == null) {
+            return;
+        }
+        // TODO: do we need a Selectable interface to better abstract this value update?
         if (elem instanceof TogglableTextWidget) {
             ((TogglableTextWidget<?>)elem).selected.update(state);
         } else {
@@ -75,7 +103,7 @@ public class Selector
         }
     }
 
-    protected final Slot<Element<?>> _childAddSlot = new Slot<Element<?>>() {
+    protected final Slot<Element<?>> _addSlot = new Slot<Element<?>>() {
         @Override public void onEmit (Element<?> child) {
             if (child instanceof Clickable<?>) {
                 ((Clickable<?>)child).clicked().connect(_clickSlot);
@@ -83,7 +111,7 @@ public class Selector
         }
     };
 
-    protected final Slot<Element<?>> _childRemoveSlot = new Slot<Element<?>>() {
+    protected final Slot<Element<?>> _removeSlot = new Slot<Element<?>>() {
         @Override public void onEmit (Element<?> removed) {
             if (removed instanceof Clickable<?>) {
                 ((Clickable<?>)removed).clicked().disconnect(_clickSlot);
