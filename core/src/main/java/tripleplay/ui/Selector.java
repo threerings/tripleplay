@@ -13,7 +13,7 @@ import react.ValueView;
  * Maintains a single selected item among the children of <code>Elements</code>.<p>
  *
  * A click on a child that implements <code>Clickable</code> makes it the selected item, or
- * <code>setSelected</code> can be used to manually control the selected item.
+ * <code>selected</code> can be used to manually control the selected item.
  */
 public class Selector
 {
@@ -25,12 +25,10 @@ public class Selector
         selected.connect(new ValueView.Listener<Element<?>> () {
             @Override public void onChange (Element<?> selected, Element<?> deselected) {
                 if (deselected != null) {
-                    deselected.set(Element.Flag.SELECTED, false);
-                    deselected.invalidate();
+                    doSelect(deselected, false);
                 }
                 if (selected != null) {
-                    selected.set(Element.Flag.SELECTED, true);
-                    selected.invalidate();
+                    doSelect(selected, true);
                 }
             }
         });
@@ -65,6 +63,16 @@ public class Selector
         elements.childAdded().disconnect(_childAddSlot);
         elements.childRemoved().disconnect(_childRemoveSlot);
         return this;
+    }
+
+    protected void doSelect (Element<?> elem, boolean state) {
+        // TODO: do we need a Selectable interface to better abstract this kind of signal?
+        if (elem instanceof TogglableTextWidget) {
+            ((TogglableTextWidget<?>)elem).selected.update(state);
+        } else {
+            elem.set(Element.Flag.SELECTED, state);
+            elem.invalidate();
+        }
     }
 
     protected final Slot<Element<?>> _childAddSlot = new Slot<Element<?>>() {
