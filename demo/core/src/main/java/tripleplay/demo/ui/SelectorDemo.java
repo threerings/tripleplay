@@ -84,7 +84,7 @@ public class SelectorDemo extends DemoScreen
     }
 
     protected void update (Label label, ToggleButton sel) {
-        label.text.update(sel == null ? "<None>" :((ToggleButton)sel).text.get());
+        label.text.update(sel == null ? "<None>" : sel.text.get());
     }
 
     protected ToggleButton mkButt (String label) {

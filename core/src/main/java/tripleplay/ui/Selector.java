@@ -125,5 +125,4 @@ public class Selector
             selected.update(clicked);
         }
     };
-
 }
