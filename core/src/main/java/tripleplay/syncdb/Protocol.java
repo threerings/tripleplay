@@ -183,7 +183,7 @@ public class Protocol
     /** Used to encode ints and strings in one big compact string. */
     public static class PayloadWriter {
         public void writeInt (int value) {
-            Asserts.checkArgument(value > 0, "Cannot write negative integers to payload.");
+            Asserts.checkArgument(value >= 0, "Cannot write negative integers to payload.");
             writeInt(value, false);
         }
 
