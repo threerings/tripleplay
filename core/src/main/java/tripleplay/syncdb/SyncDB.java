@@ -395,7 +395,7 @@ public abstract class SyncDB
 
     protected <E> Set<E> toSet (String data, Codec<E> codec) {
         Set<E> set = new HashSet<E>();
-        if (data != null) {
+        if (data != null && data.length() > 0) {
             for (String edata : data.split("\t")) set.add(codec.decode(edata));
         }
         return set;
