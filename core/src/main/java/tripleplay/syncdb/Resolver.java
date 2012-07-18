@@ -17,6 +17,13 @@ public interface Resolver<T>
         }
     };
 
+    /** Uses the smallest of the client and server integers. */
+    Resolver<Integer> INTMIN = new Resolver<Integer>() {
+        public <V extends Integer> V resolve (V client, V server) {
+            return (client > server) ? server : client;
+        }
+    };
+
     /** Uses the largest of the client and server integers. */
     Resolver<Integer> INTMAX = new Resolver<Integer>() {
         public <V extends Integer> V resolve (V client, V server) {
