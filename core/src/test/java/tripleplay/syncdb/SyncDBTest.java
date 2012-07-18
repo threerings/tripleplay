@@ -67,7 +67,17 @@ public class SyncDBTest
     @Test public void testSimpleSync () {
         Protocol.Session session = testSession();
         TestDB one = new TestDB(), two = new TestDB();
-        makeTestChanges1(one);
+
+        one.trueBool.update(true);
+        one.maxInt.update(42);
+        one.maxLong.update(400L);
+        one.serverString.update("foo");
+        one.unionSet.add("one");
+        one.unionSet.add("two");
+        one.unionSet.add("three");
+        one.interSet.add("four");
+        one.serverSet.add("five");
+
         session.sync(one);
         session.sync(two);
         one.assertEquals(two);
@@ -181,18 +191,6 @@ public class SyncDBTest
 
         // make sure we reread our data from storage properly
         one.assertEquals(one.clone());
-    }
-
-    protected void makeTestChanges1 (TestDB db) {
-        db.trueBool.update(true);
-        db.maxInt.update(42);
-        db.maxLong.update(400L);
-        db.serverString.update("foo");
-        db.unionSet.add("one");
-        db.unionSet.add("two");
-        db.unionSet.add("three");
-        db.interSet.add("four");
-        db.serverSet.add("five");
     }
 
     protected void makeTestChanges2 (TestDB db) {
