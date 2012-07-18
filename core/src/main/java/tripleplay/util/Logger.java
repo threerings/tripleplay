@@ -55,6 +55,14 @@ public class Logger
             return this;
         }
 
+        /** Configures the log level for messages from the supplied logger. Messages from the
+         * supplied logger with severity lower than this level will not be logged regardless of
+         * the default log level. Pass null to clear any level cutoff for {@code logger}. */
+        public Levels set (Logger logger, Level level) {
+            _levels.put(logger._ident, level);
+            return this;
+        }
+
         /** Returns the current default log level. */
         public Level defaultLevel () {
             return _defaultLevel;
