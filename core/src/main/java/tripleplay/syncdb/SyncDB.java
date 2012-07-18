@@ -45,9 +45,11 @@ import static tripleplay.syncdb.Log.log;
 public abstract class SyncDB
 {
     /** The separator used in a map key. This character must not appear in a normal key. */
-    public static final String MAP_KEY_SEP = ".";
+    public static final String MAP_KEY_SEP = "|";
 
-    /** The separator used in a subdb key. This character must not appear in a normal key. */
+    /** The separator used in a subdb key. This character may appear in a normal key, but if the
+     * client plans to manage subdb conflict resolution in the aggregate, it is best to avoid using
+     * this separatora elsewhere. */
     public static final String SUBDB_KEY_SEP = ":";
 
     /**
@@ -357,7 +359,7 @@ public abstract class SyncDB
      * not already been created, and will then be cached for the lifetime of the game. */
     protected SubDB getSubDB (String prefix) {
         SubDB db = _subdbs.get(prefix);
-        if (db == null) _subdbs.put(prefix, createSubDB(prefix));
+        if (db == null) _subdbs.put(prefix, db = createSubDB(prefix));
         return db;
     }
 
@@ -439,6 +441,17 @@ public abstract class SyncDB
 
         protected String key (String name) {
             return _dbpre + SUBDB_KEY_SEP + name;
+        }
+
+        /** Removes all of this subdb's properties from the client's persistent storage, and
+         * removes any pending sync requests for properties of this subdb. */
+        protected void purge () {
+            String keyPrefix = _dbpre + SUBDB_KEY_SEP;
+            for (String key : _storage.keys()) {
+                if (!key.startsWith(keyPrefix)) continue;
+                _storage.removeItem(key);
+                _mods.remove(key);
+            }
         }
 
         protected String _dbpre;
