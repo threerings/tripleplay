@@ -44,8 +44,11 @@ import static tripleplay.syncdb.Log.log;
  */
 public abstract class SyncDB
 {
-    /** The separator used in a prefixed key. This character must not appear in a normal key. */
-    public static final String PREFIXED_KEY_SEP = ".";
+    /** The separator used in a map key. This character must not appear in a normal key. */
+    public static final String MAP_KEY_SEP = ".";
+
+    /** The separator used in a subdb key. This character must not appear in a normal key. */
+    public static final String SUBDB_KEY_SEP = ":";
 
     /**
      * Returns the version at which this database was last synced.
@@ -103,7 +106,7 @@ public abstract class SyncDB
         for (Map.Entry<String,String> entry : delta.entrySet()) {
             String name = entry.getKey();
             Property prop;
-            int pidx = name.indexOf(PREFIXED_KEY_SEP);
+            int pidx = name.indexOf(MAP_KEY_SEP);
             if (pidx == -1) prop = _props.get(name);
             else prop = _props.get(name.substring(0, pidx));
             if (prop == null) {
@@ -293,7 +296,7 @@ public abstract class SyncDB
 
             protected String skey (Object rawKey) {
                 @SuppressWarnings("unchecked") K key = (K)rawKey;
-                return prefix + PREFIXED_KEY_SEP + keyCodec.encode(key);
+                return prefix + MAP_KEY_SEP + keyCodec.encode(key);
             }
 
             protected final Set<K> _keys = new HashSet<K>(sget(prefix + "_keys", keyCodec)) {
@@ -350,6 +353,22 @@ public abstract class SyncDB
         return map;
     }
 
+    /** Returns the subdb associated with the supplied prefix. The subdb will be created if it has
+     * not already been created, and will then be cached for the lifetime of the game. */
+    protected SubDB getSubDB (String prefix) {
+        SubDB db = _subdbs.get(prefix);
+        if (db == null) _subdbs.put(prefix, createSubDB(prefix));
+        return db;
+    }
+
+    /** Called to create the subdb for the supplied subdb prefix. This happens on demand when
+     * properties are seen that belong to a subdb. This allows subdbs to be created on-demand, only
+     * when their properties are needed to apply updates or resolve conflicts. A game can of course
+     * also trigger the resolution of a subdb by calling {@link #getSubDB}. */
+    protected SubDB createSubDB (String prefix) {
+        throw new IllegalArgumentException("Unknown subdb prefix: " + prefix);
+    }
+
     protected <T> T get (String name, T defval, Codec<T> codec) {
         String data = _storage.getItem(name);
         return (data == null) ? defval : codec.decode(data);
@@ -388,13 +407,46 @@ public abstract class SyncDB
         _mods.add(name);
     }
 
+    /** Manages merges and updates to database properties. */
     protected interface Property {
         boolean merge (String name, String data);
         void update (String name, String data);
     }
 
+    /** Used to encapsulate a collection of properties associated with a particular prefix. For
+     * example a chess game could create a subdb for each active game using some generated game id
+     * as a prefix, and when the game was complete, the entire subdb could be removed.
+     * Additionally, conflict resolution could be adjusted for all elements in a subdb (e.g. using
+     * the server's values for an entire subdb, or the client's). */
+    protected abstract class SubDB {
+        protected SubDB (String prefix) {
+            _dbpre = prefix;
+        }
+
+        protected <T> Value<T> value (String name, T defval, Codec<T> codec,
+                                      Resolver<? super T> resolver) {
+            return SyncDB.this.value(key(name), defval, codec, resolver);
+        }
+
+        protected <E> RSet<E> set (String name, Codec<E> codec, SetResolver resolver) {
+            return SyncDB.this.set(key(name), codec, resolver);
+        }
+
+        protected <K,V> RMap<K,V> map (String prefix, Codec<K> keyCodec, Codec<V> valCodec,
+                                       Resolver<? super V> resolver) {
+            return SyncDB.this.map(key(prefix), keyCodec, valCodec, resolver);
+        }
+
+        protected String key (String name) {
+            return _dbpre + SUBDB_KEY_SEP + name;
+        }
+
+        protected String _dbpre;
+    }
+
     protected final Storage _storage;
     protected final Map<String,Property> _props = new HashMap<String,Property>();
+    protected final Map<String,SubDB> _subdbs = new HashMap<String,SubDB>();
     protected final Set<String> _mods;
     protected int _version;
 
