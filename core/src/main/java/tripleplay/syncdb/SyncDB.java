@@ -45,12 +45,12 @@ import static tripleplay.syncdb.Log.log;
 public abstract class SyncDB
 {
     /** The separator used in a map key. This character must not appear in a normal key. */
-    public static final String MAP_KEY_SEP = "|";
+    public static final String MAP_KEY_SEP = "~";
 
     /** The separator used in a subdb key. This character may appear in a normal key, but if the
      * client plans to manage subdb conflict resolution in the aggregate, it is best to avoid using
      * this separatora elsewhere. */
-    public static final String SUBDB_KEY_SEP = ":";
+    public static final String SUBDB_KEY_SEP = "!";
 
     /**
      * Returns the version at which this database was last synced.

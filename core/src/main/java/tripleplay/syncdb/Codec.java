@@ -41,30 +41,30 @@ public interface Codec<T>
     /** A codec for ints. */
     Codec<Integer> INT = new Codec<Integer>() {
         public String encode (Integer value) {
-            return String.valueOf(value);
+            return Base90.encodeInt(value);
         }
         public Integer decode (String data) {
-            return Integer.parseInt(data);
+            return Base90.decodeInt(data);
         }
     };
 
     /** A codec for longs. */
     Codec<Long> LONG = new Codec<Long>() {
         public String encode (Long value) {
-            return String.valueOf(value);
+            return Base90.encodeLong(value);
         }
         public Long decode (String data) {
-            return Long.parseLong(data);
+            return Base90.decodeLong(data);
         }
     };
 
-    /** A codec for booleans. Encodes to the string {@code true} or {@code false}. */
+    /** A codec for booleans. Encodes to the string {@code t} or {@code f}. */
     Codec<Boolean> BOOLEAN = new Codec<Boolean>() {
         public String encode (Boolean value) {
-            return String.valueOf(value);
+            return value ? "t" : "f";
         }
         public Boolean decode (String data) {
-            return Boolean.parseBoolean(data);
+            return "t".equals(data);
         }
     };
 
