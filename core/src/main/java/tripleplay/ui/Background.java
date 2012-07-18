@@ -208,7 +208,8 @@ public abstract class Background
         @Override public void addTo (GroupLayer parent, float x, float y, float depthAdjust) {
             for (Layer layer : _layers) {
                 layer.setDepth(BACKGROUND_DEPTH + depthAdjust);
-                parent.addAt(layer, x, y);
+                layer.transform().translate(x, y); // adjust any existing transform
+                parent.add(layer);
             }
         }
         @Override public void destroy () {
