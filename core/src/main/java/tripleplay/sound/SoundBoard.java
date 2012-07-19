@@ -175,7 +175,6 @@ public class SoundBoard
         public Fader (Sound sound) {
             _sound = sound;
             _start = _sound.volume();
-            System.err.println("Fading from " + _start);
         }
 
         public boolean update (float delta) {
