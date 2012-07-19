@@ -378,12 +378,12 @@ public abstract class Element<T extends Element<T>>
      * Configures the size of this widget.
      */
     protected T setSize (float width, float height) {
-        if (_size.width == width && _size.height == height) return asT(); // NOOP
+        boolean changed = _size.width != width || _size.height != height;
         _size.setSize(width, height);
         // if we have a cached preferred size and this size differs from it, we need to clear our
         // layout data as it may contain computations specific to our preferred size
         if (_preferredSize != null && !_size.equals(_preferredSize)) clearLayoutData();
-        invalidate();
+        if (changed) invalidate();
         return asT();
     }
 
