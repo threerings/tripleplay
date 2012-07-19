@@ -11,7 +11,7 @@ package tripleplay.syncdb;
 public class Base90
 {
     public static String encodeInt (int value) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (value < 0) {
             buf.append(NEG_MARKER);
             value -= Integer.MIN_VALUE;
@@ -39,7 +39,7 @@ public class Base90
     }
 
     public static String encodeLong (long value) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (value < 0) {
             buf.append(NEG_MARKER);
             value -= Long.MIN_VALUE;
