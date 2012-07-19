@@ -24,6 +24,7 @@ import react.Slot;
 import react.Value;
 
 import playn.core.Asserts;
+import playn.core.Platform;
 import playn.core.Storage;
 
 import static tripleplay.syncdb.Log.log;
@@ -82,6 +83,7 @@ public abstract class SyncDB
      */
     public void noteSync (int version) {
         _mods.clear();
+        flushMods();
         updateVersion(version);
     }
 
@@ -122,11 +124,13 @@ public abstract class SyncDB
                                     // to the latest synced value, so clear the mod flag
             }
         }
+        flushMods();
         updateVersion(version);
     }
 
-    protected SyncDB (Storage storage) {
-        _storage = storage;
+    protected SyncDB (Platform platform) {
+        _platform = platform;
+        _storage = platform.storage();
         _version = get(SYNC_VERS_KEY, 0, Codec.INT);
         // read the current unsynced key set
         _mods = sget(SYNC_MODS_KEY, Codec.STRING);
@@ -406,7 +410,20 @@ public abstract class SyncDB
     }
 
     protected void noteModified (String name) {
-        _mods.add(name);
+        if (_mods.add(name)) queueFlushMods();
+    }
+
+    protected void flushMods () {
+        sset(SYNC_MODS_KEY, _mods, Codec.STRING);
+    }
+
+    protected void queueFlushMods () {
+        if (_flushQueued) return;
+        _flushQueued = true;
+        _platform.invokeLater(new Runnable() { public void run () {
+            flushMods();
+            _flushQueued = false;
+        }});
     }
 
     /** Manages merges and updates to database properties. */
@@ -452,16 +469,20 @@ public abstract class SyncDB
                 _storage.removeItem(key);
                 _mods.remove(key);
             }
+            flushMods();
         }
 
         protected String _dbpre;
     }
 
+    protected final Platform _platform;
     protected final Storage _storage;
+
     protected final Map<String,Property> _props = new HashMap<String,Property>();
     protected final Map<String,SubDB> _subdbs = new HashMap<String,SubDB>();
     protected final Set<String> _mods;
     protected int _version;
+    protected boolean _flushQueued;
 
     protected static final String SYNC_VERS_KEY = "syncv";
     protected static final String SYNC_MODS_KEY = "syncm";

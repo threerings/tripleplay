@@ -12,7 +12,9 @@ import react.RMap;
 import react.RSet;
 import react.Value;
 
+import playn.core.Platform;
 import playn.core.Storage;
+import playn.core.StubPlatform;
 import playn.core.util.Callback;
 
 import com.google.common.collect.ImmutableMap;
@@ -40,15 +42,15 @@ public class SyncDBTest
             "maxMap", Codec.STRING, Codec.INT, Resolver.INTMAX);
 
         public TestDB () {
-            this(testStorage());
+            this(testPlatform());
         }
 
-        public TestDB (Storage storage) {
-            super(storage);
+        public TestDB (Platform platform) {
+            super(platform);
         }
 
         public TestDB clone () {
-            return new TestDB(_storage);
+            return new TestDB(_platform);
         }
 
         public void assertEquals (TestDB other) {
@@ -252,24 +254,7 @@ public class SyncDBTest
         };
     }
 
-    protected static Storage testStorage () {
-        return new Storage() {
-            public void setItem(String key, String data) throws RuntimeException {
-                _data.put(key, data);
-            }
-            public void removeItem(String key) {
-                _data.remove(key);
-            }
-            public String getItem(String key) {
-                return _data.get(key);
-            }
-            public Iterable<String> keys() {
-                return _data.keySet();
-            }
-            public boolean isPersisted() {
-                return true;
-            }
-            protected final Map<String,String> _data = new HashMap<String,String>();
-        };
+    protected static Platform testPlatform () {
+        return new StubPlatform();
     }
 }
