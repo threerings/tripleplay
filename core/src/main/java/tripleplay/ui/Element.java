@@ -361,8 +361,15 @@ public abstract class Element<T extends Element<T>>
      */
     protected IDimension preferredSize (float hintX, float hintY) {
         if (_preferredSize == null) {
-            _preferredSize = computeSize(hintX, hintY);
-            if (_constraint != null) _constraint.adjustPreferredSize(_preferredSize, hintX, hintY);
+            Dimension psize = computeSize(hintX, hintY);
+            if (_constraint != null) _constraint.adjustPreferredSize(psize, hintX, hintY);
+            // round our preferred size up to the nearest whole number; if we allow it to remain
+            // fractional, we can run into annoying layout problems where floating point rounding
+            // error causes a tiny fraction of a pixel to be shaved off of the preferred size of a
+            // text widget, causing it to wrap its text differently and hosing the layout
+            psize.width = MathUtil.iceil(psize.width);
+            psize.height = MathUtil.iceil(psize.height);
+            _preferredSize = psize;
         }
         return _preferredSize;
     }
