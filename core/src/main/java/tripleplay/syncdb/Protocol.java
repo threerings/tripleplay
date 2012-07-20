@@ -62,6 +62,7 @@ public class Protocol
                 Runnable merge = new Runnable() { public void run () {
                     db.applyDelta(rsp.version, rsp.delta);
                     if (db.hasUnsyncedChanges()) sync(db);
+                    else onCleanSync();
                 }};
                 if (db.containsMerges(rsp.delta)) {
                     onBeforeMerge(rsp.version, rsp.delta, merge);
