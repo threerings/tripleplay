@@ -10,6 +10,11 @@ import static org.junit.Assert.*;
 
 public class Base90Test
 {
+    @Test public void testZero () {
+        assertEquals(0, Base90.decodeInt(Base90.encodeInt(0)));
+        assertEquals(1, Base90.encodeInt(0).length());
+    }
+
     @Test public void testInts () {
         assertEquals(Integer.MIN_VALUE, Base90.decodeInt(Base90.encodeInt(Integer.MIN_VALUE)));
         assertEquals(Integer.MAX_VALUE, Base90.decodeInt(Base90.encodeInt(Integer.MAX_VALUE)));

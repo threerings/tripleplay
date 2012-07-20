@@ -16,10 +16,10 @@ public class Base90
             buf.append(NEG_MARKER);
             value -= Integer.MIN_VALUE;
         }
-        while (value > 0) {
+        do {
             buf.append(CHARS.charAt(value % BASE));
             value /= BASE;
-        }
+        } while (value > 0);
         return buf.toString();
     }
 
