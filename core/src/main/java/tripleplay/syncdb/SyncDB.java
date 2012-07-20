@@ -107,6 +107,15 @@ public abstract class SyncDB
      * @param delta the modifications from our local version to the latest version.
      */
     public void applyDelta (int version, Map<String,String> delta) {
+        // resolve all of the subdbs that are needed to apply these properties
+        Set<String> subDBs = new HashSet<String>();
+        for (String key : delta.keySet()) {
+            int sdidx = key.indexOf(SUBDB_KEY_SEP);
+            if (sdidx >= 0) subDBs.add(key.substring(0, sdidx));
+        }
+        if (!subDBs.isEmpty()) for (String subdb : subDBs) getSubDB(subdb);
+
+        // now apply the delta to the appropriate properties
         for (Map.Entry<String,String> entry : delta.entrySet()) {
             String name = entry.getKey();
             Property prop;
@@ -124,8 +133,20 @@ public abstract class SyncDB
                                     // to the latest synced value, so clear the mod flag
             }
         }
+
         flushMods();
         updateVersion(version);
+    }
+
+    /**
+     * Prepares this database to be melded into a pre-existing database. Resets this database's
+     * version to zero and marks all properties as modified. The database can then be synced with
+     * another database which will merge the other database into this one and then push remaining
+     * changes back up to the server. This is used to merge the database between two clients.
+     */
+    public void prepareToMeld () {
+        updateVersion(0);
+        for (Property prop : _props.values()) prop.prepareToMeld();
     }
 
     protected SyncDB (Platform platform) {
@@ -173,6 +194,9 @@ public abstract class SyncDB
             public void update (String name, String data) {
                 value.update(codec.decode(data));
             }
+            public void prepareToMeld () {
+                noteModified(name);
+            }
         });
         return value;
     }
@@ -210,6 +234,9 @@ public abstract class SyncDB
                 Set<E> sset = toSet(data, codec);
                 rset.retainAll(sset);
                 rset.addAll(sset);
+            }
+            public void prepareToMeld () {
+                noteModified(name);
             }
         });
         return rset;
@@ -255,9 +282,10 @@ public abstract class SyncDB
             @Override public V put (K key, V value) {
                 _keys.add(key);
                 String skey = skey(key);
+                String valstr = valCodec.encode(value);
                 String ovalstr = _storage.getItem(skey);
-                _storage.setItem(skey, valCodec.encode(value));
-                noteModified(skey);
+                _storage.setItem(skey, valstr);
+                if (!valstr.equals(ovalstr)) noteModified(skey);
                 return ovalstr == null ? null : valCodec.decode(ovalstr);
             }
             @Override public V remove (Object rawKey) {
@@ -355,6 +383,9 @@ public abstract class SyncDB
                 if (data == null) map.remove(skey);
                 else map.put(skey, valCodec.decode(data));
             }
+            public void prepareToMeld () {
+                for (K key : map.keySet()) noteModified(prefix + MAP_KEY_SEP + keyCodec.encode(key));
+            }
         });
         return map;
     }
@@ -430,6 +461,7 @@ public abstract class SyncDB
     protected interface Property {
         boolean merge (String name, String data);
         void update (String name, String data);
+        void prepareToMeld ();
     }
 
     /** Used to encapsulate a collection of properties associated with a particular prefix. For
