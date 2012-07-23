@@ -172,18 +172,20 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new LayoutData() {
-            @Override public Dimension computeSize (float hintX, float hintY) {
-                return _layout.computeSize(Elements.this, hintX, hintY);
-            }
+        return new ElementsLayoutData();
+    }
 
-            @Override public void layout (float left, float top, float width, float height) {
-                // layout our children
-                _layout.layout(Elements.this, left, top, width, height);
-                // layout is only called as part of revalidation, so now we validate our children
-                for (Element<?> child : _children) child.validate();
-            }
-        };
+    protected class ElementsLayoutData extends LayoutData {
+        @Override public Dimension computeSize (float hintX, float hintY) {
+            return _layout.computeSize(Elements.this, hintX, hintY);
+        }
+
+        @Override public void layout (float left, float top, float width, float height) {
+            // layout our children
+            _layout.layout(Elements.this, left, top, width, height);
+            // layout is only called as part of revalidation, so now we validate our children
+            for (Element<?> child : _children) child.validate();
+        }
     }
 
     protected final Layout _layout;
