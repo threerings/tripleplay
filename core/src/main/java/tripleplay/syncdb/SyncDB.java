@@ -290,7 +290,7 @@ public abstract class SyncDB
             }
             @Override public V remove (Object rawKey) {
                 String ovalue = _storage.getItem(skey(rawKey));
-                _keys.remove(rawKey);
+                _keys.remove(rawKey); // this triggers a noteModified
                 return (ovalue == null) ? null : valCodec.decode(ovalue);
             }
 
