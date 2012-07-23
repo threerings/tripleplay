@@ -27,10 +27,12 @@ public class ProtocolTest
         out.writeInt(42);
         out.writeString("two");
         out.writeString("");
+        out.writeString(null);
         Protocol.PayloadReader in = new Protocol.PayloadReader(out.payload());
         assertEquals("one", in.readString());
         assertEquals(42, in.readInt());
         assertEquals("two", in.readString());
         assertEquals("", in.readString());
+        assertTrue(null == in.readString());
     }
 }

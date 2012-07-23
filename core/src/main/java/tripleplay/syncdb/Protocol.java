@@ -174,7 +174,7 @@ public class Protocol
 
         public String readString () {
             int length = readInt();
-            return _payload.substring(_pos, _pos += length);
+            return (length == Short.MAX_VALUE) ? null : _payload.substring(_pos, _pos += length);
         }
 
         protected final String _payload;
@@ -189,7 +189,10 @@ public class Protocol
         }
 
         public void writeString (String value) {
-            writeInt(value.length());
+            Asserts.checkArgument(value == null || value.length() < Short.MAX_VALUE,
+                                  "Strings must be less than " + Short.MAX_VALUE + " chars.");
+            int length = (value == null) ? Short.MAX_VALUE : value.length();
+            writeInt(length);
             _payload.append(value);
         }
 
