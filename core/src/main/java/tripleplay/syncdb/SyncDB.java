@@ -492,8 +492,8 @@ public abstract class SyncDB
             return _dbpre + SUBDB_KEY_SEP + name;
         }
 
-        /** Removes all of this subdb's properties from the client's persistent storage, and
-         * removes any pending sync requests for properties of this subdb. */
+        /** Removes all of this subdb's properties from the client's persistent storage. Removes
+         * any pending sync requests for properties of this subdb. Clears the subdb object. */
         protected void purge () {
             String keyPrefix = _dbpre + SUBDB_KEY_SEP;
             for (String key : _storage.keys()) {
@@ -502,6 +502,7 @@ public abstract class SyncDB
                 _mods.remove(key);
             }
             flushMods();
+            _subdbs.remove(_dbpre);
         }
 
         protected String _dbpre;
