@@ -61,7 +61,7 @@ public class Timer
         while (root.next != null && root.next.nextExpire <= now) {
             Action act = root.next;
             if (!act.cancelled()) {
-                execute(act);
+                execute(act.action);
                 if (act.repeatMillis == 0) {
                     act.cancel();
                 } else {
@@ -72,9 +72,9 @@ public class Timer
         }
     }
 
-    protected void execute (Action act) {
+    protected void execute (Runnable runnable) {
         try {
-            act.action.run();
+            runnable.run();
         } catch (Exception e) {
             PlayN.log().warn("Action failed", e);
         }
