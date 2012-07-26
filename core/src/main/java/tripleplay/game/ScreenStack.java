@@ -245,6 +245,23 @@ public abstract class ScreenStack
     }
 
     /**
+     * Returns the top screen on the stack, or null if the stack contains no screens.
+     */
+    public Screen top () {
+        return _screens.isEmpty() ? null : _screens.get(0);
+    }
+
+    /**
+     * Searches from the top-most screen to the bottom-most screen for a screen that matches the
+     * predicate, returning the first matching screen. {@code null} is returned if no matching
+     * screen is found.
+     */
+    public Screen find (Predicate pred) {
+        for (Screen screen : _screens) if (pred.apply(screen)) return screen;
+        return null;
+    }
+
+    /**
      * Updates the currently visible screen. A screen stack client should call this method from
      * {@link Game#update}.
      */
@@ -268,10 +285,6 @@ public abstract class ScreenStack
 
     protected Transition defaultPopTransition () {
         return NOOP;
-    }
-
-    protected Screen top () {
-        return _screens.get(0);
     }
 
     protected void add (Screen screen) {
