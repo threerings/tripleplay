@@ -118,8 +118,8 @@ public class Velocity
             initVelocity(_vel);
             float scale = graphics().ctx().scale.factor;
             // TODO: account for device orientation
-            data[start + ParticleBuffer.VEL_X] += _vel.x * scale;
-            data[start + ParticleBuffer.VEL_Y] += _vel.y * scale;
+            data[start + ParticleBuffer.VEL_X] = _vel.x * scale;
+            data[start + ParticleBuffer.VEL_Y] = _vel.y * scale;
         }
         protected abstract void initVelocity (Vector vel);
         protected final Vector _vel = new Vector();
