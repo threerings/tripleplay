@@ -197,9 +197,11 @@ public class Protocol
         public void writeString (String value) {
             Asserts.checkArgument(value == null || value.length() < Short.MAX_VALUE,
                                   "Strings must be less than " + Short.MAX_VALUE + " chars.");
-            int length = (value == null) ? Short.MAX_VALUE : value.length();
-            writeInt(length);
-            _payload.append(value);
+            if (value == null) writeInt(Short.MAX_VALUE);
+            else {
+                writeInt(value.length());
+                _payload.append(value);
+            }
         }
 
         public String payload () {
