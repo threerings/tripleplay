@@ -77,6 +77,9 @@ public class Protocol
 
     /** Encapsulates a sync request from the client. */
     public static class Request {
+        /** The version of {@link Protocol} in use by the client. */
+        public final int protocolVersion = protocolVersion();
+
         /** The latest version with which the client has synced. */
         public final int version;
 
@@ -92,6 +95,9 @@ public class Protocol
 
     /** Encapsualtes a response from the server. */
     public static class Response {
+        /** The version of {@link Protocol} in use by the client. */
+        public final int protocolVersion = protocolVersion();
+
         /** The latest server version. */
         public final int version;
 
@@ -219,6 +225,7 @@ public class Protocol
     /** Encodes a client request into a compact string format. */
     public static String encodeRequest (Request req) {
         PayloadWriter out = new PayloadWriter();
+        out.writeInt(req.protocolVersion);
         out.writeInt(req.version);
         for (Map.Entry<String,String> entry : req.delta.entrySet()) {
             out.writeString(entry.getKey());
@@ -231,10 +238,15 @@ public class Protocol
     public static Request decodeRequest (String payload) {
         PayloadReader in = new PayloadReader(payload);
         try {
+            int protocolVersion = in.readInt();
+            if (protocolVersion != 1) throw new UnsupportedOperationException(
+                "Unknown protocol version " + protocolVersion);
+
             int version = in.readInt();
             Map<String,String> delta = new HashMap<String,String>();
             while (!in.atEOF()) delta.put(in.readString(), in.readString());
             return new Request(version, delta);
+
         } catch (Exception e) {
             throw new RuntimeException("Error decoding request: " + payload, e);
         }
@@ -243,6 +255,7 @@ public class Protocol
     /** Encodes a server response into a compact string format. */
     public static String encodeResponse (Response rsp) {
         PayloadWriter out = new PayloadWriter();
+        out.writeInt(rsp.protocolVersion);
         out.writeInt(rsp.version);
         out.writeInt(rsp.cleanSync ? 1 : 0);
         for (Map.Entry<String,String> entry : rsp.delta.entrySet()) {
@@ -256,15 +269,29 @@ public class Protocol
     public static Response decodeResponse (String payload) {
         PayloadReader in = new PayloadReader(payload);
         try {
+            int protocolVersion = in.readInt();
+            if (protocolVersion != 1) throw new UnsupportedOperationException(
+                "Unknown protocol version " + protocolVersion);
+
             int version = in.readInt();
             boolean cleanSync = in.readInt() == 1;
             if (cleanSync) return new Response(version);
             Map<String,String> delta = new HashMap<String,String>();
             while (!in.atEOF()) delta.put(in.readString(), in.readString());
             return new Response(version, delta);
+
         } catch (Exception e) {
             throw new RuntimeException("Error decoding response: " + payload, e);
         }
+    }
+
+    /**
+     * Returns the current version of the protocol code. This is used to handle backwards
+     * compatibility in the unlikely event that this very simple protocol evolves. We can't rely on
+     * clients to update themselves, so we may need to bridge the gap on the server.
+     */
+    public static int protocolVersion () {
+        return 1;
     }
 
     /** Used to encode the final chunk between 0 and 46. */
