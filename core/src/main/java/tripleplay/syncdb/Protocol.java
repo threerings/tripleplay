@@ -173,8 +173,14 @@ public class Protocol
         }
 
         public String readString () {
-            int length = readInt();
-            return (length == Short.MAX_VALUE) ? null : _payload.substring(_pos, _pos += length);
+            int length = readInt(), start = _pos;
+            if (length == Short.MAX_VALUE) return null;
+            try {
+                return _payload.substring(start, _pos += length);
+            } catch (Exception e) {
+                throw new RuntimeException(
+                    "Invalid readString state [start=" + start + ", length=" + length + "]", e);
+            }
         }
 
         protected final String _payload;
