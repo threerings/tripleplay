@@ -21,7 +21,14 @@ public class Root extends Elements<Root>
      * Sizes this root element to its preferred size.
      */
     public Root pack () {
-        IDimension psize = preferredSize(0, 0);
+        return pack(0, 0);
+    }
+
+    /**
+     * Sizes this element to its preferred size, computed using the supplied hints.
+     */
+    public Root pack (float widthHint, float heightHint) {
+        IDimension psize = preferredSize(widthHint, heightHint);
         setSize(psize.width(), psize.height());
         return this;
     }
