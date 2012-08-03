@@ -325,17 +325,17 @@ public abstract class SyncDB
                 return DBUtil.mapKey(prefix, key, keyCodec);
             }
 
-            protected final Set<K> _keys = new HashSet<K>(sget(prefix + "_keys", keyCodec)) {
+            protected final Set<K> _keys = new HashSet<K>(sget(mapKeysKey(prefix), keyCodec)) {
                 @Override public boolean add (K elem) {
                     if (!super.add(elem)) return false;
-                    sset(prefix + "_keys", this, keyCodec);
+                    sset(mapKeysKey(prefix), this, keyCodec);
                     return true;
                 }
                 @Override public boolean remove (Object elem) {
                     if (!super.remove(elem)) return false;
                     @SuppressWarnings("unchecked") K key = (K)elem;
                     removeStorage(key);
-                    sset(prefix + "_keys", this, keyCodec);
+                    sset(mapKeysKey(prefix), this, keyCodec);
                     return true;
                 }
                 @Override public Iterator<K> iterator () {
@@ -441,6 +441,11 @@ public abstract class SyncDB
         boolean merge (String name, String data);
         void update (String name, String data);
         void prepareToMeld ();
+    }
+
+    /** Returns the key used to store the keys for a map with the specified prefix. */
+    protected static String mapKeysKey (String mapPrefix) {
+        return mapPrefix + "_keys";
     }
 
     /** Used to encapsulate a collection of properties associated with a particular prefix. For
