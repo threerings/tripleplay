@@ -45,14 +45,6 @@ import static tripleplay.syncdb.Log.log;
  */
 public abstract class SyncDB
 {
-    /** The separator used in a map key. This character must not appear in a normal key. */
-    public static final String MAP_KEY_SEP = "~";
-
-    /** The separator used in a subdb key. This character may appear in a normal key, but if the
-     * client plans to manage subdb conflict resolution in the aggregate, it is best to avoid using
-     * this separatora elsewhere. */
-    public static final String SUBDB_KEY_SEP = "!";
-
     /**
      * Returns the version at which this database was last synced.
      */
@@ -110,8 +102,8 @@ public abstract class SyncDB
         // resolve all of the subdbs that are needed to apply these properties
         Set<String> subDBs = new HashSet<String>();
         for (String key : delta.keySet()) {
-            int sdidx = key.indexOf(SUBDB_KEY_SEP);
-            if (sdidx >= 0) subDBs.add(key.substring(0, sdidx));
+            String sdb = DBUtil.subDB(key);
+            if (key != null) subDBs.add(sdb);
         }
         if (!subDBs.isEmpty()) for (String subdb : subDBs) getSubDB(subdb);
 
@@ -119,7 +111,7 @@ public abstract class SyncDB
         for (Map.Entry<String,String> entry : delta.entrySet()) {
             String name = entry.getKey();
             Property prop;
-            int pidx = name.indexOf(MAP_KEY_SEP);
+            int pidx = name.indexOf(DBUtil.MAP_KEY_SEP);
             if (pidx == -1) prop = _props.get(name);
             else prop = _props.get(name.substring(0, pidx));
             if (prop == null) {
@@ -226,12 +218,12 @@ public abstract class SyncDB
         };
         _props.put(name, new Property() {
             public boolean merge (String name, String data) {
-                Set<E> sset = toSet(data, codec);
+                Set<E> sset = DBUtil.decodeSet(data, codec);
                 resolver.resolve(rset, sset);
                 return rset.equals(sset);
             }
             public void update (String name, String data) {
-                Set<E> sset = toSet(data, codec);
+                Set<E> sset = DBUtil.decodeSet(data, codec);
                 rset.retainAll(sset);
                 rset.addAll(sset);
             }
@@ -330,7 +322,7 @@ public abstract class SyncDB
 
             protected String skey (Object rawKey) {
                 @SuppressWarnings("unchecked") K key = (K)rawKey;
-                return prefix + MAP_KEY_SEP + keyCodec.encode(key);
+                return DBUtil.mapKey(prefix, key, keyCodec);
             }
 
             protected final Set<K> _keys = new HashSet<K>(sget(prefix + "_keys", keyCodec)) {
@@ -384,7 +376,7 @@ public abstract class SyncDB
                 else map.put(skey, valCodec.decode(data));
             }
             public void prepareToMeld () {
-                for (K key : map.keySet()) noteModified(prefix + MAP_KEY_SEP + keyCodec.encode(key));
+                for (K key : map.keySet()) noteModified(DBUtil.mapKey(prefix, key, keyCodec));
             }
         });
         return map;
@@ -416,24 +408,11 @@ public abstract class SyncDB
     }
 
     protected <E> void sset (String name, Set<E> set, Codec<E> codec) {
-        StringBuilder buf = new StringBuilder();
-        for (E elem : set) {
-            if (buf.length() > 0) buf.append("\t");
-            buf.append(codec.encode(elem));
-        }
-        _storage.setItem(name, buf.toString());
+        _storage.setItem(name, DBUtil.encodeSet(set, codec));
     }
 
     protected <E> Set<E> sget (String name, Codec<E> codec) {
-        return toSet(_storage.getItem(name), codec);
-    }
-
-    protected <E> Set<E> toSet (String data, Codec<E> codec) {
-        Set<E> set = new HashSet<E>();
-        if (data != null && data.length() > 0) {
-            for (String edata : data.split("\t")) set.add(codec.decode(edata));
-        }
-        return set;
+        return DBUtil.decodeSet(_storage.getItem(name), codec);
     }
 
     protected void updateVersion (int version) {
@@ -489,13 +468,13 @@ public abstract class SyncDB
         }
 
         protected String key (String name) {
-            return _dbpre + SUBDB_KEY_SEP + name;
+            return DBUtil.subDBKey(_dbpre, name);
         }
 
         /** Removes all of this subdb's properties from the client's persistent storage. Removes
          * any pending sync requests for properties of this subdb. Clears the subdb object. */
         protected void purge () {
-            String keyPrefix = _dbpre + SUBDB_KEY_SEP;
+            String keyPrefix = DBUtil.subDBKey(_dbpre, "");
             for (String key : _storage.keys()) {
                 if (!key.startsWith(keyPrefix)) continue;
                 _storage.removeItem(key);
