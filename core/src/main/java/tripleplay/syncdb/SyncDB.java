@@ -103,7 +103,7 @@ public abstract class SyncDB
         Set<String> subDBs = new HashSet<String>();
         for (String key : delta.keySet()) {
             String sdb = DBUtil.subDB(key);
-            if (key != null) subDBs.add(sdb);
+            if (sdb != null) subDBs.add(sdb);
         }
         if (!subDBs.isEmpty()) for (String subdb : subDBs) getSubDB(subdb);
 
