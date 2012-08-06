@@ -40,7 +40,8 @@ public class SimpleStyles
                 Style.BACKGROUND.is(Background.roundRect(bgColor, 5, brColor, 2).inset(3, 2, 0, 3))).
             // flip ul and br to make Field appear recessed
             add(Field.class,
-                Style.BACKGROUND.is(Background.beveled(0xFFFFFFFF, brColor, ulColor).inset(5))).
+                Style.BACKGROUND.is(Background.beveled(0xFFFFFFFF, brColor, ulColor).inset(5)),
+                Style.HALIGN.left).
             add(Field.class, Style.Mode.DISABLED,
                 Style.BACKGROUND.is(Background.beveled(0xFFCCCCCC, brColor, ulColor).inset(5)));
     }
