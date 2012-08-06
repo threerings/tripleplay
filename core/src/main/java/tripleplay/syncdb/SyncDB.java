@@ -109,7 +109,7 @@ public abstract class SyncDB
 
         // now apply the delta to the appropriate properties
         for (Map.Entry<String,String> entry : delta.entrySet()) {
-            String name = entry.getKey();
+            String name = entry.getKey(), value = entry.getValue();
             Property prop;
             int pidx = name.indexOf(DBUtil.MAP_KEY_SEP);
             if (pidx == -1) prop = _props.get(name);
@@ -117,9 +117,17 @@ public abstract class SyncDB
             if (prop == null) {
                 log.warning("No local property defined", "name", name);
             } else if (_mods.contains(name)) {
-                if (prop.merge(name, entry.getValue())) _mods.remove(name);
+                try {
+                    if (prop.merge(name, value)) _mods.remove(name);
+                } catch (Exception e) {
+                    log.warning("Property merge fail", "name", name, "value", value, e);
+                }
             } else {
-                prop.update(name, entry.getValue());
+                try {
+                    prop.update(name, value);
+                } catch (Exception e) {
+                    log.warning("Property update fail", "name", name, "value", value, e);
+                }
                 _mods.remove(name); // updating will cause the property to be marked as locally
                                     // changed, but it's not really locally changed, it's been set
                                     // to the latest synced value, so clear the mod flag
