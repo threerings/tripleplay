@@ -211,22 +211,18 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float twidth = textWidth(), theight = textHeight();
             if (twidth <= 0 || theight <= 0) return;
 
-            // make sure our canvas layer is big enough to hold our text
-            _tglyph.prepare(twidth, theight);
+            // create a canvas no larger than the text, constrained to the available size
+            float tgwidth = Math.min(availWidth, twidth), tgheight = Math.min(availHeight, theight);
+            _tglyph.prepare(tgwidth, tgheight);
 
             // we do some extra fiddling here because one may want to constrain the height of a
             // button such that the text is actually cut off on the top and/or bottom because fonts
             // may have lots of whitespace above or below and you're trying to squeeze the text
             // snugly into your button
-            float oy = valign.offset(theight, availHeight);
-            if (oy >= 0) {
-                renderer.render(_tglyph.canvas(), text, color, 0, 0);
-            } else {
-                renderer.render(_tglyph.canvas(), text, color, 0, oy);
-                oy = 0;
-            }
-            _tglyph.layer().setTranslation(MathUtil.ifloor(tx + halign.offset(twidth, availWidth)),
-                                           MathUtil.ifloor(ty + oy));
+            float ox = MathUtil.ifloor(halign.offset(twidth, availWidth));
+            float oy = MathUtil.ifloor(valign.offset(theight, availHeight));
+            renderer.render(_tglyph.canvas(), text, color, Math.min(ox, 0), Math.min(oy, 0));
+            _tglyph.layer().setTranslation(tx + Math.max(ox, 0), ty + Math.max(oy, 0));
         }
 
         protected float textWidth () { return renderer.adjustWidth(text.width()); }
