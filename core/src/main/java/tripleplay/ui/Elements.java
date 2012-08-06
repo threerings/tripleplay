@@ -145,21 +145,23 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
 
     protected void didAdd (Element<?> child) {
         layer.add(child.layer);
-        if (isAdded()) child.wasAdded(this);
+        child.wasParented(this);
+        if (isAdded()) child.wasAdded();
         _childAdded.emit(child);
     }
 
     protected void didRemove (Element<?> child, boolean destroy) {
         layer.remove(child.layer);
         if (isAdded()) child.wasRemoved();
+        child.wasUnparented();
         if (destroy) child.layer.destroy();
         _childRemoved.emit(child);
     }
 
-    @Override protected void wasAdded (Elements<?> parent) {
-        super.wasAdded(parent);
+    @Override protected void wasAdded () {
+        super.wasAdded();
         for (Element<?> child : _children) {
-            child.wasAdded(this);
+            child.wasAdded();
         }
     }
 

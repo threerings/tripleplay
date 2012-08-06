@@ -254,24 +254,42 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Called when this element (or its parent element) was added to the interface hierarchy.
+     * Called when this element is added to a parent element. If the parent element is already
+     * added to a hierarchy with a {@link Root}, this will immediately be followed by a call to
+     * {@link #wasAdded}, otherwise the {@link #wasAdded} call will come later when the parent is
+     * added to a root.
      */
-    protected void wasAdded (Elements<?> parent) {
+    protected void wasParented (Elements<?> parent) {
         _parent = parent;
+    }
+
+    /**
+     * Called when this element is removed from its direct parent. If the element was removed from
+     * a parent that was connected to a {@link Root}, this will have been immediately preceded by a
+     * call to {@link #wasRemoved}. Otherwise no call to {@link #wasRemoved} will be made.
+     */
+    protected void wasUnparented () {
+        _parent = null;
+    }
+
+    /**
+     * Called when this element (or its parent element) was added to an interface hierarchy
+     * connected to a {@link Root}. The element will subsequently be validated and displayed
+     * (assuming it's visible).
+     */
+    protected void wasAdded () {
         if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.TRUE);
     }
 
     /**
      * Called when this element (or its parent element) was removed from the interface hierarchy.
-     * Also, if the element was removed directly from its parent, then the layer is orphaned
-     * prior to this call. Furthermore, if the element is being destroyed (see
-     * {@link Elements#destroy(Element)} and other methods), the destruction of the layer will
-     * occur <b>after</b> this method returns. This allows subclasses to manage resources as
-     * needed. <p><b>NOTE</b>: the base class method must <b>always</b> be called for correct
-     * operation.</p>
+     * Also, if the element was removed directly from its parent, then the layer is orphaned prior
+     * to this call. Furthermore, if the element is being destroyed (see {@link Elements#destroy}
+     * and other methods), the destruction of the layer will occur <b>after</b> this method
+     * returns. This allows subclasses to manage resources as needed. <p><b>NOTE</b>: the base
+     * class method must <b>always</b> be called for correct operation.</p>
      */
     protected void wasRemoved () {
-        _parent = null;
         if (_bginst != null) {
             _bginst.destroy();
             _bginst = null;
