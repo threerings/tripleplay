@@ -205,6 +205,15 @@ public class TimerTest
         assertEquals(1, ran2.ranCount);
     }
 
+    @Test
+    public void testInternalCancel () {
+        final InternalCanceler ran1 = new InternalCanceler();
+        Timer t = new Timer(0);
+        ran1.handle = t.every(2, ran1);
+        for (int ii = 0; ii < 7; ii++) t.update(ii + 1);
+        assertEquals(1, ran1.ranCount);
+    }
+
     protected static class Counter implements Runnable
     {
         public int ranCount;
@@ -250,6 +259,14 @@ public class TimerTest
             timer.update(1);
             timer.update(2);
             assertEquals(2, ran);
+        }
+    }
+
+    protected static class InternalCanceler extends Counter
+    {
+        @Override public void run () {
+            super.run();
+            cancel();
         }
     }
 }
