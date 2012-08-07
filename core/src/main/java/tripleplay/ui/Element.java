@@ -279,6 +279,7 @@ public abstract class Element<T extends Element<T>>
      */
     protected void wasAdded () {
         if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.TRUE);
+        invalidate();
     }
 
     /**
