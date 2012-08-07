@@ -387,6 +387,13 @@ public abstract class SyncDB
                 for (K key : map.keySet()) noteModified(DBUtil.mapKey(prefix, key, keyCodec));
             }
         });
+        // register a property for our keys set which is a NOOP, as updates to our values will
+        // automatically keep our keys in sync
+        _props.put(mapKeysKey(prefix), new Property() {
+            public boolean merge (String name, String data) { return true; } // noop
+            public void update (String name, String data) {} // noop
+            public void prepareToMeld () {} // noop
+        });
         return map;
     }
 
