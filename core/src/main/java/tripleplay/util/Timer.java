@@ -64,7 +64,7 @@ public class Timer
                 execute(act.action);
                 if (act.repeatMillis == 0) {
                     act.cancel();
-                } else {
+                } else if (!act.cancelled()) {
                     act.nextExpire += act.repeatMillis;
                     root.next = insert(act, act.next);
                 }
