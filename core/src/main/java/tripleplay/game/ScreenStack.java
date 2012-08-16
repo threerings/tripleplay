@@ -15,6 +15,7 @@ import static playn.core.PlayN.graphics;
 import tripleplay.game.trans.FlipTransition;
 import tripleplay.game.trans.PageTurnTransition;
 import tripleplay.game.trans.SlideTransition;
+// import static tripleplay.game.Log.log;
 
 /**
  * Manages a stack of screens. The stack supports useful manipulations: pushing a new screen onto
@@ -150,6 +151,8 @@ public abstract class ScreenStack
      * all screens.
      */
     public void popTo (Screen newTopScreen, Transition trans) {
+        // if the desired top screen is already the top screen, then NOOP
+        if (top() == newTopScreen) return;
         // remove all intervening screens
         while (_screens.size() > 1 && _screens.get(1) != newTopScreen) {
             justRemove(_screens.get(1));
@@ -175,6 +178,7 @@ public abstract class ScreenStack
             addAndShow(screen);
         } else {
             final Screen otop = _screens.remove(0);
+            // log.info("Removed " + otop + ", new top " + top());
             transition(new Transitor(otop, screen, trans) {
                 protected void onComplete () {
                     hide(otop);
@@ -203,6 +207,7 @@ public abstract class ScreenStack
 
         if (_screens.size() > 1) {
             final Screen otop = _screens.remove(0);
+            // log.info("Removed " + otop + ", new top " + top());
             transition(new Untransitor(otop, top(), trans) {
                 protected void onComplete () {
                     hide(otop);
@@ -236,7 +241,8 @@ public abstract class ScreenStack
                 Screen screen = iter.next();
                 if (pred.apply(screen)) {
                     iter.remove();
-                    justRemove(screen);
+                    wasRemoved(screen);
+                    // log.info("Pred removed " + screen + ", new top " + top());
                 }
             }
         }
@@ -292,6 +298,7 @@ public abstract class ScreenStack
             throw new IllegalArgumentException("Cannot add screen to stack twice.");
         }
         _screens.add(0, screen);
+        // log.info("Added " + screen + ", new top " + top());
         try { screen.wasAdded(); }
         catch (RuntimeException e) { handleError(e); }
     }
@@ -316,10 +323,11 @@ public abstract class ScreenStack
     protected boolean justRemove (Screen screen) {
         boolean removed = _screens.remove(screen);
         if (removed) wasRemoved(screen);
+        // log.info("Just removed " + screen + ", new top " + top());
         return removed;
     }
 
-    protected void wasRemoved(Screen screen) {
+    protected void wasRemoved (Screen screen) {
         try { screen.wasRemoved(); }
         catch (RuntimeException e) { handleError(e); }
     }
