@@ -1,3 +1,8 @@
+//
+// Triple Play - utilities for use in PlayN-based games
+// Copyright (c) 2011-2012, Three Rings Design, Inc. - All rights reserved.
+// http://github.com/threerings/tripleplay/blob/master/LICENSE
+
 package tripleplay.flump;
 
 import java.util.Collections;
@@ -8,19 +13,15 @@ import java.util.ArrayList;
 import playn.core.Image;
 import playn.core.Json;
 import playn.core.Layer;
-import playn.core.PlayN;
 import playn.core.ResourceCallback;
+import static playn.core.PlayN.*;
 
 public class Library
 {
-    /**
-     * The original frame rate of movies in this library.
-     */
+    /** The original frame rate of movies in this library. */
     public final float frameRate;
 
-    /**
-     * The symbols defined in this library.
-     */
+    /** The symbols defined in this library. */
     public final Map<String,Symbol> symbols;
 
     protected Library (Json.Object json, String baseDir) {
@@ -37,8 +38,7 @@ public class Library
         }
 
         for (Json.Object atlasJson : json.getArray("atlases", Json.Object.class)) {
-            Image atlas = PlayN.assets().getImage(
-                baseDir + "/" + atlasJson.getString("file"));
+            Image atlas = assets().getImage(baseDir + "/" + atlasJson.getString("file"));
             for (Json.Object textureJson : atlasJson.getArray(
                     "textures", Json.Object.class)) {
                 Texture.Symbol texture = new Texture.Symbol(textureJson, atlas);
@@ -64,11 +64,15 @@ public class Library
         }
     }
 
+    /**
+     * Loads a Library from PlayN assets.
+     * @param baseDir The base directory, containing library.json and texture atlases.
+     */
     public static void fromAssets (final String baseDir, final ResourceCallback<Library> callback) {
-        PlayN.assets().getText(baseDir + "/library.json", new ResourceCallback<String>() {
+        assets().getText(baseDir + "/library.json", new ResourceCallback<String>() {
             public void done (String text) {
                 try {
-                    callback.done(new Library(PlayN.json().parse(text), baseDir));
+                    callback.done(new Library(json().parse(text), baseDir));
                 } catch (Exception err) {
                     callback.error(err);
                 }
@@ -79,10 +83,11 @@ public class Library
         });
     }
 
+    /** Creates an instance of a symbol, or throws if the symbol name is not in this library. */
     public Instance createInstance (String symbolName) {
         Symbol symbol = symbols.get(symbolName);
         if (symbol == null) {
-            throw new RuntimeException("Missing required symbol [name=" + symbolName + "]");
+            throw new IllegalArgumentException("Missing required symbol [name=" + symbolName + "]");
         }
         return symbol.createInstance();
     }

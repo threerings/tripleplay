@@ -1,3 +1,8 @@
+//
+// Triple Play - utilities for use in PlayN-based games
+// Copyright (c) 2011-2012, Three Rings Design, Inc. - All rights reserved.
+// http://github.com/threerings/tripleplay/blob/master/LICENSE
+
 package tripleplay.flump;
 
 import java.util.ArrayList;
@@ -15,14 +20,10 @@ public class Movie
     public static class Symbol
         implements tripleplay.flump.Symbol
     {
-        /**
-         * The number of frames in this movie.
-         */
+        /** The number of frames in this movie. */
         public final int frames;
 
-        /**
-         * The layers in this movie.
-         */
+        /** The layers in this movie. */
         public final List<LayerData> layers;
 
         protected Symbol (Library lib, Json.Object json) {
@@ -90,20 +91,24 @@ public class Movie
         setFrame(nextFrame);
     }
 
+    /** The playback position, in milliseconds. */
     public float position () {
         return _position;
     }
 
+    /** Changes the playback position. */
     public void setPosition (float position) {
         if (position < 0) position = 0;
         _position = position;
         update(0); // Force the display list changes immediately
     }
 
+    /** The playback speed multiplier, defaults to 1. Larger values will play faster. */
     public float speed () {
         return _speed;
     }
 
+    /** Changes the playback speed multiplier. */
     public void setSpeed (float speed) {
         _speed = speed;
     }

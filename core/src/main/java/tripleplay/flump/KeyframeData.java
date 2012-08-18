@@ -1,3 +1,8 @@
+//
+// Triple Play - utilities for use in PlayN-based games
+// Copyright (c) 2011-2012, Three Rings Design, Inc. - All rights reserved.
+// http://github.com/threerings/tripleplay/blob/master/LICENSE
+
 package tripleplay.flump;
 
 import pythagoras.f.IPoint;
@@ -20,7 +25,7 @@ public class KeyframeData
     public final float alpha;
     public final float ease;
 
-    public KeyframeData (Json.Object json, KeyframeData prevKf) {
+    protected KeyframeData (Json.Object json, KeyframeData prevKf) {
         index = (prevKf != null) ? prevKf.index + prevKf.duration : 0;
         duration = json.getInt("duration");
         label = json.getString("label");
@@ -44,8 +49,7 @@ public class KeyframeData
         return _symbol;
     }
 
-    protected static IPoint getPoint (Json.Object json, String field, float defX, float defY)
-    {
+    protected static IPoint getPoint (Json.Object json, String field, float defX, float defY) {
         Json.TypedArray<Float> array = json.getArray(field, Float.class);
         return (array != null) ? new Point(array.get(0), array.get(1)) : new Point(defX, defY);
     }

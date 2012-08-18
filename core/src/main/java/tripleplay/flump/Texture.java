@@ -1,3 +1,8 @@
+//
+// Triple Play - utilities for use in PlayN-based games
+// Copyright (c) 2011-2012, Three Rings Design, Inc. - All rights reserved.
+// http://github.com/threerings/tripleplay/blob/master/LICENSE
+
 package tripleplay.flump;
 
 import pythagoras.f.IPoint;
@@ -6,23 +11,11 @@ import pythagoras.f.Point;
 import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.Json;
-import playn.core.PlayN;
+import static playn.core.PlayN.*;
 
 public class Texture
     implements Instance
 {
-    protected Texture (Symbol symbol) {
-        _layer = PlayN.graphics().createImageLayer(symbol.region);
-        _layer.setOrigin(-symbol.offset.x(), -symbol.offset.y());
-    }
-
-    @Override public ImageLayer layer () {
-        return _layer;
-    }
-
-    @Override public void update (float dt) {
-    }
-
     public static class Symbol
         implements tripleplay.flump.Symbol
     {
@@ -46,6 +39,18 @@ public class Texture
         }
 
         protected String _name;
+    }
+
+    protected Texture (Symbol symbol) {
+        _layer = graphics().createImageLayer(symbol.region);
+        _layer.setOrigin(-symbol.offset.x(), -symbol.offset.y());
+    }
+
+    @Override public ImageLayer layer () {
+        return _layer;
+    }
+
+    @Override public void update (float dt) {
     }
 
     protected ImageLayer _layer;
