@@ -72,7 +72,7 @@ public class Movie
         for (int ii = 0; ii < _animators.length; ++ii) {
             LayerAnimator animator = new LayerAnimator(symbol.layers.get(ii));
             _animators[ii] = animator;
-            _root.add(animator.layer);
+            _root.add(animator.content);
         }
         setFrame(1);
     }
