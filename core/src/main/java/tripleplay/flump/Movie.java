@@ -95,7 +95,9 @@ public class Movie
     }
 
     public void setPosition (float position) {
+        if (position < 0) position = 0;
         _position = position;
+        update(0); // Force the display list changes immediately
     }
 
     public float speed () {
