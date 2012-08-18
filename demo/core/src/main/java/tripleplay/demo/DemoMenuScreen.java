@@ -27,6 +27,7 @@ import tripleplay.demo.anim.*;
 import tripleplay.demo.game.*;
 import tripleplay.demo.particle.*;
 import tripleplay.demo.ui.*;
+import tripleplay.demo.flump.*;
 
 /**
  * Displays a top-level menu of our various demo screens.
@@ -46,6 +47,8 @@ public class DemoMenuScreen extends UIScreen
             new ScreensDemo(stack), null, null,
             // tripleplay.particle
             new FountainDemo(), new FireworksDemo(), null,
+            // tripleplay.flump
+            new FlumpDemo(), null, null,
         };
     }
 
@@ -115,6 +118,7 @@ public class DemoMenuScreen extends UIScreen
         "tripleplay.anim",
         "tripleplay.game",
         "tripleplay.particle",
+        "tripleplay.flump",
     };
     protected final DemoScreen[] _screens;
 
