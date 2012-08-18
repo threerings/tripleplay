@@ -20,6 +20,9 @@ public class Texture
         return _layer;
     }
 
+    @Override public void update (float dt) {
+    }
+
     public static class Symbol
         implements tripleplay.flump.Symbol
     {

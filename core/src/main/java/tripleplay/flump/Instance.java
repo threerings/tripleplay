@@ -10,5 +10,7 @@ public interface Instance
     /**
      * The layer that displays this instance.
      */
-    public Layer layer ();
+    Layer layer ();
+
+    void update (float dt);
 }
