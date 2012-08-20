@@ -68,9 +68,7 @@ public class Interface
      * Creates a root element with the specified layout and stylesheet.
      */
     public Root createRoot (Layout layout, Stylesheet sheet) {
-        Root root = new Root(this, layout, sheet);
-        _roots.add(root);
-        return root;
+        return addRoot(new Root(this, layout, sheet));
     }
 
 
@@ -81,6 +79,16 @@ public class Interface
     public Root createRoot (Layout layout, Stylesheet sheet, GroupLayer parent) {
         Root root = createRoot(layout, sheet);
         parent.add(root.layer);
+        return root;
+    }
+
+    /**
+     * Adds a root to this interface. The root must have been created with this interface and not
+     * be added to any other interfaces. Generally you should use {@link #createRoot}, but this
+     * method is exposed for callers with special needs.
+     */
+    public Root addRoot (Root root) {
+        _roots.add(root);
         return root;
     }
 
