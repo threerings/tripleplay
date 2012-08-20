@@ -73,6 +73,11 @@ public class Root extends Elements<Root>
      * Computes the preferred size of this root. In general, one should use {@link #pack} or one of
      * the related pack methods, but if one has special sizing requirements, they may wish to call
      * {@code preferredSize} directly, followed by {@link #setSize}.
+     *
+     * @param hintX the width hint (a width in which the layout will attempt to fit itself), or 0
+     * to allow the layout to use unlimited width.
+     * @param hintY the height hint (a width in which the layout will attempt to fit itself), or 0
+     * to allow the layout to use unlimited height.
      */
     @Override public IDimension preferredSize (float hintX, float hintY) {
         return super.preferredSize(hintX, hintY);
