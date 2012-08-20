@@ -33,6 +33,9 @@ import playn.core.Pointer;
  */
 public class Flicker extends Pointer.Adapter
 {
+    /** This flicker's bounds. */
+    public final float min, max;
+
     /** The current position value. */
     public float position;
 
@@ -44,8 +47,8 @@ public class Flicker extends Pointer.Adapter
      */
     public Flicker (float initial, float min, float max) {
         this.position = initial;
-        _min = min;
-        _max = max;
+        this.min = min;
+        this.max = max;
     }
 
     /** Returns the position of this flicker as an animation value. */
@@ -60,7 +63,7 @@ public class Flicker extends Pointer.Adapter
     public void update (float delta) {
         if (_vel != 0) {
             float prev = position;
-            position = MathUtil.clamp(position + _vel * delta, _min, _max);
+            position = MathUtil.clamp(position + _vel * delta, min, max);
             if (position == prev) _vel = 0; // for now stop when we hit the edge
             float prevVel = _vel;
             _vel += _accel * delta;
@@ -84,7 +87,7 @@ public class Flicker extends Pointer.Adapter
         _cur = getPosition(event);
         _curStamp = event.time();
         float delta = _cur - _start;
-        position = MathUtil.clamp(_origPos + delta, _min, _max);
+        position = MathUtil.clamp(_origPos + delta, min, max);
         _maxDelta = Math.max(Math.abs(delta), _maxDelta);
     }
 
@@ -156,8 +159,6 @@ public class Flicker extends Pointer.Adapter
     protected float minFlickDelta () {
         return 10;
     }
-
-    protected final float _min, _max;
 
     protected float _vel, _accel;
     protected float _origPos, _start, _cur, _prev;
