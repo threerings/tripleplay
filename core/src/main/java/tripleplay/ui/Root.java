@@ -69,6 +69,15 @@ public class Root extends Elements<Root>
         return this;
     }
 
+    /**
+     * Computes the preferred size of this root. In general, one should use {@link #pack} or one of
+     * the related pack methods, but if one has special sizing requirements, they may wish to call
+     * {@code preferredSize} directly, followed by {@link #setSize}.
+     */
+    @Override public IDimension preferredSize (float hintX, float hintY) {
+        return super.preferredSize(hintX, hintY);
+    }
+
     protected Root (Interface iface, Layout layout, Stylesheet sheet) {
         super(layout);
         setStylesheet(sheet);
