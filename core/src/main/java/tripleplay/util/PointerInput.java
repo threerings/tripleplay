@@ -40,8 +40,7 @@ public class PointerInput extends Input<Pointer.Listener>
         return ((PointerReactor)plistener).register(region, listener);
     }
 
-    protected class PointerReactor extends Reactor<Pointer.Listener>
-        implements Pointer.Listener {
+    protected class PointerReactor extends Reactor<Pointer.Listener> implements Pointer.Listener {
         @Override public void onPointerStart (Pointer.Event event) {
             _active = hitTest(event);
             if (_active != null) {
@@ -59,7 +58,12 @@ public class PointerInput extends Input<Pointer.Listener>
                 _active = null;
             }
         }
-
+        @Override public void onPointerCancel (Pointer.Event event) {
+            if (_active != null) {
+                _active.onPointerCancel(event);
+                _active = null;
+            }
+        }
         protected Pointer.Listener _active;
     };
 }

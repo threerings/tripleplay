@@ -33,6 +33,11 @@ public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> exte
         onRelease();
     }
 
+    @Override protected void onPointerCancel (Pointer.Event event) {
+        super.onPointerCancel(event);
+        onCancel();
+    }
+
     /** Called when the mouse is clicked on this widget. */
     protected void onPress () {
         set(Flag.SELECTED, true);
@@ -54,6 +59,15 @@ public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> exte
             set(Flag.SELECTED, false);
             invalidate();
             onClick();
+        }
+    }
+
+    /** Called when the interaction is canceled after having been pressed on this widget. This
+     * should not result in a call to {@link #onClick}. */
+    protected void onCancel () {
+        if (isSelected()) {
+            set(Flag.SELECTED, false);
+            invalidate();
         }
     }
 

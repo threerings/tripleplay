@@ -39,6 +39,9 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
             public void onPointerEnd (Pointer.Event event) {
                 Widget.this.onPointerEnd(event, event.localX(), event.localY());
             }
+            public void onPointerCancel (Pointer.Event event) {
+                Widget.this.onPointerCancel(event);
+            }
         });
     }
 
@@ -74,6 +77,15 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
      * @param y the y-coordinate of the event, translated into this element's coordinates.
      */
     protected void onPointerEnd (Pointer.Event event, float x, float y) {
+    }
+
+    /**
+     * Called when a touch that started within the bounds of this component is canceled. This
+     * should generally terminate any active interaction without triggering a click, etc.
+     *
+     * @param event the pointer event that triggered this call.
+     */
+    protected void onPointerCancel (Pointer.Event event) {
     }
 
     /**

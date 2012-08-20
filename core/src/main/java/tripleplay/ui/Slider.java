@@ -116,6 +116,8 @@ public class Slider extends Widget<Slider>
         _clicked.emit(this);
     }
 
+    // nothing to do for onPointerCancel, just let the interaction stop
+
     protected void updateThumb () {
         float thumbPct = (value.get() - _min) / _range;
         _thumb.setTranslation(_thumbLeft + _thumbRange * thumbPct, _thumbY);

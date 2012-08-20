@@ -53,6 +53,13 @@ public abstract class Dragger
     public void onDragEnd (IPoint current, IPoint start) {
     }
 
+    /**
+     * Called when the pointer interaction was canceled during a drag.
+     * @param start the point at which the drag started.
+     */
+    public void onDragCancel (IPoint start) {
+    }
+
     @Override public void onPointerStart (Pointer.Event event) {
         onDragStart(_start.set(event.x(), event.y()));
     }
@@ -63,6 +70,10 @@ public abstract class Dragger
 
     @Override public void onPointerEnd (Pointer.Event event) {
         onDragEnd(_current.set(event.x(), event.y()), _start);
+    }
+
+    @Override public void onPointerCancel (Pointer.Event event) {
+        onDragCancel(_start);
     }
 
     protected Point _start = new Point(), _current = new Point();

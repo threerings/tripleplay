@@ -40,12 +40,16 @@ public abstract class TogglableTextWidget<T extends TogglableTextWidget<T>>
         selected.update(inBounds ? !_anchorState : _anchorState);
     }
 
-    /** Called when the mouse is released after having been pressed on this widget. This should
-     * {@link #onClick} if appropriate. */
-    protected void onRelease () {
+    @Override protected void onRelease () {
+        // we explicitly don't call super here
         if (_anchorState != isSelected()) {
             onClick();
         }
+    }
+
+    @Override protected void onCancel () {
+        // we explicitly don't call super here
+        selected.update(_anchorState);
     }
 
     protected boolean _anchorState;
