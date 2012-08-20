@@ -76,7 +76,7 @@ public class Root extends Elements<Root>
      *
      * @param hintX the width hint (a width in which the layout will attempt to fit itself), or 0
      * to allow the layout to use unlimited width.
-     * @param hintY the height hint (a width in which the layout will attempt to fit itself), or 0
+     * @param hintY the height hint (a height in which the layout will attempt to fit itself), or 0
      * to allow the layout to use unlimited height.
      */
     @Override public IDimension preferredSize (float hintX, float hintY) {
