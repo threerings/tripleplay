@@ -75,6 +75,7 @@ public class Flicker extends Pointer.Adapter
     @Override public void onPointerStart (Pointer.Event event) {
         _vel = 0;
         _maxDelta = 0;
+        _minFlickExceeded = false;
         _origPos = position;
         _start = _prev = _cur = getPosition(event);
         _prevStamp = 0;
@@ -88,7 +89,12 @@ public class Flicker extends Pointer.Adapter
         _curStamp = event.time();
         float delta = _cur - _start;
         position = MathUtil.clamp(_origPos + delta, min, max);
-        _maxDelta = Math.max(Math.abs(delta), _maxDelta);
+        float absDelta = Math.abs(delta);
+        if (!_minFlickExceeded && absDelta > minFlickDelta()) {
+            _minFlickExceeded = true;
+            minFlickExceeded();
+        }
+        _maxDelta = Math.max(absDelta, _maxDelta);
     }
 
     @Override public void onPointerEnd (Pointer.Event event) {
@@ -97,10 +103,10 @@ public class Flicker extends Pointer.Adapter
         // if not, determine whether we should impart velocity to the tower
         else {
             float dragTime = (float)(_curStamp - _prevStamp);
-            float delta = _cur - _prev, absDelta = Math.abs(delta);
+            float delta = _cur - _prev;
             float signum = Math.signum(delta);
-            float dragVel = absDelta / dragTime;
-            if (dragVel > flickVelThresh() && absDelta > minFlickDelta()) {
+            float dragVel = Math.abs(delta) / dragTime;
+            if (dragVel > flickVelThresh() && _minFlickExceeded) {
                 _vel = signum * Math.min(maxFlickVel(), dragVel * flickXfer());
                 _accel = -signum * friction();
             }
@@ -160,8 +166,15 @@ public class Flicker extends Pointer.Adapter
         return 10;
     }
 
+    /**
+     * A method called as soon as the minimum flick distance is exceeded.
+     */
+    protected void minFlickExceeded () {
+    }
+
     protected float _vel, _accel;
     protected float _origPos, _start, _cur, _prev;
     protected double _curStamp, _prevStamp;
     protected float _maxDelta;
+    protected boolean _minFlickExceeded;
 }
