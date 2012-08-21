@@ -69,13 +69,17 @@ public class Library
      * @param baseDir The base directory, containing library.json and texture atlases.
      */
     public static void fromAssets (final String baseDir, final Callback<Library> callback) {
+        assert(callback != null);
         assets().getText(baseDir + "/library.json", new ResourceCallback<String>() {
             public void done (String text) {
+                Library lib = null;
                 try {
-                    callback.onSuccess(new Library(json().parse(text), baseDir));
+                    lib = new Library(json().parse(text), baseDir);
                 } catch (Exception err) {
                     callback.onFailure(err);
+                    return;
                 }
+                callback.onSuccess(lib);
             }
             public void error (Throwable cause) {
                 callback.onFailure(cause);
