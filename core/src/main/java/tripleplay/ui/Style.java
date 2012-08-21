@@ -239,16 +239,19 @@ public abstract class Style<V>
         return new Binding<V>(this, value);
     }
 
-    protected Style (boolean inherited) {
-        this.inherited = inherited;
-    }
-
-    protected static <V> Style<V> newStyle (boolean inherited, final V defaultValue) {
+    /**
+     * Creates a style identifier with the supplied properties.
+     */
+    public static <V> Style<V> newStyle (boolean inherited, final V defaultValue) {
         return new Style<V>(inherited) {
             public V getDefault (Element<?> elem) {
                 return defaultValue;
             }
         };
+    }
+
+    protected Style (boolean inherited) {
+        this.inherited = inherited;
     }
 
     protected static TextFormat.Alignment toAlignment (HAlign align) {
