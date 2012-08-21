@@ -209,7 +209,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         // this is broken out so that subclasses can extend this action
         protected void updateTextGlyph (float tx, float ty, float availWidth, float availHeight) {
             float twidth = textWidth(), theight = textHeight();
-            if (twidth <= 0 || theight <= 0) return;
+            if (twidth <= 0 || theight <= 0 || availWidth <= 0 || availHeight <= 0) return;
 
             // create a canvas no larger than the text, constrained to the available size
             float tgwidth = Math.min(availWidth, twidth), tgheight = Math.min(availHeight, theight);
