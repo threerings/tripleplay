@@ -14,6 +14,7 @@ import playn.core.Image;
 import playn.core.Json;
 import playn.core.Layer;
 import playn.core.ResourceCallback;
+import playn.core.util.Callback;
 import static playn.core.PlayN.*;
 
 public class Library
@@ -67,17 +68,17 @@ public class Library
      * Loads a Library from PlayN assets.
      * @param baseDir The base directory, containing library.json and texture atlases.
      */
-    public static void fromAssets (final String baseDir, final ResourceCallback<Library> callback) {
+    public static void fromAssets (final String baseDir, final Callback<Library> callback) {
         assets().getText(baseDir + "/library.json", new ResourceCallback<String>() {
             public void done (String text) {
                 try {
-                    callback.done(new Library(json().parse(text), baseDir));
+                    callback.onSuccess(new Library(json().parse(text), baseDir));
                 } catch (Exception err) {
-                    callback.error(err);
+                    callback.onFailure(err);
                 }
             }
             public void error (Throwable cause) {
-                callback.error(cause);
+                callback.onFailure(cause);
             }
         });
     }

@@ -6,7 +6,7 @@
 package tripleplay.demo.flump;
 
 import playn.core.GroupLayer;
-import playn.core.ResourceCallback;
+import playn.core.util.Callback;
 import static playn.core.PlayN.*;
 
 import tripleplay.flump.*;
@@ -28,13 +28,13 @@ public class FlumpDemo extends DemoScreen
     @Override protected Group createIface () {
         final Group root = new Group(new AbsoluteLayout());
 
-        Library.fromAssets("flump", new ResourceCallback<Library>() {
-            public void done (Library lib) {
+        Library.fromAssets("flump", new Callback<Library>() {
+            public void onSuccess (Library lib) {
                 _movie = lib.createMovie("walk");
                 _movie.layer().setTranslation(graphics().width()/2, 300);
                 root.layer.add(_movie.layer());
             }
-            public void error (Throwable cause) { throw new IllegalStateException(cause); }
+            public void onFailure (Throwable cause) { throw new IllegalStateException(cause); }
         });
 
         return root;
