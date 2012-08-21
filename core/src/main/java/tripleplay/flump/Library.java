@@ -39,8 +39,7 @@ public class Library
 
         for (Json.Object atlasJson : json.getArray("atlases", Json.Object.class)) {
             Image atlas = assets().getImage(baseDir + "/" + atlasJson.getString("file"));
-            for (Json.Object textureJson : atlasJson.getArray(
-                    "textures", Json.Object.class)) {
+            for (Json.Object textureJson : atlasJson.getArray("textures", Json.Object.class)) {
                 Texture.Symbol texture = new Texture.Symbol(textureJson, atlas);
                 symbols.put(texture.name(), texture);
             }
