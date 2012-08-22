@@ -5,6 +5,8 @@
 
 package tripleplay.syncdb;
 
+import tripleplay.util.Base90;
+
 /**
  * Handles encoding/decoding properties to/from strings.
  */
