@@ -1,6 +1,6 @@
 //
 // Triple Play - utilities for use in PlayN-based games
-// Copyright (c) 2011-2012, Three Rings Design, Inc. - All rights reserved.
+// Copyright (m01) 2011-2012, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.flump;
@@ -8,6 +8,10 @@ package tripleplay.flump;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import pythagoras.f.AffineTransform;
+import pythagoras.f.FloatMath;
+import pythagoras.f.Transform;
 
 import playn.core.GroupLayer;
 import playn.core.Json;
@@ -69,7 +73,7 @@ public class Movie
     protected Movie (Symbol symbol) {
         _symbol = symbol;
         _animators = new LayerAnimator[symbol.layers.size()];
-        for (int ii = 0; ii < _animators.length; ++ii) {
+        for (int ii = 0, ll = _animators.length; ii < ll; ++ii) {
             LayerAnimator animator = new LayerAnimator(symbol.layers.get(ii));
             _animators[ii] = animator;
             _root.add(animator.content);
@@ -177,13 +181,21 @@ public class Movie
             }
 
             KeyframeData kf = keyframes.get(keyframeIdx);
-            if (keyframeIdx == finalFrame) {
-                content.setTranslation(kf.loc.x(), kf.loc.y());
-                content.setScale(kf.scale.x(), kf.scale.y());
-                content.setRotation(kf.skew.x());
-                content.setAlpha(kf.alpha);
+            content.setVisible(kf.visible);
+            if (!kf.visible) {
+                return; // Don't bother animating invisible layers
+            }
 
-            } else {
+            float locX = kf.loc.x();
+            float locY = kf.loc.y();
+            float scaleX = kf.scale.x();
+            float scaleY = kf.scale.y();
+            float skewX = kf.skew.x();
+            float skewY = kf.skew.y();
+            float alpha = kf.alpha;
+
+            if (keyframeIdx < finalFrame) {
+                // Interpolate with the next keyframe
                 float interp = (frame-kf.index) / kf.duration;
                 float ease = kf.ease;
                 if (ease != 0) {
@@ -201,18 +213,31 @@ public class Movie
                 }
 
                 KeyframeData nextKf = keyframes.get(keyframeIdx+1);
-                content.setTranslation(
-                    kf.loc.x() + (nextKf.loc.x()-kf.loc.x())*interp,
-                    kf.loc.y() + (nextKf.loc.y()-kf.loc.y())*interp);
-                content.setScale(
-                    kf.scale.x() + (nextKf.scale.x()-kf.scale.x())*interp,
-                    kf.scale.y() + (nextKf.scale.y()-kf.scale.y())*interp);
-                content.setRotation(kf.skew.x() + (nextKf.skew.x()-kf.skew.x())*interp);
-                content.setAlpha(kf.alpha + (nextKf.alpha-kf.alpha)*interp);
+                locX += (nextKf.loc.x()-locX) * interp;
+                locY += (nextKf.loc.y()-locY) * interp;
+                scaleX += (nextKf.scale.x()-scaleX) * interp;
+                scaleY += (nextKf.scale.y()-scaleY) * interp;
+                skewX += (nextKf.skew.x()-skewX) * interp;
+                skewY += (nextKf.skew.y()-skewY) * interp;
+                alpha += (nextKf.alpha-alpha) * interp;
             }
 
-            // content.setOrigin(kf.pivot.x(), kf.pivot.y());
-            content.setVisible(kf.visible);
+            float sinX = FloatMath.sin(skewX), cosX = FloatMath.cos(skewX);
+            float sinY = FloatMath.sin(skewY), cosY = FloatMath.cos(skewY);
+
+            // From an identity matrix, append the skew
+            _scratch.setTransform(cosY, sinY, -sinX, cosX, 0, 0);
+
+            // Append the scale
+            _scratch.scale(scaleX, scaleY);
+
+            // Append the translation, and prepend the pivot
+            _scratch.tx = locX - _scratch.m00*kf.pivot.x() - _scratch.m10*kf.pivot.y();
+            _scratch.ty = locY - _scratch.m01*kf.pivot.x() - _scratch.m11*kf.pivot.y();
+
+            content.transform().setTransform(_scratch.m00, _scratch.m01,
+                _scratch.m10, _scratch.m11, _scratch.tx, _scratch.ty);
+            content.setAlpha(alpha);
         }
 
         protected void setCurrent (Instance current) {
@@ -223,6 +248,8 @@ public class Movie
                 group.add(current.layer());
             }
         }
+
+        protected static AffineTransform _scratch = new AffineTransform();
 
         protected LayerData _data;
         protected Instance _current; // The instance currently visible
