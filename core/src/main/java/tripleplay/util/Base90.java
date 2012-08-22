@@ -3,10 +3,10 @@
 // Copyright (c) 2011-2012, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
-package tripleplay.syncdb;
+package tripleplay.util;
 
 /**
- * Encodes and decodes ints and longs in base 90.
+ * Encodes and decodes ints and longs to strings in base 90.
  */
 public class Base90
 {

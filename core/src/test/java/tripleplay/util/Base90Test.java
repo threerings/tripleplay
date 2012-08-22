@@ -3,7 +3,7 @@
 // Copyright (c) 2011-2012, Three Rings Design, Inc. - All rights reserved.
 // http://github.com/threerings/tripleplay/blob/master/LICENSE
 
-package tripleplay.syncdb;
+package tripleplay.util;
 
 import org.junit.*;
 import static org.junit.Assert.*;
