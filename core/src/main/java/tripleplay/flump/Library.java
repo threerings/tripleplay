@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import playn.core.Image;
 import playn.core.Json;
 import playn.core.Layer;
-import playn.core.ResourceCallback;
 import playn.core.util.Callback;
 import static playn.core.PlayN.*;
 
@@ -70,8 +69,8 @@ public class Library
      */
     public static void fromAssets (final String baseDir, final Callback<Library> callback) {
         assert(callback != null);
-        assets().getText(baseDir + "/library.json", new ResourceCallback<String>() {
-            public void done (String text) {
+        assets().getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
+            public void onSuccess (String text) {
                 Library lib = null;
                 try {
                     lib = new Library(json().parse(text), baseDir);
@@ -80,9 +79,6 @@ public class Library
                     return;
                 }
                 callback.onSuccess(lib);
-            }
-            public void error (Throwable cause) {
-                callback.onFailure(cause);
             }
         });
     }

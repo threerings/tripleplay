@@ -9,7 +9,7 @@ import playn.core.GroupLayer;
 import playn.core.Image;
 import playn.core.ImmediateLayer;
 import playn.core.Surface;
-import playn.core.ResourceCallback;
+import playn.core.util.Callback;
 import static playn.core.PlayN.*;
 
 import tripleplay.anim.Flipbook;
@@ -49,8 +49,8 @@ public class FramesDemo extends DemoScreen
 
         // test our packed frames
         final Image packed = assets().getImage("images/packed.png");
-        assets().getText("images/packed.json", new ResourceCallback<String>() {
-            public void done (String json) {
+        assets().getText("images/packed.json", new Callback<String>() {
+            public void onSuccess (String json) {
                 GroupLayer box = graphics().createGroupLayer();
                 layer.addAt(box, 100, 200);
                 anim.repeat(box).flipbook(
@@ -58,7 +58,7 @@ public class FramesDemo extends DemoScreen
                     setVisible(box, false).then().delay(500).then().setVisible(box, true);
             }
 
-            public void error (Throwable t) {
+            public void onFailure (Throwable t) {
                 t.printStackTrace(System.err);
             }
         });

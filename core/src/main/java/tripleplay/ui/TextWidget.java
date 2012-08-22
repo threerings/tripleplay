@@ -10,9 +10,9 @@ import pythagoras.f.MathUtil;
 
 import playn.core.Image;
 import playn.core.ImageLayer;
-import playn.core.ResourceCallback;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
+import playn.core.util.Callback;
 import static playn.core.PlayN.graphics;
 
 import react.Slot;
@@ -55,12 +55,12 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     clearLayoutData();
                     invalidate();
                 } else {
-                    icon.addCallback(new ResourceCallback<Image>() {
-                        public void done (Image resource) {
+                    icon.addCallback(new Callback<Image>() {
+                        public void onSuccess (Image resource) {
                             clearLayoutData();
                             invalidate();
                         }
-                        public void error (Throwable err) {} // noop!
+                        public void onFailure (Throwable err) {} // noop!
                     });
                 }
             }
