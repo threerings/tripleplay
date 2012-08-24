@@ -107,6 +107,10 @@ public class Movie
         update(0); // Force the display list changes immediately
     }
 
+    public Symbol symbol () {
+        return _symbol;
+    }
+
     /** The playback speed multiplier, defaults to 1. Larger values will play faster. */
     public float speed () {
         return _speed;
