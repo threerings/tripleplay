@@ -335,6 +335,9 @@ public abstract class SyncDB
 
             protected final Set<K> _keys = new HashSet<K>(sget(mapKeysKey(prefix), keyCodec)) {
                 @Override public boolean add (K elem) {
+                    // our super constructor will call add() with keys we loaded and passed to it;
+                    // we don't want the addition of those keys to trigger a restore of the keyset
+                    if (!_superctordone) return super.add(elem);
                     if (!super.add(elem)) return false;
                     sset(mapKeysKey(prefix), this, keyCodec);
                     return true;
@@ -363,6 +366,12 @@ public abstract class SyncDB
                     _storage.removeItem(skey);
                     noteModified(skey);
                 }
+                // we're taking advantage of object initialization order here; before our super
+                // constructor is finished running, this field will be false; then it will be
+                // initialized to true during our (synthetic) constructor; we use this value in
+                // add() to distinguish between the add() calls made by our super constructor and
+                // all subsequent add calls made once this map is live
+                protected boolean _superctordone = true;
             };
         }
 
