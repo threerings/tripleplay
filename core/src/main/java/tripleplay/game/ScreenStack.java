@@ -268,6 +268,20 @@ public abstract class ScreenStack
     }
 
     /**
+     * Returns true if we're currently transitioning between screens.
+     */
+    public boolean isTransiting () {
+        return _transitor != null;
+    }
+
+    /**
+     * Returns the number of screens on the stack.
+     */
+    public int size () {
+        return _screens.size();
+    }
+
+    /**
      * Updates the currently visible screen. A screen stack client should call this method from
      * {@link Game#update}.
      */
