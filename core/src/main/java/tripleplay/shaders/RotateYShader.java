@@ -36,7 +36,6 @@ public class RotateYShader extends IndexedTrisShader
     @Override protected String vertexShader() {
         return "uniform vec2 u_ScreenSize;\n" +
             "uniform float u_Angle;\n" +
-            "uniform vec2 u_Eye;\n" +
             "attribute vec4 a_Matrix;\n" +
             "attribute vec2 a_Translation;\n" +
             "attribute vec2 a_Position;\n" +
@@ -60,8 +59,9 @@ public class RotateYShader extends IndexedTrisShader
             "    0,    1, 0,    0,\n" +
             "   -sina, 0, cosa, 0,\n" +
             "    0,    0, 0,    1);\n" +
-            "  pos = rotmat * vec4(pos.x - u_Eye.x * u_ScreenSize.x," +
-            "                      pos.y - u_Eye.y * u_ScreenSize.y, 0, 1);\n" +
+            "  pos = rotmat * vec4(pos.x - " + ShaderUtil.format(eyeX) + " * u_ScreenSize.x,\n" +
+            "                      pos.y - " + ShaderUtil.format(eyeY) + " * u_ScreenSize.y,\n" +
+            "                      0, 1);\n" +
 
             // Perspective project the vertex back into the plane
             "  mat4 persp = mat4(\n" +
@@ -70,12 +70,13 @@ public class RotateYShader extends IndexedTrisShader
             "    0, 0, 1, -1.0/2000.0,\n" +
             "    0, 0, 0, 1);\n" +
             "  pos = persp * pos;\n" +
-            "  pos += vec4(u_Eye.x * u_ScreenSize.x, u_Eye.y * u_ScreenSize.y, 0, 0);\n;" +
+            "  pos += vec4(" + ShaderUtil.format(eyeX) + " * u_ScreenSize.x,\n" +
+            "              " + ShaderUtil.format(eyeY) + " * u_ScreenSize.y, 0, 0);\n" +
 
             // Finally convert the coordinates into OpenGL space
             "  pos.x /= (u_ScreenSize.x / 2.0);\n" +
             "  pos.y /= (u_ScreenSize.y / 2.0);\n" +
-            "  pos.z /= (u_ScreenSize.x * " + zScale + ");\n" +
+            "  pos.z /= (u_ScreenSize.x * " + ShaderUtil.format(zScale) + ");\n" +
             "  pos.x -= 1.0;\n" +
             "  pos.y = 1.0 - pos.y;\n" +
             // z may already be rotated into negative space so we don't shift it
@@ -89,13 +90,11 @@ public class RotateYShader extends IndexedTrisShader
     protected Core createTextureCore() {
         return new ITCore(vertexShader(), textureFragmentShader()) {
             private final Uniform1f uAngle = prog.getUniform1f("u_Angle");
-            private final Uniform2f uEye = prog.getUniform2f("u_Eye");
 
             @Override
             public void prepare(int fbufWidth, int fbufHeight) {
                 super.prepare(fbufWidth, fbufHeight);
                 uAngle.bind(angle);
-                uEye.bind(eyeX, eyeY);
             }
         };
     }
@@ -104,13 +103,11 @@ public class RotateYShader extends IndexedTrisShader
     protected Core createColorCore() {
         return new ITCore(vertexShader(), colorFragmentShader()) {
             private final Uniform1f uAngle = prog.getUniform1f("u_Angle");
-            private final Uniform2f uEye = prog.getUniform2f("u_Eye");
 
             @Override
             public void prepare(int fbufWidth, int fbufHeight) {
                 super.prepare(fbufWidth, fbufHeight);
                 uAngle.bind(angle);
-                uEye.bind(eyeX, eyeY);
             }
         };
     }
