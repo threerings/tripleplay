@@ -13,14 +13,10 @@ import playn.core.Json;
 
 public class LayerData
 {
-    /**
-     * The authored name of this layer.
-     */
+    /** The authored name of this layer. */
     public final String name;
 
-    /**
-     * The keyframes in this layer.
-     */
+    /** The keyframes in this layer. */
     public final List<KeyframeData> keyframes;
 
     protected LayerData (Json.Object json) {
@@ -36,9 +32,7 @@ public class LayerData
         }
     }
 
-    /**
-     * The number of frames in this layer.
-     */
+    /** The number of frames in this layer. */
     public int frames () {
         KeyframeData lastKf = keyframes.get(keyframes.size() - 1);
         return lastKf.index + lastKf.duration;
