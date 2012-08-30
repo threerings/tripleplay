@@ -22,11 +22,7 @@ public class Shim extends Element<Shim>
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new LayoutData() {
-            @Override public Dimension computeSize (float hintX, float hintY) {
-                return new Dimension(_size);
-            }
-        };
+        return new SizableLayoutData(null, _size);
     }
 
     protected final Dimension _size;
