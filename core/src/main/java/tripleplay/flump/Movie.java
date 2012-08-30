@@ -187,8 +187,9 @@ public class Movie
             }
 
             KeyframeData kf = keyframes.get(keyframeIdx);
-            content.setVisible(kf.visible);
-            if (!kf.visible) {
+            boolean visible = kf.symbol() != null && kf.visible;
+            content.setVisible(visible);
+            if (!visible) {
                 return; // Don't bother animating invisible layers
             }
 
