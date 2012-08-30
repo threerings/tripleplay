@@ -86,7 +86,9 @@ public class Movie
     }
 
     @Override public void update (float dt) {
-        _position += _speed*dt;
+        dt *= _speed;
+
+        _position += dt;
         if (_position > _symbol.duration()) {
             _position = _position % _symbol.duration();
         }
@@ -133,8 +135,7 @@ public class Movie
         }
         for (int ii = 0, ll = _animators.length; ii < ll; ++ii) {
             LayerAnimator animator = _animators[ii];
-            animator.composeFrame(frame);
-            animator.update(dt);
+            animator.setFrame(frame, dt);
         }
         _frame = frame;
     }
@@ -165,13 +166,7 @@ public class Movie
             }
         }
 
-        public void update (float dt) {
-            if (_current != null) {
-                _current.update(dt);
-            }
-        }
-
-        public void composeFrame (float frame) {
+        public void setFrame (float frame, float dt) {
             List<KeyframeData> keyframes = _data.keyframes;
             int finalFrame = keyframes.size()-1;
 
@@ -245,6 +240,10 @@ public class Movie
             content.transform().setTransform(_scratch.m00, _scratch.m01,
                 _scratch.m10, _scratch.m11, _scratch.tx, _scratch.ty);
             content.setAlpha(alpha);
+
+            if (_current != null) {
+                _current.update(dt);
+            }
         }
 
         protected void setCurrent (Instance current) {
