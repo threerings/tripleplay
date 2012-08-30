@@ -78,7 +78,7 @@ public class Movie
             _animators[ii] = animator;
             _root.add(animator.content);
         }
-        setFrame(1);
+        setFrame(1, 0);
     }
 
     @Override public GroupLayer layer () {
@@ -92,7 +92,7 @@ public class Movie
         }
 
         float nextFrame = _position*_symbol.frameRate();
-        setFrame(nextFrame);
+        setFrame(nextFrame, dt);
     }
 
     /** The playback position, in milliseconds. */
@@ -121,7 +121,7 @@ public class Movie
         _speed = speed;
     }
 
-    protected void setFrame (float frame)
+    protected void setFrame (float frame, float dt)
     {
         if (frame < _frame) {
             // Wrap back to the beginning
@@ -132,7 +132,9 @@ public class Movie
             }
         }
         for (int ii = 0, ll = _animators.length; ii < ll; ++ii) {
-            _animators[ii].composeFrame(frame);
+            LayerAnimator animator = _animators[ii];
+            animator.composeFrame(frame);
+            animator.update(dt);
         }
         _frame = frame;
     }
