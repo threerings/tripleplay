@@ -484,15 +484,7 @@ public abstract class Element<T extends Element<T>>
         return PlayN.graphics().createGroupLayer();
     }
 
-    protected abstract class LayoutData {
-        public final Background bg = resolveStyle(Style.BACKGROUND);
-
-        /**
-         * Computes this element's preferred size, given the supplied hints. The background insets
-         * will be automatically added to the returned size.
-         */
-        public abstract Dimension computeSize (float hintX, float hintY);
-
+    protected abstract class BaseLayoutData {
         /**
          * Rebuilds this element's visualization. Called when this element's size has changed. In
          * the case of groups, this will relayout its children, in the case of widgets, this will
@@ -501,6 +493,85 @@ public abstract class Element<T extends Element<T>>
         public void layout (float left, float top, float width, float height) {
             // noop!
         }
+    }
+
+    protected abstract class LayoutData extends BaseLayoutData {
+        public final Background bg = resolveStyle(Style.BACKGROUND);
+
+        /**
+         * Computes this element's preferred size, given the supplied hints. The background insets
+         * will be automatically added to the returned size.
+         */
+        public abstract Dimension computeSize (float hintX, float hintY);
+    }
+
+    /**
+     * A layout data that will delegate to another layout data instance, but alter the size
+     * computation to optionally use fixed values.
+     */
+    protected class SizableLayoutData extends LayoutData {
+        /**
+         * Creates a new layout that will defer to the given delegate for layout but use the
+         * given width and height for size computation. Each axis is used to override the passed-in
+         * hints and to adjust the final size. The delegate may be null if there is no need for
+         * layout.
+         */
+        public SizableLayoutData (BaseLayoutData layoutDelegate, IDimension prefSize) {
+            this.layoutDelegate = layoutDelegate;
+            this.sizeDelegate = null;
+            if (prefSize != null) {
+                prefWidth = prefSize.width();
+                prefHeight = prefSize.height();
+            } else {
+                prefWidth = prefHeight = 0;
+            }
+        }
+
+        /**
+         * Creates a new layout that will defer to the given delegate for layout but use the
+         * given width and height for size computation.
+         * @param prefSize Overrides one or both of the size element's computed size. A zero width
+         * or height indicates not to override the corresponding axis
+         * @param delegate the layout data to use for layout and size calculation
+         */
+        public SizableLayoutData (LayoutData delegate, IDimension prefSize) {
+            this.layoutDelegate = delegate;
+            this.sizeDelegate = delegate;
+            if (prefSize != null) {
+                prefWidth = prefSize.width();
+                prefHeight = prefSize.height();
+            } else {
+                prefWidth = prefHeight = 0;
+            }
+        }
+
+        @Override public Dimension computeSize (float hintX, float hintY) {
+            // hint the delegate with our preferred width or height or both
+            hintX = select(prefWidth, hintX);
+            hintY = select(prefHeight, hintY);
+
+            // get the usual size
+            Dimension dim = sizeDelegate == null ? new Dimension(prefWidth, prefHeight) :
+                sizeDelegate.computeSize(hintX, hintY);
+
+            // swap in our preferred width or height or both
+            dim.width = select(prefWidth, dim.width);
+            dim.height = select(prefHeight, dim.height);
+
+            return dim;
+        }
+
+        @Override public void layout (float left, float top, float width, float height) {
+            if (layoutDelegate != null) layoutDelegate.layout(left, top, width, height);
+        }
+
+        protected float select (float pref, float base) {
+            return pref == 0 ? base : pref;
+        }
+
+        protected final BaseLayoutData layoutDelegate;
+        protected final LayoutData sizeDelegate;
+        protected final float prefWidth, prefHeight;
     }
 
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
