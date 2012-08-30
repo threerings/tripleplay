@@ -10,29 +10,30 @@ import react.UnitSlot;
 import tripleplay.util.DimensionValue;
 
 /**
- * A widget that allows configuring its preferred size. The size is always returned when the size
- * of the widget is calculated, but the widget may end up being stretched when contained in a
+ * A group that allows configuring its preferred size. The size is always returned when the size
+ * of the group is calculated, but the group may end up being stretched when contained in a
  * layout that does so.
  */
-public class SizableWidget<T extends SizableWidget<T>> extends Widget<T>
+public class SizableGroup extends Group
 {
     /** The preferred size of this widget. Update at will. */
     public final DimensionValue preferredSize = new DimensionValue(0, 0);
 
-    /** Creates the sizable widget with preferred width and height of 0. Note that this will
+    /** Creates the sizable group with preferred width and height of 0. Note that this will
      * cause the base layout preferred size to be used, if overridden. */
-    public SizableWidget () {
-        this(0, 0);
+    public SizableGroup (Layout layout) {
+        this(layout, 0, 0);
     }
 
-    /** Creates the sizable widget with the given preferred size. */
-    public SizableWidget (IDimension size) {
-        this(size.width(), size.height());
+    /** Creates the sizable group with the given preferred size. */
+    public SizableGroup (Layout layout, IDimension size) {
+        this(layout, size.width(), size.height());
     }
 
-    /** Creates the sizable widget with preferred width and height. */
-    public SizableWidget (float width, float height) {
-        preferredSize.update(width, height);
+    /** Creates the sizable group with preferred width and height. */
+    public SizableGroup (Layout layout, float wid, float hei) {
+        super(layout);
+        preferredSize.update(wid, hei);
         preferredSize.connect(new UnitSlot() {
             @Override public void onEmit () {
                 invalidate();
@@ -40,7 +41,7 @@ public class SizableWidget<T extends SizableWidget<T>> extends Widget<T>
         });
     }
 
-    /** Creates the layout to which the widget's {@link Element.SizableLayoutData} will delegate. */
+    /** Creates the layout to which the group's {@link Element.SizableLayoutData} will delegate. */
     protected BaseLayoutData createBaseLayoutData (float hintX, float hintY) {
         return null;
     }
