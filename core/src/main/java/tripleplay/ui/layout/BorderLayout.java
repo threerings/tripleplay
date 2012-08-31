@@ -247,6 +247,8 @@ public class BorderLayout extends Layout
             if (dim == null) {
                 return;
             }
+            Constraint c = constraint(p);
+            dim = c.adjust(dim, bounds);
             float y = bounds.y;
             if (p == Position.NORTH) {
                 bounds.y += dim.height() + vgap;
@@ -254,8 +256,6 @@ public class BorderLayout extends Layout
                 y += bounds.height - dim.height();
             }
             bounds.height -= dim.height() + vgap;
-            Constraint c = constraint(p);
-            dim = c.adjust(dim, bounds);
             setBounds(p, c.align(bounds.x, halign.offset(dim.width(), bounds.width)), y, dim);
         }
 
@@ -264,6 +264,8 @@ public class BorderLayout extends Layout
             if (dim == null) {
                 return;
             }
+            Constraint c = constraint(p);
+            dim = c.adjust(dim, bounds);
             float x = bounds.x;
             if (p == Position.WEST) {
                 bounds.x += dim.width() + hgap;
@@ -271,8 +273,6 @@ public class BorderLayout extends Layout
                 x += bounds.width - dim.width();
             }
             bounds.width -= dim.width() + hgap;
-            Constraint c = constraint(p);
-            dim = c.adjust(dim, bounds);
             setBounds(p, x, c.align(bounds.y, valign.offset(dim.height(), bounds.height)), dim);
         }
 
