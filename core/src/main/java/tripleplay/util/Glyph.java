@@ -11,6 +11,7 @@ import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.PlayN;
 import playn.core.TextLayout;
+import pythagoras.f.IDimension;
 
 /**
  * Handles the maintenance of a canvas image and layer for displaying a chunk of pre-rendered
@@ -26,6 +27,13 @@ public class Glyph
     public Glyph (GroupLayer parent, float depth) {
         _parent = parent;
         _depth = depth;
+    }
+
+    /** Ensures that the canvas image is at least the specified dimensions and cleared to all
+     * transparent pixels. Also creates and adds the image layer to the parent layer if
+     * needed. */
+    public void prepare (IDimension dim) {
+        prepare(dim.width(), dim.height());
     }
 
     /** Ensures that the canvas image is at least the specified dimensions and cleared to all
