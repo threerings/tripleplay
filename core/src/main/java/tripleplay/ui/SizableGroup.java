@@ -41,13 +41,8 @@ public class SizableGroup extends Group
         });
     }
 
-    /** Creates the layout to which the group's {@link Element.SizableLayoutData} will delegate. */
-    protected BaseLayoutData createBaseLayoutData (float hintX, float hintY) {
-        return null;
-    }
-
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         // use a sizable layout data with our preferred size and delegate to the base, if any
-        return new SizableLayoutData(createBaseLayoutData(hintX, hintY), preferredSize.get());
+        return new SizableLayoutData(super.createLayoutData(hintX, hintY), preferredSize.get());
     }
 }
