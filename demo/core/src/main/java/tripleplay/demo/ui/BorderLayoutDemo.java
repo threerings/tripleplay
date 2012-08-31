@@ -18,10 +18,13 @@ import tripleplay.ui.Group;
 import tripleplay.ui.Label;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Shim;
+import tripleplay.ui.SizableGroup;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.BorderLayout;
+import tripleplay.ui.layout.FlowLayout;
+import tripleplay.util.DimensionValue;
 
 import tripleplay.demo.DemoScreen;
 
@@ -61,7 +64,7 @@ public class BorderLayoutDemo extends DemoScreen
             }
         });
 
-        Button useGroups = new Button("Toggle Groups");
+        Button useGroups = new Button("Toggle Sizing");
         buttons.add(new Shim(10, 1)).add(useGroups);
         useGroups.clicked().connect(new UnitSlot() {
             @Override public void onEmit () {
@@ -99,25 +102,29 @@ public class BorderLayoutDemo extends DemoScreen
             this.useGroups = useGroups;
             this.gaps = gaps;
 
-            add(newSection(NORTH, BorderLayout.NORTH, 0xFFFFFF00));
-            add(newSection(SOUTH, BorderLayout.SOUTH, 0xFFFFCC33));
-            add(newSection(WEST, BorderLayout.WEST, 0xFF666666));
-            add(newSection(EAST, BorderLayout.EAST, 0xFF6699CC));
-            add(newSection(CENTER, BorderLayout.CENTER, 0xFFFFCCCC));
+            add(newSection(NORTH, BorderLayout.NORTH, 0xFFFFFF00, 2).addStyles(Style.VALIGN.top));
+            add(newSection(SOUTH, BorderLayout.SOUTH, 0xFFFFCC33, 2).addStyles(Style.VALIGN.bottom));
+            add(newSection(WEST, BorderLayout.WEST, 0xFF666666, 1).addStyles(Style.HALIGN.left));
+            add(newSection(EAST, BorderLayout.EAST, 0xFF6699CC, 1).addStyles(Style.HALIGN.right));
+            add(newSection(CENTER, BorderLayout.CENTER, 0xFFFFCCCC, 0));
         }
 
         public void toggleEdge (String name) {
             edges.get(name).setVisible(!edges.get(name).isVisible());
         }
 
-        protected Element<?> newSection (String text, Layout.Constraint constraint, int bgColor) {
+        protected Element<?> newSection (String text, Layout.Constraint constraint, int bgColor,
+            int flags) {
             Element<?> e;
             if (useGroups) {
-                Background whiteBg = Background.solid(0xFFFFFFFF).inset(5);
-                Label l = new Label(text).addStyles(Style.BACKGROUND.is(whiteBg));
                 Background colorBg = Background.solid(bgColor);
-                e = new Group(AxisLayout.vertical().offStretch(), Style.BACKGROUND.is(colorBg)).
-                    add(l).setConstraint(constraint);
+                SizableGroup g = new SizableGroup(new FlowLayout());
+                g.addStyles(Style.BACKGROUND.is(colorBg));
+
+                if ((flags & 1) != 0) g.add(getSizer(g, "W+", 10, 0), getSizer(g, "W-", -10, 0));
+                if ((flags & 2) != 0) g.add(getSizer(g, "H+", 0, 10), getSizer(g, "H-", 0, -10));
+                e = g.setConstraint(constraint);
+
             } else {
                 Background colorBg = Background.solid(bgColor).inset(5);
                 e = new Label(text).addStyles(Style.BACKGROUND.is(colorBg)).setConstraint(constraint);
@@ -125,6 +132,23 @@ public class BorderLayoutDemo extends DemoScreen
             edges.put(text, e);
             return e;
         }
+    }
+
+    protected static Button getSizer (SizableGroup g, String text, float dw, float dh) {
+        Button b = new Button(text);
+        b.clicked().connect(getSizer(g.preferredSize, dw, dh));
+        return b;
+    }
+
+    protected static UnitSlot getSizer (
+            final DimensionValue base, final float dw, final float dh) {
+        return new UnitSlot() {
+            @Override public void onEmit () {
+                base.update(
+                    Math.max(0, base.get().width() + dw),
+                    Math.max(0, base.get().height() + dh));
+            }
+        };
     }
 
     protected Group _root;
