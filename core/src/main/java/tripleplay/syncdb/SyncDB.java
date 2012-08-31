@@ -149,6 +149,15 @@ public abstract class SyncDB
         for (Property prop : _props.values()) prop.prepareToMeld();
     }
 
+    /**
+     * Processes any subdbs that have been queued for purging. This requires a pass over all keys
+     * in the storage system, and thus benefits from aggregating purges prior to performing them.
+     */
+    public void processPurges () {
+        purgeDBs(sget(SYNC_PURGE_KEY, Codec.STRING));
+        _storage.removeItem(SYNC_PURGE_KEY);
+    }
+
     protected SyncDB (Platform platform) {
         _platform = platform;
         _storage = platform.storage();
@@ -460,6 +469,20 @@ public abstract class SyncDB
         }});
     }
 
+    protected void purgeDBs (Set<String> dbs) {
+        log.info("Purging", "dbs", dbs);
+        if (dbs.isEmpty()) return; // NOOP!
+
+        for (String key : _storage.keys()) {
+            int sdbidx = key.indexOf(DBUtil.SUBDB_KEY_SEP);
+            if (sdbidx == -1 || !dbs.contains(key.substring(0, sdbidx))) continue;
+            // log.info("Purging property " + key);
+            _storage.removeItem(key);
+            _mods.remove(key);
+        }
+        flushMods();
+    }
+
     /** Manages merges and updates to database properties. */
     protected interface Property {
         boolean merge (String name, String data);
@@ -503,13 +526,18 @@ public abstract class SyncDB
         /** Removes all of this subdb's properties from the client's persistent storage. Removes
          * any pending sync requests for properties of this subdb. Clears the subdb object. */
         protected void purge () {
-            String keyPrefix = DBUtil.subDBKey(_dbpre, "");
-            for (String key : _storage.keys()) {
-                if (!key.startsWith(keyPrefix)) continue;
-                _storage.removeItem(key);
-                _mods.remove(key);
-            }
-            flushMods();
+            purgeDBs(Collections.singleton(_dbpre));
+            _subdbs.remove(_dbpre);
+        }
+
+        /** Notes that this subdb should be purged in the next call to {@link #processPurges}.
+         * NOTE: this subdb will immediately be cleared from the subdbs table; it should not be
+         * accessed again after calling this method. */
+        protected void queuePurge () {
+            Set<String> pendingPurges = sget(SYNC_PURGE_KEY, Codec.STRING);
+            pendingPurges.add(_dbpre);
+            sset(SYNC_PURGE_KEY, pendingPurges, Codec.STRING);
+            log.info("Queued purge", "subdb", _dbpre, "penders", pendingPurges);
             _subdbs.remove(_dbpre);
         }
 
@@ -525,8 +553,9 @@ public abstract class SyncDB
     protected int _version;
     protected boolean _flushQueued;
 
-    protected static final String SYNC_VERS_KEY = "syncv";
-    protected static final String SYNC_MODS_KEY = "syncm";
+    protected static final String SYNC_VERS_KEY  = "syncv";
+    protected static final String SYNC_MODS_KEY  = "syncm";
+    protected static final String SYNC_PURGE_KEY = "syncp";
     protected static final Set<String> SYNC_KEYS = new HashSet<String>(); static {
         SYNC_KEYS.add(SYNC_VERS_KEY);
         SYNC_KEYS.add(SYNC_MODS_KEY);
