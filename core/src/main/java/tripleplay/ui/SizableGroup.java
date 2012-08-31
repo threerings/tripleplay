@@ -42,7 +42,7 @@ public class SizableGroup extends Group
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        // use a sizable layout data with our preferred size and delegate to the base, if any
+        // use a sizable layout data with the usual layout and hybrid size
         return new SizableLayoutData(super.createLayoutData(hintX, hintY), preferredSize.get());
     }
 }

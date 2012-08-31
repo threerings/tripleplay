@@ -511,14 +511,19 @@ public abstract class Element<T extends Element<T>>
      */
     protected class SizableLayoutData extends LayoutData {
         /**
-         * Creates a new layout that will defer to the given delegate for layout but use the
-         * given width and height for size computation. Each axis is used to override the passed-in
-         * hints and to adjust the final size. The delegate may be null if there is no need for
-         * layout.
+         * Creates a new layout with the given delegates and size.
+         * @param layoutDelegate the delegate to use during layout. May be null if the element
+         * has no layout
+         * @param sizeDelegate the delegate to use during size computation. May be null if the
+         * size will be completely specified by <code>prefSize</code>
+         * @param prefSize overrides the size computation. The width and/or height may be zero,
+         * which indicates the <code>sizeDelegate</code>'s result should be used for that axis.
+         * Passing <code>null</code> is equivalent to passing a 0x0 dimension
          */
-        public SizableLayoutData (BaseLayoutData layoutDelegate, IDimension prefSize) {
+        public SizableLayoutData (BaseLayoutData layoutDelegate, LayoutData sizeDelegate,
+                                  IDimension prefSize) {
             this.layoutDelegate = layoutDelegate;
-            this.sizeDelegate = null;
+            this.sizeDelegate = sizeDelegate;
             if (prefSize != null) {
                 prefWidth = prefSize.width();
                 prefHeight = prefSize.height();
@@ -528,11 +533,9 @@ public abstract class Element<T extends Element<T>>
         }
 
         /**
-         * Creates a new layout that will defer to the given delegate for layout but use the
-         * given width and height for size computation.
-         * @param prefSize Overrides one or both of the size element's computed size. A zero width
-         * or height indicates not to override the corresponding axis
-         * @param delegate the layout data to use for layout and size calculation
+         * Creates a new layout that will defer to the given delegate for layout and size. This
+         * is equivalent to <code>SizableLayoutData(delegate, delegate, prefSize)</code>.
+         * @see #SizableLayoutData(BaseLayoutData, LayoutData, IDimension)
          */
         public SizableLayoutData (LayoutData delegate, IDimension prefSize) {
             this.layoutDelegate = delegate;

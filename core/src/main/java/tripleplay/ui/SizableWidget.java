@@ -47,6 +47,6 @@ public class SizableWidget<T extends SizableWidget<T>> extends Widget<T>
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         // use a sizable layout data with our preferred size and delegate to the base, if any
-        return new SizableLayoutData(createBaseLayoutData(hintX, hintY), preferredSize.get());
+        return new SizableLayoutData(createBaseLayoutData(hintX, hintY), null, preferredSize.get());
     }
 }
