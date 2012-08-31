@@ -12,6 +12,7 @@ import react.Signal;
 import react.Slot;
 
 import playn.core.Image;
+import playn.core.GroupLayer;
 import static playn.core.PlayN.graphics;
 
 import tripleplay.particle.Emitter;
@@ -22,16 +23,27 @@ import tripleplay.particle.Emitter;
 public class Particles
 {
     /**
-     * Creates an emitter that supports up to {@code maxParticles} particles at any one time.
+     * Creates an emitter that supports up to {@code maxParticles} particles at any one time. The
+     * emitter is added to the root layer.
      *
      * @param image the image to use for each particle.
      */
     public Emitter createEmitter (int maxParticles, Image image) {
+        return createEmitter(maxParticles, image, graphics().rootLayer());
+    }
+
+    /**
+     * Creates an emitter that supports up to {@code maxParticles} particles at any one time.
+     *
+     * @param image the image to use for each particle.
+     * @param onLayer the layer to which to add the layer which will render the particles.
+     */
+    public Emitter createEmitter (int maxParticles, Image image, GroupLayer onLayer) {
         final Emitter emitter = new Emitter(this, maxParticles, image);
         emitter._conn = _onUpdate.connect(new Slot<Now>() { public void onEmit (Now now) {
             emitter.update(now.time, now.dt);
         }});
-        graphics().rootLayer().add(emitter.layer);
+        onLayer.add(emitter.layer);
         return emitter;
     }
 
