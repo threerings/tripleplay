@@ -122,7 +122,7 @@ public class Selector
 
     protected final Slot<Element<?>> _clickSlot = new Slot<Element<?>>() {
         @Override public void onEmit (Element<?> clicked) {
-            selected.update(clicked);
+            selected.update(clicked.isSelected() ? clicked : null);
         }
     };
 }
