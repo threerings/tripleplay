@@ -541,6 +541,15 @@ public abstract class SyncDB
             _subdbs.remove(_dbpre);
         }
 
+        /** Cancels a queued purge for this subdb. */
+        protected void cancelQueuedPurge () {
+            Set<String> pendingPurges = sget(SYNC_PURGE_KEY, Codec.STRING);
+            if (pendingPurges.remove(_dbpre)) {
+                sset(SYNC_PURGE_KEY, pendingPurges, Codec.STRING);
+                log.info("Canceled queued purge", "subdb", _dbpre, "penders", pendingPurges);
+            }
+        }
+
         protected String _dbpre;
     }
 
