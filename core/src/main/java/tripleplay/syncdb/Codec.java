@@ -50,6 +50,25 @@ public interface Codec<T>
         }
     };
 
+    /** A codec for int arrays. */
+    Codec<int[]> INTS = new Codec<int[]>() {
+        public String encode (int[] values) {
+            StringBuilder buf = new StringBuilder();
+            for (int value : values) {
+                if (buf.length() > 0) buf.append("\t");
+                buf.append(Base90.encodeInt(value));
+            }
+            return buf.toString();
+        }
+        public int[] decode (String data) {
+            if (data.length() == 0) return new int[0];
+            String[] encs = data.split("\t");
+            int[] values = new int[encs.length];
+            for (int ii = 0; ii < encs.length; ii++) values[ii] = Base90.decodeInt(encs[ii]);
+            return values;
+        }
+    };
+
     /** A codec for longs. */
     Codec<Long> LONG = new Codec<Long>() {
         public String encode (Long value) {
