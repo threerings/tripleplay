@@ -36,7 +36,7 @@ public class Interface
     }
 
     /**
-     * "Paints" the elements in this interface. Must be called from {@link Game#update}.
+     * "Paints" the elements in this interface. Must be called from {@link Game#paint}.
      */
     public void paint (float alpha) {
         for (int ii = 0, ll = _roots.size(); ii < ll; ii++) {
