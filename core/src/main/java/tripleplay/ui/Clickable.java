@@ -8,7 +8,7 @@ package tripleplay.ui;
 import react.SignalView;
 
 /**
- * Implemented by <code>Element</code> that detect and emit clicks.
+ * Implemented by {@link Element}s that can be clicked.
  */
 public interface Clickable<T extends Element<T>>
 {

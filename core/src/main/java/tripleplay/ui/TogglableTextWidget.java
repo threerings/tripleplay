@@ -19,8 +19,7 @@ public abstract class TogglableTextWidget<T extends TogglableTextWidget<T>>
     public final Value<Boolean> selected = Value.create(false);
 
     @Override // from Togglable
-    public Value<Boolean> selected ()
-    {
+    public Value<Boolean> selected () {
         return selected;
     }
 

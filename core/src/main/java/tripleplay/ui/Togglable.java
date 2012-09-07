@@ -8,7 +8,7 @@ package tripleplay.ui;
 import react.Value;
 
 /**
- * Implemented by <code>Element</code> that expose a selected state and can be clicked.
+ * Implemented by {@link Element}s that expose a selected state and can be clicked.
  */
 public interface Togglable<T extends Element<T>> extends Clickable<T>
 {
