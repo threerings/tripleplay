@@ -26,8 +26,8 @@ public class Selector
     public Selector () {
         selected.connect(new ValueView.Listener<Element<?>> () {
             @Override public void onChange (Element<?> selected, Element<?> deselected) {
-                setSelected(deselected, false);
-                setSelected(selected, true);
+                if (deselected != null) get(deselected).update(false);
+                if (selected != null) get(selected).update(true);
             }
         });
     }
@@ -36,7 +36,9 @@ public class Selector
     public Selector (Elements<?> elements, Element<?> initialSelection) {
         this();
         add(elements);
-        selected.update(initialSelection);
+        if (initialSelection instanceof Togglable<?>) {
+            selected.update(initialSelection);
+        }
     }
 
     /**
@@ -88,33 +90,24 @@ public class Selector
     }
 
     /**
-     * Internal method to update the selection state of an element.
+     * Internal method to get the selection value of an element (non-null).
      */
-    protected void setSelected (Element<?> elem, boolean state) {
-        if (elem == null) {
-            return;
-        }
-        // TODO: do we need a Selectable interface to better abstract this value update?
-        if (elem instanceof TogglableTextWidget) {
-            ((TogglableTextWidget<?>)elem).selected.update(state);
-        } else {
-            elem.set(Element.Flag.SELECTED, state);
-            elem.invalidate();
-        }
+    protected Value<Boolean> get (Element<?> elem) {
+        return ((Togglable<?>)elem).selected();
     }
 
     protected final Slot<Element<?>> _addSlot = new Slot<Element<?>>() {
         @Override public void onEmit (Element<?> child) {
-            if (child instanceof Clickable<?>) {
-                ((Clickable<?>)child).clicked().connect(_clickSlot);
+            if (child instanceof Togglable<?>) {
+                ((Togglable<?>)child).clicked().connect(_clickSlot);
             }
         }
     };
 
     protected final Slot<Element<?>> _removeSlot = new Slot<Element<?>>() {
         @Override public void onEmit (Element<?> removed) {
-            if (removed instanceof Clickable<?>) {
-                ((Clickable<?>)removed).clicked().disconnect(_clickSlot);
+            if (removed instanceof Togglable<?>) {
+                ((Togglable<?>)removed).clicked().disconnect(_clickSlot);
             }
             if (selected.get() == removed) selected.update(null);
         }
@@ -122,7 +115,7 @@ public class Selector
 
     protected final Slot<Element<?>> _clickSlot = new Slot<Element<?>>() {
         @Override public void onEmit (Element<?> clicked) {
-            selected.update(clicked.isSelected() ? clicked : null);
+            selected.update(get(clicked).get() ? clicked : null);
         }
     };
 }
