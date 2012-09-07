@@ -130,13 +130,13 @@ public class TableLayout extends Layout
     }
 
     @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
-        Metrics m = computeMetrics(elems, hintX, hintY, true);
+        Metrics m = computeMetrics(elems, hintX, hintY);
         return new Dimension(m.totalWidth(_colgap), m.totalHeight(_rowgap));
     }
 
     @Override public void layout (Elements<?> elems,
                                   float left, float top, float width, float height) {
-        Metrics m = computeMetrics(elems, width, height, false);
+        Metrics m = computeMetrics(elems, width, height);
         int columns = m.columns(), row = 0, col = 0;
 
         float naturalWidth = m.totalWidth(_colgap);
@@ -180,8 +180,7 @@ public class TableLayout extends Layout
         return freeColumns;
     }
 
-    protected Metrics computeMetrics (Elements<?> elems, float hintX, float hintY,
-                                      boolean preferred) {
+    protected Metrics computeMetrics (Elements<?> elems, float hintX, float hintY) {
         int columns = _columns.length;
         int rows = elems.childCount() / columns;
         if (elems.childCount() % columns != 0) rows++;
@@ -207,10 +206,9 @@ public class TableLayout extends Layout
 
         // determine the total width needed by the fixed columns, then compute the hint given to
         // free columns based on the remaining space
-        int freeColumns = freeColumns(), fixedColumns = columns - freeColumns;
         float fixedWidth = _colgap*(columns-1); // start with gaps, add fixed col widths
         for (int cc = 0; cc < columns; cc++) fixedWidth += metrics.columnWidths[cc];
-        float freeHintX = (hintX - fixedWidth) / freeColumns(), maxrh = 0;
+        float freeHintX = (hintX - fixedWidth) / freeColumns();
 
         ii = 0;
         for (Element<?> elem : elems) {
@@ -221,7 +219,6 @@ public class TableLayout extends Layout
                 metrics.rowHeights[row] = Math.max(metrics.rowHeights[row], psize.height());
                 metrics.columnWidths[col] = Math.max(metrics.columnWidths[col], psize.width());
             }
-            if (col == columns-1) maxrh = Math.max(maxrh, metrics.rowHeights[row]);
             ii++;
         }
 
