@@ -7,8 +7,6 @@ package tripleplay.particle;
 
 import java.util.List;
 
-import pythagoras.f.FloatMath;
-
 /**
  * Contains the basic metadata for an array of particles: position, velocity, scale, rotation,
  * birth time, lifespan.

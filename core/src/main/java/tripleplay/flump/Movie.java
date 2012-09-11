@@ -11,7 +11,6 @@ import java.util.List;
 
 import pythagoras.f.AffineTransform;
 import pythagoras.f.FloatMath;
-import pythagoras.f.Transform;
 
 import playn.core.GroupLayer;
 import playn.core.Json;

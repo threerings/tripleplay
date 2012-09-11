@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 import playn.core.Image;
 import playn.core.Json;
-import playn.core.Layer;
 import playn.core.util.Callback;
 import static playn.core.PlayN.*;
 

@@ -12,8 +12,6 @@ import playn.core.Asserts;
 import playn.core.Net;
 import playn.core.util.Callback;
 
-import static tripleplay.syncdb.Log.log;
-
 /**
  * Handles the process of syncing a databse with the server.
  */

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import playn.core.PlayN;
-import playn.core.Sound;
 
 /**
  * Provides a sound clip that can be played multiple times. Callers tell the multiclip to prepare a

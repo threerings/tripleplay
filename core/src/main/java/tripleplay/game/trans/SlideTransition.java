@@ -7,7 +7,6 @@ package tripleplay.game.trans;
 
 import tripleplay.game.Screen;
 import tripleplay.game.ScreenStack;
-import tripleplay.util.Interpolator;
 
 /**
  * Slides the old screen off, and the new screen on right behind.

@@ -6,7 +6,6 @@
 package tripleplay.flump;
 
 import pythagoras.f.IPoint;
-import pythagoras.f.Point;
 
 import playn.core.Image;
 import playn.core.ImageLayer;

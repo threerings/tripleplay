@@ -5,8 +5,6 @@
 
 package tripleplay.particle;
 
-import pythagoras.f.FloatMath;
-
 import playn.core.gl.GL20;
 import playn.core.gl.GLBuffer;
 import playn.core.gl.GLContext;

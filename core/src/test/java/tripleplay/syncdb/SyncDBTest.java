@@ -13,7 +13,6 @@ import react.RSet;
 import react.Value;
 
 import playn.core.Platform;
-import playn.core.Storage;
 import playn.core.StubPlatform;
 import playn.core.util.Callback;
 

@@ -7,14 +7,12 @@ package tripleplay.ui;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IPoint;
-import pythagoras.f.Rectangle;
 
 import react.Signal;
 import react.SignalView;
 import react.UnitSlot;
 import react.Value;
 
-import playn.core.Canvas;
 import playn.core.CanvasImage;
 import playn.core.Image;
 import playn.core.ImageLayer;

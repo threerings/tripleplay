@@ -10,7 +10,7 @@ import tripleplay.util.Interpolator;
 /**
  * Handles shared code for transitions that use an interpolation.
  */
-public abstract class InterpedTransition<T extends InterpedTransition> extends AbstractTransition<T>
+public abstract class InterpedTransition<T extends InterpedTransition<T>> extends AbstractTransition<T>
 {
     public T linear () { return interp(Interpolator.LINEAR); }
     public T easeIn () { return interp(Interpolator.EASE_IN); }

@@ -9,7 +9,6 @@ import pythagoras.f.IDimension;
 import pythagoras.f.Point;
 
 import playn.core.Layer;
-import playn.core.PlayN;
 
 /**
  * The root of a display hierarchy. An application can have one or more roots, but they should not

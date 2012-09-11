@@ -5,9 +5,6 @@
 
 package tripleplay.particle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import react.Signal;
 import react.Slot;
 

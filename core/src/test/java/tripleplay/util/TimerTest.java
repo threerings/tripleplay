@@ -14,11 +14,11 @@ public class TimerTest
     public void testOneShot () {
         Timer timer = new Timer(0);
         Counter r1 = new Counter();
-        Timer.Handle h1 = timer.after(10, r1);
+        timer.after(10, r1);
         // make sure the timer hasn't run yet
         timer.update(3);
         assertEquals(0, r1.ranCount);
-        // elapse time past our expirey and make sure it has run
+        // elapse time past our expiry and make sure it has run
         timer.update(15);
         assertEquals(1, r1.ranCount);
     }
@@ -32,7 +32,7 @@ public class TimerTest
         timer.update(3);
         assertEquals(0, r1.ranCount);
         h1.cancel();
-        // elapse time past our expirey and make sure our canceled timer did not run
+        // elapse time past our expiry and make sure our canceled timer did not run
         timer.update(15);
         assertEquals(0, r1.ranCount);
     }
@@ -46,10 +46,10 @@ public class TimerTest
         // make sure the timer hasn't run yet
         timer.update(time += 3);
         assertEquals(0, r1.ranCount);
-        // elapse time past our expirey and make sure our action ran
+        // elapse time past our expiry and make sure our action ran
         timer.update(time += 10);
         assertEquals(1, r1.ranCount);
-        // elapse time past our expirey again and make sure our action ran again
+        // elapse time past our expiry again and make sure our action ran again
         timer.update(time += 10);
         assertEquals(2, r1.ranCount);
         // cancel our timer and make sure it ceases to run
@@ -64,9 +64,9 @@ public class TimerTest
         Timer timer = new Timer(time);
         Counter r1 = new Counter(), r2 = new Counter(), r3 = new Counter();
         // set up timers to expire after 10, 10, and 25, the latter two repeating every 10 and 15
-        Timer.Handle h1 = timer.after(10, r1);
-        Timer.Handle h2 = timer.every(10, r2);
-        Timer.Handle h3 = timer.atThenEvery(25, 15, r3);
+        timer.after(10, r1);
+        timer.every(10, r2);
+        timer.atThenEvery(25, 15, r3);
 
         // T=T+3: no timers have run
         time += 3; timer.update(time);
@@ -107,21 +107,21 @@ public class TimerTest
 
         // make sure that three timers set to expire at the same time go off in the order they were
         // registered
-        Timer.Handle h1 = timer.every(10, new Runnable() {
+        timer.every(10, new Runnable() {
             public void run () {
                 r1[0] += 1;
                 assertTrue(r1[0] == r2[0]+1);
                 assertTrue(r1[0] == r3[0]+1);
             }
         });
-        Timer.Handle h2 = timer.every(10, new Runnable() {
+        timer.every(10, new Runnable() {
             public void run () {
                 assertTrue(r1[0] == r2[0]+1);
                 r2[0] += 1;
                 assertTrue(r2[0] == r3[0]+1);
             }
         });
-        Timer.Handle h3 = timer.every(10, new Runnable() {
+        timer.every(10, new Runnable() {
             public void run () {
                 assertTrue(r1[0] == r3[0]+1);
                 assertTrue(r2[0] == r3[0]+1);

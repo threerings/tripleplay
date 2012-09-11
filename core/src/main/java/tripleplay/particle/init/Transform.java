@@ -10,7 +10,6 @@ import playn.core.Layer;
 import static playn.core.PlayN.graphics;
 
 import pythagoras.f.FloatMath;
-import pythagoras.f.Point;
 
 import tripleplay.particle.Initializer;
 import tripleplay.particle.ParticleBuffer;
@@ -79,7 +78,6 @@ public class Transform
                 System.arraycopy(_matrix, 0, data, start + ParticleBuffer.M00, 6);
             }
             protected final InternalTransform xform = graphics().ctx().createTransform();
-            protected final Point _pos = new Point();
             protected final float[] _matrix = new float[6];
         };
     }
@@ -95,7 +93,6 @@ public class Transform
                 data[start + ParticleBuffer.TX] = x + rando.getFloat(width);
                 data[start + ParticleBuffer.TY] = y + rando.getFloat(height);
             }
-            protected final Point _pos = new Point();
         };
     }
 }

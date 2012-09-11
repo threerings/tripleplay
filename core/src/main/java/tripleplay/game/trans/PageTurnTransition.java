@@ -13,7 +13,6 @@ import pythagoras.f.FloatMath;
 import pythagoras.f.MathUtil;
 
 import tripleplay.game.Screen;
-import tripleplay.game.ScreenStack;
 import tripleplay.shaders.RotateYShader;
 import tripleplay.util.Interpolator;
 

@@ -14,7 +14,7 @@ import tripleplay.game.ScreenStack;
  * A base class for transitions that handles duration and the PITA machinery to case return values
  * to the right type.
  */
-public abstract class AbstractTransition<T extends AbstractTransition>
+public abstract class AbstractTransition<T extends AbstractTransition<T>>
     implements ScreenStack.Transition
 {
     /** Configures the duration of the transition. */
