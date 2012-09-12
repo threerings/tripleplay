@@ -133,10 +133,17 @@ public class Field extends TextWidget<Field>
         }
         if (nativeField) {
             _nativeField.add();
-            _tglyph.layer().setAlpha(0);
+            setGlyphLayerAlpha(0);
         } else {
             _nativeField.remove();
-            _tglyph.layer().setAlpha(1);
+            setGlyphLayerAlpha(1);
+        }
+    }
+
+    protected void setGlyphLayerAlpha (float alpha)
+    {
+        if (_tglyph.layer() != null) {
+            _tglyph.layer().setAlpha(alpha);
         }
     }
 
