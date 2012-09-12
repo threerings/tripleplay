@@ -62,6 +62,11 @@ public class Button extends ClickableTextWidget<Button>
         return "Button(" + text.get() + ")";
     }
 
+    @Override protected Class<?> getStyleClass ()
+    {
+        return Button.class;
+    }
+
     @Override protected void layout () {
         super.layout();
         _actionSound = resolveStyle(Style.ACTION_SOUND);

@@ -32,4 +32,9 @@ public class Group extends Elements<Group>
     public Group (Layout layout) {
         super(layout);
     }
+
+    @Override protected Class<?> getStyleClass ()
+    {
+        return Group.class;
+    }
 }

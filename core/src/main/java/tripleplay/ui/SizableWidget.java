@@ -14,7 +14,7 @@ import tripleplay.util.DimensionValue;
  * of the widget is calculated, but the widget may end up being stretched when contained in a
  * layout that does so.
  */
-public class SizableWidget<T extends SizableWidget<T>> extends Widget<T>
+public abstract class SizableWidget<T extends SizableWidget<T>> extends Widget<T>
 {
     /** The preferred size of this widget. Update at will. */
     public final DimensionValue preferredSize = new DimensionValue(0, 0);

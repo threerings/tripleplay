@@ -85,6 +85,11 @@ public class Slider extends Widget<Slider>
     /** Returns our minimum allowed value. */
     public float min () { return _min; }
 
+    @Override protected Class<?> getStyleClass ()
+    {
+        return Slider.class;
+    }
+
     @Override protected void wasRemoved () {
         super.wasRemoved();
         if (_barInst != null) {

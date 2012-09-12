@@ -56,6 +56,11 @@ public class Field extends TextWidget<Field>
         return this;
     }
 
+    @Override protected Class<?> getStyleClass ()
+    {
+        return Field.class;
+    }
+
     @Override protected String text () {
         String ctext = text.get();
         // we always want non-empty text so that we force ourselves to always have a text layer and

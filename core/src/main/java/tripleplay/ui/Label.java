@@ -54,6 +54,11 @@ public class Label extends TextWidget<Label>
         return "Label(" + text.get() + ")";
     }
 
+    @Override protected Class<?> getStyleClass ()
+    {
+        return Label.class;
+    }
+
     @Override protected String text () {
         return text.get();
     }

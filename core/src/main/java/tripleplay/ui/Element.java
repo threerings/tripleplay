@@ -248,10 +248,12 @@ public abstract class Element<T extends Element<T>>
      * actual class, but you may wish to, for example, extend {@link Label} with some customization
      * and override this method to return {@code Label.class} so that your extension has the same
      * styles as Label applied to it.
+     *
+     * Concrete Element implementations should return the actual class instance instead of
+     * getClass(). Returning getClass() means that further subclasses will lose all styles applied
+     * to this implementation, probably unintentionally.
      */
-    protected Class<?> getStyleClass () {
-        return getClass();
-    }
+    protected abstract Class<?> getStyleClass ();
 
     /**
      * Called when this element is added to a parent element. If the parent element is already

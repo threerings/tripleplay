@@ -21,6 +21,11 @@ public class Shim extends Element<Shim>
         _size = new Dimension(size);
     }
 
+    @Override protected Class<?> getStyleClass ()
+    {
+        return Shim.class;
+    }
+
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         return new SizableLayoutData(null, _size);
     }

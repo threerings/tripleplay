@@ -44,6 +44,11 @@ public class CheckBox extends ClickableTextWidget<CheckBox>
         });
     }
 
+    @Override protected Class<?> getStyleClass ()
+    {
+        return CheckBox.class;
+    }
+
     @Override protected String text () {
         return (_checkIcon == null) ? _checkStr : null;
     }
