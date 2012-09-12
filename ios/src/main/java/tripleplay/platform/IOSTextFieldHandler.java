@@ -105,7 +105,7 @@ public class IOSTextFieldHandler
                 }}));
 
         NSNotificationCenter.get_DefaultCenter().AddObserver(
-            UIKeyboard.get_DidHideNotification(),
+            UIKeyboard.get_WillHideNotification(),
             new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
                 @Override public void Invoke (NSNotification nf) {
                     if (!_gameViewTransformed) {
