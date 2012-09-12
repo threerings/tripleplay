@@ -44,6 +44,19 @@ public class IOSTextFieldHandler
                     if (field != null) field.text().update(field._field.get_Text());
                 }}));
 
+        // fire the finishedEditing signal when editing is ended
+        NSNotificationCenter.get_DefaultCenter().AddObserver(
+            UITextField.get_TextDidEndEditingNotification(),
+            new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(
+                new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
+                    @Override public void Invoke (NSNotification nf) {
+                        IOSNativeTextField field = _activeFields.get(nf.get_Object());
+                        if (field != null) {
+                            field._finishedEditing.emit(null);
+                        }
+                    }
+                }));
+
         // slide the game view up when the keyboard is displayed
         NSNotificationCenter.get_DefaultCenter().AddObserver(
             UIKeyboard.get_DidShowNotification(),
@@ -141,7 +154,7 @@ public class IOSTextFieldHandler
     protected final Map<UITextField, IOSNativeTextField> _activeFields =
         new HashMap<UITextField, IOSNativeTextField>();
 
-    // we specifically track whether we've transformed the game view in a boolean becase
+    // we specifically track whether we've transformed the game view in a boolean because
     // CGAffineTransform is a value class and cannot be null
     protected static boolean _gameViewTransformed;
     protected static CGAffineTransform _gameViewTransform;

@@ -5,6 +5,7 @@
 
 package tripleplay.platform;
 
+import cli.MonoTouch.UIKit.UIFont;
 import cli.MonoTouch.UIKit.UIKeyboardType;
 import cli.MonoTouch.UIKit.UITextAutocapitalizationType;
 import cli.MonoTouch.UIKit.UITextAutocorrectionType;
@@ -18,6 +19,7 @@ import playn.core.Font;
 import playn.core.Keyboard;
 import playn.ios.IOSPlatform;
 
+import react.Signal;
 import react.Slot;
 import react.Value;
 
@@ -44,10 +46,17 @@ public class IOSNativeTextField implements NativeTextField
                 _field.set_Text(value);
             }
         });
+
+        _finishedEditing = Signal.create();
     }
 
     @Override public Value<String> text () {
         return _text;
+    }
+
+    @Override public Signal<Void> finishedEditing ()
+    {
+        return _finishedEditing;
     }
 
     @Override public IOSNativeTextField setTextType (Keyboard.TextType type) {
@@ -70,11 +79,13 @@ public class IOSNativeTextField implements NativeTextField
 
     @Override public IOSNativeTextField setFont (Font font) {
         _field.set_Font(_handler.getUIFont(font));
+        updateBounds();
         return this;
     }
 
     @Override public IOSNativeTextField setBounds (IRectangle bounds) {
-        _field.set_Frame(new RectangleF(bounds.x(), bounds.y(), bounds.width(), bounds.height()));
+        _requestedBounds = bounds;
+        updateBounds();
         return this;
     }
 
@@ -86,9 +97,39 @@ public class IOSNativeTextField implements NativeTextField
         if (_handler.isAdded(_field)) _handler.deactivate(this);
     }
 
+    @Override public void focus ()
+    {
+        _field.BecomeFirstResponder();
+    }
+
+    protected void updateBounds ()
+    {
+        if (_requestedBounds == null) {
+            return;
+        }
+
+        UIFont font = _field.get_Font();
+        // field fudged to the left 1 pixel to match PlayN text rendering.
+        RectangleF fieldBounds = new RectangleF(_requestedBounds.x() + 1, _requestedBounds.y(),
+            _requestedBounds.width(), _requestedBounds.height());
+        if (fieldBounds.get_Height() < font.get_LineHeight()) {
+            // ensure we're tall enough for a single line of text and the text cursor
+            fieldBounds.set_Height(font.get_LineHeight());
+        }
+        // offset upwards because the text field has some built in vertical padding we want to
+        // ignore. The difference between the lineHeight and the ascender + descender (which is
+        // negative) seems to represent this pretty well.
+        fieldBounds.set_Y(Math.round(fieldBounds.get_Y() -
+            (font.get_LineHeight() - (font.get_Ascender() - font.get_Descender()))));
+        _field.set_Frame(fieldBounds);
+    }
+
     protected final IOSTextFieldHandler _handler;
     protected final UITextField _field;
     protected final Value<String> _text;
+    protected final Signal<Void> _finishedEditing;
+
+    protected IRectangle _requestedBounds;
 
     // all fields close the keyboard when the return key is used
     protected static final UITextFieldDelegate CLOSE_ON_RETURN = new UITextFieldDelegate() {

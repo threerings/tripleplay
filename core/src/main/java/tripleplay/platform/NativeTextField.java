@@ -10,6 +10,7 @@ import pythagoras.f.IRectangle;
 import playn.core.Font;
 import playn.core.Keyboard;
 
+import react.Signal;
 import react.Value;
 
 /**
@@ -20,6 +21,9 @@ public interface NativeTextField
 {
     /** The current value of the text field. */
     Value<String> text ();
+
+    /** A signal that is dispatched when the native text field has lost focus */
+    Signal<Void> finishedEditing();
 
     /** Configures the type of text expected to be entered in this field.
      * @return {@code this} for call chaining. */
@@ -38,4 +42,7 @@ public interface NativeTextField
 
     /** Removes the field from the view. */
     void remove ();
+
+    /** Request focus for the native text field */
+    void focus ();
 }
