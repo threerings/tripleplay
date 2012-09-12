@@ -47,10 +47,12 @@ object TriplePlayBuild extends Build {
   }
 
   lazy val core = builder("core")
+  lazy val ios = builder("ios")
   lazy val tools = builder("tools")
   lazy val demoCore = builder("demo-core")
   lazy val demoJava = builder("demo-java")
 
   // one giant fruit roll-up to bring them all together
-  lazy val tripleplay = Project("tripleplay", file(".")) aggregate(core, tools, demoCore, demoJava)
+  lazy val tripleplay = Project("tripleplay", file(".")) aggregate(
+    core, ios, tools, demoCore, demoJava)
 }

@@ -48,6 +48,7 @@
 
   <modules>
     <module>core</module>
+    <module>ios</module>
     <module>tools</module>
     <module>demo</module>
   </modules>
