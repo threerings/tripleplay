@@ -10,6 +10,7 @@ import java.util.List;
 
 import playn.core.Game;
 import playn.core.GroupLayer;
+import tripleplay.ui.Element.Flag;
 
 /**
  * The main class that integrates the Triple Play UI with a PlayN game. This class is mainly
@@ -111,6 +112,7 @@ public class Interface
      */
     public void destroyRoot (Root root) {
         _roots.remove(root);
+        root.set(Flag.WILL_DESTROY, true);
         root.wasRemoved();
         root.layer.destroy();
     }

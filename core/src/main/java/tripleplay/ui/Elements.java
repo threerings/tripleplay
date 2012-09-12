@@ -151,6 +151,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     protected void didRemove (Element<?> child, boolean destroy) {
+        if (destroy) child.set(Flag.WILL_DESTROY, true);
         layer.remove(child.layer);
         if (isAdded()) child.wasRemoved();
         child.wasUnparented();
@@ -167,7 +168,9 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
+        boolean willDestroy = isSet(Flag.WILL_DESTROY);
         for (Element<?> child : _children) {
+            if (willDestroy) child.set(Flag.WILL_DESTROY, true);
             child.wasRemoved();
         }
         // if we're added again, we'll be re-laid-out

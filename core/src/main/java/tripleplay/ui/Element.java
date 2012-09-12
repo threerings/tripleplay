@@ -289,8 +289,9 @@ public abstract class Element<T extends Element<T>>
      * Also, if the element was removed directly from its parent, then the layer is orphaned prior
      * to this call. Furthermore, if the element is being destroyed (see {@link Elements#destroy}
      * and other methods), the destruction of the layer will occur <b>after</b> this method
-     * returns. This allows subclasses to manage resources as needed. <p><b>NOTE</b>: the base
-     * class method must <b>always</b> be called for correct operation.</p>
+     * returns and the {@link #willDestroy()} method returns true. This allows subclasses to
+     * manage resources as needed. <p><b>NOTE</b>: the base class method must <b>always</b> be
+     * called for correct operation.</p>
      */
     protected void wasRemoved () {
         if (_bginst != null) {
@@ -486,6 +487,17 @@ public abstract class Element<T extends Element<T>>
         return PlayN.graphics().createGroupLayer();
     }
 
+    /**
+     * Tests if this element is about to be destroyed. Elements are destroyed via a call to one of
+     * the "destroy" methods such as {@link Elements#destroy(Element)}. This allows subclasses
+     * to manage resources appropriately during their implementation of {@link #wasRemoved}, for
+     * example clearing a child cache. <p>NOTE: at the expense of slight semantic dissonance,
+     * the flag is not cleared after destruction</p>
+     */
+    protected boolean willDestroy () {
+        return isSet(Flag.WILL_DESTROY);
+    }
+
     protected abstract class BaseLayoutData {
         /**
          * Rebuilds this element's visualization. Called when this element's size has changed. In
@@ -591,7 +603,7 @@ public abstract class Element<T extends Element<T>>
     protected Background.Instance _bginst;
 
     protected static enum Flag {
-        VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3);
+        VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3), WILL_DESTROY(1 << 4);
 
         public final int mask;
 
