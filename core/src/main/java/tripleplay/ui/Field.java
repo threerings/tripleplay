@@ -14,6 +14,7 @@ import playn.core.util.Callback;
 
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
+import react.Signal;
 import react.Slot;
 import react.Value;
 import tripleplay.platform.NativeTextField;
@@ -26,6 +27,9 @@ public class Field extends TextWidget<Field>
 {
     /** The text displayed by this widget. */
     public final Value<String> text;
+
+    /** A signal that is dispatched when text editing is complete. */
+    public final Signal<Void> finishedEditing;
 
     public Field () {
         this("");
@@ -45,12 +49,13 @@ public class Field extends TextWidget<Field>
 
         if (TPPlatform.instance().hasNativeTextFields()) {
             _nativeField = TPPlatform.instance().createNativeTextField();
-            _nativeField.finishedEditing().connect(new Slot<Void>() {
+            text = _nativeField.text();
+            (finishedEditing = _nativeField.finishedEditing()).connect(new Slot<Void>() {
                 @Override public void onEmit (Void event) { updateMode(false); }
             });
-            text = _nativeField.text();
         } else {
             text = Value.create("");
+            finishedEditing = Signal.create();
         }
         this.text.update(initialText);
         this.text.connect(textDidChange());
@@ -104,6 +109,7 @@ public class Field extends TextWidget<Field>
                 @Override public void onSuccess (String result) {
                     // null result is a canceled entry dialog.
                     if (result != null) text.update(result);
+                    finishedEditing.emit(null);
                 }
                 @Override public void onFailure (Throwable cause) { /* noop */ }
             });
