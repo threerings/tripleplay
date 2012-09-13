@@ -519,6 +519,33 @@ public abstract class Element<T extends Element<T>>
         public abstract Dimension computeSize (float hintX, float hintY);
     }
 
+    /** Ways in which a preferred and an original dimension can be "taken" to produce a result.
+     * The name is supposed to be readable in context and compact, for example
+     * <code>new SizableLayoutData(...).forWidth(Take.MAX).forHeight(Take.MIN, 200)</code>. */
+    protected enum Take
+    {
+        /** Uses the maximum of the preferred size and original. */
+        MAX {
+            @Override public float apply (float preferred, float original) {
+                return Math.max(preferred, original);
+            }
+        },
+        /** Uses the minimum of the preferred size and original. */
+        MIN {
+            @Override public float apply (float preferred, float original) {
+                return Math.min(preferred, original);
+            }
+        },
+        /** Uses the preferred size if non-zero, otherwise the original. This is the default. */
+        PREFERRED_IF_SET {
+            @Override public float apply (float preferred, float original) {
+                return preferred == 0 ? original : preferred;
+            }
+        };
+
+        public abstract float apply (float preferred, float original);
+    }
+
     /**
      * A layout data that will delegate to another layout data instance, but alter the size
      * computation to optionally use fixed values.
@@ -562,6 +589,44 @@ public abstract class Element<T extends Element<T>>
             }
         }
 
+        /**
+         * Sets the way in which widths are combined to calculate the resulting preferred size.
+         * For example, <code>new SizeableLayoutData(...).forWidth(Take.MAX)</code>.
+         */
+        public SizableLayoutData forWidth (Take fn) {
+            widthFn = fn;
+            return this;
+        }
+
+        /**
+         * Sets the preferred width and how it should be combined with the delegate's preferred
+         * width. For example, <code>new SizeableLayoutData(...).forWidth(Take.MAX, 250)</code>.
+         */
+        public SizableLayoutData forWidth (Take fn, float pref) {
+            widthFn = fn;
+            prefWidth = pref;
+            return this;
+        }
+
+        /**
+         * Sets the way in which heights are combined to calculate the resulting preferred size.
+         * For example, <code>new SizeableLayoutData(...).forHeight(Take.MAX)</code>.
+         */
+        public SizableLayoutData forHeight (Take fn) {
+            heightFn = fn;
+            return this;
+        }
+
+        /**
+         * Sets the preferred height and how it should be combined with the delegate's preferred
+         * height. For example, <code>new SizeableLayoutData(...).forHeight(Take.MAX, 250)</code>.
+         */
+        public SizableLayoutData forHeight (Take fn, float pref) {
+            heightFn = fn;
+            prefHeight = pref;
+            return this;
+        }
+
         @Override public Dimension computeSize (float hintX, float hintY) {
             // hint the delegate with our preferred width or height or both
             hintX = select(prefWidth, hintX);
@@ -572,8 +637,8 @@ public abstract class Element<T extends Element<T>>
                 sizeDelegate.computeSize(hintX, hintY);
 
             // swap in our preferred width or height or both
-            dim.width = select(prefWidth, dim.width);
-            dim.height = select(prefHeight, dim.height);
+            dim.width = widthFn.apply(prefWidth, dim.width);
+            dim.height = heightFn.apply(prefHeight, dim.height);
 
             return dim;
         }
@@ -588,7 +653,8 @@ public abstract class Element<T extends Element<T>>
 
         protected final BaseLayoutData layoutDelegate;
         protected final LayoutData sizeDelegate;
-        protected final float prefWidth, prefHeight;
+        protected float prefWidth, prefHeight;
+        protected Take widthFn = Take.PREFERRED_IF_SET, heightFn = Take.PREFERRED_IF_SET;
     }
 
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
