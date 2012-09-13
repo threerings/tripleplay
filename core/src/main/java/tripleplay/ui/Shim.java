@@ -21,8 +21,7 @@ public class Shim extends Element<Shim>
         _size = new Dimension(size);
     }
 
-    @Override protected Class<?> getStyleClass ()
-    {
+    @Override protected Class<?> getStyleClass () {
         return Shim.class;
     }
 

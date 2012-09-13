@@ -56,8 +56,7 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
         return "ToggleButton(" + text.get() + ")";
     }
 
-    @Override protected Class<?> getStyleClass ()
-    {
+    @Override protected Class<?> getStyleClass () {
         return ToggleButton.class;
     }
 

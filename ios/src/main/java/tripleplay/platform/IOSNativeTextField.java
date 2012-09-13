@@ -38,24 +38,27 @@ public class IOSNativeTextField implements NativeTextField
             UITextAutocapitalizationType.wrap(UITextAutocapitalizationType.Sentences));
         _field.set_SecureTextEntry(false);
 
-        _field.set_Delegate(CLOSE_ON_RETURN);
+        // all fields close the keyboard when the return key is used
+        _field.set_Delegate(new UITextFieldDelegate() {
+            @Override public boolean ShouldReturn (UITextField field) {
+                _pressedReturn = true;
+                field.ResignFirstResponder();
+                return false;
+            }
+        });
 
-        _text = Value.create("");
         _text.connect(new Slot<String>() {
             @Override public void onEmit (String value) {
                 _field.set_Text(value);
             }
         });
-
-        _finishedEditing = Signal.create();
     }
 
     @Override public Value<String> text () {
         return _text;
     }
 
-    @Override public Signal<Boolean> finishedEditing ()
-    {
+    @Override public Signal<Boolean> finishedEditing () {
         return _finishedEditing;
     }
 
@@ -97,16 +100,12 @@ public class IOSNativeTextField implements NativeTextField
         if (_handler.isAdded(_field)) _handler.deactivate(this);
     }
 
-    @Override public void focus ()
-    {
+    @Override public void focus () {
         _field.BecomeFirstResponder();
     }
 
-    protected void updateBounds ()
-    {
-        if (_requestedBounds == null) {
-            return;
-        }
+    protected void updateBounds () {
+        if (_requestedBounds == null) return;
 
         UIFont font = _field.get_Font();
         // field fudged to the left 1 pixel to match PlayN text rendering.
@@ -124,26 +123,16 @@ public class IOSNativeTextField implements NativeTextField
         _field.set_Frame(fieldBounds);
     }
 
-    protected void didFinish ()
-    {
+    protected void didFinish () {
         _finishedEditing.emit(_pressedReturn);
         _pressedReturn = false;
     }
 
     protected final IOSTextFieldHandler _handler;
     protected final UITextField _field;
-    protected final Value<String> _text;
-    protected final Signal<Boolean> _finishedEditing;
+    protected final Value<String> _text = Value.create("");
+    protected final Signal<Boolean> _finishedEditing = Signal.create();
 
     protected IRectangle _requestedBounds;
     protected boolean _pressedReturn;
-
-    // all fields close the keyboard when the return key is used
-    protected final UITextFieldDelegate CLOSE_ON_RETURN = new UITextFieldDelegate() {
-        @Override public boolean ShouldReturn (UITextField field) {
-            _pressedReturn = true;
-            field.ResignFirstResponder();
-            return false;
-        }
-    };
 }

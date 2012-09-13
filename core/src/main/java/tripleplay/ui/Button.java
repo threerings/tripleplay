@@ -62,8 +62,7 @@ public class Button extends ClickableTextWidget<Button>
         return "Button(" + text.get() + ")";
     }
 
-    @Override protected Class<?> getStyleClass ()
-    {
+    @Override protected Class<?> getStyleClass () {
         return Button.class;
     }
 

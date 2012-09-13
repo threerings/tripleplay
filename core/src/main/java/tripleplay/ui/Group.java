@@ -33,8 +33,7 @@ public class Group extends Elements<Group>
         super(layout);
     }
 
-    @Override protected Class<?> getStyleClass ()
-    {
+    @Override protected Class<?> getStyleClass () {
         return Group.class;
     }
 }

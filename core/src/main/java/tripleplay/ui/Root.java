@@ -99,8 +99,7 @@ public class Root extends Elements<Root>
         }
     }
 
-    @Override protected Class<?> getStyleClass ()
-    {
+    @Override protected Class<?> getStyleClass () {
         return Root.class;
     }
 

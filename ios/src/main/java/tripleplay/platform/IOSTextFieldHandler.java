@@ -54,9 +54,7 @@ public class IOSTextFieldHandler
                 new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
                     @Override public void Invoke (NSNotification nf) {
                         IOSNativeTextField field = _activeFields.get(nf.get_Object());
-                        if (field != null) {
-                            field.didFinish();
-                        }
+                        if (field != null) field.didFinish();
                     }
                 }));
 
@@ -74,9 +72,7 @@ public class IOSTextFieldHandler
 
                     // find the first responder
                     IOSNativeTextField firstResponder = findFirstResponder();
-                    if (firstResponder == null) {
-                        return; // it's not a field we're managing, bail
-                    }
+                    if (firstResponder == null) return; // it's not a field we're managing, bail
 
                     // figure out how we need to transform the game view
                     SizeF size = ((NSValue) nf.get_UserInfo().get_Item(
@@ -108,10 +104,9 @@ public class IOSTextFieldHandler
             UIKeyboard.get_WillHideNotification(),
             new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
                 @Override public void Invoke (NSNotification nf) {
-                    if (!_gameViewTransformed) {
-                        return; // not transformed? bail - this might be ok, if it was shown
-                                // outside of our purview
-                    }
+                    // bail if not transformed; this might be ok, if the keyboard was shown outside
+                    // of our purview
+                    if (!_gameViewTransformed) return;
 
                     UIView gameView = _overlay.get_Superview();
                     gameView.set_Transform(_gameViewTransform);
@@ -153,27 +148,20 @@ public class IOSTextFieldHandler
 
     protected IOSNativeTextField findFirstResponder () {
         for (Map.Entry<UITextField, IOSNativeTextField> entry : _activeFields.entrySet()) {
-            if (entry.getKey().get_IsFirstResponder()) {
-                return entry.getValue();
-            }
+            if (entry.getKey().get_IsFirstResponder()) return entry.getValue();
         }
         return null;
     }
 
-    protected class TouchDetector extends UIView
-    {
+    protected class TouchDetector extends UIView {
         public TouchDetector (RectangleF bounds) {
             super(bounds);
         }
 
         @Override public void TouchesBegan (NSSet nsSet, UIEvent uiEvent) {
             IOSNativeTextField firstResponder = findFirstResponder();
-            if (firstResponder != null) {
-                firstResponder._field.ResignFirstResponder();
-            }
-
-            // if we don't do the super call after our own handling, the touches end event for
-            // this touch never gets dispatched;
+            if (firstResponder != null) firstResponder._field.ResignFirstResponder();
+            // call super, otherwise the TouchesEnded event for this touch are never dispatched
             super.TouchesBegan(nsSet, uiEvent);
         }
     }
