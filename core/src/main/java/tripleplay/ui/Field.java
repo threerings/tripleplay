@@ -14,9 +14,12 @@ import playn.core.util.Callback;
 
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
+
 import react.Signal;
+import react.SignalView;
 import react.Slot;
 import react.Value;
+
 import tripleplay.platform.NativeTextField;
 import tripleplay.platform.TPPlatform;
 
@@ -27,9 +30,6 @@ public class Field extends TextWidget<Field>
 {
     /** The text displayed by this widget. */
     public final Value<String> text;
-
-    /** A signal that is dispatched when text editing is complete. */
-    public final Signal<Boolean> finishedEditing;
 
     public Field () {
         this("");
@@ -50,16 +50,22 @@ public class Field extends TextWidget<Field>
         if (TPPlatform.instance().hasNativeTextFields()) {
             _nativeField = TPPlatform.instance().createNativeTextField();
             text = _nativeField.text();
-            (finishedEditing = _nativeField.finishedEditing()).connect(new Slot<Boolean>() {
+            _finishedEditing = _nativeField.finishedEditing();
+            _finishedEditing.connect(new Slot<Boolean>() {
                 @Override public void onEmit (Boolean event) { updateMode(false); }
             });
         } else {
             _nativeField = null;
             text = Value.create("");
-            finishedEditing = Signal.create();
+            _finishedEditing = Signal.create();
         }
         this.text.update(initialText);
         this.text.connect(textDidChange());
+    }
+
+    /** Returns a signal that is dispatched when text editing is complete. */
+    public SignalView<Boolean> finishedEditing () {
+        return _finishedEditing;
     }
 
     /**
@@ -106,9 +112,9 @@ public class Field extends TextWidget<Field>
         } else {
             PlayN.keyboard().getText(_textType, _popupLabel, text.get(), new Callback<String>() {
                 @Override public void onSuccess (String result) {
-                    // null result is a canceled entry dialog.
+                    // null result is a canceled entry dialog
                     if (result != null) text.update(result);
-                    finishedEditing.emit(result != null);
+                    _finishedEditing.emit(result != null);
                 }
                 @Override public void onFailure (Throwable cause) { /* noop */ }
             });
@@ -145,6 +151,7 @@ public class Field extends TextWidget<Field>
     }
 
     protected final NativeTextField _nativeField;
+    protected final Signal<Boolean> _finishedEditing;
 
     // used when popping up a text entry interface on mobile platforms
     protected Keyboard.TextType _textType = Keyboard.TextType.DEFAULT;
