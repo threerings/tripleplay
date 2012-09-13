@@ -54,7 +54,7 @@ public class IOSNativeTextField implements NativeTextField
         return _text;
     }
 
-    @Override public Signal<Void> finishedEditing ()
+    @Override public Signal<Boolean> finishedEditing ()
     {
         return _finishedEditing;
     }
@@ -124,16 +124,24 @@ public class IOSNativeTextField implements NativeTextField
         _field.set_Frame(fieldBounds);
     }
 
+    protected void didFinish ()
+    {
+        _finishedEditing.emit(_pressedReturn);
+        _pressedReturn = false;
+    }
+
     protected final IOSTextFieldHandler _handler;
     protected final UITextField _field;
     protected final Value<String> _text;
-    protected final Signal<Void> _finishedEditing;
+    protected final Signal<Boolean> _finishedEditing;
 
     protected IRectangle _requestedBounds;
+    protected boolean _pressedReturn;
 
     // all fields close the keyboard when the return key is used
-    protected static final UITextFieldDelegate CLOSE_ON_RETURN = new UITextFieldDelegate() {
+    protected final UITextFieldDelegate CLOSE_ON_RETURN = new UITextFieldDelegate() {
         @Override public boolean ShouldReturn (UITextField field) {
+            _pressedReturn = true;
             field.ResignFirstResponder();
             return false;
         }

@@ -22,8 +22,9 @@ public interface NativeTextField
     /** The current value of the text field. */
     Value<String> text ();
 
-    /** A signal that is dispatched when the native text field has lost focus */
-    Signal<Void> finishedEditing();
+    /** A signal that is dispatched when the native text field has lost focus. Value is false if
+     * editing was canceled */
+    Signal<Boolean> finishedEditing();
 
     /** Configures the type of text expected to be entered in this field.
      * @return {@code this} for call chaining. */

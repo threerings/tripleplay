@@ -29,7 +29,7 @@ public class Field extends TextWidget<Field>
     public final Value<String> text;
 
     /** A signal that is dispatched when text editing is complete. */
-    public final Signal<Void> finishedEditing;
+    public final Signal<Boolean> finishedEditing;
 
     public Field () {
         this("");
@@ -50,8 +50,8 @@ public class Field extends TextWidget<Field>
         if (TPPlatform.instance().hasNativeTextFields()) {
             _nativeField = TPPlatform.instance().createNativeTextField();
             text = _nativeField.text();
-            (finishedEditing = _nativeField.finishedEditing()).connect(new Slot<Void>() {
-                @Override public void onEmit (Void event) { updateMode(false); }
+            (finishedEditing = _nativeField.finishedEditing()).connect(new Slot<Boolean>() {
+                @Override public void onEmit (Boolean event) { updateMode(false); }
             });
         } else {
             text = Value.create("");
@@ -109,7 +109,7 @@ public class Field extends TextWidget<Field>
                 @Override public void onSuccess (String result) {
                     // null result is a canceled entry dialog.
                     if (result != null) text.update(result);
-                    finishedEditing.emit(null);
+                    finishedEditing.emit(result != null);
                 }
                 @Override public void onFailure (Throwable cause) { /* noop */ }
             });

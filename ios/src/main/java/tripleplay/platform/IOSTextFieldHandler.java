@@ -11,7 +11,9 @@ import java.util.Map;
 import cli.MonoTouch.CoreGraphics.CGAffineTransform;
 import cli.MonoTouch.Foundation.NSNotification;
 import cli.MonoTouch.Foundation.NSNotificationCenter;
+import cli.MonoTouch.Foundation.NSSet;
 import cli.MonoTouch.Foundation.NSValue;
+import cli.MonoTouch.UIKit.UIEvent;
 import cli.MonoTouch.UIKit.UIFont;
 import cli.MonoTouch.UIKit.UIKeyboard;
 import cli.MonoTouch.UIKit.UITextField;
@@ -32,6 +34,7 @@ public class IOSTextFieldHandler
 {
     public IOSTextFieldHandler (IOSTPPlatform platform) {
         _overlay = platform.platform.uiOverlay();
+        _touchDetector = new TouchDetector(_overlay.get_Bounds());
 
         // update text values when the text is changed
         NSNotificationCenter.get_DefaultCenter().AddObserver(
@@ -52,7 +55,7 @@ public class IOSTextFieldHandler
                     @Override public void Invoke (NSNotification nf) {
                         IOSNativeTextField field = _activeFields.get(nf.get_Object());
                         if (field != null) {
-                            field._finishedEditing.emit(null);
+                            field.didFinish();
                         }
                     }
                 }));
@@ -70,13 +73,7 @@ public class IOSTextFieldHandler
                     }
 
                     // find the first responder
-                    UITextField firstResponder = null;
-                    for (UITextField field : _activeFields.keySet()) {
-                        if (field.get_IsFirstResponder()) {
-                            firstResponder = field;
-                            break;
-                        }
-                    }
+                    IOSNativeTextField firstResponder = findFirstResponder();
                     if (firstResponder == null) {
                         return; // it's not a field we're managing, bail
                     }
@@ -84,7 +81,7 @@ public class IOSTextFieldHandler
                     // figure out how we need to transform the game view
                     SizeF size = ((NSValue) nf.get_UserInfo().get_Item(
                         UIKeyboard.get_FrameBeginUserInfoKey())).get_RectangleFValue().get_Size();
-                    RectangleF fieldFrame = firstResponder.get_Frame();
+                    RectangleF fieldFrame = firstResponder._field.get_Frame();
                     // oddly, the size given for keyboard dimensions is portrait, always.
                     float targetOffset = -size.get_Width() +
                         _overlay.get_Bounds().get_Height() - fieldFrame.get_Bottom();
@@ -102,6 +99,9 @@ public class IOSTextFieldHandler
                     trans.Translate(target.get_X(), target.get_Y());
                     gameView.set_Transform(trans);
                     _gameViewTransformed = true;
+
+                    // touches outside of the keyboard will close the keyboard
+                    _overlay.Add(_touchDetector);
                 }}));
 
         NSNotificationCenter.get_DefaultCenter().AddObserver(
@@ -117,6 +117,7 @@ public class IOSTextFieldHandler
                     gameView.set_Transform(_gameViewTransform);
                     _gameViewTransform = null;
                     _gameViewTransformed = false;
+                    _touchDetector.RemoveFromSuperview();
                 }}));
     }
 
@@ -150,12 +151,41 @@ public class IOSTextFieldHandler
         return field.IsDescendantOfView(_overlay);
     }
 
+    protected IOSNativeTextField findFirstResponder () {
+        for (Map.Entry<UITextField, IOSNativeTextField> entry : _activeFields.entrySet()) {
+            if (entry.getKey().get_IsFirstResponder()) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    protected class TouchDetector extends UIView
+    {
+        public TouchDetector (RectangleF bounds) {
+            super(bounds);
+        }
+
+        @Override public void TouchesBegan (NSSet nsSet, UIEvent uiEvent) {
+            IOSNativeTextField firstResponder = findFirstResponder();
+            if (firstResponder != null) {
+                firstResponder._field.ResignFirstResponder();
+            }
+
+            // if we don't do the super call after our own handling, the touches end event for
+            // this touch never gets dispatched;
+            super.TouchesBegan(nsSet, uiEvent);
+        }
+    }
+
     protected final UIView _overlay;
     protected final Map<UITextField, IOSNativeTextField> _activeFields =
         new HashMap<UITextField, IOSNativeTextField>();
 
     // we specifically track whether we've transformed the game view in a boolean because
     // CGAffineTransform is a value class and cannot be null
-    protected static boolean _gameViewTransformed;
-    protected static CGAffineTransform _gameViewTransform;
+    protected boolean _gameViewTransformed;
+    protected CGAffineTransform _gameViewTransform;
+
+    protected TouchDetector _touchDetector;
 }
