@@ -323,7 +323,7 @@ public abstract class ScreenStack
     }
 
     protected void justShow (Screen screen) {
-        graphics().rootLayer().add(screen.layer);
+        graphics().rootLayer().addAt(screen.layer, originX, originY);
         try { screen.wasShown(); }
         catch (RuntimeException e) { handleError(e); }
     }
