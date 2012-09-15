@@ -465,8 +465,8 @@ public abstract class SyncDB
     }
 
     protected void purgeDBs (Set<String> dbs) {
-        log.info("Purging", "dbs", dbs);
         if (dbs.isEmpty()) return; // NOOP!
+        log.info("Purging", "dbs", dbs);
 
         for (String key : _storage.keys()) {
             int sdbidx = key.indexOf(DBUtil.SUBDB_KEY_SEP);
