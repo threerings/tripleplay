@@ -28,6 +28,12 @@ import tripleplay.platform.TPPlatform;
  */
 public class Field extends TextWidget<Field>
 {
+    /** If on a platform that utilizes native fields and this is true, the native field is
+     * displayed whenever this Field is visible, and the native field is responsible for all text
+     * rendering. If false, the native field is only displayed while actively editing (after a user
+     * click). */
+    public static final Style<Boolean> FULLTIME_NATIVE_FIELD = Style.newStyle(false, true);
+
     /** The text displayed by this widget. */
     public final Value<String> text;
 
@@ -52,7 +58,11 @@ public class Field extends TextWidget<Field>
             text = _nativeField.text();
             _finishedEditing = _nativeField.finishedEditing();
             _finishedEditing.connect(new Slot<Boolean>() {
-                @Override public void onEmit (Boolean event) { updateMode(false); }
+                @Override public void onEmit (Boolean event) {
+                    if (!fulltimeNativeField()) {
+                        updateMode(false);
+                    }
+                }
             });
         } else {
             _nativeField = null;
@@ -101,11 +111,9 @@ public class Field extends TextWidget<Field>
 
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
         super.onPointerStart(event, x, y);
-        if (!isEnabled()) return;
+        if (!isEnabled() || fulltimeNativeField()) return;
 
         if (_nativeField != null) {
-            _nativeField.setTextType(_textType).setFont(resolveStyle(Style.FONT)).
-                setBounds(getNativeFieldBounds());
             updateMode(true);
             _nativeField.focus();
 
@@ -127,6 +135,22 @@ public class Field extends TextWidget<Field>
         updateMode(false);
     }
 
+    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
+        return new TextLayoutData(hintX, hintY) {
+            @Override public void layout (float left, float top, float width, float height) {
+                super.layout(left, top, width, height);
+
+                if (fulltimeNativeField()) {
+                    updateMode(true);
+                }
+            }
+        };
+    }
+
+    protected boolean fulltimeNativeField () {
+        return _nativeField != null && resolveStyle(FULLTIME_NATIVE_FIELD);
+    }
+
     protected Rectangle getNativeFieldBounds () {
         // TODO: handle alignments other than HAlign.LEFT and VAlign.TOP
         Background bg = resolveStyle(Style.BACKGROUND);
@@ -138,6 +162,8 @@ public class Field extends TextWidget<Field>
     protected void updateMode (boolean nativeField) {
         if (_nativeField == null) return;
         if (nativeField) {
+            _nativeField.setTextType(_textType).setFont(resolveStyle(Style.FONT)).
+                setBounds(getNativeFieldBounds());
             _nativeField.add();
             setGlyphLayerAlpha(0);
         } else {
