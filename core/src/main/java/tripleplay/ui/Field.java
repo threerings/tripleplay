@@ -59,9 +59,7 @@ public class Field extends TextWidget<Field>
             _finishedEditing = _nativeField.finishedEditing();
             _finishedEditing.connect(new Slot<Boolean>() {
                 @Override public void onEmit (Boolean event) {
-                    if (!fulltimeNativeField()) {
-                        updateMode(false);
-                    }
+                    if (!fulltimeNativeField()) updateMode(false);
                 }
             });
         } else {
@@ -139,10 +137,7 @@ public class Field extends TextWidget<Field>
         return new TextLayoutData(hintX, hintY) {
             @Override public void layout (float left, float top, float width, float height) {
                 super.layout(left, top, width, height);
-
-                if (fulltimeNativeField()) {
-                    updateMode(true);
-                }
+                if (fulltimeNativeField()) updateMode(true);
             }
         };
     }
