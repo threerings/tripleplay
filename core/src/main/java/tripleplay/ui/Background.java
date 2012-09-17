@@ -19,6 +19,7 @@ import pythagoras.f.IDimension;
 import tripleplay.ui.bgs.BeveledBackground;
 import tripleplay.ui.bgs.BlankBackground;
 import tripleplay.ui.bgs.BorderedBackground;
+import tripleplay.ui.bgs.CenteredImageBackground;
 import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.RoundRectBackground;
 import tripleplay.ui.bgs.Scale9Background;
@@ -81,6 +82,13 @@ public abstract class Background
      */
     public static Background image (Image bgimage) {
         return new ImageBackground(bgimage);
+    }
+
+    /**
+     * Creates a centered image background with the specified image.
+     */
+    public static Background centeredImage (Image bgimage) {
+        return new CenteredImageBackground(bgimage);
     }
 
     /**
