@@ -7,6 +7,7 @@ package tripleplay.ui;
 
 import playn.core.Image;
 import playn.core.Keyboard;
+import playn.core.Keyboard.TextType;
 import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Pointer;
@@ -33,6 +34,21 @@ public class Field extends TextWidget<Field>
      * rendering. If false, the native field is only displayed while actively editing (after a user
      * click). */
     public static final Style<Boolean> FULLTIME_NATIVE_FIELD = Style.newStyle(false, true);
+
+    /** Controls the behavior of native text fields with respect to auto-capitalization on
+     * platforms that support it. */
+    // TODO: iOS supports multiple styles of autocap, support them here?
+    public static final Style<Boolean> AUTOCAPITALIZATION = Style.newStyle(false, true);
+
+    /** Controls the behavior of native text fields with respect to auto-correction on platforms
+     * that support it. */
+    public static final Style<Boolean> AUTOCORRECTION = Style.newStyle(false, true);
+
+    /** Controls secure text entry on native text fields: typically this will mean dots or asterix
+     * displayed instead of the typed character. */
+    public static final Style<Boolean> SECURE_TEXT_ENTRY = Style.newStyle(false, false);
+
+    public static final Style<TextType> TEXT_TYPE = Style.newStyle(false, TextType.DEFAULT);
 
     /** The text displayed by this widget. */
     public final Value<String> text;
@@ -78,10 +94,10 @@ public class Field extends TextWidget<Field>
 
     /**
      * Configures the keyboard type to use when text is requested via a popup.
+     * @Deprecated Use the TEXT_TYPE Style instead.
      */
     public Field setTextType (Keyboard.TextType type) {
-        _textType = type;
-        return this;
+        return addStyles(TEXT_TYPE.is(type));
     }
 
     /**
@@ -116,8 +132,8 @@ public class Field extends TextWidget<Field>
             _nativeField.focus();
 
         } else {
-            PlayN.keyboard().getText(_textType, _popupLabel, text.get(), new Callback<String>() {
-                @Override public void onSuccess (String result) {
+            PlayN.keyboard().getText(resolveStyle(TEXT_TYPE), _popupLabel, text.get(),
+                new Callback<String>() { @Override public void onSuccess (String result) {
                     // null result is a canceled entry dialog
                     if (result != null) text.update(result);
                     _finishedEditing.emit(result != null);
@@ -157,8 +173,12 @@ public class Field extends TextWidget<Field>
     protected void updateMode (boolean nativeField) {
         if (_nativeField == null) return;
         if (nativeField) {
-            _nativeField.setTextType(_textType).setFont(resolveStyle(Style.FONT)).
-                setBounds(getNativeFieldBounds());
+            _nativeField.setTextType(resolveStyle(TEXT_TYPE))
+                .setFont(resolveStyle(Style.FONT))
+                .setAutocapitalization(resolveStyle(AUTOCAPITALIZATION))
+                .setAutocorrection(resolveStyle(AUTOCORRECTION))
+                .setSecureTextEntry(resolveStyle(SECURE_TEXT_ENTRY))
+                .setBounds(getNativeFieldBounds());
             _nativeField.add();
             setGlyphLayerAlpha(0);
         } else {
@@ -175,6 +195,5 @@ public class Field extends TextWidget<Field>
     protected final Signal<Boolean> _finishedEditing;
 
     // used when popping up a text entry interface on mobile platforms
-    protected Keyboard.TextType _textType = Keyboard.TextType.DEFAULT;
     protected String _popupLabel;
 }

@@ -31,13 +31,6 @@ public class IOSNativeTextField implements NativeTextField
         _handler = handler;
         _field = new UITextField();
 
-        // TODO: probably want to make these customizable. Certainly in the case of SecureTextEntry
-        _field.set_AutocorrectionType(
-            UITextAutocorrectionType.wrap(UITextAutocorrectionType.Yes));
-        _field.set_AutocapitalizationType(
-            UITextAutocapitalizationType.wrap(UITextAutocapitalizationType.Sentences));
-        _field.set_SecureTextEntry(false);
-
         // all fields close the keyboard when the return key is used
         _field.set_Delegate(new UITextFieldDelegate() {
             @Override public boolean ShouldReturn (UITextField field) {
@@ -89,6 +82,23 @@ public class IOSNativeTextField implements NativeTextField
     @Override public IOSNativeTextField setBounds (IRectangle bounds) {
         _requestedBounds = bounds;
         updateBounds();
+        return this;
+    }
+
+    @Override public IOSNativeTextField setAutocapitalization (boolean enable) {
+        _field.set_AutocapitalizationType(UITextAutocapitalizationType.wrap(
+            enable ? UITextAutocapitalizationType.Sentences : UITextAutocapitalizationType.None));
+        return this;
+    }
+
+    @Override public NativeTextField setAutocorrection (boolean enable) {
+        _field.set_AutocorrectionType(UITextAutocorrectionType.wrap(
+            enable ? UITextAutocorrectionType.Yes : UITextAutocorrectionType.No));
+        return this;
+    }
+
+    @Override public NativeTextField setSecureTextEntry (boolean enable) {
+        _field.set_SecureTextEntry(enable);
         return this;
     }
 

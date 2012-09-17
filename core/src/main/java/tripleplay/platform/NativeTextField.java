@@ -38,6 +38,18 @@ public interface NativeTextField
      * @return {@code this} for call chaining. */
     NativeTextField setBounds (IRectangle bounds);
 
+    /** Configures the autocapitalization behavior of the field.
+     * @return {@code this} for call chaining. */
+    NativeTextField setAutocapitalization (boolean useAutocapitalization);
+
+    /** Configures the autocorrection behavior of the field.
+     * @return {@code this} for call chaining. */
+    NativeTextField setAutocorrection (boolean useAutocorrection);
+
+    /** Configures the secure entry behavior of the field.
+     * @return {@code this} for call chaining. */
+    NativeTextField setSecureTextEntry (boolean useSecureEntry);
+
     /** Adds the field to the view. */
     void add ();
 
