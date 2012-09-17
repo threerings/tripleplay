@@ -6,6 +6,7 @@
 package tripleplay.ui.bgs;
 
 import pythagoras.f.IDimension;
+import pythagoras.f.MathUtil;
 
 import playn.core.Image;
 import playn.core.ImmediateLayer;
@@ -26,11 +27,13 @@ public class CenteredImageBackground extends Background
         _image = image;
     }
 
-    @Override protected Instance instantiate (final IDimension size) {
+    @Override protected Instance instantiate (IDimension size) {
+        final float x = MathUtil.ifloor((size.width()-_image.width())/2);
+        final float y = MathUtil.ifloor((size.height()-_image.height())/2);
         return new LayerInstance(graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 if (alpha != null) surf.setAlpha(alpha);
-                surf.drawImageCentered(_image, size.width()/2, size.height()/2);
+                surf.drawImage(_image, x, y);
             }
         }));
     }
