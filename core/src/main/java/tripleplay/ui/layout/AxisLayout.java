@@ -247,8 +247,8 @@ public abstract class AxisLayout extends Layout
 
             // the first argument to computeSize is not used for stretched elements
             float availX = hintX - m.gaps(_gap), availY = hintY - m.gaps(_gap);
-            float ehintX = vert ? availX : c.computeSize(0, m.totalWeight, availX);
-            float ehintY = vert ? c.computeSize(0, m.totalWeight, availY) : availY;
+            float ehintX = vert ? availX : c.computeSize(0, m.totalWeight, availX - m.fixWidth);
+            float ehintY = vert ? c.computeSize(0, m.totalWeight, availY - m.fixHeight) : availY;
             IDimension psize = preferredSize(elem, ehintX, ehintY);
             float pwidth = psize.width(), pheight = psize.height();
             m.unitWidth = Math.max(m.unitWidth, pwidth / c.weight);
