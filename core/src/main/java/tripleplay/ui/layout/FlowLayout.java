@@ -51,10 +51,19 @@ public class FlowLayout extends Layout
 
     /**
      * Sets the alignment used for positioning elements within their row. By default, elements
-     * are centered vertically: {@link Style.VAlign#CENTER}.
+     * are not stretched and centered vertically: {@link Style.VAlign#CENTER}.
      */
     public FlowLayout align (Style.VAlign align) {
         _valign = align;
+        return this;
+    }
+
+    /**
+     * Stretch elements vertically to the maximum height of other elements in the same row. This
+     * clears any previously set vertical alignment.
+     */
+    public FlowLayout stretch () {
+        _valign = null;
         return this;
     }
 
@@ -75,8 +84,12 @@ public class FlowLayout extends Layout
                 Element<?> elem = elems.childAt(elemIdx);
                 if (!elem.isVisible()) continue;
                 IDimension esize = preferredSize(elem, width, height);
-                setBounds(elem, x, y + _valign.offset(esize.height(), rowSize.height()),
-                    esize.width(), esize.height());
+                if (_valign == null) {
+                    setBounds(elem, x, y, esize.width(), rowSize.height());
+                } else {
+                    setBounds(elem, x, y + _valign.offset(esize.height(), rowSize.height()),
+                        esize.width(), esize.height());
+                }
                 x += esize.width() + _hgap;
             }
             y += _vgap + rowSize.height;
