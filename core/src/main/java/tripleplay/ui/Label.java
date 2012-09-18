@@ -43,13 +43,6 @@ public class Label extends TextWidget<Label>
         this.icon.connect(iconDidChange());
     }
 
-    /** @deprecated Call {@code label.icon.update(icon)} or pass your icon to the ctor. */
-    @Deprecated
-    public Label setIcon (Image icon) {
-        this.icon.update(icon);
-        return this;
-    }
-
     @Override public String toString () {
         return "Label(" + text.get() + ")";
     }

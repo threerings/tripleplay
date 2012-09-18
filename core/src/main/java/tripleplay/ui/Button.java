@@ -47,13 +47,6 @@ public class Button extends ClickableTextWidget<Button>
         this.icon.connect(iconDidChange());
     }
 
-    /** @deprecated Call {@code button.icon.update(icon)} or pass your icon to the ctor. */
-    @Deprecated
-    public Button setIcon (Image icon) {
-        this.icon.update(icon);
-        return this;
-    }
-
     @Override public SignalView<Button> clicked () {
         return _clicked;
     }
