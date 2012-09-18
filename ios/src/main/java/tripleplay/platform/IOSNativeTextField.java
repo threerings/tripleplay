@@ -42,7 +42,8 @@ public class IOSNativeTextField implements NativeTextField
 
         _text.connect(new Slot<String>() {
             @Override public void onEmit (String value) {
-                _field.set_Text(value);
+                String current = _field.get_Text();
+                if (current == null || !current.equals(value)) _field.set_Text(value);
             }
         });
     }
