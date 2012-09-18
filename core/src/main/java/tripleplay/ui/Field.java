@@ -48,6 +48,7 @@ public class Field extends TextWidget<Field>
      * displayed instead of the typed character. */
     public static final Style<Boolean> SECURE_TEXT_ENTRY = Style.newStyle(false, false);
 
+    /** Sets the Keyboard.TextType in use by this Field. */
     public static final Style<TextType> TEXT_TYPE = Style.newStyle(false, TextType.DEFAULT);
 
     /** The text displayed by this widget. */
