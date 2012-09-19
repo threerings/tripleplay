@@ -7,6 +7,7 @@
   <source path="flump"/>
   <source path="game"/>
   <source path="particle"/>
+  <source path="platform"/>
   <source path="shaders"/>
   <source path="sound"/>
   <source path="ui"/>
