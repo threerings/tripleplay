@@ -97,7 +97,7 @@ public class Field extends TextWidget<Field>
      * Configures the keyboard type to use when text is requested via a popup.
      * @deprecated Use the TEXT_TYPE Style instead.
      */
-    public Field setTextType (Keyboard.TextType type) {
+    @Deprecated public Field setTextType (Keyboard.TextType type) {
         return addStyles(TEXT_TYPE.is(type));
     }
 
