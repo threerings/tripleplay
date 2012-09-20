@@ -60,16 +60,44 @@ public abstract class SyncDB
      */
     public Map<String,String> getDelta () {
         Map<String,String> delta = new HashMap<String,String>();
-        for (String name : _mods) delta.put(name, _storage.getItem(name));
+        for (String name : _mods.keySet()) delta.put(name, _storage.getItem(name));
         return delta;
+    }
+
+    /**
+     * Returns a snapshot of our current mapping of modified properties to modification count. This
+     * must be taken at the same time as a call to {@link #getDelta}, and then provided to the call
+     * to {@link #noteSync} if the delta was successfully used in a sync.
+     */
+    public Map<String,Integer> getMods () {
+        return new HashMap<String,Integer>(_mods);
     }
 
     /**
      * Notes that we synced cleanly with the server. Updates our local version to the latest sync
      * version and notes that we no longer have unsynced modifications.
      */
-    public void noteSync (int version) {
-        _mods.clear();
+    public void noteSync (int version, Map<String,Integer> syncedMods) {
+        // clear out the synced properties from our set of currently modified properties
+        for (Map.Entry<String,Integer> entry : syncedMods.entrySet()) {
+            String prop = entry.getKey();
+            Integer mcount = _mods.get(prop);
+            if (mcount == null) {
+                log.warning("Have no mod count for synced property?", "prop", prop);
+                continue;
+            }
+
+            int syncedMC = entry.getValue().intValue(), curMC = mcount.intValue();
+            if (syncedMC > curMC) {
+                log.warning("Synced mod count is greater than current?", "prop", prop, "curMC", curMC,
+                            "syncedMC", syncedMC);
+                // leave it as modified and we'll sync again just in case
+            } else if (syncedMC == curMC) {
+                _mods.remove(prop);
+            }
+            // otherwise the curMC is greater than syncedMC, meaning the property was modified
+            // while this sync was taking place
+        }
         flushMods();
         updateVersion(version);
     }
@@ -79,7 +107,7 @@ public abstract class SyncDB
      * changes also exist.
      */
     public boolean containsMerges (Map<String,String> delta) {
-        for (String key : delta.keySet()) if (_mods.contains(key)) return true;
+        for (String key : delta.keySet()) if (_mods.containsKey(key)) return true;
         return false;
     }
 
@@ -111,7 +139,7 @@ public abstract class SyncDB
             else prop = _props.get(name.substring(0, pidx));
             if (prop == null) {
                 log.warning("No local property defined", "name", name);
-            } else if (_mods.contains(name)) {
+            } else if (_mods.containsKey(name)) {
                 try {
                     if (prop.merge(name, value)) _mods.remove(name);
                 } catch (Exception e) {
@@ -158,7 +186,7 @@ public abstract class SyncDB
         _storage = platform.storage();
         _version = get(SYNC_VERS_KEY, 0, Codec.INT);
         // read the current unsynced key set
-        _mods = sget(SYNC_MODS_KEY, Codec.STRING);
+        for (String mod : sget(SYNC_MODS_KEY, Codec.STRING)) _mods.put(mod, 1);
     }
 
     /**
@@ -448,11 +476,13 @@ public abstract class SyncDB
     }
 
     protected void noteModified (String name) {
-        if (_mods.add(name)) queueFlushMods();
+        Integer omods = _mods.get(name);
+        _mods.put(name, (omods == null) ? 1 : omods+1);
+        if (omods == null) queueFlushMods();
     }
 
     protected void flushMods () {
-        sset(SYNC_MODS_KEY, _mods, Codec.STRING);
+        sset(SYNC_MODS_KEY, _mods.keySet(), Codec.STRING);
     }
 
     protected void queueFlushMods () {
@@ -553,7 +583,7 @@ public abstract class SyncDB
 
     protected final Map<String,Property> _props = new HashMap<String,Property>();
     protected final Map<String,SubDB> _subdbs = new HashMap<String,SubDB>();
-    protected final Set<String> _mods;
+    protected final Map<String,Integer> _mods = new HashMap<String,Integer>();
     protected int _version;
     protected boolean _flushQueued;
 

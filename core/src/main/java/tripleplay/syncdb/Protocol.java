@@ -26,8 +26,9 @@ public class Protocol
 
         /** Syncs the supplied database with this session's server. */
         public void sync (final SyncDB db) {
+            final Map<String,Integer> mods = db.getMods();
             _server.sendSync(db.version(), db.getDelta(), new Callback<Response>() {
-                @Override public void onSuccess (Response rsp) { onSyncSuccess(db, rsp); }
+                @Override public void onSuccess (Response rsp) { onSyncSuccess(db, mods, rsp); }
                 @Override public void onFailure (Throwable cause) { onSyncFailure(db, cause); }
             });
         }
@@ -52,9 +53,9 @@ public class Protocol
          */
         protected abstract void onSyncFailure (SyncDB db, Throwable cause);
 
-        protected void onSyncSuccess (final SyncDB db, final Response rsp) {
+        protected void onSyncSuccess (final SyncDB db, Map<String,Integer> mods, final Response rsp) {
             if (rsp.cleanSync) {
-                db.noteSync(rsp.version);
+                db.noteSync(rsp.version, mods);
                 onCleanSync();
             } else {
                 Runnable merge = new Runnable() { public void run () {

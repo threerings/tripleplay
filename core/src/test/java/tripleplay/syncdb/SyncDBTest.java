@@ -82,12 +82,45 @@ public class SyncDBTest
         session.sync(one);
         session.sync(two);
         one.assertEquals(two);
+
+        // make sure we have no lingering modifications
+        assertEquals(0, one.getMods().size());
+        assertEquals(0, two.getMods().size());
+    }
+
+    @Test public void testModsWhileSyncing () {
+        final TestDB one = new TestDB(), two = new TestDB();
+        Protocol.Session session = new Protocol.Session(new TestServer()) {
+            protected void onSyncSuccess (SyncDB db, Map<String,Integer> mods, Protocol.Response rsp) {
+                // simulate a concurrent modification by modifying values in one just before we
+                // note that our sync has completed
+                if (rsp.cleanSync) {
+                    one.maxInt.update(50); // modify a property that was part of the sync
+                    one.maxLong.update(400L); // and modify a property that was not part of the sync
+                }
+                super.onSyncSuccess(db, mods, rsp);
+            }
+            protected void onSyncFailure (SyncDB db, Throwable cause) {
+                System.err.println("Sync failure " + cause);
+            }
+        };
+
+        one.trueBool.update(true);
+        one.maxInt.update(42);
+        one.serverString.update("foo");
+
+        session.sync(one);
+        session.sync(two);
+        // one.assertEquals(two); // they won't be equal as we modified 'one' concurrently
+
+        // make sure the concurrent modifications in DB one did not get wiped out
+        assertEquals(Sets.newHashSet("maxInt", "maxLong"), one.getMods().keySet());
+        assertEquals(0, two.getMods().size());
     }
 
     @Test public void testMaxing () {
         Protocol.Session session = testSession();
-        TestDB one = new TestDB();
-        TestDB two = new TestDB();
+        TestDB one = new TestDB(), two = new TestDB();
 
         // start with some synced changes
         one.maxInt.update(42);
@@ -108,12 +141,15 @@ public class SyncDBTest
         one.assertEquals(two);
         assertEquals(45, one.maxInt.get().intValue());
         assertEquals(65L, one.maxLong.get().longValue());
+
+        // make sure we have no lingering modifications
+        assertEquals(0, one.getMods().size());
+        assertEquals(0, two.getMods().size());
     }
 
     @Test public void testUseServer () {
         Protocol.Session session = testSession();
-        TestDB one = new TestDB();
-        TestDB two = new TestDB();
+        TestDB one = new TestDB(), two = new TestDB();
 
         // start with some synced changes
         one.serverString.update("foo");
@@ -128,12 +164,15 @@ public class SyncDBTest
 
         one.assertEquals(two);
         assertEquals("bar", two.serverString.get());
+
+        // make sure we have no lingering modifications
+        assertEquals(0, one.getMods().size());
+        assertEquals(0, two.getMods().size());
     }
 
     @Test public void testSets () {
         Protocol.Session session = testSession();
-        TestDB one = new TestDB();
-        TestDB two = new TestDB();
+        TestDB one = new TestDB(), two = new TestDB();
 
         // start with some synced changes
         one.unionSet.add("one");
@@ -164,12 +203,15 @@ public class SyncDBTest
 
         // make sure we reread our data from storage properly
         one.assertEquals(one.clone());
+
+        // make sure we have no lingering modifications
+        assertEquals(0, one.getMods().size());
+        assertEquals(0, two.getMods().size());
     }
 
     @Test public void testMap () {
         Protocol.Session session = testSession();
-        TestDB one = new TestDB();
-        TestDB two = new TestDB();
+        TestDB one = new TestDB(), two = new TestDB();
 
         // start with some synced changes
         one.maxMap.put("one", 1);
@@ -192,6 +234,10 @@ public class SyncDBTest
 
         // make sure we reread our data from storage properly
         one.assertEquals(one.clone());
+
+        // make sure we have no lingering modifications
+        assertEquals(0, one.getMods().size());
+        assertEquals(0, two.getMods().size());
     }
 
     protected void makeTestChanges2 (TestDB db) {
