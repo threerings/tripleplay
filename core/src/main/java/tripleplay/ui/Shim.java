@@ -11,23 +11,17 @@ import pythagoras.f.IDimension;
 /**
  * An invisible widget that simply requests a fixed amount of space.
  */
-public class Shim extends Element<Shim>
+public class Shim extends SizableWidget<Shim>
 {
     public Shim (float width, float height) {
-        _size = new Dimension(width, height);
+        this(new Dimension(width, height));
     }
 
     public Shim (IDimension size) {
-        _size = new Dimension(size);
+        super(size);
     }
 
     @Override protected Class<?> getStyleClass () {
         return Shim.class;
     }
-
-    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new SizableLayoutData(null, _size);
-    }
-
-    protected final Dimension _size;
 }
