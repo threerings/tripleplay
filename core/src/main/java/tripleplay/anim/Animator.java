@@ -237,7 +237,7 @@ public abstract class Animator
      * not change screen position, even though its coordinates relative to its parent will most
      * likely have changed.
      */
-    public Animation.Action reparent(final GroupLayer newParent, final Layer child) {
+    public Animation.Action reparent (final GroupLayer newParent, final Layer child) {
         return action(new Runnable() { public void run () {
             Layers.reparent(child, newParent);
         }});
