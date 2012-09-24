@@ -58,13 +58,22 @@ public abstract class SizableWidget<T extends SizableWidget<T>> extends Widget<T
      * is returned.
      */
     protected Glyph prepareGlyph () {
+        return prepareGlyph(null);
+    }
+
+    /**
+     * Prepares the given {@link Glyph} (or creates a new one if null) that has been prepared to
+     * this SizableWidget's {@link #preferredSize}. If that size is 0 in either dimension, a warning
+     * is logged and null is returned.
+     */
+    protected Glyph prepareGlyph (Glyph glyph) {
         IDimension size = preferredSize.get();
         if (size.width() == 0 || size.height() == 0) {
             log.warning("SizableWidget cannot prepare a glyph with a 0 dimension", "size", size);
             return null;
         }
 
-        Glyph glyph = new Glyph();
+        glyph = glyph == null ? new Glyph() : glyph;
         glyph.prepare(size);
         return glyph;
     }
