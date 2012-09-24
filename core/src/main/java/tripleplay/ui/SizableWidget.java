@@ -9,6 +9,8 @@ import pythagoras.f.IDimension;
 import react.UnitSlot;
 import tripleplay.util.DimensionValue;
 
+import static tripleplay.ui.Log.log;
+
 /**
  * A widget that allows configuring its preferred size. The size is always returned when the size
  * of the widget is calculated, but the widget may end up being stretched when contained in a
@@ -48,5 +50,22 @@ public abstract class SizableWidget<T extends SizableWidget<T>> extends Widget<T
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         // use a sizable layout data with our preferred size and delegate to the base, if any
         return new SizableLayoutData(createBaseLayoutData(hintX, hintY), null, preferredSize.get());
+    }
+
+    /**
+     * Returns a new {@link Glyph} that has been prepared to this SizableWidget's
+     * {@link #preferredSize}. If that size is 0 in either dimension, a warning is logged and null
+     * is returned.
+     */
+    protected Glyph prepareGlyph () {
+        IDimension size = preferredSize.get();
+        if (size.width() == 0 || size.height() == 0) {
+            log.warning("SizableWidget cannot prepare a glyph with a 0 dimension", "size", size);
+            return null;
+        }
+
+        Glyph glyph = new Glyph();
+        glyph.prepare(size);
+        return glyph;
     }
 }
