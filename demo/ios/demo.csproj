@@ -62,7 +62,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
-    <Reference Include="OpenTK" />
     <Reference Include="tripleplay-demo-ios">
       <HintPath>bin\tripleplay-demo-ios.dll</HintPath>
     </Reference>
@@ -71,6 +70,7 @@
     </Reference>
     <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="System.Data" />
+    <Reference Include="OpenTK-1.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
