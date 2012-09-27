@@ -37,6 +37,7 @@ public abstract class EffectRenderer
         public float adjustHeight (float height) { return height + 2; }
 
         public void render (Canvas canvas, TextLayout text, int textColor, float x, float y) {
+            canvas.save();
             canvas.setFillColor(outlineColor);
             canvas.fillText(text, x+0, y+0);
             canvas.fillText(text, x+0, y+1);
@@ -48,6 +49,7 @@ public abstract class EffectRenderer
             canvas.fillText(text, x+2, y+2);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+1, y+1);
+            canvas.restore();
         }
     }
 
@@ -73,6 +75,7 @@ public abstract class EffectRenderer
         public float adjustHeight (float height) { return height + 2*outlineWidth; }
 
         public void render (Canvas canvas, TextLayout text, int textColor, float x, float y) {
+            canvas.save();
             canvas.setStrokeColor(outlineColor);
             canvas.setStrokeWidth(outlineWidth*2);
             canvas.setLineCap(outlineCap);
@@ -80,6 +83,7 @@ public abstract class EffectRenderer
             canvas.strokeText(text, x+outlineWidth, y+outlineWidth);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+outlineWidth, y+outlineWidth);
+            canvas.restore();
         }
     }
 
@@ -99,10 +103,12 @@ public abstract class EffectRenderer
         public void render (Canvas canvas, TextLayout text, int textColor, float x, float y) {
             float tx = (shadowX < 0) ? -shadowX : 0, ty = (shadowY < 0) ? -shadowY : 0;
             float sx = (shadowX < 0) ? 0 : shadowX, sy = (shadowY < 0) ? 0 : shadowY;
+            canvas.save();
             canvas.setFillColor(shadowColor);
             canvas.fillText(text, x+sx, y+sy);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+tx, y+ty);
+            canvas.restore();
         }
     }
 }
