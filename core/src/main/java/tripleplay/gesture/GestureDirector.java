@@ -17,7 +17,6 @@ import playn.core.Touch.Event;
 
 import pythagoras.f.IRectangle;
 
-import tripleplay.gesture.Gesture.State;
 import tripleplay.util.Timer;
 import tripleplay.util.Timer.Handle;
 
@@ -43,7 +42,7 @@ public class GestureDirector
      * Adds a gesture to the set considered during each user interaction. Returns this director for
      * chaining.
      */
-    public GestureDirector add (Gesture gesture) {
+    public GestureDirector add (Gesture<?> gesture) {
         _gestures.add(gesture);
         return this;
     }
@@ -52,7 +51,7 @@ public class GestureDirector
      * Removes the given gesture from the set considered during each user interaction. Returns false
      * if that gesture was not found.
      */
-    public boolean remove (Gesture gesture) {
+    public boolean remove (Gesture<?> gesture) {
         return _gestures.remove(gesture);
     }
 
@@ -69,7 +68,7 @@ public class GestureDirector
 
         if (_currentTouches.isEmpty()) {
             // new user interaction!
-            for (Gesture gesture : _gestures) gesture.start();
+            for (Gesture<?> gesture : _gestures) gesture.start();
             _greedy = null;
         }
         _currentTouches.put(touch.id(), touch);
@@ -120,17 +119,14 @@ public class GestureDirector
             return;
         }
 
-        List<Gesture> greedy = new ArrayList<Gesture>();
-        List<Gesture> complete = new ArrayList<Gesture>();
-        for (Gesture gesture : _gestures) {
+        List<Gesture<?>> greedy = new ArrayList<Gesture<?>>();
+        List<Gesture<?>> complete = new ArrayList<Gesture<?>>();
+        for (Gesture<?> gesture : _gestures) {
             if (gesture.state() == Gesture.State.UNQUALIFIED) continue;
 
             gesture.evaluate(node);
-            if (gesture.state() == State.GREEDY) {
-                greedy.add(gesture);
-            } else if (gesture.state() == State.COMPLETE) {
-                complete.add(gesture);
-            }
+            if (gesture.state() == Gesture.State.GREEDY) greedy.add(gesture);
+            else if (gesture.state() == Gesture.State.COMPLETE) complete.add(gesture);
         }
 
         int greedyAndComplete = greedy.size() + complete.size();
@@ -144,7 +140,7 @@ public class GestureDirector
         if (greedyAndComplete > 0) {
             // put all but the potential greedy gesture into UNQUALIFIED for the remainder of this
             // interaction.
-            for (Gesture gesture : _gestures) if (_greedy != gesture) gesture.cancel();
+            for (Gesture<?> gesture : _gestures) if (_greedy != gesture) gesture.cancel();
         }
     }
 
@@ -153,6 +149,6 @@ public class GestureDirector
     protected Timer _timer;
     protected Map<Integer, Event> _currentTouches = new HashMap<Integer, Event>();
     protected Map<Integer, Handle> _currentMoves = new HashMap<Integer, Handle>();
-    protected Set<Gesture> _gestures = new HashSet<Gesture>();
-    protected Gesture _greedy;
+    protected Set<Gesture<?>> _gestures = new HashSet<Gesture<?>>();
+    protected Gesture<?> _greedy;
 }
