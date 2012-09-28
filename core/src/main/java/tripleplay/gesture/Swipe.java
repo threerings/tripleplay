@@ -75,21 +75,21 @@ public class Swipe extends GestureBase<Swipe>
             break;
 
         case PAUSE:
-            if (_cancelOnPause) {
-                setState(_movedEnough && _startPoints.size() == _touches ?
-                    State.COMPLETE : State.UNQUALIFIED);
-            }
+            if (_cancelOnPause) setState(getEndState());
             break;
 
         case END:
-            setState(_movedEnough && _startPoints.size() == _touches ?
-                State.COMPLETE : State.UNQUALIFIED);
+            setState(getEndState());
             break;
 
         case CANCEL:
             setState(State.UNQUALIFIED);
             break;
         }
+    }
+
+    protected State getEndState () {
+        return _movedEnough && _startPoints.size() == _touches ? State.COMPLETE : State.UNQUALIFIED;
     }
 
     // TODO: any gesture that cares about swiping in a cardinal direction could make use of this
