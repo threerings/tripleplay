@@ -75,7 +75,11 @@ public class Swipe extends GestureBase<Swipe>
             break;
 
         case PAUSE:
-            if (!_cancelOnPause) break; // fall through if we do cancel on pause
+            if (_cancelOnPause) {
+                setState(_movedEnough && _startPoints.size() == _touches ?
+                    State.COMPLETE : State.UNQUALIFIED);
+            }
+            break;
 
         case END:
             setState(_movedEnough && _startPoints.size() == _touches ?
