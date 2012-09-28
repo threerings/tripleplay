@@ -17,6 +17,7 @@ import playn.core.Touch.Event;
 
 import pythagoras.f.IRectangle;
 
+import tripleplay.gesture.Gesture.State;
 import tripleplay.util.Timer;
 import tripleplay.util.Timer.Handle;
 
@@ -125,9 +126,10 @@ public class GestureDirector
             if (gesture.state() == Gesture.State.UNQUALIFIED) continue;
 
             gesture.evaluate(node);
-            switch (gesture.state()) {
-            case GREEDY: greedy.add(gesture); break;
-            case COMPLETE: complete.add(gesture); break;
+            if (gesture.state() == State.GREEDY) {
+                greedy.add(gesture);
+            } else if (gesture.state() == State.COMPLETE) {
+                complete.add(gesture);
             }
         }
 
