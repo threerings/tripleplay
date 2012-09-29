@@ -15,6 +15,8 @@ import playn.core.Json;
 import playn.core.util.Callback;
 import static playn.core.PlayN.*;
 
+import react.Value;
+
 public class Library
 {
     /** The original frame rate of movies in this library. */
@@ -23,42 +25,58 @@ public class Library
     /** The symbols defined in this library. */
     public final Map<String,Symbol> symbols;
 
-    protected Library (Json.Object json, String baseDir) {
+    protected Library (Json.Object json, String baseDir, final Callback<Library> callback) {
         frameRate = json.getNumber("frameRate");
 
-        Map<String,Symbol> symbols = new HashMap<String,Symbol>();
+        final Map<String,Symbol> symbols = new HashMap<String,Symbol>();
         this.symbols = Collections.unmodifiableMap(symbols);
 
-        ArrayList<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
+        final ArrayList<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
         for (Json.Object movieJson : json.getArray("movies", Json.Object.class)) {
             Movie.Symbol movie = new Movie.Symbol(this, movieJson);
             movies.add(movie);
             symbols.put(movie.name(), movie);
         }
 
-        for (Json.Object atlasJson : json.getArray("atlases", Json.Object.class)) {
-            Image atlas = assets().getImage(baseDir + "/" + atlasJson.getString("file"));
-            for (Json.Object textureJson : atlasJson.getArray("textures", Json.Object.class)) {
-                Texture.Symbol texture = new Texture.Symbol(textureJson, atlas);
-                symbols.put(texture.name(), texture);
-            }
-        }
+        Json.TypedArray<Json.Object> atlases = json.getArray("atlases", Json.Object.class);
+        final Value<Integer> remainingAtlases = Value.create(atlases.length());
+        remainingAtlases.connectNotify(new Value.Listener<Integer>() {
+            public void onChange (Integer remaining, Integer _) {
+                if (remaining > 0) return;
 
-        // Now that all symbols have been parsed, go through and resolve references
-        for (Movie.Symbol movie : movies) {
-            for (LayerData layer : movie.layers) {
-                for (KeyframeData kf : layer.keyframes) {
-                    Symbol symbol = symbols.get(kf._symbolName);
-                    if (symbol != null) {
-                        if (layer._lastSymbol == null) {
-                            layer._lastSymbol = symbol;
-                        } else if (layer._lastSymbol != symbol) {
-                            layer._multipleSymbols = true;
+                // When all the symbols have been loaded, go through and resolve references
+                for (Movie.Symbol movie : movies) {
+                    for (LayerData layer : movie.layers) {
+                        for (KeyframeData kf : layer.keyframes) {
+                            Symbol symbol = symbols.get(kf._symbolName);
+                            if (symbol != null) {
+                                if (layer._lastSymbol == null) {
+                                    layer._lastSymbol = symbol;
+                                } else if (layer._lastSymbol != symbol) {
+                                    layer._multipleSymbols = true;
+                                }
+                                kf._symbol = symbol;
+                            }
                         }
-                        kf._symbol = symbol;
                     }
                 }
+
+                // We're done!
+                callback.onSuccess(Library.this);
             }
+        });
+
+        for (final Json.Object atlasJson : atlases) {
+            Image atlas = assets().getImage(baseDir + "/" + atlasJson.getString("file"));
+            atlas.addCallback(new Callback.Chain<Image>(callback) {
+                public void onSuccess (Image atlas) {
+                    for (Json.Object textureJson : atlasJson.getArray("textures", Json.Object.class)) {
+                        Texture.Symbol texture = new Texture.Symbol(textureJson, atlas);
+                        symbols.put(texture.name(), texture);
+                    }
+                    remainingAtlases.update(remainingAtlases.get() - 1);
+                }
+            });
         }
     }
 
@@ -67,17 +85,16 @@ public class Library
      * @param baseDir The base directory, containing library.json and texture atlases.
      */
     public static void fromAssets (final String baseDir, final Callback<Library> callback) {
-        assert(callback != null);
+        assert(callback != null); // Fail fast
+
         assets().getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
             public void onSuccess (String text) {
                 Library lib = null;
                 try {
-                    lib = new Library(json().parse(text), baseDir);
+                    lib = new Library(json().parse(text), baseDir, callback);
                 } catch (Exception err) {
                     callback.onFailure(err);
-                    return;
                 }
-                callback.onSuccess(lib);
             }
         });
     }
