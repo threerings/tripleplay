@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pythagoras.f.AffineTransform;
 import pythagoras.f.FloatMath;
 
 import playn.core.GroupLayer;

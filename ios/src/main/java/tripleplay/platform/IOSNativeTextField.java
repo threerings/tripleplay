@@ -17,13 +17,9 @@ import pythagoras.f.IRectangle;
 
 import playn.core.Font;
 import playn.core.Keyboard;
-import playn.ios.IOSPlatform;
-
 import react.Signal;
 import react.Slot;
 import react.Value;
-
-import static tripleplay.platform.Log.log;
 
 public class IOSNativeTextField implements NativeTextField
 {

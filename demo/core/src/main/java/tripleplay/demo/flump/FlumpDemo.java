@@ -5,7 +5,6 @@
 
 package tripleplay.demo.flump;
 
-import playn.core.GroupLayer;
 import playn.core.util.Callback;
 import static playn.core.PlayN.*;
 

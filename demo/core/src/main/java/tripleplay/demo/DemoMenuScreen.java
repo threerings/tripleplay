@@ -5,11 +5,8 @@
 
 package tripleplay.demo;
 
-import playn.core.PlayN;
-
 import react.UnitSlot;
 
-import tripleplay.game.Screen;
 import tripleplay.game.ScreenStack;
 import tripleplay.game.UIScreen;
 import tripleplay.ui.Background;

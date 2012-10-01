@@ -17,7 +17,6 @@ import tripleplay.ui.Constraints;
 import tripleplay.ui.Field;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
-import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
 import tripleplay.ui.ToggleButton;

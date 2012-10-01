@@ -13,13 +13,11 @@ import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
-import tripleplay.ui.Layout;
 import tripleplay.ui.Root;
 import tripleplay.ui.SimpleStyles;
 import tripleplay.ui.Style;
 import tripleplay.ui.Stylesheet;
 import tripleplay.ui.layout.AxisLayout;
-import tripleplay.ui.layout.BorderLayout;
 
 /**
  * The base class for all demo screens.

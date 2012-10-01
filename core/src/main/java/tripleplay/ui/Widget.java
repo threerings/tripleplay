@@ -5,9 +5,6 @@
 
 package tripleplay.ui;
 
-import pythagoras.f.Point;
-
-import playn.core.Layer;
 import playn.core.Pointer;
 
 /**

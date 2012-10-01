@@ -12,8 +12,6 @@ import static playn.core.PlayN.graphics;
 
 import tripleplay.particle.Emitter;
 import tripleplay.particle.Generator;
-import tripleplay.particle.Initializer;
-import tripleplay.particle.ParticleBuffer;
 import tripleplay.particle.Particles;
 import tripleplay.particle.effect.Alpha;
 import tripleplay.particle.effect.Drag;
