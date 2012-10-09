@@ -37,12 +37,11 @@ public class TintingShader extends IndexedTrisShader
             "uniform sampler2D u_Texture;\n" +
             "varying vec2 v_TexCoord;\n" +
             "uniform float u_Alpha;\n" +
-
+            "const vec4 tintColor = vec4(" + ShaderUtil.format(_red) + ", " +
+                                             ShaderUtil.format(_green) + ", " +
+                                             ShaderUtil.format(_blue) + ", " +
+                                             ShaderUtil.format(_alpha) + ");\n" +
             "void main(void) {\n" +
-            "  vec4 tintColor = vec4(" + ShaderUtil.format(_red) + ", " +
-                                         ShaderUtil.format(_green) + ", " +
-                                         ShaderUtil.format(_blue) + ", " +
-                                         ShaderUtil.format(_alpha) + ");\n" +
             "  vec4 textureColor = texture2D(u_Texture, v_TexCoord);\n" +
             "  gl_FragColor = textureColor * tintColor * u_Alpha;\n" +
             "}";
