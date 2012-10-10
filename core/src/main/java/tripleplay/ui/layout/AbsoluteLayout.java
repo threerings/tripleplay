@@ -33,25 +33,35 @@ public class AbsoluteLayout extends Layout
     public static final class Constraint extends Layout.Constraint {
         public final IPoint position;
         public final IDimension size;
+        public final boolean center;
 
-        public Constraint (IPoint position, IDimension size) {
+        public Constraint (IPoint position, IDimension size, boolean center) {
             this.position = position;
             this.size = size;
+            this.center = center;
+        }
+
+        public IDimension psize (AbsoluteLayout layout, Element<?> elem) {
+            return size == ZERO ? layout.preferredSize(elem, size.width(), size.height()) : size;
+        }
+
+        public IPoint pos (IDimension psize) {
+            return center ? position.subtract(psize.width()/2, psize.height()/2) : position;
         }
     }
 
     /**
-     * Constrains {@code elem} to the specified position, in its preferred size.
+     * Positions {@code elem} at the specified position, in its preferred size.
      */
     public static <T extends Element<?>> T at (T elem, float x, float y) {
         return at(elem, new Point(x, y));
     }
 
     /**
-     * Constraints {@code elem} to the specified position, in its preferred size.
+     * Positions {@code elem} at the specified position, in its preferred size.
      */
     public static <T extends Element<?>> T at (T elem, IPoint position) {
-        return at(elem, position, new Dimension(0, 0));
+        return at(elem, position, ZERO);
     }
 
     /**
@@ -65,7 +75,22 @@ public class AbsoluteLayout extends Layout
      * Constrains {@code elem} to the specified position and size.
      */
     public static <T extends Element<?>> T at (T elem, IPoint position, IDimension size) {
-        elem.setConstraint(new Constraint(position, size));
+        elem.setConstraint(new Constraint(position, size, false));
+        return elem;
+    }
+
+    /**
+     * Centers {@code elem} on the specified position, in its preferred size.
+     */
+    public static <T extends Element<?>> T centerAt (T elem, float x, float y) {
+        return centerAt(elem, new Point(x, y));
+    }
+
+    /**
+     * Centers {@code elem} on the specified position, in its preferred size.
+     */
+    public static <T extends Element<?>> T centerAt (T elem, IPoint position) {
+        elem.setConstraint(new Constraint(position, ZERO, true));
         return elem;
     }
 
@@ -75,8 +100,8 @@ public class AbsoluteLayout extends Layout
         for (Element<?> elem : elems) {
             if (!elem.isVisible()) continue;
             Constraint c = constraint(elem);
-            IDimension psize = preferredSize(elem, c.size.width(), c.size.height());
-            bounds.add(new Rectangle(c.position, c.size.width() == 0 ? psize : c.size));
+            IDimension psize = c.psize(this, elem);
+            bounds.add(new Rectangle(c.pos(psize), psize));
         }
         return new Dimension(bounds.width, bounds.height);
     }
@@ -86,10 +111,9 @@ public class AbsoluteLayout extends Layout
         for (Element<?> elem : elems) {
             if (!elem.isVisible()) continue;
             Constraint c = constraint(elem);
-            // this should return a cached size
-            IDimension psize = c.size.width() == 0 ? preferredSize(elem, 0, 0) : c.size;
-            setBounds(elem, left + c.position.x(), top + c.position.y(),
-                      psize.width(), psize.height());
+            IDimension psize = c.psize(this, elem); // this should return a cached size
+            IPoint pos = c.pos(psize);
+            setBounds(elem, left + pos.x(), top + pos.y(), psize.width(), psize.height());
         }
     }
 
@@ -97,4 +121,6 @@ public class AbsoluteLayout extends Layout
         return (Constraint)Asserts.checkNotNull(
             elem.constraint(), "Elements in AbsoluteLayout must have a constraint.");
     }
+
+    protected static final Dimension ZERO = new Dimension(0, 0);
 }
