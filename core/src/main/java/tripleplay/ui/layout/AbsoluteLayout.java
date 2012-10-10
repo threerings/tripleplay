@@ -42,7 +42,13 @@ public class AbsoluteLayout extends Layout
         }
 
         public IDimension psize (AbsoluteLayout layout, Element<?> elem) {
-            return size == ZERO ? layout.preferredSize(elem, size.width(), size.height()) : size;
+            float fwidth = size.width(), fheight = size.height();
+            if (fwidth > 0 && fheight > 0) return size;
+            // if eiher forced width or height is zero, use preferred size in that dimension
+            IDimension psize = layout.preferredSize(elem, fwidth, fheight);
+            if (fwidth > 0) return new Dimension(fwidth, psize.height());
+            else if (fheight > 0) return new Dimension(psize.width(), fheight);
+            else return psize;
         }
 
         public IPoint pos (IDimension psize) {
