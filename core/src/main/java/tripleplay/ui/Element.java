@@ -19,6 +19,7 @@ import react.SignalView;
 import react.Slot;
 
 import playn.core.GroupLayer;
+import playn.core.Layer;
 import playn.core.PlayN;
 
 /**
@@ -32,6 +33,23 @@ public abstract class Element<T extends Element<T>>
 {
     /** The layer associated with this element. */
     public final GroupLayer layer = createLayer();
+
+    protected Element () {
+        // optimize hit testing by checking our bounds first
+        layer.setHitTester(new Layer.HitTester() {
+            public Layer hitTest (Layer layer, Point p) {
+                Layer hit = null;
+                if (isVisible() && contains(p.x, p.y)) {
+                    if (isSet(Flag.HIT_DESCEND)) hit = layer.hitTestDefault(p);
+                    if (hit == null && isSet(Flag.HIT_ABSORB)) hit = layer;
+                }
+                return hit;
+            }
+        });
+
+        // descend by default
+        set(Flag.HIT_DESCEND, true);
+    }
 
     /**
      * Returns this element's x offset relative to its parent.
@@ -669,7 +687,8 @@ public abstract class Element<T extends Element<T>>
     protected Background.Instance _bginst;
 
     protected static enum Flag {
-        VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3), WILL_DESTROY(1 << 4);
+        VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3), WILL_DESTROY(1 << 4),
+        HIT_DESCEND(1 << 5), HIT_ABSORB(1 << 6);
 
         public final int mask;
 

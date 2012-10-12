@@ -6,9 +6,6 @@
 package tripleplay.ui;
 
 import pythagoras.f.IDimension;
-import pythagoras.f.Point;
-
-import playn.core.Layer;
 
 /**
  * The root of a display hierarchy. An application can have one or more roots, but they should not
@@ -87,16 +84,8 @@ public class Root extends Elements<Root>
         setStylesheet(sheet);
         _iface = iface;
 
-        if (absorbsClicks()) {
-            layer.setHitTester(new Layer.HitTester() {
-                public Layer hitTest (Layer layer, Point p) {
-                    if (!isVisible() || !contains(p.x, p.y)) return null;
-                    // if this click doesn't hit anything else, it hits us
-                    Layer hit = layer.hitTestDefault(p);
-                    return (hit != null) ? hit : Root.this.layer;
-                }
-            });
-        }
+        // TODO: once method is removed, just default to true
+        set(Flag.HIT_ABSORB, absorbsClicks());
     }
 
     @Override protected Class<?> getStyleClass () {
@@ -114,8 +103,16 @@ public class Root extends Elements<Root>
     /**
      * By default, all clicks that fall within a root's bounds are dispatched to the root's layer
      * if they do not land on an interactive child element. This prevents clicks from "falling
-     * through" to lower roots, which are visually obscured by this root. Override this method and
-     * return false if you want this root not to absorb clicks (if it's "transparent").
+     * through" to lower roots, which are visually obscured by this root. Call this method with
+     * false if you want this root not to absorb clicks (if it's "transparent").
+     */
+    public Root setAbsorbsClicks (boolean absorbsClicks) {
+        set(Flag.HIT_ABSORB, absorbsClicks);
+        return this;
+    }
+
+    /**
+     * @deprecated use {@link #setAbsorbsClicks(boolean)} instead
      */
     protected boolean absorbsClicks () {
         return true;

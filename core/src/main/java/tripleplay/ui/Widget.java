@@ -22,11 +22,8 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
     protected void enableInteraction () {
         // we receive all pointer events for a root in that root and then dispatch events via our
         // custom mechanism from there on down
-        layer.setHitTester(new Layer.HitTester() {
-            public Layer hitTest (Layer layer, Point p) {
-                return (isVisible() && contains(p.x, p.y)) ? layer : null;
-            }
-        });
+        set(Flag.HIT_DESCEND, false);
+        set(Flag.HIT_ABSORB, true);
 
         // add a pointer listener for handling mouse events
         layer.addListener(new Pointer.Listener() {

@@ -11,10 +11,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import playn.core.Layer;
-
 import pythagoras.f.Dimension;
-import pythagoras.f.Point;
 
 import react.Signal;
 import react.SignalView;
@@ -30,13 +27,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
      */
     public Elements (Layout layout) {
         _layout = layout;
-
-        // optimize hit testing by checking our bounds first
-        layer.setHitTester(new Layer.HitTester() {
-            public Layer hitTest (Layer layer, Point p) {
-                return (isVisible() && contains(p.x, p.y)) ? layer.hitTestDefault(p) : null;
-            }
-        });
+        set(Flag.HIT_DESCEND, true);
     }
 
     /** Emitted after a child has been added to this Elements. */
