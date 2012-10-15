@@ -69,7 +69,7 @@ public class Interface
      * Creates a root element with the specified layout and stylesheet.
      */
     public Root createRoot (Layout layout, Stylesheet sheet) {
-        return addRoot(new Root(this, layout, sheet));
+        return addRoot(new Root(layout, sheet));
     }
 
 

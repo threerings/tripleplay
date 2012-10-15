@@ -79,10 +79,18 @@ public class Root extends Elements<Root>
         return super.preferredSize(hintX, hintY);
     }
 
-    protected Root (Interface iface, Layout layout, Stylesheet sheet) {
+    /**
+     * Applies the root size to all descendants. The size normally comes from a call to
+     * {@link #pack()} or a related method. Validation is performed automatically by
+     * {@link Interface#paint(float)} if the root is created via {@link Interface}.
+     */
+    @Override public void validate () {
+        super.validate();
+    }
+
+    protected Root (Layout layout, Stylesheet sheet) {
         super(layout);
         setStylesheet(sheet);
-        _iface = iface;
 
         // TODO: once method is removed, just default to true
         set(Flag.HIT_ABSORB, absorbsClicks());
@@ -118,7 +126,6 @@ public class Root extends Elements<Root>
         return true;
     }
 
-    protected final Interface _iface;
     protected boolean _valid;
     protected Element<?> _active;
 }
