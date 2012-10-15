@@ -1,5 +1,5 @@
 // we use pom-util to read metadata from the Maven POMs
-libraryDependencies += "com.samskivert" % "sbt-pom-util" % "0.3-SNAPSHOT"
+libraryDependencies += "com.samskivert" % "sbt-pom-util" % "0.3"
 
 // we use proguard to package up our tools
 libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-proguard-plugin" % (v+"-0.1.1"))
