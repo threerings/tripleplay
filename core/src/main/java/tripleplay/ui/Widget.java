@@ -20,8 +20,7 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
      * Widgets that are interactive can call this method to wire up the appropriate listeners.
      */
     protected void enableInteraction () {
-        // we receive all pointer events for a root in that root and then dispatch events via our
-        // custom mechanism from there on down
+        // an interactive widget absorbs clicks and does not descend (propagate them to sublayers)
         set(Flag.HIT_DESCEND, false);
         set(Flag.HIT_ABSORB, true);
 
