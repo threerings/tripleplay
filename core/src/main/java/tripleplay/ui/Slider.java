@@ -25,6 +25,18 @@ import static playn.core.PlayN.graphics;
  */
 public class Slider extends Widget<Slider>
 {
+    /** Holds the minimum and maximum values for the slider. */
+    public static class Range
+    {
+        public final float min, max, range;
+        public Range (float min, float max) {
+            if (min > max) throw new IllegalArgumentException();
+            this.min = min;
+            this.max = max;
+            this.range = max - min;
+        }
+    }
+
     /** The width of the bar of an unstretched slider. The slider's preferred width will be this
      * width plus the width of the thumb image (which can extend past the left edge of the bar by
      * half its width and the right edge of the bar by half its width). Inherited. */
@@ -48,17 +60,25 @@ public class Slider extends Widget<Slider>
     /** The value of the slider. */
     public final Value<Float> value;
 
+    /** The range of the slider. */
+    public final Value<Range> range;
+
+    /** Constructs a new slider with empty range and zero value. */
+    public Slider () {
+        this(0, 0, 0);
+    }
+
     public Slider (float value, float min, float max) {
         enableInteraction();
         this.value = Value.create(value);
-        _min = min;
-        _max = max;
-        _range = _max - _min;
+        range = Value.create(new Range(min, max));
         // set up our thumb layer
         layer.add(_thumb = graphics().createImageLayer());
         _thumb.setDepth(1);
         // update our display if the slider value is changed externally
-        this.value.connect(new UnitSlot () { @Override public void onEmit () { updateThumb(); }});
+        UnitSlot updateThumb = new UnitSlot () { @Override public void onEmit () { updateThumb(); }};
+        this.value.connect(updateThumb);
+        range.connect(updateThumb);
     }
 
     /**
@@ -80,10 +100,10 @@ public class Slider extends Widget<Slider>
     }
 
     /** Returns our maximum allowed value. */
-    public float max () { return _max; }
+    public float max () { return range.get().max; }
 
     /** Returns our minimum allowed value. */
-    public float min () { return _min; }
+    public float min () { return range.get().min; }
 
     @Override protected Class<?> getStyleClass () {
         return Slider.class;
@@ -121,19 +141,21 @@ public class Slider extends Widget<Slider>
     // nothing to do for onPointerCancel, just let the interaction stop
 
     protected void updateThumb () {
-        float thumbPct = (value.get() - _min) / _range;
+        Range r = range.get();
+        float thumbPct = (value.get() - r.min) / r.range;
         _thumb.setTranslation(_thumbLeft + _thumbRange * thumbPct, _thumbY);
     }
 
     protected void handlePointer (float x, float y) {
+        Range r = range.get();
         float width = _thumbRange;
         x = Math.min(width,  x - _thumbLeft);
-        float pos = Math.max(x, 0) / width * _range;
+        float pos = Math.max(x, 0) / width * r.range;
         if (_increment != null) {
             float i = _increment;
             pos = i * Math.round(pos / i);
         }
-        value.update(_min + pos);
+        value.update(r.min + pos);
     }
 
     protected static Image createDefaultThumbImage () {
@@ -184,7 +206,6 @@ public class Slider extends Widget<Slider>
     }
 
     protected final Signal<Slider> _clicked = Signal.create();
-    protected final float _min, _max, _range;
     protected final ImageLayer _thumb;
 
     protected Background.Instance _barInst;
