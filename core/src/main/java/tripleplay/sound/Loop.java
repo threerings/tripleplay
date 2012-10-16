@@ -16,7 +16,4 @@ public interface Loop extends Playable
         @Override public void stop () {}
         @Override public boolean isPlaying () { return false; }
     }
-
-    /** Returns whether this loop is currently playing. */
-    boolean isPlaying ();
 }

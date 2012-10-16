@@ -17,6 +17,7 @@ public interface Clip extends Playable
         @Override public void preload () {}
         @Override public void play () {}
         @Override public void stop () {}
+        @Override public boolean isPlaying () { return false; }
         @Override public Sound asSound () { return new Sound.Silence(); }
     }
 

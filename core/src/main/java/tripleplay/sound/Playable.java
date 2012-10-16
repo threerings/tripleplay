@@ -16,4 +16,7 @@ public interface Playable
 
     /** Stops this clip or loop (fading it out over one second). */
     void stop ();
+
+    /** Returns true if this playable is currently playing, false othwerise. */
+    boolean isPlaying ();
 }

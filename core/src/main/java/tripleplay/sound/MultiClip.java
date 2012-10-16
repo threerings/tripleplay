@@ -80,6 +80,10 @@ public class MultiClip
             sound.stop();
             releaseTime = 0; // release immediately
         }
+
+        @Override public boolean isPlaying () {
+            return sound.isPlaying();
+        }
     }
 
     protected final SoundBoard _board;
