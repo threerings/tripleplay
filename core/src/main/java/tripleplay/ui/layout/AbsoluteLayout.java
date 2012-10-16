@@ -16,6 +16,8 @@ import pythagoras.f.Rectangle;
 import tripleplay.ui.Element;
 import tripleplay.ui.Elements;
 import tripleplay.ui.Layout;
+import tripleplay.ui.Style.HAlign;
+import tripleplay.ui.Style.VAlign;
 
 /**
  * A layout that positions elements at absolute coordinates (at either their preferred size or at a
@@ -33,12 +35,14 @@ public class AbsoluteLayout extends Layout
     public static final class Constraint extends Layout.Constraint {
         public final IPoint position;
         public final IDimension size;
-        public final boolean center;
+        public final HAlign halign;
+        public final VAlign valign;
 
-        public Constraint (IPoint position, IDimension size, boolean center) {
+        public Constraint (IPoint position, IDimension size, HAlign halign, VAlign valign) {
             this.position = position;
             this.size = size;
-            this.center = center;
+            this.halign = halign;
+            this.valign = valign;
         }
 
         public IDimension psize (AbsoluteLayout layout, Element<?> elem) {
@@ -52,7 +56,9 @@ public class AbsoluteLayout extends Layout
         }
 
         public IPoint pos (IDimension psize) {
-            return center ? position.subtract(psize.width()/2, psize.height()/2) : position;
+            return new Point(
+                position.x() + halign.offset(psize.width(), 0),
+                position.y() + valign.offset(psize.height(), 0));
         }
     }
 
@@ -81,7 +87,40 @@ public class AbsoluteLayout extends Layout
      * Constrains {@code elem} to the specified position and size.
      */
     public static <T extends Element<?>> T at (T elem, IPoint position, IDimension size) {
-        elem.setConstraint(new Constraint(position, size, false));
+        elem.setConstraint(new Constraint(position, size, HAlign.LEFT, VAlign.TOP));
+        return elem;
+    }
+
+    /**
+     * Positions {@code elem} relative to the given position using the given alignments.
+     */
+    public static <T extends Element<?>> T at (T elem, float x, float y, HAlign halign, VAlign valign) {
+        return at(elem, new Point(x, y), ZERO, halign, valign);
+    }
+
+    /**
+     * Positions {@code elem} relative to the given position using the given alignments.
+     */
+    public static <T extends Element<?>> T at (T elem, IPoint position, HAlign halign, VAlign valign) {
+        return at(elem, position, ZERO, halign, valign);
+    }
+
+    /**
+     * Constrains {@code elem} to the specified size and aligns it relative to the given position
+     * using the given alignments.
+     */
+    public static <T extends Element<?>> T at (T elem, float x, float y, float width, float height,
+                                               HAlign halign, VAlign valign) {
+        return at(elem, new Point(x, y), new Dimension(width, height), halign, valign);
+    }
+
+    /**
+     * Constrains {@code elem} to the specified size and aligns it relative to the given position
+     * using the given alignments.
+     */
+    public static <T extends Element<?>> T at (T elem, IPoint position, IDimension size,
+                                               HAlign halign, VAlign valign) {
+        elem.setConstraint(new Constraint(position, size, halign, valign));
         return elem;
     }
 
@@ -96,7 +135,7 @@ public class AbsoluteLayout extends Layout
      * Centers {@code elem} on the specified position, in its preferred size.
      */
     public static <T extends Element<?>> T centerAt (T elem, IPoint position) {
-        elem.setConstraint(new Constraint(position, ZERO, true));
+        elem.setConstraint(new Constraint(position, ZERO, HAlign.CENTER, VAlign.CENTER));
         return elem;
     }
 
