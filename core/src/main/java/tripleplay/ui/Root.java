@@ -14,6 +14,17 @@ import pythagoras.f.IDimension;
 public class Root extends Elements<Root>
 {
     /**
+     * Creates a new root with the provided layout and stylesheet.
+     */
+    public Root (Layout layout, Stylesheet sheet) {
+        super(layout);
+        setStylesheet(sheet);
+
+        // TODO: once method is removed, just default to true
+        set(Flag.HIT_ABSORB, absorbsClicks());
+    }
+
+    /**
      * Sizes this root element to its preferred size.
      */
     public Root pack () {
@@ -86,14 +97,6 @@ public class Root extends Elements<Root>
      */
     @Override public void validate () {
         super.validate();
-    }
-
-    protected Root (Layout layout, Stylesheet sheet) {
-        super(layout);
-        setStylesheet(sheet);
-
-        // TODO: once method is removed, just default to true
-        set(Flag.HIT_ABSORB, absorbsClicks());
     }
 
     @Override protected Class<?> getStyleClass () {
