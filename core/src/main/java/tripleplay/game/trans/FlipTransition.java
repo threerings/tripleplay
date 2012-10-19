@@ -52,7 +52,7 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
     }
 
     @Override protected Interpolator defaultInterpolator () {
-        return Interpolator.EASE_OUT;
+        return Interpolator.LINEAR;
     }
 
     protected boolean _flipped, _unflip;
