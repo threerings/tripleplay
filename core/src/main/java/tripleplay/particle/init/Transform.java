@@ -56,6 +56,22 @@ public class Transform
     }
 
     /**
+     * Returns an initializer that scales its previously assigned transform.
+     */
+    public static Initializer scale (final float scale)
+    {
+        return new Initializer() {
+            @Override public void init (int index, float[] data, int start) {
+                data[start + ParticleBuffer.M00] *= scale;
+                data[start + ParticleBuffer.M01] *= scale;
+                data[start + ParticleBuffer.M10] *= scale;
+                data[start + ParticleBuffer.M11] *= scale;
+            }
+        };
+    }
+
+
+    /**
      * Returns an initializer that configures a particle with the same transform (scale, rotation,
      * position) as the supplied layer. This will the the fully computed transform, not the layer's
      * local transform.
