@@ -111,4 +111,8 @@ public class Library
     public Movie createMovie (String symbolName) {
         return (Movie)createInstance(symbolName);
     }
+
+    public Texture createTexture (String symbolName) {
+        return (Texture)createInstance(symbolName);
+    }
 }
