@@ -166,6 +166,38 @@ public abstract class Background
     }
 
     /**
+     * Sets the left inset for this background.
+     */
+    public Background insetLeft (float left) {
+        this.left = left;
+        return this;
+    }
+
+    /**
+     * Sets the right inset for this background.
+     */
+    public Background insetRight (float right) {
+        this.right = right;
+        return this;
+    }
+
+    /**
+     * Sets the top inset for this background.
+     */
+    public Background insetTop (float top) {
+        this.top = top;
+        return this;
+    }
+
+    /**
+     * Sets the bottom inset for this background.
+     */
+    public Background insetBottom (float bottom) {
+        this.bottom = bottom;
+        return this;
+    }
+
+    /**
      * Configures the alpha transparency of this background.
      */
     public Background alpha (float alpha) {
