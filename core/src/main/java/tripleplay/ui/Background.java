@@ -31,6 +31,19 @@ import tripleplay.ui.bgs.SolidBackground;
  */
 public abstract class Background
 {
+    /** An instantiation of a particular background template. Backgrounds are configured as a style
+     * property; elements instantiate them at specific dimensions when they are actually used.*/
+    public interface Instance {
+        /** Adds this background's layers to the specified group at the specified x/y offset.
+         * @param depthAdjust an adjustment to the standard depth at which backgrounds are added.
+         * This adjustment is added to the standard background depth (-10). This allows one to
+         * control the rendering order of multiple backgrounds on a single widget. */
+        void addTo (GroupLayer parent, float x, float y, float depthAdjust);
+
+        /** Disposes of this background instance when it is no longer valid/needed. */
+        void destroy ();
+    }
+
     /** The (highest) depth at which background layers are rendered. May range from (-11, 10]. */
     public static final float BACKGROUND_DEPTH = -10f;
 
@@ -96,6 +109,11 @@ public abstract class Background
      */
     public static Background scale9 (Image scale9Image) {
         return new Scale9Background(scale9Image);
+    }
+
+    /** Instantiates a background at the supplied size. */
+    public static Instance instantiate (Background delegate, IDimension size) {
+        return delegate.instantiate(size);
     }
 
     /** The insets of this background. */
@@ -165,14 +183,6 @@ public abstract class Background
     }
 
     /**
-     * Instantiates a delegate background at the supplied size. This allows one to make a composite
-     * background which consists of multiple backgrounds arranged in concert.
-     */
-    protected Instance instantiate (Background delegate, IDimension size) {
-        return delegate.instantiate(size);
-    }
-
-    /**
      * Instantiates this background using the supplied widget size. The supplied size should
      * include the insets defined for this background.
      */
@@ -196,20 +206,7 @@ public abstract class Background
         return layer;
     }
 
-    /** An instantiation of a particular background template. Backgrounds are configured as a style
-     * property; elements instantiate them at specific dimensions when they are actually used.*/
-    protected static abstract class Instance {
-        /** Adds this background's layers to the specified group at the specified x/y offset.
-         * @param depthAdjust an adjustment to the standard depth at which backgrounds are added.
-         * This adjustment is added to the standard background depth (-10). This allows one to
-         * control the rendering order of multiple backgrounds on a single widget. */
-        public abstract void addTo (GroupLayer parent, float x, float y, float depthAdjust);
-
-        /** Disposes of this background instance when it is no longer valid/needed. */
-        public abstract void destroy ();
-    }
-
-    protected static class LayerInstance extends Instance {
+    protected static class LayerInstance implements Instance {
         public LayerInstance (Layer... layers) {
             _layers = layers;
         }
