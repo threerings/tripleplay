@@ -39,13 +39,18 @@ public class FramesDemo extends DemoScreen
         layer.add(bg);
 
         // test our simple frames
-        GroupLayer box = graphics().createGroupLayer();
+        final GroupLayer box = graphics().createGroupLayer();
         layer.addAt(box, 0, 100);
         Image image = assets().getImage("images/spritesheet.png");
-        SimpleFrames frames = new SimpleFrames(image, 60, 60, 60);
-        anim.repeat(box).flipbook(box, new Flipbook(frames, 66));
-        anim.repeat(box).tweenX(box).to(width-frames.width()).in(2000).easeInOut().then().
-            tweenX(box).to(0).in(2000).easeInOut();
+        image.addCallback(new Callback<Image>() {
+            public void onSuccess (Image image) {
+                SimpleFrames frames = new SimpleFrames(image, 60, 60, 60);
+                anim.repeat(box).flipbook(box, new Flipbook(frames, 66));
+                anim.repeat(box).tweenX(box).to(width-frames.width()).in(2000).easeInOut().then().
+                    tweenX(box).to(0).in(2000).easeInOut();
+            }
+            public void onFailure (Throwable error) {} // n/a
+        });
 
         // test our packed frames
         final Image packed = assets().getImage("images/packed.png");
