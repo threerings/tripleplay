@@ -10,10 +10,10 @@ import tripleplay.util.Base90;
 /**
  * Handles encoding/decoding properties to/from strings.
  */
-public interface Codec<T>
+public abstract class Codec<T>
 {
     /** A codec for enums which encodes to/from {@link Enum#name}. */
-    class EnumC<E extends Enum<E>> implements Codec<E> {
+    public static class EnumC<E extends Enum<E>> extends Codec<E> {
         public static <E extends Enum<E>> EnumC<E> create (Class<E> eclass) {
             return new EnumC<E>(eclass);
         }
@@ -31,7 +31,7 @@ public interface Codec<T>
     }
 
     /** A codec for strings. The identity codec. */
-    Codec<String> STRING = new Codec<String>() {
+    public static final Codec<String> STRING = new Codec<String>() {
         public String encode (String value) {
             return value;
         }
@@ -41,7 +41,7 @@ public interface Codec<T>
     };
 
     /** A codec for ints. */
-    Codec<Integer> INT = new Codec<Integer>() {
+    public static final Codec<Integer> INT = new Codec<Integer>() {
         public String encode (Integer value) {
             return Base90.encodeInt(value);
         }
@@ -51,7 +51,7 @@ public interface Codec<T>
     };
 
     /** A codec for int arrays. */
-    Codec<int[]> INTS = new Codec<int[]>() {
+    public static final Codec<int[]> INTS = new Codec<int[]>() {
         public String encode (int[] values) {
             StringBuilder buf = new StringBuilder();
             for (int value : values) {
@@ -70,7 +70,7 @@ public interface Codec<T>
     };
 
     /** A codec for longs. */
-    Codec<Long> LONG = new Codec<Long>() {
+    public static final Codec<Long> LONG = new Codec<Long>() {
         public String encode (Long value) {
             return Base90.encodeLong(value);
         }
@@ -80,7 +80,7 @@ public interface Codec<T>
     };
 
     /** A codec for booleans. Encodes to the string {@code t} or {@code f}. */
-    Codec<Boolean> BOOLEAN = new Codec<Boolean>() {
+    public static final Codec<Boolean> BOOLEAN = new Codec<Boolean>() {
         public String encode (Boolean value) {
             return value ? "t" : "f";
         }
@@ -90,8 +90,13 @@ public interface Codec<T>
     };
 
     /** Encodes the supplied value to a string. */
-    String encode (T value);
+    public abstract String encode (T value);
 
-    /** Decodes the supplied string into a value. */
-    T decode (String data);
+    /** Decodes the supplied string into a value. May freak out if {@code data} is null. */
+    public abstract T decode (String data);
+
+    /** Decodes the supplied string into a value. Returns {@code defval} if {@code data} is null. */
+    public T decode (String data, T defval) {
+        return (data == null) ? defval : decode(data);
+    }
 }

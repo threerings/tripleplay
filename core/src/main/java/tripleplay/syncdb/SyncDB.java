@@ -219,12 +219,13 @@ public abstract class SyncDB
         };
         _props.put(name, new Property() {
             public boolean merge (String name, String data) {
-                T svalue = codec.decode(data), nvalue = resolver.resolve(value.get(), svalue);
+                T svalue = codec.decode(data, defval);
+                T nvalue = resolver.resolve(value.get(), svalue);
                 value.update(nvalue);
                 return nvalue.equals(svalue);
             }
             public void update (String name, String data) {
-                value.update(codec.decode(data));
+                value.update(codec.decode(data, defval));
             }
             public void prepareToMeld () {
                 noteModified(name);
@@ -258,14 +259,18 @@ public abstract class SyncDB
         };
         _props.put(name, new Property() {
             public boolean merge (String name, String data) {
-                Set<E> sset = DBUtil.decodeSet(data, codec);
+                Set<E> sset = (data == null) ? Collections.<E>emptySet() :
+                    DBUtil.decodeSet(data, codec);
                 resolver.resolve(rset, sset);
                 return rset.equals(sset);
             }
             public void update (String name, String data) {
-                Set<E> sset = DBUtil.decodeSet(data, codec);
-                rset.retainAll(sset);
-                rset.addAll(sset);
+                if (data == null) rset.clear();
+                else {
+                    Set<E> sset = DBUtil.decodeSet(data, codec);
+                    rset.retainAll(sset);
+                    rset.addAll(sset);
+                }
             }
             public void prepareToMeld () {
                 noteModified(name);
@@ -307,8 +312,7 @@ public abstract class SyncDB
                 return _keys.contains(key);
             }
             @Override public V get (Object rawKey) {
-                String value = _storage.getItem(skey(rawKey));
-                return value == null ? null : valCodec.decode(value);
+                return valCodec.decode(_storage.getItem(skey(rawKey)), null);
             }
 
             @Override public V put (K key, V value) {
@@ -318,12 +322,12 @@ public abstract class SyncDB
                 String ovalstr = _storage.getItem(skey);
                 _storage.setItem(skey, valstr);
                 if (!valstr.equals(ovalstr)) noteModified(skey);
-                return ovalstr == null ? null : valCodec.decode(ovalstr);
+                return valCodec.decode(ovalstr, null);
             }
             @Override public V remove (Object rawKey) {
                 String ovalue = _storage.getItem(skey(rawKey));
                 _keys.remove(rawKey); // this triggers a noteModified
-                return (ovalue == null) ? null : valCodec.decode(ovalue);
+                return valCodec.decode(ovalue, null);
             }
 
             @Override public Set<K> keySet () {
@@ -455,8 +459,7 @@ public abstract class SyncDB
     }
 
     protected <T> T get (String name, T defval, Codec<T> codec) {
-        String data = _storage.getItem(name);
-        return (data == null) ? defval : codec.decode(data);
+        return codec.decode(_storage.getItem(name), defval);
     }
 
     protected <T> void set (String name, T value, Codec<T> codec) {
