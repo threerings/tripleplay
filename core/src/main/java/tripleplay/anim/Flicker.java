@@ -12,6 +12,8 @@ import react.Signal;
 import playn.core.Game;
 import playn.core.Pointer;
 
+import tripleplay.util.Interpolator;
+
 /**
  * Implements click, and scroll/flick gestures for a single variable (y position by default). When
  * the pointer is pressed and dragged, the scroll position is updated to track the pointer. If the
@@ -61,15 +63,11 @@ public class Flicker extends Pointer.Adapter
 
     /** This must be called every frame with {@link Game#update}'s delta. */
     public void update (float delta) {
-        if (_vel != 0) {
-            float prev = position;
-            position = MathUtil.clamp(position + _vel * delta, min, max);
-            if (position == prev) _vel = 0; // for now stop when we hit the edge
-            float prevVel = _vel;
-            _vel += _accel * delta;
-            // if we decelerate past zero velocity, stop
-            if (Math.signum(prevVel) != Math.signum(_vel)) _vel = 0;
-        }
+        // update our position based on our velocity
+        if (_vel != 0) position = position + _vel * delta;
+
+        // let our state handle additional updates
+        _state.update(delta);
     }
 
     @Override public void onPointerStart (Pointer.Event event) {
@@ -87,8 +85,17 @@ public class Flicker extends Pointer.Adapter
         _prevStamp = _curStamp;
         _cur = getPosition(event);
         _curStamp = event.time();
+
+        // update our position based on the drag delta
         float delta = _cur - _start;
-        position = MathUtil.clamp(_origPos + delta, min, max);
+        position = _origPos + delta;
+
+        // if we're not allowed to rebound, clamp the position to our bounds
+        if (!allowRebound()) position = MathUtil.clamp(position, min, max);
+        // otherwise if we're exceeding min/max then only use a fraction of the delta
+        else if (position < min) position += (min-position)*overFraction();
+        else if (position > max) position -= (position-max)*overFraction();
+
         float absDelta = Math.abs(delta);
         if (!_minFlickExceeded && absDelta > minFlickDelta()) {
             _minFlickExceeded = true;
@@ -106,9 +113,13 @@ public class Flicker extends Pointer.Adapter
             float delta = _cur - _prev;
             float signum = Math.signum(delta);
             float dragVel = Math.abs(delta) / dragTime;
-            if (dragVel > flickVelThresh() && _minFlickExceeded) {
+            // if we're outside our bounds, go immediately into easeback mode
+            if (position < min || position > max) setState(EASEBACK);
+            // otherwise potentially initiate a flick
+            else if (dragVel > flickVelThresh() && _minFlickExceeded) {
                 _vel = signum * Math.min(maxFlickVel(), dragVel * flickXfer());
                 _accel = -signum * friction();
+                setState(SCROLLING);
             }
         }
     }
@@ -117,14 +128,14 @@ public class Flicker extends Pointer.Adapter
      * Extracts the desired position from the pointer event. The default is to use the y-position.
      */
     protected float getPosition (Pointer.Event event) {
-        return event.localY();
+        return event.y();
     }
 
     /**
      * Returns the deceleration (in pixels per ms per ms) applied to non-zero velocity.
      */
     protected float friction () {
-        return 0.002f;
+        return 0.0015f;
     }
 
     /**
@@ -170,8 +181,135 @@ public class Flicker extends Pointer.Adapter
      * A method called as soon as the minimum flick distance is exceeded.
      */
     protected void minFlickExceeded () {
+        // nothing by default
     }
 
+    /**
+     * Determines whether or not the flicker is allowed to scroll past its limits and rebound in a
+     * bouncily physical manner (ala iOS). If this is enabled, the flicker position may be
+     * temporarily less than {@link #min} or greater than {@link #max} while it is rebounding. The
+     * user will also be allowed to drag the flicker past the edge up to {@link #overFraction}
+     * times the height of the screen.
+     */
+    protected boolean allowRebound () {
+        return true;
+    }
+
+    /**
+     * The fraction of the drag distance to use when we've dragged beyond our minimum or maximum
+     * value. The default value is {@code 0.5} which seems to be what most inertial scrolling code
+     * uses, but you can use an even smaller fraction if you don't want the user to expose so much
+     * of your "off-screen" area. If rebounding is disabled, this value is not used and dragging
+     * beyond the edges is disallowed.
+     */
+    protected float overFraction () {
+        return 0.5f;
+    }
+
+    /**
+     * The duration (in milliseconds) over which to animate our ease back to the edge.
+     */
+    protected float easebackTime () {
+        return 500;
+    }
+
+    protected void setState (State state) {
+        state.becameActive();
+        _state = state;
+    }
+
+    protected abstract class State {
+        public void becameActive () {}
+        public void update (float delta) {}
+    }
+
+    protected final State SCROLLING = new State() {
+        public void update (float delta) {
+            // update our velocity based on the current (friction) acceleration
+            float prevVel = _vel;
+            _vel += _accel * delta;
+
+            // if we decelerate to (or rather slightly through) zero velocity, stop
+            if (Math.signum(prevVel) != Math.signum(_vel)) setState(STOPPED);
+            // otherwise, if we move past the edge of our bounds, either stop if rebound is
+            // disallowed or go into decelerate mode if rebound is allowed
+            else if (position < min || position > max) setState(allowRebound() ? DECELERATE : STOPPED);
+        }
+
+        public String toString () { return "SCROLLING"; }
+    };
+
+    protected final State DECELERATE = new State() {
+        public void update (float delta) {
+            // update our acceleration on the pixel distance back to the edge
+            float retpix = (position < min) ? (min - position) : (max - position);
+            _accel = retpix / 8000; // TODO: allow this to be tuned?
+
+            // now update our velocity based on this one
+            float prevVel = _vel;
+            _vel += _accel * delta;
+
+            // once we decelerate to zero, switch to snapback mode
+            if (Math.signum(prevVel) != Math.signum(_vel)) setState(SNAPBACK);
+        }
+
+        public String toString () { return "DECELERATE"; }
+    };
+
+    protected final State SNAPBACK = new State() {
+        public void becameActive () {
+            _vel = 0;
+            _snapdist = (position < min) ? (min - position) : (max - position);
+        }
+
+        public void update (float delta) {
+            // if we're in the first 30% of the snapback, accelerate, otherwise switch to easeback
+            float retpix = (position < min) ? (min - position) : (max - position);
+            float retpct = retpix / _snapdist;
+            if (retpct > 0.7f) _vel += _accel * delta;
+            else setState(EASEBACK);
+        }
+
+        public String toString () { return "SNAPBACK"; }
+
+        protected float _snapdist;
+    };
+
+    protected final State EASEBACK = new State() {
+        public void becameActive () {
+            _vel = 0; // we animate based on timestamps now
+            _spos = position;
+            _delta = 0;
+            _time = easebackTime();
+        }
+
+        public void update (float delta) {
+            // from here we just interpolate to our final position
+            _delta += delta;
+            float target = (position <= min) ? min : max;
+            if (_delta > _time) {
+                position = target;
+                setState(STOPPED);
+            } else {
+                position = Interpolator.EASE_OUT.apply(_spos, target-_spos, _delta, _time);
+            }
+        }
+
+        public String toString () { return "EASEBACK"; }
+
+        protected float _time, _spos, _delta;
+    };
+
+    protected final State STOPPED = new State() {
+        public void becameActive () {
+            position = MathUtil.clamp(position, min, max);
+            _vel = 0;
+        }
+
+        public String toString () { return "STOPPED"; }
+    };
+
+    protected State _state = STOPPED;
     protected float _vel, _accel;
     protected float _origPos, _start, _cur, _prev;
     protected double _curStamp, _prevStamp;
