@@ -40,7 +40,7 @@ public abstract class Animator
      * Registers an animation with this animator. It will be started on the next frame and continue
      * until cancelled or it reports that it has completed.
      */
-    public abstract <T extends Animation> T add (T tween);
+    public abstract <T extends Animation> T add (T anim);
 
     /**
      * Starts a tween on the supplied layer's x/y-translation.
