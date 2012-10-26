@@ -7,6 +7,7 @@ package tripleplay.anim;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import pythagoras.f.XY;
 import react.Value;
@@ -125,6 +126,15 @@ public abstract class Animator
     }
 
     /**
+     * Starts a tween using the supplied custom value. {@link Animation.Value#initial} will be used
+     * (if needed) to obtain the initial value before the tween begins. {@link Animation.Value#set}
+     * will be called each time the tween is updated with the intermediate values.
+     */
+    public Animation.One tween (Animation.Value value) {
+        return add(new Animation.One(value));
+    }
+
+    /**
      * Starts a flipbook animation that displays in {@code layer}. Note that the image layer in
      * question will have its translation adjusted based on the offset of the current frame. Thus
      * it should be placed into a {@link GroupLayer} if it is to be positioned and animated
@@ -168,12 +178,12 @@ public abstract class Animator
     }
 
     /**
-     * Starts a tween using the supplied custom value. {@link Animation.Value#initial} will be used
-     * (if needed) to obtain the initial value before the tween begins. {@link Animation.Value#set}
-     * will be called each time the tween is updated with the intermediate values.
+     * Creates a shake animation on the specified layer.
+     *
+     * @param random a random number generator to use for adding randomness to the shake.
      */
-    public Animation.One tween (Animation.Value value) {
-        return add(new Animation.One(value));
+    public Animation.Shake shake (Layer layer, Random random) {
+        return add(new Animation.Shake(layer, random));
     }
 
     /**

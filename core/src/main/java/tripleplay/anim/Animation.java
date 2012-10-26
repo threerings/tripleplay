@@ -5,6 +5,8 @@
 
 package tripleplay.anim;
 
+import java.util.Random;
+
 import pythagoras.f.XY;
 
 import playn.core.ImageLayer;
@@ -266,6 +268,92 @@ public abstract class Animation
         }
 
         protected Layer _layer;
+    }
+
+    /** An animation that shakes a layer randomly in the x and y directions. */
+    public static class Shake extends Animation.Interped<Shake> {
+        public Shake (Layer layer, Random rand) {
+            _layer = layer;
+            _rand = rand;
+        }
+
+        /** Configures the amount under and over the starting x and y allowed when shaking. The
+         * animation will shake the layer in the range {@code x + underX} to {@code x + overX} and
+         * similarly for y, thus {@code underX} (and {@code underY}) should be negative. */
+        public Shake bounds (float underX, float overX, float underY, float overY) {
+            _underX = underX;
+            _overX = overX;
+            _underY = underY;
+            _overY = overY;
+            return this;
+        }
+
+        /** Configures the shake cycle time in the x and y directions. */
+        public Shake cycleTime (float millis) { return cycleTime(millis, millis); }
+
+        /** Configures the shake cycle time in the x and y directions. */
+        public Shake cycleTime (float millisX, float millisY) {
+            _cycleTimeX = millisX;
+            _cycleTimeY = millisY;
+            return this;
+        }
+
+        @Override
+        protected void init (float time) {
+            super.init(time);
+            _startX = _layer.transform().tx();
+            _startY = _layer.transform().ty();
+            _minX = _startX + _underX;
+            _rangeX = _startX + _overX - _minX;
+            _minY = _startY + _underY;
+            _rangeY = _startY + _overY - _minY;
+
+            // start our X/Y shaking randomly in one direction or the other
+            _curMinX = _startX;
+            _curRangeX = _rand.nextBoolean() ? _overX : _underX;
+            _curMinY = _startY;
+            _curRangeY = _rand.nextBoolean() ? _overY : _underY;
+        }
+
+        @Override
+        protected float apply (float time) {
+            float dt = time-_start, nx, ny;
+            if (dt < _duration) {
+                float dtx = time-_timeX, dty = time-_timeY;
+                if (dtx < _cycleTimeX) nx = _interp.apply(_curMinX, _curRangeX, dtx, _cycleTimeX);
+                else {
+                    nx = _curMinX + _curRangeX;
+                    _curMinX = nx;
+                    _curRangeX = (nx < _startX ? 1 : -1) * _rand.nextFloat() * _rangeX;
+                    _timeX = time;
+                }
+                if (dty < _cycleTimeY) ny = _interp.apply(_curMinY, _curRangeY, dty, _cycleTimeY);
+                else {
+                    ny = _curMinY + _curRangeY;
+                    _curMinY = ny;
+                    _curRangeY = (ny < _startY ? 1 : -1) * _rand.nextFloat() * _rangeY;
+                    _timeY = time;
+                }
+            } else {
+                nx = _startX;
+                ny = _startY;
+            }
+            _layer.setTranslation(nx, ny);
+            return _duration - dt;
+        }
+
+        protected final Layer _layer;
+        protected final Random _rand;
+
+        // parameters initialized by setters or in init()
+        protected float _underX = -2, _overX = 2, _underY = -2, _overY = 2;
+        protected float _cycleTimeX = 100, _cycleTimeY = 100;
+        protected float _startX, _startY;
+        protected float _minX, _rangeX, _minY, _rangeY;
+
+        // parameters used during animation
+        protected float _timeX, _timeY;
+        protected float _curMinX, _curRangeX, _curMinY, _curRangeY;
     }
 
     /**
