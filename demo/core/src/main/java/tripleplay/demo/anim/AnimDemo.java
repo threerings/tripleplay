@@ -5,13 +5,11 @@
 
 package tripleplay.demo.anim;
 
-import java.util.Random;
-
 import playn.core.CanvasImage;
-import playn.core.ImageLayer;
 import playn.core.Font;
-import static playn.core.PlayN.*;
+import playn.core.ImageLayer;
 import playn.core.Pointer;
+import static playn.core.PlayN.*;
 
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
@@ -42,7 +40,7 @@ public class AnimDemo extends DemoScreen
         final ImageLayer click = CFG.toLayer("Click to Shake");
         click.addListener(new Pointer.Adapter() {
             public void onPointerStart (Pointer.Event event) {
-                anim.shake(click, RAND).bounds(-3, 3, -3, 0).cycleTime(25, 25).in(1000);
+                anim.shake(click).bounds(-3, 3, -3, 0).cycleTime(25, 25).in(1000);
             }
         });
         layer.addAt(click, (width-click.width())/2, 275);
@@ -50,7 +48,6 @@ public class AnimDemo extends DemoScreen
         return null;
     }
 
-    protected static final Random RAND = new Random();
     protected static final TextConfig CFG = new TextConfig(0xFF000000).
         withFont(graphics().createFont("Helvetica", Font.Style.PLAIN, 48));
 }
