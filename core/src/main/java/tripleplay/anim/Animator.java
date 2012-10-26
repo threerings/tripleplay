@@ -7,7 +7,6 @@ package tripleplay.anim;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import pythagoras.f.XY;
 import react.Value;
@@ -179,11 +178,9 @@ public abstract class Animator
 
     /**
      * Creates a shake animation on the specified layer.
-     *
-     * @param random a random number generator to use for adding randomness to the shake.
      */
-    public Animation.Shake shake (Layer layer, Random random) {
-        return add(new Animation.Shake(layer, random));
+    public Animation.Shake shake (Layer layer) {
+        return add(new Animation.Shake(layer));
     }
 
     /**

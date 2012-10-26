@@ -272,9 +272,8 @@ public abstract class Animation
 
     /** An animation that shakes a layer randomly in the x and y directions. */
     public static class Shake extends Animation.Interped<Shake> {
-        public Shake (Layer layer, Random rand) {
+        public Shake (Layer layer) {
             _layer = layer;
-            _rand = rand;
         }
 
         /** Configures the amount under and over the starting x and y allowed when shaking. The
@@ -310,9 +309,9 @@ public abstract class Animation
 
             // start our X/Y shaking randomly in one direction or the other
             _curMinX = _startX;
-            _curRangeX = _rand.nextBoolean() ? _overX : _underX;
+            _curRangeX = RANDS.nextBoolean() ? _overX : _underX;
             _curMinY = _startY;
-            _curRangeY = _rand.nextBoolean() ? _overY : _underY;
+            _curRangeY = RANDS.nextBoolean() ? _overY : _underY;
         }
 
         @Override
@@ -324,14 +323,14 @@ public abstract class Animation
                 else {
                     nx = _curMinX + _curRangeX;
                     _curMinX = nx;
-                    _curRangeX = (nx < _startX ? 1 : -1) * _rand.nextFloat() * _rangeX;
+                    _curRangeX = (nx < _startX ? 1 : -1) * RANDS.nextFloat() * _rangeX;
                     _timeX = time;
                 }
                 if (dty < _cycleTimeY) ny = _interp.apply(_curMinY, _curRangeY, dty, _cycleTimeY);
                 else {
                     ny = _curMinY + _curRangeY;
                     _curMinY = ny;
-                    _curRangeY = (ny < _startY ? 1 : -1) * _rand.nextFloat() * _rangeY;
+                    _curRangeY = (ny < _startY ? 1 : -1) * RANDS.nextFloat() * _rangeY;
                     _timeY = time;
                 }
             } else {
@@ -343,7 +342,6 @@ public abstract class Animation
         }
 
         protected final Layer _layer;
-        protected final Random _rand;
 
         // parameters initialized by setters or in init()
         protected float _underX = -2, _overX = 2, _underY = -2, _overY = 2;
@@ -434,4 +432,6 @@ public abstract class Animation
     protected Animation _root = this;
     protected Animation _current = this;
     protected Animation _next;
+
+    protected static final Random RANDS = new Random();
 }
