@@ -78,6 +78,7 @@ public class Flicker extends Pointer.Adapter
         _start = _prev = _cur = getPosition(event);
         _prevStamp = 0;
         _curStamp = event.time();
+        setState(DRAGGING);
     }
 
     @Override public void onPointerDrag (Pointer.Event event) {
@@ -121,6 +122,7 @@ public class Flicker extends Pointer.Adapter
                 _accel = -signum * friction();
                 setState(SCROLLING);
             }
+            else setState(STOPPED);
         }
     }
 
@@ -213,15 +215,27 @@ public class Flicker extends Pointer.Adapter
         return 500;
     }
 
+    /**
+     * Controls the tightness of the deceleration when we're decelerating after scrolling beyond
+     * our minimum or maximum value. Default is 5, smaller values result in tighter snapback.
+     */
+    protected float decelerateSnap () {
+        return 5;
+    }
+
     protected void setState (State state) {
-        state.becameActive();
         _state = state;
+        state.becameActive();
     }
 
     protected abstract class State {
         public void becameActive () {}
         public void update (float delta) {}
     }
+
+    protected final State DRAGGING = new State() {
+        // nada
+    };
 
     protected final State SCROLLING = new State() {
         public void update (float delta) {
@@ -233,7 +247,8 @@ public class Flicker extends Pointer.Adapter
             if (Math.signum(prevVel) != Math.signum(_vel)) setState(STOPPED);
             // otherwise, if we move past the edge of our bounds, either stop if rebound is
             // disallowed or go into decelerate mode if rebound is allowed
-            else if (position < min || position > max) setState(allowRebound() ? DECELERATE : STOPPED);
+            else if (position < min || position > max) setState(
+                allowRebound() ? DECELERATE : STOPPED);
         }
 
         public String toString () { return "SCROLLING"; }
@@ -241,9 +256,9 @@ public class Flicker extends Pointer.Adapter
 
     protected final State DECELERATE = new State() {
         public void update (float delta) {
-            // update our acceleration on the pixel distance back to the edge
+            // update our acceleration based on the pixel distance back to the edge
             float retpix = (position < min) ? (min - position) : (max - position);
-            _accel = retpix / 8000; // TODO: allow this to be tuned?
+            _accel = retpix / (1000 * decelerateSnap());
 
             // now update our velocity based on this one
             float prevVel = _vel;
