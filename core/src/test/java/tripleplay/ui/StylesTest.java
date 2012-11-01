@@ -16,7 +16,9 @@ import static org.junit.Assert.*;
 public class StylesTest
 {
     static {
-        JavaPlatform.registerHeadless();
+        JavaPlatform.Config config = new JavaPlatform.Config();
+        config.headless = true;
+        JavaPlatform.register(config);
     }
 
     @Test public void testEmpty () {
