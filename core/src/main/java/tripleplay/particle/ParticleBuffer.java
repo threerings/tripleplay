@@ -108,7 +108,7 @@ public class ParticleBuffer
      * @return the number of live particles to which the effectors were applied.
      */
     public int apply (List<? extends Effector> effectors, float now, float dt) {
-        int pp = 0, ppos = 0, ecount = effectors.size(), death = 0, living = 0;
+        int pp = 0, ppos = 0, ecount = effectors.size(), living = 0;
         for (int aa = 0; aa < alive.length; aa++) {
             int live = alive[aa], mask = 1, died = 0;
             for (int end = pp+32; pp < end; pp++, ppos += NUM_FIELDS, mask <<= 1) {
@@ -131,7 +131,6 @@ public class ParticleBuffer
             // if we killed off any particles, update the liveness array
             if (died > 0) {
                 alive[aa] = live;
-                death += died;
             }
         }
         return living;
