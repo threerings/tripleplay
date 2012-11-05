@@ -371,6 +371,16 @@ public abstract class Animator
         // nada by default
     }
 
+    /**
+     * Clears out any pending animations. <em>NOTE</em> all animations simply disappear. Any queued
+     * animations that invoked actions will not execute, nor will the cleanup actions of any
+     * animations that involve cleanup. This should only be invoked if you know the layers involved
+     * in animations will be destroyed separately.
+     */
+    public void clear () {
+        // nada by default
+    }
+
     protected static Animation.Value onX (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
@@ -445,6 +455,13 @@ public abstract class Animator
                     _accum = _nanims;
                 }
             }
+        }
+
+        @Override public void clear () {
+            _anims.clear();
+            _nanims.clear();
+            _barriers.clear();
+            _accum = _nanims;
         }
 
         protected List<Animation> _anims = new ArrayList<Animation>();
