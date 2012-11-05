@@ -225,19 +225,18 @@ public class Movie
 
             float sinX = FloatMath.sin(skewX), cosX = FloatMath.cos(skewX);
             float sinY = FloatMath.sin(skewY), cosY = FloatMath.cos(skewY);
+            float offsetX = -kf.pivot.x(), offsetY = -kf.pivot.y();
 
-            // From an identity matrix, append the skew
-            _scratch.setTransform(cosY, sinY, -sinX, cosX, 0, 0);
+            // Create a transformation matrix that translates to locX/Y, skews, scales, then
+            // translates by offsetX/Y (in that order)
+            float m00 = cosY * scaleX;
+            float m01 = sinY * scaleX;
+            float m10 = -sinX * scaleY;
+            float m11 = cosX * scaleY;
+            float tx = locX + m00*offsetX + m10*offsetY;
+            float ty = locY + m11*offsetY + m01*offsetX;
+            content.transform().setTransform(m00, m01, m10, m11, tx, ty);
 
-            // Append the scale
-            _scratch.scale(scaleX, scaleY);
-
-            // Append the translation, and prepend the pivot
-            _scratch.tx = locX - _scratch.m00*kf.pivot.x() - _scratch.m10*kf.pivot.y();
-            _scratch.ty = locY - _scratch.m01*kf.pivot.x() - _scratch.m11*kf.pivot.y();
-
-            content.transform().setTransform(_scratch.m00, _scratch.m01,
-                _scratch.m10, _scratch.m11, _scratch.tx, _scratch.ty);
             content.setAlpha(alpha);
 
             if (_current != null) {
@@ -253,8 +252,6 @@ public class Movie
                 group.add(current.layer());
             }
         }
-
-        protected static AffineTransform _scratch = new AffineTransform();
 
         protected LayerData _data;
         protected Instance _current; // The instance currently visible
