@@ -19,4 +19,16 @@ public interface Playable
 
     /** Returns true if this playable is currently playing, false othwerise. */
     boolean isPlaying ();
+
+	void setVolume(float volume);
+
+	float volume();
+
+	void fadeIn(float duration);
+
+	void fadeIn();
+
+	void fadeOut(float duration);
+
+	void fadeOut();
 }

@@ -5,19 +5,18 @@
 
 package tripleplay.sound;
 
+import static playn.core.PlayN.assets;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import playn.core.Game;
+import playn.core.Sound;
 import pythagoras.f.MathUtil;
 import react.Slot;
 import react.Value;
-
-import playn.core.Game;
-import playn.core.Sound;
-import static playn.core.PlayN.assets;
-
 import tripleplay.util.Interpolator;
 
 /**
@@ -29,6 +28,8 @@ import tripleplay.util.Interpolator;
  */
 public class SoundBoard
 {
+	protected static final float DEFAULT_FADE_DURATION = 1000;
+
     /** Controls the volume of this sound board. */
     public Value<Float> volume = new Value<Float>(1f) {
         @Override protected Float updateAndNotifyIf (Float value) {
@@ -41,11 +42,11 @@ public class SoundBoard
 
     public SoundBoard () {
         volume.connect(new Slot<Float>() { public void onEmit (Float volume) {
-            for (LoopImpl active : _active) active.setVolume(volume);
+			for (LoopImpl active : _active) active.updateVolume();
         }});
         muted.connect(new Slot<Boolean>() { public void onEmit (Boolean muted) {
             if (muted) for (LoopImpl active : _active) active.fadeOut();
-            else for (LoopImpl active : _active) active.fadeIn(volume.get());
+            else for (LoopImpl active : _active) active.fadeIn();
         }});
     }
 
@@ -98,7 +99,8 @@ public class SoundBoard
             if (shouldPlay()) prepareSound().play();
         }
         @Override public void stop () {
-            if (isPlaying()) _faders.add(new Fader(sound));
+			if (isPlaying())
+				_faders.add(new FadeOut(sound, DEFAULT_FADE_DURATION));
         }
         @Override public Sound asSound () {
             return new Sound.Silence() {
@@ -111,6 +113,10 @@ public class SoundBoard
                 }
             };
         }
+        
+        @Override protected void configSound() {
+			// do nothing
+        }
     }
 
     protected abstract class LoopImpl extends LazySound implements Loop {
@@ -121,31 +127,65 @@ public class SoundBoard
         @Override public void stop () {
             if (_active.remove(this)) fadeOut();
         }
-        public void fadeIn (float toVolume) {
-            if (!isPlaying()) prepareAndPlay();
-            // TODO: actually fade this in
-            sound.setVolume(toVolume);
-        }
-        public void fadeOut () {
-            if (isPlaying()) _faders.add(new Fader(sound));
-        }
-        public void setVolume (float volume) {
-            if (volume > 0) {
-                if (!isPlaying()) prepareAndPlay();
-                sound.setVolume(volume);
-            } else if (isPlaying()) {
-                sound.stop();
-            }
-        }
-        protected void prepareAndPlay () {
-            Sound sound = prepareSound();
-            sound.setLooping(true);
-            sound.play();
-        }
+
+		@Override protected void configSound() {
+			sound.setLooping(true);
+		}
     }
 
     protected abstract class LazySound {
-        public Sound sound;
+		protected Sound sound;
+		private float channelVolume = 1;
+
+		protected void prepareAndPlay() {
+			Sound sound = prepareSound();
+			configSound();
+			sound.play();
+		}
+
+		protected abstract void configSound();
+
+		public void fadeIn() {
+			fadeIn(DEFAULT_FADE_DURATION);
+		}
+
+		public void fadeIn(float duration) {
+			if (!isPlaying()) {
+				prepareAndPlay();
+			}
+			_faders.add(new FadeIn(sound, getRealVolume(), duration));
+		}
+
+		public void fadeOut() {
+			fadeOut(DEFAULT_FADE_DURATION);
+		}
+
+		public void fadeOut(float duration) {
+			if (isPlaying())
+				_faders.add(new FadeOut(sound, duration));
+		}
+
+		public float getRealVolume() {
+			return channelVolume * SoundBoard.this.volume.get();
+		}
+
+		public void updateVolume() {
+			float realVolume = getRealVolume();
+			if (realVolume > 0) {
+				sound.setVolume(realVolume);
+			} else if (isPlaying()) {
+				sound.stop();
+			}
+		}
+
+		public float volume() {
+			return channelVolume;
+		}
+
+		public void setVolume(float volume) {
+			channelVolume = MathUtil.clamp(volume, 0, 1);
+			updateVolume();
+		}
 
         public boolean isPlaying () {
             return (sound == null) ? false : sound.isPlaying();
@@ -162,36 +202,64 @@ public class SoundBoard
 
         protected Sound prepareSound () {
             if (sound == null) sound = assets().getSound(path());
-            sound.setVolume(volume.get());
+			sound.setVolume(getRealVolume());
             return sound;
         }
 
         protected abstract String path ();
     }
 
-    protected static class Fader {
-        public Fader (Sound sound) {
+	protected abstract static class Fader {
+		public Fader (Sound sound,float duration) {
             _sound = sound;
-            _start = _sound.volume();
+			_duration = duration;
         }
 
-        public boolean update (float delta) {
-            _elapsed += delta;
-            float vol = Interpolator.LINEAR.apply(_start, -_start, _elapsed, FADE_DURATION);
-            if (vol > 0) {
-                _sound.setVolume(vol);
-                return false;
-            }
-            _sound.stop();
-            return true;
-        }
+		public abstract boolean update(float delta);
 
         protected final Sound _sound;
-        protected final float _start;
+		protected final float _duration;
         protected float _elapsed;
-
-        protected static final float FADE_DURATION = 1000;
     }
+
+	protected static class FadeOut extends Fader {
+		public FadeOut(Sound sound, float duration) {
+			super(sound, duration);
+			// _sound.volume is the real volume
+			_start = _sound.volume();
+		}
+
+		public boolean update(float delta) {
+			_elapsed += delta;
+			float vol = Interpolator.EASE_OUT.apply(_start, -_start, _elapsed, _duration);
+			if (vol > 0) {
+				_sound.setVolume(vol);
+				return false;
+			}
+			_sound.stop();
+			return true;
+		}
+
+		protected final float _start;
+	}
+
+	protected static class FadeIn extends Fader {
+		private float _volume;
+		public FadeIn(Sound sound, float volume, float duration) {
+			super(sound, duration);
+			sound.setVolume(0);
+			this._volume = volume;
+		}
+
+		public boolean update(float delta) {
+			_elapsed += delta;
+			float vol = Interpolator.EASE_IN.apply(0, _volume, _elapsed, _duration);
+			_sound.setVolume(vol);
+			// PlayN.log().debug("volume: " + vol);
+			return vol >= _volume;
+		}
+
+	}
 
     protected final Set<LoopImpl> _active = new HashSet<LoopImpl>();
     protected final List<Fader> _faders = new ArrayList<Fader>();

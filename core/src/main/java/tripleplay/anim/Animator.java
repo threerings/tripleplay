@@ -8,16 +8,14 @@ package tripleplay.anim;
 import java.util.ArrayList;
 import java.util.List;
 
-import pythagoras.f.XY;
-import react.Value;
-
 import playn.core.Asserts;
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Sound;
-
+import pythagoras.f.XY;
+import react.Value;
 import tripleplay.sound.Playable;
 import tripleplay.util.Layers;
 
@@ -325,6 +323,14 @@ public abstract class Animator
             public float initial () { return sound.volume(); }
             public void set (float value) { sound.setVolume(value); }
         });
+    }
+    
+	public Animation.One tweenVolume(final Playable playable) {
+    	 Asserts.checkNotNull(playable);
+         return tween(new Animation.Value() {
+             public float initial () { return playable.volume(); }
+             public void set (float value) { playable.setVolume(value); }
+         });
     }
 
     /**
