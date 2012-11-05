@@ -302,16 +302,20 @@ public abstract class Animation
             super.init(time);
             _startX = _layer.transform().tx();
             _startY = _layer.transform().ty();
-            _minX = _startX + _underX;
-            _rangeX = _startX + _overX - _minX;
-            _minY = _startY + _underY;
-            _rangeY = _startY + _overY - _minY;
 
             // start our X/Y shaking randomly in one direction or the other
             _curMinX = _startX;
-            _curRangeX = RANDS.nextBoolean() ? _overX : _underX;
+            if (_overX == 0) _curRangeX = _underX;
+            else if (_underX == 0) _curRangeX = _overX;
+            else _curRangeX = RANDS.nextBoolean() ?  _overX : _underX;
             _curMinY = _startY;
-            _curRangeY = RANDS.nextBoolean() ? _overY : _underY;
+            if (_overY == 0) _curRangeY = _underY;
+            else if (_underY == 0) _curRangeY = _overY;
+            else _curRangeY = RANDS.nextBoolean() ? _overY : _underY;
+
+            System.err.println("Start " + _startY);
+            System.err.println("Bounds " + _underY + " to " + _overY);
+            System.err.println("From " + _curMinY + ", range: " + _curRangeY);
         }
 
         @Override
@@ -323,14 +327,16 @@ public abstract class Animation
                 else {
                     nx = _curMinX + _curRangeX;
                     _curMinX = nx;
-                    _curRangeX = (nx < _startX ? 1 : -1) * RANDS.nextFloat() * _rangeX;
+                    float rangeX = _startX + (_curRangeX < 0 ?  _overX : _underX) - nx;
+                    _curRangeX = rangeX/2 + RANDS.nextFloat() * rangeX/2;
                     _timeX = time;
                 }
                 if (dty < _cycleTimeY) ny = _interp.apply(_curMinY, _curRangeY, dty, _cycleTimeY);
                 else {
                     ny = _curMinY + _curRangeY;
                     _curMinY = ny;
-                    _curRangeY = (ny < _startY ? 1 : -1) * RANDS.nextFloat() * _rangeY;
+                    float rangeY = _startY + (_curRangeY < 0 ?  _overY : _underY) - ny;
+                    _curRangeY = rangeY/2 + RANDS.nextFloat() * rangeY/2;
                     _timeY = time;
                 }
             } else {
@@ -347,7 +353,6 @@ public abstract class Animation
         protected float _underX = -2, _overX = 2, _underY = -2, _overY = 2;
         protected float _cycleTimeX = 100, _cycleTimeY = 100;
         protected float _startX, _startY;
-        protected float _minX, _rangeX, _minY, _rangeY;
 
         // parameters used during animation
         protected float _timeX, _timeY;

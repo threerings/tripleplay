@@ -277,16 +277,6 @@ public abstract class Animator
     }
 
     /**
-     * Sets a boolean value to true or false, usually to simplify the enabling/disabling of UI
-     * components during an animation.
-     */
-    public Animation.Action setAnimating (final Value<Boolean> anim, final boolean animating) {
-        return action(new Runnable() { public void run () {
-            anim.update(animating);
-        }});
-    }
-
-    /**
      * Plays the supplied clip or loop.
      */
     public Animation.Action play (final Playable sound) {
@@ -339,6 +329,24 @@ public abstract class Animator
     public Animation.Action stop (final Sound sound) {
         return action(new Runnable() { public void run () {
             sound.stop();
+        }});
+    }
+
+    /**
+     * Sets a value to the supplied constant.
+     */
+    public <T> Animation.Action setValue (final Value<T> value, final T newValue) {
+        return action(new Runnable() { public void run () {
+            value.update(newValue);
+        }});
+    }
+
+    /**
+     * Increments (or decrements if {@code amount} is negative} an int value.
+     */
+    public Animation.Action increment (final Value<Integer> value, final int amount) {
+        return action(new Runnable() { public void run () {
+            value.update(value.get() + amount);
         }});
     }
 

@@ -11,6 +11,7 @@ import java.util.List;
 
 import playn.core.Game;
 import static playn.core.PlayN.graphics;
+import static playn.core.PlayN.pointer;
 
 import tripleplay.game.trans.FlipTransition;
 import tripleplay.game.trans.PageTurnTransition;
@@ -361,8 +362,8 @@ public abstract class ScreenStack
 
         public void init () {
             _trans.init(_oscreen, _nscreen);
-            // disable pointer interactions while we transition; allowing interaction
-            // PlayN.pointer().setEnabled(false);
+            // disable pointer interactions while we transition; disallowing interaction
+            pointer().setEnabled(false);
             _oscreen.hideTransitionStarted();
             showNewScreen();
         }
@@ -389,7 +390,7 @@ public abstract class ScreenStack
             _nscreen.layer.setTranslation(originX, originY);
             _nscreen.showTransitionCompleted();
             // reenable pointer interactions
-            // PlayN.pointer().setEnabled(true);
+            pointer().setEnabled(true);
             onComplete();
         }
 
