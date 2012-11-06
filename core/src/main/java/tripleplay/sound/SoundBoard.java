@@ -170,11 +170,13 @@ public class SoundBoard
 		}
 
 		public void updateVolume() {
-			float realVolume = getRealVolume();
-			if (realVolume > 0) {
-				sound.setVolume(realVolume);
-			} else if (isPlaying()) {
-				sound.stop();
+			if (sound != null) {
+				float realVolume = getRealVolume();
+				if (realVolume > 0) {
+					sound.setVolume(realVolume);
+				} else if (isPlaying()) {
+					sound.stop();
+				}
 			}
 		}
 
