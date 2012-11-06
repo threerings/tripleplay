@@ -17,15 +17,9 @@ import tripleplay.ui.Background;
 public class BlankBackground extends Background
 {
     @Override protected Instance instantiate (IDimension size) {
-        return SINGLETON;
+        return new Instance(size) {
+            @Override public void addTo (GroupLayer parent, float x, float y, float depthAdjust) {}
+            @Override public void destroy () {}
+        };
     }
-
-    protected static final Instance SINGLETON = new Instance() {
-        @Override public void addTo (GroupLayer parent, float x, float y, float depthAdjust) {
-            // noop!
-        }
-        @Override public void destroy () {
-            // noop!
-        }
-    };
 }

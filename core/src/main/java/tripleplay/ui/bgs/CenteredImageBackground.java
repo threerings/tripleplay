@@ -11,7 +11,6 @@ import pythagoras.f.MathUtil;
 import playn.core.Image;
 import playn.core.ImmediateLayer;
 import playn.core.Surface;
-import static playn.core.PlayN.graphics;
 
 import tripleplay.ui.Background;
 
@@ -30,12 +29,12 @@ public class CenteredImageBackground extends Background
     @Override protected Instance instantiate (IDimension size) {
         final float x = MathUtil.ifloor((size.width()-_image.width())/2);
         final float y = MathUtil.ifloor((size.height()-_image.height())/2);
-        return new LayerInstance(graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+        return new LayerInstance(size, new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 if (alpha != null) surf.setAlpha(alpha);
                 surf.drawImage(_image, x, y);
             }
-        }));
+        });
     }
 
     protected final Image _image;

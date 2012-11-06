@@ -9,7 +9,6 @@ import pythagoras.f.IDimension;
 
 import playn.core.ImmediateLayer;
 import playn.core.Surface;
-import static playn.core.PlayN.graphics;
 
 import tripleplay.ui.Background;
 
@@ -26,7 +25,7 @@ public class BorderedBackground extends Background
 
     @Override
     protected Instance instantiate (final IDimension size) {
-        return new LayerInstance(graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+        return new LayerInstance(size, new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 float width = size.width(), height = size.height();
                 if (alpha != null) surf.setAlpha(alpha);
@@ -38,7 +37,7 @@ public class BorderedBackground extends Background
                     fillRect(0, height-_thickness, width, _thickness);
                 if (alpha != null) surf.setAlpha(1);
             }
-        }));
+        });
     }
 
     protected final int _bgColor, _borderColor;

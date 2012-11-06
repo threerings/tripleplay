@@ -19,7 +19,7 @@ public class SolidBackground extends Background
     }
 
     @Override protected Instance instantiate (IDimension size) {
-        return new LayerInstance(createSolidLayer(_color, size.width(), size.height()));
+        return new LayerInstance(size, createSolidLayer(_color, size.width(), size.height()));
     }
 
     protected final int _color;

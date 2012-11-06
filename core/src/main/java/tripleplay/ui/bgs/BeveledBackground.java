@@ -9,7 +9,6 @@ import pythagoras.f.IDimension;
 
 import playn.core.ImmediateLayer;
 import playn.core.Surface;
-import static playn.core.PlayN.graphics;
 
 import tripleplay.ui.Background;
 
@@ -25,19 +24,19 @@ public class BeveledBackground extends Background
     }
 
     @Override protected Instance instantiate (final IDimension size) {
-        return new LayerInstance(graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+        return new LayerInstance(size, new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 float width = size.width(), height = size.height(), bot = height, right = width;
                 if (alpha != null) surf.setAlpha(alpha);
                 surf.setFillColor(_bgColor).fillRect(0, 0, width, height);
                 surf.setFillColor(_ulColor).
-                    drawLine(0, 0, right, 0, 2).drawLine(0, 0, 0, bot, 2);
+                drawLine(0, 0, right, 0, 2).drawLine(0, 0, 0, bot, 2);
                 surf.setFillColor(_brColor).
-                    drawLine(right, 0, right, bot, 1).drawLine(1, bot-1, right-1, bot-1, 1).
-                    drawLine(0, bot, right, bot, 1).drawLine(right-1, 1, right-1, bot-1, 1);
+                drawLine(right, 0, right, bot, 1).drawLine(1, bot-1, right-1, bot-1, 1).
+                drawLine(0, bot, right, bot, 1).drawLine(right-1, 1, right-1, bot-1, 1);
                 if (alpha != null) surf.setAlpha(1);
             }
-        }));
+        });
     }
 
     protected final int _bgColor, _ulColor, _brColor;

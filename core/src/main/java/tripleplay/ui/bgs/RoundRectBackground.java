@@ -53,7 +53,7 @@ public class RoundRectBackground extends Background
         }
         ImageLayer layer = graphics().createImageLayer(image);
         if (alpha != null) layer.setAlpha(alpha);
-        return new LayerInstance(layer);
+        return new LayerInstance(size, layer);
     }
 
     protected final int _bgColor, _borderColor;

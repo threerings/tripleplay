@@ -10,7 +10,6 @@ import pythagoras.f.IDimension;
 import playn.core.Image;
 import playn.core.ImmediateLayer;
 import playn.core.Surface;
-import static playn.core.PlayN.graphics;
 
 import tripleplay.ui.Background;
 
@@ -108,7 +107,7 @@ public class Scale9Background extends Background
 
     @Override
     protected Instance instantiate (final IDimension size) {
-        return new LayerInstance(graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+        return new LayerInstance(size, new ImmediateLayer.Renderer() {
             // The axes of our destination surface.
             Axis3 dx = new Axis3(size.width(), xaxis), dy = new Axis3(size.height(), yaxis);
             public void render (Surface surf) {
@@ -128,7 +127,7 @@ public class Scale9Background extends Background
                                dx.coord(x), dy.coord(y), dx.size(x), dy.size(y),
                                xaxis.coord(x), yaxis.coord(y), xaxis.size(x), yaxis.size(y));
             }
-        }));
+        });
     }
 
     protected Image _image;

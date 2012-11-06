@@ -26,7 +26,7 @@ public class ImageBackground extends Background
         ImageLayer layer = PlayN.graphics().createImageLayer(_image);
         if (alpha != null) layer.setAlpha(alpha);
         layer.setSize(size.width(), size.height());
-        return new LayerInstance(layer);
+        return new LayerInstance(size, layer);
     }
 
     protected final Image _image;

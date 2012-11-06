@@ -33,15 +33,22 @@ public abstract class Background
 {
     /** An instantiation of a particular background template. Backgrounds are configured as a style
      * property; elements instantiate them at specific dimensions when they are actually used.*/
-    public interface Instance {
+    public static abstract class Instance {
+        /** The size at which this instance was prepared. */
+        public final IDimension size;
+
         /** Adds this background's layers to the specified group at the specified x/y offset.
          * @param depthAdjust an adjustment to the standard depth at which backgrounds are added.
          * This adjustment is added to the standard background depth (-10). This allows one to
          * control the rendering order of multiple backgrounds on a single widget. */
-        void addTo (GroupLayer parent, float x, float y, float depthAdjust);
+        public abstract void addTo (GroupLayer parent, float x, float y, float depthAdjust);
 
         /** Disposes of this background instance when it is no longer valid/needed. */
-        void destroy ();
+        public abstract void destroy ();
+
+        protected Instance (IDimension size) {
+            this.size = size;
+        }
     }
 
     /** The (highest) depth at which background layers are rendered. May range from (-11, 10]. */
@@ -238,9 +245,14 @@ public abstract class Background
         return layer;
     }
 
-    protected static class LayerInstance implements Instance {
-        public LayerInstance (Layer... layers) {
+    protected static class LayerInstance extends Instance {
+        public LayerInstance (IDimension size, Layer... layers) {
+            super(size);
             _layers = layers;
+        }
+        public LayerInstance (IDimension size, ImmediateLayer.Renderer renderer) {
+            super(size);
+            _layers = new Layer[] { graphics().createImmediateLayer(renderer) };
         }
         @Override public void addTo (GroupLayer parent, float x, float y, float depthAdjust) {
             for (Layer layer : _layers) {
