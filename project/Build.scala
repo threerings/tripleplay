@@ -23,7 +23,7 @@ object TriplePlayBuild extends Build {
         publishArtifact in (Compile, packageDoc) := false,
         // wire junit into SBT
         libraryDependencies ++= Seq(
-	        "com.novocode" % "junit-interface" % "0.7" % "test->default"
+            "com.novocode" % "junit-interface" % "0.7" % "test->default"
         )
       )
       case "tools" => proguardSettings ++ seq(
