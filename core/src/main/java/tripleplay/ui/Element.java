@@ -468,7 +468,8 @@ public abstract class Element<T extends Element<T>>
 
         // if we have a non-matching background, destroy it (note that if we don't want a bg, any
         // existing bg will necessarily be invalid)
-        boolean bgok = (_bginst != null && _bginst.size.equals(_size));
+        boolean bgok = (_bginst != null && _bginst.owner() == ldata.bg &&
+                        _bginst.size.equals(_size));
         if (!bgok && _bginst != null) {
             _bginst.destroy();
             _bginst = null;

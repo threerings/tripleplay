@@ -33,9 +33,14 @@ public abstract class Background
 {
     /** An instantiation of a particular background template. Backgrounds are configured as a style
      * property; elements instantiate them at specific dimensions when they are actually used.*/
-    public static abstract class Instance {
+    public abstract class Instance {
         /** The size at which this instance was prepared. */
         public final IDimension size;
+
+        /** Returns the background that created this instance. */
+        public Background owner () {
+            return Background.this;
+        }
 
         /** Adds this background's layers to the specified group at the specified x/y offset.
          * @param depthAdjust an adjustment to the standard depth at which backgrounds are added.
@@ -245,7 +250,7 @@ public abstract class Background
         return layer;
     }
 
-    protected static class LayerInstance extends Instance {
+    protected class LayerInstance extends Instance {
         public LayerInstance (IDimension size, Layer... layers) {
             super(size);
             _layers = layers;
