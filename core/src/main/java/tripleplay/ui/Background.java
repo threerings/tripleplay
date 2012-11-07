@@ -256,8 +256,7 @@ public abstract class Background
             _layers = layers;
         }
         public LayerInstance (IDimension size, ImmediateLayer.Renderer renderer) {
-            super(size);
-            _layers = new Layer[] { graphics().createImmediateLayer(renderer) };
+            this(size, graphics().createImmediateLayer(renderer));
         }
         @Override public void addTo (GroupLayer parent, float x, float y, float depthAdjust) {
             for (Layer layer : _layers) {
