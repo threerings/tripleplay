@@ -52,7 +52,7 @@ public abstract class Background
         public abstract void destroy ();
 
         protected Instance (IDimension size) {
-            this.size = size;
+            this.size = new Dimension(size);
         }
     }
 
