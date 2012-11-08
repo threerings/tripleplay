@@ -70,12 +70,8 @@ public class Hierarchy
      * root.
      */
     public boolean hasDescendant (Element<?> descendant) {
-        if (descendant == elem) {
-            return true;
-        }
-        if (descendant == null) {
-            return false;
-        }
+        if (descendant == elem) return true;
+        if (descendant == null) return false;
         return hasDescendant(descendant.parent());
     }
 
