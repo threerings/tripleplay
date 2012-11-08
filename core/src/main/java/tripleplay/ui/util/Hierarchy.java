@@ -94,15 +94,8 @@ public class Hierarchy
         return this;
     }
 
-    /**
-     * Sets the enabled state of the root of the hierarchy and every proper descendant.
-     */
-    public Hierarchy enableAll (boolean enabled) {
-        return apply(ElementOp.SetEnabled.to(enabled));
-    }
-
     protected static void forEachDescendant (Element<?> root, ElementOp<Element<?>> op) {
-        op.perform(root);
+        op.apply(root);
         if (root instanceof Elements<?>) {
             Elements<?> es = (Elements<?>)root;
             for (int ii = 0, ll = es.childCount(); ii < ll; ++ii) {
