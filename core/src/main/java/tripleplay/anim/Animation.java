@@ -312,10 +312,6 @@ public abstract class Animation
             if (_overY == 0) _curRangeY = _underY;
             else if (_underY == 0) _curRangeY = _overY;
             else _curRangeY = RANDS.nextBoolean() ? _overY : _underY;
-
-            System.err.println("Start " + _startY);
-            System.err.println("Bounds " + _underY + " to " + _overY);
-            System.err.println("From " + _curMinY + ", range: " + _curRangeY);
         }
 
         @Override
