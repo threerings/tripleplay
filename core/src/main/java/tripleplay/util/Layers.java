@@ -107,11 +107,8 @@ public class Layers
 
     /** Utility method for capture. */
     protected static AffineTransform toAffine (Transform t) {
-        if (t instanceof AffineTransform) {
-            return (AffineTransform)t;
-        } else {
-            return new AffineTransform(t.scaleX(), t.scaleY(), t.rotation(), t.tx(), t.ty());
-        }
+        if (t instanceof AffineTransform) return (AffineTransform)t;
+        else return new AffineTransform(t.scaleX(), t.scaleY(), t.rotation(), t.tx(), t.ty());
     }
 
     /** Utility method for capture. */
