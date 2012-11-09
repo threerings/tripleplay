@@ -5,11 +5,19 @@
 
 package tripleplay.util;
 
+import playn.core.Canvas;
+import playn.core.CanvasImage;
+import playn.core.CanvasSurface;
 import playn.core.GroupLayer;
+import playn.core.ImageLayer;
+import playn.core.ImmediateLayer;
 import playn.core.Layer;
+import playn.core.PlayN;
+import pythagoras.f.AffineTransform;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
+import pythagoras.f.Transform;
 
 /**
  * Provides utility functions for dealing with Layers
@@ -55,6 +63,28 @@ public class Layers
         return r;
     }
 
+    /**
+     * Renders the given layer to the given canvas. Group, image and immediate layers are
+     * supported. Applications should not need to do this very much, but sometimes can be
+     * very handy.
+     * TODO: clipping
+     * TODO: surfaceLayer
+     */
+    public static void capture (Layer layer, Canvas canvas) {
+        capture(layer, canvas, new AffineTransform());
+    }
+
+    /**
+     * Renders the given layer to a canvas image of the given width and height and returns the
+     * image.
+     * @see #capture(Layer, Canvas)
+     */
+    public static CanvasImage capture (Layer layer, float width, float height) {
+        CanvasImage image = PlayN.graphics().createImage(width, height);
+        capture(layer, image.canvas(), new AffineTransform());
+        return image;
+    }
+
     /** Helper function for {@link #totalBounds}. */
     protected static void addBounds (Layer root, Layer l, Rectangle bounds, Point scratch) {
         if (l instanceof Layer.HasSize) {
@@ -73,5 +103,46 @@ public class Layers
                 addBounds(root, group.get(ii), bounds, scratch);
             }
         }
+    }
+
+    /** Utility method for capture. */
+    protected static AffineTransform toAffine (Transform t) {
+        return new AffineTransform(t.scaleX(), t.scaleY(), t.rotation(), t.tx(), t.ty());
+    }
+
+    /** Utility method for capture. */
+    protected static void setTransform (Canvas canvas, AffineTransform at) {
+        canvas.setTransform(at.m00, at.m01, at.m10, at.m11, at.tx, at.ty);
+    }
+
+    /** Utility method for capture. */
+    protected static void setTransform (Canvas canvas, Transform t) {
+        setTransform(canvas, toAffine(t));
+    }
+
+    /** Recursive entry point for capturing a layer. */
+    protected static void capture (Layer layer, Canvas canvas, Transform transform) {
+        if (!layer.visible()) return;
+        canvas.save();
+
+        Transform originTransform = new AffineTransform(1, 0, -layer.originX(), -layer.originY());
+        transform = transform.concatenate(layer.transform()).concatenate(originTransform);
+        setTransform(canvas, transform);
+
+        if (layer instanceof GroupLayer) {
+            GroupLayer gl = (GroupLayer)layer;
+            for (int ii = 0, ll = gl.size(); ii < ll; ii++) {
+                capture(gl.get(ii), canvas, transform);
+            }
+
+        } else if (layer instanceof ImageLayer) {
+            ImageLayer il = (ImageLayer)layer;
+            canvas.drawImage(il.image(), 0, 0);
+        } else if (layer instanceof ImmediateLayer) {
+            ImmediateLayer il = (ImmediateLayer)layer;
+            il.renderer().render(new CanvasSurface(canvas));
+        }
+
+        canvas.restore();
     }
 }
