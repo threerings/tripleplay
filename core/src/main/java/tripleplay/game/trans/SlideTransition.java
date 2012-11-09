@@ -44,8 +44,8 @@ public class SlideTransition extends InterpedTransition<SlideTransition>
             _nsx = _originX-nscreen.width(); _nsy = _originY;
             break;
         }
-        _osx = oscreen.layer.transform().tx();
-        _osy = oscreen.layer.transform().ty();
+        _osx = oscreen.layer.tx();
+        _osy = oscreen.layer.ty();
         nscreen.layer.setTranslation(_nsx, _nsy);
     }
 

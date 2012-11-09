@@ -12,7 +12,6 @@ import pythagoras.f.IRectangle;
 import pythagoras.f.MathUtil;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
-import pythagoras.f.Transform;
 
 import react.Signal;
 import react.SignalView;
@@ -55,14 +54,14 @@ public abstract class Element<T extends Element<T>>
      * Returns this element's x offset relative to its parent.
      */
     public float x () {
-        return layer.transform().tx();
+        return layer.tx();
     }
 
     /**
      * Returns this element's y offset relative to its parent.
      */
     public float y () {
-        return layer.transform().ty();
+        return layer.ty();
     }
 
     /**
@@ -77,8 +76,7 @@ public abstract class Element<T extends Element<T>>
      * @return {@code loc} for convenience.
      */
     public IPoint location (Point loc) {
-        Transform transform = layer.transform();
-        return loc.set(transform.tx(), transform.ty());
+        return loc.set(x(), y());
     }
 
     /**
@@ -86,8 +84,7 @@ public abstract class Element<T extends Element<T>>
      * @return {@code bounds} for convenience.
      */
     public IRectangle bounds (Rectangle bounds) {
-        Transform transform = layer.transform();
-        bounds.setBounds(transform.tx(), transform.ty(), _size.width, _size.height);
+        bounds.setBounds(x(), y(), _size.width, _size.height);
         return bounds;
     }
 
@@ -418,7 +415,7 @@ public abstract class Element<T extends Element<T>>
      * Configures the location of this element, relative to its parent.
      */
     protected void setLocation (float x, float y) {
-        layer.transform().setTranslation(MathUtil.ifloor(x), MathUtil.ifloor(y));
+        layer.setTranslation(MathUtil.ifloor(x), MathUtil.ifloor(y));
     }
 
     /**

@@ -45,7 +45,7 @@ public class Layers
      * transform in the process so that it stays in the same position on the screen.
      */
     public static void reparent (Layer layer, GroupLayer target) {
-        Point pos = new Point(layer.transform().tx(), layer.transform().ty());
+        Point pos = new Point(layer.tx(), layer.ty());
         Layer.Util.layerToScreen(layer.parent(), pos, pos);
         target.add(layer);
         Layer.Util.screenToLayer(layer.parent(), pos, pos);

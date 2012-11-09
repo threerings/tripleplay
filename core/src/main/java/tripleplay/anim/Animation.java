@@ -300,8 +300,8 @@ public abstract class Animation
         @Override
         protected void init (float time) {
             super.init(time);
-            _startX = _layer.transform().tx();
-            _startY = _layer.transform().ty();
+            _startX = _layer.tx();
+            _startY = _layer.ty();
 
             // start our X/Y shaking randomly in one direction or the other
             _curMinX = _startX;

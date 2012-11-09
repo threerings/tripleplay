@@ -61,7 +61,7 @@ public class FlickerDemo extends DemoScreen
     @Override public void update (float delta) {
         super.update(delta);
         _flicker.update(delta);
-        _group.transform().setTy(_flicker.position);
+        _group.setTy(_flicker.position);
     }
 
     protected GroupLayer _group = graphics().createGroupLayer();

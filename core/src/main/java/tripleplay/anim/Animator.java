@@ -76,7 +76,7 @@ public abstract class Animator
     public Animation.One tweenRotation (final Layer layer) {
         Asserts.checkNotNull(layer);
         return tween(new Animation.Value() {
-            public float initial () { return layer.transform().rotation(); }
+            public float initial () { return layer.rotation(); }
             public void set (float value) { layer.setRotation(value); }
         });
     }
@@ -87,7 +87,7 @@ public abstract class Animator
     public Animation.One tweenScale (final Layer layer) {
         Asserts.checkNotNull(layer);
         return tween(new Animation.Value() {
-            public float initial () { return layer.transform().uniformScale(); }
+            public float initial () { return layer.scaleX(); }
             public void set (float value) { layer.setScale(value); }
         });
     }
@@ -384,32 +384,32 @@ public abstract class Animator
     protected static Animation.Value onX (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
-            public float initial () { return layer.transform().tx(); }
-            public void set (float value) { layer.transform().setTx(value); }
+            public float initial () { return layer.tx(); }
+            public void set (float value) { layer.setTx(value); }
         };
     }
 
     protected static Animation.Value onY (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
-            public float initial () { return layer.transform().ty(); }
-            public void set (float value) { layer.transform().setTy(value); }
+            public float initial () { return layer.ty(); }
+            public void set (float value) { layer.setTy(value); }
         };
     }
 
     protected static Animation.Value onScaleX (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
-            public float initial () { return layer.transform().scaleX(); }
-            public void set (float value) { layer.transform().setScaleX(value); }
+            public float initial () { return layer.scaleX(); }
+            public void set (float value) { layer.setScaleX(value); }
         };
     }
 
     protected static Animation.Value onScaleY (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
-            public float initial () { return layer.transform().scaleY(); }
-            public void set (float value) { layer.transform().setScaleY(value); }
+            public float initial () { return layer.scaleY(); }
+            public void set (float value) { layer.setScaleY(value); }
         };
     }
 
