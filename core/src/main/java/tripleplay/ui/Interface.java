@@ -10,6 +10,7 @@ import java.util.List;
 
 import playn.core.Game;
 import playn.core.GroupLayer;
+import tripleplay.anim.Animator;
 import tripleplay.ui.Element.Flag;
 
 /**
@@ -33,7 +34,8 @@ public class Interface
      * Updates the elements in this interface. Must be called from {@link Game#update}.
      */
     public void update (float delta) {
-        // nada at the moment
+        _elapsed += delta;
+        _animator.update(_elapsed);
     }
 
     /**
@@ -63,6 +65,13 @@ public class Interface
      */
     public Iterable<Root> roots () {
         return _roots;
+    }
+
+    /**
+     * Returns an animator that can be used within the scope of this interface.
+     */
+    public Animator animator () {
+        return _animator;
     }
 
     /**
@@ -120,4 +129,6 @@ public class Interface
     protected final List<Root> _roots = new ArrayList<Root>();
     protected final List<Root> _dispatch = new ArrayList<Root>();
     protected final List<Runnable> _actions = new ArrayList<Runnable>();
+    protected final Animator _animator = Animator.create();
+    protected float _elapsed;
 }
