@@ -43,6 +43,14 @@ public class SimpleStyles
                 Style.BACKGROUND.is(Background.beveled(0xFFFFFFFF, brColor, ulColor).inset(5)),
                 Style.HALIGN.left).
             add(Field.class, Style.Mode.DISABLED,
-                Style.BACKGROUND.is(Background.beveled(0xFFCCCCCC, brColor, ulColor).inset(5)));
+                Style.BACKGROUND.is(Background.beveled(0xFFCCCCCC, brColor, ulColor).inset(5))).
+            add(Menu.class,
+                Style.BACKGROUND.is(Background.bordered(0xFFFFFFFF,  0x00000000, 1).inset(6))).
+            add(MenuItem.class,
+                Style.BACKGROUND.is(Background.solid(0xFFFFFFFF)),
+                Style.HALIGN.left).
+            add(MenuItem.class, Style.Mode.SELECTED,
+                Style.BACKGROUND.is(Background.solid(0xFF000000)),
+                Style.COLOR.is(0xFFFFFFFF));
     }
 }
