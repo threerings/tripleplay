@@ -31,10 +31,10 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     /** Emitted after a child has been added to this Elements. */
-    public SignalView<Element<?>> childAdded() { return _childAdded; }
+    public SignalView<Element<?>> childAdded () { return _childAdded; }
 
     /** Emitted after a child has been removed from this Elements. */
-    public SignalView<Element<?>> childRemoved() { return _childRemoved; }
+    public SignalView<Element<?>> childRemoved () { return _childRemoved; }
 
     /**
      * Returns the stylesheet configured for this group, or null.
