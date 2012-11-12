@@ -24,6 +24,7 @@ import tripleplay.demo.anim.*;
 import tripleplay.demo.game.*;
 import tripleplay.demo.particle.*;
 import tripleplay.demo.ui.*;
+import tripleplay.demo.util.ColorsDemo;
 import tripleplay.demo.flump.*;
 
 /**
@@ -46,6 +47,8 @@ public class DemoMenuScreen extends UIScreen
             new FountainDemo(), new FireworksDemo(), null,
             // tripleplay.flump
             new FlumpDemo(), null, null,
+            // tripleplay.util
+            new ColorsDemo(), null, null,
         };
     }
 
@@ -116,6 +119,7 @@ public class DemoMenuScreen extends UIScreen
         "tripleplay.game",
         "tripleplay.particle",
         "tripleplay.flump",
+        "tripleplay.util"
     };
     protected final DemoScreen[] _screens;
 
