@@ -13,6 +13,7 @@ import tripleplay.ui.Group;
 import tripleplay.ui.Label;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.TableLayout;
+import tripleplay.util.Colors;
 
 import tripleplay.demo.DemoScreen;
 
@@ -31,7 +32,10 @@ public class BackgroundDemo extends DemoScreen
         return new Group(new TableLayout(3).gaps(5, 5)).add(
             label("Beveled", Background.beveled(0xFFCCFF99, 0xFFEEFFBB, 0xFFAADD77).inset(10)),
             label("Beveled (no inset)", Background.beveled(0xFFCCFF99, 0xFFEEFFBB, 0xFFAADD77)),
-            new Label(),
+            label("Composite", Background.composite(
+                Background.solid(Colors.BLUE).inset(5),
+                Background.bordered(Colors.WHITE, Colors.BLACK, 2).inset(12),
+                Background.image(testBg).inset(5))),
             label("Solid", Background.solid(0xFFCCFF99).inset(10)),
             label("Solid (no inset)", Background.solid(0xFFCCFF99)),
             new Label(),

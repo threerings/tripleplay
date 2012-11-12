@@ -20,6 +20,7 @@ import tripleplay.ui.bgs.BeveledBackground;
 import tripleplay.ui.bgs.BlankBackground;
 import tripleplay.ui.bgs.BorderedBackground;
 import tripleplay.ui.bgs.CenteredImageBackground;
+import tripleplay.ui.bgs.CompositeBackground;
 import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.RoundRectBackground;
 import tripleplay.ui.bgs.Scale9Background;
@@ -121,6 +122,14 @@ public abstract class Background
      */
     public static Background scale9 (Image scale9Image) {
         return new Scale9Background(scale9Image);
+    }
+
+    /**
+     * Creates a composite background with the specified backgrounds. See
+     * {@link CompositeBackground}.
+     */
+    public static Background composite (Background... constituents) {
+        return new CompositeBackground(constituents);
     }
 
     /** Instantiates a background at the supplied size. */
