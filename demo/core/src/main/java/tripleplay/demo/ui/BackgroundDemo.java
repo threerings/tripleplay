@@ -28,7 +28,7 @@ public class BackgroundDemo extends DemoScreen
 
     @Override protected Group createIface () {
         Image testBg = PlayN.assets().getImage("images/background.png");
-        Image scale9Bg = PlayN.assets().getImage("images/scale9.png");
+        Image scale9Bg = PlayN.assets().getImageSync("images/scale9.png");
         return new Group(new TableLayout(3).gaps(5, 5)).add(
             label("Beveled", Background.beveled(0xFFCCFF99, 0xFFEEFFBB, 0xFFAADD77).inset(10)),
             label("Beveled (no inset)", Background.beveled(0xFFCCFF99, 0xFFEEFFBB, 0xFFAADD77)),
