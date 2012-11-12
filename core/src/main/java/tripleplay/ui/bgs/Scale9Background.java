@@ -10,6 +10,7 @@ import pythagoras.f.IDimension;
 import playn.core.Image;
 import playn.core.ImmediateLayer;
 import playn.core.Surface;
+import playn.core.util.Callback;
 
 import tripleplay.ui.Background;
 
@@ -94,27 +95,44 @@ public class Scale9Background extends Background
         protected final float[] _lengths;
     }
 
-    /** The axes of our source image. */
-    public final Axis3 xaxis, yaxis;
-
     /** Creates a new background using the given image. The subdivision of the image into a 3x3
      * grid is automatic. */
     public Scale9Background (Image image) {
         _image = image;
-        xaxis = new Axis3(image.width());
-        yaxis = new Axis3(image.height());
+        if (image.isReady()) measure();
+        else image.addCallback(new Callback<Image>() {
+            @Override public void onSuccess (Image result) {
+                measure();
+            }
+
+            @Override public void onFailure (Throwable cause) {
+                // never show up
+            }
+        });
+    }
+
+    protected void measure () {
+        _xaxis = new Axis3(_image.width());
+        _yaxis = new Axis3(_image.height());
     }
 
     @Override
     protected Instance instantiate (final IDimension size) {
         return new LayerInstance(size, new ImmediateLayer.Renderer() {
             // The axes of our destination surface.
-            Axis3 dx = new Axis3(size.width(), xaxis), dy = new Axis3(size.height(), yaxis);
+            Axis3 dx, dy;
             public void render (Surface surf) {
+                // TODO: this could be improved - use the image callback mechanism. However...
+                // there's a big tradeoff in complexity
+                if (dx == null) {
+                    if (_xaxis == null) return;
+                    dx = new Axis3(size.width(), _xaxis);
+                    dy = new Axis3(size.height(), _yaxis);
+                }
                 surf.save();
                 if (alpha != null) surf.setAlpha(alpha);
                 // issue the 9 draw calls
-                for (int yy = 0; yy < 3; ++yy) for (int xx = 0; xx < 3; ++xx) {
+                for (int yy = 0; yy < 3; yy++) for (int xx = 0; xx < 3; xx++) {
                     drawPart(surf, xx, yy);
                 }
                 if (alpha != null) surf.setAlpha(1); // alpha is not part of save/restore
@@ -125,10 +143,13 @@ public class Scale9Background extends Background
                 if (dx.size(x) ==0 || dy.size(y) == 0) return;
                 surf.drawImage(_image,
                                dx.coord(x), dy.coord(y), dx.size(x), dy.size(y),
-                               xaxis.coord(x), yaxis.coord(y), xaxis.size(x), yaxis.size(y));
+                               _xaxis.coord(x), _yaxis.coord(y), _xaxis.size(x), _yaxis.size(y));
             }
         });
     }
 
     protected Image _image;
+
+    /** The axes of our source image, once it's ready. */
+    protected Axis3 _xaxis, _yaxis;
 }
