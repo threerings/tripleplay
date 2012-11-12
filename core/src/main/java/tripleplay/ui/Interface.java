@@ -10,7 +10,6 @@ import java.util.List;
 
 import playn.core.Game;
 import playn.core.GroupLayer;
-import react.Slot;
 import tripleplay.anim.Animator;
 import tripleplay.ui.Element.Flag;
 
@@ -64,34 +63,6 @@ public class Interface
         // adjust iteration members
         if (_currentTask >= idx) _currentTask--;
         _currentTaskCount--;
-    }
-
-    /**
-     * Ensures that the given task is always added to the interface's tasks when the given element
-     * is added to a root.
-     * @return the element for chaining
-     * @see Element#hierarchyChanged()
-     */
-    public <T extends Element<?>> T updateWhenAdded (final T elem, final Task task) {
-        Slot<Boolean> hierChange = new Slot<Boolean>() {
-            @Override public void onEmit (Boolean added) {
-                if (added) addTask(task);
-                else removeTask(task);
-            }
-        };
-        elem.hierarchyChanged().connect(hierChange);
-        if (elem.isAdded()) hierChange.onEmit(true);
-        return elem;
-    }
-
-    /**
-     * Single parameter version of {@link #updateWhenAdded(Element, Task)} for use when the
-     * {@code Element} also happens to be a task.
-     * @param elem the Element and Task
-     * @return the element for chaining
-     */
-    public <T extends Element<?> & Task> T updateWhenAdded (final T elem) {
-        return updateWhenAdded(elem, elem);
     }
 
     /**
