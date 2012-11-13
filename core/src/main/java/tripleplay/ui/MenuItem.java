@@ -5,7 +5,6 @@ import playn.core.Pointer;
 import pythagoras.f.Dimension;
 import react.Signal;
 import react.SignalView;
-import react.Slot;
 import react.Value;
 
 /**
@@ -40,15 +39,6 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
         this.icon.update(icon);
         text.connect(textDidChange());
         this.icon.connect(iconDidChange());
-
-        _selected.connect(new Slot<Boolean>() {
-            @Override public void onEmit (Boolean event) {
-                if (event != isSelected()) {
-                    set(Flag.SELECTED, event);
-                    invalidate();
-                }
-            }
-        });
     }
 
     /**
@@ -86,7 +76,6 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
     public SignalView<MenuItem> triggered () { return _triggered; }
 
     @Override public SignalView<MenuItem> clicked () { return _clicked; }
-    @Override public Value<Boolean> selected () { return _selected; }
     @Override protected Class<?> getStyleClass () { return MenuItem.class; }
     @Override protected void onClick () { _clicked.emit(this); }
     @Override protected Image icon () { return icon.get(); }
@@ -97,12 +86,14 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
 
     @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
         if (contains(x, y)) {
-            boolean selected = _selected.get();
-            if (!selected) {
-                _selected.update(true);
+            boolean isSelected = selected.get();
+            if (!isSelected) {
+                // click to select
+                selected.update(true);
                 onClick();
             }
-            if (selected || _showText == ShowText.ALWAYS) trigger();
+            // trigger if this is the 2nd click -or- we always show text
+            if (isSelected || _showText == ShowText.ALWAYS) trigger();
         }
     }
 
@@ -111,7 +102,7 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
         case NEVER:
             return "";
         case WHEN_ACTIVE:
-            return _selected.get() ? text.get() : "";
+            return selected.get() ? text.get() : "";
         case ALWAYS:
         default:
             return text.get();
@@ -128,8 +119,6 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
     protected final Signal<MenuItem> _clicked = Signal.create();
     /** Size override. */
     protected final Dimension _preferredSize = new Dimension(0, 0);
-    /** Dispatched when selection occurs. */
-    protected final Value<Boolean> _selected = Value.create(false);
     /** Text display mode. */
     protected ShowText _showText = ShowText.ALWAYS;
 }
