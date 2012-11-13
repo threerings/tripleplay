@@ -29,8 +29,7 @@ public class Colors
         BLUE = Color.rgb(0, 0, 255);
 
     /**
-     * Blends the two supplied colors.
-     *
+     * Blends two colors.
      * @return a color halfway between the two colors.
      */
     public static int blend (int c1, int c2) {
@@ -40,17 +39,14 @@ public class Colors
     }
 
     /**
-     * Blends the two supplied colors, using the supplied percentage
-     * as the amount of the first color to use.
-     *
-     * @param firstperc The percentage of the first color to use, from 0.0f
-     * to 1.0f inclusive.
+     * Blends two colors proportionally.
+     * @param p1 The percentage of the first color to use, from 0.0f to 1.0f inclusive.
      */
-    public static int blend (int c1, int c2, float firstperc) {
-        float p2 = 1.0f - firstperc;
-        return Color.rgb((int)(Color.red(c1) * firstperc + Color.red(c2) * p2),
-                         (int)(Color.green(c1) * firstperc + Color.green(c2) * p2),
-                         (int)(Color.blue(c1) * firstperc + Color.blue(c2) * p2));
+    public static int blend (int c1, int c2, float p1) {
+        float p2 = 1 - p1;
+        return Color.rgb((int)(Color.red(c1) * p1 + Color.red(c2) * p2),
+                         (int)(Color.green(c1) * p1 + Color.green(c2) * p2),
+                         (int)(Color.blue(c1) * p1 + Color.blue(c2) * p2));
     }
 
     /**
