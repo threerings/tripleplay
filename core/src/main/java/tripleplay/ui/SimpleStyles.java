@@ -51,6 +51,8 @@ public class SimpleStyles
                 Style.HALIGN.left).
             add(MenuItem.class, Style.Mode.SELECTED,
                 Style.BACKGROUND.is(Background.solid(0xFF000000)),
-                Style.COLOR.is(0xFFFFFFFF));
+                Style.COLOR.is(0xFFFFFFFF)).
+            add(Tabs.class,
+                Tabs.HIGHLIGHTER.is(Tabs.textColorHighlighter(0xFF000000, 0xFFFFFFFF)));
     }
 }
