@@ -39,6 +39,7 @@ public class DemoMenuScreen extends UIScreen
             new MiscDemo(), new LabelDemo(), new SliderDemo(),
             new BackgroundDemo(), new LayoutDemo(), new BorderLayoutDemo(),
             new FlowLayoutDemo(), new SelectorDemo(), new MenuDemo(),
+            new ScrollerDemo(), null, null,
             // tripleplay.anim
             new FramesDemo(), new AnimDemo(), new FlickerDemo(),
             // tripleplay.game
@@ -114,7 +115,7 @@ public class DemoMenuScreen extends UIScreen
     }
 
     protected final String[] _rlabels = {
-        "tripleplay.ui", "", "",
+        "tripleplay.ui", "", "", "",
         "tripleplay.anim",
         "tripleplay.game",
         "tripleplay.particle",
