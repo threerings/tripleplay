@@ -2,6 +2,7 @@ package tripleplay.ui;
 
 import java.util.ArrayList;
 
+import playn.core.Asserts;
 import playn.core.Color;
 import playn.core.GroupLayer;
 import playn.core.ImmediateLayer;
@@ -388,6 +389,16 @@ public class Scroller extends Elements<Scroller>
         return _flicker.clicked;
     }
 
+    @Override public Scroller add (Element<?>... children) {
+        Asserts.checkState(childCount() + children.length == 1);
+        return super.add(children);
+    }
+
+    @Override public Scroller add (int index, Element<?> child) {
+        Asserts.checkState(childCount() == 0);
+        return super.add(index, child);
+    }
+
     /** Prepares the scroll group for the next frame, at t = t + delta. */
     protected void update (float delta) {
         _flicker.update(delta);
@@ -532,6 +543,7 @@ public class Scroller extends Elements<Scroller>
     {
         @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
             // the content is always the 1st child, get the preferred size with extended hints
+            Asserts.checkArgument(elems.childCount() == 1 && elems.childAt(0) == content);
             _contentSize.setSize(preferredSize(elems.childAt(0),
                 hbar.extendHint(hintX), vbar.extendHint(hintY)));
             return new Dimension(_contentSize);
@@ -539,6 +551,7 @@ public class Scroller extends Elements<Scroller>
 
         @Override public void layout (Elements<?> elems, float left, float top, float width,
                                       float height) {
+            Asserts.checkArgument(elems.childCount() == 1 && elems.childAt(0) == content);
             // reset range of scroll bars
             left = hbar.setRange(width, _contentSize.width);
             top = vbar.setRange(height, _contentSize.height);
