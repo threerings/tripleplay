@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import playn.core.Asserts;
 import playn.core.Image;
 import playn.core.Json;
 import playn.core.util.Callback;
@@ -85,8 +86,7 @@ public class Library
      * @param baseDir The base directory, containing library.json and texture atlases.
      */
     public static void fromAssets (final String baseDir, final Callback<Library> callback) {
-        assert(callback != null); // Fail fast
-
+        Asserts.checkNotNull(callback);
         assets().getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
             public void onSuccess (String text) {
                 Library lib = null;
