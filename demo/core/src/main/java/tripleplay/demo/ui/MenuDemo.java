@@ -32,9 +32,9 @@ public class MenuDemo extends DemoScreen
     @Override protected Group createIface () {
         Group main = new Group(AxisLayout.horizontal());
         final MenuHost menuHost = new MenuHost(iface, _root);
-        final Button direction = new Button("Select a direction");
-        final Button tree = new Button("Select a tree");
-        final Button type = new Button("Select a type");
+        final Button direction = new Button("Select a direction \u25BC");
+        final Button tree = new Button("Select a tree \u25BC");
+        final Button type = new Button("Select a type \u25BC");
         main.add(direction, tree, type);
         direction.clicked().connect(new UnitSlot() {
             @Override public void onEmit () {
@@ -74,7 +74,7 @@ public class MenuDemo extends DemoScreen
     protected Slot<MenuItem> updater (final Button target) {
         return new Slot<MenuItem>() {
             @Override public void onEmit (MenuItem item) {
-                target.text.update(item.text.get());
+                target.text.update(item.text.get() + " \u25BC");
             }
         };
     }
