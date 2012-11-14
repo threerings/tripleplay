@@ -5,16 +5,22 @@
 
 package tripleplay.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import playn.core.Events;
 import playn.core.Layer;
 import playn.core.Pointer;
+import playn.core.Pointer.Event;
 import pythagoras.f.Point;
+import react.Connection;
 import react.Signal;
 import react.SignalView;
 import react.Slot;
 import react.Value;
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
+import tripleplay.ui.MenuItem.ShowText;
 
 /**
  * Holds a collection of {@link MenuItem}s, dispatching a {@link Menu#itemTriggered()} signal
@@ -28,6 +34,7 @@ import tripleplay.anim.Animator;
  * TODO: support escape key to cancel; probably in MenuHost
  * TODO: scrolling support for really big menus
  * TODO: support/implement full screen menus - this is probably what most phone apps will want
+ * TODO: select menu items on hover
  */
 public class Menu extends Elements<Menu>
 {
@@ -252,13 +259,25 @@ public class Menu extends Elements<Menu>
     /** Connects to the menu item's signal. This gets called for any child that is added and is
      * an instance of {@code MenuItem}. */
     protected void connectMenuItem (MenuItem item) {
-        item.triggered().connect(_triggered);
+        ItemConn iconn = new ItemConn();
+        iconn.item = item;
+        iconn.trigger = item.triggered().connect(_triggered);
+        iconn.relay = item.layer.addListener(_itemListener);
+        _itemConns.add(iconn);
     }
 
     /** Disconnects from the menu item's signal. This gets called for any child that is removed
      * and is an instance of {@code MenuItem}. */
     protected void disconnectMenuItem (MenuItem item) {
-        item.triggered().disconnect(_triggered);
+        for (int ii = 0, nn = _itemConns.size(); ii < nn; ii++) {
+            ItemConn iconn = _itemConns.get(ii);
+            if (iconn.item == item) {
+                iconn.trigger.disconnect();
+                iconn.relay.disconnect();
+                _itemConns.remove(ii);
+                return;
+            }
+        }
     }
 
     /** Called by the host when the pointer is dragged. */
@@ -278,10 +297,13 @@ public class Menu extends Elements<Menu>
             return;
         }
 
-        _selected.update(getHover(e));
-        if (_selected.get() != null) {
-            ((MenuItem)_selected.get()).trigger();
-        }
+        MenuItem hover = getHover(e);
+        Element<?> selected = _selected.get();
+        _selected.update(hover);
+        if (hover == null) return; 
+
+        // trigger if this is the 2nd click -or- we always show text
+        if (hover == selected || hover._showText == ShowText.ALWAYS) hover.trigger();
     }
 
     /** Gets the item underneath the given event. */
@@ -303,6 +325,13 @@ public class Menu extends Elements<Menu>
         _animator = animator;
     }
 
+    /** Holds info about our dangling bits on items. */
+    protected static class ItemConn {
+        public MenuItem item;
+        public Connection trigger;
+        public playn.core.Connection relay;
+    }
+
     /** Slot to attach to item triggering. */
     protected Slot<MenuItem> _triggered = new Slot<MenuItem>() {
         @Override public void onEmit (MenuItem event) {
@@ -310,6 +339,23 @@ public class Menu extends Elements<Menu>
                 _itemTriggered.emit(event);
                 deactivate();
             }
+        }
+    };
+
+    protected Pointer.Listener _itemListener = new Pointer.Listener() {
+        @Override public void onPointerStart (Event event) {
+            Menu.this.onPointerDrag(event);
+        }
+
+        @Override public void onPointerDrag (Event event) {
+            Menu.this.onPointerDrag(event);
+        }
+
+        @Override public void onPointerEnd (Event event) {
+            Menu.this.onPointerEnd(event);
+        }
+
+        @Override public void onPointerCancel (Event event) {
         }
     };
 
@@ -321,6 +367,8 @@ public class Menu extends Elements<Menu>
 
     /** Tracks the currently selected menu item (prior to triggering, an item is selected). */
     protected final Value<Element<?>> _selected;
+
+    protected final List<ItemConn> _itemConns = new ArrayList<ItemConn>();
 
     /** Animator that runs the menu opening and closing states, usually from Interface. */
     protected Animator _animator;

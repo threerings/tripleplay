@@ -81,21 +81,9 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
     @Override protected Image icon () { return icon.get(); }
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {}
     @Override protected void onPointerDrag (Pointer.Event event, float x, float y) {}
+    @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {}
 
     protected void trigger () { _triggered.emit(this); }
-
-    @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
-        if (contains(x, y)) {
-            boolean isSelected = selected.get();
-            if (!isSelected) {
-                // click to select
-                selected.update(true);
-                onClick();
-            }
-            // trigger if this is the 2nd click -or- we always show text
-            if (isSelected || _showText == ShowText.ALWAYS) trigger();
-        }
-    }
 
     @Override protected String text () {
         switch (_showText) {

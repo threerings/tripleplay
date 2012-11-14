@@ -158,6 +158,13 @@ public class MenuHost
         protected Layer _relayTarget;
     }
 
+    public static Connection relayEvents (Layer from, final Menu to) {
+        return from.addListener(new Pointer.Adapter() {
+            @Override public void onPointerDrag (Pointer.Event e) { to.onPointerDrag(e); }
+            @Override public void onPointerEnd (Pointer.Event e) { to.onPointerEnd(e); }
+        });
+    }
+
     /**
      * Creates a menu host using the given values. The root layer is set to the layer of the given
      * root and the stylesheet to its stylesheet.
@@ -314,12 +321,7 @@ public class MenuHost
 
             // handle pointer events from the relay
             Layer target = pop._relayTarget;
-            if (target != null)
-                pointerRelay = pop._relayTarget.addListener(new Pointer.Adapter() {
-                    Menu menu = Activation.this.pop.menu;
-                    @Override public void onPointerDrag (Pointer.Event e) { menu.onPointerDrag(e); }
-                    @Override public void onPointerEnd (Pointer.Event e) { menu.onPointerEnd(e); }
-                });
+            if (target != null) pointerRelay = relayEvents(target, pop.menu);
         }
 
         /** Clears out the connections. */
