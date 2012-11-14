@@ -2,8 +2,10 @@ package tripleplay.demo.ui;
 
 import playn.core.Image;
 import playn.core.PlayN;
+import playn.core.Pointer;
 import react.Slot;
 import react.UnitSlot;
+import react.Value;
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.demo.DemoScreen;
@@ -16,6 +18,7 @@ import tripleplay.ui.Menu;
 import tripleplay.ui.Menu.AnimFn;
 import tripleplay.ui.MenuHost;
 import tripleplay.ui.MenuItem;
+import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.AxisLayout;
 
@@ -30,12 +33,10 @@ public class MenuDemo extends DemoScreen
     }
 
     @Override protected Group createIface () {
-        Group main = new Group(AxisLayout.horizontal());
         final MenuHost menuHost = new MenuHost(iface, _root);
         final Button direction = new Button("Select a direction \u25BC");
         final Button tree = new Button("Select a tree \u25BC");
         final Button type = new Button("Select a type \u25BC");
-        main.add(direction, tree, type);
         direction.clicked().connect(new UnitSlot() {
             @Override public void onEmit () {
                 MenuHost.Pop pop = new MenuHost.Pop(direction,
@@ -68,30 +69,70 @@ public class MenuDemo extends DemoScreen
                 menuHost.popup(pop);
             }
         });
-        return main;
+
+        TrackingLabel subject = new TrackingLabel(menuHost, "Subject \u25BC") {
+            @Override public Menu createMenu () {
+                return addIcons(MenuDemo.this.createMenu(
+                    null, "The giant", "Jack", "The goose", "Jack's mum"));
+            }
+        };
+        TrackingLabel verb = new TrackingLabel(menuHost, "Verb \u25BC") {
+            @Override public Menu createMenu () {
+                return addIcons(showText(MenuDemo.this.createMenu(
+                    null, "climbs", "lays", "crushes", "hugs"),
+                        MenuItem.ShowText.WHEN_ACTIVE));
+            }
+        };
+        TrackingLabel object = new TrackingLabel(menuHost, "Object \u25BC") {
+            @Override public Menu createMenu () {
+                return MenuDemo.this.createMenu(
+                    null, "the beanstalk", "people", "golden eggs", "the boy");
+            }
+        };
+
+        return new Group(AxisLayout.vertical().offStretch()).add(
+            new Label("Button popups"),
+            new Group(AxisLayout.horizontal()).add(direction, tree, type),
+            new Shim(1, 20),
+            new Label("Continuous Tracking"),
+            new Group(AxisLayout.horizontal()).add(subject, verb, object));
     }
 
-    protected Slot<MenuItem> updater (final Button target) {
+    protected Slot<MenuItem> updater (final Button button) {
+        return updater(button.text, button.icon);
+    }
+
+    protected Slot<MenuItem> updater (final Value<String> text, final Value<Image> icon) {
         return new Slot<MenuItem>() {
             @Override public void onEmit (MenuItem item) {
-                target.text.update(item.text.get() + " \u25BC");
+                text.update(item.text.get() + " \u25BC");
+                icon.update(item.icon.get());
             }
         };
     }
 
-    protected void addIcons (Menu menu) {
-        final Image squares = PlayN.assets().getImage("images/squares.png");
+    protected Menu addIcons (Menu menu) {
         int tile = 0;
         for (Element<?> item : menu) {
             if (item instanceof MenuItem) {
-                ((MenuItem)item).icon.update(tile(squares, tile++));
+                ((MenuItem)item).icon.update(tile(tile++));
             }
         }
+        return menu;
     }
 
-    protected Image tile (Image image, int index) {
+    protected Menu showText (Menu menu, MenuItem.ShowText showText) {
+        for (Element<?> item : menu) {
+            if (item instanceof MenuItem) {
+                ((MenuItem)item).showText(showText);
+            }
+        }
+        return menu;
+    }
+
+    protected Image tile (int index) {
         final float iwidth = 16, iheight = 16;
-        return image.subImage(index*iwidth, 0, iwidth, iheight);
+        return _squares.subImage(index*iwidth, 0, iwidth, iheight);
     }
 
     protected Menu createMenu (String title, String... items) {
@@ -101,4 +142,26 @@ public class MenuDemo extends DemoScreen
         for (String item : items) menu.add(new MenuItem(item));
         return menu;
     }
+
+    protected abstract class TrackingLabel extends Label
+    {
+        public MenuHost menuHost;
+
+        public TrackingLabel (MenuHost menuHost, String text) {
+            super(text, null);
+            this.menuHost = menuHost;
+            enableInteraction();
+        }
+
+        public abstract Menu createMenu ();
+
+        @Override public void onPointerStart (Pointer.Event ev, float x, float y) {
+            MenuHost.Pop pop = new MenuHost.Pop(this, createMenu()).
+                    atEventPos(ev).relayEvents(layer);
+            pop.menu.itemTriggered().connect(updater(text, icon));
+            menuHost.popup(pop);
+        }
+    }
+
+    protected Image _squares = PlayN.assets().getImage("images/squares.png");
 }
