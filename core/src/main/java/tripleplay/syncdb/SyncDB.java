@@ -89,8 +89,8 @@ public abstract class SyncDB
 
             int syncedMC = entry.getValue().intValue(), curMC = mcount.intValue();
             if (syncedMC > curMC) {
-                log.warning("Synced mod count is greater than current?", "prop", prop, "curMC", curMC,
-                            "syncedMC", syncedMC);
+                log.warning("Synced mod count is greater than current?", "prop", prop,
+                            "curMC", curMC, "syncedMC", syncedMC);
                 // leave it as modified and we'll sync again just in case
             } else if (syncedMC == curMC) {
                 _mods.remove(prop);
@@ -130,35 +130,40 @@ public abstract class SyncDB
         }
         if (!subDBs.isEmpty()) for (String subdb : subDBs) getSubDB(subdb);
 
-        // now apply the delta to the appropriate properties
-        for (Map.Entry<String,String> entry : delta.entrySet()) {
-            String name = entry.getKey(), value = entry.getValue();
-            Property prop;
-            int pidx = name.indexOf(DBUtil.MAP_KEY_SEP);
-            if (pidx == -1) prop = _props.get(name);
-            else prop = _props.get(name.substring(0, pidx));
-            if (prop == null) {
-                log.warning("No local property defined", "name", name);
-            } else if (_mods.containsKey(name)) {
-                try {
-                    if (prop.merge(name, value)) _mods.remove(name);
-                } catch (Exception e) {
-                    log.warning("Property merge fail", "name", name, "value", value, e);
+        // start a batch so that all of our storage changes are applied at once (efficiently)
+        startBatch();
+        try {
+            // now apply the delta to the appropriate properties
+            for (Map.Entry<String,String> entry : delta.entrySet()) {
+                String name = entry.getKey(), value = entry.getValue();
+                Property prop;
+                int pidx = name.indexOf(DBUtil.MAP_KEY_SEP);
+                if (pidx == -1) prop = _props.get(name);
+                else prop = _props.get(name.substring(0, pidx));
+                if (prop == null) {
+                    log.warning("No local property defined", "name", name);
+                } else if (_mods.containsKey(name)) {
+                    try {
+                        if (prop.merge(name, value)) _mods.remove(name);
+                    } catch (Exception e) {
+                        log.warning("Property merge fail", "name", name, "value", value, e);
+                    }
+                } else {
+                    try {
+                        prop.update(name, value);
+                    } catch (Exception e) {
+                        log.warning("Property update fail", "name", name, "value", value, e);
+                    }
+                    _mods.remove(name); // updating will cause the property to be marked as locally
+                    // changed, but it's not really locally changed, it's been set
+                    // to the latest synced value, so clear the mod flag
                 }
-            } else {
-                try {
-                    prop.update(name, value);
-                } catch (Exception e) {
-                    log.warning("Property update fail", "name", name, "value", value, e);
-                }
-                _mods.remove(name); // updating will cause the property to be marked as locally
-                                    // changed, but it's not really locally changed, it's been set
-                                    // to the latest synced value, so clear the mod flag
             }
+            flushMods();
+            updateVersion(version);
+        } finally {
+            commitBatch();
         }
-
-        flushMods();
-        updateVersion(version);
     }
 
     /**
@@ -177,8 +182,13 @@ public abstract class SyncDB
      * in the storage system, and thus benefits from aggregating purges prior to performing them.
      */
     public void processPurges () {
-        purgeDBs(sget(SYNC_PURGE_KEY, Codec.STRING));
-        _storage.removeItem(SYNC_PURGE_KEY);
+        startBatch();
+        try {
+            purgeDBs(sget(SYNC_PURGE_KEY, Codec.STRING));
+            removeItem(SYNC_PURGE_KEY);
+        } finally {
+            commitBatch();
+        }
     }
 
     protected SyncDB (Platform platform) {
@@ -320,7 +330,7 @@ public abstract class SyncDB
                 String skey = skey(key);
                 String valstr = valCodec.encode(value);
                 String ovalstr = _storage.getItem(skey);
-                _storage.setItem(skey, valstr);
+                setItem(skey, valstr);
                 if (!valstr.equals(ovalstr)) noteModified(skey);
                 return valCodec.decode(ovalstr, null);
             }
@@ -399,7 +409,7 @@ public abstract class SyncDB
                 }
                 protected void removeStorage (K key) {
                     String skey = skey(key);
-                    _storage.removeItem(skey);
+                    removeItem(skey);
                     noteModified(skey);
                 }
                 // we're taking advantage of object initialization order here; before our super
@@ -463,11 +473,11 @@ public abstract class SyncDB
     }
 
     protected <T> void set (String name, T value, Codec<T> codec) {
-        _storage.setItem(name, codec.encode(value));
+        setItem(name, codec.encode(value));
     }
 
     protected <E> void sset (String name, Set<E> set, Codec<E> codec) {
-        _storage.setItem(name, DBUtil.encodeSet(set, codec));
+        setItem(name, DBUtil.encodeSet(set, codec));
     }
 
     protected <E> Set<E> sget (String name, Codec<E> codec) {
@@ -497,6 +507,27 @@ public abstract class SyncDB
         }});
     }
 
+    protected void startBatch () {
+        if (_batch == null) _batch = _storage.startBatch();
+    }
+
+    protected void commitBatch () {
+        if (_batch != null) {
+            _batch.commit();
+            _batch = null;
+        }
+    }
+
+    protected void setItem (String key, String value) {
+        if (_batch != null) _batch.setItem(key, value);
+        else _storage.setItem(key, value);
+    }
+
+    protected void removeItem (String key) {
+        if (_batch != null) _batch.removeItem(key);
+        else _storage.removeItem(key);
+    }
+
     protected void purgeDBs (Set<String> dbs) {
         if (dbs.isEmpty()) return; // NOOP!
         log.info("Purging", "dbs", dbs);
@@ -505,7 +536,7 @@ public abstract class SyncDB
             int sdbidx = key.indexOf(DBUtil.SUBDB_KEY_SEP);
             if (sdbidx == -1 || !dbs.contains(key.substring(0, sdbidx))) continue;
             // log.info("Purging property " + key);
-            _storage.removeItem(key);
+            removeItem(key);
             _mods.remove(key);
         }
         flushMods();
@@ -583,6 +614,7 @@ public abstract class SyncDB
 
     protected final Platform _platform;
     protected final Storage _storage;
+    protected Storage.Batch _batch;
 
     protected final Map<String,Property> _props = new HashMap<String,Property>();
     protected final Map<String,SubDB> _subdbs = new HashMap<String,SubDB>();
