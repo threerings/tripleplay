@@ -133,16 +133,16 @@ public class Protocol
     }
 
     /** A {@link Server} implementation that delivers deltas to the server via {@link Net}. */
-    public static class NetServer implements Server {
+    public static abstract class NetServer implements Server {
         /** Creates a net server instance with the supplied Net service and sync URL. */
-        public NetServer (Net net, String url) {
+        public NetServer (Net net) {
             _net = net;
-            _url = url;
         }
 
         @Override
         public void sendSync (int version, Map<String,String> delta, final Callback<Response> cb) {
-            _net.post(_url, encodeRequest(new Request(version, delta)), new Callback<String>() {
+            String payload = encodeRequest(new Request(version, delta));
+            _net.post(syncURL(payload), payload, new Callback<String>() {
                 public void onSuccess (String payload) {
                     cb.onSuccess(decodeResponse(payload));
                 }
@@ -152,8 +152,11 @@ public class Protocol
             });
         }
 
+        /** Generates the sync URL, given the supplied payload. The client may wish to sign the URL
+         * based on the contents of the payload for security purposes. */
+        protected abstract String syncURL (String payload);
+
         protected final Net _net;
-        protected final String _url;
     }
 
     /** Used to decode ints and strings from one big compact string. */
