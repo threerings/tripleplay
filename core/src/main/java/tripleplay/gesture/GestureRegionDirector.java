@@ -7,7 +7,9 @@ package tripleplay.gesture;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import playn.core.Connection;
 import playn.core.Layer;
@@ -134,42 +136,45 @@ public class GestureRegionDirector
             if (mgr.touchInBounds(event)) {
                 _activeTouches.put(event.id(), new TrackedTouch(mgr, event));
                 mgr.onTouchStart(event);
-                break;
+                return;
             }
         }
+        _ignoredTouches.add(event.id());
     }
 
     @Override public void onTouchMove (Event event) {
         if (_regions.isEmpty()) return;
 
         TrackedTouch touch = _activeTouches.get(event.id());
-        if (touch == null) {
+        if (touch == null && !_ignoredTouches.contains(event.id())) {
             Log.log.warning("No start for move event", "event", event);
-            return;
+        } else if (touch != null) {
+            touch.region.onTouchMove(event);
         }
-        touch.region.onTouchMove(event);
     }
 
     @Override public void onTouchEnd (Event event) {
         if (_regions.isEmpty()) return;
 
         TrackedTouch touch = _activeTouches.remove(event.id());
-        if (touch == null) {
+        // set access first to ensure removal
+        if (!_ignoredTouches.remove(event.id()) && touch == null) {
             Log.log.warning("No start for end event", "event", event);
-            return;
+        } else if (touch != null) {
+            touch.region.onTouchEnd(event);
         }
-        touch.region.onTouchEnd(event);
     }
 
     @Override public void onTouchCancel (Event event) {
         if (_regions.isEmpty()) return;
 
         TrackedTouch touch = _activeTouches.remove(event.id());
-        if (touch == null) {
+        // set access first to ensure removal
+        if (!_ignoredTouches.remove(event.id()) && touch == null) {
             Log.log.warning("No start for cancel event", "event", event);
-            return;
+        } else if (touch != null) {
+            touch.region.onTouchCancel(event);
         }
-        touch.region.onTouchCancel(event);
     }
 
     protected float applyPercentX (float x) {
@@ -194,5 +199,6 @@ public class GestureRegionDirector
     protected IRectangle _bounds;
     protected Connection _connection;
     protected Map<Integer, TrackedTouch> _activeTouches = new HashMap<Integer, TrackedTouch>();
+    protected Set<Integer> _ignoredTouches = new HashSet<Integer>();
     protected Map<Rectangle, GestureDirector> _regions = new HashMap<Rectangle, GestureDirector>();
 }
