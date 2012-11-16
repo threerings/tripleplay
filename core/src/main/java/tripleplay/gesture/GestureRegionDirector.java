@@ -29,10 +29,6 @@ import tripleplay.util.Timer;
 public class GestureRegionDirector
     implements Touch.LayerListener
 {
-    public static interface RegionTranslator {
-        public void registerCommands (GestureRegionDirector gestureDir);
-    }
-
     /**
      * Creates an uninitalized GestureRegionDirector. setLayer() must be called separately.
      */
