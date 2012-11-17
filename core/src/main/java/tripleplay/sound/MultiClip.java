@@ -84,6 +84,26 @@ public class MultiClip
         @Override public boolean isPlaying () {
             return sound.isPlaying();
         }
+
+		@Override public void setVolume(float volume) {
+			sound.setVolume(volume);
+		}
+
+		@Override public float volume() {
+			return sound.volume();
+		}
+
+		@Override public void fadeIn(float duration) {
+		}
+
+		@Override public void fadeIn() {			
+		}
+
+		@Override public void fadeOut(float duration) {
+		}
+
+		@Override public void fadeOut() {
+		}
     }
 
     protected final SoundBoard _board;

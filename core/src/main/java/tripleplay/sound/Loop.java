@@ -15,5 +15,11 @@ public interface Loop extends Playable
         @Override public void play () {}
         @Override public void stop () {}
         @Override public boolean isPlaying () { return false; }
+		@Override public void setVolume(float volume) {}
+		@Override public float volume() { return 0; }
+		@Override public void fadeIn(float duration) {}
+		@Override public void fadeIn() {}
+		@Override public void fadeOut(float duration) {}
+		@Override public void fadeOut() {};
     }
 }
