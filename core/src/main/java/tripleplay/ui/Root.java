@@ -125,7 +125,7 @@ public class Root extends Elements<Root>
     /**
      * @deprecated use {@link #setAbsorbsClicks(boolean)} instead
      */
-    protected boolean absorbsClicks () {
+    @Deprecated protected boolean absorbsClicks () {
         return true;
     }
 
