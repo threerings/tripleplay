@@ -306,6 +306,18 @@ public abstract class Animator
     }
 
     /**
+     * Tweens the volumne of the supplied playable. Note, this does not play or stop the sound,
+     * those must be enacted separately.
+     */
+    public Animation.One tweenVolume (final Playable sound) {
+        Asserts.checkNotNull(sound);
+        return tween(new Animation.Value() {
+            public float initial () { return sound.volume(); }
+            public void set (float value) { sound.setVolume(value); }
+        });
+    }
+
+    /**
      * Tweens the volumne of the supplied sound. Useful for fade-ins and fade-outs. Note, this does
      * not play or stop the sound, those must be enacted separately.
      */
