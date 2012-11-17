@@ -10,13 +10,21 @@ package tripleplay.sound;
  */
 public interface Playable
 {
+    /** Returns the current volume configured for this clip. Note that the actual volume will be
+     * the configured volume multiplied by the master volume of the owning soundboard. */
+    float volume ();
+
+    /** Configures the volume for this clip to a value between 0 and 1. Note that the actual volume
+     * will be the configured volume multiplied by the master volume of the owning soundboard. */
+    void setVolume (float volume);
+
+    /** Returns true if this playable is currently playing, false othwerise. */
+    boolean isPlaying ();
+
     /** Starts this clip or loop playing. If the sound data is not yet loaded it will be loaded and
      * then played. */
     void play ();
 
     /** Stops this clip or loop (fading it out over one second). */
     void stop ();
-
-    /** Returns true if this playable is currently playing, false othwerise. */
-    boolean isPlaying ();
 }

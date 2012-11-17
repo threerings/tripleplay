@@ -14,12 +14,22 @@ public interface Clip extends Playable
 {
     /** A noop clip. */
     class Silence implements Clip {
-        @Override public void preload () {}
-        @Override public void play () {}
-        @Override public void stop () {}
+        @Override public float volume () { return 0; }
+        @Override public void setVolume (float volume) {}
         @Override public boolean isPlaying () { return false; }
+        @Override public void play () {}
+        @Override public void fadeIn (float fadeMillis) {}
+        @Override public void fadeOut (float fadeMillis) {}
+        @Override public void stop () {}
+        @Override public void preload () {}
         @Override public Sound asSound () { return new Sound.Silence(); }
     }
+
+    /** Fades this clip in over the specified duration. */
+    void fadeIn (float fadeMillis);
+
+    /** Fades this clip out over the specified duration. */
+    void fadeOut (float fadeMillis);
 
     /** Preloads this clip's underlying audio data. */
     void preload ();

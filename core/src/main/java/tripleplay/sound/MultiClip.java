@@ -58,8 +58,19 @@ public class MultiClip
     }
 
     protected class CopyImpl implements Copy {
-        public final Clip sound = _board.getClip(_path); { sound.preload(); }
+        public final Clip sound = _board.getClip(_path); {
+            sound.setVolume(1);
+            sound.preload();
+        }
         public double releaseTime;
+
+        @Override public float volume () {
+            return sound.volume();
+        }
+
+        @Override public void setVolume (float volume) {
+            sound.setVolume(volume);
+        }
 
         @Override public void play () {
             sound.play();

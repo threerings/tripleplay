@@ -12,8 +12,18 @@ public interface Loop extends Playable
 {
     /** A noop loop. */
     class Silence implements Loop {
-        @Override public void play () {}
-        @Override public void stop () {}
+        @Override public float volume () { return 0; }
+        @Override public void setVolume (float volume) {}
         @Override public boolean isPlaying () { return false; }
+        @Override public void play () {}
+        @Override public void fadeIn (float fadeMillis) {}
+        @Override public void fadeOut (float fadeMillis) {}
+        @Override public void stop () {}
     }
+
+    /** Fades this loop in over the specified duration. */
+    void fadeIn (float fadeMillis);
+
+    /** Fades this loop out over the specified duration. */
+    void fadeOut (float fadeMillis);
 }
