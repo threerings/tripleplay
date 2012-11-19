@@ -48,7 +48,8 @@ public class Button extends ClickableTextWidget<Button>
     }
 
     /** Programmatically triggers a click of this button. This triggers the action sound, but does
-     * not cause any change in the button's visualization. */
+     * not cause any change in the button's visualization. <em>Note:</em> this does not check the
+     * button's enabled state, so the caller must handle that if appropriate. */
     public void click () {
         if (_actionSound != null) _actionSound.play();
         _clicked.emit(this); // emit a click event
