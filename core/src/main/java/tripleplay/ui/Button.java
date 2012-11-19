@@ -47,6 +47,13 @@ public class Button extends ClickableTextWidget<Button>
         this.icon.connect(iconDidChange());
     }
 
+    /** Programmatically triggers a click of this button. This triggers the action sound, but does
+     * not cause any change in the button's visualization. */
+    public void click () {
+        if (_actionSound != null) _actionSound.play();
+        _clicked.emit(this); // emit a click event
+    }
+
     @Override public SignalView<Button> clicked () {
         return _clicked;
     }
@@ -65,8 +72,7 @@ public class Button extends ClickableTextWidget<Button>
     }
 
     @Override protected void onClick () {
-        if (_actionSound != null) _actionSound.play();
-        _clicked.emit(this); // emit a click event
+        click();
     }
 
     @Override protected String text () {
