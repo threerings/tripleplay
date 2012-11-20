@@ -28,6 +28,9 @@ public class Movie
         /** The layers in this movie. */
         public final List<LayerData> layers;
 
+        /** The duration of this movie, in milliseconds. */
+        public final float duration;
+
         protected Symbol (Library lib, Json.Object json) {
             _name = json.getString("id");
 
@@ -42,8 +45,8 @@ public class Movie
             }
             this.frames = frames;
 
-            _frameRate = lib.frameRate/1000;
-            _duration = frames/_frameRate;
+            _framesPerMs = lib.frameRate/1000;
+            this.duration = frames/_framesPerMs;
         }
 
         @Override public String name () {
@@ -54,18 +57,8 @@ public class Movie
             return new Movie(this);
         }
 
-        /** The duration of this movie, in milliseconds. */
-        public float duration () {
-            return _duration;
-        }
-
-        protected float frameRate () {
-            return _frameRate;
-        }
-
         protected String _name;
-        protected float _frameRate;
-        protected float _duration;
+        protected float _framesPerMs;
     }
 
     protected Movie (Symbol symbol) {
@@ -87,11 +80,11 @@ public class Movie
         dt *= _speed;
 
         _position += dt;
-        if (_position > _symbol.duration()) {
-            _position = _position % _symbol.duration();
+        if (_position > _symbol.duration) {
+            _position = _position % _symbol.duration;
         }
 
-        float nextFrame = _position*_symbol.frameRate();
+        float nextFrame = _position*_symbol._framesPerMs;
         setFrame(nextFrame, dt);
     }
 
