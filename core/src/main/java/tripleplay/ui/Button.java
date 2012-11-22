@@ -19,6 +19,11 @@ import react.Value;
 public class Button extends ClickableTextWidget<Button>
     implements Clickable<Button>
 {
+    /** A delay (in milliseconds) during which a button will remain unclickable after it has been
+     * clicked. This ensures that users don't hammer away at a button, triggering multiple
+     * responses (which code rarely protects against). Inherited. */
+    public static Style<Integer> DEBOUNCE_DELAY = Style.newStyle(true, 500);
+
     /** The text displayed by this widget, or null. */
     public final Value<String> text = Value.create((String)null);
 
@@ -71,9 +76,16 @@ public class Button extends ClickableTextWidget<Button>
     @Override protected void layout () {
         super.layout();
         _actionSound = resolveStyle(Style.ACTION_SOUND);
+        _debounceDelay = resolveStyle(DEBOUNCE_DELAY);
+    }
+
+    @Override protected void onPress (Pointer.Event event) {
+        // ignore press events if we're still in our debounce interval
+        if (event.time() - _lastClickStamp > _debounceDelay) super.onPress(event);
     }
 
     @Override protected void onClick (Pointer.Event event) {
+        _lastClickStamp = event.time();
         click();
     }
 
@@ -87,4 +99,6 @@ public class Button extends ClickableTextWidget<Button>
 
     protected final Signal<Button> _clicked = Signal.create();
     protected Sound _actionSound;
+    protected int _debounceDelay;
+    protected double _lastClickStamp;
 }
