@@ -19,33 +19,33 @@ public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> exte
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
         super.onPointerStart(event, x, y);
         if (!isEnabled()) return;
-        onPress();
+        onPress(event);
     }
 
     @Override protected void onPointerDrag (Pointer.Event event, float x, float y) {
         super.onPointerDrag(event, x, y);
         if (!isEnabled()) return;
-        onHover(contains(x, y));
+        onHover(event, contains(x, y));
     }
 
     @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
         super.onPointerEnd(event, x, y);
-        onRelease();
+        onRelease(event);
     }
 
     @Override protected void onPointerCancel (Pointer.Event event) {
         super.onPointerCancel(event);
-        onCancel();
+        onCancel(event);
     }
 
     /** Called when the mouse is clicked on this widget. */
-    protected void onPress () {
+    protected void onPress (Pointer.Event event) {
         set(Flag.SELECTED, true);
         invalidate();
     }
 
     /** Called as the user drags the pointer around with the widget depressed. */
-    protected void onHover (boolean inBounds) {
+    protected void onHover (Pointer.Event event, boolean inBounds) {
         if (inBounds != isSelected()) {
             set(Flag.SELECTED, inBounds);
             invalidate();
@@ -54,17 +54,17 @@ public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> exte
 
     /** Called when the mouse is released after having been pressed on this widget. This should
      * {@link #onClick} if appropriate. */
-    protected void onRelease () {
+    protected void onRelease (Pointer.Event event) {
         if (isSelected()) {
             set(Flag.SELECTED, false);
             invalidate();
-            onClick();
+            onClick(event);
         }
     }
 
     /** Called when the interaction is canceled after having been pressed on this widget. This
      * should not result in a call to {@link #onClick}. */
-    protected void onCancel () {
+    protected void onCancel (Pointer.Event event) {
         if (isSelected()) {
             set(Flag.SELECTED, false);
             invalidate();
@@ -72,7 +72,7 @@ public abstract class ClickableTextWidget<T extends ClickableTextWidget<T>> exte
     }
 
     /** Called when the mouse is pressed and released over this widget. */
-    protected void onClick () {
+    protected void onClick (Pointer.Event event) {
         // nada by default
     }
 }

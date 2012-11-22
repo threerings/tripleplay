@@ -5,6 +5,8 @@
 
 package tripleplay.ui;
 
+import playn.core.Pointer;
+
 import react.Slot;
 import react.Value;
 
@@ -34,25 +36,23 @@ public abstract class TogglableTextWidget<T extends TogglableTextWidget<T>>
         });
     }
 
-    /** Called when the mouse is clicked on this widget. */
-    protected void onPress () {
+    @Override protected void onPress (Pointer.Event event) {
         _anchorState = isSelected();
         selected.update(!_anchorState);
     }
 
-    /** Called as the user drags the pointer around with the widget depressed. */
-    protected void onHover (boolean inBounds) {
+    @Override protected void onHover (Pointer.Event event, boolean inBounds) {
         selected.update(inBounds ? !_anchorState : _anchorState);
     }
 
-    @Override protected void onRelease () {
+    @Override protected void onRelease (Pointer.Event event) {
         // we explicitly don't call super here
         if (_anchorState != isSelected()) {
-            onClick();
+            onClick(event);
         }
     }
 
-    @Override protected void onCancel () {
+    @Override protected void onCancel (Pointer.Event event) {
         // we explicitly don't call super here
         selected.update(_anchorState);
     }

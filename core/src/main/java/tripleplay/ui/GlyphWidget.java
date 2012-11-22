@@ -6,7 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.Canvas;
-import playn.core.Pointer.Event;
+import playn.core.Pointer;
 
 /**
  * Base for widgets that consist of a single glyph. Performs all boilerplate layout stuff and
@@ -49,13 +49,13 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
 
     /** Notifies this widget that the pointer or mouse has been pressed and release inside the
      * bounds of the widget. */
-    protected void onClick () {
+    protected void onClick (Pointer.Event event) {
         // nothing by default
     }
 
-    @Override protected void onPointerEnd (Event event, float x, float y) {
+    @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
         super.onPointerEnd(event, x, y);
-        if (contains(x, y)) onClick();
+        if (contains(x, y)) onClick(event);
     }
 
     @Override protected BaseLayoutData createBaseLayoutData (float hintX, float hintY) {

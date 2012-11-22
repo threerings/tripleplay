@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.Image;
+import playn.core.Pointer;
 import playn.core.Sound;
 
 import react.Signal;
@@ -73,7 +74,7 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
         _actionSound = resolveStyle(Style.ACTION_SOUND);
     }
 
-    @Override protected void onClick () {
+    @Override protected void onClick (Pointer.Event event) {
         if (_actionSound != null) _actionSound.play();
         _clicked.emit(this); // emit a click event
     }

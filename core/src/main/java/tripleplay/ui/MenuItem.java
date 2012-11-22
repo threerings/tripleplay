@@ -77,7 +77,7 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
 
     @Override public SignalView<MenuItem> clicked () { return _clicked; }
     @Override protected Class<?> getStyleClass () { return MenuItem.class; }
-    @Override protected void onClick () { _clicked.emit(this); }
+    @Override protected void onClick (Pointer.Event event) { _clicked.emit(this); }
     @Override protected Image icon () { return icon.get(); }
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {}
     @Override protected void onPointerDrag (Pointer.Event event, float x, float y) {}

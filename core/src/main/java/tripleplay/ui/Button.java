@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.Image;
+import playn.core.Pointer;
 import playn.core.Sound;
 
 import react.Signal;
@@ -72,7 +73,7 @@ public class Button extends ClickableTextWidget<Button>
         _actionSound = resolveStyle(Style.ACTION_SOUND);
     }
 
-    @Override protected void onClick () {
+    @Override protected void onClick (Pointer.Event event) {
         click();
     }
 

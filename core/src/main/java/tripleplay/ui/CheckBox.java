@@ -9,6 +9,7 @@ import react.Slot;
 import react.Value;
 
 import playn.core.Image;
+import playn.core.Pointer;
 import playn.core.Sound;
 
 /**
@@ -56,7 +57,7 @@ public class CheckBox extends ClickableTextWidget<CheckBox>
         return _checkIcon;
     }
 
-    @Override protected void onClick () {
+    @Override protected void onClick (Pointer.Event event) {
         if (_actionSound != null) _actionSound.play();
         checked.update(!checked.get());
     }
