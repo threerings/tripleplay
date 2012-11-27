@@ -35,7 +35,6 @@ public class Tap extends GestureBase<Tap>
     @Override protected void updateState (GestureNode node) {
         switch (node.type) {
         case PAUSE:
-            Log.log.warning("Received pause on a Tap.");
             setState(State.UNQUALIFIED);
             break;
 

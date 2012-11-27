@@ -107,7 +107,7 @@ public class GestureDirector
         // dispatch a pause event on touches that haven't moved for PAUSE_DELAY.
         Handle handle = _currentMoves.remove(node.touch.id());
         if (handle != null) handle.cancel();
-        if (node.type == GestureNode.Type.MOVE) {
+        if (node.type == GestureNode.Type.MOVE || node.type == GestureNode.Type.START) {
             handle = _timer.after(PAUSE_DELAY, new Runnable() {
                 @Override public void run () { onTouchPause(node.touch); }
             });
