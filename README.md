@@ -30,7 +30,7 @@ To add a Triple Play dependency to a Maven project, add the following to your
       <dependency>
         <groupId>com.threerings</groupId>
         <artifactId>tripleplay</artifactId>
-        <version>1.2</version>
+        <version>1.5</version>
       </dependency>
     </dependencies>
 
@@ -39,7 +39,7 @@ remove the vast majority of the boilerplate above.
 
 If you prefer to download pre-built binaries, those can be had here:
 
-* [tripleplay-1.2.jar](http://repo2.maven.org/maven2/com/threerings/tripleplay/1.2/tripleplay-1.2.jar)
+* [tripleplay-1.5.jar](http://repo2.maven.org/maven2/com/threerings/tripleplay/1.5/tripleplay-1.5.jar)
 
 GWT
 ---
