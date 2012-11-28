@@ -26,6 +26,7 @@ import react.Signal;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.util.XYFlicker;
 import tripleplay.util.Colors;
+import tripleplay.util.Layers;
 
 /**
  * A composite element that manages horizontal and vertical scrolling of a single content element.
@@ -238,11 +239,23 @@ public class Scroller extends Elements<Scroller>
 
     /**
      * Finds the closest ancestor of the given element that is a {@code Scroller}, or null if
-     * there isn't one.
+     * there isn't one. This uses the tripleplay ui hierarchy.
      */
     public static Scroller findScrollParent (Element<?> elem) {
         for (; elem != null && !(elem instanceof Scroller); elem = elem.parent()) {}
         return (Scroller)elem;
+    }
+
+    /**
+     * Attempts to scroll the given element into view.
+     * @return true if successful
+     */
+    public static boolean makeVisible (Element<?> elem) {
+        Scroller scroller = findScrollParent(elem);
+        if (scroller == null) return false;
+        Point offset = Layers.transform(new Point(0, 0), elem.layer, scroller.content.layer);
+        scroller.scroll(offset.x, offset.y);
+        return true;
     }
 
     /** The content contained in the scroll group. */
