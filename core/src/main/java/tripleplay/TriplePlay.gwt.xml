@@ -6,10 +6,12 @@
   <source path="anim"/>
   <source path="flump"/>
   <source path="game"/>
+  <source path="gesture"/>
   <source path="particle"/>
   <source path="platform"/>
   <source path="shaders"/>
   <source path="sound"/>
+  <source path="syncdb"/>
   <source path="ui"/>
   <source path="util"/>
 </module>
