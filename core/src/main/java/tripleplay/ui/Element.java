@@ -226,7 +226,7 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Returns true only if this element and all its parents' {#isVisible()} return true.
+     * Returns true only if this element and all its parents' {@link #isVisible()} return true.
      */
     public boolean isShowing () {
         Elements<?> parent;
