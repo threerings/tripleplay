@@ -16,12 +16,20 @@ public class Root extends Elements<Root>
     /**
      * Creates a new root with the provided layout and stylesheet.
      */
-    public Root (Layout layout, Stylesheet sheet) {
+    public Root (Interface iface, Layout layout, Stylesheet sheet) {
         super(layout);
+        _iface = iface;
         setStylesheet(sheet);
 
         // TODO: once method is removed, just default to true
         set(Flag.HIT_ABSORB, absorbsClicks());
+    }
+
+    /**
+     * Returns the interface to which this root belongs.
+     */
+    public Interface iface () {
+        return _iface;
     }
 
     /**
@@ -129,6 +137,7 @@ public class Root extends Elements<Root>
         return true;
     }
 
+    protected final Interface _iface;
     protected boolean _valid;
     protected Element<?> _active;
 }
