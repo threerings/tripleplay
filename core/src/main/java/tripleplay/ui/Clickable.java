@@ -13,5 +13,5 @@ import react.SignalView;
 public interface Clickable<T extends Element<T>>
 {
     /** A signal that is emitted when this element is clicked. */
-    SignalView<T> clicked();
+    SignalView<T> clicked ();
 }
