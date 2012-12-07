@@ -266,15 +266,12 @@ public class Scroller extends Elements<Scroller>
 
     /**
      * Creates a new scroll group containing the given content and with {@link Behavior#BOTH}.
-     * The interface is needed in order to set up a task for fading inactive scroll bars and
-     * scrolling deceleration.
      * <p>If the content is an instance of {@link Clippable}, then translation will occur via
      * that interface. Otherwise, the content's layer translation will be set directly.
      * Graphics level clipping is always performed.</p>
      */
-    public Scroller (Element<?> content, Interface iface) {
+    public Scroller (Element<?> content) {
         super(AxisLayout.horizontal().stretchByDefault().offStretch().gap(0));
-        _iface = iface;
 
         // out immediate child is the scroller, and that has the content
         add(_scroller.add(this.content = content));
@@ -452,12 +449,12 @@ public class Scroller extends Elements<Scroller>
 
     @Override protected void wasAdded () {
         super.wasAdded();
-        _iface.addTask(_updater);
+        root().iface().addTask(_updater);
     }
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        _iface.removeTask(_updater);
+        root().iface().removeTask(_updater);
     }
 
     /** Hides the layers of any children of the content that are currently visible but outside
@@ -615,7 +612,6 @@ public class Scroller extends Elements<Scroller>
         }
     };
 
-    protected final Interface _iface;
     protected final XYFlicker _flicker;
     protected final Clippable _clippable;
     protected final Dimension _contentSize = new Dimension();

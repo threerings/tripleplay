@@ -45,7 +45,7 @@ public class ScrollerDemo extends DemoScreen
         final Slider xpos = new Slider(0, 0, 1);
         final Slider ypos = new Slider(0, 0, 1);
         final Content content = new Content();
-        final Scroller scroll = new Scroller(content, iface);
+        final Scroller scroll = new Scroller(content);
         final Label click = new Label();
 
         // updates the size of the content
