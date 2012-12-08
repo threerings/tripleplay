@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.Image;
+import playn.core.PlayN;
 import playn.core.Pointer;
 
 import react.Signal;
@@ -99,10 +100,10 @@ public class LongPressButton extends Button
     }
 
     protected void fireLongPress () {
-        longPress();
+        // cancel the current interaction which will disarm the button
+        PlayN.pointer().cancelLayerDrags();
         cancelLongPressTimer();
-        set(Flag.SELECTED, false);
-        invalidate();
+        longPress();
     }
 
     protected final Signal<Button> _longPressed = Signal.create();
