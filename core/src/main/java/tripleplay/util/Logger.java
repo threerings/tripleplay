@@ -28,7 +28,7 @@ import playn.core.PlayN;
 public class Logger
 {
     /** Tags a log message with a particular severity level. */
-    public enum Level { DEBUG, INFO, WARNING, OFF; }
+    public enum Level { DEBUG, INFO, WARNING, ERROR, OFF; }
 
     /**
      * Wires the logging front-end to the logging back-end. See {@link #setImpl}.
@@ -104,6 +104,10 @@ public class Logger
             case WARNING:
                 if (t != null) PlayN.log().warn(msg, t);
                 else PlayN.log().warn(msg);
+                break;
+            case ERROR:
+                if (t != null) PlayN.log().error(msg, t);
+                else PlayN.log().error(msg);
                 break;
             }
         }
@@ -193,6 +197,19 @@ public class Logger
     public void warning (String message, Object... args) {
         if (levels.shouldLog(Level.WARNING, _ident)) {
             log(Level.WARNING, _ident, message, args);
+        }
+    }
+
+    /**
+     * Logs an error message.
+     *
+     * @param message the text of the message.
+     * @param args a series of zero or more key/value pairs followed by an optional {@link
+     * Throwable} cause.
+     */
+    public void error (String message, Object... args) {
+        if (levels.shouldLog(Level.ERROR, _ident)) {
+            log(Level.ERROR, _ident, message, args);
         }
     }
 
