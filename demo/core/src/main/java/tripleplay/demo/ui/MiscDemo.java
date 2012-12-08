@@ -9,6 +9,7 @@ import playn.core.Image;
 import playn.core.PlayN;
 
 import react.Function;
+import react.UnitSlot;
 
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
@@ -17,6 +18,7 @@ import tripleplay.ui.Constraints;
 import tripleplay.ui.Field;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
+import tripleplay.ui.LongPressButton;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
 import tripleplay.ui.ToggleButton;
@@ -41,19 +43,13 @@ public class MiscDemo extends DemoScreen
         Image smiley = PlayN.assets().getImage("images/smiley.png");
         final Image squares = PlayN.assets().getImage("images/squares.png");
 
-        Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
-        Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CC66).inset(5)));
-        Styles redBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFFCC6666).inset(5)));
-
         CheckBox toggle, toggle2;
-        ToggleButton toggle3;
-        Button disabled;
         Label label2;
         Group iface = new Group(new TableLayout(2).gaps(10, 10)).add(
             new Label("Toggling visibility"),
             new Label("Buttons"),
             // labels, visibility and icon toggling
-            new Group(AxisLayout.horizontal().gap(15), greenBg).add(
+            new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 new Group(AxisLayout.vertical()).add(
                     new Group(AxisLayout.horizontal()).add(
                         toggle = new CheckBox(),
@@ -62,17 +58,16 @@ public class MiscDemo extends DemoScreen
                         toggle2 = new CheckBox(),
                         new Label("Toggle Icon"))),
                 new Group(AxisLayout.vertical()).add(
-                    new Label("Label 1").addStyles(redBg),
+                    new Label("Label 1").addStyles(REDBG),
                     label2 = new Label("Label 2"),
                     new Label("Label 3", smiley))),
             // buttons, toggle buttons, wirey uppey
-            new Group(AxisLayout.horizontal().gap(15), greenBg).add(
-                toggle3 = new ToggleButton("Toggle Enabled"),
-                disabled = new Button("Disabled")),
+            buttonsSection(),
+
             new Label("Icon positioning"),
             new Label("Text editing"),
             // labels with varying icon alignment
-            new Group(AxisLayout.horizontal().gap(10), greenBg).add(
+            new Group(AxisLayout.horizontal().gap(10), GREENBG).add(
                 new Label("Left", tile(squares, 0)).setStyles(Style.ICON_POS.left),
                 new Label("Right", tile(squares, 1)).setStyles(Style.ICON_POS.right),
                 new Label("Above", tile(squares, 2)).setStyles(Style.ICON_POS.above,
@@ -92,16 +87,44 @@ public class MiscDemo extends DemoScreen
             }
         }).connect(label2.icon.slot());
 
+        return iface;
+    }
+
+    protected Group buttonsSection () {
+        ToggleButton toggle3 = new ToggleButton("Toggle Enabled");
+        Button disabled = new Button("Disabled");
         toggle3.selected.connectNotify(disabled.enabledSlot());
         toggle3.selected.map(new Function<Boolean,String>() {
             public String apply (Boolean selected) { return selected ? "Enabled" : "Disabled"; }
         }).connectNotify(disabled.text.slot());
 
-        return iface;
+        LongPressButton longPress = new LongPressButton("Long Pressable");
+        final Label pressResult = new Label();
+        longPress.clicked().connect(new UnitSlot() {
+            public void onEmit () {
+                pressResult.text.update("Clicked");
+            }
+        });
+        longPress.longPressed().connect(new UnitSlot() {
+            public void onEmit () {
+                pressResult.text.update("Long pressed");
+            }
+        });
+
+        return new Group(AxisLayout.vertical().offEqualize()).add(
+            new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
+                toggle3, AxisLayout.stretch(disabled)),
+            new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
+                longPress, AxisLayout.stretch(pressResult)));
     }
 
     protected Image tile (Image image, int index) {
         final float iwidth = 16, iheight = 16;
         return image.subImage(index*iwidth, 0, iwidth, iheight);
     }
+
+    protected static final Styles GREENBG = Styles.make(
+        Style.BACKGROUND.is(Background.solid(0xFF99CC66).inset(5)));
+    protected static final Styles REDBG = Styles.make(
+        Style.BACKGROUND.is(Background.solid(0xFFCC6666).inset(5)));
 }
