@@ -82,24 +82,19 @@ public class LongPressButton extends Button
 
     protected void startLongPressTimer () {
         if (_longPressInterval > 0 && _longPressReg == null) {
-            final Interface iface = root().iface();
-            final Interface.Task task = new Interface.Task() {
+            _longPressReg = root().iface().addTask(new Interface.Task() {
                 @Override public void update (float delta) {
                     _accum += delta;
                     if (_accum > _longPressInterval) fireLongPress();
                 }
                 protected float _accum;
-            };
-            iface.addTask(task);
-            _longPressReg = new Runnable() { public void run () {
-                iface.removeTask(task);
-            }};
+            });
         }
     }
 
     protected void cancelLongPressTimer () {
         if (_longPressReg != null) {
-            _longPressReg.run();
+            _longPressReg.remove();
             _longPressReg = null;
         }
     }
@@ -113,5 +108,5 @@ public class LongPressButton extends Button
 
     protected final Signal<Button> _longPressed = Signal.create();
     protected int _longPressInterval;
-    protected Runnable _longPressReg;
+    protected Interface.TaskHandle _longPressReg;
 }

@@ -36,6 +36,16 @@ public class Interface
     }
 
     /**
+     * An object that can be used to remove a previously added task.
+     */
+    public interface TaskHandle {
+        /**
+         * Removes the task associated with this handle.
+         */
+        void remove ();
+    }
+
+    /**
      * Posts a runnable that will be executed after the next time the interface is validated.
      * Processing deferred actions is not tremendously efficient, so don't call this every frame.
      */
@@ -47,22 +57,25 @@ public class Interface
      * Adds a task that will henceforth be updated once per game update. If a task is added during
      * the task update iteration, it will be updated for the first time on the following game
      * update.
+     * @return a handle that will remove the task when invoked the first time. Subsequent
+     * invocations will do nothing
      */
-    public void addTask (Task task) {
+    public TaskHandle addTask (final Task task) {
         _tasks.add(task);
-    }
-
-    /**
-     * Removes a previously added task. If a task is removed during an update and has not yet
-     * been updated itself, then it will not be updated.
-     */
-    public void removeTask (Task task) {
-        int idx = _tasks.indexOf(task);
-        if (idx == -1) return;
-        _tasks.remove(idx);
-        // adjust iteration members
-        if (_currentTask >= idx) _currentTask--;
-        _currentTaskCount--;
+        return new TaskHandle() {
+            Task target = task;
+            public void remove () {
+                if (target == null) return;
+                int idx = _tasks.indexOf(target);
+                if (idx == -1) return;
+                _tasks.remove(idx);
+                // adjust iteration members
+                if (_currentTask >= idx) _currentTask--;
+                _currentTaskCount--;
+                // clear state so we don't try and remove again
+                target = null;
+            }
+        };
     }
 
     /**

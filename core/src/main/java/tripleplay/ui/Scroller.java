@@ -449,12 +449,16 @@ public class Scroller extends Elements<Scroller>
 
     @Override protected void wasAdded () {
         super.wasAdded();
-        root().iface().addTask(_updater);
+        _updater = root().iface().addTask(new Interface.Task() {
+            @Override public void update (float delta) {
+                Scroller.this.update(delta);
+            }
+        });
     }
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        root().iface().removeTask(_updater);
+        _updater.remove();
     }
 
     /** Hides the layers of any children of the content that are currently visible but outside
@@ -606,15 +610,10 @@ public class Scroller extends Elements<Scroller>
         }
     };
 
-    protected final Interface.Task _updater = new Interface.Task() {
-        @Override public void update (float delta) {
-            Scroller.this.update(delta);
-        }
-    };
-
     protected final XYFlicker _flicker;
     protected final Clippable _clippable;
     protected final Dimension _contentSize = new Dimension();
+    protected Interface.TaskHandle _updater;
     protected Layer _barLayer;
     protected Point _queuedScroll;
     protected float _barAlpha;
