@@ -16,6 +16,10 @@ public class FadeTransition extends InterpedTransition<SlideTransition>
     public FadeTransition (ScreenStack stack) {
     }
 
+    @Override public void init (Screen oscreen, Screen nscreen) {
+        nscreen.layer.setAlpha(0);
+    }
+
     @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
         float nalpha = _interp.apply(0, 1, elapsed, _duration);
         nscreen.layer.setAlpha(nalpha);
