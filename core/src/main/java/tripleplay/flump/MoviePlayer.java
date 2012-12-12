@@ -12,7 +12,7 @@ import static playn.core.PlayN.*;
 /**
  * A convenient controller to play though multiple different movies. Designed for characters and
  * objects that have a separate Flump symbol for each of their animations, and need to switch
- * between them. The played movies will be added to a new child entity of the owner.
+ * between them.
  */
 public class MoviePlayer
 {
