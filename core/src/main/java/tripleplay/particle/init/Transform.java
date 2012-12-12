@@ -70,6 +70,24 @@ public class Transform
         };
     }
 
+    /**
+     * Returns an initializer that scales its previously assigned transform by an evenly distributed
+     * random amount within the specified range.
+     */
+    public static Initializer randomScale (final Randoms rando, final float minScale,
+                                           final float maxScale)
+    {
+        return new Initializer() {
+            @Override public void init (int index, float[] data, int start) {
+                float scale = rando.getInRange(minScale, maxScale);
+
+                data[start + ParticleBuffer.M00] *= scale;
+                data[start + ParticleBuffer.M01] *= scale;
+                data[start + ParticleBuffer.M10] *= scale;
+                data[start + ParticleBuffer.M11] *= scale;
+            }
+        };
+    }
 
     /**
      * Returns an initializer that configures a particle with the same transform (scale, rotation,
@@ -108,6 +126,19 @@ public class Transform
             @Override public void init (int index, float[] data, int start) {
                 data[start + ParticleBuffer.TX] = x + rando.getFloat(width);
                 data[start + ParticleBuffer.TY] = y + rando.getFloat(height);
+            }
+        };
+    }
+
+    /**
+     * Returns an initializer that adjusts the particle's position randomly from its current
+     * location by up to noise units in both x & y.
+     */
+    public static Initializer randomOffset (final Randoms rando, final float noise) {
+        return new Initializer() {
+            @Override public void init (int index, float[] data, int start) {
+                data[start + ParticleBuffer.TX] += rando.getInRange(-noise, noise);
+                data[start + ParticleBuffer.TY] += rando.getInRange(-noise, noise);
             }
         };
     }
