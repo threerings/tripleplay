@@ -9,6 +9,8 @@ import playn.core.GroupLayer;
 import playn.core.Layer;
 import static playn.core.PlayN.*;
 
+import tripleplay.anim.Animation;
+
 /**
  * A convenient controller to play though multiple different movies. Designed for characters and
  * objects that have a separate Flump symbol for each of their animations, and need to switch
@@ -84,6 +86,10 @@ public class MoviePlayer
         return loop(name, true);
     }
 
+    public Animation createAnimation (String name) {
+        return new PlayAnimation(name);
+    }
+
     public void update (float dt) {
         // If this update would end the oneshot movie, replace it with the looping movie
         if (_oneshotMovie != null && _oneshotMovie.position() + dt*_oneshotMovie.speed() >
@@ -104,6 +110,25 @@ public class MoviePlayer
         _root.clear();
         _root.add(movie.layer());
         return _currentMovie = movie;
+    }
+
+    protected class PlayAnimation extends Animation {
+        public PlayAnimation (String name) {
+            _name = name;
+        }
+
+        @Override protected void init (float time) {
+            play(_name);
+            _playing = _currentMovie;
+        }
+
+        @Override protected float apply (float time) {
+            // Wait until the original movie is no longer playing
+            return (_currentMovie == _playing) ? 1 : 0;
+        }
+
+        protected String _name;
+        protected Movie _playing;
     }
 
     protected Library _lib;

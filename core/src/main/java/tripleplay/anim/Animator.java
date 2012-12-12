@@ -18,6 +18,7 @@ import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Sound;
 
+import tripleplay.flump.MoviePlayer;
 import tripleplay.sound.Playable;
 import tripleplay.util.Layers;
 
@@ -177,6 +178,13 @@ public abstract class Animator
     }
 
     /**
+     * Plays a one-shot Flump movie.
+     */
+    public Animation playMovie (MoviePlayer player, String name) {
+        return add(player.createAnimation(name));
+    }
+
+    /**
      * Creates a shake animation on the specified layer.
      */
     public Animation.Shake shake (Layer layer) {
@@ -306,7 +314,7 @@ public abstract class Animator
     }
 
     /**
-     * Tweens the volumne of the supplied playable. Note, this does not play or stop the sound,
+     * Tweens the volume of the supplied playable. Note, this does not play or stop the sound,
      * those must be enacted separately.
      */
     public Animation.One tweenVolume (final Playable sound) {
@@ -318,7 +326,7 @@ public abstract class Animator
     }
 
     /**
-     * Tweens the volumne of the supplied sound. Useful for fade-ins and fade-outs. Note, this does
+     * Tweens the volume of the supplied sound. Useful for fade-ins and fade-outs. Note, this does
      * not play or stop the sound, those must be enacted separately.
      */
     public Animation.One tweenVolume (final Sound sound) {
