@@ -86,8 +86,8 @@ public class MoviePlayer
 
     public void update (float dt) {
         // If this update would end the oneshot movie, replace it with the looping movie
-        if (_oneshotMovie != null &&
-                _oneshotMovie.position()+dt > _oneshotMovie.symbol().duration) {
+        if (_oneshotMovie != null && _oneshotMovie.position() + dt*_oneshotMovie.speed() >
+                _oneshotMovie.symbol().duration) {
             _oneshotMovie = null;
             setCurrent(_loopingMovie);
         }
