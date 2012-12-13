@@ -86,7 +86,8 @@ public class MoviePlayer
         return loop(name, true);
     }
 
-    public Animation createAnimation (String name) {
+    /** Creates an {@link Animation} that plays a one-shot movie. */
+    public Animation animate (String name) {
         return new PlayAnimation(name);
     }
 

@@ -18,7 +18,6 @@ import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.Sound;
 
-import tripleplay.flump.MoviePlayer;
 import tripleplay.sound.Playable;
 import tripleplay.util.Layers;
 
@@ -175,13 +174,6 @@ public abstract class Animator
      */
     public Animation flipbookAt (GroupLayer parent, XY pos, Flipbook book) {
         return flipbookAt(parent, pos.x(), pos.y(), book);
-    }
-
-    /**
-     * Plays a one-shot Flump movie.
-     */
-    public Animation playMovie (MoviePlayer player, String name) {
-        return add(player.createAnimation(name));
     }
 
     /**
