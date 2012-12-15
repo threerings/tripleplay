@@ -108,7 +108,9 @@ public class MoviePlayer
 
     /** Replace the currently active movie. */
     protected Movie setCurrent (Movie movie) {
-        _root.clear();
+        if (_currentMovie != null) {
+            _root.remove(_currentMovie.layer());
+        }
         _root.add(movie.layer());
         return _currentMovie = movie;
     }
