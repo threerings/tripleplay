@@ -115,6 +115,15 @@ public class MoviePlayer
         return _currentMovie = movie;
     }
 
+    public void destroy () {
+        if (_currentMovie != null) {
+            _currentMovie.layer().destroy();
+        }
+        _currentMovie = null;
+        _loopingMovie = null;
+        _oneshotMovie = null;
+    }
+
     protected class PlayAnimation extends Animation {
         public PlayAnimation (String name) {
             _name = name;
