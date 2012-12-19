@@ -403,6 +403,9 @@ public abstract class Animation
         if (remain > 0) return remain;
 
         while (remain <= 0) {
+            // if we've been canceled, return 0 to indicate that we're done
+            if (_current == null) return 0;
+
             // if we have no next animation, return our overflow
             _current = _current.next();
             if (_current == null) return remain;
