@@ -248,6 +248,7 @@ public abstract class Animation
         public Animator then () {
             return new Animator() {
                 @Override public <T extends Animation> T add (T anim) {
+                    anim._root = _root;
                     // set ourselves as the repeat target of this added animation
                     anim._next = Repeat.this;
                     _next = anim;
