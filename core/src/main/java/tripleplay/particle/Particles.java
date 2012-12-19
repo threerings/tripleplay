@@ -53,6 +53,13 @@ public class Particles
         _onUpdate.emit(_now.update(delta));
     }
 
+    /**
+     * Clears the resources used by the custom shader that renders particles.
+     */
+    public void clear () {
+        _shader.clearProgram();
+    }
+
     float now () {
         return _now.time;
     }
