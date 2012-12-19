@@ -47,13 +47,11 @@ public class PageTurnTransition extends InterpedTransition<PageTurnTransition>
             }
         });
         _toflip.layer.addAt(_shadow, fwidth, 0);
+        updateAngle(0); // start things out appropriately
     }
 
     @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
-        float pct = MathUtil.clamp(_interp.apply(0, 0.5f, elapsed, _duration), 0, 0.5f);
-        if (_close) pct = 0.5f - pct;
-        _alpha = pct;
-        _shader.angle = FloatMath.PI * pct;
+        updateAngle(elapsed);
         return elapsed >= _duration;
     }
 
@@ -70,6 +68,13 @@ public class PageTurnTransition extends InterpedTransition<PageTurnTransition>
 
     @Override protected Interpolator defaultInterpolator () {
         return Interpolator.EASE_IN;
+    }
+
+    protected void updateAngle (float elapsed) {
+        float pct = MathUtil.clamp(_interp.apply(0, 0.5f, elapsed, _duration), 0, 0.5f);
+        if (_close) pct = 0.5f - pct;
+        _alpha = pct;
+        _shader.angle = FloatMath.PI * pct;
     }
 
     protected float _alpha;
