@@ -46,10 +46,15 @@ public abstract class AxisLayout extends Layout
             public float computeSize (float size, float maxSize, float extent) {
                 return Math.min(maxSize, extent);
             }
+        },
+        CONSTRAIN {
+            public float computeSize (float size, float maxSize, float extent) {
+                return Math.min(maxSize, size);
+            }
         };
 
         public abstract float computeSize (float size, float maxSize, float extent);
-    };
+    }
 
     /** Defines axis layout constraints. */
     public static final class Constraint extends Layout.Constraint {
@@ -175,8 +180,8 @@ public abstract class AxisLayout extends Layout
 
     /**
      * Configures the default constraint for elements added to this layout to be stretched. This
-     * is equivalent to calling {@link Element#setConstraint()} with {@link #stretched()} for each
-     * element added to the parent container.
+     * is equivalent to calling {@link Element#setConstraint(Layout.Constraint)} with
+     * {@link #stretched()} for each element added to the parent container.
      */
     public AxisLayout stretchByDefault () {
         _stretchByDefault = true;
@@ -204,6 +209,14 @@ public abstract class AxisLayout extends Layout
      */
     public AxisLayout offEqualize () {
         return offPolicy(Policy.EQUALIZE);
+    }
+
+    /**
+     * Configures this layout to constrain elements to the size of this container on the off-axis,
+     * leaving their size alone if it is smaller.
+     */
+    public AxisLayout offConstrain () {
+        return offPolicy(Policy.CONSTRAIN);
     }
 
     /**
