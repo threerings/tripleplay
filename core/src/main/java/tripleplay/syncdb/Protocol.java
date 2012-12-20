@@ -53,7 +53,8 @@ public class Protocol
          */
         protected abstract void onSyncFailure (SyncDB db, Throwable cause);
 
-        protected void onSyncSuccess (final SyncDB db, Map<String,Integer> mods, final Response rsp) {
+        protected void onSyncSuccess (final SyncDB db, Map<String,Integer> mods,
+                                      final Response rsp) {
             if (rsp.cleanSync) {
                 db.noteSync(rsp.version, mods);
                 onCleanSync();
@@ -144,7 +145,11 @@ public class Protocol
             String payload = encodeRequest(new Request(version, delta));
             _net.post(syncURL(payload), payload, new Callback<String>() {
                 public void onSuccess (String payload) {
-                    cb.onSuccess(decodeResponse(payload));
+                    try {
+                        cb.onSuccess(decodeResponse(payload));
+                    } catch (Throwable t) {
+                        onFailure(t);
+                    }
                 }
                 public void onFailure (Throwable cause) {
                     cb.onFailure(cause);
@@ -238,6 +243,7 @@ public class Protocol
 
     /** Decodes a client request from a compact string format. */
     public static Request decodeRequest (String payload) {
+        if (payload == null) throw new NullPointerException("Cannot decode null request.");
         PayloadReader in = new PayloadReader(payload);
         try {
             int protocolVersion = in.readInt();
@@ -269,6 +275,7 @@ public class Protocol
 
     /** Decodes a server response from a compact string format. */
     public static Response decodeResponse (String payload) {
+        if (payload == null) throw new NullPointerException("Cannot decode null response.");
         PayloadReader in = new PayloadReader(payload);
         try {
             int protocolVersion = in.readInt();
