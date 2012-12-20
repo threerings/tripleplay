@@ -83,8 +83,15 @@ public class Interface
      */
     public void update (float delta) {
         // use members for task iteration to support concurrent modification
-        for (_currentTask = 0, _currentTaskCount = _tasks.size(); _currentTask < _currentTaskCount;
-                _currentTask++) _tasks.get(_currentTask).update(delta);
+        for (_currentTask = 0, _currentTaskCount = _tasks.size();
+             _currentTask < _currentTaskCount; _currentTask++) {
+            Task task = _tasks.get(_currentTask);
+            try {
+                task.update(delta);
+            } catch (Exception e) {
+                Log.log.warning("Interface task failed: " + task, e);
+            }
+        }
         _currentTask = -1;
         // update animator
         _elapsed += delta;
