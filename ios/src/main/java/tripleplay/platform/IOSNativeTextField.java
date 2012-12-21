@@ -5,6 +5,8 @@
 
 package tripleplay.platform;
 
+import cli.MonoTouch.Foundation.NSRange;
+import cli.MonoTouch.Foundation.NSString;
 import cli.MonoTouch.UIKit.UIFont;
 import cli.MonoTouch.UIKit.UIKeyboardType;
 import cli.MonoTouch.UIKit.UITextAutocapitalizationType;
@@ -33,6 +35,13 @@ public class IOSNativeTextField implements NativeTextField
                 _pressedReturn = true;
                 field.ResignFirstResponder();
                 return false;
+            }
+            @Override public boolean ShouldChangeCharacters (UITextField uiTextField,
+                NSRange nsRange, String s) {
+                if (_maxInputLength < 1) return true;
+                int newLength = new NSString(uiTextField.get_Text())
+                    .Replace(nsRange, new NSString(s)).get_Length();
+                return newLength <= _maxInputLength;
             }
         });
 
@@ -88,14 +97,19 @@ public class IOSNativeTextField implements NativeTextField
         return this;
     }
 
-    @Override public NativeTextField setAutocorrection (boolean enable) {
+    @Override public IOSNativeTextField setAutocorrection (boolean enable) {
         _field.set_AutocorrectionType(UITextAutocorrectionType.wrap(
             enable ? UITextAutocorrectionType.Yes : UITextAutocorrectionType.No));
         return this;
     }
 
-    @Override public NativeTextField setSecureTextEntry (boolean enable) {
+    @Override public IOSNativeTextField setSecureTextEntry (boolean enable) {
         _field.set_SecureTextEntry(enable);
+        return this;
+    }
+
+    @Override public IOSNativeTextField setMaxInputLength (int maxLength) {
+        _maxInputLength = maxLength;
         return this;
     }
 
@@ -142,4 +156,5 @@ public class IOSNativeTextField implements NativeTextField
 
     protected IRectangle _requestedBounds;
     protected boolean _pressedReturn;
+    protected int _maxInputLength;
 }

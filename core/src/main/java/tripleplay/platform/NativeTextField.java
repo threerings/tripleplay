@@ -50,6 +50,12 @@ public interface NativeTextField
      * @return {@code this} for call chaining. */
     NativeTextField setSecureTextEntry (boolean useSecureEntry);
 
+    /** Configures the maximum number of characters that can be entered into this text field.
+     * Any value less than 1 indicates that it is unlimited (or limited by the platform). The
+     * default is unlimited.
+     * @return {@code this} for call chaining. */
+    NativeTextField setMaxInputLength (int maxLength);
+
     /** Adds the field to the view. */
     void add ();
 

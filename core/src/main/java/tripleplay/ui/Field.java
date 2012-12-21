@@ -51,6 +51,12 @@ public class Field extends TextWidget<Field>
     /** Sets the Keyboard.TextType in use by this Field. */
     public static final Style<TextType> TEXT_TYPE = Style.newStyle(false, TextType.DEFAULT);
 
+    /** Sets the maximum number of characters that can be entered by this Field. Currently only
+     * supported by Native fields. Anything less than 1 indicates unlimited (or limited by the
+     * platform only).
+     */
+    public static final Style<Integer> MAXIMUM_INPUT_LENGTH = Style.newStyle(false, 0);
+
     /** The text displayed by this widget. */
     public final Value<String> text;
 
@@ -179,6 +185,7 @@ public class Field extends TextWidget<Field>
                 .setAutocapitalization(resolveStyle(AUTOCAPITALIZATION))
                 .setAutocorrection(resolveStyle(AUTOCORRECTION))
                 .setSecureTextEntry(resolveStyle(SECURE_TEXT_ENTRY))
+                .setMaxInputLength(resolveStyle(MAXIMUM_INPUT_LENGTH))
                 .setBounds(getNativeFieldBounds());
             _nativeField.add();
             setGlyphLayerAlpha(0);
