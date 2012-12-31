@@ -5,7 +5,10 @@
 
 package tripleplay.syncdb;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,11 +28,7 @@ public class DBUtil
      * Decodes a set encoded via {@link #encodeSet}.
      */
     public static <E> Set<E> decodeSet (String data, Codec<E> codec) {
-        Set<E> set = new HashSet<E>();
-        if (data != null && data.length() > 0) {
-            for (String edata : data.split("\t")) set.add(codec.decode(edata));
-        }
-        return set;
+        return decode(data, codec, new HashSet<E>());
     }
 
     /**
@@ -37,12 +36,22 @@ public class DBUtil
      * set uses {@code \t} to separate; that character should not appear in {@code codec}'s output.
      */
     public static <E> String encodeSet (Set<E> set, Codec<E> codec) {
-        StringBuilder buf = new StringBuilder();
-        for (E elem : set) {
-            if (buf.length() > 0) buf.append("\t");
-            buf.append(codec.encode(elem));
-        }
-        return buf.toString();
+        return encode(set, codec);
+    }
+
+    /**
+     * Decodes a list encoded via {@link #encodeList}.
+     */
+    public static <E> List<E> decodeList (String data, Codec<E> codec) {
+        return decode(data, codec, new ArrayList<E>());
+    }
+
+    /**
+     * Encodes the supplied list as a string, using the supplied codec for its elements. The encoded
+     * list uses {@code \t} to separate; that character should not appear in {@code codec}'s output.
+     */
+    public static <E> String encodeList (List<E> list, Codec<E> codec) {
+        return encode(list, codec);
     }
 
     /**
@@ -66,5 +75,21 @@ public class DBUtil
      */
     public static <K> String mapKey (String prefix, K key, Codec<K> codec) {
         return prefix + MAP_KEY_SEP + codec.encode(key);
+    }
+
+    protected static <E> String encode (Iterable<E> values, Codec<E> codec) {
+        StringBuilder buf = new StringBuilder();
+        for (E elem : values) {
+            if (buf.length() > 0) buf.append("\t");
+            buf.append(codec.encode(elem));
+        }
+        return buf.toString();
+    }
+
+    protected static <E, C extends Collection<E>> C decode (String data, Codec<E> codec, C into) {
+        if (data != null && data.length() > 0) {
+            for (String edata : data.split("\t")) into.add(codec.decode(edata));
+        }
+        return into;
     }
 }
