@@ -95,30 +95,17 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             String curtext = text();
             boolean haveText = (curtext != null && curtext.length() > 0);
 
-            // remove our background insets from the hint
-            hintX -= bg.width(); hintY -= bg.height();
+            // start with hints minus background insets
+            Dimension hints = new Dimension(hintX - bg.width(), hintY - bg.height());
 
-            Image icon = icon();
-            if (icon != null) {
-                // remove the icon space from our hint dimensions
-                switch (iconPos) {
-                case LEFT:
-                case RIGHT:
-                    hintX -= icon.width();
-                    if (haveText) hintX -= iconGap;
-                    break;
-                case ABOVE:
-                case BELOW:
-                    hintY -= icon.height();
-                    if (haveText) hintX -= iconGap;
-                    break;
-                }
-            }
+            // accommodate our icon
+            accommodateIcon(hints, haveText);
 
+            // layout our text, if we have any
             if (haveText) {
                 renderer = Style.createEffectRenderer(TextWidget.this);
                 TextFormat format = Style.createTextFormat(TextWidget.this);
-                if (hintX > 0 && wrap) format = format.withWrapWidth(hintX);
+                if (hints.width > 0 && wrap) format = format.withWrapWidth(hints.width);
                 // TODO: should we do something with a y-hint?
                 text = graphics().layoutText(curtext, format);
             } else {
@@ -193,6 +180,26 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 updateTextGlyph(tx, ty, width-usedWidth, height-usedHeight);
             } else {
                 _tglyph.destroy();
+            }
+        }
+
+        // this is broken out so that subclasses can extend this action
+        protected void accommodateIcon (Dimension hints, boolean haveText) {
+            Image icon = icon();
+            if (icon != null) {
+                // remove the icon space from our hint dimensions
+                switch (iconPos) {
+                case LEFT:
+                case RIGHT:
+                    hints.width -= icon.width();
+                    if (haveText) hints.width -= iconGap;
+                    break;
+                case ABOVE:
+                case BELOW:
+                    hints.height -= icon.height();
+                    if (haveText) hints.height -= iconGap;
+                    break;
+                }
             }
         }
 
