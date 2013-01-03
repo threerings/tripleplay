@@ -123,6 +123,14 @@ public class TableLayout extends Layout
     }
 
     /**
+     * Configures cells to be stretched vertically to take up the entire height of their row.
+     */
+    public TableLayout fillHeight () {
+        _vstretch = true;
+        return this;
+    }
+
+    /**
      * Returns the number of columns configured for this table.
      */
     public int columns () {
@@ -158,7 +166,7 @@ public class TableLayout extends Layout
             if (colWidth > 0 && elem.isVisible()) {
                 IDimension psize = preferredSize(elem, 0, 0); // will be cached, hints ignored
                 float elemWidth = ccfg._stretch ? colWidth : Math.min(psize.width(), colWidth);
-                float elemHeight = Math.min(psize.height(), rowHeight);
+                float elemHeight = _vstretch ? rowHeight : Math.min(psize.height(), rowHeight);
                 setBounds(elem, x + ccfg._halign.offset(elemWidth, colWidth),
                           y + _rowVAlign.offset(elemHeight, rowHeight), elemWidth, elemHeight);
             }
@@ -254,5 +262,6 @@ public class TableLayout extends Layout
 
     protected final Column[] _columns;
     protected int _rowgap, _colgap;
+    protected boolean _vstretch;
     protected Style.VAlign _rowVAlign = Style.VAlign.CENTER;
 }
