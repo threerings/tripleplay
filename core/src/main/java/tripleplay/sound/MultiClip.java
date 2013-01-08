@@ -57,6 +57,14 @@ public class MultiClip
         return new CopyImpl();
     }
 
+    /**
+     * Releases all of the clips obtained by this multiclip, freeing their audio resources.
+     */
+    public void release () {
+        for (CopyImpl copy : _copies) copy.sound.release();
+        _copies.clear();
+    }
+
     protected class CopyImpl implements Copy {
         public final Clip sound = _board.getClip(_path); {
             sound.setVolume(1);

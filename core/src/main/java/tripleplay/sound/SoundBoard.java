@@ -74,7 +74,7 @@ public class SoundBoard
     }
 
     /**
-     * Creates and returns a loop with the supplied path. THe loop will contain its own copy of the
+     * Creates and returns a loop with the supplied path. The loop will contain its own copy of the
      * sound data at the specified path, and thus should be retained by the caller if it will be
      * used multiple times before being released. Once all references to this loop are released, it
      * will be garbage collected and its sound data unloaded.
@@ -116,6 +116,12 @@ public class SoundBoard
                 }
             };
         }
+        @Override public String toString () {
+            return "clip:" + sound;
+        }
+        @Override protected Sound loadSound (String path) {
+            return assets().getSound(path);
+        }
     }
 
     protected abstract class LoopImpl extends LazySound implements Loop {
@@ -137,11 +143,21 @@ public class SoundBoard
         @Override public void stop () {
             if (_active.remove(this) && isPlaying()) sound.stop();
         }
+        @Override public String toString () {
+            return "loop:" + sound;
+        }
 
         @Override protected Sound prepareSound () {
             Sound sound = super.prepareSound();
             sound.setLooping(true);
             return sound;
+        }
+        @Override protected void fadeOutComplete () {
+            sound.release();
+            sound = null;
+        }
+        @Override protected Sound loadSound (String path) {
+            return assets().getMusic(path);
         }
     }
 
@@ -157,6 +173,13 @@ public class SoundBoard
         }
         @Override public float volume () {
             return _volume;
+        }
+        @Override public void release () {
+            if (sound != null) {
+                if (sound.isPlaying()) sound.stop();
+                sound.release();
+                sound = null;
+            }
         }
 
         @Override public int hashCode () {
@@ -197,7 +220,11 @@ public class SoundBoard
                     _elapsed += delta;
                     float vol = Interpolator.LINEAR.apply(_start, -_start, _elapsed, fadeMillis);
                     updateVolume(vol);
-                    return (vol <= 0); // we're done when the volume hits zero
+                    if (vol > 0) return false;
+                    else { // we're done when the volume hits zero
+                        fadeOutComplete();
+                        return true;
+                    }
                 }
                 protected final float _start = volume.get();
                 protected float _elapsed;
@@ -205,11 +232,15 @@ public class SoundBoard
         }
 
         protected Sound prepareSound () {
-            if (sound == null) sound = assets().getSound(path());
+            if (sound == null) sound = loadSound(path());
             sound.setVolume(volume.get() * _volume);
             return sound;
         }
 
+        protected void fadeOutComplete () {
+        }
+
+        protected abstract Sound loadSound (String path);
         protected abstract String path ();
 
         protected float _volume = 1;

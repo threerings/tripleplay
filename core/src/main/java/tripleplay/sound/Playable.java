@@ -27,4 +27,8 @@ public interface Playable
 
     /** Stops this clip or loop (fading it out over one second). */
     void stop ();
+
+    /** Releases this playable when it is no longer needed. This releases any associated audio
+     * resources.If this playable is used again, the underlying sound will be reloaded. */
+    void release ();
 }
