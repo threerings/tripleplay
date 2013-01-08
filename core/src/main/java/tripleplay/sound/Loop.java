@@ -19,6 +19,7 @@ public interface Loop extends Playable
         @Override public void fadeIn (float fadeMillis) {}
         @Override public void fadeOut (float fadeMillis) {}
         @Override public void stop () {}
+        @Override public void release () {}
     }
 
     /** Fades this loop in over the specified duration. */

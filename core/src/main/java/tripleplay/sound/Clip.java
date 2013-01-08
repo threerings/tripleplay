@@ -21,6 +21,7 @@ public interface Clip extends Playable
         @Override public void fadeIn (float fadeMillis) {}
         @Override public void fadeOut (float fadeMillis) {}
         @Override public void stop () {}
+        @Override public void release () {}
         @Override public void preload () {}
         @Override public Sound asSound () { return new Sound.Silence(); }
     }
