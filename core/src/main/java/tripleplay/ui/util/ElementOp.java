@@ -35,10 +35,7 @@ public abstract class ElementOp<T extends Element<?>>
     /**
      * Iterates the given elements and applies this operation to each.
      */
-    public final void applyToEach (Iterable<? extends T> elems)
-    {
-        for (T elem : elems) {
-            apply(elem);
-        }
+    public final void applyToEach (Iterable<? extends T> elems) {
+        for (T elem : elems) apply(elem);
     }
 }
