@@ -16,8 +16,8 @@ import tripleplay.ui.Layout;
 import tripleplay.ui.Style;
 
 /**
- * Lays out elements in a simple tabular form, where each column has uniform width and each row
- * uniform height. Frills are kept to a minimum.
+ * Lays out elements in a simple tabular form, where each row has uniform height.
+ * Frills are kept to a minimum.
  */
 public class TableLayout extends Layout
 {
