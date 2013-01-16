@@ -7,6 +7,7 @@ package tripleplay.ui.layout;
 
 import java.util.Arrays;
 
+import playn.core.Asserts;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 
@@ -73,6 +74,16 @@ public class TableLayout extends Layout
         protected final Style.HAlign _halign;
         protected final boolean _fixed, _stretch;
         protected final float _minWidth;
+    }
+
+    public static class Colspan extends Layout.Constraint
+    {
+        public final int colspan;
+
+        public Colspan (int colspan) {
+            Asserts.checkArgument(colspan >= 1, "Colspan must be >= 1");
+            this.colspan = colspan;
+        }
     }
 
     /**
@@ -160,18 +171,31 @@ public class TableLayout extends Layout
         float y = top + valign.offset(m.totalHeight(_rowgap), height);
 
         for (Element<?> elem : elems) {
+            int colspan = 1;
+            Layout.Constraint constraint = elem.constraint();
+            if (constraint instanceof Colspan) {
+                colspan = ((Colspan)constraint).colspan;
+            }
+            Asserts.checkState(col + colspan <= columns);
+
+            float colWidth = 0;
+            for (int ii = 0; ii < colspan; ii++) {
+                colWidth += Math.max(0,
+                    m.columnWidths[col + ii] + (_columns[col + ii]._fixed ? 0 : freeExtra));
+            }
+
             Column ccfg = _columns[col];
-            float colWidth = Math.max(0, m.columnWidths[col] + (ccfg._fixed ? 0 : freeExtra));
             float rowHeight = m.rowHeights[row];
             if (colWidth > 0 && elem.isVisible()) {
                 IDimension psize = preferredSize(elem, 0, 0); // will be cached, hints ignored
-                float elemWidth = ccfg._stretch ? colWidth : Math.min(psize.width(), colWidth);
+                float elemWidth =
+                    (colspan > 1 || ccfg._stretch) ? colWidth : Math.min(psize.width(), colWidth);
                 float elemHeight = _vstretch ? rowHeight : Math.min(psize.height(), rowHeight);
                 setBounds(elem, x + ccfg._halign.offset(elemWidth, colWidth),
                           y + _rowVAlign.offset(elemHeight, rowHeight), elemWidth, elemHeight);
             }
             x += (colWidth + _colgap);
-            if (++col == columns) {
+            if ((col += colspan) == columns) {
                 col = 0;
                 x = startX;
                 y += (rowHeight + _rowgap);
