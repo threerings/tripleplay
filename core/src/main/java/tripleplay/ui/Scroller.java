@@ -262,7 +262,7 @@ public class Scroller extends Elements<Scroller>
     public final Element<?> content;
 
     /** Scroll bars. */
-    public final Bar hbar = new Bar(), vbar = new Bar();
+    public final Bar hbar = createBar(), vbar = createBar();
 
     /**
      * Creates a new scroll group containing the given content and with {@link Behavior#BOTH}.
@@ -437,6 +437,14 @@ public class Scroller extends Elements<Scroller>
             firePositionChange();
             setBarAlpha(BAR_TOP_ALPHA);
         }
+    }
+
+    /**
+     * A method for creating our Bar instances. This is called once each for hbar and vbar at object
+     * creation time. Overriding this method will allow subclasses to customize Bar behavior.
+     */
+    protected Bar createBar ()  {
+        return new Bar();
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
