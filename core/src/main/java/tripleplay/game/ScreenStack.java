@@ -16,7 +16,7 @@ import static playn.core.PlayN.pointer;
 import tripleplay.game.trans.FlipTransition;
 import tripleplay.game.trans.PageTurnTransition;
 import tripleplay.game.trans.SlideTransition;
-// import static tripleplay.game.Log.log;
+import static tripleplay.game.Log.log;
 
 /**
  * Manages a stack of screens. The stack supports useful manipulations: pushing a new screen onto
@@ -28,7 +28,7 @@ import tripleplay.game.trans.SlideTransition;
  * log the error, or rethrow it if they would prefer that a screen failure render their entire
  * screen stack unusable. </p>
  */
-public abstract class ScreenStack
+public class ScreenStack
 {
     /** Implements a particular screen transition. */
     public interface Transition {
@@ -415,8 +415,10 @@ public abstract class ScreenStack
         }
     }
 
-    /** Called if any exceptions are thrown by the screen callback functions. */
-    protected abstract void handleError (RuntimeException error);
+    /** Called if any exceptions are thrown by the screen calldown functions. */
+    protected void handleError (RuntimeException error) {
+        log.warning("Screen choked", error);
+    }
 
     /** The currently executing transition, or null. */
     protected Transitor _transitor;
