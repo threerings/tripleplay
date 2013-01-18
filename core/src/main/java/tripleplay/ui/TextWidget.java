@@ -16,6 +16,8 @@ import playn.core.util.Callback;
 import static playn.core.PlayN.graphics;
 
 import react.Slot;
+import react.UnitSlot;
+
 import tripleplay.util.EffectRenderer;
 
 /**
@@ -36,9 +38,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     /**
      * Returns a slot that subclasses should wire up to their text {@code Value}.
      */
-    protected Slot<String> textDidChange () {
-        return new Slot<String> () {
-            @Override public void onEmit (String newText) {
+    protected UnitSlot textDidChange () {
+        return new UnitSlot () {
+            @Override public void onEmit () {
                 clearLayoutData();
                 invalidate();
             }
