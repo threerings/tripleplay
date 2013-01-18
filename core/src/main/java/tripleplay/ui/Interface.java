@@ -141,7 +141,6 @@ public class Interface
         return addRoot(new Root(this, layout, sheet));
     }
 
-
     /**
      * Creates a root element with the specified layout and stylesheet and adds its layer to the
      * specified parent.
