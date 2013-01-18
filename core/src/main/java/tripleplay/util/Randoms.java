@@ -18,9 +18,6 @@ import java.util.RandomAccess;
  */
 public class Randoms
 {
-    /** A default Randoms that is thread-safe and can be safely shared by any caller. */
-    public static final Randoms RAND = with(new Random());
-
     /**
      * A factory to create a new Randoms object.
      */
