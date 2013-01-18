@@ -7,11 +7,14 @@ package tripleplay.ui;
 
 import pythagoras.f.IDimension;
 
+import tripleplay.util.Destroyable;
+
 /**
  * The root of a display hierarchy. An application can have one or more roots, but they should not
  * overlap and will behave as if oblivious to one another's existence.
  */
 public class Root extends Elements<Root>
+    implements Destroyable
 {
     /**
      * Creates a new root with the provided layout and stylesheet.
@@ -82,6 +85,11 @@ public class Root extends Elements<Root>
         setSize(width, height);
         setLocation(x, y);
         return this;
+    }
+
+    /** See {@link Interface#destroyRoot}. */
+    @Override public void destroy () {
+        _iface.destroyRoot(this);
     }
 
     /**

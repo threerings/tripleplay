@@ -18,6 +18,7 @@ import pythagoras.f.IDimension;
  * graphics.
  */
 public class Glyph
+    implements Destroyable
 {
     public Glyph (GroupLayer parent) {
         _parent = parent;
@@ -41,16 +42,17 @@ public class Glyph
      * needed. */
     public void prepare (float width, float height) {
         // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
+        ImageLayer layer = _layer.get();
         if (_image == null || _image.width() < width || _image.height() < height) {
             _image = PlayN.graphics().createImage(width, height);
-            if (_layer != null) _layer.setImage(_image);
+            if (layer != null) layer.setImage(_image);
         } else {
             _image.canvas().clear();
         }
-        if (_layer == null) {
-            _layer = PlayN.graphics().createImageLayer(_image);
-            if (_depth != null) _layer.setDepth(_depth);
-            _parent.add(_layer);
+        if (layer == null) {
+            layer = _layer.set(PlayN.graphics().createImageLayer(_image));
+            if (_depth != null) layer.setDepth(_depth);
+            _parent.add(layer);
         }
         _preparedWidth = width;
         _preparedHeight = height;
@@ -58,7 +60,7 @@ public class Glyph
 
     /** Returns the layer that contains our glyph image. Valid after {@link #prepare}. */
     public ImageLayer layer () {
-        return _layer;
+        return _layer.get();
     }
 
     /** Returns the canvas into which drawing may be done. Valid after {@link #prepare}. */
@@ -67,11 +69,8 @@ public class Glyph
     }
 
     /** Destroys the layer and image, removing them from the containing widget. */
-    public void destroy () {
-        if (_layer != null) {
-            _layer.destroy();
-            _layer = null;
-        }
+    @Override public void destroy () {
+        _layer.clear();
         _image = null;
     }
 
@@ -110,6 +109,6 @@ public class Glyph
     protected final GroupLayer _parent;
     protected final Float _depth;
     protected CanvasImage _image;
-    protected ImageLayer _layer;
+    protected Ref<ImageLayer> _layer = Ref.<ImageLayer>create(null);
     protected float _preparedWidth, _preparedHeight;
 }

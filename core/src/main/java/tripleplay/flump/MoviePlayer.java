@@ -10,6 +10,7 @@ import playn.core.Layer;
 import static playn.core.PlayN.*;
 
 import tripleplay.anim.Animation;
+import tripleplay.util.Destroyable;
 
 /**
  * A convenient controller to play though multiple different movies. Designed for characters and
@@ -17,6 +18,7 @@ import tripleplay.anim.Animation;
  * between them.
  */
 public class MoviePlayer
+    implements Destroyable
 {
     public MoviePlayer (Library lib) {
         this(lib, graphics().createGroupLayer());
@@ -115,7 +117,7 @@ public class MoviePlayer
         return _currentMovie = movie;
     }
 
-    public void destroy () {
+    @Override public void destroy () {
         if (_currentMovie != null) {
             _currentMovie.layer().destroy();
         }

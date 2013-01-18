@@ -17,10 +17,13 @@ import playn.core.ImmediateLayer;
 import playn.core.Surface;
 import static playn.core.PlayN.graphics;
 
+import tripleplay.util.Destroyable;
+
 /**
  * Emits and updates particles according to a particle system configuration.
  */
 public class Emitter
+    implements Destroyable
 {
     /** The layer to which this emitter is attached. */
     public final ImmediateLayer layer;
@@ -52,7 +55,7 @@ public class Emitter
     /**
      * Unregisters this emitter from the particles manager.
      */
-    public void destroy () {
+    @Override public void destroy () {
         layer.destroy();
         _conn.disconnect();
     }

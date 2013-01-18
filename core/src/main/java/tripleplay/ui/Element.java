@@ -21,6 +21,8 @@ import playn.core.GroupLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
 
+import tripleplay.util.Ref;
+
 /**
  * The root of the interface element hierarchy. See {@link Widget} for the root of all interactive
  * elements, and {@link Elements} for the root of all grouping elements.
@@ -309,10 +311,7 @@ public abstract class Element<T extends Element<T>>
      * called for correct operation.</p>
      */
     protected void wasRemoved () {
-        if (_bginst != null) {
-            _bginst.destroy();
-            _bginst = null;
-        }
+        _bginst.clear();
         if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.FALSE);
     }
 
@@ -465,16 +464,14 @@ public abstract class Element<T extends Element<T>>
 
         // if we have a non-matching background, destroy it (note that if we don't want a bg, any
         // existing bg will necessarily be invalid)
-        boolean bgok = (_bginst != null && _bginst.owner() == ldata.bg &&
-                        _bginst.size.equals(_size));
-        if (!bgok && _bginst != null) {
-            _bginst.destroy();
-            _bginst = null;
-        }
+        Background.Instance bginst = _bginst.get();
+        boolean bgok = (bginst != null && bginst.owner() == ldata.bg &&
+                        bginst.size.equals(_size));
+        if (!bgok) _bginst.clear();
         // if we want a background and don't already have one, create it
         if (width > 0 && height > 0 && !bgok) {
-            _bginst = ldata.bg.instantiate(_size);
-            _bginst.addTo(layer, 0, 0, 0);
+            bginst = _bginst.set(ldata.bg.instantiate(_size));
+            bginst.addTo(layer, 0, 0, 0);
         }
 
         // do our actual layout
@@ -688,7 +685,7 @@ public abstract class Element<T extends Element<T>>
     protected Signal<Boolean> _hierarchyChanged;
 
     protected LayoutData _ldata;
-    protected Background.Instance _bginst;
+    protected final Ref<Background.Instance> _bginst = Ref.<Background.Instance>create(null);
 
     protected static enum Flag {
         VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3), WILL_DESTROY(1 << 4),

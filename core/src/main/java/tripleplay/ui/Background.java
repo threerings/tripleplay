@@ -25,6 +25,7 @@ import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.RoundRectBackground;
 import tripleplay.ui.bgs.Scale9Background;
 import tripleplay.ui.bgs.SolidBackground;
+import tripleplay.util.Destroyable;
 
 /**
  * A background is responsible for rendering a border and a fill. It is used in conjunction with
@@ -34,7 +35,7 @@ public abstract class Background
 {
     /** An instantiation of a particular background template. Backgrounds are configured as a style
      * property; elements instantiate them at specific dimensions when they are actually used.*/
-    public abstract class Instance {
+    public abstract class Instance implements Destroyable {
         /** The size at which this instance was prepared. */
         public final IDimension size;
 
@@ -50,7 +51,7 @@ public abstract class Background
         public abstract void addTo (GroupLayer parent, float x, float y, float depthAdjust);
 
         /** Disposes of this background instance when it is no longer valid/needed. */
-        public abstract void destroy ();
+        @Override public abstract void destroy ();
 
         protected Instance (IDimension size) {
             this.size = new Dimension(size);

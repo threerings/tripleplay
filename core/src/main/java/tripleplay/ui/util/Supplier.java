@@ -6,6 +6,7 @@
 package tripleplay.ui.util;
 
 import tripleplay.ui.Element;
+import tripleplay.util.Destroyable;
 
 /**
  * Supplies elements. The means of achieving this depends on the situation. Common cases are
@@ -13,6 +14,7 @@ import tripleplay.ui.Element;
  * attention is paid to ownership and orderly resource destruction.
  */
 public abstract class Supplier
+    implements Destroyable
 {
     /**
      * Creates a supplier that will return a previously created element the first time and null
@@ -45,5 +47,5 @@ public abstract class Supplier
      * Destroys resources associated with the supplier instance. The base class implementation
      * does nothing.
      */
-    public void destroy () {}
+    @Override public void destroy () {}
 }
