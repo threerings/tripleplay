@@ -19,11 +19,11 @@ public class Texture
         implements tripleplay.flump.Symbol
     {
         public final Image.Region region;
-        public final IPoint offset;
+        public final IPoint origin;
 
         protected Symbol (Json.Object json, Image atlas) {
             _name = json.getString("symbol");
-            offset = KeyframeData.getPoint(json, "offset", 0, 0);
+            origin = KeyframeData.getPoint(json, "origin", 0, 0);
 
             Json.TypedArray<Float> rect = json.getArray("rect", Float.class);
             region = atlas.subImage(rect.get(0), rect.get(1), rect.get(2), rect.get(3));
@@ -42,7 +42,7 @@ public class Texture
 
     protected Texture (Symbol symbol) {
         _layer = graphics().createImageLayer(symbol.region);
-        _layer.setOrigin(-symbol.offset.x(), -symbol.offset.y());
+        _layer.setOrigin(symbol.origin.x(), symbol.origin.y());
     }
 
     @Override public ImageLayer layer () {

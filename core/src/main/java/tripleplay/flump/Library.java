@@ -39,8 +39,13 @@ public class Library
             symbols.put(movie.name(), movie);
         }
 
-        Json.TypedArray<Json.Object> atlases = json.getArray("atlases", Json.Object.class);
+        Json.TypedArray<Json.Object> textureGroups =
+            json.getArray("textureGroups", Json.Object.class);
+        // TODO(bruno): Support multiple scaleFactors?
+        Json.TypedArray<Json.Object> atlases =
+            textureGroups.get(0).getArray("atlases", Json.Object.class);
         final Value<Integer> remainingAtlases = Value.create(atlases.length());
+
         remainingAtlases.connectNotify(new Value.Listener<Integer>() {
             public void onChange (Integer remaining, Integer _) {
                 if (remaining > 0) return;

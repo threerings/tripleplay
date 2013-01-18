@@ -217,17 +217,14 @@ public class Movie
 
             float sinX = FloatMath.sin(skewX), cosX = FloatMath.cos(skewX);
             float sinY = FloatMath.sin(skewY), cosY = FloatMath.cos(skewY);
-            float offsetX = -kf.pivot.x(), offsetY = -kf.pivot.y();
 
-            // Create a transformation matrix that translates to locX/Y, skews, scales, then
-            // translates by offsetX/Y (in that order)
+            // Create a transformation matrix that translates to locX/Y, skews, then scales
             float m00 = cosY * scaleX;
             float m01 = sinY * scaleX;
             float m10 = -sinX * scaleY;
             float m11 = cosX * scaleY;
-            float tx = locX + m00*offsetX + m10*offsetY;
-            float ty = locY + m11*offsetY + m01*offsetX;
-            content.transform().setTransform(m00, m01, m10, m11, tx, ty);
+            content.transform().setTransform(m00, m01, m10, m11, locX, locY);
+            content.setOrigin(kf.pivot.x(), kf.pivot.y());
 
             content.setAlpha(alpha);
 
