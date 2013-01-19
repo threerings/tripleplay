@@ -62,7 +62,6 @@ import tripleplay.util.Layers;
  * TODO: some way to handle keyboard events (complicated by lack of a focus element)
  * TODO: more features when Mouse.hasMouse: show some paging buttons when bars are moused over
  * TODO: optional gutter for scroll bars?
- * TODO: method scrollTo to scroll such that an element is visible
  * TODO: more support for interacting with child elements
  */
 public class Scroller extends Elements<Scroller>
