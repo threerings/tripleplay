@@ -76,8 +76,9 @@ public class TableLayout extends Layout
         protected final float _minWidth;
     }
 
-    public static class Colspan extends Layout.Constraint
-    {
+    /** Defines a colspan constraint. */
+    public static class Colspan extends Layout.Constraint {
+        /** The number of columns spanned by this element. */
         public final int colspan;
 
         public Colspan (int colspan) {
@@ -91,6 +92,14 @@ public class TableLayout extends Layout
      */
     public static Column[] columns (int count) {
         return COL.copy(count);
+    }
+
+    /**
+     * Configures a colspan constraint on {@code elem}.
+     */
+    public static <T extends Element<?>> T colspan (T elem, int colspan) {
+        elem.setConstraint(new Colspan(colspan));
+        return elem;
     }
 
     /**
@@ -171,11 +180,7 @@ public class TableLayout extends Layout
         float y = top + valign.offset(m.totalHeight(_rowgap), height);
 
         for (Element<?> elem : elems) {
-            int colspan = 1;
-            Layout.Constraint constraint = elem.constraint();
-            if (constraint instanceof Colspan) {
-                colspan = ((Colspan)constraint).colspan;
-            }
+            int colspan = colspan(elem);
             Asserts.checkState(col + colspan <= columns);
 
             float colWidth = 0;
@@ -188,8 +193,8 @@ public class TableLayout extends Layout
             float rowHeight = m.rowHeights[row];
             if (colWidth > 0 && elem.isVisible()) {
                 IDimension psize = preferredSize(elem, 0, 0); // will be cached, hints ignored
-                float elemWidth =
-                    (colspan > 1 || ccfg._stretch) ? colWidth : Math.min(psize.width(), colWidth);
+                float elemWidth = (colspan > 1 || ccfg._stretch) ? colWidth :
+                    Math.min(psize.width(), colWidth);
                 float elemHeight = _vstretch ? rowHeight : Math.min(psize.height(), rowHeight);
                 setBounds(elem, x + ccfg._halign.offset(elemWidth, colWidth),
                           y + _rowVAlign.offset(elemHeight, rowHeight), elemWidth, elemHeight);
@@ -214,8 +219,10 @@ public class TableLayout extends Layout
 
     protected Metrics computeMetrics (Elements<?> elems, float hintX, float hintY) {
         int columns = _columns.length;
-        int rows = elems.childCount() / columns;
-        if (elems.childCount() % columns != 0) rows++;
+        int cells = 0;
+        for (Element<?> elem : elems) cells += colspan(elem);
+        int rows = cells / columns;
+        if (cells % columns != 0) rows++;
 
         Metrics metrics = new Metrics();
         metrics.columnWidths = new float[columns];
@@ -233,7 +240,7 @@ public class TableLayout extends Layout
                 metrics.rowHeights[row] = Math.max(metrics.rowHeights[row], psize.height());
                 metrics.columnWidths[col] = Math.max(metrics.columnWidths[col], psize.width());
             }
-            ii++;
+            ii += colspan(elem);
         }
 
         // determine the total width needed by the fixed columns, then compute the hint given to
@@ -251,7 +258,7 @@ public class TableLayout extends Layout
                 metrics.rowHeights[row] = Math.max(metrics.rowHeights[row], psize.height());
                 metrics.columnWidths[col] = Math.max(metrics.columnWidths[col], psize.width());
             }
-            ii++;
+            ii += colspan(elem);
         }
 
         return metrics;
@@ -276,7 +283,12 @@ public class TableLayout extends Layout
         }
     }
 
-    protected static final float sum (float[] values) {
+    protected static int colspan (Element<?> elem) {
+        Layout.Constraint constraint = elem.constraint();
+        return (constraint instanceof Colspan) ? ((Colspan)constraint).colspan : 1;
+    }
+
+    protected static float sum (float[] values) {
         float total = 0;
         for (float value : values) {
             total += value;
