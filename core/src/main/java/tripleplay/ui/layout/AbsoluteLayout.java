@@ -94,14 +94,16 @@ public class AbsoluteLayout extends Layout
     /**
      * Positions {@code elem} relative to the given position using the given alignments.
      */
-    public static <T extends Element<?>> T at (T elem, float x, float y, HAlign halign, VAlign valign) {
+    public static <T extends Element<?>> T at (T elem, float x, float y,
+                                               HAlign halign, VAlign valign) {
         return at(elem, new Point(x, y), ZERO, halign, valign);
     }
 
     /**
      * Positions {@code elem} relative to the given position using the given alignments.
      */
-    public static <T extends Element<?>> T at (T elem, IPoint position, HAlign halign, VAlign valign) {
+    public static <T extends Element<?>> T at (T elem, IPoint position,
+                                               HAlign halign, VAlign valign) {
         return at(elem, position, ZERO, halign, valign);
     }
 
