@@ -38,10 +38,7 @@ public class IOSNativeTextField implements NativeTextField
             }
             @Override public boolean ShouldChangeCharacters (UITextField uiTextField,
                 NSRange nsRange, String s) {
-                if (_validator == null) {
-                    return true;
-                }
-
+                if (_validator == null) return true;
                 String newString =  new NSString(uiTextField.get_Text())
                     .Replace(nsRange, new NSString(s)).ToString();
                 return _validator.isValid(newString);
