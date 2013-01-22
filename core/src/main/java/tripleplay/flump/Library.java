@@ -93,9 +93,8 @@ public class Library
         Asserts.checkNotNull(callback);
         assets().getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
             public void onSuccess (String text) {
-                Library lib = null;
                 try {
-                    lib = new Library(json().parse(text), baseDir, callback);
+                    new Library(json().parse(text), baseDir, callback);
                 } catch (Exception err) {
                     callback.onFailure(err);
                 }
