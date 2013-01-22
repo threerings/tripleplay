@@ -10,12 +10,13 @@ import java.util.List;
 
 import react.Value;
 
-import playn.core.Font;
 import playn.core.Canvas;
 import playn.core.CanvasImage;
+import playn.core.Font;
 import playn.core.ImageLayer;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
+import playn.core.gl.GLContext;
 import static playn.core.PlayN.graphics;
 
 /**
@@ -25,6 +26,74 @@ import static playn.core.PlayN.graphics;
  */
 public class Hud
 {
+    /** A stock HUD that provides a bunch of standard PlayN performance info and handles
+     * once-per-second updating. */
+    public static class Stock extends Hud {
+        public Stock () {
+            add("Shader info:", true);
+            add(_quadShader);
+            add(_trisShader);
+            add("Per second:", true);
+            add("Frames:", _frames);
+            add("Shader creates:", _shaderCreates);
+            add("FB creates:", _fbCreates);
+            add("Tex creates:", _texCreates);
+            add("Per frame:", true);
+            add("Shader binds:", _shaderBinds);
+            add("FB binds:", _fbBinds);
+            add("Tex binds:", _texBinds);
+            add("Quads drawn:", _rQuads);
+            add("Tris drawn:", _rTris);
+            add("Shader flushes:", _shaderFlushes);
+        }
+
+        /** Call this from your {@link Game#update} method (or similar). */
+        public void update (float delta) {
+            long now = System.currentTimeMillis();
+            if (now > _nextSec) {
+                willUpdate();
+                update();
+                _nextSec = now + 1000;
+            }
+        }
+
+        /** Called when the HUD is about to update its display. Values added to the HUD should be
+         * updated by this call if they've not been already. Must call {@code super.willUpdate()}. */
+        protected void willUpdate () {
+            GLContext.Stats stats = graphics().ctx().stats();
+            int frames = Math.max(stats.frames, 1);
+            _frames.update(frames);
+            _shaderCreates.update(stats.shaderCreates);
+            _fbCreates.update(stats.frameBufferCreates);
+            _texCreates.update(stats.texCreates);
+            _shaderBinds.update(stats.shaderBinds/frames);
+            _fbBinds.update(stats.frameBufferBinds/frames);
+            _texBinds.update(stats.texBinds/frames);
+            _rQuads.update(stats.quadsRendered/frames);
+            _rTris.update(stats.trisRendered/frames);
+            _shaderFlushes.update(stats.shaderFlushes/frames);
+            stats.reset();
+            _quadShader.update("Quad: " + graphics().ctx().quadShaderInfo());
+            _trisShader.update("Tris: " + graphics().ctx().trisShaderInfo());
+        }
+
+        protected long _nextSec;
+
+        protected final Value<Integer> _frames = Value.create(0);
+        protected final Value<Integer> _shaderCreates = Value.create(0);
+        protected final Value<Integer> _fbCreates = Value.create(0);
+        protected final Value<Integer> _texCreates = Value.create(0);
+        protected final Value<Integer> _shaderBinds = Value.create(0);
+        protected final Value<Integer> _fbBinds = Value.create(0);
+        protected final Value<Integer> _texBinds = Value.create(0);
+        protected final Value<Integer> _rQuads = Value.create(0);
+        protected final Value<Integer> _rTris = Value.create(0);
+        protected final Value<Integer> _shaderFlushes = Value.create(0);
+
+        protected final Value<String> _quadShader = Value.create("");
+        protected final Value<String> _trisShader = Value.create("");
+    }
+
     /** The image layer that contains this HUD. Add to the scene graph where desired. */
     public final ImageLayer layer;
 
