@@ -78,6 +78,9 @@ public class Field extends TextWidget<Field>
 
         if (TPPlatform.instance().hasNativeTextFields()) {
             _nativeField = TPPlatform.instance().createNativeTextField();
+            _nativeField.setValidator(new NativeTextField.Validator() {
+                @Override public boolean isValid (String text) { return textIsValid(text); }
+            });
             text = _nativeField.text();
             _finishedEditing = _nativeField.finishedEditing();
             _finishedEditing.connect(new Slot<Boolean>() {
@@ -113,6 +116,17 @@ public class Field extends TextWidget<Field>
     public Field setPopupLabel (String label) {
         _popupLabel = label;
         return this;
+    }
+
+    /**
+     * Used with native fields. Returning false form this method will cancel a text edit from the
+     * user. The default implementation supplied here honors the MAXIMUM_INPUT_LENGTH Field style.
+     */
+    protected boolean textIsValid (String text) {
+        tripleplay.ui.Log.log.info("textIsValid? [" + text + "]");
+        int maxLength = resolveStyle(MAXIMUM_INPUT_LENGTH);
+        int textLength = text == null ? 0 : text.length();
+        return maxLength < 1 || textLength <= maxLength;
     }
 
     @Override protected Class<?> getStyleClass () {
@@ -161,6 +175,9 @@ public class Field extends TextWidget<Field>
             @Override public void layout (float left, float top, float width, float height) {
                 super.layout(left, top, width, height);
                 if (fulltimeNativeField()) updateMode(true);
+
+                // make sure our cached value is up to date
+                _maxFieldLength = resolveStyle(MAXIMUM_INPUT_LENGTH);
             }
         };
     }
@@ -185,7 +202,6 @@ public class Field extends TextWidget<Field>
                 .setAutocapitalization(resolveStyle(AUTOCAPITALIZATION))
                 .setAutocorrection(resolveStyle(AUTOCORRECTION))
                 .setSecureTextEntry(resolveStyle(SECURE_TEXT_ENTRY))
-                .setMaxInputLength(resolveStyle(MAXIMUM_INPUT_LENGTH))
                 .setBounds(getNativeFieldBounds());
             _nativeField.add();
             setGlyphLayerAlpha(0);
@@ -204,4 +220,7 @@ public class Field extends TextWidget<Field>
 
     // used when popping up a text entry interface on mobile platforms
     protected String _popupLabel;
+
+    // Set via the MAXIMUM_INPUT_LENGTH style during widget validation
+    protected int _maxFieldLength = 0;
 }

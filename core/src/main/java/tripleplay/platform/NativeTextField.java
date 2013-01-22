@@ -19,12 +19,21 @@ import react.Value;
  */
 public interface NativeTextField
 {
+    public interface Validator {
+        /** Return false if the text is not valid for any reason. */
+        boolean isValid (String text);
+    }
+
     /** The current value of the text field. */
     Value<String> text ();
 
     /** A signal that is dispatched when the native text field has lost focus. Value is false if
      * editing was canceled */
     Signal<Boolean> finishedEditing();
+
+    /** Sets the validator for use with this native field.
+     * @return {@code this} for call chaining. */
+    NativeTextField setValidator (Validator validator);
 
     /** Configures the type of text expected to be entered in this field.
      * @return {@code this} for call chaining. */
@@ -49,12 +58,6 @@ public interface NativeTextField
     /** Configures the secure entry behavior of the field.
      * @return {@code this} for call chaining. */
     NativeTextField setSecureTextEntry (boolean useSecureEntry);
-
-    /** Configures the maximum number of characters that can be entered into this text field.
-     * Any value less than 1 indicates that it is unlimited (or limited by the platform). The
-     * default is unlimited.
-     * @return {@code this} for call chaining. */
-    NativeTextField setMaxInputLength (int maxLength);
 
     /** Adds the field to the view. */
     void add ();

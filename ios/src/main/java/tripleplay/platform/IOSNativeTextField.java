@@ -38,10 +38,13 @@ public class IOSNativeTextField implements NativeTextField
             }
             @Override public boolean ShouldChangeCharacters (UITextField uiTextField,
                 NSRange nsRange, String s) {
-                if (_maxInputLength < 1) return true;
-                int newLength = new NSString(uiTextField.get_Text())
-                    .Replace(nsRange, new NSString(s)).get_Length();
-                return newLength <= _maxInputLength;
+                if (_validator == null) {
+                    return true;
+                }
+
+                String newString =  new NSString(uiTextField.get_Text())
+                    .Replace(nsRange, new NSString(s)).ToString();
+                return _validator.isValid(newString);
             }
         });
 
@@ -59,6 +62,11 @@ public class IOSNativeTextField implements NativeTextField
 
     @Override public Signal<Boolean> finishedEditing () {
         return _finishedEditing;
+    }
+
+    @Override public NativeTextField setValidator (Validator validator) {
+        _validator = validator;
+        return this;
     }
 
     @Override public IOSNativeTextField setTextType (Keyboard.TextType type) {
@@ -108,11 +116,6 @@ public class IOSNativeTextField implements NativeTextField
         return this;
     }
 
-    @Override public IOSNativeTextField setMaxInputLength (int maxLength) {
-        _maxInputLength = maxLength;
-        return this;
-    }
-
     @Override public void add () {
         if (!_handler.isAdded(_field)) _handler.activate(this);
     }
@@ -156,5 +159,5 @@ public class IOSNativeTextField implements NativeTextField
 
     protected IRectangle _requestedBounds;
     protected boolean _pressedReturn;
-    protected int _maxInputLength;
+    protected Validator _validator;
 }
