@@ -123,8 +123,7 @@ public class Field extends TextWidget<Field>
      * user. The default implementation supplied here honors the MAXIMUM_INPUT_LENGTH Field style.
      */
     protected boolean textIsValid (String text) {
-        tripleplay.ui.Log.log.info("textIsValid? [" + text + "]");
-        int maxLength = resolveStyle(MAXIMUM_INPUT_LENGTH);
+        int maxLength = _maxFieldLength;
         int textLength = text == null ? 0 : text.length();
         return maxLength < 1 || textLength <= maxLength;
     }
