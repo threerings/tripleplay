@@ -253,6 +253,9 @@ public class Scroller extends Elements<Scroller>
         Scroller scroller = findScrollParent(elem);
         if (scroller == null) return false;
 
+        // the element in question may have been added and then immediately scrolled to, which
+        // means it hasn't been layed out yet and does not have its proper position; in that case
+        // defer this process a tick to allow it to be laid out
         if (!scroller.isSet(Flag.VALID)) {
             PlayN.invokeLater(new Runnable() {
                 @Override public void run () {
