@@ -249,9 +249,19 @@ public class Scroller extends Elements<Scroller>
      * Attempts to scroll the given element into view.
      * @return true if successful
      */
-    public static boolean makeVisible (Element<?> elem) {
+    public static boolean makeVisible (final Element<?> elem) {
         Scroller scroller = findScrollParent(elem);
         if (scroller == null) return false;
+
+        if (!scroller.isSet(Flag.VALID)) {
+            PlayN.invokeLater(new Runnable() {
+                @Override public void run () {
+                    makeVisible(elem);
+                }
+            });
+            return true;
+        }
+
         Point offset = Layers.transform(new Point(0, 0), elem.layer, scroller.content.layer);
         scroller.scroll(offset.x, offset.y);
         return true;
