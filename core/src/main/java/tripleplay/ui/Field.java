@@ -181,15 +181,7 @@ public class Field extends TextWidget<Field>
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new TextLayoutData(hintX, hintY) {
-            @Override public void layout (float left, float top, float width, float height) {
-                super.layout(left, top, width, height);
-                if (fulltimeNativeField()) updateMode(true);
-
-                // make sure our cached value is up to date
-                _maxFieldLength = resolveStyle(MAXIMUM_INPUT_LENGTH);
-            }
-        };
+        return new FieldLayoutData(hintX, hintY);
     }
 
     protected boolean fulltimeNativeField () {
@@ -223,6 +215,21 @@ public class Field extends TextWidget<Field>
 
     protected void setGlyphLayerAlpha (float alpha) {
         if (_tglyph.layer() != null) _tglyph.layer().setAlpha(alpha);
+    }
+
+    protected class FieldLayoutData extends TextLayoutData
+    {
+        public FieldLayoutData (float hintX, float hintY) {
+            super(hintX, hintY);
+        }
+
+        @Override  public void layout (float left, float top, float width, float height) {
+            super.layout(left, top, width, height);
+            if (fulltimeNativeField()) updateMode(true);
+
+            // make sure our cached value is up to date
+            _maxFieldLength = resolveStyle(MAXIMUM_INPUT_LENGTH);
+        }
     }
 
     protected final NativeTextField _nativeField;
