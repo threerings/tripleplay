@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.Connection;
 import playn.core.Image;
 import playn.core.Pointer;
 import pythagoras.f.Dimension;
@@ -75,10 +76,28 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
         return this;
     }
 
+    @Override protected void wasAdded () {
+        super.wasAdded();
+        Menu menu = menu();
+        if (menu != null) _relay = menu.connectItem(this);
+    }
+
+    @Override protected void wasRemoved () {
+        Menu menu = menu();
+        if (menu != null) menu.disconnectItem(this);
+        if (_relay != null) _relay.disconnect();
+        _relay = null;
+        super.wasRemoved();
+    }
+
     /**
-     * Gets the signal that dispatches when a menu item is triggered.
+     * Gets the signal that dispatches when a menu item is triggered. This is created lazily since
+     * most callers will just connect to {@Menu#itemTriggered()}. 
      */
-    public SignalView<MenuItem> triggered () { return _triggered; }
+    public SignalView<MenuItem> triggered () {
+        if (_triggered == null) _triggered = Signal.create();
+        return _triggered;
+    }
 
     @Override public SignalView<MenuItem> clicked () { return _clicked; }
     @Override protected Class<?> getStyleClass () { return MenuItem.class; }
@@ -88,7 +107,11 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
     @Override protected void onPointerDrag (Pointer.Event event, float x, float y) {}
     @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {}
 
-    protected void trigger () { _triggered.emit(this); }
+    protected void trigger () {
+        if (_triggered != null) _triggered.emit(this);
+        Menu menu = menu();
+        if (menu != null) menu.emitTriggered(this);
+    }
 
     @Override protected String text () {
         switch (_showText) {
@@ -106,10 +129,21 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
         return new SizableLayoutData(super.createLayoutData(hintX, hintY), _preferredSize);
     }
 
-    /** Dispatched when the item is triggered. */
-    protected final Signal<MenuItem> _triggered = Signal.create();
+    protected Menu menu () {
+        for (Elements<?> parent = parent(); parent != null; parent = parent.parent()) {
+            if (parent instanceof Menu) return (Menu)parent;
+        }
+        return null;
+    }
+
+    /** Dispatched when the item is clicked. */
+    protected Signal<MenuItem> _triggered;
+
     /** Dispatched when the item is clicked. */
     protected final Signal<MenuItem> _clicked = Signal.create();
+
+    protected Connection _relay;
+
     /** Size override. */
     protected final Dimension _preferredSize = new Dimension(0, 0);
     /** Text display mode. */

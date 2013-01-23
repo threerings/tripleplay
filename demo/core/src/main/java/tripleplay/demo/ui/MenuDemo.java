@@ -95,12 +95,31 @@ public class MenuDemo extends DemoScreen
             }
         };
 
+        TrackingLabel depth = new TrackingLabel(menuHost, "Floors \u25BC") {
+            @Override public Menu createMenu () {
+                Menu menu = new Menu(AxisLayout.horizontal().offStretch(), Style.VALIGN.top);
+                Group g1 = new Group(AxisLayout.vertical(), Style.VALIGN.top);
+                g1.add(new Group(AxisLayout.horizontal()).add(
+                    new MenuItem("1A"), new MenuItem("1B"), new MenuItem("1C")));
+                g1.add(new Group(AxisLayout.horizontal()).add(
+                    new MenuItem("2A"), new MenuItem("2B")));
+                g1.add(new Group(AxisLayout.horizontal()).add(
+                    new MenuItem("3A"), new MenuItem("3B"), new MenuItem("3C")));
+                Group g2 = new Group(AxisLayout.vertical(), Style.HALIGN.right);
+                g2.add(new MenuItem("Roof", tile(0)), new MenuItem("Basement", tile(1)));
+                return menu.add(g1, g2);
+            }
+        };
+
         return new Group(AxisLayout.vertical().offStretch()).add(
             new Label("Button popups"),
             new Group(AxisLayout.horizontal()).add(direction, tree, type),
             new Shim(1, 20),
             new Label("Continuous Tracking"),
-            new Group(AxisLayout.horizontal()).add(subject, verb, object));
+            new Group(AxisLayout.horizontal()).add(subject, verb, object),
+            new Shim(1, 20),
+            new Label("Intermedate groups"),
+            new Group(AxisLayout.horizontal()).add(depth));
     }
 
     protected Slot<MenuItem> updater (final Button button) {

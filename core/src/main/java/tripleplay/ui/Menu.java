@@ -5,19 +5,18 @@
 
 package tripleplay.ui;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import playn.core.Connection;
 import playn.core.Events;
 import playn.core.Layer;
 import playn.core.Pointer;
 import playn.core.Pointer.Event;
 import pythagoras.f.Point;
-import react.Connection;
 import react.Signal;
 import react.SignalView;
 import react.Slot;
-import react.Value;
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.ui.MenuItem.ShowText;
@@ -77,7 +76,6 @@ public class Menu extends Elements<Menu>
      */
     public Menu (Layout layout) {
         super(layout);
-        _selected = new Selector(this, null).selected;
 
         // use a hit tester "eater" to pretend our layer covers all its siblings
         layer.setHitTester(new Layer.HitTester() {
@@ -197,16 +195,6 @@ public class Menu extends Elements<Menu>
         }
     }
 
-    @Override protected void didAdd (Element<?> child) {
-        super.didAdd(child);
-        if (child instanceof MenuItem) connectMenuItem((MenuItem)child);
-    }
-
-    @Override protected void didRemove (Element<?> child, boolean destroy) {
-        if (child instanceof MenuItem) disconnectMenuItem((MenuItem)child);
-        super.didRemove(child, destroy);
-    }
-
     /** Creates an animation to move the menu's layer (and its children) into the open state.
      * By default, simply resolves the {@link #OPENER} style and calls {@link AnimFn#go}.
      * Subclasses can hook in here if needed. */
@@ -234,7 +222,7 @@ public class Menu extends Elements<Menu>
     /** Called when the animation to close the menu is complete or fast forwarded. */
     protected void onClosed () {
         _deactivated.emit(this);
-        _selected.update(null);
+        _selector.selected.update(null);
         clearAnim();
     }
 
@@ -256,28 +244,15 @@ public class Menu extends Elements<Menu>
         _complete = null;
     }
 
-    /** Connects to the menu item's signal. This gets called for any child that is added and is
-     * an instance of {@code MenuItem}. */
-    protected void connectMenuItem (MenuItem item) {
-        ItemConn iconn = new ItemConn();
-        iconn.item = item;
-        iconn.trigger = item.triggered().connect(_triggered);
-        iconn.relay = item.layer.addListener(_itemListener);
-        _itemConns.add(iconn);
+    /** Connects up the menu item. This gets called internally MenuItem. */
+    protected Connection connectItem (MenuItem item) {
+        _items.add(item);
+        return item.layer.addListener(_itemListener);
     }
 
-    /** Disconnects from the menu item's signal. This gets called for any child that is removed
-     * and is an instance of {@code MenuItem}. */
-    protected void disconnectMenuItem (MenuItem item) {
-        for (int ii = 0, nn = _itemConns.size(); ii < nn; ii++) {
-            ItemConn iconn = _itemConns.get(ii);
-            if (iconn.item == item) {
-                iconn.trigger.disconnect();
-                iconn.relay.disconnect();
-                _itemConns.remove(ii);
-                return;
-            }
-        }
+    /** Disconnects the menu item. This gets called internally by MenuItem. */
+    protected void disconnectItem (MenuItem item) {
+        _items.remove(item);
     }
 
     /** Called by the host when the pointer is dragged. */
@@ -287,7 +262,7 @@ public class Menu extends Elements<Menu>
             return;
         }
 
-        _selected.update(getHover(e));
+        _selector.selected.update(getHover(e));
     }
 
     /** Called by the host when the pointer is lifted. */
@@ -298,8 +273,8 @@ public class Menu extends Elements<Menu>
         }
 
         MenuItem hover = getHover(e);
-        Element<?> selected = _selected.get();
-        _selected.update(hover);
+        Element<?> selected = _selector.selected.get();
+        _selector.selected.update(hover);
         if (hover == null) return; 
 
         // trigger if this is the 2nd click -or- we always show text
@@ -311,9 +286,9 @@ public class Menu extends Elements<Menu>
         // manual hit detection
         Layer hit = layer.hitTest(Layer.Util.screenToLayer(layer, e.x(), e.y()));
 
-        for (Element<?> child : this) {
-            if (child.layer == hit && child instanceof MenuItem) {
-                return (MenuItem)child;
+        for (MenuItem item : _items) {
+            if (item.layer == hit) {
+                return item;
             }
         }
 
@@ -325,11 +300,8 @@ public class Menu extends Elements<Menu>
         _animator = animator;
     }
 
-    /** Holds info about our dangling bits on items. */
-    protected static class ItemConn {
-        public MenuItem item;
-        public Connection trigger;
-        public playn.core.Connection relay;
+    protected void emitTriggered (MenuItem item) {
+        _triggered.onEmit(item);
     }
 
     /** Slot to attach to item triggering. */
@@ -366,9 +338,9 @@ public class Menu extends Elements<Menu>
     protected final Signal<MenuItem> _itemTriggered = Signal.create();
 
     /** Tracks the currently selected menu item (prior to triggering, an item is selected). */
-    protected final Value<Element<?>> _selected;
+    protected final Selector _selector = new Selector();
 
-    protected final List<ItemConn> _itemConns = new ArrayList<ItemConn>();
+    protected final Set<MenuItem> _items = new HashSet<MenuItem>();
 
     /** Animator that runs the menu opening and closing states, usually from Interface. */
     protected Animator _animator;
