@@ -46,7 +46,12 @@ public class IOSTextFieldHandler
                     IOSNativeTextField field = _activeFields.get(nf.get_Object());
                     if (field != null) {
                         String value = field._field.get_Text();
-                        field.text().update(field._transformer == null ? value :
+                        // updateForce is used because the transformer may return the same value
+                        // text() already has (but is different from what's in the native field). In
+                        // that case, we need an update to go through and notify the
+                        // IOSNativeTextField of the "change" so that the underlying native field
+                        // gets the update.
+                        field.text().updateForce(field._transformer == null ? value :
                             field._transformer.transform(value));
                     }
                 }}));
