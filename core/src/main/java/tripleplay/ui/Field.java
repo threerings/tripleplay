@@ -78,12 +78,9 @@ public class Field extends TextWidget<Field>
 
         if (TPPlatform.instance().hasNativeTextFields()) {
             _nativeField = TPPlatform.instance().createNativeTextField();
-            _nativeField.setValidator(new NativeTextField.Validator() {
-                @Override public boolean isValid (String text) { return textIsValid(text); }
-            });
-            _nativeField.setTransformer(new NativeTextField.Transformer() {
-                @Override public String transform (String text) { return transformText(text); }
-            });
+            // set our default validator and transformer
+            setValidator(null);
+            setTransformer(null);
             text = _nativeField.text();
             _finishedEditing = _nativeField.finishedEditing();
             _finishedEditing.connect(new Slot<Boolean>() {
@@ -118,6 +115,35 @@ public class Field extends TextWidget<Field>
      */
     public Field setPopupLabel (String label) {
         _popupLabel = label;
+        return this;
+    }
+
+    /**
+     * Set the text field validator for use with this field. The default is to go through
+     * {@link #textIsValid(String)}. Pass in null to set/restore the default validator.
+     *
+     * Note that setting a custom validator will bypass checking of the
+     * {@link #MAXIMUM_INPUT_LENGTH} style.
+     *
+     * @return this for call chaining.
+     */
+    public Field setValidator (NativeTextField.Validator validator)
+    {
+        if (_nativeField != null)
+            _nativeField.setValidator(validator == null ? _defaultValidator : validator);
+        return this;
+    }
+
+    /**
+     * Set the text field transformer for use with this field. The default is to go through
+     * {@link #transformText(String)}. Pass in null to set/restore the default transformer.
+     *
+     * @return this for call chaining.
+     */
+    public Field setTransformer (NativeTextField.Transformer transformer)
+    {
+        if (_nativeField != null)
+            _nativeField.setTransformer(transformer == null ? _defaultTransformer : transformer);
         return this;
     }
 
@@ -233,6 +259,14 @@ public class Field extends TextWidget<Field>
     }
 
     protected final NativeTextField _nativeField;
+    protected final NativeTextField.Transformer _defaultTransformer =
+        new NativeTextField.Transformer() {
+            @Override public String transform (String text) { return transformText(text); }
+        };
+    protected final NativeTextField.Validator _defaultValidator =
+        new NativeTextField.Validator() {
+            @Override public boolean isValid (String text) { return textIsValid(text); }
+        };
     protected final Signal<Boolean> _finishedEditing;
 
     // used when popping up a text entry interface on mobile platforms
