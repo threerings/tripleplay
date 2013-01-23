@@ -24,6 +24,11 @@ public interface NativeTextField
         boolean isValid (String text);
     }
 
+    public interface Transformer {
+        /** Transform the specified text in some way, or simply return the text untransformed. */
+        public String transform (String text);
+    }
+
     /** The current value of the text field. */
     Value<String> text ();
 
@@ -34,6 +39,10 @@ public interface NativeTextField
     /** Sets the validator for use with this native field.
      * @return {@code this} for call chaining. */
     NativeTextField setValidator (Validator validator);
+
+    /** Sets the transformer for use with this native field.
+     * @return {@code this} for call chaining. */
+    NativeTextField setTransformer (Transformer transformer);
 
     /** Configures the type of text expected to be entered in this field.
      * @return {@code this} for call chaining. */

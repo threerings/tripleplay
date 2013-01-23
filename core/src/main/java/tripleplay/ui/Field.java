@@ -81,6 +81,9 @@ public class Field extends TextWidget<Field>
             _nativeField.setValidator(new NativeTextField.Validator() {
                 @Override public boolean isValid (String text) { return textIsValid(text); }
             });
+            _nativeField.setTransformer(new NativeTextField.Transformer() {
+                @Override public String transform (String text) { return transformText(text); }
+            });
             text = _nativeField.text();
             _finishedEditing = _nativeField.finishedEditing();
             _finishedEditing.connect(new Slot<Boolean>() {
@@ -126,6 +129,14 @@ public class Field extends TextWidget<Field>
         int maxLength = _maxFieldLength;
         int textLength = text == null ? 0 : text.length();
         return maxLength < 1 || textLength <= maxLength;
+    }
+
+    /**
+     * Called when the native field's value is changed. Override and return a modified value to
+     * perform text transformation while the user is editing the field.
+     */
+    protected String transformText (String text) {
+        return text;
     }
 
     @Override protected Class<?> getStyleClass () {

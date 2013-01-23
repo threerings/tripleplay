@@ -44,7 +44,11 @@ public class IOSTextFieldHandler
                     // we get notifications about all text fields, whether they're under our
                     // control or not
                     IOSNativeTextField field = _activeFields.get(nf.get_Object());
-                    if (field != null) field.text().update(field._field.get_Text());
+                    if (field != null) {
+                        String value = field._field.get_Text();
+                        field.text().update(field._transformer == null ? value :
+                            field._transformer.transform(value));
+                    }
                 }}));
 
         // fire the finishedEditing signal when editing is ended

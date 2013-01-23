@@ -66,6 +66,11 @@ public class IOSNativeTextField implements NativeTextField
         return this;
     }
 
+    @Override public NativeTextField setTransformer (Transformer transformer) {
+        _transformer = transformer;
+        return this;
+    }
+
     @Override public IOSNativeTextField setTextType (Keyboard.TextType type) {
         switch (type) {
         case NUMBER:
@@ -157,4 +162,5 @@ public class IOSNativeTextField implements NativeTextField
     protected IRectangle _requestedBounds;
     protected boolean _pressedReturn;
     protected Validator _validator;
+    protected Transformer _transformer;
 }
