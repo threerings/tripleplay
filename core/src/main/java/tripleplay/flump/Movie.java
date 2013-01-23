@@ -187,7 +187,7 @@ public class Movie
             float skewY = kf.skew.y();
             float alpha = kf.alpha;
 
-            if (keyframeIdx < finalFrame) {
+            if (kf.tweened && keyframeIdx < finalFrame) {
                 // Interpolate with the next keyframe
                 float interp = (frame-kf.index) / kf.duration;
                 float ease = kf.ease;

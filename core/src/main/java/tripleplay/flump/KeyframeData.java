@@ -23,6 +23,7 @@ public class KeyframeData
 
     public final boolean visible;
     public final float alpha;
+    public final boolean tweened;
     public final float ease;
 
     protected KeyframeData (Json.Object json, KeyframeData prevKf) {
@@ -36,6 +37,7 @@ public class KeyframeData
         pivot = getPoint(json, "pivot", 0, 0);
         alpha = json.getNumber("alpha", 1);
         visible = json.getBoolean("visible", true);
+        tweened = json.getBoolean("tweened", true);
         ease = json.getNumber("ease", 0);
 
         _symbolName = json.getString("ref");
