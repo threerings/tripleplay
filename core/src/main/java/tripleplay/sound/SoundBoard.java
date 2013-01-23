@@ -195,7 +195,7 @@ public class SoundBoard
             if (isPlaying()) {
                 float effectiveVolume = volume * _volume;
                 if (effectiveVolume > 0) sound.setVolume(effectiveVolume);
-                else sound.stop();
+                else stop();
             }
         }
 
