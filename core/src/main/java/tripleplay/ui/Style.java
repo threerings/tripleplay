@@ -190,6 +190,10 @@ public abstract class Style<V>
     /** The gap between the icon and text in labels, buttons, etc. */
     public static final Style<Integer> ICON_GAP = newStyle(false, 2);
 
+    /** If true, the icon is cuddled to the text, with extra space between icon and border, if
+     * false, the icon is placed next to the border with extra space between icon and label. */
+    public static final Style<Boolean> ICON_CUDDLE = newStyle(false, false);
+
     /** The sound to be played when this element's action is triggered. */
     public static final Style<Sound> ACTION_SOUND = newStyle(false, (Sound)null);
 

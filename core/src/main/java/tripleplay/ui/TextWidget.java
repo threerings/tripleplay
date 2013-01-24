@@ -87,6 +87,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final Style.VAlign valign = resolveStyle(Style.VALIGN);
         public final Style.Pos iconPos = resolveStyle(Style.ICON_POS);
         public final int iconGap = resolveStyle(Style.ICON_GAP);
+        public final boolean iconCuddle = resolveStyle(Style.ICON_CUDDLE);
         public final int color = resolveStyle(Style.COLOR);
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
 
@@ -178,10 +179,22 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 _ilayer = null;
             }
 
-            if (text != null) {
+            if (text == null) _tglyph.destroy();
+            else {
                 updateTextGlyph(tx, ty, width-usedWidth, height-usedHeight);
-            } else {
-                _tglyph.destroy();
+                // if we're cuddling, adjust icon position based on the now known tex position
+                if (_ilayer != null && iconCuddle) {
+                    float ctx = _tglyph.layer().tx(), cty = _tglyph.layer().ty();
+                    float ix = _ilayer.tx(), iy = _ilayer.ty();
+                    float iwid = icon.width(), ihei = icon.height();
+                    switch (iconPos) {
+                    case LEFT:  ix = ctx - iwid - iconGap; break;
+                    case ABOVE: iy = cty - ihei - iconGap; break;
+                    case RIGHT: ix = ctx + textWidth() + iconGap; break;
+                    case BELOW: iy = cty + textHeight() + iconGap; break;
+                    }
+                    _ilayer.setTranslation(ix, iy);
+                }
             }
         }
 
