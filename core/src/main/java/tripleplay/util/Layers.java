@@ -71,7 +71,7 @@ public class Layers
      * TODO: surfaceLayer
      */
     public static void capture (Layer layer, Canvas canvas) {
-        capture(layer, canvas, new AffineTransform());
+        recurseCapture(layer, canvas);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Layers
      */
     public static CanvasImage capture (Layer layer, float width, float height) {
         CanvasImage image = PlayN.graphics().createImage(width, height);
-        capture(layer, image.canvas(), new AffineTransform());
+        recurseCapture(layer, image.canvas());
         return image;
     }
 
@@ -112,28 +112,27 @@ public class Layers
     }
 
     /** Utility method for capture. */
-    protected static void setTransform (Canvas canvas, AffineTransform at) {
-        canvas.setTransform(at.m00, at.m01, at.m10, at.m11, at.tx, at.ty);
+    protected static void concatTransform (Canvas canvas, AffineTransform at) {
+        canvas.transform(at.m00, at.m01, at.m10, at.m11, at.tx, at.ty);
     }
 
     /** Utility method for capture. */
-    protected static void setTransform (Canvas canvas, Transform t) {
-        setTransform(canvas, toAffine(t));
+    protected static void concatTransform (Canvas canvas, Transform t) {
+        concatTransform(canvas, toAffine(t));
     }
 
     /** Recursive entry point for capturing a layer. */
-    protected static void capture (Layer layer, Canvas canvas, Transform transform) {
+    protected static void recurseCapture (Layer layer, Canvas canvas) {
         if (!layer.visible()) return;
         canvas.save();
 
-        Transform originTransform = new AffineTransform(1, 0, -layer.originX(), -layer.originY());
-        transform = transform.concatenate(layer.transform()).concatenate(originTransform);
-        setTransform(canvas, transform);
+        canvas.translate(-layer.originX(), -layer.originY());
+        concatTransform(canvas, layer.transform());
 
         if (layer instanceof GroupLayer) {
             GroupLayer gl = (GroupLayer)layer;
             for (int ii = 0, ll = gl.size(); ii < ll; ii++) {
-                capture(gl.get(ii), canvas, transform);
+                recurseCapture(gl.get(ii), canvas);
             }
 
         } else if (layer instanceof ImageLayer) {
