@@ -71,7 +71,27 @@ public class Layers
      * TODO: surfaceLayer
      */
     public static void capture (Layer layer, Canvas canvas) {
-        recurseCapture(layer, canvas);
+        if (!layer.visible()) return;
+        canvas.save();
+
+        canvas.translate(-layer.originX(), -layer.originY());
+        concatTransform(canvas, layer.transform());
+
+        if (layer instanceof GroupLayer) {
+            GroupLayer gl = (GroupLayer)layer;
+            for (int ii = 0, ll = gl.size(); ii < ll; ii++) {
+                capture(gl.get(ii), canvas);
+            }
+
+        } else if (layer instanceof ImageLayer) {
+            ImageLayer il = (ImageLayer)layer;
+            canvas.drawImage(il.image(), 0, 0);
+        } else if (layer instanceof ImmediateLayer) {
+            ImmediateLayer il = (ImmediateLayer)layer;
+            il.renderer().render(new CanvasSurface(canvas));
+        }
+
+        canvas.restore();
     }
 
     /**
@@ -81,7 +101,7 @@ public class Layers
      */
     public static CanvasImage capture (Layer layer, float width, float height) {
         CanvasImage image = PlayN.graphics().createImage(width, height);
-        recurseCapture(layer, image.canvas());
+        capture(layer, image.canvas());
         return image;
     }
 
@@ -119,30 +139,5 @@ public class Layers
     /** Utility method for capture. */
     protected static void concatTransform (Canvas canvas, Transform t) {
         concatTransform(canvas, toAffine(t));
-    }
-
-    /** Recursive entry point for capturing a layer. */
-    protected static void recurseCapture (Layer layer, Canvas canvas) {
-        if (!layer.visible()) return;
-        canvas.save();
-
-        canvas.translate(-layer.originX(), -layer.originY());
-        concatTransform(canvas, layer.transform());
-
-        if (layer instanceof GroupLayer) {
-            GroupLayer gl = (GroupLayer)layer;
-            for (int ii = 0, ll = gl.size(); ii < ll; ii++) {
-                recurseCapture(gl.get(ii), canvas);
-            }
-
-        } else if (layer instanceof ImageLayer) {
-            ImageLayer il = (ImageLayer)layer;
-            canvas.drawImage(il.image(), 0, 0);
-        } else if (layer instanceof ImmediateLayer) {
-            ImmediateLayer il = (ImmediateLayer)layer;
-            il.renderer().render(new CanvasSurface(canvas));
-        }
-
-        canvas.restore();
     }
 }
