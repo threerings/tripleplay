@@ -144,8 +144,8 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     protected void didRemove (Element<?> child, boolean destroy) {
         if (destroy) child.set(Flag.WILL_DESTROY, true);
         layer.remove(child.layer);
-        if (isAdded()) child.wasRemoved();
         child.wasUnparented();
+        if (isAdded()) child.wasRemoved();
         if (destroy) child.layer.destroy();
         _childRemoved.emit(child);
     }

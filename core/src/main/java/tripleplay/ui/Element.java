@@ -284,8 +284,8 @@ public abstract class Element<T extends Element<T>>
 
     /**
      * Called when this element is removed from its direct parent. If the element was removed from
-     * a parent that was connected to a {@link Root}, this will have been immediately preceded by a
-     * call to {@link #wasRemoved}. Otherwise no call to {@link #wasRemoved} will be made.
+     * a parent that was connected to a {@link Root}, a call to {@link #wasRemoved} will
+     * immediately follow. Otherwise no call to {@link #wasRemoved} will be made.
      */
     protected void wasUnparented () {
         _parent = null;
