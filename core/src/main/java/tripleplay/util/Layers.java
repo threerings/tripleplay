@@ -74,8 +74,8 @@ public class Layers
         if (!layer.visible()) return;
         canvas.save();
 
-        canvas.translate(-layer.originX(), -layer.originY());
         concatTransform(canvas, layer.transform());
+        canvas.translate(-layer.originX(), -layer.originY());
 
         if (layer instanceof GroupLayer) {
             GroupLayer gl = (GroupLayer)layer;
