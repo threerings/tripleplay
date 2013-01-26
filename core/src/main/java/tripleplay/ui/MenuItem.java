@@ -76,18 +76,9 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
         return this;
     }
 
-    @Override protected void wasAdded () {
-        super.wasAdded();
-        Menu menu = menu();
-        if (menu != null) _relay = menu.connectItem(this);
-    }
-
-    @Override protected void wasRemoved () {
-        Menu menu = menu();
-        if (menu != null) menu.disconnectItem(this);
+    protected void setRelay (Connection relay) {
         if (_relay != null) _relay.disconnect();
-        _relay = null;
-        super.wasRemoved();
+        _relay = relay;
     }
 
     /**
@@ -109,8 +100,6 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
 
     protected void trigger () {
         if (_triggered != null) _triggered.emit(this);
-        Menu menu = menu();
-        if (menu != null) menu.emitTriggered(this);
     }
 
     @Override protected String text () {
@@ -127,13 +116,6 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         return new SizableLayoutData(super.createLayoutData(hintX, hintY), _preferredSize);
-    }
-
-    protected Menu menu () {
-        for (Elements<?> parent = parent(); parent != null; parent = parent.parent()) {
-            if (parent instanceof Menu) return (Menu)parent;
-        }
-        return null;
     }
 
     /** Dispatched when the item is clicked. */

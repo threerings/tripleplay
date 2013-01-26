@@ -8,7 +8,6 @@ package tripleplay.ui;
 import java.util.HashSet;
 import java.util.Set;
 
-import playn.core.Connection;
 import playn.core.Events;
 import playn.core.Layer;
 import playn.core.Pointer;
@@ -16,6 +15,7 @@ import playn.core.Pointer.Event;
 import pythagoras.f.Point;
 import react.Signal;
 import react.SignalView;
+import react.Slot;
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.ui.MenuItem.ShowText;
@@ -90,6 +90,9 @@ public class Menu extends Elements<Menu>
                 if (event.hit() == layer) deactivate();
             }
         });
+
+        childAdded().connect(_descendantAdded);
+        childRemoved().connect(_descendantRemoved);
     }
 
     /**
@@ -237,15 +240,18 @@ public class Menu extends Elements<Menu>
         }
     }
 
-    /** Connects up the menu item. This gets called internally MenuItem. */
-    protected Connection connectItem (MenuItem item) {
+    /** Connects up the menu item. This gets called when any descendant is added that is an
+     * instance of MenuItem. */
+    protected void connectItem (MenuItem item) {
         _items.add(item);
-        return item.layer.addListener(_itemListener);
+        item.setRelay(item.layer.addListener(_itemListener));
     }
 
-    /** Disconnects the menu item. This gets called internally by MenuItem. */
+    /** Disconnects the menu item. This gets called when any descendant is removed that is an
+     * instance of MenuItem. */
     protected void disconnectItem (MenuItem item) {
         _items.remove(item);
+        item.setRelay(null);
     }
 
     /** Called by the host when the pointer is dragged. */
@@ -271,7 +277,13 @@ public class Menu extends Elements<Menu>
         if (hover == null) return; 
 
         // trigger if this is the 2nd click -or- we always show text
-        if (hover == selected || hover._showText == ShowText.ALWAYS) hover.trigger();
+        if (hover == selected || hover._showText == ShowText.ALWAYS) {
+            if (isVisible()) {
+                hover.trigger();
+                _itemTriggered.emit(hover);
+                deactivate();
+            }
+        }
     }
 
     /** Gets the item underneath the given event. */
@@ -293,12 +305,39 @@ public class Menu extends Elements<Menu>
         _animator = animator;
     }
 
-    protected void emitTriggered (MenuItem item) {
-        if (isVisible()) {
-            _itemTriggered.emit(item);
-            deactivate();
+    protected abstract class DescendingSlot extends Slot<Element<?>>
+    {
+        @Override public void onEmit (Element<?> elem) {
+            if (elem instanceof Elements) {
+                Elements<?> es = (Elements<?>)elem;
+                visitElems(es);
+                for (Element<?> child : es) onEmit(child);
+            }
+            if (elem instanceof MenuItem) visitItem((MenuItem)elem);
         }
+        protected abstract void visitElems (Elements<?> elems);
+        protected abstract void visitItem (MenuItem item);
     }
+
+    protected final Slot<Element<?>> _descendantAdded = new DescendingSlot() {
+        @Override protected void visitElems (Elements<?> elems) {
+            elems.childAdded().connect(_descendantAdded);
+            elems.childRemoved().connect(_descendantRemoved);
+        }
+        @Override protected void visitItem (MenuItem item) {
+            connectItem(item);
+        }
+    };
+
+    protected final Slot<Element<?>> _descendantRemoved = new DescendingSlot() {
+        @Override protected void visitElems (Elements<?> elems) {
+            elems.childAdded().disconnect(_descendantAdded);
+            elems.childRemoved().disconnect(_descendantRemoved);
+        }
+        @Override protected void visitItem (MenuItem item) {
+            disconnectItem(item);
+        }
+    };
 
     protected Pointer.Listener _itemListener = new Pointer.Listener() {
         @Override public void onPointerStart (Event event) {
