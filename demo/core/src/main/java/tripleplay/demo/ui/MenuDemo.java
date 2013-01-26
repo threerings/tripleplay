@@ -25,7 +25,11 @@ import tripleplay.ui.MenuHost;
 import tripleplay.ui.MenuItem;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
+import tripleplay.ui.Styles;
+import tripleplay.ui.Stylesheet;
 import tripleplay.ui.layout.AxisLayout;
+import tripleplay.ui.layout.TableLayout;
+import tripleplay.util.Colors;
 
 public class MenuDemo extends DemoScreen
 {
@@ -110,6 +114,22 @@ public class MenuDemo extends DemoScreen
                 return menu.add(g1, g2);
             }
         };
+        TrackingLabel cells = new TrackingLabel(menuHost, "Ship Locations \u25BC") {
+            @Override public Menu createMenu () {
+                String letters = "ABCDEFGHIJ";
+                Menu menu = new Menu(AxisLayout.horizontal().offStretch(), Style.VALIGN.top);
+                Group g = new Group(new TableLayout(10));
+                g.setStylesheet(Stylesheet.builder().add(MenuItem.class, Styles.none().
+                    add(Style.BACKGROUND.is(Background.blank().inset(5, 1))).
+                    addSelected(Style.BACKGROUND.is(Background.solid(Colors.BLACK).inset(5, 1)))).create());
+                for (int col = 0; col < 10; col++) {
+                    for (int row = 0; row < 10; row++) {
+                       g.add(new MenuItem(letters.substring(col, col+1) + (row + 1)));
+                    }
+                }
+                return menu.add(g);
+            }
+        };
 
         return new Group(AxisLayout.vertical().offStretch()).add(
             new Label("Button popups"),
@@ -119,7 +139,7 @@ public class MenuDemo extends DemoScreen
             new Group(AxisLayout.horizontal()).add(subject, verb, object),
             new Shim(1, 20),
             new Label("Intermedate groups"),
-            new Group(AxisLayout.horizontal()).add(depth));
+            new Group(AxisLayout.horizontal()).add(depth, cells));
     }
 
     protected Slot<MenuItem> updater (final Button button) {
