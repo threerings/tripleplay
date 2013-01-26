@@ -16,7 +16,6 @@ import playn.core.Pointer.Event;
 import pythagoras.f.Point;
 import react.Signal;
 import react.SignalView;
-import react.Slot;
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.ui.MenuItem.ShowText;
@@ -212,18 +211,16 @@ public class Menu extends Elements<Menu>
     /** Called when the animation to open the menu is complete or fast forwarded. */
     protected void onOpened () {
         _active = true;
-        if (_pendingEnd != null) onPointerEnd(_pendingEnd);
-        else if (_pendingDrag != null) onPointerDrag(_pendingDrag);
-        _pendingDrag = null;
-        _pendingEnd = null;
-        clearAnim();
+        Pointer.Event pd = _pendingDrag, pe = _pendingEnd;
+        _pendingDrag = _pendingEnd = null;
+        if (pe != null) onPointerEnd(pe);
+        else if (pd != null) onPointerDrag(pd);
     }
 
     /** Called when the animation to close the menu is complete or fast forwarded. */
     protected void onClosed () {
         _deactivated.emit(this);
         _selector.selected.update(null);
-        clearAnim();
     }
 
     /** Runs the animation completion action and cancels the animation. */
@@ -232,16 +229,12 @@ public class Menu extends Elements<Menu>
             // cancel the animation
             _anim.cancel();
             // run our complete logic manually
-            _complete.run();
+            Runnable complete = _complete;
+            _complete = null;
+            complete.run();
             // clear fields
-            clearAnim();
+            _anim = null;
         }
-    }
-
-    /** Clears the animation and completion action. */
-    protected void clearAnim () {
-        _anim = null;
-        _complete = null;
     }
 
     /** Connects up the menu item. This gets called internally MenuItem. */
@@ -301,18 +294,11 @@ public class Menu extends Elements<Menu>
     }
 
     protected void emitTriggered (MenuItem item) {
-        _triggered.onEmit(item);
-    }
-
-    /** Slot to attach to item triggering. */
-    protected Slot<MenuItem> _triggered = new Slot<MenuItem>() {
-        @Override public void onEmit (MenuItem event) {
-            if (isVisible()) {
-                _itemTriggered.emit(event);
-                deactivate();
-            }
+        if (isVisible()) {
+            _itemTriggered.emit(item);
+            deactivate();
         }
-    };
+    }
 
     protected Pointer.Listener _itemListener = new Pointer.Listener() {
         @Override public void onPointerStart (Event event) {
