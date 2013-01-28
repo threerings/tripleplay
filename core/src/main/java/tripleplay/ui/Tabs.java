@@ -124,9 +124,7 @@ public class Tabs extends Elements<Tabs>
 
     /** Style for highlighting a tab. The default value is a no-op highlighter. */
     public static Style<Highlighter> HIGHLIGHTER = Style.<Highlighter>newStyle(true,
-        new Highlighter() {
-            @Override public void highlight (Tab tab, boolean highlight) {}
-        });
+        noOpHighlighter());
 
     /** The row of buttons, one per tab. */
     public final Group buttons = new Group(AxisLayout.horizontal().gap(3));
@@ -150,6 +148,12 @@ public class Tabs extends Elements<Tabs>
                 if (tab.button.isSelected() && highlight) return;
                 tab.button.addStyles(Style.COLOR.is(highlight ? highlightColor : originalColor));
             }
+        };
+    }
+
+    public static Highlighter noOpHighlighter () {
+        return new Highlighter() {
+            @Override public void highlight (Tab tab, boolean highlight) {}
         };
     }
 
