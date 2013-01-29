@@ -122,9 +122,15 @@ public class Tabs extends Elements<Tabs>
         protected Element<?> _content;
     }
 
+    /** A no-op highlighter to use if you want to make highlighting do nothing. */
+    public static Highlighter NOOP_HIGHLIGHTER =
+        new Highlighter() {
+            @Override public void highlight (Tab tab, boolean highlight) {}
+        };
+
     /** Style for highlighting a tab. The default value is a no-op highlighter. */
     public static Style<Highlighter> HIGHLIGHTER = Style.<Highlighter>newStyle(true,
-        noOpHighlighter());
+        NOOP_HIGHLIGHTER);
 
     /** The row of buttons, one per tab. */
     public final Group buttons = new Group(AxisLayout.horizontal().gap(3));
@@ -148,12 +154,6 @@ public class Tabs extends Elements<Tabs>
                 if (tab.button.isSelected() && highlight) return;
                 tab.button.addStyles(Style.COLOR.is(highlight ? highlightColor : originalColor));
             }
-        };
-    }
-
-    public static Highlighter noOpHighlighter () {
-        return new Highlighter() {
-            @Override public void highlight (Tab tab, boolean highlight) {}
         };
     }
 
