@@ -115,9 +115,13 @@ public class MenuDemo extends DemoScreen
             }
         };
         TrackingLabel cells = new TrackingLabel(menuHost, "Ship Locations \u25BC") {
+            Menu menu;
             @Override public Menu createMenu () {
+                if (menu != null) {
+                    return menu;
+                }
                 String letters = "ABCDEFGHIJ";
-                Menu menu = new Menu(AxisLayout.horizontal().offStretch(), Style.VALIGN.top);
+                menu = new Menu(AxisLayout.horizontal().offStretch(), Style.VALIGN.top);
                 Group g = new Group(new TableLayout(10));
                 g.setStylesheet(Stylesheet.builder().add(MenuItem.class, Styles.none().
                     add(Style.BACKGROUND.is(Background.blank().inset(5, 1))).
@@ -128,6 +132,15 @@ public class MenuDemo extends DemoScreen
                     }
                 }
                 return menu.add(g);
+            }
+
+            @Override public MenuHost.Pop makePop () {
+                return super.makePop().retainMenu();
+            }
+
+            @Override protected void wasRemoved () {
+                super.wasRemoved();
+                menu.layer.destroy();
             }
         };
 
@@ -200,10 +213,13 @@ public class MenuDemo extends DemoScreen
         public abstract Menu createMenu ();
 
         @Override public void onPointerStart (Pointer.Event ev, float x, float y) {
-            MenuHost.Pop pop = new MenuHost.Pop(this, createMenu()).
-                    atEventPos(ev).relayEvents(layer);
+            MenuHost.Pop pop = makePop().atEventPos(ev);
             pop.menu.itemTriggered().connect(updater(text, icon));
             menuHost.popup(pop);
+        }
+
+        protected MenuHost.Pop makePop () {
+            return new MenuHost.Pop(this, createMenu()).relayEvents(layer);
         }
     }
 
