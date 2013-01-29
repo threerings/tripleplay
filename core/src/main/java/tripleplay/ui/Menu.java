@@ -8,6 +8,7 @@ package tripleplay.ui;
 import java.util.HashSet;
 import java.util.Set;
 
+import playn.core.Asserts;
 import playn.core.Events;
 import playn.core.Layer;
 import playn.core.Pointer;
@@ -213,6 +214,7 @@ public class Menu extends Elements<Menu>
 
     /** Called when the animation to open the menu is complete or fast forwarded. */
     protected void onOpened () {
+        clearAnim();
         _active = true;
         Pointer.Event pd = _pendingDrag, pe = _pendingEnd;
         _pendingDrag = _pendingEnd = null;
@@ -222,6 +224,7 @@ public class Menu extends Elements<Menu>
 
     /** Called when the animation to close the menu is complete or fast forwarded. */
     protected void onClosed () {
+        clearAnim();
         _deactivated.emit(this);
         _selector.selected.update(null);
     }
@@ -231,13 +234,16 @@ public class Menu extends Elements<Menu>
         if (_anim != null) {
             // cancel the animation
             _anim.cancel();
-            // run our complete logic manually
-            Runnable complete = _complete;
-            _complete = null;
-            complete.run();
-            // clear fields
-            _anim = null;
+            // run our complete logic manually (this will always invoke clearAnim too)
+            _complete.run();
+            Asserts.check(_anim == null && _complete == null);
         }
+    }
+
+    /** Clears out members used during animation. */
+    protected void clearAnim () {
+        _complete = null;
+        _anim = null;
     }
 
     /** Connects up the menu item. This gets called when any descendant is added that is an
