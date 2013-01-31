@@ -137,15 +137,23 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     protected void didAdd (Element<?> child) {
         layer.add(child.layer);
         child.wasParented(this);
-        if (isAdded()) child.wasAdded();
+        // bar n-child from being added twice
+        if (isAdded() && !child.willAdd()) {
+            child.set(Flag.IS_ADDING, true);
+            child.wasAdded();
+        }
         _childAdded.emit(child);
     }
 
     protected void didRemove (Element<?> child, boolean destroy) {
         if (destroy) child.set(Flag.WILL_DESTROY, true);
         layer.remove(child.layer);
+        boolean needsRemove = child.willRemove(); // early removal of a scheduled n-child
         child.wasUnparented();
-        if (isAdded()) child.wasRemoved();
+        if (isAdded() || needsRemove) {
+            child.set(Flag.IS_REMOVING, true);
+            child.wasRemoved();
+        }
         if (destroy) child.layer.destroy();
         _childRemoved.emit(child);
     }
@@ -153,6 +161,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     @Override protected void wasAdded () {
         super.wasAdded();
         for (Element<?> child : _children) {
+            child.set(Flag.IS_ADDING, true);
             child.wasAdded();
         }
     }
@@ -162,6 +171,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
         boolean willDestroy = isSet(Flag.WILL_DESTROY);
         for (Element<?> child : _children) {
             if (willDestroy) child.set(Flag.WILL_DESTROY, true);
+            child.set(Flag.IS_REMOVING, true);
             child.wasRemoved();
         }
         // if we're added again, we'll be re-laid-out

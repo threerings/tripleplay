@@ -299,6 +299,7 @@ public abstract class Element<T extends Element<T>>
     protected void wasAdded () {
         if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.TRUE);
         invalidate();
+        set(Flag.IS_ADDING, false);
     }
 
     /**
@@ -313,6 +314,7 @@ public abstract class Element<T extends Element<T>>
     protected void wasRemoved () {
         _bginst.clear();
         if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.FALSE);
+        set(Flag.IS_REMOVING, false);
     }
 
     /**
@@ -517,6 +519,20 @@ public abstract class Element<T extends Element<T>>
         return isSet(Flag.WILL_DESTROY);
     }
 
+    /**
+     * Tests if this element is scheduled to be removed from a root hierarchy.
+     */
+    protected final boolean willRemove () {
+        return isSet(Flag.IS_REMOVING) || (_parent != null && _parent.willRemove());
+    }
+
+    /**
+     * Tests if this element is scheduled to be added to a root hierarchy.
+     */
+    protected final boolean willAdd () {
+        return isSet(Flag.IS_ADDING) || (_parent != null && _parent.willAdd());
+    }
+
     protected abstract class BaseLayoutData {
         /**
          * Rebuilds this element's visualization. Called when this element's size has changed. In
@@ -689,7 +705,7 @@ public abstract class Element<T extends Element<T>>
 
     protected static enum Flag {
         VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3), WILL_DESTROY(1 << 4),
-        HIT_DESCEND(1 << 5), HIT_ABSORB(1 << 6);
+        HIT_DESCEND(1 << 5), HIT_ABSORB(1 << 6), IS_REMOVING(1 << 7), IS_ADDING(1 << 8);
 
         public final int mask;
 
