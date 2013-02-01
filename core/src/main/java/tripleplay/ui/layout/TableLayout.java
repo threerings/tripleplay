@@ -23,45 +23,52 @@ import tripleplay.ui.Style;
 public class TableLayout extends Layout
 {
     /** The default column configuration. */
-    public static final Column COL = new Column(Style.HAlign.CENTER, false, false, 0);
+    public static final Column COL = new Column(Style.HAlign.CENTER, false, 1, 0);
 
     /** A configurator for a table column. */
     public static class Column {
-        protected Column (Style.HAlign halign, boolean fixed, boolean stretch, float minWidth) {
+        protected Column (Style.HAlign halign, boolean stretch, float weight, float minWidth) {
             _halign = halign;
-            _fixed = fixed;
+            _weight = weight;
             _stretch = stretch;
             _minWidth = minWidth;
         }
 
-        /** Configures this column as left-aligned. */
+        /** Returns a copy of this column with left alignment. */
         public Column alignLeft () {
-            return new Column(Style.HAlign.LEFT, _fixed, _stretch, _minWidth);
+            return new Column(Style.HAlign.LEFT, _stretch, _weight, _minWidth);
         }
 
-        /** Configures this column as right-aligned. */
+        /** Returns a copy of this column with right alignment. */
         public Column alignRight () {
-            return new Column(Style.HAlign.RIGHT, _fixed, _stretch, _minWidth);
+            return new Column(Style.HAlign.RIGHT, _stretch, _weight, _minWidth);
         }
 
-        /** Configures this column's width as fixed to the width of its widest element. By default
-         * columns are 'free' and may be configured as wider than their default to accommodate
-         * excess width available to the table. */
+        /** Returns a copy of this column set to always use the width of its widest element. By
+         * default, columns are 'free' and may be configured as wider than their default to
+         * accommodate excess width available to the table. */
         public Column fixed () {
-            return new Column(_halign, true, _stretch, _minWidth);
+            return new Column(_halign, _stretch, 0, _minWidth);
         }
 
-        /** Configures this column to stretch the width of its elements to the column width. By
-         * default elements are configured to their preferred width. */
+        /** Returns a copy of this column set to accommodate excess width, using the given
+         * weight. The excess will be divided amongst all non-fixed colulmns according to their
+         * weight. By defaults columns are free with weight set to 1. */
+        public Column free (float weight) {
+            return new Column(_halign, _stretch, weight, _minWidth);
+        }
+
+        /** Returns a copy of this column set to stretch the width of its elements to the column
+         * width. By default elements are configured to their preferred width. */
         public Column stretch () {
-            return new Column(_halign, _fixed, true, _minWidth);
+            return new Column(_halign, true, _weight, _minWidth);
         }
 
         /** Configures the minimum width of this column. This column will not be allowed to shrink
          * below its minimum width unless the total table width is insufficient to satisfy the
          * minimum width requirements of all of its columns. */
         public Column minWidth (float minWidth) {
-            return new Column(_halign, _fixed, _stretch, minWidth);
+            return new Column(_halign, _stretch, _weight, minWidth);
         }
 
         /** Returns {@code count} copies of this column. */
@@ -72,8 +79,8 @@ public class TableLayout extends Layout
         }
 
         protected final Style.HAlign _halign;
-        protected final boolean _fixed, _stretch;
-        protected final float _minWidth;
+        protected final boolean _stretch;
+        protected final float _weight, _minWidth;
     }
 
     /** Defines a colspan constraint. */
@@ -168,12 +175,12 @@ public class TableLayout extends Layout
         int columns = m.columns(), row = 0, col = 0;
 
         float naturalWidth = m.totalWidth(_colgap);
-        int freeColumns = freeColumns();
-        float freeExtra = (width - naturalWidth) / freeColumns;
+        float freeWeight = freeWeight();
+        float freeExtra = (width - naturalWidth) / freeWeight;
         // freeExtra may end up negative; if our natural width is too wide
 
         Style.HAlign halign = resolveStyle(elems, Style.HALIGN);
-        float startX = left + ((freeColumns == 0) ? halign.offset(naturalWidth, width) : 0);
+        float startX = left + ((freeWeight == 0) ? halign.offset(naturalWidth, width) : 0);
         float x = startX;
 
         Style.VAlign valign = resolveStyle(elems, Style.VALIGN);
@@ -185,8 +192,8 @@ public class TableLayout extends Layout
 
             float colWidth = 0;
             for (int ii = 0; ii < colspan; ii++) {
-                colWidth += Math.max(0,
-                    m.columnWidths[col + ii] + (_columns[col + ii]._fixed ? 0 : freeExtra));
+                colWidth += Math.max(0, m.columnWidths[col + ii] +
+                    (freeWeight == 0 ? 0 : freeExtra * _columns[col + ii]._weight));
             }
 
             Column ccfg = _columns[col];
@@ -209,12 +216,12 @@ public class TableLayout extends Layout
         }
     }
 
-    protected int freeColumns () {
-        int freeColumns = 0;
+    protected float freeWeight () {
+        float freeWeight = 0;
         for (int ii = 0; ii < _columns.length; ii++) {
-            if (!_columns[ii]._fixed) freeColumns++;
+            freeWeight += _columns[ii]._weight;
         }
-        return freeColumns;
+        return freeWeight;
     }
 
     protected Metrics computeMetrics (Elements<?> elems, float hintX, float hintY) {
@@ -235,7 +242,7 @@ public class TableLayout extends Layout
         int ii = 0;
         for (Element<?> elem : elems) {
             int col = ii % columns, row = ii / columns;
-            if (elem.isVisible() && _columns[col]._fixed) {
+            if (elem.isVisible() && _columns[col]._weight == 0) {
                 IDimension psize = preferredSize(elem, hintX, hintY);
                 metrics.rowHeights[row] = Math.max(metrics.rowHeights[row], psize.height());
                 metrics.columnWidths[col] = Math.max(metrics.columnWidths[col], psize.width());
@@ -247,12 +254,12 @@ public class TableLayout extends Layout
         // free columns based on the remaining space
         float fixedWidth = _colgap*(columns-1); // start with gaps, add fixed col widths
         for (int cc = 0; cc < columns; cc++) fixedWidth += metrics.columnWidths[cc];
-        float freeHintX = (hintX - fixedWidth) / freeColumns();
+        float freeHintX = (hintX - fixedWidth) / freeWeight();
 
         ii = 0;
         for (Element<?> elem : elems) {
             int col = ii % columns, row = ii / columns;
-            if (elem.isVisible() && !_columns[col]._fixed) {
+            if (elem.isVisible() && _columns[col]._weight > 0) {
                 // TODO: supply sane y hint?
                 IDimension psize = preferredSize(elem, freeHintX, hintY);
                 metrics.rowHeights[row] = Math.max(metrics.rowHeights[row], psize.height());
