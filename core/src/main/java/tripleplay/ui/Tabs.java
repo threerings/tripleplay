@@ -174,16 +174,14 @@ public class Tabs extends Elements<Tabs>
 
         selected.connect(new ValueView.Listener<Tab>() {
             @Override public void onChange (Tab selected, Tab deselected) {
-                // hide the deselected content
-                if (deselected != null) deselected.content().setVisible(false);
+                // remove the deselected content
+                if (deselected != null) contentArea.remove(deselected.content());
 
                 // show the new content, creating if necessary
                 if (selected != null) {
                     // own it baby
                     if (selected.content().parent() != contentArea)
                         contentArea.add(selected.content());
-                    // make sure its visible
-                    selected.content().setVisible(true);
                     // unhighlight
                     highlighter().highlight(selected, false);
                 }
@@ -298,11 +296,20 @@ public class Tabs extends Elements<Tabs>
     }
 
     @Override protected void wasRemoved () {
-        super.wasRemoved();
-        // let go of suppliers
-        for (Tab tab : _tabs) {
-            tab._generator.destroy();
+        if (willDestroy()) {
+            // let go of suppliers
+            for (Tab tab : _tabs) {
+                tab._generator.destroy();
+            }
+            // let go of removed tabs
+            for (Tab tab : _tabs) {
+                if (tab._content != null && tab._content.parent() == null) {
+                    tab._content.layer.destroy();
+                    tab._content = null;
+                }
+            }
         }
+        super.wasRemoved();
     }
 
     /** Sets the {@link Tab#_index} field of our tabs, after a change to ordering. */
