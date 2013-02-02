@@ -25,7 +25,7 @@ public class TableLayout extends Layout
     /** The default column configuration. */
     public static final Column COL = new Column(Style.HAlign.CENTER, false, 1, 0);
 
-    /** A configurator for a table column. */
+    /** A configurator for a table column. Instances are immutable; all methods return a copy.*/
     public static class Column {
         protected Column (Style.HAlign halign, boolean stretch, float weight, float minWidth) {
             _halign = halign;
@@ -34,39 +34,39 @@ public class TableLayout extends Layout
             _minWidth = minWidth;
         }
 
-        /** Returns a copy of this column with left alignment. */
+        /** Left aligns cells. */
         public Column alignLeft () {
             return new Column(Style.HAlign.LEFT, _stretch, _weight, _minWidth);
         }
 
-        /** Returns a copy of this column with right alignment. */
+        /** Right aligns cells. */
         public Column alignRight () {
             return new Column(Style.HAlign.RIGHT, _stretch, _weight, _minWidth);
         }
 
-        /** Returns a copy of this column set to always use the width of its widest element. By
-         * default, columns are 'free' and may be configured as wider than their default to
-         * accommodate excess width available to the table. */
+        /** Sets column to always use the width of its widest element. By default, columns are
+         * 'free' and may be configured as wider than their default to accommodate excess
+         * width available to the table. */
         public Column fixed () {
             return new Column(_halign, _stretch, 0, _minWidth);
         }
 
-        /** Returns a copy of this column set to accommodate excess width, using the given
-         * weight. The excess will be divided amongst all non-fixed colulmns according to their
-         * weight. By defaults columns are free with weight set to 1. */
+        /** Sets column to grow freely when excess width is available. The excess will be divided
+         * proportionally amongst all non-fixed colulmns in the table, according to weight. By
+         * default, columns are free with weight set to 1. */
         public Column free (float weight) {
             return new Column(_halign, _stretch, weight, _minWidth);
         }
 
-        /** Returns a copy of this column set to stretch the width of its elements to the column
-         * width. By default elements are configured to their preferred width. */
+        /** Sets column to stretch the width of its elements to the column width. By default,
+         * elements are configured to their preferred width. */
         public Column stretch () {
             return new Column(_halign, true, _weight, _minWidth);
         }
 
-        /** Configures the minimum width of this column. This column will not be allowed to shrink
-         * below its minimum width unless the total table width is insufficient to satisfy the
-         * minimum width requirements of all of its columns. */
+        /** Configures the minimum width. The column will not be allowed to shrink below its
+         * minimum width unless the total table width is insufficient to satisfy the minimum
+         * width requirements of all of its columns. */
         public Column minWidth (float minWidth) {
             return new Column(_halign, _stretch, _weight, minWidth);
         }
@@ -218,9 +218,7 @@ public class TableLayout extends Layout
 
     protected float freeWeight () {
         float freeWeight = 0;
-        for (int ii = 0; ii < _columns.length; ii++) {
-            freeWeight += _columns[ii]._weight;
-        }
+        for (int ii = 0; ii < _columns.length; ii++) freeWeight += _columns[ii]._weight;
         return freeWeight;
     }
 
