@@ -39,7 +39,7 @@ public class DemoMenuScreen extends UIScreen
             new MiscDemo(), new LabelDemo(), new SliderDemo(),
             new BackgroundDemo(), new LayoutDemo(), new BorderLayoutDemo(),
             new FlowLayoutDemo(), new SelectorDemo(), new MenuDemo(),
-            new ScrollerDemo(), new TabsDemo(), null,
+            new ScrollerDemo(), new TabsDemo(), new TableLayoutDemo(),
             // tripleplay.anim
             new FramesDemo(), new AnimDemo(), new FlickerDemo(),
             // tripleplay.game
@@ -79,7 +79,6 @@ public class DemoMenuScreen extends UIScreen
                 grid.add(new Shim(1, 1));
             } else {
                 Button button = new Button(screen.name());
-                final int ss = ii;
                 button.clicked().connect(new UnitSlot() { public void onEmit () {
                     _stack.push(screen);
                     screen.back.clicked().connect(new UnitSlot() { public void onEmit () {
