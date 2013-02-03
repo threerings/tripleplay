@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import pythagoras.f.IDimension;
-import react.UnitSlot;
 import tripleplay.util.DimensionValue;
 
 import static tripleplay.ui.Log.log;
@@ -35,11 +34,7 @@ public abstract class SizableWidget<T extends SizableWidget<T>> extends Widget<T
     /** Creates the sizable widget with preferred width and height. */
     public SizableWidget (float width, float height) {
         preferredSize.update(width, height);
-        preferredSize.connect(new UnitSlot() {
-            @Override public void onEmit () {
-                invalidate();
-            }
-        });
+        preferredSize.connect(invalidateSlot());
     }
 
     /** Creates the layout to which the widget's {@link Element.SizableLayoutData} will delegate. */

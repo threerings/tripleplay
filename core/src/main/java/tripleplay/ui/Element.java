@@ -16,6 +16,7 @@ import pythagoras.f.Rectangle;
 import react.Signal;
 import react.SignalView;
 import react.Slot;
+import react.UnitSlot;
 
 import playn.core.GroupLayer;
 import playn.core.Layer;
@@ -350,6 +351,26 @@ public abstract class Element<T extends Element<T>>
                 _parent.invalidate();
             }
         }
+    }
+
+    /**
+     * Gets a new slot which will invoke {@link #invalidate()} when emitted.
+     */
+    protected UnitSlot invalidateSlot () {
+        return invalidateSlot(false);
+    }
+
+    /**
+     * Gets a new slot which will invoke {@link #invalidate()}.
+     * @param styles if set, the slot will also call {@link #clearLayoutData()} when emitted
+     */
+    protected UnitSlot invalidateSlot (final boolean styles) {
+        return new UnitSlot() {
+            @Override public void onEmit () {
+                invalidate();
+                if (styles) clearLayoutData();
+            }
+        };
     }
 
     /**

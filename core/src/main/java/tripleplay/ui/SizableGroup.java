@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import pythagoras.f.IDimension;
-import react.UnitSlot;
 import tripleplay.util.DimensionValue;
 
 /**
@@ -34,11 +33,7 @@ public class SizableGroup extends Group
     public SizableGroup (Layout layout, float wid, float hei) {
         super(layout);
         preferredSize.update(wid, hei);
-        preferredSize.connect(new UnitSlot() {
-            @Override public void onEmit () {
-                invalidate();
-            }
-        });
+        preferredSize.connect(invalidateSlot());
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {

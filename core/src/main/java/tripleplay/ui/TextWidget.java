@@ -39,12 +39,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
      * Returns a slot that subclasses should wire up to their text {@code Value}.
      */
     protected UnitSlot textDidChange () {
-        return new UnitSlot () {
-            @Override public void onEmit () {
-                clearLayoutData();
-                invalidate();
-            }
-        };
+        return invalidateSlot(true);
     }
 
     /**
