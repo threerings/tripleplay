@@ -44,7 +44,7 @@ If you prefer to download pre-built binaries, those can be had here:
 GWT
 ---
 
-When using TriplePlay in a [PlayN] game that targets the HTML5 or Flash
+When using Triple Play in a [PlayN] game that targets the HTML5 or Flash
 backends, you must also add a reference to the [GWT] module to your
 `FooGame.gwt.xml` file, like so:
 
