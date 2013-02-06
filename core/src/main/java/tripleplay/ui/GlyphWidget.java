@@ -7,6 +7,7 @@ package tripleplay.ui;
 
 import playn.core.Canvas;
 import playn.core.Pointer;
+import react.UnitSlot;
 
 /**
  * Base for widgets that consist of a single glyph. Performs all boilerplate layout stuff and
@@ -39,6 +40,16 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
     protected GlyphWidget (boolean interactive, float width, float height) {
         this(interactive);
         preferredSize.update(width, height);
+    }
+
+    /**
+     * Returns a slot that calls render. Useful if your {@link #paint(Canvas)} method uses a react
+     * value.
+     */
+    protected UnitSlot renderSlot () {
+        return new UnitSlot() {
+            @Override public void onEmit () { render(); }
+        };
     }
 
     /**
