@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <project name="tripleplay-demo" default="run-java" xmlns:artifact="urn:maven-artifact-ant">
   <!-- Define your project information here -->
-  <property name="java.classname" value="com.threerings.java.TripleDemoJava"/>
-  <property name="html.classname" value="com.threerings.TripleDemo"/>
+  <property name="java.classname" value="tripleplay.demo.TripleDemoJava"/>
+  <property name="html.classname" value="tripleplay.demo.TripleDemo"/>
   <property name="html.index" value="TripleDemo.html"/>
 
   <!-- Everything below here shouldn't need to be modified -->
