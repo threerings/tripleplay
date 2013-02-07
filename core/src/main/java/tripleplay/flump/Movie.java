@@ -7,7 +7,9 @@ package tripleplay.flump;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pythagoras.f.FloatMath;
 
@@ -114,8 +116,24 @@ public class Movie
         _speed = speed;
     }
 
-    protected void setFrame (float frame, float dt)
-    {
+    public Layer getNamedLayer (String name) {
+        for (LayerAnimator animator : _animators) {
+            if (animator.data.name.equals(name)) {
+                return animator.content;
+            }
+        }
+        return null; // Not found
+    }
+
+    public Map<String,Layer> namedLayers () {
+        Map<String,Layer> namedLayers = new HashMap<String,Layer>();
+        for (LayerAnimator animator : _animators) {
+            namedLayers.put(animator.data.name, animator.content);
+        }
+        return Collections.unmodifiableMap(namedLayers);
+    }
+
+    protected void setFrame (float frame, float dt) {
         if (frame < _frame) {
             // Wrap back to the beginning
             for (int ii = 0, ll = _animators.length; ii < ll; ++ii) {
@@ -132,14 +150,15 @@ public class Movie
     }
 
     // Controls a single Flash layer
-    protected static class LayerAnimator
-    {
+    protected static class LayerAnimator {
+        public final LayerData data;
         public final Layer content;
+
         public int keyframeIdx = 0;
         public boolean changedKeyframe = false;
 
         public LayerAnimator (LayerData data) {
-            _data = data;
+            this.data = data;
             if (data._multipleSymbols) {
                 _instances = new Instance[data.keyframes.size()];
                 for (int ii = 0, ll = _instances.length; ii < ll; ++ii) {
@@ -158,7 +177,7 @@ public class Movie
         }
 
         public void setFrame (float frame, float dt) {
-            List<KeyframeData> keyframes = _data.keyframes;
+            List<KeyframeData> keyframes = data.keyframes;
             int finalFrame = keyframes.size()-1;
 
             while (keyframeIdx < finalFrame && keyframes.get(keyframeIdx+1).index <= frame) {
@@ -242,7 +261,6 @@ public class Movie
             }
         }
 
-        protected LayerData _data;
         protected Instance _current; // The instance currently visible
         protected Instance[] _instances; // Null if only 0-1 instance on this layer
     }
