@@ -30,21 +30,26 @@ public class Hud
      * once-per-second updating. */
     public static class Stock extends Hud {
         public Stock () {
-            add("Shader info:", true);
-            add(_quadShader);
-            add(_trisShader);
+            _haveGL = (graphics().ctx() != null);
+            if (_haveGL) {
+                add("Shader info:", true);
+                add(_quadShader);
+                add(_trisShader);
+            }
             add("Per second:", true);
             add("Frames:", _frames);
-            add("Shader creates:", _shaderCreates);
-            add("FB creates:", _fbCreates);
-            add("Tex creates:", _texCreates);
-            add("Per frame:", true);
-            add("Shader binds:", _shaderBinds);
-            add("FB binds:", _fbBinds);
-            add("Tex binds:", _texBinds);
-            add("Quads drawn:", _rQuads);
-            add("Tris drawn:", _rTris);
-            add("Shader flushes:", _shaderFlushes);
+            if (_haveGL) {
+                add("Shader creates:", _shaderCreates);
+                add("FB creates:", _fbCreates);
+                add("Tex creates:", _texCreates);
+                add("Per frame:", true);
+                add("Shader binds:", _shaderBinds);
+                add("FB binds:", _fbBinds);
+                add("Tex binds:", _texBinds);
+                add("Quads drawn:", _rQuads);
+                add("Tris drawn:", _rTris);
+                add("Shader flushes:", _shaderFlushes);
+            }
         }
 
         /** Call this from your {@link Game#update} method (or similar). */
@@ -57,26 +62,37 @@ public class Hud
             }
         }
 
+        /** Call this from your {@link Game#paint} method (or similar). */
+        public void paint (float alpha) {
+            _paints += 1;
+        }
+
         /** Called when the HUD is about to update its display. Values added to the HUD should be
          * updated by this call if they've not been already. Must call {@code super.willUpdate()}. */
         protected void willUpdate () {
-            GLContext.Stats stats = graphics().ctx().stats();
-            int frames = Math.max(stats.frames, 1);
-            _frames.update(frames);
-            _shaderCreates.update(stats.shaderCreates);
-            _fbCreates.update(stats.frameBufferCreates);
-            _texCreates.update(stats.texCreates);
-            _shaderBinds.update(stats.shaderBinds/frames);
-            _fbBinds.update(stats.frameBufferBinds/frames);
-            _texBinds.update(stats.texBinds/frames);
-            _rQuads.update(stats.quadsRendered/frames);
-            _rTris.update(stats.trisRendered/frames);
-            _shaderFlushes.update(stats.shaderFlushes/frames);
-            stats.reset();
-            _quadShader.update("Quad: " + graphics().ctx().quadShaderInfo());
-            _trisShader.update("Tris: " + graphics().ctx().trisShaderInfo());
+            if (_haveGL) {
+                GLContext.Stats stats = graphics().ctx().stats();
+                int frames = Math.max(stats.frames, 1);
+                _frames.update(frames);
+                _shaderCreates.update(stats.shaderCreates);
+                _fbCreates.update(stats.frameBufferCreates);
+                _texCreates.update(stats.texCreates);
+                _shaderBinds.update(stats.shaderBinds/frames);
+                _fbBinds.update(stats.frameBufferBinds/frames);
+                _texBinds.update(stats.texBinds/frames);
+                _rQuads.update(stats.quadsRendered/frames);
+                _rTris.update(stats.trisRendered/frames);
+                _shaderFlushes.update(stats.shaderFlushes/frames);
+                stats.reset();
+                _quadShader.update("Quad: " + graphics().ctx().quadShaderInfo());
+                _trisShader.update("Tris: " + graphics().ctx().trisShaderInfo());
+            } else {
+                _frames.update(_paints);
+                _paints = 0;
+            }
         }
 
+        protected final boolean _haveGL;
         protected long _nextSec;
 
         protected final Value<Integer> _frames = Value.create(0);
@@ -206,6 +222,8 @@ public class Hud
     }
 
     protected final List<Row> _rows = new ArrayList<Row>();
+    protected int _paints;
+
     protected TextFormat _fmt = new TextFormat().withFont(
         graphics().createFont("Helvetica", Font.Style.PLAIN, 12));
     protected int _textColor = 0xFF000000, _bgColor = 0xFFFFFFFF;
