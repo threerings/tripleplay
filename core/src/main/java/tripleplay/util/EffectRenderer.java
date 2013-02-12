@@ -49,6 +49,10 @@ public abstract class EffectRenderer
     public static class PixelOutline extends EffectRenderer {
         public final int outlineColor;
 
+        public PixelOutline(int outlineColor) {
+            this(outlineColor, false);
+        }
+
         public PixelOutline (int outlineColor, boolean underlined) {
             this.outlineColor = outlineColor;
             _underlined = underlined;
@@ -91,9 +95,18 @@ public abstract class EffectRenderer
         public final Canvas.LineCap outlineCap;
         public final Canvas.LineJoin outlineJoin;
 
+        public VectorOutline (int outlineColor, float outlineWidth) {
+            this(outlineColor, outlineWidth, false);
+        }
+
         public VectorOutline (int outlineColor, float outlineWidth, boolean underlined) {
             this(outlineColor, outlineWidth, Canvas.LineCap.ROUND, Canvas.LineJoin.ROUND,
                 underlined);
+        }
+
+        public VectorOutline (int outlineColor, float outlineWidth, Canvas.LineCap cap,
+                              Canvas.LineJoin join) {
+            this(outlineColor, outlineWidth, cap, join, false);
         }
 
         public VectorOutline (int outlineColor, float outlineWidth,
@@ -134,6 +147,10 @@ public abstract class EffectRenderer
     public static class Shadow extends EffectRenderer {
         public final int shadowColor;
         public final float shadowX, shadowY;
+
+        public Shadow (int shadowColor, float shadowX, float shadowY) {
+            this(shadowColor, shadowX, shadowY, false);
+        }
 
         public Shadow (int shadowColor, float shadowX, float shadowY, boolean underlined) {
             this.shadowColor = shadowColor;
