@@ -38,7 +38,7 @@ public abstract class EffectRenderer
                 for (int ii = 0; ii < layout.lineCount(); ii++) {
                     Rectangle bounds = layout.lineBounds(ii);
                     float sx = x + bounds.x;
-                    float sy = y + bounds.y + layout.ascent();
+                    float sy = y + bounds.y + bounds.height() - 1;
                     canvas.drawLine(sx, sy, sx + layout.width(), sy);
                 }
             }
