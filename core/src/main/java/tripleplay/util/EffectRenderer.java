@@ -7,6 +7,7 @@ package tripleplay.util;
 
 import playn.core.Canvas;
 import playn.core.TextLayout;
+import pythagoras.f.Rectangle;
 
 /**
  * Handles the rendering of text with a particular effect (shadow, outline, etc.).
@@ -14,23 +15,43 @@ import playn.core.TextLayout;
 public abstract class EffectRenderer
 {
     /** An "effect" that just renders the text normally. */
-    public static final EffectRenderer NONE = new EffectRenderer() {
-        public void render (Canvas canvas, TextLayout layout, int textColor, float x, float y) {
-            canvas.setFillColor(textColor);
-            canvas.fillText(layout, x, y);
-        }
-    };
+    public static final EffectRenderer NONE = new NoEffect(false);
 
     public float adjustWidth (float width) { return width; }
     public float adjustHeight (float height) { return height; }
 
+    public boolean underlined () { return _underlined; }
+
     public abstract void render (Canvas canvas, TextLayout layout, int textColor, float x, float y);
+
+    public static class NoEffect extends EffectRenderer {
+        public NoEffect (boolean underlined) {
+            _underlined = underlined;
+        }
+
+        public void render (Canvas canvas, TextLayout layout, int textColor, float x, float y) {
+            canvas.save();
+            canvas.setFillColor(textColor);
+            canvas.fillText(layout, x, y);
+            if (_underlined) {
+                canvas.setStrokeColor(textColor);
+                for (int ii = 0; ii < layout.lineCount(); ii++) {
+                    Rectangle bounds = layout.lineBounds(ii);
+                    float sx = x + bounds.x;
+                    float sy = y + bounds.y + layout.ascent();
+                    canvas.drawLine(sx, sy, sx + layout.width(), sy);
+                }
+            }
+            canvas.restore();
+        }
+    }
 
     public static class PixelOutline extends EffectRenderer {
         public final int outlineColor;
 
-        public PixelOutline (int outlineColor) {
+        public PixelOutline (int outlineColor, boolean underlined) {
             this.outlineColor = outlineColor;
+            _underlined = underlined;
         }
 
         public float adjustWidth (float width) { return width + 2; }
@@ -59,16 +80,18 @@ public abstract class EffectRenderer
         public final Canvas.LineCap outlineCap;
         public final Canvas.LineJoin outlineJoin;
 
-        public VectorOutline (int outlineColor, float outlineWidth) {
-            this(outlineColor, outlineWidth, Canvas.LineCap.ROUND, Canvas.LineJoin.ROUND);
+        public VectorOutline (int outlineColor, float outlineWidth, boolean underlined) {
+            this(outlineColor, outlineWidth, Canvas.LineCap.ROUND, Canvas.LineJoin.ROUND,
+                underlined);
         }
 
         public VectorOutline (int outlineColor, float outlineWidth,
-                              Canvas.LineCap cap, Canvas.LineJoin join) {
+                              Canvas.LineCap cap, Canvas.LineJoin join, boolean underlined) {
             this.outlineColor = outlineColor;
             this.outlineWidth = outlineWidth;
             this.outlineCap = cap;
             this.outlineJoin = join;
+            _underlined = underlined;
         }
 
         public float adjustWidth (float width) { return width + 2*outlineWidth; }
@@ -91,10 +114,11 @@ public abstract class EffectRenderer
         public final int shadowColor;
         public final float shadowX, shadowY;
 
-        public Shadow (int shadowColor, float shadowX, float shadowY) {
+        public Shadow (int shadowColor, float shadowX, float shadowY, boolean underlined) {
             this.shadowColor = shadowColor;
             this.shadowX = shadowX;
             this.shadowY = shadowY;
+            _underlined = underlined;
         }
 
         public float adjustWidth (float width) { return width + Math.abs(shadowX); }
@@ -111,4 +135,6 @@ public abstract class EffectRenderer
             canvas.restore();
         }
     }
+
+    protected boolean _underlined;
 }

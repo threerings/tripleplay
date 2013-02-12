@@ -63,14 +63,16 @@ public class TextConfig
      */
     public TextConfig withShadow (int shadowColor, float shadowX, float shadowY) {
         return new TextConfig(format, textColor,
-                              new EffectRenderer.Shadow(shadowColor, shadowX, shadowY));
+                              new EffectRenderer.Shadow(shadowColor, shadowX, shadowY,
+                                                        effect.underlined()));
     }
 
     /**
      * Returns a new text config which uses a pixel outline effect.
      */
     public TextConfig withOutline (int outlineColor) {
-        return new TextConfig(format, textColor, new EffectRenderer.PixelOutline(outlineColor));
+        return new TextConfig(format, textColor,
+                              new EffectRenderer.PixelOutline(outlineColor, effect.underlined()));
     }
 
     /**
@@ -78,7 +80,8 @@ public class TextConfig
      */
     public TextConfig withOutline (int outlineColor, float outlineWidth) {
         return new TextConfig(format, textColor,
-                              new EffectRenderer.VectorOutline(outlineColor, outlineWidth));
+                              new EffectRenderer.VectorOutline(outlineColor, outlineWidth,
+                                                               effect.underlined()));
     }
 
     /**

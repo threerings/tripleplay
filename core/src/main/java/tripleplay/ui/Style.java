@@ -181,6 +181,9 @@ public abstract class Style<V>
     /** The effect to use when rendering text, if any. Inherited. */
     public static final TextEffectStyle TEXT_EFFECT = new TextEffectStyle();
 
+    /** Whether or not to underline text. Inherited. */
+    public static final Style<Boolean> UNDERLINE = newStyle(true, false);
+
     /** The background for an element. Not inherited. */
     public static final Style<Background> BACKGROUND = newStyle(false, Background.blank());
 
@@ -216,18 +219,21 @@ public abstract class Style<V>
     public static EffectRenderer createEffectRenderer (Element<?> elem) {
         switch (Styles.resolveStyle(elem, Style.TEXT_EFFECT)) {
         case PIXEL_OUTLINE:
-            return new EffectRenderer.PixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT));
+            return new EffectRenderer.PixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT),
+                                                   Styles.resolveStyle(elem, Style.UNDERLINE));
         case VECTOR_OUTLINE:
             return new EffectRenderer.VectorOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT),
                                                     Styles.resolveStyle(elem, Style.OUTLINE_WIDTH),
                                                     Styles.resolveStyle(elem, Style.OUTLINE_CAP),
-                                                    Styles.resolveStyle(elem, Style.OUTLINE_JOIN));
+                                                    Styles.resolveStyle(elem, Style.OUTLINE_JOIN),
+                                                    Styles.resolveStyle(elem, Style.UNDERLINE));
         case SHADOW:
             return new EffectRenderer.Shadow(Styles.resolveStyle(elem, Style.SHADOW),
                                              Styles.resolveStyle(elem, Style.SHADOW_X),
-                                             Styles.resolveStyle(elem, Style.SHADOW_Y));
+                                             Styles.resolveStyle(elem, Style.SHADOW_Y),
+                                             Styles.resolveStyle(elem, Style.UNDERLINE));
         default:
-            return EffectRenderer.NONE;
+            return new EffectRenderer.NoEffect(Styles.resolveStyle(elem, Style.UNDERLINE));
         }
     }
 
