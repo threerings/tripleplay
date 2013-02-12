@@ -35,6 +35,9 @@ public class LabelDemo extends DemoScreen
         Image smiley = PlayN.assets().getImage("images/smiley.png");
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CC66).inset(5)));
+        Styles smallUnderlined = Styles.make(
+            Style.FONT.is(PlayN.graphics().createFont("Times New Roman", Font.Style.PLAIN, 20)),
+            Style.HALIGN.center, Style.UNDERLINE.is(true));
         Styles bigLabel = Styles.make(
             Style.FONT.is(PlayN.graphics().createFont("Times New Roman", Font.Style.PLAIN, 32)),
             Style.HALIGN.center);
@@ -57,7 +60,16 @@ public class LabelDemo extends DemoScreen
                                        bigLabel.add(Style.TEXT_EFFECT.vectorOutline,
                                                     Style.OUTLINE_WIDTH.is(2f))),
                 new Label("Shadow").addStyles(
-                                       bigLabel.add(Style.TEXT_EFFECT.shadow))));
+                                       bigLabel.add(Style.TEXT_EFFECT.shadow))),
+            new Group(AxisLayout.horizontal().gap(10)).add(
+                new Label("Plain Underline").addStyles(smallUnderlined),
+                new Label("Pixel Outline Underline").addStyles(
+                                       smallUnderlined.add(Style.TEXT_EFFECT.pixelOutline))),
+                new Label("Vector Outline Underline").addStyles(
+                                       smallUnderlined.add(Style.TEXT_EFFECT.vectorOutline,
+                                                           Style.OUTLINE_WIDTH.is(2f))),
+                new Label("Shadow Underline").addStyles(
+                                       smallUnderlined.add(Style.TEXT_EFFECT.shadow)));
     }
 
     protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
