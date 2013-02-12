@@ -139,6 +139,16 @@ public class Root extends Elements<Root>
     }
 
     /**
+     * Gets this Root's menu host, creating it if necessary.
+     */
+    public MenuHost getMenuHost () {
+        if (_menuHost == null) {
+            _menuHost = new MenuHost(_iface, this);
+        }
+        return _menuHost;
+    }
+
+    /**
      * @deprecated use {@link #setAbsorbsClicks(boolean)} instead
      */
     @Deprecated protected boolean absorbsClicks () {
@@ -148,4 +158,5 @@ public class Root extends Elements<Root>
     protected final Interface _iface;
     protected boolean _valid;
     protected Element<?> _active;
+    protected MenuHost _menuHost;
 }
