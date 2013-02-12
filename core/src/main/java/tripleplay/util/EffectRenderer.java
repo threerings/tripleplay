@@ -39,7 +39,7 @@ public abstract class EffectRenderer
                     Rectangle bounds = layout.lineBounds(ii);
                     float sx = x + bounds.x;
                     float sy = y + bounds.y + bounds.height() - 1;
-                    canvas.drawLine(sx, sy, sx + layout.width(), sy);
+                    canvas.fillRect(sx, sy, bounds.width(), 1);
                 }
             }
             canvas.restore();
@@ -70,6 +70,17 @@ public abstract class EffectRenderer
             canvas.fillText(text, x+2, y+2);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+1, y+1);
+            if (_underlined) {
+                for (int ii = 0; ii < text.lineCount(); ii++) {
+                    Rectangle bounds = text.lineBounds(ii);
+                    float sx = x + bounds.x + 1;
+                    float sy = y + bounds.y + bounds.height();
+                    canvas.setFillColor(outlineColor);
+                    canvas.fillRect(sx-1, sy-1, bounds.width()+3, 3);
+                    canvas.setFillColor(textColor);
+                    canvas.fillRect(sx, sy, bounds.width(), 1);
+                }
+            }
             canvas.restore();
         }
     }
@@ -106,6 +117,16 @@ public abstract class EffectRenderer
             canvas.strokeText(text, x+outlineWidth, y+outlineWidth);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+outlineWidth, y+outlineWidth);
+            if (_underlined) {
+                for (int ii = 0; ii < text.lineCount(); ii++) {
+                    Rectangle bounds = text.lineBounds(ii);
+                    float sx = x + bounds.x + outlineWidth;
+                    float sy = y + bounds.y + bounds.height() - 1 + outlineWidth;
+                    canvas.drawLine(sx, sy, sx+bounds.width(), sy);
+                    canvas.setFillColor(textColor);
+                    canvas.fillRect(sx, sy, bounds.width(), 1);
+                }
+            }
             canvas.restore();
         }
     }
@@ -132,6 +153,17 @@ public abstract class EffectRenderer
             canvas.fillText(text, x+sx, y+sy);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+tx, y+ty);
+            if (_underlined) {
+                for (int ii = 0; ii < text.lineCount(); ii++) {
+                    Rectangle bounds = text.lineBounds(ii);
+                    canvas.setFillColor(shadowColor);
+                    canvas.fillRect(sx+bounds.x+x, sy+bounds.y+bounds.height()-1,
+                        bounds.width()+1, 1);
+                    canvas.setFillColor(textColor);
+                    canvas.fillRect(tx+bounds.x+x, ty+bounds.y+bounds.height()-1,
+                        bounds.width()+1, 1);
+                }
+            }
             canvas.restore();
         }
     }
