@@ -34,13 +34,10 @@ public class RotateYShader extends IndexedTrisShader
     }
 
     @Override protected String vertexShader() {
-        return "uniform vec2 u_ScreenSize;\n" +
+        return VERT_UNIFS +
             "uniform float u_Angle;\n" +
-            "attribute vec4 a_Matrix;\n" +
-            "attribute vec2 a_Translation;\n" +
-            "attribute vec2 a_Position;\n" +
-            "attribute vec2 a_TexCoord;\n" +
-            "varying vec2 v_TexCoord;\n" +
+            VERT_ATTRS +
+            VERT_VARS +
 
             "void main(void) {\n" +
             // Transform the vertex per the normal screen transform
@@ -82,7 +79,8 @@ public class RotateYShader extends IndexedTrisShader
             // z may already be rotated into negative space so we don't shift it
             "  gl_Position = pos;\n" +
 
-            "  v_TexCoord = a_TexCoord;\n" +
+            VERT_SETTEX +
+            VERT_SETCOLOR +
             "}";
     }
 
@@ -92,8 +90,8 @@ public class RotateYShader extends IndexedTrisShader
             private final Uniform1f uAngle = prog.getUniform1f("u_Angle");
 
             @Override
-            public void prepare(int fbufWidth, int fbufHeight) {
-                super.prepare(fbufWidth, fbufHeight);
+            public void activate(int fbufWidth, int fbufHeight) {
+                super.activate(fbufWidth, fbufHeight);
                 uAngle.bind(angle);
             }
         };
@@ -105,8 +103,8 @@ public class RotateYShader extends IndexedTrisShader
             private final Uniform1f uAngle = prog.getUniform1f("u_Angle");
 
             @Override
-            public void prepare(int fbufWidth, int fbufHeight) {
-                super.prepare(fbufWidth, fbufHeight);
+            public void activate(int fbufWidth, int fbufHeight) {
+                super.activate(fbufWidth, fbufHeight);
                 uAngle.bind(angle);
             }
         };

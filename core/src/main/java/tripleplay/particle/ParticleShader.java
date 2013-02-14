@@ -122,7 +122,7 @@ public class ParticleShader extends GLShader
         }
 
         @Override
-        public void prepare (int fbufWidth, int fbufHeight) {
+        public void activate (int fbufWidth, int fbufHeight) {
             prog.bind();
             uScreenSize.bind(fbufWidth, fbufHeight);
 
@@ -134,6 +134,11 @@ public class ParticleShader extends GLShader
             aTexCoord.bind(VERTEX_STRIDE, 48);
 
             elements.bind(GL20.GL_ELEMENT_ARRAY_BUFFER);
+        }
+
+        @Override
+        public void prepare (int tint, boolean justActivated) {
+            // NOOP
         }
 
         @Override
@@ -221,7 +226,7 @@ public class ParticleShader extends GLShader
         }
 
         @Override
-        public void prepare(int tex, float alpha, boolean justActivated) {
+        public void prepare(int tex, boolean justActivated) {
             ctx.checkGLError("textureShader.prepare start");
             boolean stateChanged = (tex != lastTex);
             if (!justActivated && stateChanged)
