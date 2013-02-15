@@ -37,8 +37,10 @@ public abstract class Animator
     }
 
     /**
-     * Registers an animation with this animator. It will be started on the next frame and continue
-     * until cancelled or it reports that it has completed.
+     * Registers an animation with this animator. If this is the root animator, it will be started
+     * on the next frame and continue until cancelled or it reports that it has completed. If this
+     * is an animator returned from {@link Animation#then} then the queued animation will be
+     * started when the animation on which {@code then} was called has completed.
      */
     public abstract <T extends Animation> T add (T anim);
 

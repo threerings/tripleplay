@@ -355,7 +355,17 @@ public abstract class Animation
 
     /**
      * Returns an animation factory for constructing an animation that will be queued up for
-     * execution when the current animation is completes.
+     * execution when the current animation is completes. <em>Note:</em> only a single animation
+     * can be chained on this returned animator. You cannot queue up multiple animations to fire in
+     * parallel using the animator returned by this method. If you need to do that, do this:
+     * <pre>{@code
+     * rootAnim.queueSomeAnim().then().action(new Runnable() {
+     *   public void run () {
+     *     rootAnim.queueAnimA()...
+     *   }
+     * }).then().queueAnimB()...
+     * }</pre>
+     * This will result in {@code queueAnimA} and {@code queueAnimB} being started in parallel.
      */
     public Animator then () {
         return new ChainAnimator() {
