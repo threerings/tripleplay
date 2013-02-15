@@ -85,28 +85,27 @@ public class RotateYShader extends IndexedTrisShader
     }
 
     @Override
-    protected Core createTextureCore() {
-        return new ITCore(vertexShader(), textureFragmentShader()) {
-            private final Uniform1f uAngle = prog.getUniform1f("u_Angle");
-
-            @Override
-            public void activate(int fbufWidth, int fbufHeight) {
-                super.activate(fbufWidth, fbufHeight);
-                uAngle.bind(angle);
-            }
-        };
+    protected Core createTextureCore () {
+        return new RotateYCore(vertexShader(), textureFragmentShader());
     }
 
     @Override
-    protected Core createColorCore() {
-        return new ITCore(vertexShader(), colorFragmentShader()) {
-            private final Uniform1f uAngle = prog.getUniform1f("u_Angle");
+    protected Core createColorCore () {
+        return new RotateYCore(vertexShader(), colorFragmentShader());
+    }
 
-            @Override
-            public void activate(int fbufWidth, int fbufHeight) {
-                super.activate(fbufWidth, fbufHeight);
-                uAngle.bind(angle);
-            }
-        };
+    protected class RotateYCore extends ITCore {
+        public RotateYCore (String vertShader, String fragShader) {
+            super(vertShader, fragShader);
+            _uAngle = prog.getUniform1f("u_Angle");
+        }
+
+        @Override
+        public void activate (int fbufWidth, int fbufHeight) {
+            super.activate(fbufWidth, fbufHeight);
+            _uAngle.bind(angle);
+        }
+
+        protected final Uniform1f _uAngle;
     }
 }
