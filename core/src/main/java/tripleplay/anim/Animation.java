@@ -246,13 +246,10 @@ public abstract class Animation
 
         @Override
         public Animator then () {
-            return new Animator() {
-                @Override public <T extends Animation> T add (T anim) {
-                    anim._root = _root;
+            return new ChainAnimator() {
+                @Override protected Animation next () {
                     // set ourselves as the repeat target of this added animation
-                    anim._next = Repeat.this;
-                    _next = anim;
-                    return anim;
+                    return Repeat.this;
                 }
             };
         }
@@ -361,15 +358,12 @@ public abstract class Animation
      * execution when the current animation is completes.
      */
     public Animator then () {
-        return new Animator() {
-            @Override public <T extends Animation> T add (T anim) {
+        return new ChainAnimator() {
+            @Override protected Animation next () {
                 // our _next is either null, or it points to the animation to which we should
                 // repeat when we reach the end of this chain; so pass the null or the repeat
                 // target down to our new next animation
-                anim._root = _root;
-                anim._next = _next;
-                _next = anim;
-                return anim;
+                return _next;
             }
         };
     }
@@ -431,6 +425,21 @@ public abstract class Animation
 
     @Override public String toString () {
         return getClass().getName() + " start:" + _start;
+    }
+
+    protected abstract class ChainAnimator extends Animator {
+        @Override public <T extends Animation> T add (T anim) {
+            if (_added) throw new IllegalStateException(
+                "Cannot add multiple animations off the same then()");
+            _added = true;
+
+            anim._root = _root;
+            anim._next = next();
+            _next = anim;
+            return anim;
+        }
+        protected abstract Animation next ();
+        protected boolean _added;
     }
 
     protected float _start;
