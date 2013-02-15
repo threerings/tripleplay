@@ -295,6 +295,13 @@ public class Tabs extends Elements<Tabs>
         return Tabs.class;
     }
 
+    @Override protected void wasAdded () {
+        super.wasAdded();
+        if (selected.get() == null && tabCount() > 0) {
+            selected.update(tabAt(0));
+        }
+    }
+
     @Override protected void wasRemoved () {
         if (willDestroy()) {
             // let go of suppliers
