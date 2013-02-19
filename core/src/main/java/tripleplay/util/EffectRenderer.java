@@ -15,25 +15,13 @@ import pythagoras.f.Rectangle;
 public abstract class EffectRenderer
 {
     /** An "effect" that just renders the text normally. */
-    public static final EffectRenderer NONE = new NoEffect(false);
-
-    public float adjustWidth (float width) { return width; }
-    public float adjustHeight (float height) { return height; }
-
-    public boolean underlined () { return _underlined; }
-
-    public abstract void render (Canvas canvas, TextLayout layout, int textColor, float x, float y);
-
-    public static class NoEffect extends EffectRenderer {
-        public NoEffect (boolean underlined) {
-            _underlined = underlined;
-        }
-
-        public void render (Canvas canvas, TextLayout layout, int textColor, float x, float y) {
+    public static final EffectRenderer NONE = new EffectRenderer() {
+        public void render (Canvas canvas, TextLayout layout, int textColor, boolean underlined,
+            float x, float y) {
             canvas.save();
             canvas.setFillColor(textColor);
             canvas.fillText(layout, x, y);
-            if (_underlined) {
+            if (underlined) {
                 canvas.setStrokeColor(textColor);
                 for (int ii = 0; ii < layout.lineCount(); ii++) {
                     Rectangle bounds = layout.lineBounds(ii);
@@ -44,24 +32,26 @@ public abstract class EffectRenderer
             }
             canvas.restore();
         }
-    }
+    };
+
+    public float adjustWidth (float width) { return width; }
+    public float adjustHeight (float height) { return height; }
+
+    public abstract void render (Canvas canvas, TextLayout layout, int textColor,
+        boolean underlined, float x, float y);
 
     public static class PixelOutline extends EffectRenderer {
         public final int outlineColor;
 
-        public PixelOutline(int outlineColor) {
-            this(outlineColor, false);
-        }
-
-        public PixelOutline (int outlineColor, boolean underlined) {
+        public PixelOutline (int outlineColor) {
             this.outlineColor = outlineColor;
-            _underlined = underlined;
         }
 
         public float adjustWidth (float width) { return width + 2; }
         public float adjustHeight (float height) { return height + 2; }
 
-        public void render (Canvas canvas, TextLayout text, int textColor, float x, float y) {
+        public void render (Canvas canvas, TextLayout text, int textColor, boolean underlined,
+            float x, float y) {
             canvas.save();
             canvas.setFillColor(outlineColor);
             canvas.fillText(text, x+0, y+0);
@@ -74,7 +64,7 @@ public abstract class EffectRenderer
             canvas.fillText(text, x+2, y+2);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+1, y+1);
-            if (_underlined) {
+            if (underlined) {
                 for (int ii = 0; ii < text.lineCount(); ii++) {
                     Rectangle bounds = text.lineBounds(ii);
                     float sx = x + bounds.x + 1;
@@ -96,32 +86,22 @@ public abstract class EffectRenderer
         public final Canvas.LineJoin outlineJoin;
 
         public VectorOutline (int outlineColor, float outlineWidth) {
-            this(outlineColor, outlineWidth, false);
-        }
-
-        public VectorOutline (int outlineColor, float outlineWidth, boolean underlined) {
-            this(outlineColor, outlineWidth, Canvas.LineCap.ROUND, Canvas.LineJoin.ROUND,
-                underlined);
-        }
-
-        public VectorOutline (int outlineColor, float outlineWidth, Canvas.LineCap cap,
-                              Canvas.LineJoin join) {
-            this(outlineColor, outlineWidth, cap, join, false);
+            this(outlineColor, outlineWidth, Canvas.LineCap.ROUND, Canvas.LineJoin.ROUND);
         }
 
         public VectorOutline (int outlineColor, float outlineWidth,
-                              Canvas.LineCap cap, Canvas.LineJoin join, boolean underlined) {
+                              Canvas.LineCap cap, Canvas.LineJoin join) {
             this.outlineColor = outlineColor;
             this.outlineWidth = outlineWidth;
             this.outlineCap = cap;
             this.outlineJoin = join;
-            _underlined = underlined;
         }
 
         public float adjustWidth (float width) { return width + 2*outlineWidth; }
         public float adjustHeight (float height) { return height + 2*outlineWidth; }
 
-        public void render (Canvas canvas, TextLayout text, int textColor, float x, float y) {
+        public void render (Canvas canvas, TextLayout text, int textColor, boolean underlined,
+            float x, float y) {
             canvas.save();
             canvas.setStrokeColor(outlineColor);
             canvas.setStrokeWidth(outlineWidth*2);
@@ -130,7 +110,7 @@ public abstract class EffectRenderer
             canvas.strokeText(text, x+outlineWidth, y+outlineWidth);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+outlineWidth, y+outlineWidth);
-            if (_underlined) {
+            if (underlined) {
                 for (int ii = 0; ii < text.lineCount(); ii++) {
                     Rectangle bounds = text.lineBounds(ii);
                     float sx = x + bounds.x + outlineWidth;
@@ -149,20 +129,16 @@ public abstract class EffectRenderer
         public final float shadowX, shadowY;
 
         public Shadow (int shadowColor, float shadowX, float shadowY) {
-            this(shadowColor, shadowX, shadowY, false);
-        }
-
-        public Shadow (int shadowColor, float shadowX, float shadowY, boolean underlined) {
             this.shadowColor = shadowColor;
             this.shadowX = shadowX;
             this.shadowY = shadowY;
-            _underlined = underlined;
         }
 
         public float adjustWidth (float width) { return width + Math.abs(shadowX); }
         public float adjustHeight (float height) { return height + Math.abs(shadowY); }
 
-        public void render (Canvas canvas, TextLayout text, int textColor, float x, float y) {
+        public void render (Canvas canvas, TextLayout text, int textColor, boolean underlined,
+            float x, float y) {
             float tx = (shadowX < 0) ? -shadowX : 0, ty = (shadowY < 0) ? -shadowY : 0;
             float sx = (shadowX < 0) ? 0 : shadowX, sy = (shadowY < 0) ? 0 : shadowY;
             canvas.save();
@@ -170,7 +146,7 @@ public abstract class EffectRenderer
             canvas.fillText(text, x+sx, y+sy);
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+tx, y+ty);
-            if (_underlined) {
+            if (underlined) {
                 for (int ii = 0; ii < text.lineCount(); ii++) {
                     Rectangle bounds = text.lineBounds(ii);
                     canvas.setFillColor(shadowColor);
@@ -184,6 +160,4 @@ public abstract class EffectRenderer
             canvas.restore();
         }
     }
-
-    protected boolean _underlined;
 }

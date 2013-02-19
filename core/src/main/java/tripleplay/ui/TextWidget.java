@@ -84,6 +84,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final int iconGap = resolveStyle(Style.ICON_GAP);
         public final boolean iconCuddle = resolveStyle(Style.ICON_CUDDLE);
         public final int color = resolveStyle(Style.COLOR);
+        public final boolean underlined = resolveStyle(Style.UNDERLINE);
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
 
         public final TextLayout text;
@@ -238,7 +239,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             // snugly into your button
             float ox = MathUtil.ifloor(halign.offset(twidth, availWidth));
             float oy = MathUtil.ifloor(valign.offset(theight, availHeight));
-            renderer.render(_tglyph.canvas(), text, color, Math.min(ox, 0), Math.min(oy, 0));
+            renderer.render(_tglyph.canvas(), text, color, underlined,
+                Math.min(ox, 0), Math.min(oy, 0));
             _tglyph.layer().setTranslation(tx + Math.max(ox, 0), ty + Math.max(oy, 0));
         }
 

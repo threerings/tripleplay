@@ -219,21 +219,18 @@ public abstract class Style<V>
     public static EffectRenderer createEffectRenderer (Element<?> elem) {
         switch (Styles.resolveStyle(elem, Style.TEXT_EFFECT)) {
         case PIXEL_OUTLINE:
-            return new EffectRenderer.PixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT),
-                                                   Styles.resolveStyle(elem, Style.UNDERLINE));
+            return new EffectRenderer.PixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT));
         case VECTOR_OUTLINE:
             return new EffectRenderer.VectorOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT),
                                                     Styles.resolveStyle(elem, Style.OUTLINE_WIDTH),
                                                     Styles.resolveStyle(elem, Style.OUTLINE_CAP),
-                                                    Styles.resolveStyle(elem, Style.OUTLINE_JOIN),
-                                                    Styles.resolveStyle(elem, Style.UNDERLINE));
+                                                    Styles.resolveStyle(elem, Style.OUTLINE_JOIN));
         case SHADOW:
             return new EffectRenderer.Shadow(Styles.resolveStyle(elem, Style.SHADOW),
                                              Styles.resolveStyle(elem, Style.SHADOW_X),
-                                             Styles.resolveStyle(elem, Style.SHADOW_Y),
-                                             Styles.resolveStyle(elem, Style.UNDERLINE));
+                                             Styles.resolveStyle(elem, Style.SHADOW_Y));
         default:
-            return new EffectRenderer.NoEffect(Styles.resolveStyle(elem, Style.UNDERLINE));
+            return EffectRenderer.NONE;
         }
     }
 

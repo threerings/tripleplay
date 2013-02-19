@@ -22,6 +22,7 @@ public class TextConfig
     public final TextFormat format;
     public final int textColor;
     public final EffectRenderer effect;
+    public final boolean underlined;
 
     public TextConfig (int textColor) {
         this(new TextFormat(), textColor, EffectRenderer.NONE);
@@ -32,9 +33,15 @@ public class TextConfig
     }
 
     public TextConfig (TextFormat format, int textColor, EffectRenderer effect) {
+        this(format, textColor, effect, false);
+    }
+
+    public TextConfig (TextFormat format, int textColor, EffectRenderer effect,
+        boolean underlined) {
         this.format = format;
         this.textColor = textColor;
         this.effect = effect;
+        this.underlined = underlined;
     }
 
     /**
@@ -63,8 +70,7 @@ public class TextConfig
      */
     public TextConfig withShadow (int shadowColor, float shadowX, float shadowY) {
         return new TextConfig(format, textColor,
-                              new EffectRenderer.Shadow(shadowColor, shadowX, shadowY,
-                                                        effect.underlined()));
+                              new EffectRenderer.Shadow(shadowColor, shadowX, shadowY));
     }
 
     /**
@@ -72,7 +78,7 @@ public class TextConfig
      */
     public TextConfig withOutline (int outlineColor) {
         return new TextConfig(format, textColor,
-                              new EffectRenderer.PixelOutline(outlineColor, effect.underlined()));
+                              new EffectRenderer.PixelOutline(outlineColor));
     }
 
     /**
@@ -80,8 +86,11 @@ public class TextConfig
      */
     public TextConfig withOutline (int outlineColor, float outlineWidth) {
         return new TextConfig(format, textColor,
-                              new EffectRenderer.VectorOutline(outlineColor, outlineWidth,
-                                                               effect.underlined()));
+                              new EffectRenderer.VectorOutline(outlineColor, outlineWidth));
+    }
+
+    public TextConfig withUnderline (boolean underlined) {
+        return new TextConfig(format, textColor, effect, underlined);
     }
 
     /**
@@ -105,7 +114,7 @@ public class TextConfig
      * this config's text color and effect.
      */
     public void render (Canvas canvas, TextLayout layout, float x, float y) {
-        effect.render(canvas, layout, textColor, x, y);
+        effect.render(canvas, layout, textColor, underlined, x, y);
     }
 
     /**
