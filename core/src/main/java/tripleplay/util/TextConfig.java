@@ -48,21 +48,21 @@ public class TextConfig
      * Returns a new text config which uses the specified text format.
      */
     public TextConfig withFormat (TextFormat format) {
-        return new TextConfig(format, textColor, effect);
+        return new TextConfig(format, textColor, effect, underlined);
     }
 
     /**
      * Returns a new text config with a text format updated to use the specified font.
      */
     public TextConfig withFont (Font font) {
-        return new TextConfig(format.withFont(font), textColor, effect);
+        return new TextConfig(format.withFont(font), textColor, effect, underlined);
     }
 
     /**
      * Returns a new text config which uses the specified text color.
      */
     public TextConfig withColor (int textColor) {
-        return new TextConfig(format, textColor, effect);
+        return new TextConfig(format, textColor, effect, underlined);
     }
 
     /**
@@ -70,7 +70,7 @@ public class TextConfig
      */
     public TextConfig withShadow (int shadowColor, float shadowX, float shadowY) {
         return new TextConfig(format, textColor,
-                              new EffectRenderer.Shadow(shadowColor, shadowX, shadowY));
+                              new EffectRenderer.Shadow(shadowColor, shadowX, shadowY), underlined);
     }
 
     /**
@@ -78,7 +78,7 @@ public class TextConfig
      */
     public TextConfig withOutline (int outlineColor) {
         return new TextConfig(format, textColor,
-                              new EffectRenderer.PixelOutline(outlineColor));
+                              new EffectRenderer.PixelOutline(outlineColor), underlined);
     }
 
     /**
@@ -86,7 +86,8 @@ public class TextConfig
      */
     public TextConfig withOutline (int outlineColor, float outlineWidth) {
         return new TextConfig(format, textColor,
-                              new EffectRenderer.VectorOutline(outlineColor, outlineWidth));
+                              new EffectRenderer.VectorOutline(outlineColor, outlineWidth),
+                              underlined);
     }
 
     public TextConfig withUnderline (boolean underlined) {
