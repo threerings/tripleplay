@@ -13,6 +13,7 @@ import java.util.Map;
 
 import pythagoras.f.FloatMath;
 
+import playn.core.Asserts;
 import playn.core.GroupLayer;
 import playn.core.Json;
 import playn.core.Layer;
@@ -116,6 +117,7 @@ public class Movie
         _speed = speed;
     }
 
+    /** Retrieves a named layer. It should generally not be modified. */
     public Layer getNamedLayer (String name) {
         for (LayerAnimator animator : _animators) {
             if (animator.data.name.equals(name)) {
@@ -125,6 +127,22 @@ public class Movie
         return null; // Not found
     }
 
+    /**
+     * Replaces the instance on a named layer. The layer should already be empty or contain a single
+     * Movie.
+     */
+    public void setNamedLayer (String name, Instance instance) {
+        for (LayerAnimator animator : _animators) {
+            if (animator.data.name.equals(name)) {
+                Asserts.checkState(animator.content instanceof GroupLayer,
+                    "Layer not a container", "name", name);
+                animator.setCurrent(instance);
+                return;
+            }
+        }
+    }
+
+    /** Retrieves all named layers. They generally should not be modified. */
     public Map<String,Layer> namedLayers () {
         Map<String,Layer> namedLayers = new HashMap<String,Layer>();
         for (LayerAnimator animator : _animators) {
