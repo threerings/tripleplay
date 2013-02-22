@@ -6,6 +6,7 @@
 package tripleplay.flump;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -119,12 +120,25 @@ public class Movie
 
     /** Retrieves a named layer. It should generally not be modified. */
     public Layer getNamedLayer (String name) {
-        for (LayerAnimator animator : _animators) {
-            if (animator.data.name.equals(name)) {
-                return animator.content;
+        LayerAnimator animator = getNamedAnimator(name);
+        return animator != null ? animator.content : null;
+    }
+
+    /** Returns all of the {@Instance}s on a named layer. */
+    public List<Instance> getInstances (String name) {
+        List<Instance> instances;
+        LayerAnimator animator = getNamedAnimator(name);
+        if (animator != null) {
+            if (animator._instances != null) {
+                instances = Arrays.asList(animator._instances);
+            } else {
+                instances = new ArrayList<Instance>(1);
+                instances.add(animator._current);
             }
+        } else {
+            instances = new ArrayList<Instance>(0);
         }
-        return null; // Not found
+        return Collections.unmodifiableList(instances);
     }
 
     /**
@@ -149,6 +163,15 @@ public class Movie
             namedLayers.put(animator.data.name, animator.content);
         }
         return Collections.unmodifiableMap(namedLayers);
+    }
+
+    protected LayerAnimator getNamedAnimator (String name) {
+        for (LayerAnimator animator : _animators) {
+            if (animator.data.name.equals(name)) {
+                return animator;
+            }
+        }
+        return null; // Not found
     }
 
     protected void setFrame (float frame, float dt) {
