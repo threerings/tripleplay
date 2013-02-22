@@ -146,13 +146,11 @@ public class Movie
      * Movie.
      */
     public void setNamedLayer (String name, Instance instance) {
-        for (LayerAnimator animator : _animators) {
-            if (animator.data.name.equals(name)) {
-                Asserts.checkState(animator.content instanceof GroupLayer,
-                    "Layer not a container", "name", name);
-                animator.setCurrent(instance);
-                return;
-            }
+        LayerAnimator animator = getNamedAnimator(name);
+        if (animator != null) {
+            Asserts.checkState(animator.content instanceof GroupLayer,
+                "Layer not a container", "name", name);
+            animator.setCurrent(instance);
         }
     }
 
