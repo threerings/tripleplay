@@ -275,6 +275,10 @@ public class MenuHost
         pop.menu.activate();
     }
 
+    public Menu active () {
+        return _active != null ? _active.pop.menu : null;
+    }
+
     /** Simple layout for positioning the menu within the transient {@code Root}. */
     protected static class RootLayout extends Layout
     {
