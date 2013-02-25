@@ -245,8 +245,8 @@ public abstract class Animation
         }
 
         @Override
-        public Animator then () {
-            return new ChainAnimator() {
+        public AnimationBuilder then () {
+            return new ChainBuilder() {
                 @Override protected Animation next () {
                     // set ourselves as the repeat target of this added animation
                     return Repeat.this;
@@ -354,10 +354,10 @@ public abstract class Animation
     }
 
     /**
-     * Returns an animation factory for constructing an animation that will be queued up for
-     * execution when the current animation is completes. <em>Note:</em> only a single animation
-     * can be chained on this returned animator. You cannot queue up multiple animations to fire in
-     * parallel using the animator returned by this method. If you need to do that, do this:
+     * Returns a builder for constructing an animation that will be queued up for execution when
+     * the current animation completes. <em>Note:</em> only a single animation can be chained on
+     * this returned animation builder. You cannot queue up multiple animations to fire in parallel
+     * using the animation builder returned by this method. If you need to do that, do this:
      * <pre>{@code
      * rootAnim.queueSomeAnim().then().action(new Runnable() {
      *   public void run () {
@@ -367,8 +367,8 @@ public abstract class Animation
      * }</pre>
      * This will result in {@code queueAnimA} and {@code queueAnimB} being started in parallel.
      */
-    public Animator then () {
-        return new ChainAnimator() {
+    public AnimationBuilder then () {
+        return new ChainBuilder() {
             @Override protected Animation next () {
                 // our _next is either null, or it points to the animation to which we should
                 // repeat when we reach the end of this chain; so pass the null or the repeat
@@ -437,7 +437,7 @@ public abstract class Animation
         return getClass().getName() + " start:" + _start;
     }
 
-    protected abstract class ChainAnimator extends Animator {
+    protected abstract class ChainBuilder extends AnimationBuilder {
         @Override public <T extends Animation> T add (T anim) {
             if (_added) throw new IllegalStateException(
                 "Cannot add multiple animations off the same then()");

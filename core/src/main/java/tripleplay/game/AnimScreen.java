@@ -13,7 +13,7 @@ import tripleplay.anim.Animator;
 public abstract class AnimScreen extends Screen
 {
     /** Manages animations. */
-    public final Animator anim = Animator.create();
+    public final Animator anim = new Animator();
 
     // create your scene graph in wasShown or wasAdded and register animations any time; while the
     // screen is showing, animations will run; while the screen is hidden, animations will be

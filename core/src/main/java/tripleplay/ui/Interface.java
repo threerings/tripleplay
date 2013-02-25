@@ -187,7 +187,7 @@ public class Interface
 
     protected final List<Root> _roots = new ArrayList<Root>();
     protected final List<Runnable> _actions = new ArrayList<Runnable>();
-    protected final Animator _animator = Animator.create();
+    protected final Animator _animator = new Animator();
     protected final List<Task> _tasks = new ArrayList<Task>();
     protected float _elapsed;
     protected int _currentTask, _currentTaskCount;

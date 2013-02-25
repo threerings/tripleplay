@@ -11,15 +11,15 @@ import static org.junit.Assert.*;
 public class AnimatorTest
 {
     @Test public void testAnimDoubleRegisterFreakout () {
-        Animator anim = Animator.create();
+        Animator anim = new Animator();
         Runnable NOOP = new Runnable() { public void run () {} };
-        Animator thenAnim = anim.action(NOOP).then();
+        AnimationBuilder chain = anim.action(NOOP).then();
         // it's OK to keep chaining animations
-        thenAnim.action(NOOP).then().action(NOOP);
-        // it's not OK to try to chain an animation off the then() animator that we kept a
-        // reference to and have already chained an animation off of
+        chain.action(NOOP).then().action(NOOP);
+        // it's not OK to try to chain an animation off the then() builder to which we kept a
+        // reference and off of which we have already chained an animation
         try {
-            thenAnim.action(NOOP);
+            chain.action(NOOP);
             fail("Double register failed to freakout");
         } catch (IllegalStateException ise) {} // success
     }
