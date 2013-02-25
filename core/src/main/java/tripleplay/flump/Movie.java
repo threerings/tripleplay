@@ -126,19 +126,10 @@ public class Movie
 
     /** Returns all of the {@Instance}s on a named layer. */
     public List<Instance> getInstances (String name) {
-        List<Instance> instances;
         LayerAnimator animator = getNamedAnimator(name);
-        if (animator != null) {
-            if (animator._instances != null) {
-                instances = Arrays.asList(animator._instances);
-            } else {
-                instances = new ArrayList<Instance>(1);
-                instances.add(animator._current);
-            }
-        } else {
-            instances = new ArrayList<Instance>(0);
-        }
-        return Collections.unmodifiableList(instances);
+        if (animator == null) return Collections.<Instance>emptyList();
+        if (animator._instances == null) return Collections.singletonList(animator._current);
+        return Collections.unmodifiableList(Arrays.asList(animator._instances));
     }
 
     /**
