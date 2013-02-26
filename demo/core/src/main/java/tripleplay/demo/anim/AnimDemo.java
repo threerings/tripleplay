@@ -11,6 +11,8 @@ import playn.core.ImageLayer;
 import playn.core.Pointer;
 import static playn.core.PlayN.*;
 
+import tripleplay.anim.AnimGroup;
+import tripleplay.anim.Animation;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
 import tripleplay.util.TextConfig;
@@ -27,8 +29,7 @@ public class AnimDemo extends DemoScreen
     @Override protected Group createIface () {
         // demo a repeating animation
         CanvasImage image = graphics().createImage(100, 100);
-        image.canvas().setFillColor(0xFFFFCC99);
-        image.canvas().fillCircle(50, 50, 50);
+        image.canvas().setFillColor(0xFFFFCC99).fillCircle(50, 50, 50);
         ImageLayer circle = graphics().createImageLayer(image);
 
         float width = graphics().width();
@@ -45,7 +46,29 @@ public class AnimDemo extends DemoScreen
         });
         layer.addAt(click, (width-click.width())/2, 275);
 
+        // demo animation groups
+        CanvasImage ball = graphics().createImage(40, 40);
+        ball.canvas().setFillColor(0xFF99CCFF).fillCircle(20, 20, 20);
+        ImageLayer[] balls = new ImageLayer[6];
+        for (int ii = 0; ii < balls.length; ii++) {
+            layer.addAt(balls[ii] = graphics().createImageLayer(ball), 170+ii*50, 350);
+        }
+        anim.repeat(layer).add(dropBalls(balls, 0, 1)).then().
+            add(dropBalls(balls, 1, 2)).then().
+            add(dropBalls(balls, 3, 3));
+
         return null;
+    }
+
+    protected Animation dropBalls (ImageLayer[] balls, int offset, int count) {
+        float startY = 350;
+        AnimGroup group = new AnimGroup();
+        for (int ii = 0; ii < count; ii++) {
+            ImageLayer ball = balls[ii+offset];
+            group.tweenY(ball).to(startY+100).in(1000).easeIn().then().
+                tweenY(ball).to(startY).in(1000).easeOut();
+        }
+        return group.toAnim();
     }
 
     protected static final TextConfig CFG = new TextConfig(0xFF000000).
