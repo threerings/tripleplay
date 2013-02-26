@@ -388,6 +388,7 @@ public abstract class Animation
 
     protected void init (float time) {
         _start = time;
+        _current = this;
     }
 
     protected float apply (Animator animator, float time) {
@@ -446,7 +447,7 @@ public abstract class Animation
 
     protected float _start;
     protected Animation _root = this;
-    protected Animation _current = this;
+    protected Animation _current;
     protected Animation _next;
 
     protected static final Random RANDS = new Random();
