@@ -13,7 +13,7 @@ public class AnimatorTest
     @Test public void testAnimDoubleRegisterFreakout () {
         Animator anim = new Animator();
         Runnable NOOP = new Runnable() { public void run () {} };
-        AnimationBuilder chain = anim.action(NOOP).then();
+        AnimBuilder chain = anim.action(NOOP).then();
         // it's OK to keep chaining animations
         chain.action(NOOP).then().action(NOOP);
         // it's not OK to try to chain an animation off the then() builder to which we kept a

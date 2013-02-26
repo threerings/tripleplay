@@ -28,7 +28,7 @@ import tripleplay.util.Layers;
  * actions. Animations can also be sequenced to orchestrate complex correlated actions. The user of
  * this class must call {@link #update} on every {@link Game#update} call to drive the animations.
  */
-public class Animator extends AnimationBuilder
+public class Animator extends AnimBuilder
 {
     /** @deprecated Just construct Animator directly now. */
     @Deprecated public static Animator create () {

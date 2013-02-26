@@ -22,7 +22,7 @@ import tripleplay.util.Layers;
  * Provides a fluent interface for building single chains of animations. See {@link Animator} for a
  * concrete entry point.
  */
-public abstract class AnimationBuilder
+public abstract class AnimBuilder
 {
     /**
      * Registers an animation with this builder. If this is the root animator, it will be started
@@ -185,7 +185,7 @@ public abstract class AnimationBuilder
      * the supplied layer has been removed from its parent. The layer must be added to a parent
      * before the next frame (if it's not already), or the cancellation will trigger immediately.
      */
-    public AnimationBuilder repeat (Layer layer) {
+    public AnimBuilder repeat (Layer layer) {
         return add(new Animation.Repeat(layer)).then();
     }
 

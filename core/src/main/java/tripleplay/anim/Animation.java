@@ -245,7 +245,7 @@ public abstract class Animation
         }
 
         @Override
-        public AnimationBuilder then () {
+        public AnimBuilder then () {
             return new ChainBuilder() {
                 @Override protected Animation next () {
                     // set ourselves as the repeat target of this added animation
@@ -367,7 +367,7 @@ public abstract class Animation
      * }</pre>
      * This will result in {@code queueAnimA} and {@code queueAnimB} being started in parallel.
      */
-    public AnimationBuilder then () {
+    public AnimBuilder then () {
         return new ChainBuilder() {
             @Override protected Animation next () {
                 // our _next is either null, or it points to the animation to which we should
@@ -437,7 +437,7 @@ public abstract class Animation
         return getClass().getName() + " start:" + _start;
     }
 
-    protected abstract class ChainBuilder extends AnimationBuilder {
+    protected abstract class ChainBuilder extends AnimBuilder {
         @Override public <T extends Animation> T add (T anim) {
             if (_added) throw new IllegalStateException(
                 "Cannot add multiple animations off the same then()");
