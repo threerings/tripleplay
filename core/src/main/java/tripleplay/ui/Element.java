@@ -47,6 +47,9 @@ public abstract class Element<T extends Element<T>>
                 }
                 return hit;
             }
+            @Override public String toString () {
+                return "HitTester for " + Element.this;
+            }
         });
 
         // descend by default
