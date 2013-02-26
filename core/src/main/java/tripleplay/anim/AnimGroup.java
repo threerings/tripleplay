@@ -75,18 +75,30 @@ public class AnimGroup extends AnimBuilder
      * to call {@link #add} (or any other method) after {@link #toAnim}.
      */
     public Animation toAnim () {
-        final Animation[] anims = _anims.toArray(new Animation[_anims.size()]);
+        final Animation[] groupAnims = _anims.toArray(new Animation[_anims.size()]);
         _anims = null;
         return new Animation() {
+            protected void init (float time) {
+                super.init(time);
+                for (int ii = 0; ii < groupAnims.length; ii++) {
+                    (_curAnims[ii] = groupAnims[ii]).init(time);
+                }
+            }
+
+            protected float apply (Animator animator, float time) {
+                _animator = animator;
+                return super.apply(animator, time);
+            }
+
             protected float apply (float time) {
-                float remain = Float.MIN_VALUE;
+                float remain = Float.NEGATIVE_INFINITY;
                 int processed = 0;
-                for (int ii = 0; ii < anims.length; ii++) {
-                    Animation anim = anims[ii];
+                for (int ii = 0; ii < _curAnims.length; ii++) {
+                    Animation anim = _curAnims[ii];
                     if (anim == null) continue;
-                    float aremain = anim.apply(time);
+                    float aremain = anim.apply(_animator, time);
                     // if this animation is now complete, remove it from the array
-                    if (aremain <= 0) anims[ii] = null;
+                    if (aremain <= 0) _curAnims[ii] = null;
                     // note this animation's leftover time, we want our remaining time to be the
                     // highest remaining time of our internal animations
                     remain = Math.max(remain, aremain);
@@ -94,9 +106,12 @@ public class AnimGroup extends AnimBuilder
                     processed++;
                 }
                 // if we somehow processed zero animations, return 0 (meaning we're done) rather
-                // than MIN_VALUE which would throw off any animation queued up after this one
+                // than -infinity which would throw off any animation queued up after this one
                 return processed == 0 ? 0 : remain;
             }
+
+            protected Animator _animator;
+            protected Animation[] _curAnims = new Animation[groupAnims.length];
         };
     }
 
