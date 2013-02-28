@@ -54,13 +54,12 @@ public class Library
                 for (Movie.Symbol movie : movies) {
                     for (LayerData layer : movie.layers) {
                         for (KeyframeData kf : layer.keyframes) {
-                            Symbol symbol = symbols.get(kf._symbolName);
-                            if (symbol != null) {
-                                if (layer._lastSymbol == null) {
-                                    layer._lastSymbol = symbol;
-                                } else if (layer._lastSymbol != symbol) {
-                                    layer._multipleSymbols = true;
-                                }
+                            if (kf._symbolName != null) {
+                                Symbol symbol = symbols.get(kf._symbolName);
+                                Asserts.checkNotNull(symbol);
+
+                                if (layer._lastSymbol == null) layer._lastSymbol = symbol;
+                                else if (layer._lastSymbol != symbol) layer._multipleSymbols = true;
                                 kf._symbol = symbol;
                             }
                         }
