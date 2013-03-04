@@ -8,19 +8,7 @@ package tripleplay.anim;
 import java.util.ArrayList;
 import java.util.List;
 
-import pythagoras.f.XY;
-import react.Value;
-
-import playn.core.Asserts;
 import playn.core.Game;
-import playn.core.GroupLayer;
-import playn.core.ImageLayer;
-import playn.core.Layer;
-import playn.core.PlayN;
-import playn.core.Sound;
-
-import tripleplay.sound.Playable;
-import tripleplay.util.Layers;
 
 /**
  * Handles creation and management of animations. Animations may involve the tweening of a
