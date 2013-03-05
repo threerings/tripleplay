@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
 import playn.core.Pointer;
 import playn.core.Sound;
 
@@ -21,10 +20,10 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
     implements Clickable<ToggleButton>
 {
     /** The text displayed by this widget, or null. */
-    public final Value<String> text = Value.create((String)null);
+    public final Value<String> text = Value.create(null);
 
     /** The icon displayed by this widget, or null. */
-    public final Value<Image> icon = Value.<Image>create(null);
+    public final Value<Icon> icon = Value.create(null);
 
     /** Creates a button with no text or icon. */
     public ToggleButton () {
@@ -37,12 +36,12 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
     }
 
     /** Creates a button with the supplied icon. */
-    public ToggleButton (Image icon) {
+    public ToggleButton (Icon icon) {
         this(null, icon);
     }
 
     /** Creates a button with the supplied text and icon. */
-    public ToggleButton (String text, Image icon) {
+    public ToggleButton (String text, Icon icon) {
         this.text.update(text);
         this.icon.update(icon);
         this.text.connect(textDidChange());
@@ -65,7 +64,7 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
         return text.get();
     }
 
-    @Override protected Image icon () {
+    @Override protected Icon icon () {
         return icon.get();
     }
 

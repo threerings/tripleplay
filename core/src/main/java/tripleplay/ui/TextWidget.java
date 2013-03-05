@@ -8,8 +8,7 @@ package tripleplay.ui;
 import pythagoras.f.Dimension;
 import pythagoras.f.MathUtil;
 
-import playn.core.Image;
-import playn.core.ImageLayer;
+import playn.core.Layer;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 import playn.core.util.Callback;
@@ -33,7 +32,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     /**
      * Returns the current icon displayed by this widget, or null if it has no icon.
      */
-    protected abstract Image icon ();
+    protected abstract Icon icon ();
 
     /**
      * Returns a slot that subclasses should wire up to their text {@code Value}.
@@ -45,15 +44,15 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     /**
      * Returns a slot that subclasses should wire up to their icon {@code Value}.
      */
-    protected Slot<Image> iconDidChange() {
-        return new Slot<Image>() {
-            @Override public void onEmit (Image icon) {
+    protected Slot<Icon> iconDidChange() {
+        return new Slot<Icon>() {
+            @Override public void onEmit (Icon icon) {
                 if (icon == null) {
                     clearLayoutData();
                     invalidate();
                 } else {
-                    icon.addCallback(new Callback<Image>() {
-                        public void onSuccess (Image resource) {
+                    icon.addCallback(new Callback<Icon>() {
+                        public void onSuccess (Icon resource) {
                             clearLayoutData();
                             invalidate();
                         }
@@ -117,7 +116,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             Dimension size = new Dimension();
             addTextSize(size);
 
-            Image icon = icon();
+            Icon icon = icon();
             if (icon != null) {
                 switch (iconPos) {
                 case LEFT:
@@ -140,7 +139,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         @Override public void layout (float left, float top, float width, float height) {
             float tx = left, ty = top, usedWidth = 0, usedHeight = 0;
 
-            Image icon = icon();
+            Icon icon = icon();
             if (icon != null && iconPos != null) {
                 float ix = left, iy = top;
                 float iwidth = icon.width(), iheight = icon.height();
@@ -166,8 +165,12 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     usedHeight = iheight;
                     break;
                 }
-                if (_ilayer == null) layer.add(_ilayer = graphics().createImageLayer(icon));
-                else _ilayer.setImage(icon);
+                Layer iconLayer = icon.layer();
+                if (_ilayer != null && _ilayer != iconLayer) {
+                    layer.remove(_ilayer);
+                    _ilayer = null;
+                }
+                if (_ilayer == null) layer.add(_ilayer = iconLayer);
                 _ilayer.setTranslation(ix, iy);
 
             } else if (icon == null && _ilayer != null) {
@@ -196,7 +199,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         // this is broken out so that subclasses can extend this action
         protected void accommodateIcon (Dimension hints, boolean haveText) {
-            Image icon = icon();
+            Icon icon = icon();
             if (icon != null) {
                 // remove the icon space from our hint dimensions
                 switch (iconPos) {
@@ -249,5 +252,5 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     }
 
     protected final Glyph _tglyph = new Glyph();
-    protected ImageLayer _ilayer;
+    protected Layer _ilayer;
 }

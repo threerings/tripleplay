@@ -5,10 +5,8 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
 import playn.core.PlayN;
 import playn.core.Pointer;
-
 import react.Signal;
 import react.SignalView;
 
@@ -36,12 +34,12 @@ public class LongPressButton extends Button
     }
 
     /** Creates a button with the supplied icon. */
-    public LongPressButton (Image icon) {
+    public LongPressButton (Icon icon) {
         this(null, icon);
     }
 
     /** Creates a button with the supplied text and icon. */
-    public LongPressButton (String text, Image icon) {
+    public LongPressButton (String text, Icon icon) {
         super(text, icon);
     }
 

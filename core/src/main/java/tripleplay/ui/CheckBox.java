@@ -28,14 +28,14 @@ public class CheckBox extends ClickableTextWidget<CheckBox>
 
     /** Creates a checkbox with the supplied check character. */
     public CheckBox (char checkChar) {
-        this(checkChar, null);
+        this(checkChar, (Icon)null);
     }
 
-    public CheckBox (Image checkIcon) {
+    public CheckBox (Icon checkIcon) {
         this((char)0, checkIcon);
     }
 
-    protected CheckBox (char checkChar, Image checkIcon) {
+    protected CheckBox (char checkChar, Icon checkIcon) {
         _checkStr = String.valueOf(checkChar);
         _checkIcon = checkIcon;
         checked.connect(new Slot<Boolean> () {
@@ -53,7 +53,7 @@ public class CheckBox extends ClickableTextWidget<CheckBox>
         return (_checkIcon == null) ? _checkStr : null;
     }
 
-    @Override protected Image icon () {
+    @Override protected Icon icon () {
         return _checkIcon;
     }
 
@@ -75,6 +75,6 @@ public class CheckBox extends ClickableTextWidget<CheckBox>
     }
 
     protected final String _checkStr;
-    protected final Image _checkIcon;
+    protected final Icon _checkIcon;
     protected Sound _actionSound;
 }

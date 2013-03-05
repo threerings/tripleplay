@@ -18,6 +18,8 @@ import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Element;
 import tripleplay.ui.Group;
+import tripleplay.ui.Icon;
+import tripleplay.ui.ImageIcon;
 import tripleplay.ui.Label;
 import tripleplay.ui.Menu;
 import tripleplay.ui.Menu.AnimFn;
@@ -159,7 +161,7 @@ public class MenuDemo extends DemoScreen
         return updater(button.text, button.icon);
     }
 
-    protected Slot<MenuItem> updater (final Value<String> text, final Value<Image> icon) {
+    protected Slot<MenuItem> updater (final Value<String> text, final Value<Icon> icon) {
         return new Slot<MenuItem>() {
             @Override public void onEmit (MenuItem item) {
                 text.update(item.text.get() + " \u25BC");
@@ -187,9 +189,9 @@ public class MenuDemo extends DemoScreen
         return menu;
     }
 
-    protected Image tile (int index) {
+    protected Icon tile (int index) {
         final float iwidth = 16, iheight = 16;
-        return _squares.subImage(index*iwidth, 0, iwidth, iheight);
+        return new ImageIcon(_squares.subImage(index*iwidth, 0, iwidth, iheight));
     }
 
     protected Menu createMenu (String title, String... items) {
@@ -205,7 +207,7 @@ public class MenuDemo extends DemoScreen
         public MenuHost menuHost;
 
         public TrackingLabel (MenuHost menuHost, String text) {
-            super(text, null);
+            super(text);
             this.menuHost = menuHost;
             enableInteraction();
         }

@@ -7,8 +7,6 @@ package tripleplay.ui;
 
 import react.ValueView;
 
-import playn.core.Image;
-
 /**
  * A label that displays a {@link ValueView}. If you already have the contents of the label in a
  * reactive value, you can use this to simply display it rather than using a stock {@link Label}
@@ -30,5 +28,5 @@ public class ValueLabel extends TextWidget<ValueLabel>
     @Override public String toString () { return "VLabel(" + text.get() + ")"; }
     @Override protected Class<?> getStyleClass () { return Label.class; }
     @Override protected String text () { return String.valueOf(text.get()); }
-    @Override protected Image icon () { return null; }
+    @Override protected Icon icon () { return null; }
 }

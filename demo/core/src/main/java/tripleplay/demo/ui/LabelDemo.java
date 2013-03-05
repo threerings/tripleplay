@@ -6,11 +6,12 @@
 package tripleplay.demo.ui;
 
 import playn.core.Font;
-import playn.core.Image;
 import playn.core.PlayN;
 
 import tripleplay.ui.Background;
 import tripleplay.ui.Group;
+import tripleplay.ui.Icon;
+import tripleplay.ui.ImageIcon;
 import tripleplay.ui.Label;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
@@ -32,7 +33,7 @@ public class LabelDemo extends DemoScreen
     }
 
     @Override protected Group createIface () {
-        Image smiley = PlayN.assets().getImage("images/smiley.png");
+        Icon smiley = new ImageIcon(PlayN.assets().getImage("images/smiley.png"));
         Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CC66).inset(5)));
         Styles smallUnderlined = Styles.make(

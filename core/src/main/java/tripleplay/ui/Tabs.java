@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import playn.core.Asserts;
-import playn.core.Image;
 
 import react.Slot;
 import react.Value;
@@ -229,7 +228,7 @@ public class Tabs extends Elements<Tabs>
      * {@link #contentArea} group when the tab is selected.
      * @return the newly added tab
      */
-    public Tab add (String label, Image icon, Supplier supplier) {
+    public Tab add (String label, Icon icon, Supplier supplier) {
         Tab tab = new Tab(new ToggleButton(label, icon), supplier);
         tab._index = _tabs.size();
         _tabs.add(tab);
@@ -242,7 +241,7 @@ public class Tabs extends Elements<Tabs>
      * See {@link Tabs#add(String, Supplier)}.
      * @return the newly added tab
      */
-    public Tab add (String label, Image icon, Element<?> panel) {
+    public Tab add (String label, Icon icon, Element<?> panel) {
         return add(label, icon, Supplier.auto(panel));
     }
 

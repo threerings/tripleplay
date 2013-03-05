@@ -7,9 +7,10 @@ package tripleplay.demo.util;
 
 import playn.core.Canvas;
 import playn.core.CanvasImage;
-import playn.core.Image;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
+import tripleplay.ui.Icon;
+import tripleplay.ui.ImageIcon;
 import tripleplay.ui.Label;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.AxisLayout;
@@ -51,7 +52,7 @@ public class ColorsDemo extends DemoScreen
         return new Label(createSampler(baseColor));
     }
 
-    protected Image createSampler (int baseColor) {
+    protected Icon createSampler (int baseColor) {
         int size = 16;
         CanvasImage cimg = graphics().createImage(size * 17, size);
         Canvas canvas = cimg.canvas();
@@ -70,6 +71,6 @@ public class ColorsDemo extends DemoScreen
 
         canvas.setStrokeColor(Colors.BLACK);
         canvas.strokeRect(size * 8, 0, size - 1, size - 1);
-        return cimg;
+        return new ImageIcon(cimg);
     }
 }

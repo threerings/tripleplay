@@ -17,6 +17,8 @@ import tripleplay.ui.CheckBox;
 import tripleplay.ui.Constraints;
 import tripleplay.ui.Field;
 import tripleplay.ui.Group;
+import tripleplay.ui.Icon;
+import tripleplay.ui.ImageIcon;
 import tripleplay.ui.Label;
 import tripleplay.ui.LongPressButton;
 import tripleplay.ui.Style;
@@ -40,7 +42,7 @@ public class MiscDemo extends DemoScreen
     }
 
     @Override protected Group createIface () {
-        Image smiley = PlayN.assets().getImage("images/smiley.png");
+        Icon smiley = new ImageIcon(PlayN.assets().getImage("images/smiley.png"));
         final Image squares = PlayN.assets().getImage("images/squares.png");
 
         CheckBox toggle, toggle2;
@@ -81,8 +83,8 @@ public class MiscDemo extends DemoScreen
 
         toggle.checked.update(true);
         toggle.checked.connect(label2.visibleSlot());
-        toggle2.checked.map(new Function<Boolean,Image>() {
-            public Image apply (Boolean checked) {
+        toggle2.checked.map(new Function<Boolean,Icon>() {
+            public Icon apply (Boolean checked) {
                 return checked ? tile(squares, 0) : null;
             }
         }).connect(label2.icon.slot());
@@ -118,9 +120,9 @@ public class MiscDemo extends DemoScreen
                 longPress, AxisLayout.stretch(pressResult)));
     }
 
-    protected Image tile (Image image, int index) {
+    protected Icon tile (Image image, int index) {
         final float iwidth = 16, iheight = 16;
-        return image.subImage(index*iwidth, 0, iwidth, iheight);
+        return new ImageIcon(image.subImage(index*iwidth, 0, iwidth, iheight));
     }
 
     protected static final Styles GREENBG = Styles.make(

@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import playn.core.Connection;
-import playn.core.Image;
 import playn.core.Pointer;
 import pythagoras.f.Dimension;
 import react.Signal;
@@ -28,7 +27,7 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
     public final Value<String> text = Value.create(null);
 
     /** The icon shown. */
-    public final Value<Image> icon = Value.create(null);
+    public final Value<Icon> icon = Value.create(null);
 
     /**
      * Creates a new menu item with the given label.
@@ -40,7 +39,7 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
     /**
      * Creates a new menu item with the given label and icon.
      */
-    public MenuItem (String label, Image icon) {
+    public MenuItem (String label, Icon icon) {
         text.update(label);
         this.icon.update(icon);
         text.connect(textDidChange());
@@ -93,7 +92,7 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
     @Override public SignalView<MenuItem> clicked () { return _clicked; }
     @Override protected Class<?> getStyleClass () { return MenuItem.class; }
     @Override protected void onClick (Pointer.Event event) { _clicked.emit(this); }
-    @Override protected Image icon () { return icon.get(); }
+    @Override protected Icon icon () { return icon.get(); }
     @Override protected void onPointerStart (Pointer.Event event, float x, float y) {}
     @Override protected void onPointerDrag (Pointer.Event event, float x, float y) {}
     @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {}

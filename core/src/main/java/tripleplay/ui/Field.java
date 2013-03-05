@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
 import playn.core.Keyboard;
 import playn.core.Keyboard.TextType;
 import playn.core.Layer;
@@ -176,7 +175,7 @@ public class Field extends TextWidget<Field>
         return (ctext == null || ctext.length() == 0) ? " " : ctext;
     }
 
-    @Override protected Image icon () {
+    @Override protected Icon icon () {
         return null; // fields never have an icon
     }
 

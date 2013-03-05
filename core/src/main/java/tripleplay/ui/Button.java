@@ -5,10 +5,8 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
 import playn.core.Pointer;
 import playn.core.Sound;
-
 import react.Signal;
 import react.SignalView;
 import react.Value;
@@ -28,7 +26,7 @@ public class Button extends ClickableTextWidget<Button>
     public final Value<String> text = Value.create((String)null);
 
     /** The icon displayed by this widget, or null. */
-    public final Value<Image> icon = Value.<Image>create(null);
+    public final Value<Icon> icon = Value.<Icon>create(null);
 
     /** Creates a button with no text or icon. */
     public Button () {
@@ -41,12 +39,12 @@ public class Button extends ClickableTextWidget<Button>
     }
 
     /** Creates a button with the supplied icon. */
-    public Button (Image icon) {
+    public Button (Icon icon) {
         this(null, icon);
     }
 
     /** Creates a button with the supplied text and icon. */
-    public Button (String text, Image icon) {
+    public Button (String text, Icon icon) {
         this.text.update(text);
         this.icon.update(icon);
         this.text.connect(textDidChange());
@@ -93,7 +91,7 @@ public class Button extends ClickableTextWidget<Button>
         return text.get();
     }
 
-    @Override protected Image icon () {
+    @Override protected Icon icon () {
         return icon.get();
     }
 
