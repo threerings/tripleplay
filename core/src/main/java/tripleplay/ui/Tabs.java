@@ -215,9 +215,8 @@ public class Tabs extends Elements<Tabs>
     }
 
     /**
-     * Adds a new tab to the container with a pre-constructed element for its content.
-     * This is a shortcut for calling {@link Tabs#add(String, Supplier)} with a {@link
-     * Supplier#auto()}.
+     * Adds a new tab to the container with a pre-constructed element for its content. This is a
+     * shortcut for calling {@link #add(String, Supplier)} with a {@link Supplier#auto}.
      * @return the newly added tab
      */
     public Tab add (String label, Element<?> panel) {

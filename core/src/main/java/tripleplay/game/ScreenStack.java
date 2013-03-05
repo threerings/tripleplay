@@ -223,7 +223,7 @@ public class ScreenStack
     }
 
     /**
-     * {@link #remove(Predicte,Transition)} with the default transition.
+     * {@link #remove(Predicate,Transition)} with the default transition.
      */
     public void remove (Predicate pred) {
         remove(pred, defaultPopTransition());

@@ -30,10 +30,11 @@ import tripleplay.util.Layers;
 
 /**
  * A composite element that manages horizontal and vertical scrolling of a single content element.
- * As shown below, the content can be thought of as moving around behind the scroll group, which
- * is clipped to create a "view" to the content. Methods {@link #xpos()} and {@link #ypos()} allow
- * reading the current position of the view. The view position can be set with {@link #scroll()}.
- * The view size and content size are available via {@link #viewSize()} and {@link #contentSize()}.
+ * As shown below, the content can be thought of as moving around behind the scroll group, which is
+ * clipped to create a "view" to the content. Methods {@link #xpos} and {@link #ypos} allow reading
+ * the current position of the view. The view position can be set with {@link #scroll}. The view
+ * size and content size are available via {@link #viewSize} and {@link #contentSize}.
+ *
  * <pre>{@code
  *      Scrolled view (xpos,ypos>0)       View unscrolled (xpos,ypos=0)
  *     ---------------------------        ---------------------------
@@ -57,7 +58,7 @@ import tripleplay.util.Layers;
  * {@code Group} and add things to that.</p>
  *
  * <p>NOTE: since scrolling is done by pointer events, child elements cannot be clicked directly.
- * Instead, basic click handling can be done using the {@link #contentClicked()} signal.</p>
+ * Instead, basic click handling can be done using the {@link #contentClicked} signal.</p>
  *
  * TODO: some way to handle keyboard events (complicated by lack of a focus element)
  * TODO: more features when Mouse.hasMouse: show some paging buttons when bars are moused over
@@ -89,7 +90,7 @@ public class Scroller extends Elements<Scroller>
 
     /**
      * Interface for customizing how content is clipped and translated.
-     * @see Scroller#Scroller(Element, Interface)
+     * @see Scroller#Scroller
      */
     public interface Clippable {
         /**
@@ -394,8 +395,8 @@ public class Scroller extends Elements<Scroller>
     }
 
     /**
-     * Gets the size of the content that we are responsible for scrolling. Scrolling is active
-     * for a given axis when this is larger than {@link #scrollSize()} along that axis.
+     * Gets the size of the content that we are responsible for scrolling. Scrolling is active for
+     * a given axis when this is larger than {@link #viewSize} along that axis.
      */
     public IDimension contentSize () {
         return _contentSize;

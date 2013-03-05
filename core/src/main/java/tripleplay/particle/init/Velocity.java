@@ -43,7 +43,7 @@ public class Velocity
 
     /**
      * Returns an initializer that provides a uniformly distribted random velocity in the range
-     * {@code minX} to {@link maxX} and similarly for the y direction.
+     * {@code minX} to {@code maxX} and similarly for the y direction.
      */
     public static Initializer randomSquare (final Randoms rando,
                                             final float minX, final float maxX,

@@ -22,7 +22,7 @@ import tripleplay.anim.Animator;
 import tripleplay.ui.MenuItem.ShowText;
 
 /**
- * Holds a collection of {@link MenuItem}s, dispatching a {@link Menu#itemTriggered()} signal
+ * Holds a collection of {@link MenuItem}s, dispatching a {@link Menu#itemTriggered} signal
  * when one is selected and triggered. Normally used in conjunction with {@link MenuHost} to popup
  * the menu (in its own {@code Root}), manage animations, track user input, and handle
  * cancellation.
@@ -46,7 +46,7 @@ public class Menu extends Elements<Menu>
          * For the given menu and animator, adds an animation to the given animator and returns it.
          * TODO: how can more than one animation be supported? seems Animation should have a join()
          * method in addition to then()
-         */ 
+         */
         Animation go (Menu menu, Animator animator);
     }
 
@@ -124,8 +124,7 @@ public class Menu extends Elements<Menu>
     /**
      * Opens this menu, using an animation created by the resolved {@link #OPENER} style. Once the
      * animation is finished, the user can view the {@code MenuItem} choices. When one is selected
-     * and dispatched via the {@link #itemTriggered()} signal, the menu is deactivated
-     * automatically.
+     * and dispatched via the {@link #itemTriggered} signal, the menu is deactivated automatically.
      */
     public void activate () {
         // already active, nothing to do
@@ -280,7 +279,7 @@ public class Menu extends Elements<Menu>
         MenuItem hover = getHover(e);
         Element<?> selected = _selector.selected.get();
         _selector.selected.update(hover);
-        if (hover == null) return; 
+        if (hover == null) return;
 
         // trigger if this is the 2nd click -or- we always show text
         if (hover == selected || hover._showText == ShowText.ALWAYS) {

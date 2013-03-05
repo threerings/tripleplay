@@ -83,7 +83,7 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
 
     /**
      * Gets the signal that dispatches when a menu item is triggered. This is created lazily since
-     * most callers will just connect to {@Menu#itemTriggered()}. 
+     * most callers will just connect to {@link Menu#itemTriggered}.
      */
     public SignalView<MenuItem> triggered () {
         if (_triggered == null) _triggered = Signal.create();

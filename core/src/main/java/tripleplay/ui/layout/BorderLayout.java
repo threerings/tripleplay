@@ -21,8 +21,10 @@ import tripleplay.ui.Style;
  * Arranges up to 5 elements, one central and one on each edge. Added elements must have a
  * constraint from the class' listing (e.g. {@link BorderLayout#CENTER}), which determines the
  * position in the layout and stretching.
+ *
  * <p>This is how the layout looks. Note north/south and east/west behavior is not quite symmetric
  * because east and west fit between the bottom of the north and top of the south:</p>
+ *
  * <p><pre>
  *     |-----------------------------|
  *     |            north            |
@@ -37,39 +39,40 @@ import tripleplay.ui.Style;
  *     |            south            |
  *     |-----------------------------|
  * </pre></p>
- * When an element is not stretched, it obeys the {@link Style.HAlign} and {@link Style.VAlign}
- * bindings.
+ *
+ * When an element is not stretched, it obeys the {@link tripleplay.ui.Style.HAlign} and {@link
+ * tripleplay.ui.Style.VAlign} bindings.
  */
 public class BorderLayout extends Layout
 {
-    /** Constraint to position an element in the center of its parent. The element is stretched
-     * in both directions to take up available space. If {@link Constraint#unstretched()} is
-     * used, the element will be aligned in both directions using its preferred size and the
-     * {@link Style.HAlign} and {@link Style.VAlign} bindings. */
+    /** Constraint to position an element in the center of its parent. The element is stretched in
+     * both directions to take up available space. If {@link Constraint#unstretched} is used, the
+     * element will be aligned in both directions using its preferred size and the {@link
+     * tripleplay.ui.Style.HAlign} and {@link tripleplay.ui.Style.VAlign} bindings. */
     public static final Constraint CENTER = Position.CENTER.stretched;
 
     /** Constraint to position an element along the top edge of its parent. The element is
-     * stretched horizontally and uses its preferred height. If {@link Constraint#unstretched()} is
+     * stretched horizontally and uses its preferred height. If {@link Constraint#unstretched} is
      * used, the element will be aligned horizontally using its preferred size according to the
-     * {@link Style.HAlign} binding. */
+     * {@link tripleplay.ui.Style.HAlign} binding. */
     public static final Constraint NORTH = Position.NORTH.stretched;
 
     /** Constraint to position an element along the bottom edge of its parent. The element is
-     * stretched horizontally and uses its preferred height. If {@link Constraint#unstretched()} is
+     * stretched horizontally and uses its preferred height. If {@link Constraint#unstretched} is
      * used, the element will be aligned horizontally using its preferred size according to the
-     * {@link Style.HAlign} binding. */
+     * {@link tripleplay.ui.Style.HAlign} binding. */
     public static final Constraint SOUTH = Position.SOUTH.stretched;
 
     /** Constraint to position an element along the right edge of its parent. The element is
-     * stretched vertically and uses its preferred width. If {@link Constraint#unstretched()} is
+     * stretched vertically and uses its preferred width. If {@link Constraint#unstretched} is
      * used, the element will be aligned vertically using its preferred size according to the
-     * {@link Style.VAlign} binding. */
+     * {@link tripleplay.ui.Style.VAlign} binding. */
     public static final Constraint EAST = Position.EAST.stretched;
 
     /** Constraint to position an element along the right edge of its parent. The element is
-     * stretched vertically and uses its preferred width. If {@link Constraint#unstretched()} is
+     * stretched vertically and uses its preferred width. If {@link Constraint#unstretched} is
      * used, the element will be aligned vertically using its preferred size according to the
-     * {@link Style.VAlign} binding. */
+     * {@link tripleplay.ui.Style.VAlign} binding. */
     public static final Constraint WEST = Position.WEST.stretched;
 
     /**

@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Maintains a list of {@link Destrayable}s. When an object is removed from the list or the list is
+ * Maintains a list of {@link Destroyable}s. When an object is removed from the list or the list is
  * cleared, it is {@link Destroyable#destroy}ed.
  *
  * <p> Note that this is not a proper {@code java.util.List} because that interface exposes a ton

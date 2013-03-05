@@ -55,8 +55,8 @@ public class FlowLayout extends Layout
     }
 
     /**
-     * Sets the alignment used for positioning elements within their row. By default, elements
-     * are not stretched and centered vertically: {@link Style.VAlign#CENTER}.
+     * Sets the alignment used for positioning elements within their row. By default, elements are
+     * not stretched and centered vertically: {@link tripleplay.ui.Style.VAlign#CENTER}.
      */
     public FlowLayout align (Style.VAlign align) {
         _valign = align;

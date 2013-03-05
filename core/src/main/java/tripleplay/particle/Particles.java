@@ -45,7 +45,7 @@ public class Particles
     }
 
     /**
-     * Updates all registered emitters. Call this from {@link Game#update} or similar.
+     * Updates all registered emitters. Call this from {@code Game.update} or similar.
      *
      * @param delta the time that has elapsed since the last frame, in milliseconds.
      */

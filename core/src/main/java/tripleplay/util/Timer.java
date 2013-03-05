@@ -44,7 +44,7 @@ public class Timer
         return add(initialMillis, repeatMillis, action);
     }
 
-    /** This should be called from {@link Game#update}, or similar. */
+    /** This should be called from {@link playn.core.Game#update}, or similar. */
     public void update () {
         update(System.currentTimeMillis());
     }

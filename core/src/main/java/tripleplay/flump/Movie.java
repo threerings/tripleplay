@@ -124,7 +124,7 @@ public class Movie
         return animator != null ? animator.content : null;
     }
 
-    /** Returns all of the {@Instance}s on a named layer. */
+    /** Returns all of the {@code Instance}s on a named layer. */
     public List<Instance> getInstances (String name) {
         LayerAnimator animator = getNamedAnimator(name);
         if (animator == null) return Collections.<Instance>emptyList();
