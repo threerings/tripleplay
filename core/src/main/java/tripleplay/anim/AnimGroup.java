@@ -13,19 +13,19 @@ import java.util.List;
  * an {@link Animator} at some later time. All animations added to the group will be started in
  * parallel.
  *
- * <code>{@pre
+ * <pre>{@code
  * AnimGroup group = new AnimGroup();
  * group.tweenXY(...).then().tweenAlpha(...);
  * group.play(sound).then().action(...);
  * // the two animation chains (the tween chain and the play/action chain) will run in parallel
  * // after this group is added to an Animator
  * anim.add(group.toAnim());
- * }</code>
+ * }</pre>
  *
  * One can combine multiple animation groups to achieve any desired construction of sequential and
  * parallel animations.
  *
- * <code>{@pre
+ * <pre>{@code
  * AnimGroup group2 = new AnimGroup();
  * group2.tweenXY(...).then().tweenAlpha(...);
  * group2.play(sound).then().action(...);
@@ -35,14 +35,14 @@ import java.util.List;
  * // group 1's two animation chains will be queued up to run in parallel, and the first of its
  * // chains will delay 1s and then trigger group 2's chains, which themselves run in parallel
  * anim.add(group1.toAnim());
- * }</code>
+ * }</pre>
  *
  * It is of course also possible to add a group with a single animation chain, which will contain
  * no parallelism but can still be useful for situations where one wants to compose sequences of
  * animations internally and then return that package of animations to be sequenced with other
  * packages of animations by some outer mechanism:
  *
- * <code>{@pre
+ * <pre>{@code
  * class Ship {
  *   Animation createExplosionAnim () {
  *     AnimGroup group = new AnimGroup();
@@ -50,7 +50,7 @@ import java.util.List;
  *     return group.toAnim();
  *   }
  * }
- * }</code>
+ * }</pre>
  */
 public class AnimGroup extends AnimBuilder
 {

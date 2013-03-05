@@ -34,7 +34,7 @@ import tripleplay.util.Layers;
  * is clipped to create a "view" to the content. Methods {@link #xpos()} and {@link #ypos()} allow
  * reading the current position of the view. The view position can be set with {@link #scroll()}.
  * The view size and content size are available via {@link #viewSize()} and {@link #contentSize()}.
- * <pre><code>
+ * <pre>{@code
  *      Scrolled view (xpos,ypos>0)       View unscrolled (xpos,ypos=0)
  *     ---------------------------        ---------------------------
  *     |                :        |        | Scroll  |               |
@@ -46,7 +46,7 @@ import tripleplay.util.Layers;
  *     |           |  "view" |   |        |         content         |
  *     |           -----------   |        |                         |
  *     ---------------------------        ---------------------------
- * </code></pre>
+ * }</pre>
  *
  * <p>Scroll bars are overlaid at the edges of the view and fade out after a short period of
  * inactivity. By default, bars are drawn as simple semi-transparent overlays. The color, size and

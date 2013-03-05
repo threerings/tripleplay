@@ -10,12 +10,12 @@ import react.Value;
 import react.ValueView;
 
 /**
- * Maintains a single selected item among a specified set of <code>Element</code> instances. The
- * elements may be added individually, or the children of an <code>Elements</code> may be tracked
+ * Maintains a single selected item among a specified set of {@code Element} instances. The
+ * elements may be added individually, or the children of an {@code Elements} may be tracked
  * automatically.
  *
- * <p>A click on a tracked element that implements <code>Clickable</code> makes it the selected
- * item, or <code>selected</code> can be used to manually control the selected item.</p>
+ * <p>A click on a tracked element that implements {@code Clickable} makes it the selected item, or
+ * {@code selected} can be used to manually control the selected item.</p>
  */
 public class Selector
 {
@@ -42,9 +42,8 @@ public class Selector
     }
 
     /**
-     * Tracks the children of <code>elements</code> for setting the selection. Children
-     * subsequently added or removed from <code>elements</code> are automatically handled
-     * appropriately.
+     * Tracks the children of {@code elements} for setting the selection. Children subsequently
+     * added or removed from {@code elements} are automatically handled appropriately.
      */
     public Selector add (Elements<?> elements) {
         for (Element<?> child : elements) {
@@ -56,7 +55,7 @@ public class Selector
     }
 
     /**
-     * Stops tracking the children of <code>elements</code> for setting the selection.
+     * Stops tracking the children of {@code elements} for setting the selection.
      */
     public Selector remove (Elements<?> elements) {
         for (Element<?> child : elements) {

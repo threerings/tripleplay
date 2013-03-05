@@ -10,7 +10,7 @@ import pythagoras.f.IDimension;
 import react.Value;
 
 /**
- * A specialized <code>Value</code> for dimensions.
+ * A specialized {@code Value} for dimensions.
  */
 public class DimensionValue extends Value<IDimension>
 {

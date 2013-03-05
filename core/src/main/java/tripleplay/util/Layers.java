@@ -53,8 +53,8 @@ public class Layers
     }
 
     /**
-     * Computes the total bounds of the layer hierarchy rooted at <code>root</code>.
-     * The returned Rectangle will be in <code>root</code>'s coordinate system.
+     * Computes the total bounds of the layer hierarchy rooted at {@code root}.
+     * The returned Rectangle will be in {@code root}'s coordinate system.
      */
     public static Rectangle totalBounds (Layer root) {
         // account for root's origin (we use 0-x rather than just -x to avoid weird -0 values)

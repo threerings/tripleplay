@@ -128,8 +128,8 @@ public class MenuHost
         }
 
         /**
-         * Flags this <code>Pop</code> event so that the menu will not be destroyed automatically
-         * when it is deactivated. Returns this instance for chaining.
+         * Flags this {@code Pop} event so that the menu will not be destroyed automatically when
+         * it is deactivated. Returns this instance for chaining.
          */
         public Pop retainMenu () {
             _retain = true;

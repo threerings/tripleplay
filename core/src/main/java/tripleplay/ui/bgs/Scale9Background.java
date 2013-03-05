@@ -23,10 +23,10 @@ import tripleplay.ui.Background;
  *
  * <p>By using {@link #xaxis} and {@link #yaxis}, the partitioning of the image can be
  * controlled directly. For example, if the horizontal middle of an image is a single pixel:
- * <pre><code>
+ * <pre>{@code
  *     Scale9Background bkg = ...;
  *     bkg.xaxis.resize(1, 1);
- * </code></pre></p>
+ * }</pre></p>
  */
 public class Scale9Background extends Background
 {

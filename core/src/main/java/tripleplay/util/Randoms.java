@@ -26,30 +26,30 @@ public class Randoms
     }
 
     /**
-     * Returns a pseudorandom, uniformly distributed <code>int</code> value between <code>0</code>
-     * (inclusive) and <code>high</code> (exclusive).
+     * Returns a pseudorandom, uniformly distributed {@code int} value between {@code 0}
+     * (inclusive) and {@code high} (exclusive).
      *
      * @param high the high value limiting the random number sought.
      *
-     * @throws IllegalArgumentException if <code>high</code> is not positive.
+     * @throws IllegalArgumentException if {@code high} is not positive.
      */
     public int getInt (int high) {
         return _r.nextInt(high);
     }
 
     /**
-     * Returns a pseudorandom, uniformly distributed <code>int</code> value between
-     * <code>low</code> (inclusive) and <code>high</code> (exclusive).
+     * Returns a pseudorandom, uniformly distributed {@code int} value between {@code low}
+     * (inclusive) and {@code high} (exclusive).
      *
-     * @throws IllegalArgumentException if <code>high - low</code> is not positive.
+     * @throws IllegalArgumentException if {@code high - low} is not positive.
      */
     public int getInRange (int low, int high) {
         return low + _r.nextInt(high - low);
     }
 
     /**
-     * Returns a pseudorandom, uniformly distributed <code>float</code> value between
-     * <code>0.0</code> (inclusive) and the <code>high</code> (exclusive).
+     * Returns a pseudorandom, uniformly distributed {@code float} value between {@code 0.0}
+     * (inclusive) and the {@code high} (exclusive).
      *
      * @param high the high value limiting the random number sought.
      */
@@ -58,39 +58,39 @@ public class Randoms
     }
 
     /**
-     * Returns a pseudorandom, uniformly distributed <code>float</code> value between
-     * <code>low</code> (inclusive) and <code>high</code> (exclusive).
+     * Returns a pseudorandom, uniformly distributed {@code float} value between {@code low}
+     * (inclusive) and {@code high} (exclusive).
      */
     public float getInRange (float low, float high) {
         return low + (_r.nextFloat() * (high - low));
     }
 
     /**
-     * Returns true approximately one in <code>n</code> times.
+     * Returns true approximately one in {@code n} times.
      *
-     * @throws IllegalArgumentException if <code>n</code> is not positive.
+     * @throws IllegalArgumentException if {@code n} is not positive.
      */
     public boolean getChance (int n) {
         return (0 == _r.nextInt(n));
     }
 
     /**
-     * Has a probability <code>p</code> of returning true.
+     * Has a probability {@code p} of returning true.
      */
     public boolean getProbability (float p) {
         return _r.nextFloat() < p;
     }
 
     /**
-     * Returns <code>true</code> or <code>false</code> with approximately even probability.
+     * Returns {@code true} or {@code false} with approximately even probability.
      */
     public boolean getBoolean () {
         return _r.nextBoolean();
     }
 
     /**
-     * Returns a pseudorandom, normally distributed <code>float</code> value around the
-     * <code>mean</code> with the standard deviation <code>dev</code>.
+     * Returns a pseudorandom, normally distributed {@code float} value around the {@code mean}
+     * with the standard deviation {@code dev}.
      */
     public float getNormal (float mean, float dev) {
         return (float)_r.nextGaussian() * dev + mean;
@@ -122,8 +122,7 @@ public class Randoms
     }
 
     /**
-     * Pick a random element from the specified Iterator, or return <code>ifEmpty</code>
-     * if it is empty.
+     * Pick a random element from the specified Iterator, or return {@code ifEmpty} if it is empty.
      *
      * <p><b>Implementation note:</b> because the total size of the Iterator is not known,
      * the random number generator is queried after the second element and every element
@@ -146,8 +145,7 @@ public class Randoms
     }
 
     /**
-     * Pick a random element from the specified Iterable, or return <code>ifEmpty</code>
-     * if it is empty.
+     * Pick a random element from the specified Iterable, or return {@code ifEmpty} if it is empty.
      *
      * <p><b>Implementation note:</b> optimized implementations are used if the Iterable
      * is a List or Collection. Otherwise, it behaves as if calling {@link #pick(Iterator, Object)}
@@ -160,9 +158,9 @@ public class Randoms
     }
 
     /**
-     * Pick a random <em>key</em> from the specified mapping of weight values, or return
-     * <code>ifEmpty</code> if no mapping has a weight greater than <code>0</code>. Each
-     * weight value is evaluated as a double.
+     * Pick a random <em>key</em> from the specified mapping of weight values, or return {@code
+     * ifEmpty} if no mapping has a weight greater than {@code 0}. Each weight value is evaluated
+     * as a double.
      *
      * <p><b>Implementation note:</b> a random number is generated for every entry with a
      * non-zero weight after the first such entry.
@@ -188,8 +186,8 @@ public class Randoms
     }
 
     /**
-     * Pluck (remove) a random element from the specified Iterable, or return <code>ifEmpty</code>
-     * if it is empty.
+     * Pluck (remove) a random element from the specified Iterable, or return {@code ifEmpty} if it
+     * is empty.
      *
      * <p><b>Implementation note:</b> optimized implementations are used if the Iterable
      * is a List or Collection. Otherwise, two Iterators are created from the Iterable

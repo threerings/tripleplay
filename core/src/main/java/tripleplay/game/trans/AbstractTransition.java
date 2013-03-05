@@ -50,7 +50,7 @@ public abstract class AbstractTransition<T extends AbstractTransition<T>>
     }
 
     /**
-     * Returns <code>this</code> cast to <code>T</code>.
+     * Returns {@code this} cast to {@code T}.
      */
     @SuppressWarnings({"unchecked", "cast"}) protected T asT () {
         return (T)this;

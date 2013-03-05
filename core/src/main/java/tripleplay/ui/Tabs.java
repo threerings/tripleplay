@@ -25,7 +25,7 @@ import tripleplay.ui.util.Supplier;
  *
  * <p>This diagram shows a {@code Tabs} with A and B tabs. When A's button is clicked, A's content
  * is shown. B content is not generated or not visible.
- * <code><pre>
+ * <pre>{@code
  *   --------------------------------------
  *   |  -----  -----                      |
  *   |  |*A*|  | B |                      |  <--- the buttons group, A selected
@@ -37,7 +37,7 @@ import tripleplay.ui.util.Supplier;
  *   |  --------------------------------  |
  *   |                                    |
  *   --------------------------------------
- * </code></pre></p>
+ * }</pre></p>
  *
  * <p>The tab content associated with a button is supplied on demand via a {@link Supplier}
  * instance. The contract of {@code Supplier} is obeyed in that {@link Supplier#destroy()} is
@@ -84,8 +84,7 @@ public class Tabs extends Elements<Tabs>
         }
 
         /**
-         * Selects this tab. This is just a shortcut for <code>{@link Tabs#selected}.update(this)
-         * </code>.
+         * Selects this tab. This is just a shortcut for {@link Tabs#selected}.update(this).
          */
         public void select () {
             selected.update(this);

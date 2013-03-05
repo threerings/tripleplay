@@ -161,7 +161,7 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Returns <code>this</code> cast to <code>T</code>.
+     * Returns {@code this} cast to {@code T}.
      */
     @SuppressWarnings({"unchecked", "cast"}) protected T asT () {
         return (T)this;
@@ -580,7 +580,7 @@ public abstract class Element<T extends Element<T>>
 
     /** Ways in which a preferred and an original dimension can be "taken" to produce a result.
      * The name is supposed to be readable in context and compact, for example
-     * <code>new SizableLayoutData(...).forWidth(Take.MAX).forHeight(Take.MIN, 200)</code>. */
+     * {@code new SizableLayoutData(...).forWidth(Take.MAX).forHeight(Take.MIN, 200)}. */
     protected enum Take
     {
         /** Uses the maximum of the preferred size and original. */
@@ -615,10 +615,10 @@ public abstract class Element<T extends Element<T>>
          * @param layoutDelegate the delegate to use during layout. May be null if the element
          * has no layout
          * @param sizeDelegate the delegate to use during size computation. May be null if the
-         * size will be completely specified by <code>prefSize</code>
+         * size will be completely specified by {@code prefSize}
          * @param prefSize overrides the size computation. The width and/or height may be zero,
-         * which indicates the <code>sizeDelegate</code>'s result should be used for that axis.
-         * Passing <code>null</code> is equivalent to passing a 0x0 dimension
+         * which indicates the {@code sizeDelegate}'s result should be used for that axis. Passing
+         * {@code null} is equivalent to passing a 0x0 dimension
          */
         public SizableLayoutData (BaseLayoutData layoutDelegate, LayoutData sizeDelegate,
                                   IDimension prefSize) {
@@ -633,8 +633,8 @@ public abstract class Element<T extends Element<T>>
         }
 
         /**
-         * Creates a new layout that will defer to the given delegate for layout and size. This
-         * is equivalent to <code>SizableLayoutData(delegate, delegate, prefSize)</code>.
+         * Creates a new layout that will defer to the given delegate for layout and size. This is
+         * equivalent to {@code SizableLayoutData(delegate, delegate, prefSize)}.
          * @see #SizableLayoutData(BaseLayoutData, LayoutData, IDimension)
          */
         public SizableLayoutData (LayoutData delegate, IDimension prefSize) {
@@ -650,7 +650,7 @@ public abstract class Element<T extends Element<T>>
 
         /**
          * Sets the way in which widths are combined to calculate the resulting preferred size.
-         * For example, <code>new SizeableLayoutData(...).forWidth(Take.MAX)</code>.
+         * For example, {@code new SizeableLayoutData(...).forWidth(Take.MAX)}.
          */
         public SizableLayoutData forWidth (Take fn) {
             widthFn = fn;
@@ -659,7 +659,7 @@ public abstract class Element<T extends Element<T>>
 
         /**
          * Sets the preferred width and how it should be combined with the delegate's preferred
-         * width. For example, <code>new SizeableLayoutData(...).forWidth(Take.MAX, 250)</code>.
+         * width. For example, {@code new SizeableLayoutData(...).forWidth(Take.MAX, 250)}.
          */
         public SizableLayoutData forWidth (Take fn, float pref) {
             widthFn = fn;
@@ -669,7 +669,7 @@ public abstract class Element<T extends Element<T>>
 
         /**
          * Sets the way in which heights are combined to calculate the resulting preferred size.
-         * For example, <code>new SizeableLayoutData(...).forHeight(Take.MAX)</code>.
+         * For example, {@code new SizeableLayoutData(...).forHeight(Take.MAX)}.
          */
         public SizableLayoutData forHeight (Take fn) {
             heightFn = fn;
@@ -678,7 +678,7 @@ public abstract class Element<T extends Element<T>>
 
         /**
          * Sets the preferred height and how it should be combined with the delegate's preferred
-         * height. For example, <code>new SizeableLayoutData(...).forHeight(Take.MAX, 250)</code>.
+         * height. For example, {@code new SizeableLayoutData(...).forHeight(Take.MAX, 250)}.
          */
         public SizableLayoutData forHeight (Take fn, float pref) {
             heightFn = fn;

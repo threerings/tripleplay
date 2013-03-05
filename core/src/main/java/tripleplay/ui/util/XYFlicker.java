@@ -16,9 +16,12 @@ import react.Signal;
  * calculates a velocity, applies it to the position over time and diminishes its value by
  * friction. For smaller drag deltas, dispatches the pointer end event on the {@link #clicked}
  * signal.
+ *
  * <p><b>NOTE:</b>Clients of this class must call {@link #update(float)}, so that friction and
  * other calculations can be applied. This is normally done within the client's own update method
- * and followed by some usage of the {@link #position()} method. For example:<code><pre>
+ * and followed by some usage of the {@link #position()} method. For example:
+ *
+ * <pre>{@code
  *    XYFlicker flicker = new XYFlicker();
  *    Layer layer = ...;
  *    { layer.addListener(flicker); }
@@ -26,7 +29,7 @@ import react.Signal;
  *        flicker.update(delta);
  *        layer.setTranslation(flicker.position().x(), flicker.position().y());
  *    }
- * </pre></code></p>
+ * }</pre></p>
  *
  * TODO: figure out how to implement with two Flickers. could require some changes therein since
  * you probably don't want them to have differing states, plus 2x clicked signals is wasteful

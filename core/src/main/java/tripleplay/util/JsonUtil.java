@@ -13,8 +13,8 @@ import playn.core.Json;
 public class JsonUtil
 {
     /**
-     * @return the Enum whose name corresponds to string for the given key,
-     * or <code>defaultVal</code> if the key doesn't exist.
+     * @return the Enum whose name corresponds to string for the given key, or {@code defaultVal}
+     * if the key doesn't exist.
      */
     public static <T extends Enum<T>> T getEnum (Json.Object json, String key, Class<T> enumType,
         T defaultVal)
@@ -33,7 +33,7 @@ public class JsonUtil
     }
 
     /**
-     * @return the boolean value at the given key, or <code>defaultVal</code> if the key
+     * @return the boolean value at the given key, or {@code defaultVal} if the key
      * doesn't exist.
      */
     public static boolean getBoolean (Json.Object json, String key, boolean defaultVal)
@@ -52,7 +52,7 @@ public class JsonUtil
     }
 
     /**
-     * @return the double value at the given key, or <code>defaultVal</code> if the key
+     * @return the double value at the given key, or {@code defaultVal} if the key
      * doesn't exist.
      */
     public static double getNumber (Json.Object json, String key, double defaultVal)
@@ -71,7 +71,7 @@ public class JsonUtil
     }
 
     /**
-     * @return the float value at the given key, or <code>defaultVal</code> if the key
+     * @return the float value at the given key, or {@code defaultVal} if the key
      * doesn't exist.
      */
     public static float getFloat (Json.Object json, String key, float defaultVal)
@@ -89,7 +89,7 @@ public class JsonUtil
     }
 
     /**
-     * @return the int value at the given key, or <code>defaultVal</code> if the key
+     * @return the int value at the given key, or {@code defaultVal} if the key
      * doesn't exist.
      */
     public static int getInt (Json.Object json, String key, int defaultVal)
@@ -108,7 +108,7 @@ public class JsonUtil
     }
 
     /**
-     * @return the String value at the given key, or <code>defaultVal</code> if the key
+     * @return the String value at the given key, or {@code defaultVal} if the key
      * doesn't exist.
      */
     public static String getString (Json.Object json, String key, String defaultVal)
@@ -127,7 +127,7 @@ public class JsonUtil
     }
 
     /**
-     * @return the Json.Object value at the given key, or <code>defaultVal</code> if the key
+     * @return the Json.Object value at the given key, or {@code defaultVal} if the key
      * doesn't exist.
      */
     public static Json.Object getObject (Json.Object json, String key, Json.Object defaultVal)
@@ -146,7 +146,7 @@ public class JsonUtil
     }
 
     /**
-     * @return the Json.Object value at the given key, or <code>defaultVal</code> if the key
+     * @return the Json.Object value at the given key, or {@code defaultVal} if the key
      * doesn't exist.
      */
     public static Json.Array getArray (Json.Object json, String key, Json.Array defaultVal)
