@@ -18,7 +18,7 @@ tripleplay.flump.Movie
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,8 +30,8 @@ tripleplay.flump.Movie
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.flump.Library.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.flump.Movie.Symbol.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.KeyframeData.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.MoviePlayer.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.flump.Movie.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -57,38 +57,31 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.position_added()"></A>
-  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#position()" target="_top"><tt>position</tt></A>()</nobr>
+  <A NAME="tripleplay.flump.Movie.getInstances_added(java.lang.String)"></A>
+  <nobr><code>List&lt;Instance&gt;</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#getInstances(java.lang.String)" target="_top"><tt>getInstances</tt></A>(<code>String</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">The playback position, in milliseconds.</TD>
+  <TD VALIGN="TOP">Returns all of the {@Instance}s on a named layer.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.setPosition_added(float)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#setPosition(float)" target="_top"><tt>setPosition</tt></A>(<code>float</code>)</nobr>
+  <A NAME="tripleplay.flump.Movie.getNamedLayer_added(java.lang.String)"></A>
+  <nobr><code>Layer</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#getNamedLayer(java.lang.String)" target="_top"><tt>getNamedLayer</tt></A>(<code>String</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Changes the playback position.</TD>
+  <TD VALIGN="TOP">Retrieves a named layer.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.setSpeed_added(float)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#setSpeed(float)" target="_top"><tt>setSpeed</tt></A>(<code>float</code>)</nobr>
+  <A NAME="tripleplay.flump.Movie.namedLayers_added()"></A>
+  <nobr>(<code>Map&lt;String, Layer&gt;</code>)&nbsp;<A HREF="../tripleplay/flump/Movie.html#namedLayers()" target="_top"><tt>namedLayers</tt></A>()</nobr>
   </TD>
-  <TD VALIGN="TOP">Changes the playback speed multiplier.</TD>
+  <TD VALIGN="TOP">Retrieves all named layers.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.speed_added()"></A>
-  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#speed()" target="_top"><tt>speed</tt></A>()</nobr>
+  <A NAME="tripleplay.flump.Movie.setNamedLayer_added(java.lang.String, tripleplay.flump.Instance)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#setNamedLayer(java.lang.String, tripleplay.flump.Instance)" target="_top"><tt>setNamedLayer</tt></A>(<code>String,</nobr> Instance<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">The playback speed multiplier, defaults to 1.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.symbol_added()"></A>
-  <nobr><code>Symbol</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#symbol()" target="_top"><tt>symbol</tt></A>()</nobr>
-  </TD>
-  <TD>&nbsp;</TD>
+  <TD VALIGN="TOP">Replaces the instance on a named layer.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -100,7 +93,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -112,8 +105,8 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.flump.Library.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.flump.Movie.Symbol.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.KeyframeData.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.MoviePlayer.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.flump.Movie.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

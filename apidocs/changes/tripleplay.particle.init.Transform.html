@@ -18,7 +18,7 @@ tripleplay.particle.init.Transform
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/particle/init/Transform.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/particle/init/Transform.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.particle.init.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -57,10 +57,19 @@ Class tripleplay.particle.init.<A HREF="../tripleplay/particle/init/Transform.ht
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.particle.init.Transform.scale_added(float)"></A>
-  <nobr><code>Initializer</code>&nbsp;<A HREF="../tripleplay/particle/init/Transform.html#scale(float)" target="_top"><tt>scale</tt></A>(<code>float</code>)</nobr>
+  <A NAME="tripleplay.particle.init.Transform.randomOffset_added(tripleplay.util.Randoms, float)"></A>
+  <nobr><code>Initializer</code>&nbsp;<A HREF="../tripleplay/particle/init/Transform.html#randomOffset(tripleplay.util.Randoms, float)" target="_top"><tt>randomOffset</tt></A>(<code>Randoms,</nobr> float<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Returns an initializer that scales its previously assigned transform.</TD>
+  <TD VALIGN="TOP">Returns an initializer that adjusts the particle's position randomly from its current
+ location by up to noise units in both x & y.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.particle.init.Transform.randomScale_added(tripleplay.util.Randoms, float, float)"></A>
+  <nobr><code>Initializer</code>&nbsp;<A HREF="../tripleplay/particle/init/Transform.html#randomScale(tripleplay.util.Randoms, float, float)" target="_top"><tt>randomScale</tt></A>(<code>Randoms,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Returns an initializer that scales its previously assigned transform by an evenly distributed
+ random amount within the specified range.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -72,7 +81,7 @@ Class tripleplay.particle.init.<A HREF="../tripleplay/particle/init/Transform.ht
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/particle/init/Transform.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/particle/init/Transform.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.particle.init.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>

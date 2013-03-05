@@ -18,7 +18,7 @@ tripleplay.ui.Interface
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,7 +31,7 @@ tripleplay.ui.Interface
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.ui.Field.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Label.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.MenuHost.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Interface.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -50,38 +50,35 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Interface.html" target="_top"><tt>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Interface.addRoot_added(tripleplay.ui.Root)"></A>
-  <nobr><code>Root</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#addRoot(tripleplay.ui.Root)" target="_top"><tt>addRoot</tt></A>(<code>Root</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Adds a root to this interface.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Interface.addTask_added(tripleplay.ui.Interface.Task)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#addTask(tripleplay.ui.Interface.Task)" target="_top"><tt>addTask</tt></A>(<code>Task</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Adds a task that will henceforth be updated once per game update.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Interface.animator_added()"></A>
-  <nobr><code>Animator</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#animator()" target="_top"><tt>animator</tt></A>()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Returns an animator that can be used within the scope of this interface.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Interface.removeTask_added(tripleplay.ui.Interface.Task)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#removeTask(tripleplay.ui.Interface.Task)" target="_top"><tt>removeTask</tt></A>(<code>Task</code>)</nobr>
+  <A NAME="tripleplay.ui.Interface.removeTask_removed(tripleplay.ui.Interface.Task)"></A>
+  <nobr><code>void</code>&nbsp;removeTask(<code>Task</code>)</nobr>
   </TD>
   <TD VALIGN="TOP">Removes a previously added task.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Interface.addTask_changed(tripleplay.ui.Interface.Task)"></A>
+  <nobr><code>TaskHandle</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#addTask(tripleplay.ui.Interface.Task)" target="_top"><tt>addTask</tt></A>(<code>Task</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>void</code> to <code>TaskHandle</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Adds a task that will henceforth be updated once per game update.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -93,7 +90,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Interface.html" target="_top"><tt>
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -106,7 +103,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Interface.html" target="_top"><tt>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.ui.Field.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Label.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.MenuHost.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Interface.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

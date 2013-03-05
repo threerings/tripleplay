@@ -18,7 +18,7 @@ tripleplay.util
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Package</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1"> &nbsp;<FONT CLASS="NavBarFont1">Class</FONT>&nbsp;</TD>
@@ -30,13 +30,13 @@ tripleplay.util
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="pkg_tripleplay.ui.layout.html"><B>PREV PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.ui.util.html"><B>PREV PACKAGE</B></A>
 &nbsp;<B>NEXT PACKAGE</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="pkg_tripleplay.util.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
-REMOVED&nbsp;|&nbsp;
+<a href="#Removed">REMOVED</a>&nbsp;|&nbsp;
 <a href="#Added">ADDED</a>&nbsp;|&nbsp;
 <a href="#Changed">CHANGED</a>
   </FONT></TD>
@@ -48,31 +48,61 @@ REMOVED&nbsp;|&nbsp;
 Package <A HREF="../tripleplay/util/package-summary.html" target="_top"><tt>tripleplay.util</tt></A>
 </H2>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Classes" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Removed"></a>
+<TABLE summary="Removed Classes" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Classes</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Classes</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Base90"></A>
-  <nobr><A HREF="../tripleplay/util/Base90.html" target="_top"><tt>Base90</tt></A></nobr>
+  <A NAME="Key"></A>
+  Key
   </TD>
-  <TD VALIGN="TOP">Encodes and decodes ints and longs to strings in base 90.</TD>
+  <TD>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Classes and Interfaces" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Classes and Interfaces</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Colors"></A>
-  <nobr><A HREF="../tripleplay/util/Colors.html" target="_top"><tt>Colors</tt></A></nobr>
+  <A NAME="Destroyable"></A>
+  <nobr><A HREF="../tripleplay/util/Destroyable.html" target="_top"><tt><I>Destroyable</I></tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">Utilities and constants for colors.</TD>
+  <TD VALIGN="TOP">A shared interface by all resources that can be destroyed (manually cleaned up).</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="DimensionValue"></A>
-  <nobr><A HREF="../tripleplay/util/DimensionValue.html" target="_top"><tt>DimensionValue</tt></A></nobr>
+  <A NAME="DestroyableList"></A>
+  <nobr><A HREF="../tripleplay/util/DestroyableList.html" target="_top"><tt>DestroyableList</tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">A specialized <code>Value</code> for dimensions.</TD>
+  <TD VALIGN="TOP">Maintains a list of <A HREF="../tripleplay/util/DestroyableList/Destrayable.html"><TT>Destrayable</TT></A>s.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="Hud"></A>
+  <nobr><A HREF="../tripleplay/util/Hud.html" target="_top"><tt>Hud</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">Maintains a (usually debugging) HUD with textual information displayed in one or two colums.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="Hud.Stock"></A>
+  <nobr><A HREF="../tripleplay/util/Hud.Stock.html" target="_top"><tt>Hud.Stock</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">A stock HUD that provides a bunch of standard PlayN performance info and handles
+ once-per-second updating.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="Ref"></A>
+  <nobr><A HREF="../tripleplay/util/Ref.html" target="_top"><tt>Ref</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">Maintains a reference to a resource.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -84,10 +114,31 @@ Package <A HREF="../tripleplay/util/package-summary.html" target="_top"><tt>trip
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Dragger"></A>
-  <nobr><A HREF="tripleplay.util.Dragger.html">Dragger</A></nobr>
+  <A NAME="EffectRenderer"></A>
+  <nobr><A HREF="tripleplay.util.EffectRenderer.html">EffectRenderer</A></nobr>
   </TD>
-  <TD VALIGN="TOP">A helpful class for implementing drag and drop behavior.</TD>
+  <TD VALIGN="TOP">Handles the rendering of text with a particular effect (shadow, outline, etc.).</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="EffectRenderer.PixelOutline"></A>
+  <nobr><A HREF="tripleplay.util.EffectRenderer.PixelOutline.html">EffectRenderer.PixelOutline</A></nobr>
+  </TD>
+  <TD>&nbsp;</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="EffectRenderer.Shadow"></A>
+  <nobr><A HREF="tripleplay.util.EffectRenderer.Shadow.html">EffectRenderer.Shadow</A></nobr>
+  </TD>
+  <TD>&nbsp;</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="EffectRenderer.VectorOutline"></A>
+  <nobr><A HREF="tripleplay.util.EffectRenderer.VectorOutline.html">EffectRenderer.VectorOutline</A></nobr>
+  </TD>
+  <TD>&nbsp;</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
@@ -99,17 +150,19 @@ Package <A HREF="../tripleplay/util/package-summary.html" target="_top"><tt>trip
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Layers"></A>
-  <nobr><A HREF="tripleplay.util.Layers.html">Layers</A></nobr>
+  <A NAME="Logger"></A>
+  <nobr><A HREF="tripleplay.util.Logger.html">Logger</A></nobr>
   </TD>
-  <TD VALIGN="TOP">Provides utility functions for dealing with Layers</TD>
+  <TD VALIGN="TOP">Provides logging services that are routed to the appropriate logging destination on the client
+ or server.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Logger.Levels"></A>
-  <nobr><A HREF="tripleplay.util.Logger.Levels.html">Logger.Levels</A></nobr>
+  <A NAME="TextConfig"></A>
+  <nobr><A HREF="tripleplay.util.TextConfig.html">TextConfig</A></nobr>
   </TD>
-  <TD VALIGN="TOP">Manages the target log levels for a given ident.</TD>
+  <TD VALIGN="TOP">Encapsulates a styled text configuration and provides utility methods for rendering it in
+ various ways.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -120,7 +173,7 @@ Package <A HREF="../tripleplay/util/package-summary.html" target="_top"><tt>trip
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Package</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1"> &nbsp;<FONT CLASS="NavBarFont1">Class</FONT>&nbsp;</TD>
@@ -132,7 +185,7 @@ Package <A HREF="../tripleplay/util/package-summary.html" target="_top"><tt>trip
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="pkg_tripleplay.ui.layout.html"><B>PREV PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.ui.util.html"><B>PREV PACKAGE</B></A>
 &nbsp;<B>NEXT PACKAGE</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;

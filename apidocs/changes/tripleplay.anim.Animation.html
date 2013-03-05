@@ -18,7 +18,7 @@ tripleplay.anim.Animation
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animation.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animation.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,7 +31,7 @@ tripleplay.anim.Animation
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.anim.Animator.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Animation.Repeat.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.anim.Animation.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -50,32 +50,21 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/Animation.html" target="_top">
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animation.cancel_removed()"></A>
-  <nobr><code>boolean</code>&nbsp;cancel()</nobr>
+  <A NAME="tripleplay.anim.Animation.then_changed()"></A>
+  <nobr><code>AnimBuilder</code>&nbsp;<A HREF="../tripleplay/anim/Animation.html#then()" target="_top"><tt>then</tt></A>()  </nobr>
   </TD>
-  <TD VALIGN="TOP">Cancels this animation.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animation.handle_added()"></A>
-  <nobr><code>Handle</code>&nbsp;<A HREF="../tripleplay/anim/Animation.html#handle()" target="_top"><tt>handle</tt></A>()</nobr>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>Animator</code> to <code>AnimBuilder</code>.<br>
   </TD>
-  <TD VALIGN="TOP">Returns a handle on this collection of animations which can be used to cancel the animation.</TD>
+  <TD VALIGN="TOP">Returns a builder for constructing an animation that will be queued up for execution when
+ the current animation completes.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -87,7 +76,7 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/Animation.html" target="_top">
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animation.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.5</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animation.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -100,7 +89,7 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/Animation.html" target="_top">
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.anim.Animator.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Animation.Repeat.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.anim.Animation.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
