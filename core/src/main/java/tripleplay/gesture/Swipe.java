@@ -154,9 +154,9 @@ public class Swipe extends GestureBase<Swipe>
     // a swipe.
     protected static final int DIRECTION_THRESHOLD = 10;
 
-    protected final int _touches;
-    protected final Direction _direction;
-    protected final int _directionModifier;
+    protected int _touches;
+    protected Direction _direction;
+    protected int _directionModifier;
 
     protected boolean _movedEnough = false;
     protected Map<Integer, Point> _startPoints = new HashMap<Integer, Point>();
