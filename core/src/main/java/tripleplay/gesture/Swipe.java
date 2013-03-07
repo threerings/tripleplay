@@ -116,8 +116,8 @@ public class Swipe extends GestureBase<Swipe>
 
         // if we've strayed outside of the safe zone, or we've backtracked from our last position,
         // disqualify
-        if (offAxisDistance > _offAxisTolerance || lastAxisDistance < 0)
-            setState(State.UNQUALIFIED);
+        if (offAxisDistance > _offAxisTolerance) setState(State.UNQUALIFIED);
+        else if (lastAxisDistance < 0)  backtracked(-lastAxisDistance);
 
         // Figure out if we've moved enough to meet minimum requirements with all touches
         if (!_movedEnough) {
@@ -143,6 +143,10 @@ public class Swipe extends GestureBase<Swipe>
             return (end.y() - start.y()) * _directionModifier;
         else
             return (end.x() - start.x()) * _directionModifier;
+    }
+
+    protected void backtracked (float distance) {
+        setState(State.UNQUALIFIED);
     }
 
     // the furthest in a perpendicular direction a finger can go before being considered to not be
