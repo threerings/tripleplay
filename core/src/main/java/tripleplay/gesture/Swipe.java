@@ -32,8 +32,7 @@ public class Swipe extends GestureBase<Swipe>
             direction = Direction.RIGHT;
         }
         _touches = touches;
-        _direction = direction;
-        _directionModifier = _direction == Direction.UP || _direction == Direction.LEFT ? -1 : 1;
+        setDirection(direction);
     }
 
     /**
@@ -117,7 +116,7 @@ public class Swipe extends GestureBase<Swipe>
         // if we've strayed outside of the safe zone, or we've backtracked from our last position,
         // disqualify
         if (offAxisDistance > _offAxisTolerance) setState(State.UNQUALIFIED);
-        else if (lastAxisDistance < 0)  backtracked(-lastAxisDistance);
+        else if (lastAxisDistance < 0) backtracked(node, -lastAxisDistance);
 
         // Figure out if we've moved enough to meet minimum requirements with all touches
         if (!_movedEnough) {
@@ -145,8 +144,13 @@ public class Swipe extends GestureBase<Swipe>
             return (end.x() - start.x()) * _directionModifier;
     }
 
-    protected void backtracked (float distance) {
+    protected void backtracked (GestureNode node, float distance) {
         setState(State.UNQUALIFIED);
+    }
+
+    protected void setDirection (Direction direction) {
+        _direction = direction;
+        _directionModifier = _direction == Direction.UP || _direction == Direction.LEFT ? -1 : 1;
     }
 
     // the furthest in a perpendicular direction a finger can go before being considered to not be
