@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.Image;
 import playn.core.Pointer;
 import playn.core.Sound;
 import react.Signal;
@@ -30,17 +31,29 @@ public class Button extends ClickableTextWidget<Button>
 
     /** Creates a button with no text or icon. */
     public Button () {
-        this(null, null);
+        this(null, (Icon)null);
     }
 
     /**  Creates a button with the supplied text. */
     public Button (String text) {
-        this(text, null);
+        this(text, (Icon)null);
     }
 
     /** Creates a button with the supplied icon. */
     public Button (Icon icon) {
         this(null, icon);
+    }
+
+    /** Creates a button with the supplied icon. */
+    @Deprecated
+    public Button (Image icon) {
+        this(null, new ImageIcon(icon));
+    }
+
+    /** Creates a button with the supplied text and icon. */
+    @Deprecated
+    public Button (String text, Image icon) {
+        this(text, new ImageIcon(icon));
     }
 
     /** Creates a button with the supplied text and icon. */

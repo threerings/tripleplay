@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.Image;
 import playn.core.PlayN;
 import playn.core.Pointer;
 import react.Signal;
@@ -25,17 +26,29 @@ public class LongPressButton extends Button
 
     /** Creates a button with no text or icon. */
     public LongPressButton () {
-        this(null, null);
+        this(null, (Icon)null);
     }
 
     /**  Creates a button with the supplied text. */
     public LongPressButton (String text) {
-        this(text, null);
+        this(text, (Icon)null);
     }
 
     /** Creates a button with the supplied icon. */
     public LongPressButton (Icon icon) {
         this(null, icon);
+    }
+
+    /** Creates a button with the supplied icon. */
+    @Deprecated
+    public LongPressButton (Image icon) {
+        this(null, new ImageIcon(icon));
+    }
+
+    /** Creates a button with the supplied text and icon. */
+    @Deprecated
+    public LongPressButton (String text, Image icon) {
+        this(text, new ImageIcon(icon));
     }
 
     /** Creates a button with the supplied text and icon. */

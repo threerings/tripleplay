@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.Connection;
+import playn.core.Image;
 import playn.core.Pointer;
 import pythagoras.f.Dimension;
 import react.Signal;
@@ -33,7 +34,15 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
      * Creates a new menu item with the given label.
      */
     public MenuItem (String label) {
-        this(label, null);
+        this(label, (Icon)null);
+    }
+
+    /**
+     * Creates a new menu item with the given label and icon.
+     */
+    @Deprecated
+    public MenuItem (String label, Image icon) {
+        this(label, new ImageIcon(icon));
     }
 
     /**
