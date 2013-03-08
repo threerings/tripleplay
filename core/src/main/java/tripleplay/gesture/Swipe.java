@@ -57,19 +57,19 @@ public class Swipe extends GestureBase<Swipe>
 
     @Override protected void clearMemory () {
         _movedEnough = false;
-        _startPoints.clear();
-        _lastPoints.clear();
+        _startNodes.clear();
+        _lastNodes.clear();
     }
 
     @Override protected void updateState (GestureNode node) {
         switch (node.type) {
         case START:
-            _startPoints.put(node.touch.id(), node.location());
+            _startNodes.put(node.touch.id(), node);
             break;
 
         case MOVE:
             // always grounds for immediate dismissal
-            if (_startPoints.size() != _touches) setState(State.UNQUALIFIED);
+            if (_startNodes.size() != _touches) setState(State.UNQUALIFIED);
             evaluateMove(node);
             break;
 
@@ -88,21 +88,21 @@ public class Swipe extends GestureBase<Swipe>
     }
 
     protected State getEndState () {
-        return _movedEnough && _startPoints.size() == _touches ? State.COMPLETE : State.UNQUALIFIED;
+        return _movedEnough && _startNodes.size() == _touches ? State.COMPLETE : State.UNQUALIFIED;
     }
 
     // TODO: any gesture that cares about swiping in a cardinal direction could make use of this
     protected void evaluateMove (GestureNode node) {
-        Point start = _startPoints.get(node.touch.id());
+        Point start = _startNodes.get(node.touch.id()).location();
         if (start == null) {
             Log.log.warning("No start point for a path check, invalid state",
                 "touchId", node.touch.id());
             return;
         }
 
-        Point last = _lastPoints.get(node.touch.id());
+        Point last = _lastNodes.get(node.touch.id()).location();
         Point current = node.location();
-        _lastPoints.put(node.touch.id(), current);
+        _lastNodes.put(node.touch.id(), node);
         // we haven't moved far enough yet, no further evaluation needed.
         if (current.distance(start) < DIRECTION_THRESHOLD) return;
 
@@ -121,9 +121,10 @@ public class Swipe extends GestureBase<Swipe>
         // Figure out if we've moved enough to meet minimum requirements with all touches
         if (!_movedEnough) {
             boolean allMovedEnough = true;
-            for (Map.Entry<Integer, Point> touchStart : _startPoints.entrySet()) {
-                Point touchLast = _lastPoints.get(touchStart.getKey());
-                if (axisDistance(touchStart.getValue(), touchLast) <= DIRECTION_THRESHOLD) {
+            for (Map.Entry<Integer, GestureNode> touchStart : _startNodes.entrySet()) {
+                Point touchLast = _lastNodes.get(touchStart.getKey()).location();
+                if (axisDistance(touchStart.getValue().location(), touchLast) <=
+                    DIRECTION_THRESHOLD) {
                     allMovedEnough = false;
                     break;
                 }
@@ -163,8 +164,8 @@ public class Swipe extends GestureBase<Swipe>
     protected int _directionModifier;
 
     protected boolean _movedEnough = false;
-    protected Map<Integer, Point> _startPoints = new HashMap<Integer, Point>();
-    protected Map<Integer, Point> _lastPoints = new HashMap<Integer, Point>();
+    protected Map<Integer, GestureNode> _startNodes = new HashMap<Integer, GestureNode>();
+    protected Map<Integer, GestureNode> _lastNodes = new HashMap<Integer, GestureNode>();
     protected boolean _cancelOnPause = true;
     protected int _offAxisTolerance = 10;
 }
