@@ -5,6 +5,8 @@
 
 package tripleplay.flump;
 
+import react.Value;
+
 import playn.core.GroupLayer;
 import playn.core.Layer;
 import static playn.core.PlayN.*;
@@ -20,6 +22,10 @@ import tripleplay.util.Destroyable;
 public class MoviePlayer
     implements Destroyable
 {
+    /** The currently playing movie, if any. */
+    public final Value<Movie> movie = Value.create(null);
+    public Movie movie () { return movie.get(); }
+
     public MoviePlayer (Library lib) {
         this(lib, graphics().createGroupLayer());
     }
@@ -32,11 +38,6 @@ public class MoviePlayer
     /** The layer the movies are placed on. */
     public Layer layer () {
         return _root;
-    }
-
-    /** The currently playing movie, if any. */
-    public Movie movie () {
-        return _currentMovie;
     }
 
     /** Whether the current movie is being looped. */
@@ -100,7 +101,7 @@ public class MoviePlayer
             _oneshotMovie = null;
             setCurrent(_loopingMovie);
         }
-        _currentMovie.update(dt);
+        movie().update(dt);
     }
 
     /** Override this to dress up avatars or any other custom initialization. */
@@ -109,21 +110,22 @@ public class MoviePlayer
     }
 
     /** Replace the currently active movie. */
-    protected Movie setCurrent (Movie movie) {
-        if (_currentMovie != null) {
-            _root.remove(_currentMovie.layer());
+    protected Movie setCurrent (Movie current) {
+        if (movie() != null) {
+            _root.remove(movie().layer());
         }
-        _root.add(movie.layer());
-        return _currentMovie = movie;
+        _root.add(current.layer());
+        movie.update(current);
+        return current;
     }
 
     @Override public void destroy () {
-        if (_currentMovie != null) {
-            _currentMovie.layer().destroy();
+        if (movie() != null) {
+            movie().layer().destroy();
         }
-        _currentMovie = null;
         _loopingMovie = null;
         _oneshotMovie = null;
+        movie.update(null);
     }
 
     protected class PlayAnimation extends Animation {
@@ -133,12 +135,12 @@ public class MoviePlayer
 
         @Override protected void init (float time) {
             play(_name);
-            _playing = _currentMovie;
+            _playing = movie();
         }
 
         @Override protected float apply (float time) {
             // Wait until the original movie is no longer playing
-            return (_currentMovie == _playing) ? 1 : 0;
+            return (movie() == _playing) ? 1 : 0;
         }
 
         protected String _name;
@@ -148,7 +150,6 @@ public class MoviePlayer
     protected Library _lib;
     protected GroupLayer _root;
 
-    protected Movie _currentMovie;
     protected Movie _oneshotMovie;
     protected Movie _loopingMovie;
 }
