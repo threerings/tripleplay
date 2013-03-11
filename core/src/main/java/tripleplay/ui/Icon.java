@@ -25,7 +25,8 @@ public interface Icon
     float height ();
 
     /**
-     * Creates a new layer for displaying this icon.
+     * Creates a new layer for displaying this icon. The caller is takes ownership of the new
+     * layer and is responsible for its destruction.
      */
     Layer render ();
 
