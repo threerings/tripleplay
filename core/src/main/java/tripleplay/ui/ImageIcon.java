@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import playn.core.Image;
-import playn.core.ImageLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.util.Callback;
@@ -25,9 +24,8 @@ public class ImageIcon implements Icon
         return _image.height();
     }
 
-    @Override public Layer layer () {
-        return (_layer == null || _layer.destroyed()) ?
-            (_layer = PlayN.graphics().createImageLayer(_image)) : _layer;
+    @Override public Layer render () {
+        return PlayN.graphics().createImageLayer(_image);
     }
 
     @Override public void addCallback (final Callback<? super Icon> callback) {
@@ -42,6 +40,5 @@ public class ImageIcon implements Icon
         });
     }
 
-    protected ImageLayer _layer;
     protected final Image _image;
 }

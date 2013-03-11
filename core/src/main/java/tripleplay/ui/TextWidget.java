@@ -165,16 +165,11 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     usedHeight = iheight;
                     break;
                 }
-                Layer iconLayer = icon.layer();
-                if (_ilayer != null && _ilayer != iconLayer) {
-                    layer.remove(_ilayer);
-                    _ilayer = null;
-                }
-                if (_ilayer == null) layer.add(_ilayer = iconLayer);
-                _ilayer.setTranslation(ix, iy);
+                if (_ilayer != null) _ilayer.destroy();
+                layer.addAt(_ilayer = icon.render(), ix, iy);
 
             } else if (icon == null && _ilayer != null) {
-                layer.remove(_ilayer);
+                _ilayer.destroy();
                 _ilayer = null;
             }
 

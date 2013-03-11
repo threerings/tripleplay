@@ -25,9 +25,9 @@ public interface Icon
     float height();
 
     /**
-     * Returns the Layer for this icon.
+     * Creates a layer containing this icon.
      */
-    Layer layer();
+    Layer render();
 
     /**
      * Adds a callback to be notified when this icon has loaded. If the icon is
