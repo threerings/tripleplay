@@ -17,17 +17,17 @@ public interface Icon
     /**
      * Returns the width of this icon.
      */
-    float width();
+    float width ();
 
     /**
      * Returns the height of this icon.
      */
-    float height();
+    float height ();
 
     /**
-     * Creates a layer containing this icon.
+     * Creates a new layer for displaying this icon.
      */
-    Layer render();
+    Layer render ();
 
     /**
      * Adds a callback to be notified when this icon has loaded. If the icon is
