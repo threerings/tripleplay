@@ -30,10 +30,8 @@ public abstract class Animation
 
     /** Used to cancel animations after they've been started. See {@link #handle}. */
     public interface Handle {
-        /** Cancels this animation. It will remove itself from its animator the next frame.
-         * @return true if this animation was actually running and was canceled, false if it had
-         * already completed. */
-        boolean cancel ();
+        /** Cancels this animation. It will remove itself from its animator the next frame. */
+        void cancel ();
     }
 
     /** Processes a {@link Flipbook}. */
@@ -377,8 +375,11 @@ public abstract class Animation
      */
     public Handle handle () {
         return new Handle() {
-            @Override public boolean cancel () {
-                return _root.cancel();
+            @Override public void cancel () {
+                _root.cancel();
+            }
+            @Override public String toString () {
+                return "handle:" + Animation.this;
             }
         };
     }
@@ -393,7 +394,7 @@ public abstract class Animation
 
     protected float apply (Animator animator, float time) {
         // if we're cancelled, abandon ship now
-        if (_current == null) return 0;
+        if (_canceled) return 0;
 
         // if the current animation has completed, move the next one in our chain
         float remain = _current.apply(time);
@@ -401,7 +402,7 @@ public abstract class Animation
 
         while (remain <= 0) {
             // if we've been canceled, return 0 to indicate that we're done
-            if (_current == null) return 0;
+            if (_canceled) return 0;
 
             // if we have no next animation, return our overflow
             _current = _current.next();
@@ -414,10 +415,8 @@ public abstract class Animation
         return remain;
     }
 
-    protected boolean cancel () {
-        if (_current == null) return false;
-        _current = null;
-        return true;
+    protected void cancel () {
+        _canceled = true;
     }
 
     protected abstract float apply (float time);
@@ -427,7 +426,9 @@ public abstract class Animation
     }
 
     @Override public String toString () {
-        return getClass().getName() + " start:" + _start;
+        String name = getClass().getName();
+        name = name.substring(name.lastIndexOf(".")+1);
+        return name + ":" + hashCode() + " start:" + _start;
     }
 
     protected abstract class ChainBuilder extends AnimBuilder {
@@ -449,6 +450,7 @@ public abstract class Animation
     protected Animation _root = this;
     protected Animation _current;
     protected Animation _next;
+    protected boolean _canceled;
 
     protected static final Random RANDS = new Random();
 }
