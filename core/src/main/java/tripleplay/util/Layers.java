@@ -53,6 +53,17 @@ public class Layers
     }
 
     /**
+     * Whether a GroupLayer hierarchy contains another layer somewhere in its depths.
+     */
+    public static boolean contains (GroupLayer group, Layer layer) {
+        while (layer != null) {
+            layer = layer.parent();
+            if (layer == group) return true;
+        }
+        return false;
+    }
+
+    /**
      * Computes the total bounds of the layer hierarchy rooted at {@code root}.
      * The returned Rectangle will be in {@code root}'s coordinate system.
      */
