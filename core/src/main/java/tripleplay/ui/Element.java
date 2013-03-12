@@ -7,8 +7,6 @@ package tripleplay.ui;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
-import pythagoras.f.IPoint;
-import pythagoras.f.IRectangle;
 import pythagoras.f.MathUtil;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
@@ -81,7 +79,7 @@ public abstract class Element<T extends Element<T>>
      * Writes the location of this element (relative to its parent) into the supplied point.
      * @return {@code loc} for convenience.
      */
-    public IPoint location (Point loc) {
+    public Point location (Point loc) {
         return loc.set(x(), y());
     }
 
@@ -89,7 +87,7 @@ public abstract class Element<T extends Element<T>>
      * Writes the current bounds of this element into the supplied bounds.
      * @return {@code bounds} for convenience.
      */
-    public IRectangle bounds (Rectangle bounds) {
+    public Rectangle bounds (Rectangle bounds) {
         bounds.setBounds(x(), y(), _size.width, _size.height);
         return bounds;
     }
