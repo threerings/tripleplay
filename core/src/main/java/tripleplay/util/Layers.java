@@ -25,7 +25,7 @@ import pythagoras.f.Transform;
 public class Layers
 {
     /**
-     * Transforms a point from one Layer's coordinate system to another's
+     * Transforms a point from one Layer's coordinate system to another's.
      */
     public static Point transform (IPoint p, Layer from, Layer to, Point result) {
         Layer.Util.layerToScreen(from, p, result);
@@ -34,7 +34,7 @@ public class Layers
     }
 
     /**
-     * Transforms a point from one Layer's coordinate system to another's
+     * Transforms a point from one Layer's coordinate system to another's.
      */
     public static Point transform (IPoint p, Layer from, Layer to) {
         return transform(p, from, to, new Point());
