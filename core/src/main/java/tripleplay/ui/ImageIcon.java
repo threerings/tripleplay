@@ -10,7 +10,9 @@ import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.util.Callback;
 
-public class ImageIcon implements Icon
+/** A label icon that displays an image. */
+public class ImageIcon
+    implements Icon
 {
     public ImageIcon (Image image) {
         _image = image;
