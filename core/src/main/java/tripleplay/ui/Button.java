@@ -47,13 +47,13 @@ public class Button extends ClickableTextWidget<Button>
     /** Creates a button with the supplied icon. */
     @Deprecated
     public Button (Image icon) {
-        this(null, new ImageIcon(icon));
+        this(null, Icons.image(icon));
     }
 
     /** Creates a button with the supplied text and icon. */
     @Deprecated
     public Button (String text, Image icon) {
-        this(text, new ImageIcon(icon));
+        this(text, Icons.image(icon));
     }
 
     /** Creates a button with the supplied text and icon. */

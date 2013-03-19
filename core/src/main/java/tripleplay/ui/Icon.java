@@ -31,12 +31,9 @@ public interface Icon
     Layer render ();
 
     /**
-     * Adds a callback to be notified when this icon has loaded. If the icon is
-     * already loaded, the callback will be notified immediately; otherwise on the main playn
-     * thread at a later time. The callback is discarded once the icon is loaded.
-     *
-     * This mimicks the behavior of {@link Image} since the most common case is an
-     * {@link ImageIcon}.
+     * Adds a callback to be notified when this icon has loaded. If the icon is already loaded, the
+     * callback will be notified immediately; otherwise later on the main thread. The callback is
+     * discarded once the icon is loaded. This mimics the behavior of {@link Image}.
      */
     void addCallback (Callback<? super Icon> callback);
 }

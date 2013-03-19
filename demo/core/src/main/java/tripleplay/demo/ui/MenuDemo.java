@@ -19,7 +19,7 @@ import tripleplay.ui.Button;
 import tripleplay.ui.Element;
 import tripleplay.ui.Group;
 import tripleplay.ui.Icon;
-import tripleplay.ui.ImageIcon;
+import tripleplay.ui.Icons;
 import tripleplay.ui.Label;
 import tripleplay.ui.Menu;
 import tripleplay.ui.Menu.AnimFn;
@@ -191,7 +191,7 @@ public class MenuDemo extends DemoScreen
 
     protected Icon tile (int index) {
         final float iwidth = 16, iheight = 16;
-        return new ImageIcon(_squares.subImage(index*iwidth, 0, iwidth, iheight));
+        return Icons.image(_squares.subImage(index*iwidth, 0, iwidth, iheight));
     }
 
     protected Menu createMenu (String title, String... items) {

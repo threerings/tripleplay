@@ -14,7 +14,7 @@ import tripleplay.ui.Button;
 import tripleplay.ui.Element;
 import tripleplay.ui.Group;
 import tripleplay.ui.Icon;
-import tripleplay.ui.ImageIcon;
+import tripleplay.ui.Icons;
 import tripleplay.ui.Label;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
@@ -94,5 +94,5 @@ public class FlowLayoutDemo extends DemoScreen
 
     protected enum ElemType { SMILE, TEXT, SMILE_TEXT, BUTTON };
 
-    protected Icon _smiley = new ImageIcon(PlayN.assets().getImage("images/smiley.png"));
+    protected Icon _smiley = Icons.image(PlayN.assets().getImage("images/smiley.png"));
 }

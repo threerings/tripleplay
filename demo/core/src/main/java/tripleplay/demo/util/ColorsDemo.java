@@ -10,7 +10,7 @@ import playn.core.CanvasImage;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
 import tripleplay.ui.Icon;
-import tripleplay.ui.ImageIcon;
+import tripleplay.ui.Icons;
 import tripleplay.ui.Label;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.AxisLayout;
@@ -71,6 +71,6 @@ public class ColorsDemo extends DemoScreen
 
         canvas.setStrokeColor(Colors.BLACK);
         canvas.strokeRect(size * 8, 0, size - 1, size - 1);
-        return new ImageIcon(cimg);
+        return Icons.image(cimg);
     }
 }

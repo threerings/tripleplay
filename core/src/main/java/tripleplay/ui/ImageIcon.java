@@ -10,7 +10,8 @@ import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.util.Callback;
 
-/** A label icon that displays an image. */
+/** Use {@link Icons#image}. */
+@Deprecated
 public class ImageIcon
     implements Icon
 {

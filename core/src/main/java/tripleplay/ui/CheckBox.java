@@ -37,7 +37,7 @@ public class CheckBox extends ClickableTextWidget<CheckBox>
 
     @Deprecated
     public CheckBox (Image checkIcon) {
-        this((char)0, new ImageIcon(checkIcon));
+        this((char)0, Icons.image(checkIcon));
     }
 
     protected CheckBox (char checkChar, Icon checkIcon) {

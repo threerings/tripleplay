@@ -42,7 +42,7 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
      */
     @Deprecated
     public MenuItem (String label, Image icon) {
-        this(label, new ImageIcon(icon));
+        this(label, Icons.image(icon));
     }
 
     /**
