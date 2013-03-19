@@ -7,13 +7,13 @@ object TriplePlayBuild extends Build {
   val builder = new ProjectBuilder("pom.xml") {
     override val globalSettings = Seq(
       crossPaths    := false,
-      scalaVersion  := "2.9.1",
+      scalaVersion  := "2.10.0",
       javacOptions  ++= Seq("-Xlint", "-Xlint:-serial", "-source", "1.6", "-target", "1.6"),
       scalacOptions ++= Seq("-unchecked", "-deprecation"),
       javaOptions   ++= Seq("-ea"),
       fork in Compile := true
     )
-    override def projectSettings (name :String) = name match {
+    override def projectSettings (name :String, pom :pomutil.POM) = name match {
       case "core" => seq(
         // no scala-library dependency here
         autoScalaLibrary := false,
