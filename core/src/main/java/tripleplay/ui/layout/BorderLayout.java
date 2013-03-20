@@ -195,7 +195,8 @@ public class BorderLayout extends Layout
                 }
                 if (elements.put(p, elem) != null) {
                     throw new IllegalStateException(
-                        "Multiple elements with the same constraint: " + p);
+                        "Multiple elements: " + elem + " and " + elements.get(p) +
+                        " with the same constraint: " + p);
                 }
             }
         }
