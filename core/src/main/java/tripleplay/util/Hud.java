@@ -34,7 +34,7 @@ import static playn.core.PlayN.graphics;
  *     hud.update(delta);
  *   }
  *   public void paint (float alpha) {
- *     hud.paint(alpha);
+ *     hud.paint();
  *   }
  * }
  * }</pre>
@@ -78,7 +78,7 @@ public class Hud
         }
 
         /** Call this from your {@code Game.paint} method (or similar). */
-        public void paint (float alpha) {
+        public void paint () {
             _paints += 1;
         }
 
