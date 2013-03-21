@@ -21,8 +21,8 @@ public class PlayMovie extends Animation
 
     @Override protected float apply (float time) {
         float elapsed = time - _start;
-        _movie.setPosition(1000*elapsed);
-        return _movie.symbol().duration/1000 - elapsed;
+        _movie.setPosition(elapsed);
+        return _movie.symbol().duration - elapsed;
     }
 
     protected Movie _movie;
