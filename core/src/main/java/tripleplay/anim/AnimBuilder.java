@@ -174,10 +174,10 @@ public abstract class AnimBuilder
     }
 
     /**
-     * Creates an animation that delays for the specified number of seconds.
+     * Creates an animation that delays for the specified duration in milliseconds.
      */
-    public Animation.Delay delay (float seconds) {
-        return add(new Animation.Delay(seconds));
+    public Animation.Delay delay (float duration) {
+        return add(new Animation.Delay(duration));
     }
 
     /**
