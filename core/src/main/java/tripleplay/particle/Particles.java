@@ -8,8 +8,9 @@ package tripleplay.particle;
 import react.Signal;
 import react.Slot;
 
-import playn.core.Image;
 import playn.core.GroupLayer;
+import playn.core.Image;
+import playn.core.util.Clock;
 import static playn.core.PlayN.graphics;
 
 import tripleplay.particle.Emitter;
@@ -37,7 +38,7 @@ public class Particles
      */
     public Emitter createEmitter (int maxParticles, Image image, GroupLayer onLayer) {
         final Emitter emitter = new Emitter(this, maxParticles, image);
-        emitter._conn = _onUpdate.connect(new Slot<Now>() { public void onEmit (Now now) {
+        emitter._conn = _onPaint.connect(new Slot<Now>() { public void onEmit (Now now) {
             emitter.update(now.time, now.dt);
         }});
         onLayer.add(emitter.layer);
@@ -45,12 +46,12 @@ public class Particles
     }
 
     /**
-     * Updates all registered emitters. Call this from {@code Game.update} or similar.
+     * Updates all registered emitters. Call this from {@code Game.paint} or similar.
      *
-     * @param delta the time that has elapsed since the last frame, in milliseconds.
+     * @param clock an up-to-date frame clock.
      */
-    public void update (int delta) {
-        _onUpdate.emit(_now.update(delta));
+    public void paint (Clock clock) {
+        _onPaint.emit(_now.update(clock.dt()));
     }
 
     /**
@@ -67,7 +68,7 @@ public class Particles
     protected static class Now {
         public float time;
         public float dt;
-        public Now update (int delta) {
+        public Now update (float delta) {
             dt = delta/1000f;
             time += dt;
             return this;
@@ -75,6 +76,6 @@ public class Particles
     }
 
     protected final Now _now = new Now();
-    protected final Signal<Now> _onUpdate = Signal.create();
+    protected final Signal<Now> _onPaint = Signal.create();
     protected final ParticleShader _shader = new ParticleShader(graphics().ctx());
 }

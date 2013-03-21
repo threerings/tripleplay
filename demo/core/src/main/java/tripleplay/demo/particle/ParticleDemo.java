@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import playn.core.util.Clock;
 import static playn.core.PlayN.graphics;
 
 import tripleplay.particle.Emitter;
@@ -37,9 +38,9 @@ public abstract class ParticleDemo extends DemoScreen
         _emitters.clear();
     }
 
-    @Override public void update (int delta) {
-        super.update(delta);
-        _parts.update(delta);
+    @Override public void paint (Clock clock) {
+        super.paint(clock);
+        _parts.paint(clock);
     }
 
     @Override protected Group createIface () {
