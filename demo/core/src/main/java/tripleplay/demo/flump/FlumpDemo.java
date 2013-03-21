@@ -6,6 +6,7 @@
 package tripleplay.demo.flump;
 
 import playn.core.util.Callback;
+import playn.core.util.Clock;
 import static playn.core.PlayN.*;
 
 import tripleplay.flump.*;
@@ -39,10 +40,10 @@ public class FlumpDemo extends DemoScreen
         return root;
     }
 
-    @Override public void update (int delta) {
-        super.update(delta);
+    @Override public void paint (Clock clock) {
+        super.paint(clock);
         if (_movie != null) {
-            _movie.update(delta);
+            _movie.update(clock.dt());
         }
     }
 

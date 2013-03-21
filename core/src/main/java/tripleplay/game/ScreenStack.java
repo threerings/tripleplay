@@ -376,9 +376,7 @@ public class ScreenStack
         public void paint (Clock clock) {
             _oscreen.paint(clock);
             _nscreen.paint(clock);
-            float time = clock.time();
-            if (_start == 0) _start = time;
-            _complete = _trans.update(_oscreen, _nscreen, time - _start);
+            _complete = _trans.update(_oscreen, _nscreen, _elapsed += clock.dt());
         }
 
         public void complete () {
@@ -401,7 +399,7 @@ public class ScreenStack
 
         protected final Screen _oscreen, _nscreen;
         protected final Transition _trans;
-        protected float _start;
+        protected float _elapsed;
         protected boolean _complete;
     }
 
