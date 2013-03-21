@@ -22,7 +22,22 @@ import static playn.core.PlayN.graphics;
 /**
  * Maintains a (usually debugging) HUD with textual information displayed in one or two colums. The
  * text is all rendered to a single {@link CanvasImage} (and updated only when values change) to
- * put as little strain on the renderer as possible.
+ * put as little strain on the renderer as possible. Example usage:
+ * <pre>{@code
+ * class MyGame extends Game.Default {
+ *   private Hud.Stock hud = new Hud.Stock();
+ *   public void init () {
+ *     hud.layer.setDepth(Short.MAX_VALUE);
+ *     graphics().rootLayer().add(hud.layer);
+ *   }
+ *   public void update (int delta) {
+ *     hud.update(delta);
+ *   }
+ *   public void paint (float alpha) {
+ *     hud.paint(alpha);
+ *   }
+ * }
+ * }</pre>
  */
 public class Hud
 {
