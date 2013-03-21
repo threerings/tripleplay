@@ -97,7 +97,7 @@ public abstract class Animation
             return using(Interpolator.EASE_INOUT);
         }
 
-        /** Configures the duration for this animation (in seconds). Default: 1. */
+        /** Configures the duration for this animation (in milliseconds). Default: 1000. */
         public R in (float duration) {
             _duration = duration;
             @SuppressWarnings("unchecked") R tthis = (R)this;
@@ -105,7 +105,7 @@ public abstract class Animation
         }
 
         protected Interpolator _interp = Interpolator.LINEAR;
-        protected float _duration = 1;
+        protected float _duration = 1000;
     }
 
     /** Animates a single scalar value. */
