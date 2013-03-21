@@ -43,7 +43,7 @@ public class FlumpDemo extends DemoScreen
     @Override public void paint (Clock clock) {
         super.paint(clock);
         if (_movie != null) {
-            _movie.update(clock.dt());
+            _movie.paint(clock);
         }
     }
 

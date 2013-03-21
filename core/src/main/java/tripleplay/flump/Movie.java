@@ -18,6 +18,7 @@ import playn.core.Asserts;
 import playn.core.GroupLayer;
 import playn.core.Json;
 import playn.core.Layer;
+import playn.core.util.Clock;
 import static playn.core.PlayN.*;
 
 public class Movie
@@ -80,7 +81,11 @@ public class Movie
         return _root;
     }
 
-    @Override public void update (float dt) {
+    @Override public void paint (Clock clock) {
+        paint(clock.dt());
+    }
+
+    @Override public void paint (float dt) {
         dt *= _speed;
 
         _position += dt;
@@ -101,7 +106,7 @@ public class Movie
     public void setPosition (float position) {
         if (position < 0) position = 0;
         _position = position;
-        update(0); // Force the display list changes immediately
+        paint(0); // Force the display list changes immediately
     }
 
     public Symbol symbol () {
@@ -278,7 +283,7 @@ public class Movie
             content.setAlpha(alpha);
 
             if (_current != null) {
-                _current.update(dt);
+                _current.paint(dt);
             }
         }
 

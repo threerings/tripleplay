@@ -6,6 +6,7 @@
 package tripleplay.flump;
 
 import playn.core.Layer;
+import playn.core.util.Clock;
 
 /** A created instance of a Flump symbol. */
 public interface Instance
@@ -15,7 +16,12 @@ public interface Instance
 
     /**
      * Notifies this instance that time has passed, for animation.
+     */
+    void paint (Clock clock);
+
+    /**
+     * Notifies this instance that time has passed, for animation.
      * @param dt The time since the last update, in milliseconds.
      */
-    void update (float dt);
+    void paint (float dt);
 }

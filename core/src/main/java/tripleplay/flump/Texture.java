@@ -10,6 +10,7 @@ import pythagoras.f.IPoint;
 import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.Json;
+import playn.core.util.Clock;
 import static playn.core.PlayN.*;
 
 public class Texture
@@ -49,7 +50,10 @@ public class Texture
         return _layer;
     }
 
-    @Override public void update (float dt) {
+    @Override public void paint (Clock clock) {
+    }
+
+    @Override public void paint (float dt) {
     }
 
     protected ImageLayer _layer;

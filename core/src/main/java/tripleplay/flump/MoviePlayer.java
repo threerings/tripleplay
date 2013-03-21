@@ -9,6 +9,7 @@ import react.Value;
 
 import playn.core.GroupLayer;
 import playn.core.Layer;
+import playn.core.util.Clock;
 import static playn.core.PlayN.*;
 
 import tripleplay.anim.Animation;
@@ -94,14 +95,14 @@ public class MoviePlayer
         return new PlayAnimation(name);
     }
 
-    public void update (float dt) {
+    public void paint (Clock clock) {
         // If this update would end the oneshot movie, replace it with the looping movie
-        if (_oneshotMovie != null && _oneshotMovie.position() + dt*_oneshotMovie.speed() >
+        if (_oneshotMovie != null && _oneshotMovie.position() + clock.dt()*_oneshotMovie.speed() >
                 _oneshotMovie.symbol().duration) {
             _oneshotMovie = null;
             setCurrent(_loopingMovie);
         }
-        movie().update(dt);
+        movie().paint(clock);
     }
 
     /** Override this to dress up avatars or any other custom initialization. */
