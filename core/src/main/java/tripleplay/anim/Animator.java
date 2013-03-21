@@ -10,6 +10,8 @@ import java.util.List;
 
 import playn.core.util.Clock;
 
+import tripleplay.util.Paintable;
+
 /**
  * Handles creation and management of animations. Animations may involve the tweening of a
  * geometric property of a layer (x, y, rotation, scale, alpha), or simple delays, or performing
@@ -19,6 +21,7 @@ import playn.core.util.Clock;
  * {@link playn.core.Game.Default#paint} call to drive the animations. </p>
  */
 public class Animator extends AnimBuilder
+    implements Paintable
 {
     /** @deprecated Just construct Animator directly now. */
     @Deprecated public static Animator create () {

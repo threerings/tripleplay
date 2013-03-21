@@ -14,6 +14,7 @@ import playn.core.Pointer;
 import playn.core.util.Clock;
 
 import tripleplay.util.Interpolator;
+import tripleplay.util.Paintable;
 
 /**
  * Implements click, and scroll/flick gestures for a single variable (y position by default). When
@@ -35,6 +36,7 @@ import tripleplay.util.Interpolator;
  * it reaches its bounds.</p>
  */
 public class Flicker extends Pointer.Adapter
+    implements Paintable
 {
     /** This flicker's bounds. */
     public final float min, max;

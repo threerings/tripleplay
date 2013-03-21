@@ -8,16 +8,13 @@ package tripleplay.flump;
 import playn.core.Layer;
 import playn.core.util.Clock;
 
+import tripleplay.util.Paintable;
+
 /** A created instance of a Flump symbol. */
-public interface Instance
+public interface Instance extends Paintable
 {
     /** The layer that displays this instance. */
     Layer layer ();
-
-    /**
-     * Notifies this instance that time has passed, for animation.
-     */
-    void paint (Clock clock);
 
     /**
      * Notifies this instance that time has passed, for animation.

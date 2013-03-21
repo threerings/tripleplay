@@ -17,6 +17,7 @@ import static playn.core.PlayN.pointer;
 import tripleplay.game.trans.FlipTransition;
 import tripleplay.game.trans.PageTurnTransition;
 import tripleplay.game.trans.SlideTransition;
+import tripleplay.util.Paintable;
 import static tripleplay.game.Log.log;
 
 /**
@@ -30,6 +31,7 @@ import static tripleplay.game.Log.log;
  * screen stack unusable. </p>
  */
 public class ScreenStack
+    implements Paintable
 {
     /** Implements a particular screen transition. */
     public interface Transition {

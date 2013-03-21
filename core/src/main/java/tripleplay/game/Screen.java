@@ -9,12 +9,15 @@ import playn.core.PlayN;
 import playn.core.GroupLayer;
 import playn.core.util.Clock;
 
+import tripleplay.util.Paintable;
+
 /**
  * Contains the UI for a single game screen.
  *
  * @see ScreenStack
  */
 public abstract class Screen
+    implements Paintable
 {
     /** The layer on which all of this screen's UI must be placed. */
     public final GroupLayer layer = PlayN.graphics().createGroupLayer();

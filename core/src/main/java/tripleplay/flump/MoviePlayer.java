@@ -14,6 +14,7 @@ import static playn.core.PlayN.*;
 
 import tripleplay.anim.Animation;
 import tripleplay.util.Destroyable;
+import tripleplay.util.Paintable;
 
 /**
  * A convenient controller to play though multiple different movies. Designed for characters and
@@ -21,7 +22,7 @@ import tripleplay.util.Destroyable;
  * between them.
  */
 public class MoviePlayer
-    implements Destroyable
+    implements Destroyable, Paintable
 {
     /** The currently playing movie, if any. */
     public final Value<Movie> movie = Value.create(null);

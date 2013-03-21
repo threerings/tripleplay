@@ -14,11 +14,13 @@ import playn.core.util.Clock;
 import static playn.core.PlayN.graphics;
 
 import tripleplay.particle.Emitter;
+import tripleplay.util.Paintable;
 
 /**
  * Manages all particle emitters.
  */
 public class Particles
+    implements Paintable
 {
     /**
      * Creates an emitter that supports up to {@code maxParticles} particles at any one time. The

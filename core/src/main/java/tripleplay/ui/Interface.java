@@ -14,6 +14,7 @@ import playn.core.util.Clock;
 
 import tripleplay.anim.Animator;
 import tripleplay.ui.Element.Flag;
+import tripleplay.util.Paintable;
 
 /**
  * The main class that integrates the Triple Play UI with a PlayN game. This class is mainly
@@ -25,6 +26,7 @@ import tripleplay.ui.Element.Flag;
  * {@link Default#paint} to drive your interface. </p>
  */
 public class Interface
+    implements Paintable
 {
     /**
      * A time based task that requires an update per frame. See {@link Interface#addTask}.
