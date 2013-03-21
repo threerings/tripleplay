@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import playn.core.Game;
 import playn.core.util.Clock;
 import static playn.core.PlayN.graphics;
 import static playn.core.PlayN.pointer;

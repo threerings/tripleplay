@@ -9,7 +9,6 @@ import pythagoras.f.MathUtil;
 
 import react.Signal;
 
-import playn.core.Game;
 import playn.core.Pointer;
 import playn.core.util.Clock;
 

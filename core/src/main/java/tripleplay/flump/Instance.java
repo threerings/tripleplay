@@ -6,7 +6,6 @@
 package tripleplay.flump;
 
 import playn.core.Layer;
-import playn.core.util.Clock;
 
 import tripleplay.util.Paintable;
 
