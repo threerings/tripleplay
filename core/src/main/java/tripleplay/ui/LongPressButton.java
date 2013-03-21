@@ -94,11 +94,11 @@ public class LongPressButton extends Button
     protected void startLongPressTimer () {
         if (_longPressInterval > 0 && _longPressReg == null) {
             _longPressReg = root().iface().addTask(new Interface.Task() {
-                @Override public void update (float delta) {
+                @Override public void update (int delta) {
                     _accum += delta;
                     if (_accum > _longPressInterval) fireLongPress();
                 }
-                protected float _accum;
+                protected int _accum;
             });
         }
     }

@@ -49,7 +49,7 @@ public class Particles
      *
      * @param delta the time that has elapsed since the last frame, in milliseconds.
      */
-    public void update (float delta) {
+    public void update (int delta) {
         _onUpdate.emit(_now.update(delta));
     }
 
@@ -67,8 +67,8 @@ public class Particles
     protected static class Now {
         public float time;
         public float dt;
-        public Now update (float delta) {
-            dt = delta/1000;
+        public Now update (int delta) {
+            dt = delta/1000f;
             time += dt;
             return this;
         }

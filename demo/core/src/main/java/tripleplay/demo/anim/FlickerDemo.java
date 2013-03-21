@@ -7,13 +7,14 @@ package tripleplay.demo.anim;
 
 import pythagoras.f.Point;
 
-import playn.core.GroupLayer;
 import playn.core.CanvasImage;
 import playn.core.Font;
+import playn.core.GroupLayer;
 import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.Layer;
 import playn.core.util.Callback;
+import playn.core.util.Clock;
 import static playn.core.PlayN.*;
 
 import tripleplay.anim.Flicker;
@@ -58,9 +59,9 @@ public class FlickerDemo extends DemoScreen
         return null;
     }
 
-    @Override public void update (float delta) {
-        super.update(delta);
-        _flicker.update(delta);
+    @Override public void paint (Clock clock) {
+        super.paint(clock);
+        _flicker.paint(clock);
         _group.setTy(_flicker.position);
     }
 

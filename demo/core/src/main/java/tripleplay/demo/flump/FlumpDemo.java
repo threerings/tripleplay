@@ -39,7 +39,7 @@ public class FlumpDemo extends DemoScreen
         return root;
     }
 
-    @Override public void update (float delta) {
+    @Override public void update (int delta) {
         super.update(delta);
         if (_movie != null) {
             _movie.update(delta);

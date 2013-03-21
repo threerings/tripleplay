@@ -25,7 +25,7 @@ import react.Signal;
  *    XYFlicker flicker = new XYFlicker();
  *    Layer layer = ...;
  *    { layer.addListener(flicker); }
- *    void update (float delta) {
+ *    void update (int delta) {
  *        flicker.update(delta);
  *        layer.setTranslation(flicker.position().x(), flicker.position().y());
  *    }
@@ -96,7 +96,7 @@ public class XYFlicker implements Pointer.Listener
         _accel.set(0, 0);
     }
 
-    public void update (float delta) {
+    public void update (int delta) {
         if (_vel.x == 0 && _vel.y == 0) return;
 
         _prev.set(_position);

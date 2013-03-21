@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import playn.core.Game;
+import playn.core.util.Clock;
 import static playn.core.PlayN.graphics;
 import static playn.core.PlayN.pointer;
 
@@ -283,21 +284,19 @@ public class ScreenStack
     }
 
     /**
-     * Updates the currently visible screen. A screen stack client should call this method from
-     * {@link Game#update}.
+     * Called from your game's {@code update} method. Calls {@link Screen#update} on top screen.
      */
-    public void update (float delta) {
+    public void update (int delta) {
         if (_transitor != null) _transitor.update(delta);
         else if (!_screens.isEmpty()) top().update(delta);
     }
 
     /**
-     * Paints the currently visible screen. A screen stack client should call this method from
-     * {@link Game#paint}.
+     * Called from your game's {@code paint} method. Calls {@link Screen#paint} on top screen.
      */
-    public void paint (float alpha) {
-        if (_transitor != null) _transitor.paint(alpha);
-        else if (!_screens.isEmpty()) top().paint(alpha);
+    public void paint (Clock clock) {
+        if (_transitor != null) _transitor.paint(clock);
+        else if (!_screens.isEmpty()) top().paint(clock);
     }
 
     protected Transition defaultPushTransition () {
@@ -368,18 +367,18 @@ public class ScreenStack
             showNewScreen();
         }
 
-        public void update (float delta) {
+        public void update (int delta) {
             _oscreen.update(delta);
             _nscreen.update(delta);
-            _elapsed += delta;
-            if (_trans.update(_oscreen, _nscreen, _elapsed)) {
-                complete();
-            }
+            if (_complete) complete();
         }
 
-        public void paint (float alpha) {
-            _oscreen.paint(alpha);
-            _nscreen.paint(alpha);
+        public void paint (Clock clock) {
+            _oscreen.paint(clock);
+            _nscreen.paint(clock);
+            float time = clock.time();
+            if (_start == 0) _start = time;
+            _complete = _trans.update(_oscreen, _nscreen, time - _start);
         }
 
         public void complete () {
@@ -402,7 +401,8 @@ public class ScreenStack
 
         protected final Screen _oscreen, _nscreen;
         protected final Transition _trans;
-        protected float _elapsed;
+        protected float _start;
+        protected boolean _complete;
     }
 
     protected class Untransitor extends Transitor {

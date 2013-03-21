@@ -428,7 +428,7 @@ public class Scroller extends Elements<Scroller>
     }
 
     /** Prepares the scroll group for the next frame, at t = t + delta. */
-    protected void update (float delta) {
+    protected void update (int delta) {
         _flicker.update(delta);
         update(false);
 
@@ -471,7 +471,7 @@ public class Scroller extends Elements<Scroller>
     @Override protected void wasAdded () {
         super.wasAdded();
         _updater = root().iface().addTask(new Interface.Task() {
-            @Override public void update (float delta) {
+            @Override public void update (int delta) {
                 Scroller.this.update(delta);
             }
         });

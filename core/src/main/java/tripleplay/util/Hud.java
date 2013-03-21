@@ -52,8 +52,8 @@ public class Hud
             }
         }
 
-        /** Call this from your {@link playn.core.Game#update} method (or similar). */
-        public void update (float delta) {
+        /** Call this from your {@code Game.update} method (or similar). */
+        public void update (int delta) {
             long now = System.currentTimeMillis();
             if (now > _nextSec) {
                 willUpdate();
@@ -62,7 +62,7 @@ public class Hud
             }
         }
 
-        /** Call this from your {@link playn.core.Game#paint} method (or similar). */
+        /** Call this from your {@code Game.paint} method (or similar). */
         public void paint (float alpha) {
             _paints += 1;
         }

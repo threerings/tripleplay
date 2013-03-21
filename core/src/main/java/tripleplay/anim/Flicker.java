@@ -11,6 +11,7 @@ import react.Signal;
 
 import playn.core.Game;
 import playn.core.Pointer;
+import playn.core.util.Clock;
 
 import tripleplay.util.Interpolator;
 
@@ -61,13 +62,18 @@ public class Flicker extends Pointer.Adapter
         };
     }
 
-    /** This must be called every frame with {@link Game#update}'s delta. */
-    public void update (float delta) {
+    /** This must be called every frame with an alpha-adjusted clock. */
+    public void paint (Clock clock) {
+        float now = clock.time(), dt = now - _lastTime;
+
         // update our position based on our velocity
-        if (_vel != 0) position = position + _vel * delta;
+        if (_vel != 0) position = position + _vel * dt;
 
         // let our state handle additional updates
-        _state.update(delta);
+        _state.paint(dt);
+
+        // note our last paint time
+        _lastTime = now;
     }
 
     @Override public void onPointerStart (Pointer.Event event) {
@@ -230,7 +236,7 @@ public class Flicker extends Pointer.Adapter
 
     protected abstract class State {
         public void becameActive () {}
-        public void update (float delta) {}
+        public void paint (float dt) {}
     }
 
     protected final State DRAGGING = new State() {
@@ -238,10 +244,10 @@ public class Flicker extends Pointer.Adapter
     };
 
     protected final State SCROLLING = new State() {
-        public void update (float delta) {
+        public void paint (float dt) {
             // update our velocity based on the current (friction) acceleration
             float prevVel = _vel;
-            _vel += _accel * delta;
+            _vel += _accel * dt;
 
             // if we decelerate to (or rather slightly through) zero velocity, stop
             if (Math.signum(prevVel) != Math.signum(_vel)) setState(STOPPED);
@@ -255,14 +261,14 @@ public class Flicker extends Pointer.Adapter
     };
 
     protected final State DECELERATE = new State() {
-        public void update (float delta) {
+        public void paint (float dt) {
             // update our acceleration based on the pixel distance back to the edge
             float retpix = (position < min) ? (min - position) : (max - position);
             _accel = retpix / (1000 * decelerateSnap());
 
             // now update our velocity based on this one
             float prevVel = _vel;
-            _vel += _accel * delta;
+            _vel += _accel * dt;
 
             // once we decelerate to zero, switch to snapback mode
             if (Math.signum(prevVel) != Math.signum(_vel)) setState(SNAPBACK);
@@ -277,11 +283,11 @@ public class Flicker extends Pointer.Adapter
             _snapdist = (position < min) ? (min - position) : (max - position);
         }
 
-        public void update (float delta) {
+        public void paint (float dt) {
             // if we're in the first 30% of the snapback, accelerate, otherwise switch to easeback
             float retpix = (position < min) ? (min - position) : (max - position);
             float retpct = retpix / _snapdist;
-            if (retpct > 0.7f) _vel += _accel * delta;
+            if (retpct > 0.7f) _vel += _accel * dt;
             else setState(EASEBACK);
         }
 
@@ -298,9 +304,9 @@ public class Flicker extends Pointer.Adapter
             _time = easebackTime();
         }
 
-        public void update (float delta) {
+        public void paint (float dt) {
             // from here we just interpolate to our final position
-            _delta += delta;
+            _delta += dt;
             float target = (position <= min) ? min : max;
             if (_delta > _time) {
                 position = target;
@@ -325,6 +331,7 @@ public class Flicker extends Pointer.Adapter
     };
 
     protected State _state = STOPPED;
+    protected float _lastTime;
     protected float _vel, _accel;
     protected float _origPos, _start, _cur, _prev;
     protected double _curStamp, _prevStamp;

@@ -37,7 +37,7 @@ public abstract class ParticleDemo extends DemoScreen
         _emitters.clear();
     }
 
-    @Override public void update (float delta) {
+    @Override public void update (int delta) {
         super.update(delta);
         _parts.update(delta);
     }

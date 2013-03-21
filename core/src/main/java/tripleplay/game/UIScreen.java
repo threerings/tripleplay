@@ -5,6 +5,8 @@
 
 package tripleplay.game;
 
+import playn.core.util.Clock;
+
 import tripleplay.ui.Interface;
 
 /**
@@ -30,13 +32,13 @@ public abstract class UIScreen extends Screen
     //     iface.destroyRoot(_root);
     // }
 
-    @Override public void update (float delta) {
+    @Override public void update (int delta) {
         super.update(delta);
         iface.update(delta);
     }
 
-    @Override public void paint (float alpha) {
-        super.paint(alpha);
-        iface.paint(alpha);
+    @Override public void paint (Clock clock) {
+        super.paint(clock);
+        iface.paint(clock);
     }
 }

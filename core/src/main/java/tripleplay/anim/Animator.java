@@ -8,13 +8,15 @@ package tripleplay.anim;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.Game;
+import playn.core.util.Clock;
 
 /**
  * Handles creation and management of animations. Animations may involve the tweening of a
  * geometric property of a layer (x, y, rotation, scale, alpha), or simple delays, or performing
- * actions. Animations can also be sequenced to orchestrate complex correlated actions. The user of
- * this class must call {@link #update} on every {@link Game#update} call to drive the animations.
+ * actions. Animations can also be sequenced to orchestrate complex correlated actions.
+ *
+ * <p> The user of this class must call {@link #paint} with an up-to-date {@link Clock} on every
+ * {@link playn.core.Game.Default#paint} call to drive the animations. </p>
  */
 public class Animator extends AnimBuilder
 {
@@ -45,10 +47,14 @@ public class Animator extends AnimBuilder
     }
 
     /**
-     * Performs per-frame animation processing.
-     * @param time a monotonically increasing seconds value.
+     * Performs per-frame animation processing. This should be called from your game's
+     * {@code paint} method using an up-to-date clock.
+     *
+     * @param clock a clock containing the current alpha-adjusted time.
      */
-    public void update (float time) {
+    public void paint (Clock clock) {
+        float time = clock.time();
+
         // if we have any animations queued up to be added, add those now
         if (!_nanims.isEmpty()) {
             for (int ii = 0, ll = _nanims.size(); ii < ll; ii++) {

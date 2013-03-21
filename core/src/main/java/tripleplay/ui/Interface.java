@@ -8,8 +8,10 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.Game;
+import playn.core.Game.Default;
 import playn.core.GroupLayer;
+import playn.core.util.Clock;
+
 import tripleplay.anim.Animator;
 import tripleplay.ui.Element.Flag;
 
@@ -17,31 +19,28 @@ import tripleplay.ui.Element.Flag;
  * The main class that integrates the Triple Play UI with a PlayN game. This class is mainly
  * necessary to automatically validate hierarchies of {@code Element}s during each paint.
  * Create an interface instance, create {@link Root} groups via the interface and add the
- * {@link Root#layer}s into your scene graph wherever you desire. Call {@link #update} and 
- * {@link #paint} from {@link Game#update} and {@link Game#paint} to render your interface.
+ * {@link Root#layer}s into your scene graph wherever you desire.
+ *
+ * <p> Call {@link #update} and {@link #paint} from {@link Default#update} and
+ * {@link Default#paint} to drive your interface. </p>
  */
 public class Interface
 {
     /**
-     * A time based task that requires an update per frame.
-     * @see Interface#addTask(Task)
+     * A time based task that requires an update per frame. See {@link Interface#addTask}.
      */
     public interface Task {
-        /**
-         * Performs the update for this task.
-         * @param delta time that has passed, normally passed down from
-         * {@link playn.core.Game#update(float)}
-         */
-        void update (float delta);
+        /** Performs the update for this task.
+         * @param delta time that has passed (in ms), normally passed down from
+         * {@link Default#update}. */
+        void update (int delta);
     }
 
     /**
      * An object that can be used to remove a previously added task.
      */
     public interface TaskHandle {
-        /**
-         * Removes the task associated with this handle.
-         */
+        /** Removes the task associated with this handle. */
         void remove ();
     }
 
@@ -58,7 +57,7 @@ public class Interface
      * the task update iteration, it will be updated for the first time on the following game
      * update.
      * @return a handle that will remove the task when invoked the first time. Subsequent
-     * invocations will do nothing
+     * invocations will do nothing.
      */
     public TaskHandle addTask (final Task task) {
         _tasks.add(task);
@@ -79,9 +78,9 @@ public class Interface
     }
 
     /**
-     * Updates the elements in this interface. Must be called from {@link Game#update}.
+     * Updates the elements in this interface. Normally called from {@link Default#update}.
      */
-    public void update (float delta) {
+    public void update (int delta) {
         // use members for task iteration to support concurrent modification
         for (_currentTask = 0, _currentTaskCount = _tasks.size();
              _currentTask < _currentTaskCount; _currentTask++) {
@@ -93,15 +92,16 @@ public class Interface
             }
         }
         _currentTask = -1;
-        // update animator
-        _elapsed += delta;
-        _animator.update(_elapsed);
     }
 
     /**
-     * "Paints" the elements in this interface. Must be called from {@link Game#paint}.
+     * "Paints" the elements in this interface. Normally called from {@link Default#paint}.
      */
-    public void paint (float alpha) {
+    public void paint (Clock clock) {
+        // update the animator
+        _animator.paint(clock);
+
+        // ensure that our roots are validated
         for (int ii = 0, ll = _roots.size(); ii < ll; ii++) {
             _roots.get(ii).validate();
         }
@@ -189,6 +189,5 @@ public class Interface
     protected final List<Runnable> _actions = new ArrayList<Runnable>();
     protected final Animator _animator = new Animator();
     protected final List<Task> _tasks = new ArrayList<Task>();
-    protected float _elapsed;
     protected int _currentTask, _currentTaskCount;
 }

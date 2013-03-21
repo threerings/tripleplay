@@ -14,7 +14,6 @@ import pythagoras.f.MathUtil;
 import react.Slot;
 import react.Value;
 
-import playn.core.Game;
 import playn.core.Sound;
 import static playn.core.PlayN.assets;
 
@@ -49,9 +48,9 @@ public class SoundBoard
     }
 
     /**
-     * This must be called from your {@link Game#update} method.
+     * This must be called from your {@link playn.core.Game.Default#update} method.
      */
-    public void update (float delta) {
+    public void update (int delta) {
         // update any active faders
         for (int ii = 0, ll = _faders.size(); ii < ll; ii++) {
             if (_faders.get(ii).update(delta)) {
@@ -203,20 +202,20 @@ public class SoundBoard
             if (!isPlaying()) prepareSound().play();
             sound.setVolume(0); // start at zero, fade in from there
             _faders.add(new Fader() {
-                public boolean update (float delta) {
+                public boolean update (int delta) {
                     _elapsed += delta;
                     float vol = Interpolator.LINEAR.apply(0, _range, _elapsed, fadeMillis);
                     updateVolume(vol);
                     return (vol >= _range); // we're done when the volume hits the target
                 }
                 protected final float _range = volume.get();
-                protected float _elapsed;
+                protected int _elapsed;
             });
         }
 
         protected void startFadeOut (final float fadeMillis) {
             if (isPlaying()) _faders.add(new Fader() {
-                public boolean update (float delta) {
+                public boolean update (int delta) {
                     _elapsed += delta;
                     float vol = Interpolator.LINEAR.apply(_start, -_start, _elapsed, fadeMillis);
                     updateVolume(vol);
@@ -227,7 +226,7 @@ public class SoundBoard
                     }
                 }
                 protected final float _start = volume.get();
-                protected float _elapsed;
+                protected int _elapsed;
             });
         }
 
@@ -247,7 +246,7 @@ public class SoundBoard
     }
 
     protected abstract class Fader {
-        public abstract boolean update (float delta);
+        public abstract boolean update (int delta);
     }
 
     protected final Set<LoopImpl> _active = new HashSet<LoopImpl>();

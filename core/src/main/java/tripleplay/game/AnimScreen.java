@@ -5,6 +5,8 @@
 
 package tripleplay.game;
 
+import playn.core.util.Clock;
+
 import tripleplay.anim.Animator;
 
 /**
@@ -19,18 +21,8 @@ public abstract class AnimScreen extends Screen
     // screen is showing, animations will run; while the screen is hidden, animations will be
     // paused
 
-    @Override public void update (float delta) {
-        super.update(delta);
-        _elapsed += delta;
+    @Override public void paint (Clock clock) {
+        super.paint(clock);
+        anim.paint(clock);
     }
-
-    @Override public void paint (float alpha) {
-        super.paint(alpha);
-        anim.update(_elapsed + alpha * updateRate());
-    }
-
-    /** Returns your game's update rate. */
-    protected abstract float updateRate ();
-
-    protected float _elapsed;
 }

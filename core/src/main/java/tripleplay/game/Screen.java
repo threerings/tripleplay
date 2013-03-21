@@ -7,6 +7,7 @@ package tripleplay.game;
 
 import playn.core.PlayN;
 import playn.core.GroupLayer;
+import playn.core.util.Clock;
 
 /**
  * Contains the UI for a single game screen.
@@ -61,11 +62,11 @@ public abstract class Screen
     public void hideTransitionStarted () {
     }
 
-    /** Called every frame while a screen is visible. */
-    public void update (float delta) {
+    /** Called on every update, while a screen is visible. */
+    public void update (int delta) {
     }
 
-    /** Called every frame while a screen is visible. */
-    public void paint (float alpha) {
+    /** Called on every paint, while a screen is visible. */
+    public void paint (Clock clock) {
     }
 }

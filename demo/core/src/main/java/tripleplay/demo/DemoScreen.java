@@ -71,9 +71,5 @@ public abstract class DemoScreen extends UIAnimScreen
         return Background.bordered(0xFFCCCCCC, 0xFFCC99FF, 5).inset(5);
     }
 
-    protected float updateRate () {
-        return 16;
-    }
-
     protected Root _root;
 }
