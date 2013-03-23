@@ -5,8 +5,8 @@
 
 package tripleplay.ui;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import playn.core.Asserts;
 import playn.core.Events;
@@ -255,8 +255,14 @@ public class Menu extends Elements<Menu>
     /** Disconnects the menu item. This gets called when any descendant is removed that is an
      * instance of MenuItem. */
     protected void disconnectItem (MenuItem item) {
-        _items.remove(item);
+        int itemIdx = _items.indexOf(item);
+        _items.remove(itemIdx);
         item.setRelay(null);
+        didDisconnectItem(item, itemIdx);
+    }
+
+    /** Notifes subclasses of item removal, in case they want to know the index. */
+    protected void didDisconnectItem (MenuItem item, int itemIdx) {
     }
 
     /** Called by the host when the pointer is dragged. */
@@ -297,7 +303,7 @@ public class Menu extends Elements<Menu>
         Layer hit = layer.hitTest(Layer.Util.screenToLayer(layer, e.x(), e.y()));
 
         for (MenuItem item : _items) {
-            if (item.layer == hit) {
+            if (item.isVisible() && item.layer == hit) {
                 return item;
             }
         }
@@ -370,7 +376,7 @@ public class Menu extends Elements<Menu>
     /** Tracks the currently selected menu item (prior to triggering, an item is selected). */
     protected final Selector _selector = new Selector();
 
-    protected final Set<MenuItem> _items = new HashSet<MenuItem>();
+    protected final List<MenuItem> _items = new ArrayList<MenuItem>();
 
     /** Animator that runs the menu opening and closing states, usually from Interface. */
     protected Animator _animator;

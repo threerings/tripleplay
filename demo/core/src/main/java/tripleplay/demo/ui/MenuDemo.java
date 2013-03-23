@@ -5,9 +5,11 @@
 
 package tripleplay.demo.ui;
 
+import playn.core.CanvasImage;
 import playn.core.Image;
 import playn.core.PlayN;
 import playn.core.Pointer;
+import pythagoras.f.FloatMath;
 import react.Slot;
 import react.UnitSlot;
 import react.Value;
@@ -22,10 +24,14 @@ import tripleplay.ui.Icon;
 import tripleplay.ui.Icons;
 import tripleplay.ui.Label;
 import tripleplay.ui.Menu;
+import tripleplay.ui.PagedMenu;
 import tripleplay.ui.Menu.AnimFn;
 import tripleplay.ui.MenuHost;
 import tripleplay.ui.MenuItem;
+import tripleplay.ui.Scroller;
 import tripleplay.ui.Shim;
+import tripleplay.ui.SizableGroup;
+import tripleplay.ui.Slider;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
 import tripleplay.ui.Stylesheet;
@@ -142,7 +148,105 @@ public class MenuDemo extends DemoScreen
 
             @Override protected void wasRemoved () {
                 super.wasRemoved();
-                menu.layer.destroy();
+                if (menu != null) {
+                    menu.layer.destroy();
+                }
+            }
+        };
+
+        TrackingLabel scrolled = new TrackingLabel(menuHost, "Bits \u25BC") {
+            @Override public Menu createMenu () {
+                final Menu menu = new Menu(AxisLayout.vertical().offStretch());
+                menu.add(new Label("Select a byte").addStyles(Style.COLOR.is(0xFFFFFFFF),
+                    Style.BACKGROUND.is(Background.beveled(0xFF8F8F8F, 0xFF4F4F4F, 0xFFCFCFCF).
+                        inset(4))));
+                Group items = new Group(AxisLayout.vertical());
+                Scroller scroller = new Scroller(items);
+                menu.add(new SizableGroup(AxisLayout.vertical().offStretch(), 0, 200).add(
+                    scroller.setBehavior(Scroller.Behavior.VERTICAL).
+                        setConstraint(AxisLayout.stretched())));
+
+                StringBuilder bits = new StringBuilder();
+                for (int ii = 0; ii < 256; ii++) {
+                    bits.setLength(0);
+                    for (int mask = 128; mask > 0; mask >>= 1) {
+                        bits.append((ii & mask) != 0 ? 1 : 0);
+                    }
+                    items.add(new MenuItem(bits.toString()));
+                }
+                return menu;
+            }
+        };
+
+        TrackingLabel bytes = new TrackingLabel(menuHost, "Bytes \u25BC") {
+            final String HEX = "0123456789ABCDEF";
+            @Override public Menu createMenu () {
+                final PagedMenu menu = new PagedMenu(new TableLayout(2), 16);
+                menu.add(new Label("Select a byte").addStyles(Style.COLOR.is(0xFFFFFFFF),
+                    Style.BACKGROUND.is(Background.beveled(0xFF8F8F8F, 0xFF4F4F4F, 0xFFCFCFCF).
+                        inset(4))).setConstraint(new TableLayout.Colspan(2)));
+                final Button prev = new Button("<< Previous");
+                final Button next = new Button("Next >>");
+                menu.add(prev, next);
+                prev.clicked().connect(menu.incrementPage(-1));
+                next.clicked().connect(menu.incrementPage(1));
+                UnitSlot updateEnabling = new UnitSlot() {
+                    @Override public void onEmit () {
+                        prev.setEnabled(menu.page().get() > 0);
+                        next.setEnabled(menu.page().get() < menu.numPages().get() - 1);
+                    }
+                };
+
+                menu.page().connect(updateEnabling);
+                menu.numPages().connect(updateEnabling);
+
+                int sel = -1;
+                for (int ii = 0; ii < 256; ii++) {
+                    String hex = new StringBuilder("0x").
+                        append(HEX.charAt((ii>>4)&0xf)).
+                        append(HEX.charAt(ii&0xf)).toString();
+                    if (text.get().startsWith(hex)) sel = ii;
+                    menu.add(new MenuItem(hex));
+                }
+                if (sel != -1) menu.setPage(sel / menu.itemsPerPage);
+                updateEnabling.onEmit();
+                return menu;
+            }
+        };
+
+        TrackingLabel colors = new TrackingLabel(menuHost, "Colors \u25BC") {
+            @Override public Menu createMenu () {
+                final PagedMenu menu = new PagedMenu(AxisLayout.vertical(), 32);
+                final Slider slider = new Slider().setIncrement(1);
+                slider.value.connect(new Slot<Float>() {
+                    @Override public void onEmit (Float val) {
+                        menu.setPage(FloatMath.round(val));
+                    }
+                });
+                menu.page().connect(new Slot<Integer>() {
+                    @Override public void onEmit (Integer page) {
+                        slider.value.update(page.floatValue());
+                    }
+                });
+                menu.numPages().connect(new Slot<Integer>() {
+                    @Override public void onEmit (Integer numPages) {
+                        slider.range.update(new Slider.Range(0, numPages.intValue() - 1));
+                        slider.setEnabled(numPages > 0);
+                    }
+                });
+
+                Styles itemStyles = Styles.none().add(Style.Mode.SELECTED,
+                        Style.BACKGROUND.is(Background.solid(Colors.BLUE).inset(2))).
+                    add(Style.BACKGROUND.is(Background.blank().inset(2)));
+                Group colorTable = new Group(new TableLayout(4));
+                for (int ii = 0; ii < 256; ii++) {
+                    CanvasImage colorImg = PlayN.graphics().createImage(16, 16);
+                    colorImg.canvas().setFillColor(0xFF000000 | (ii << 16));
+                    colorImg.canvas().fillRect(0, 0, 16, 16);
+                    colorTable.add(new MenuItem("", Icons.image(colorImg)).addStyles(itemStyles));
+                }
+                menu.add(colorTable, slider);
+                return menu;
             }
         };
 
@@ -153,8 +257,11 @@ public class MenuDemo extends DemoScreen
             new Label("Continuous Tracking"),
             new Group(AxisLayout.horizontal()).add(subject, verb, object),
             new Shim(1, 20),
-            new Label("Intermedate groups"),
-            new Group(AxisLayout.horizontal()).add(depth, cells));
+            new Label("Intermediate groups"),
+            new Group(AxisLayout.horizontal()).add(depth, cells),
+            new Shim(1, 20),
+            new Label("Scrolling and Paging"),
+            new Group(AxisLayout.horizontal()).add(scrolled, bytes, colors));
     }
 
     protected Slot<MenuItem> updater (final Button button) {
