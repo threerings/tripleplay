@@ -253,9 +253,8 @@ public abstract class Background
     }
 
     protected Layer createTiledLayer (Image image, float width, float height) {
+        image.setRepeat(true, true);
         ImageLayer layer = graphics().createImageLayer(image);
-        layer.setRepeatX(true);
-        layer.setRepeatY(true);
         if (alpha != null) layer.setAlpha(alpha);
         return layer;
     }

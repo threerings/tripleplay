@@ -70,7 +70,7 @@ public class Emitter
     Emitter (Particles parts, final int maxParticles, final Image image) {
         this.layer = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             @Override public void render (Surface surface) {
-                int tex = image.ensureTexture(false, false);
+                int tex = image.ensureTexture();
                 _buffer.render(_parts._shader.prepare(tex, maxParticles),
                                image.width(), image.height());
             }
