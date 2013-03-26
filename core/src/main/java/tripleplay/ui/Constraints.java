@@ -62,6 +62,43 @@ public class Constraints
     }
 
     /**
+     * Returns a layout constraint that forces the widget's preferred width to be no more than the
+     * specified value.
+     */
+    public static Layout.Constraint maxWidth (final float width) {
+        return new Layout.Constraint() {
+            @Override public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
+                psize.width = Math.min(psize.width, width);
+            }
+        };
+    }
+
+    /**
+     * Returns a layout constraint that forces the widget's preferred height to be no more than the
+     * specified value.
+     */
+    public static Layout.Constraint maxHeight (final float height) {
+        return new Layout.Constraint() {
+            @Override public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
+                psize.height = Math.min(psize.height, height);
+            }
+        };
+    }
+
+    /**
+     * Returns a layout constraint that forces the widget's preferred width height to be no more
+     * than the specified values.
+     */
+    public static Layout.Constraint maxSize (final float width, final float height) {
+        return new Layout.Constraint() {
+            @Override public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
+                psize.width = Math.min(psize.width, width);
+                psize.height = Math.min(psize.height, height);
+            }
+        };
+    }
+
+    /**
      * Returns a layout constraint that forces the widget's preferred width to be no less than the
      * specified value.
      */
