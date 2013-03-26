@@ -92,6 +92,10 @@ public class Slider extends Widget<Slider>
         return this;
     }
 
+    public float increment () {
+        return _increment;
+    }
+
     /** A signal that is emitted when the user has released their finger/pointer after having
      * started adjusting the slider. {@link #value} will contain the correct current value at the
      * time this signal is emitted. */
