@@ -92,7 +92,10 @@ public class Slider extends Widget<Slider>
         return this;
     }
 
-    public float increment () {
+    /**
+     * Getter for the slider increment value. Note that it is a Float object and may be null.
+     */
+    public Float increment () {
         return _increment;
     }
 
