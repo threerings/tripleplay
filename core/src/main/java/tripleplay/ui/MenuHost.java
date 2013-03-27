@@ -177,8 +177,7 @@ public class MenuHost
             return this;
         }
 
-        public float alignedX (float width)
-        {
+        public float alignedX (float width) {
             switch (_halign) {
             case LEFT: return position.x();
             case CENTER: return position.x() - width / 2;
@@ -190,15 +189,11 @@ public class MenuHost
             return position.x();
         }
 
-        public float alignedY (float height)
-        {
+        public float alignedY (float height) {
             switch (_valign) {
-            case TOP:
-                return position.y();
-            case CENTER:
-                return position.y() - height / 2;
-            case BOTTOM:
-                return position.y() - height;
+            case TOP: return position.y();
+            case CENTER: return position.y() - height / 2;
+            case BOTTOM: return position.y() - height;
             }
 
             // Unreachable
