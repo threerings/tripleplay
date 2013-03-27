@@ -107,8 +107,7 @@ public class MenuHost
         /**
          * Sets the menu's horizontal alignment.
          */
-        public Pop halign (HAlign halign)
-        {
+        public Pop halign (HAlign halign) {
             _halign = halign;
             return this;
         }
@@ -116,8 +115,7 @@ public class MenuHost
         /**
          * Sets the menu's vertical alignment.
          */
-        public Pop valign (VAlign valign)
-        {
+        public Pop valign (VAlign valign) {
             _valign = valign;
             return this;
         }
@@ -182,12 +180,9 @@ public class MenuHost
         public float alignedX (float width)
         {
             switch (_halign) {
-            case LEFT:
-                return position.x();
-            case CENTER:
-                return position.x() - width / 2;
-            case RIGHT:
-                return position.x() - width;
+            case LEFT: return position.x();
+            case CENTER: return position.x() - width / 2;
+            case RIGHT: return position.x() - width;
             }
 
             // Unreachable
