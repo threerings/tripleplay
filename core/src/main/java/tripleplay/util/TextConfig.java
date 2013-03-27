@@ -5,6 +5,7 @@
 
 package tripleplay.util;
 
+import playn.core.Asserts;
 import playn.core.Canvas;
 import playn.core.CanvasImage;
 import playn.core.Font;
@@ -38,10 +39,22 @@ public class TextConfig
 
     public TextConfig (TextFormat format, int textColor, EffectRenderer effect,
         boolean underlined) {
-        this.format = format;
+        this.format = Asserts.checkNotNull(format);
         this.textColor = textColor;
-        this.effect = effect;
+        this.effect = Asserts.checkNotNull(effect);
         this.underlined = underlined;
+    }
+
+    @Override public boolean equals (Object other) {
+        if (!(other instanceof TextConfig)) return false;
+
+        TextConfig that = (TextConfig)other;
+        return format.equals(that.format) && effect == that.effect &&
+            underlined == that.underlined && textColor == that.textColor;
+    }
+
+    @Override public int hashCode () {
+        return format.hashCode() ^ effect.hashCode() ^ (underlined ? 1 : 0) ^ textColor;
     }
 
     /**
