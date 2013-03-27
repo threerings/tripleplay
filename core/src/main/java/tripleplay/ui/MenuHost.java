@@ -5,17 +5,22 @@
 
 package tripleplay.ui;
 
-import playn.core.Connection;
-import playn.core.Events;
-import playn.core.GroupLayer;
-import playn.core.Layer;
-import playn.core.Pointer;
 import pythagoras.f.Dimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
+
+import playn.core.Connection;
+import playn.core.Events;
+import playn.core.GroupLayer;
+import playn.core.Layer;
+import playn.core.Pointer;
+
 import react.Slot;
+
+import tripleplay.ui.Style.HAlign;
+import tripleplay.ui.Style.VAlign;
 
 import static playn.core.PlayN.graphics;
 
@@ -100,31 +105,49 @@ public class MenuHost
         }
 
         /**
+         * Sets the menu's horizontal alignment.
+         */
+        public Pop halign (HAlign halign)
+        {
+            _halign = halign;
+            return this;
+        }
+
+        /**
+         * Sets the menu's vertical alignment.
+         */
+        public Pop valign (VAlign valign)
+        {
+            _valign = valign;
+            return this;
+        }
+
+        /**
          * Positions the menu horizontally relative to the left edge of the trigger.
          */
         public Pop toLeft (float x) {
-            return atLayerX(trigger.layer, x);
+            return atLayerX(trigger.layer, x).halign(HAlign.RIGHT);
         }
 
         /**
          * Positions the menu horizontally relative to the right edge of the trigger.
          */
         public Pop toRight (float x) {
-            return atLayerX(trigger.layer, trigger.size().width() + x);
+            return atLayerX(trigger.layer, trigger.size().width() + x).halign(HAlign.LEFT);
         }
 
         /**
          * Positions the menu vertically relative to the top edge of the trigger.
          */
         public Pop toTop (float y) {
-            return atLayerY(trigger.layer, y);
+            return atLayerY(trigger.layer, y).valign(VAlign.TOP);
         }
 
         /**
          * Positions the menu vertically relative to the bottom edge of the trigger.
          */
         public Pop toBottom (float y) {
-            return atLayerY(trigger.layer, trigger.size().height() + y);
+            return atLayerY(trigger.layer, trigger.size().height() + y).valign(VAlign.BOTTOM);
         }
 
         /**
@@ -156,11 +179,46 @@ public class MenuHost
             return this;
         }
 
+        public float alignedX (float width)
+        {
+            switch (_halign) {
+            case LEFT:
+                return position.x();
+            case CENTER:
+                return position.x() - width / 2;
+            case RIGHT:
+                return position.x() - width;
+            }
+
+            // Unreachable
+            assert(false);
+            return position.x();
+        }
+
+        public float alignedY (float height)
+        {
+            switch (_valign) {
+            case TOP:
+                return position.y();
+            case CENTER:
+                return position.y() - height / 2;
+            case BOTTOM:
+                return position.y() - height;
+            }
+
+            // Unreachable
+            assert(false);
+            return position.x();
+        }
+
         /** Whether we should keep the menu around (i.e. not destroy it). */
         protected boolean _retain;
 
         /** The layer that will be sending pointer drag and end events to us. */
         protected Layer _relayTarget;
+
+        protected HAlign _halign = HAlign.LEFT;
+        protected VAlign _valign = VAlign.TOP;
     }
 
     public static Connection relayEvents (Layer from, final Menu to) {
@@ -224,7 +282,8 @@ public class MenuHost
         menuRoot.pack();
 
         // position the menu
-        Point loc = Layer.Util.screenToLayer(rootLayer, pop.position.x(), pop.position.y());
+        Point loc = Layer.Util.screenToLayer(rootLayer, pop.alignedX(menuRoot.size().width()),
+            pop.alignedY(menuRoot.size().height()));
         menuRoot.layer.setTranslation(loc.x, loc.y);
 
         // set up the activation
