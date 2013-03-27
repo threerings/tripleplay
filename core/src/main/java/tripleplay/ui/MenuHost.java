@@ -177,6 +177,9 @@ public class MenuHost
             return this;
         }
 
+        /**
+         * Returns the x position for the menu, adjusted for our specified alignment.
+         */
         public float alignedX (float width) {
             switch (_halign) {
             case LEFT: return position.x();
@@ -189,6 +192,9 @@ public class MenuHost
             return position.x();
         }
 
+        /**
+         * Returns the y position for the menu, adjusted for our specified alignment.
+         */
         public float alignedY (float height) {
             switch (_valign) {
             case TOP: return position.y();
