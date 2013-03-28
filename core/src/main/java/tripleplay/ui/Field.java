@@ -126,8 +126,7 @@ public class Field extends TextWidget<Field>
      *
      * @return this for call chaining.
      */
-    public Field setValidator (NativeTextField.Validator validator)
-    {
+    public Field setValidator (NativeTextField.Validator validator) {
         if (_nativeField != null)
             _nativeField.setValidator(validator == null ? _defaultValidator : validator);
         return this;
@@ -139,10 +138,19 @@ public class Field extends TextWidget<Field>
      *
      * @return this for call chaining.
      */
-    public Field setTransformer (NativeTextField.Transformer transformer)
-    {
+    public Field setTransformer (NativeTextField.Transformer transformer) {
         if (_nativeField != null)
             _nativeField.setTransformer(transformer == null ? _defaultTransformer : transformer);
+        return this;
+    }
+
+    /**
+     * Forcibly notify the NativeTextField backing this field that its screen position has changed.
+     *
+     * @return this for call chaining.
+     */
+    public Field updateNativeFieldBounds () {
+        if (_nativeField != null) _nativeField.setBounds(getNativeFieldBounds());
         return this;
     }
 
@@ -228,8 +236,8 @@ public class Field extends TextWidget<Field>
                 .setFont(resolveStyle(Style.FONT))
                 .setAutocapitalization(resolveStyle(AUTOCAPITALIZATION))
                 .setAutocorrection(resolveStyle(AUTOCORRECTION))
-                .setSecureTextEntry(resolveStyle(SECURE_TEXT_ENTRY))
-                .setBounds(getNativeFieldBounds());
+                .setSecureTextEntry(resolveStyle(SECURE_TEXT_ENTRY));
+            updateNativeFieldBounds();
             _nativeField.add();
             setGlyphLayerAlpha(0);
         } else {
