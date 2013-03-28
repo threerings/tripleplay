@@ -5,6 +5,7 @@
 
 package tripleplay.platform;
 
+import java.awt.Dimension;
 import java.awt.Canvas;
 import javax.swing.JFrame;
 
@@ -29,11 +30,13 @@ public class JavaTPPlatform extends TPPlatform
         _platform = platform;
 
         _frame = new JFrame("Game");
-        _frame.setSize(config.width, config.height);
 
         Canvas canvas = new Canvas();
+        canvas.setPreferredSize(new Dimension(config.width, config.height));
         _frame.getContentPane().add(canvas);
 
+        _frame.pack();
+        _frame.setResizable(false);
         _frame.setVisible(true);
 
         try {
