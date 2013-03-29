@@ -55,6 +55,24 @@ public class Swipe extends GestureBase<Swipe>
         return this;
     }
 
+    /**
+     * The distance on the Swipe's Direction axis that a touch must move to qualify the Swipe for
+     * completion.
+     */
+    public Swipe onAxisThreshold (int pixels) {
+        _onAxisThreshold = pixels;
+        return this;
+    }
+
+    /**
+     * An axis Swipe will consider any movement along the axis of its configured direction to be
+     * valid, rather than only movement in the direction itself.
+     */
+    public Swipe axisSwipe (boolean value) {
+        _axisSwipe = value;
+        return this;
+    }
+
     @Override protected void clearMemory () {
         _movedEnough = false;
         _startNodes.clear();
@@ -105,7 +123,7 @@ public class Swipe extends GestureBase<Swipe>
         _lastNodes.put(node.touch.id(), node);
         // we haven't moved far enough yet, no further evaluation needed.
         Point startLoc = start.location();
-        if (current.distance(startLoc) < DIRECTION_THRESHOLD) return;
+        if (current.distance(startLoc) < _onAxisThreshold) return;
 
         float offAxisDistance; // distance from our start position in the perpendicular axis
         float lastAxisDistance = axisDistance(
@@ -127,7 +145,7 @@ public class Swipe extends GestureBase<Swipe>
                 GestureNode touchLast = _lastNodes.get(touchStart.getKey());
                 if (axisDistance(touchStart.getValue().location(),
                     touchLast == null ? null : touchLast.location()) <=
-                    DIRECTION_THRESHOLD) {
+                    _onAxisThreshold) {
                     allMovedEnough = false;
                     break;
                 }
@@ -142,25 +160,24 @@ public class Swipe extends GestureBase<Swipe>
     protected float axisDistance (Point start, Point end) {
         if (start == null || end == null) return 0;
 
+        float value;
         if (_direction == Direction.UP || _direction == Direction.DOWN)
-            return (end.y() - start.y()) * _directionModifier;
+            value = end.y() - start.y();
         else
-            return (end.x() - start.x()) * _directionModifier;
+            value = end.x() - start.x();
+        return _axisSwipe ? Math.abs(value) : value * _directionModifier;
     }
 
     protected void backtracked (GestureNode node, float distance) {
-        setState(State.UNQUALIFIED);
+        if (!_axisSwipe) {
+            setState(State.UNQUALIFIED);
+        }
     }
 
     protected void setDirection (Direction direction) {
         _direction = direction;
         _directionModifier = _direction == Direction.UP || _direction == Direction.LEFT ? -1 : 1;
     }
-
-    // the furthest in a perpendicular direction a finger can go before being considered to not be
-    // moving the in the right direction. Also the distance that a finger must move to be considered
-    // a swipe.
-    protected static final int DIRECTION_THRESHOLD = 10;
 
     protected int _touches;
     protected Direction _direction;
@@ -171,4 +188,6 @@ public class Swipe extends GestureBase<Swipe>
     protected Map<Integer, GestureNode> _lastNodes = new HashMap<Integer, GestureNode>();
     protected boolean _cancelOnPause = true;
     protected int _offAxisTolerance = 10;
+    protected int _onAxisThreshold = 10;
+    protected boolean _axisSwipe = false;
 }
