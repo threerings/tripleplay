@@ -17,6 +17,8 @@ import playn.core.Touch.Event;
 
 import pythagoras.f.IRectangle;
 
+import react.Value;
+import react.ValueView;
 import tripleplay.util.Timer;
 import tripleplay.util.Timer.Handle;
 
@@ -63,13 +65,17 @@ public class GestureDirector
         return _currentTouches.containsKey(touch.id());
     }
 
+    public ValueView<Gesture<?>> greedyGesture () {
+        return _greedy;
+    }
+
     @Override public void onTouchStart (Event touch) {
         if (!touchInBounds(touch)) return;
 
         if (_currentTouches.isEmpty()) {
             // new user interaction!
             for (Gesture<?> gesture : _gestures) gesture.start();
-            _greedy = null;
+            _greedy.update(null);
         }
         _currentTouches.put(touch.id(), touch);
         evaluateGestures(new GestureNode(GestureNode.Type.START, touch));
@@ -114,8 +120,9 @@ public class GestureDirector
             _currentMoves.put(node.touch.id(), handle);
         }
 
-        if (_greedy != null) {
-            _greedy.evaluate(node);
+        Gesture<?> currentGreedy = _greedy.get();
+        if (currentGreedy != null) {
+            currentGreedy.evaluate(node);
             return;
         }
 
@@ -136,11 +143,11 @@ public class GestureDirector
                 "node", node, "greedy", greedy, "complete", complete);
             // soldier on: the first greedy gesture will have priority
         }
-        _greedy = greedy.isEmpty() ? null : greedy.get(0);
+        _greedy.update(currentGreedy = (greedy.isEmpty() ? null : greedy.get(0)));
         if (greedyAndComplete > 0) {
             // put all but the potential greedy gesture into UNQUALIFIED for the remainder of this
             // interaction.
-            for (Gesture<?> gesture : _gestures) if (_greedy != gesture) gesture.cancel();
+            for (Gesture<?> gesture : _gestures) if (currentGreedy != gesture) gesture.cancel();
         }
     }
 
@@ -150,5 +157,5 @@ public class GestureDirector
     protected Map<Integer, Event> _currentTouches = new HashMap<Integer, Event>();
     protected Map<Integer, Handle> _currentMoves = new HashMap<Integer, Handle>();
     protected Set<Gesture<?>> _gestures = new HashSet<Gesture<?>>();
-    protected Gesture<?> _greedy;
+    protected Value<Gesture<?>> _greedy = Value.create(null);
 }
