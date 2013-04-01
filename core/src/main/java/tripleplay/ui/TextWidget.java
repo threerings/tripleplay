@@ -45,7 +45,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     /**
      * Returns a slot that subclasses should wire up to their icon {@code Value}.
      */
-    protected Slot<Icon> iconDidChange() {
+    protected Slot<Icon> iconDidChange () {
         return new Slot<Icon>() {
             @Override public void onEmit (Icon icon) {
                 if (icon == null) {
