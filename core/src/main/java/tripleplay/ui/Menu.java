@@ -289,7 +289,7 @@ public class Menu extends Elements<Menu>
 
         // trigger if this is the 2nd click -or- we always show text
         if (hover == selected || hover._showText == ShowText.ALWAYS) {
-            if (isVisible()) {
+            if (isVisible() && hover.isEnabled()) {
                 hover.trigger();
                 _itemTriggered.emit(hover);
                 deactivate();
