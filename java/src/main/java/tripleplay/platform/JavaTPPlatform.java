@@ -30,6 +30,7 @@ public class JavaTPPlatform extends TPPlatform
         _platform = platform;
 
         _frame = new JFrame("Game");
+        _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Canvas canvas = new Canvas();
         canvas.setPreferredSize(new Dimension(config.width, config.height));
