@@ -47,6 +47,16 @@ public class JavaNativeTextField
         if (oldField != null) {
             _field.setBounds(oldField.getBounds());
             _field.setFont(oldField.getFont());
+            _field.setText(oldField.getText());
+
+            if (oldField.getParent() != null) {
+                boolean focused = oldField.isFocusOwner();
+
+                _root.remove(oldField);
+                _root.add(_field);
+                _field.setCaretPosition(oldField.getCaretPosition());
+                if (focused) _field.requestFocus();
+            }
         }
 
         _field.getDocument().addDocumentListener(new DocumentListener() {
