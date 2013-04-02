@@ -143,8 +143,7 @@ public class JavaNativeTextField
         _field.requestFocus();
     }
 
-    protected static int awtFontStyle (Font.Style style)
-    {
+    protected static int awtFontStyle (Font.Style style) {
         switch (style) {
         case BOLD: return java.awt.Font.BOLD;
         case BOLD_ITALIC: return java.awt.Font.BOLD | java.awt.Font.ITALIC;
