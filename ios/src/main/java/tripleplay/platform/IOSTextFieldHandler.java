@@ -17,7 +17,10 @@ import cli.MonoTouch.UIKit.UIEvent;
 import cli.MonoTouch.UIKit.UIFont;
 import cli.MonoTouch.UIKit.UIKeyboard;
 import cli.MonoTouch.UIKit.UITextField;
+import cli.MonoTouch.UIKit.UITouch;
 import cli.MonoTouch.UIKit.UIView;
+import cli.System.Collections.IEnumerator;
+import cli.System.Convert;
 import cli.System.Drawing.PointF;
 import cli.System.Drawing.RectangleF;
 import cli.System.Drawing.SizeF;
@@ -171,11 +174,22 @@ public class IOSTextFieldHandler
             super(bounds);
         }
 
-        @Override public void TouchesBegan (NSSet nsSet, UIEvent uiEvent) {
+        @Override public void TouchesBegan (NSSet touches, UIEvent uiEvent) {
             IOSNativeTextField firstResponder = findFirstResponder();
-            if (firstResponder != null) firstResponder._field.ResignFirstResponder();
+            if (firstResponder != null) {
+                UITouch touch = null;
+                if (Convert.ToInt32(touches.get_Count()) == 1) {
+                    IEnumerator enumerator = touches.GetEnumerator();
+                    enumerator.MoveNext();
+                    touch = (UITouch)enumerator.get_Current();
+                }
+                // only resign if this touch is not manipulating the field itself.
+                PointF loc = touch == null ? null : touch.LocationInView(firstResponder._field);
+                if (loc == null || !firstResponder._field.get_Bounds().Contains(loc))
+                    firstResponder._field.ResignFirstResponder();
+            }
             // call super, otherwise the TouchesEnded event for this touch are never dispatched
-            super.TouchesBegan(nsSet, uiEvent);
+            super.TouchesBegan(touches, uiEvent);
         }
     }
 
