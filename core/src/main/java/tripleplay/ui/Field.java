@@ -155,6 +155,14 @@ public class Field extends TextWidget<Field>
     }
 
     /**
+     * Returns true if this Field is backed by a native field and that field currently has keyboard
+     * (virtual or physical) focus.
+     */
+    public boolean hasFocus () {
+        return _nativeField == null ? false : _nativeField.hasFocus();
+    }
+
+    /**
      * Used with native fields. Returning false form this method will cancel a text edit from the
      * user. The default implementation supplied here honors the MAXIMUM_INPUT_LENGTH Field style.
      */

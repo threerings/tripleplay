@@ -130,6 +130,10 @@ public class IOSNativeTextField implements NativeTextField
         _field.BecomeFirstResponder();
     }
 
+    @Override public boolean hasFocus () {
+        return _field.get_IsFirstResponder();
+    }
+
     protected void updateBounds () {
         if (_requestedBounds == null) return;
 

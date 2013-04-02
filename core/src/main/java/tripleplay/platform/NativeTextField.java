@@ -76,4 +76,7 @@ public interface NativeTextField
 
     /** Request focus for the native text field */
     void focus ();
+
+    /** Returns true if this native text field currently has focus. */
+    boolean hasFocus ();
 }
