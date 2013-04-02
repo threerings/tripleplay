@@ -164,7 +164,6 @@ public class JavaNativeTextField
         return java.awt.Font.PLAIN;
     }
 
-
     protected Container _root;
     protected JTextField _field;
 

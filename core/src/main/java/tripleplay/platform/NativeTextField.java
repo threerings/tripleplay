@@ -34,7 +34,7 @@ public interface NativeTextField
 
     /** A signal that is dispatched when the native text field has lost focus. Value is false if
      * editing was canceled */
-    Signal<Boolean> finishedEditing();
+    Signal<Boolean> finishedEditing ();
 
     /** Sets the validator for use with this native field.
      * @return {@code this} for call chaining. */
