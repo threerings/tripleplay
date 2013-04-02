@@ -22,14 +22,16 @@ public class IOSTPPlatform extends TPPlatform
     /** The iOS platform with which this TPPlatform was registered. */
     public final IOSPlatform platform;
 
-    @Override
-    public boolean hasNativeTextFields () {
+    @Override public boolean hasNativeTextFields () {
         return true;
     }
 
-    @Override
-    public NativeTextField createNativeTextField () {
+    @Override public NativeTextField createNativeTextField () {
         return new IOSNativeTextField(_fieldHandler);
+    }
+
+    @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
+        _fieldHandler.setVirtualKeyboardController(ctrl);
     }
 
     private IOSTPPlatform (IOSPlatform platform) {

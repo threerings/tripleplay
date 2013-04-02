@@ -55,6 +55,10 @@ public class JavaTPPlatform extends TPPlatform
         return new JavaNativeTextField(_frame.getLayeredPane());
     }
 
+    @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
+        // nada, no virtual keyboard
+    }
+
     /** The Java platform with which this TPPlatform was registered. */
     protected JavaPlatform _platform;
 

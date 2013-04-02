@@ -24,6 +24,7 @@ import cli.System.Drawing.SizeF;
 
 import playn.core.Font;
 import playn.ios.IOSFont;
+import pythagoras.f.Point;
 
 import static tripleplay.platform.Log.log;
 
@@ -129,6 +130,10 @@ public class IOSTextFieldHandler
                 }}));
     }
 
+    public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
+        _virtualKeyboardCtrl = ctrl;
+    }
+
     public UIFont getUIFont (Font font) {
         if (font == null) font = IOSFont.defaultFont();
 
@@ -179,10 +184,21 @@ public class IOSTextFieldHandler
         }
 
         @Override public boolean PointInside (PointF pointF, UIEvent uiEvent) {
+            // let through any touch that the virtual keyboard controller wants to allow.
+            if (!hideVirtualKeyboardAt(pointF)) return false;
+            // allow through touches that hit text fields we manage
             for (IOSNativeTextField field : _activeFields.values())
                 if (field._field.PointInside(ConvertPointToView(pointF, field._field), uiEvent))
                     return false;
+            // else absorb the hit at this point so that we can hide the keyboard in TouchesBegan
             return true;
+        }
+
+        protected boolean hideVirtualKeyboardAt (PointF pointF) {
+            PointF overlay = ConvertPointToView(pointF, _overlay);
+            Point pythagOverlay = new Point(overlay.get_X(), overlay.get_Y());
+            return _virtualKeyboardCtrl == null ||
+                _virtualKeyboardCtrl.hideKeyboardForTouch(pythagOverlay);
         }
     }
 
@@ -196,4 +212,5 @@ public class IOSTextFieldHandler
     protected CGAffineTransform _gameViewTransform;
 
     protected TouchDetector _touchDetector;
+    protected VirtualKeyboardController _virtualKeyboardCtrl;
 }

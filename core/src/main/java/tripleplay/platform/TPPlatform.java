@@ -41,6 +41,12 @@ public abstract class TPPlatform
      */
     public abstract NativeTextField createNativeTextField ();
 
+    /**
+     * Sets the instance of VirtualKeyboardController to use for virtual keyboard management, or
+     * null for none.
+     */
+    public abstract void setVirtualKeyboardController (VirtualKeyboardController ctrl);
+
     /** Called by the static register methods in the per-platform backends. */
     static void register (TPPlatform instance) {
         if (_instance != _default) {
@@ -56,6 +62,7 @@ public abstract class TPPlatform
         @Override public NativeTextField createNativeTextField () {
             throw new UnsupportedOperationException();
         }
+        @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) { }
     }
 
     protected static TPPlatform _default = new Stub();
