@@ -58,6 +58,15 @@ public class JavaTPPlatform extends TPPlatform
         // nada, no virtual keyboard
     }
 
+    /**
+     * Sets the title of the window.
+     *
+     * @param title the window title
+     */
+    public void setTitle (String title) {
+        _frame.setTitle(title);
+    }
+
     /** The Java platform with which this TPPlatform was registered. */
     protected JavaPlatform _platform;
 
