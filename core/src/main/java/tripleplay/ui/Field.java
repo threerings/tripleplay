@@ -159,7 +159,7 @@ public class Field extends TextWidget<Field>
      * (virtual or physical) focus.
      */
     public boolean hasFocus () {
-        return _nativeField == null ? false : _nativeField.hasFocus();
+        return _nativeField != null && _nativeField.hasFocus();
     }
 
     /**
