@@ -9,12 +9,14 @@ import cli.MonoTouch.Foundation.NSRange;
 import cli.MonoTouch.Foundation.NSString;
 import cli.MonoTouch.UIKit.UIFont;
 import cli.MonoTouch.UIKit.UIKeyboardType;
+import cli.MonoTouch.UIKit.UIReturnKeyType;
 import cli.MonoTouch.UIKit.UITextAutocapitalizationType;
 import cli.MonoTouch.UIKit.UITextAutocorrectionType;
 import cli.MonoTouch.UIKit.UITextField;
 import cli.MonoTouch.UIKit.UITextFieldDelegate;
 import cli.System.Drawing.RectangleF;
 
+import playn.core.PlayN;
 import pythagoras.f.IRectangle;
 
 import playn.core.Font;
@@ -115,6 +117,41 @@ public class IOSNativeTextField implements NativeTextField
 
     @Override public IOSNativeTextField setSecureTextEntry (boolean enable) {
         _field.set_SecureTextEntry(enable);
+        return this;
+    }
+
+    @Override public NativeTextField setReturnKeyLabel (String label) {
+        if (label == null || label.isEmpty()) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Default));
+            return this;
+        }
+        label = label.toLowerCase();
+        if (label.equals(_field.get_ReturnKeyType().ToString().toLowerCase())) {
+            // NOOP
+            return this;
+        }
+
+        if (label.equals("go")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Go));
+        } else if (label.equals("google")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Google));
+        } else if (label.equals("join")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Join));
+        } else if (label.equals("next")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Next));
+        } else if (label.equals("route")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Route));
+        } else if (label.equals("search")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Search));
+        } else if (label.equals("send")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Send));
+        } else if (label.equals("yahoo")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Yahoo));
+        } else if (label.equals("done")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Done));
+        } else if (label.equals("emergencycall")) {
+            _field.set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.EmergencyCall));
+        }
         return this;
     }
 

@@ -52,9 +52,14 @@ public class Field extends TextWidget<Field>
 
     /** Sets the maximum number of characters that can be entered by this Field. Currently only
      * supported by Native fields. Anything less than 1 indicates unlimited (or limited by the
-     * platform only).
-     */
+     * platform only). */
     public static final Style<Integer> MAXIMUM_INPUT_LENGTH = Style.newStyle(false, 0);
+
+    /** Sets the label used on the "return" key of the virtual keyboard on native keyboards. Be
+     * aware that some platforms (such as iOS) have a limited number of options. The underlying
+     * native implementation is responsible for attempting to match this style, but may be unable
+     * to do so. Defaults to null (uses platform default). */
+    public static final Style<String> RETURN_KEY_LABEL = Style.newStyle(false, null);
 
     /** The text displayed by this widget. */
     public final Value<String> text;
@@ -244,7 +249,8 @@ public class Field extends TextWidget<Field>
                 .setFont(resolveStyle(Style.FONT))
                 .setAutocapitalization(resolveStyle(AUTOCAPITALIZATION))
                 .setAutocorrection(resolveStyle(AUTOCORRECTION))
-                .setSecureTextEntry(resolveStyle(SECURE_TEXT_ENTRY));
+                .setSecureTextEntry(resolveStyle(SECURE_TEXT_ENTRY))
+                .setReturnKeyLabel(resolveStyle(RETURN_KEY_LABEL));
             updateNativeFieldBounds();
             _nativeField.add();
             setGlyphLayerAlpha(0);

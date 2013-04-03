@@ -113,12 +113,12 @@ public class JavaNativeTextField
     }
 
     @Override public JavaNativeTextField setAutocapitalization (boolean enable) {
-        // TODO
+        // nada - only for virtual keyboards
         return this;
     }
 
     @Override public JavaNativeTextField setAutocorrection (boolean enable) {
-        // TODO
+        // nada - only for virtual keyboards
         return this;
     }
 
@@ -128,6 +128,11 @@ public class JavaNativeTextField
             setupField();
         }
 
+        return this;
+    }
+
+    @Override public NativeTextField setReturnKeyLabel (String label) {
+        // nada - only for virtual keyboards
         return this;
     }
 
