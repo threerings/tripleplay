@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 
 import org.lwjgl.opengl.Display;
 
-import playn.core.PlayN;
 import playn.java.JavaPlatform;
 
 /**
