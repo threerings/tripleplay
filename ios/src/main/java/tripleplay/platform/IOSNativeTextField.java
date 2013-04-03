@@ -7,6 +7,7 @@ package tripleplay.platform;
 
 import cli.MonoTouch.Foundation.NSRange;
 import cli.MonoTouch.Foundation.NSString;
+import cli.MonoTouch.UIKit.UIControlContentVerticalAlignment;
 import cli.MonoTouch.UIKit.UIFont;
 import cli.MonoTouch.UIKit.UIKeyboardType;
 import cli.MonoTouch.UIKit.UIReturnKeyType;
@@ -16,7 +17,6 @@ import cli.MonoTouch.UIKit.UITextField;
 import cli.MonoTouch.UIKit.UITextFieldDelegate;
 import cli.System.Drawing.RectangleF;
 
-import playn.core.PlayN;
 import pythagoras.f.IRectangle;
 
 import playn.core.Font;
@@ -30,6 +30,8 @@ public class IOSNativeTextField implements NativeTextField
     public IOSNativeTextField (IOSTextFieldHandler handler) {
         _handler = handler;
         _field = new UITextField();
+        _field.set_VerticalAlignment(
+            UIControlContentVerticalAlignment.wrap(UIControlContentVerticalAlignment.Center));
 
         // all fields close the keyboard when the return key is used
         _field.set_Delegate(new UITextFieldDelegate() {
@@ -182,11 +184,6 @@ public class IOSNativeTextField implements NativeTextField
             // ensure we're tall enough for a single line of text and the text cursor
             fieldBounds.set_Height(font.get_LineHeight());
         }
-        // offset upwards because the text field has some built in vertical padding we want to
-        // ignore. The difference between the lineHeight and the ascender + descender (which is
-        // negative) seems to represent this pretty well.
-        fieldBounds.set_Y(Math.round(fieldBounds.get_Y() -
-            (font.get_LineHeight() - (font.get_Ascender() - font.get_Descender()))));
         _field.set_Frame(fieldBounds);
     }
 
