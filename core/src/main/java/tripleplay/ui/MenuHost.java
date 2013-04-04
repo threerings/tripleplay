@@ -105,7 +105,7 @@ public class MenuHost
         }
 
         /**
-         * Sets the menu's horizontal alignment.
+         * Sets the horizontal alignment of the menu relative to the popup position.
          */
         public Pop halign (HAlign halign) {
             _halign = halign;
@@ -113,7 +113,7 @@ public class MenuHost
         }
 
         /**
-         * Sets the menu's vertical alignment.
+         * Sets the vertical alignment of the menu relative to the popup position.
          */
         public Pop valign (VAlign valign) {
             _valign = valign;
@@ -121,28 +121,32 @@ public class MenuHost
         }
 
         /**
-         * Positions the menu horizontally relative to the left edge of the trigger.
+         * Positions the right edge of the menu relative to the left edge of the trigger, offset
+         * by the given value.
          */
         public Pop toLeft (float x) {
             return atLayerX(trigger.layer, x).halign(HAlign.RIGHT);
         }
 
         /**
-         * Positions the menu horizontally relative to the right edge of the trigger.
+         * Positions the left edge of the menu relative to the right edge of the trigger, offset
+         * by the given value.
          */
         public Pop toRight (float x) {
             return atLayerX(trigger.layer, trigger.size().width() + x).halign(HAlign.LEFT);
         }
 
         /**
-         * Positions the menu vertically relative to the top edge of the trigger.
+         * Positions the top edge of the menu relative to the top edge of the trigger, offset
+         * by the given value.
          */
         public Pop toTop (float y) {
             return atLayerY(trigger.layer, y).valign(VAlign.TOP);
         }
 
         /**
-         * Positions the menu vertically relative to the bottom edge of the trigger.
+         * Positions the bottom edge of the menu relative to the bottom edge of the trigger, offset
+         * by the given value.
          */
         public Pop toBottom (float y) {
             return atLayerY(trigger.layer, trigger.size().height() + y).valign(VAlign.BOTTOM);
@@ -175,36 +179,6 @@ public class MenuHost
             Point br = Layer.Util.layerToScreen(elem.layer, elem.size().width(), elem.size().height());
             bounds = new Rectangle(tl.x(), tl.y(), br.x() - tl.x(), br.y() - tl.y());
             return this;
-        }
-
-        /**
-         * Returns the x position for the menu, adjusted for our specified alignment.
-         */
-        public float alignedX (float width) {
-            switch (_halign) {
-            case LEFT: return position.x();
-            case CENTER: return position.x() - width / 2;
-            case RIGHT: return position.x() - width;
-            }
-
-            // Unreachable
-            assert(false);
-            return position.x();
-        }
-
-        /**
-         * Returns the y position for the menu, adjusted for our specified alignment.
-         */
-        public float alignedY (float height) {
-            switch (_valign) {
-            case TOP: return position.y();
-            case CENTER: return position.y() - height / 2;
-            case BOTTOM: return position.y() - height;
-            }
-
-            // Unreachable
-            assert(false);
-            return position.x();
         }
 
         /** Whether we should keep the menu around (i.e. not destroy it). */
@@ -278,8 +252,9 @@ public class MenuHost
         menuRoot.pack();
 
         // position the menu
-        Point loc = Layer.Util.screenToLayer(rootLayer, pop.alignedX(menuRoot.size().width()),
-            pop.alignedY(menuRoot.size().height()));
+        Point loc = Layer.Util.screenToLayer(rootLayer,
+            pop.position.x() + pop._halign.offset(0, menuRoot.size().width()),
+            pop.position.y() + pop._valign.offset(0, menuRoot.size().height()));
         menuRoot.layer.setTranslation(loc.x, loc.y);
 
         // set up the activation
