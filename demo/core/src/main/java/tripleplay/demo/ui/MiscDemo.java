@@ -6,6 +6,7 @@
 package tripleplay.demo.ui;
 
 import playn.core.Image;
+import playn.core.Log;
 import playn.core.PlayN;
 
 import react.Function;
@@ -47,6 +48,8 @@ public class MiscDemo extends DemoScreen
 
         CheckBox toggle, toggle2;
         Label label2;
+        Field editable, disabled;
+        Button setField;
         Group iface = new Group(new TableLayout(2).gaps(10, 10)).add(
             new Label("Toggling visibility"),
             new Label("Buttons"),
@@ -77,9 +80,11 @@ public class MiscDemo extends DemoScreen
                 new Label("Below", tile(squares, 3)).setStyles(Style.ICON_POS.below,
                                                                Style.HALIGN.center)),
             // an editable text field
-            new Group(AxisLayout.horizontal().gap(10)).add(
-                new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
-                new Field("Disabled text").setEnabled(false)));
+            new Group(AxisLayout.vertical()).add(
+                new Group(AxisLayout.horizontal().gap(10)).add(
+                    editable = new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
+                    disabled = new Field("Disabled text").setEnabled(false)),
+                setField = new Button("Set -> ")));
 
         toggle.checked.update(true);
         toggle.checked.connect(label2.visibleSlot());
@@ -89,6 +94,13 @@ public class MiscDemo extends DemoScreen
             }
         }).connect(label2.icon.slot());
 
+        final Field source = editable, target = disabled;
+        setField.clicked().connect(new UnitSlot() {
+            public void onEmit () {
+                PlayN.log().info("Setting text to " + source.text.get());
+                target.text.update(source.text.get());
+            }
+        });
         return iface;
     }
 
