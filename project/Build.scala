@@ -47,6 +47,7 @@ object TriplePlayBuild extends Build {
   }
 
   lazy val core = builder("core")
+  lazy val java = builder("java")
   lazy val ios = builder("ios")
   lazy val tools = builder("tools")
   lazy val demoCore = builder("demo-core")
