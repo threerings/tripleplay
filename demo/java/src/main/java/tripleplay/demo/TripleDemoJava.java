@@ -7,13 +7,21 @@ package tripleplay.demo;
 
 import playn.core.PlayN;
 import playn.java.JavaPlatform;
+import tripleplay.platform.JavaTPPlatform;
 
 public class TripleDemoJava
 {
     public static void main (String[] args) {
-        JavaPlatform platform = JavaPlatform.register();
+        JavaPlatform.Config config = new JavaPlatform.Config();
+        JavaPlatform platform = JavaPlatform.register(config);
         platform.assets().setPathPrefix("tripleplay/rsrc");
         TripleDemo.mainArgs = args;
+
+        // TODO: upgrade to include other systems
+        if (System.getProperty("os.name").contains("Linux")) {
+            JavaTPPlatform.register(platform, config);
+        }
+
         PlayN.run(new TripleDemo());
     }
 }

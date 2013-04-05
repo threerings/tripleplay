@@ -29,6 +29,12 @@
       <artifactId>playn-java</artifactId>
       <version>${playn.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay-java</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
