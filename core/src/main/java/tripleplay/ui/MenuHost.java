@@ -253,8 +253,8 @@ public class MenuHost
 
         // position the menu
         Point loc = Layer.Util.screenToLayer(rootLayer,
-            pop.position.x() + pop._halign.offset(0, menuRoot.size().width()),
-            pop.position.y() + pop._valign.offset(0, menuRoot.size().height()));
+            pop.position.x() + pop._halign.offset(menuRoot.size().width(), 0),
+            pop.position.y() + pop._valign.offset(menuRoot.size().height(), 0));
         menuRoot.layer.setTranslation(loc.x, loc.y);
 
         // set up the activation
