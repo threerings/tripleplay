@@ -25,6 +25,8 @@ import cli.System.Drawing.SizeF;
 import playn.core.Font;
 import playn.ios.IOSFont;
 import pythagoras.f.Point;
+import react.Value;
+import react.ValueView;
 
 import static tripleplay.platform.Log.log;
 
@@ -112,6 +114,7 @@ public class IOSTextFieldHandler
 
                     // touches outside of the keyboard will close the keyboard
                     _overlay.Add(_touchDetector);
+                    _keyboardActive.update(true);
                 }}));
 
         NSNotificationCenter.get_DefaultCenter().AddObserver(
@@ -127,11 +130,16 @@ public class IOSTextFieldHandler
                     _gameViewTransform = null;
                     _gameViewTransformed = false;
                     _touchDetector.RemoveFromSuperview();
+                    _keyboardActive.update(false);
                 }}));
     }
 
     public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
         _virtualKeyboardCtrl = ctrl;
+    }
+
+    public ValueView<Boolean> virtualKeyboardActive () {
+        return _keyboardActive;
     }
 
     public UIFont getUIFont (Font font) {
@@ -205,6 +213,7 @@ public class IOSTextFieldHandler
     protected final UIView _overlay;
     protected final Map<UITextField, IOSNativeTextField> _activeFields =
         new HashMap<UITextField, IOSNativeTextField>();
+    protected final Value<Boolean> _keyboardActive = Value.create(false);
 
     // we specifically track whether we've transformed the game view in a boolean because
     // CGAffineTransform is a value class and cannot be null

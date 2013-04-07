@@ -6,6 +6,7 @@
 package tripleplay.platform;
 
 import playn.ios.IOSPlatform;
+import react.ValueView;
 
 /**
  * Implements iOS-specific TriplePlay services.
@@ -32,6 +33,10 @@ public class IOSTPPlatform extends TPPlatform
 
     @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
         _fieldHandler.setVirtualKeyboardController(ctrl);
+    }
+
+    @Override public ValueView<Boolean> virtualKeyboardActive () {
+        return _fieldHandler.virtualKeyboardActive();
     }
 
     private IOSTPPlatform (IOSPlatform platform) {

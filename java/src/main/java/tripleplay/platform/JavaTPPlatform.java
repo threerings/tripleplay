@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import org.lwjgl.opengl.Display;
 
 import playn.java.JavaPlatform;
+import react.Value;
+import react.ValueView;
 
 /**
  * Implements Java-specific TriplePlay services.
@@ -58,6 +60,10 @@ public class JavaTPPlatform extends TPPlatform
         // nada, no virtual keyboard
     }
 
+    @Override public ValueView<Boolean> virtualKeyboardActive () {
+        return _false;
+    }
+
     /**
      * Sets the title of the window.
      *
@@ -71,4 +77,6 @@ public class JavaTPPlatform extends TPPlatform
     protected JavaPlatform _platform;
 
     protected JFrame _frame;
+
+    protected final Value<Boolean> _false = Value.create(false);
 }

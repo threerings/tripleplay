@@ -5,6 +5,9 @@
 
 package tripleplay.platform;
 
+import react.Value;
+import react.ValueView;
+
 /**
  * The entry point for per-platform services made available by TriplePlay. This is akin to the
  * mechanism used by PlayN for its per-platform backends, and must be configured in a similar way.
@@ -47,6 +50,12 @@ public abstract class TPPlatform
      */
     public abstract void setVirtualKeyboardController (VirtualKeyboardController ctrl);
 
+    /**
+     * A value indicating whether the virtual keyboard is currently active or not (if the platform
+     * has one).
+     */
+    public abstract ValueView<Boolean> virtualKeyboardActive ();
+
     /** Called by the static register methods in the per-platform backends. */
     static void register (TPPlatform instance) {
         if (_instance != _default) {
@@ -63,6 +72,8 @@ public abstract class TPPlatform
             throw new UnsupportedOperationException();
         }
         @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) { }
+        @Override public ValueView<Boolean> virtualKeyboardActive () { return _false; }
+        protected final Value<Boolean> _false = Value.create(false);
     }
 
     protected static TPPlatform _default = new Stub();
