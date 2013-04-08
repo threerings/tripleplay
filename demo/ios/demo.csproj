@@ -10,7 +10,6 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TripleDemo</RootNamespace>
     <AssemblyName>TripleDemo</AssemblyName>
-    <newfilesearch>OnLoad</newfilesearch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
