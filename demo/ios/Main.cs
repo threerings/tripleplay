@@ -4,6 +4,7 @@ using MonoTouch.UIKit;
 
 using playn.ios;
 using playn.core;
+using tripleplay.platform;
 
 namespace tripleplay.demo
 {
@@ -11,8 +12,10 @@ namespace tripleplay.demo
   public partial class AppDelegate : UIApplicationDelegate {
     public override bool FinishedLaunching (UIApplication app, NSDictionary options) {
       app.SetStatusBarHidden(true, true);
-      var pf = IOSPlatform.register(app, IOSPlatform.SupportedOrients.LANDSCAPES);
-      pf.assets().setPathPrefix("assets");
+      IOSPlatform.Config config = new IOSPlatform.Config();
+      config.orients = IOSPlatform.SupportedOrients.LANDSCAPES;
+      IOSPlatform platform = IOSPlatform.register(app, config);
+      IOSTPPlatform.register(platform);
       PlayN.run(new TripleDemo());
       return true;
     }

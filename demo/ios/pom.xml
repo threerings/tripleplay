@@ -21,9 +21,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.googlecode.playn</groupId>
-      <artifactId>playn-ios</artifactId>
-      <version>${playn.version}</version>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay-ios</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
