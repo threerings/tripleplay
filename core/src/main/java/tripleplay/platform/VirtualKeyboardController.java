@@ -13,4 +13,10 @@ public interface VirtualKeyboardController
      * if desired.
      */
     boolean hideKeyboardForTouch (Point location);
+
+    /**
+     * Called each time a field has the return key pressed. Return true to hide the keyboard
+     * (the default).
+     */
+    boolean hideKeyboardOnEnter ();
 }

@@ -37,7 +37,12 @@ public class IOSNativeTextField implements NativeTextField
         _field.set_Delegate(new UITextFieldDelegate() {
             @Override public boolean ShouldReturn (UITextField field) {
                 _pressedReturn = true;
-                field.ResignFirstResponder();
+                if (_handler._virtualKeyboardCtrl == null ||
+                    _handler._virtualKeyboardCtrl.hideKeyboardOnEnter()) {
+                    field.ResignFirstResponder();
+                } else {
+                    didFinish();
+                }
                 return false;
             }
             @Override public boolean ShouldChangeCharacters (UITextField uiTextField,
