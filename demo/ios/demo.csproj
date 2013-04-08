@@ -88,6 +88,8 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Content Include="touch-icon-57x57.png" />
+    <Content Include="touch-icon-72x72.png" />
+    <Content Include="touch-icon-144x144.png" />
     <Content Include="assets\images\background.png" />
     <Content Include="assets\images\packed.json" />
     <Content Include="assets\images\packed.png" />

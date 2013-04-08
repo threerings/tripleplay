@@ -7,6 +7,8 @@
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>touch-icon-57x57.png</string>
+		<string>touch-icon-72x72.png</string>
+		<string>touch-icon-144x144.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>tripleplay.demo</string>
