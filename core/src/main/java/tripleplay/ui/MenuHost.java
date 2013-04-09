@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.PlayN;
 import pythagoras.f.Dimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.IRectangle;
@@ -271,6 +272,9 @@ public class MenuHost
                     // remove or destroy it, depending on the caller's preference
                     if (pop._retain) menuRoot.remove(pop.menu);
                     else menuRoot.destroy(pop.menu);
+
+                    // remove the hidden area we added
+                    PlayN.uiOverlay().hideOverlay(null);
                 }
 
                 // clear all connections
@@ -336,6 +340,11 @@ public class MenuHost
             }
 
             setBounds(elems.childAt(0), left, top, width, height);
+
+            // tell the UI overlay to let the real dimensions of the menu through
+            Rectangle bounds = elems.childAt(0).bounds(new Rectangle());
+            bounds.setLocation(Layer.Util.layerToScreen(elems.childAt(0).layer, 0, 0));
+            PlayN.uiOverlay().hideOverlay(bounds);
         }
     }
 
