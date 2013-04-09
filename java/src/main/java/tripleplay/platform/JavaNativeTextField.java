@@ -70,7 +70,7 @@ public class JavaNativeTextField
                 update();
             }
             protected void update () {
-                _text.update(_field.getText());
+                if (!_textNotifyInProgress) _text.update(_field.getText());
             }
         });
         _field.addActionListener(new ActionListener() {
@@ -83,7 +83,11 @@ public class JavaNativeTextField
 
         _textConnection = _text.connectNotify(new Slot<String>() {
             @Override public void onEmit (String value) {
-                if (!_field.getText().equals(value)) _field.setText(value);
+                if (!_field.getText().equals(value)) {
+                    _textNotifyInProgress = true;
+                    _field.setText(value);
+                    _textNotifyInProgress = false;
+                }
             }});
     }
 
@@ -183,4 +187,6 @@ public class JavaNativeTextField
     protected boolean _isSecure;
 
     protected Connection _textConnection;
+
+    protected boolean _textNotifyInProgress;
 }
