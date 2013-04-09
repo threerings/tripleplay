@@ -11,6 +11,8 @@ object TriplePlayBuild extends Build {
       javacOptions  ++= Seq("-Xlint", "-Xlint:-serial", "-source", "1.6", "-target", "1.6"),
       scalacOptions ++= Seq("-unchecked", "-deprecation"),
       javaOptions   ++= Seq("-ea"),
+      // disable doc publishing, TODO: reenable when scaladoc doesn't choke on our code
+      publishArtifact in (Compile, packageDoc) := false,
       fork in Compile := true
     )
     override def projectSettings (name :String, pom :pomutil.POM) = name match {
@@ -19,8 +21,6 @@ object TriplePlayBuild extends Build {
         autoScalaLibrary := false,
         // include source in our jar for GWT
         unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java",
-        // disable doc publishing, TODO: reenable when scaladoc doesn't choke on our code
-        publishArtifact in (Compile, packageDoc) := false,
         // wire junit into SBT
         libraryDependencies ++= Seq(
             "com.novocode" % "junit-interface" % "0.7" % "test->default"
