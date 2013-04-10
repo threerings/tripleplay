@@ -68,8 +68,8 @@ public class Layers
      * The returned Rectangle will be in {@code root}'s coordinate system.
      */
     public static Rectangle totalBounds (Layer root) {
-        // account for root's origin (we use 0-x rather than just -x to avoid weird -0 values)
-        Rectangle r = new Rectangle(0-root.originX(), 0-root.originY(), 0, 0);
+        // account for root's origin
+        Rectangle r = new Rectangle(root.originX(), root.originY(), 0, 0);
         addBounds(root, root, r, new Point());
         return r;
     }
