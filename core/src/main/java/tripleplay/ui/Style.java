@@ -146,6 +146,18 @@ public abstract class Style<V>
         }
     };
 
+    /** A Boolean style, with convenient members for on & off bindings. */
+    public static class Flag extends Style<Boolean> {
+        public final Binding<Boolean> off = is(false);
+        public final Binding<Boolean> on = is(true);
+        private Flag (boolean inherited, boolean defaultVal) {
+            super(inherited);
+            _default = defaultVal;
+        }
+        public Boolean getDefault (Element<?> mode) { return _default; }
+        protected final Boolean _default;
+    }
+
     /** The shadow color for an element. Inherited. */
     public static final Style<Integer> SHADOW = newStyle(true, 0x55000000);
 
@@ -176,13 +188,13 @@ public abstract class Style<V>
 
     /** Whether or not to allow text to wrap. When text cannot wrap and does not fit into the
      * allowed space, it is truncated. Not inherited. */
-    public static final Style<Boolean> TEXT_WRAP = newStyle(false, false);
+    public static final Flag TEXT_WRAP = newFlag(false, false);
 
     /** The effect to use when rendering text, if any. Inherited. */
     public static final TextEffectStyle TEXT_EFFECT = new TextEffectStyle();
 
     /** Whether or not to underline text. Inherited. */
-    public static final Style<Boolean> UNDERLINE = newStyle(true, false);
+    public static final Flag UNDERLINE = newFlag(true, false);
 
     /** The background for an element. Not inherited. */
     public static final Style<Background> BACKGROUND = newStyle(false, Background.blank());
@@ -195,7 +207,7 @@ public abstract class Style<V>
 
     /** If true, the icon is cuddled to the text, with extra space between icon and border, if
      * false, the icon is placed next to the border with extra space between icon and label. */
-    public static final Style<Boolean> ICON_CUDDLE = newStyle(false, false);
+    public static final Flag ICON_CUDDLE = newFlag(false, false);
 
     /** The sound to be played when this element's action is triggered. */
     public static final Style<Sound> ACTION_SOUND = newStyle(false, (Sound)null);
@@ -255,6 +267,13 @@ public abstract class Style<V>
                 return defaultValue;
             }
         };
+    }
+
+    /**
+     * Creates a boolean style identifier with the supplied properties.
+     */
+    public static Flag newFlag (boolean inherited, final boolean defaultValue) {
+        return new Flag(inherited, defaultValue);
     }
 
     protected Style (boolean inherited) {

@@ -32,20 +32,20 @@ public class Field extends TextWidget<Field>
      * displayed whenever this Field is visible, and the native field is responsible for all text
      * rendering. If false, the native field is only displayed while actively editing (after a user
      * click). */
-    public static final Style<Boolean> FULLTIME_NATIVE_FIELD = Style.newStyle(false, true);
+    public static final Style.Flag FULLTIME_NATIVE_FIELD = Style.newFlag(false, true);
 
     /** Controls the behavior of native text fields with respect to auto-capitalization on
      * platforms that support it. */
     // TODO: iOS supports multiple styles of autocap, support them here?
-    public static final Style<Boolean> AUTOCAPITALIZATION = Style.newStyle(false, true);
+    public static final Style.Flag AUTOCAPITALIZATION = Style.newFlag(false, true);
 
     /** Controls the behavior of native text fields with respect to auto-correction on platforms
      * that support it. */
-    public static final Style<Boolean> AUTOCORRECTION = Style.newStyle(false, true);
+    public static final Style.Flag AUTOCORRECTION = Style.newFlag(false, true);
 
     /** Controls secure text entry on native text fields: typically this will mean dots or asterix
      * displayed instead of the typed character. */
-    public static final Style<Boolean> SECURE_TEXT_ENTRY = Style.newStyle(false, false);
+    public static final Style.Flag SECURE_TEXT_ENTRY = Style.newFlag(false, false);
 
     /** Sets the Keyboard.TextType in use by this Field. */
     public static final Style<TextType> TEXT_TYPE = Style.newStyle(false, TextType.DEFAULT);
