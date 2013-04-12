@@ -38,9 +38,9 @@ public class Animator extends AnimBuilder
 
     /**
      * Causes this animator to delay the start of any subsequently registered animations until the
-     * specified delay has elapsed <em>after this barrier becomes active</em>. Any previously
-     * registered barriers must first expire and this barrier must move to the head of the list
-     * before its delay timer will be started. This is probably what you want.
+     * specified delay (in milliseconds) has elapsed <em>after this barrier becomes active</em>.
+     * Any previously registered barriers must first expire and this barrier must move to the head
+     * of the list before its delay timer will be started. This is probably what you want.
      */
     public void addBarrier (float delay) {
         Barrier barrier = new Barrier(delay);

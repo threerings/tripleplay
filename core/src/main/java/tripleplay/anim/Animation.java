@@ -207,7 +207,7 @@ public abstract class Animation
         protected float _tox, _toy;
     }
 
-    /** Delays a specified number of seconds. */
+    /** Delays a specified number of milliseconds. */
     public static class Delay extends Animation {
         public Delay (float duration) {
             _duration = duration;
