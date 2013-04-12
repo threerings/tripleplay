@@ -11,9 +11,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JPasswordField;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 
 import pythagoras.f.FloatMath;
 import pythagoras.f.IRectangle;
@@ -38,10 +40,11 @@ public class JavaNativeTextField
     protected void setupField () {
         if (_textConnection != null) _textConnection.disconnect();
 
-        JTextField oldField = _field;
+        JTextComponent oldField = _field;
 
         // Use an appropriate field type based on our security mode.
-        _field = _isSecure ? new JPasswordField() : new JTextField();
+        _field = _mode == Mode.MULTI_LINE ? new JTextArea() :
+            _mode == Mode.SECURE ? new JPasswordField() : new JTextField();
 
         // Restore any of our settings that we can directly from the old field.
         if (oldField != null) {
@@ -73,11 +76,13 @@ public class JavaNativeTextField
                 if (!_textNotifyInProgress) _text.update(_field.getText());
             }
         });
-        _field.addActionListener(new ActionListener() {
-            public void actionPerformed (ActionEvent event) {
-                _finishedEditing.emit(true);
-            }
-        });
+        if (_field instanceof JTextField) {
+            ((JTextField)_field).addActionListener(new ActionListener() {
+                public void actionPerformed (ActionEvent event) {
+                    _finishedEditing.emit(true);
+                }
+            });
+        }
         _field.setBorder(BorderFactory.createEmptyBorder());
         _field.setBackground(new Color(0xffffff, false)); // TODO(bruno): Transparency
 
@@ -136,12 +141,11 @@ public class JavaNativeTextField
         return this;
     }
 
-    @Override public JavaNativeTextField setSecureTextEntry (boolean enable) {
-        if (_isSecure != enable) {
-            _isSecure = enable;
+    @Override public JavaNativeTextField refreshMode (Mode mode) {
+        if (_mode != mode) {
+            _mode = mode;
             setupField();
         }
-
         return this;
     }
 
@@ -179,12 +183,12 @@ public class JavaNativeTextField
     }
 
     protected Container _root;
-    protected JTextField _field;
+    protected JTextComponent _field;
 
     protected Value<String> _text = Value.create("");
     protected Signal<Boolean> _finishedEditing = Signal.create();
 
-    protected boolean _isSecure;
+    protected Mode _mode;
 
     protected Connection _textConnection;
 

@@ -29,6 +29,18 @@ public interface NativeTextField
         public String transform (String text);
     }
 
+    /** A native text field be in one of three modes. In general, modes correspond to different
+     * underlying native classes, and must be refreshed prior to other set methods using
+     * {@link NativeTextField#refreshMode(Mode)}. */
+    public enum Mode {
+        /** Single line, visible text. */
+        NORMAL,
+        /** Single line, text obscured. */
+        SECURE,
+        /** Mutliple lines. */
+        MULTI_LINE
+    }
+
     /** The current value of the text field. */
     Value<String> text ();
 
@@ -64,15 +76,15 @@ public interface NativeTextField
      * @return {@code this} for call chaining. */
     NativeTextField setAutocorrection (boolean useAutocorrection);
 
-    /** Configures the secure entry behavior of the field.
-     * @return {@code this} for call chaining. */
-    NativeTextField setSecureTextEntry (boolean useSecureEntry);
-
     /** Configures the label of the return key on virtual keyboards. Underlying platform is
      * responsible for attempting to match this value as well as it is able. Null indicates platform
      * default.
      * @return {@code this} for call chaining. */
     NativeTextField setReturnKeyLabel (String label);
+
+    /** Updates or creates a new native text field with the given mode. If a value != this is
+     * returned, the caller must then repopulate all the properties of the fields.*/
+    NativeTextField refreshMode (Mode mode);
 
     /** Adds the field to the view. */
     void add ();

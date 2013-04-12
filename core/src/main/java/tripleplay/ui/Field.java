@@ -61,6 +61,9 @@ public class Field extends TextWidget<Field>
      * to do so. Defaults to null (uses platform default). */
     public static final Style<String> RETURN_KEY_LABEL = Style.newStyle(false, null);
 
+    /** Sets the field to allow the return key to insert a line break in the text. */
+    public static final Style.Flag MULTILINE = Style.newFlag(false, false);
+
     /** The text displayed by this widget. */
     public final Value<String> text;
 
@@ -209,6 +212,7 @@ public class Field extends TextWidget<Field>
             _nativeField.focus();
 
         } else {
+            // TODO: multi-line keyboard.getText
             PlayN.keyboard().getText(resolveStyle(TEXT_TYPE), _popupLabel, text.get(),
                 new Callback<String>() { @Override public void onSuccess (String result) {
                     // null result is a canceled entry dialog
@@ -245,11 +249,20 @@ public class Field extends TextWidget<Field>
     protected void updateMode (boolean nativeField) {
         if (_nativeField == null) return;
         if (nativeField) {
+            NativeTextField.Mode mode = NativeTextField.Mode.NORMAL;
+            boolean multiLine = resolveStyle(MULTILINE);
+            if (resolveStyle(SECURE_TEXT_ENTRY)) {
+                if (multiLine) Log.log.warning("Ignoring MULTILINE Style");
+                mode = NativeTextField.Mode.SECURE;
+            } else if (multiLine) {
+                mode = NativeTextField.Mode.MULTI_LINE;
+            }
+
+            _nativeField = _nativeField.refreshMode(mode);
             _nativeField.setTextType(resolveStyle(TEXT_TYPE))
                 .setFont(resolveStyle(Style.FONT))
                 .setAutocapitalization(resolveStyle(AUTOCAPITALIZATION))
                 .setAutocorrection(resolveStyle(AUTOCORRECTION))
-                .setSecureTextEntry(resolveStyle(SECURE_TEXT_ENTRY))
                 .setReturnKeyLabel(resolveStyle(RETURN_KEY_LABEL));
             updateNativeFieldBounds();
             _nativeField.add();
@@ -279,7 +292,7 @@ public class Field extends TextWidget<Field>
         }
     }
 
-    protected final NativeTextField _nativeField;
+    protected NativeTextField _nativeField;
     protected final NativeTextField.Transformer _defaultTransformer =
         new NativeTextField.Transformer() {
             @Override public String transform (String text) { return transformText(text); }

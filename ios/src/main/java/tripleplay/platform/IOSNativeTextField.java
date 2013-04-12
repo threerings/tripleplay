@@ -122,8 +122,11 @@ public class IOSNativeTextField implements NativeTextField
         return this;
     }
 
-    @Override public IOSNativeTextField setSecureTextEntry (boolean enable) {
-        _field.set_SecureTextEntry(enable);
+    @Override public NativeTextField refreshMode (Mode mode) {
+        if (mode == Mode.MULTI_LINE) {
+            Log.log.warning("Ignoring multi-line setting");
+        }
+        _field.set_SecureTextEntry(mode == Mode.SECURE);
         return this;
     }
 
