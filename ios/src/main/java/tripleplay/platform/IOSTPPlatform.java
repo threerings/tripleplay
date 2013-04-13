@@ -28,7 +28,7 @@ public class IOSTPPlatform extends TPPlatform
     }
 
     @Override public NativeTextField createNativeTextField () {
-        return new IOSNativeTextField(_fieldHandler);
+        return new IOSNativeTextField.SingleLine(_fieldHandler, null);
     }
 
     @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {

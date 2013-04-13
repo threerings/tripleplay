@@ -17,6 +17,7 @@ import cli.MonoTouch.UIKit.UIEvent;
 import cli.MonoTouch.UIKit.UIFont;
 import cli.MonoTouch.UIKit.UIKeyboard;
 import cli.MonoTouch.UIKit.UITextField;
+import cli.MonoTouch.UIKit.UITextView;
 import cli.MonoTouch.UIKit.UIView;
 import cli.System.Drawing.PointF;
 import cli.System.Drawing.RectangleF;
@@ -39,44 +40,34 @@ public class IOSTextFieldHandler
         _overlay = platform.platform.uiOverlay();
         _touchDetector = new TouchDetector(_overlay.get_Bounds());
 
-        // update text values when the text is changed
-        NSNotificationCenter.get_DefaultCenter().AddObserver(
-            UITextField.get_TextFieldTextDidChangeNotification(),
-            new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
+        cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_
+            // dispatches text changes
+            change = new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
                 @Override public void Invoke (NSNotification nf) {
                     // we get notifications about all text fields, whether they're under our
                     // control or not
                     IOSNativeTextField field = _activeFields.get(nf.get_Object());
-                    if (field != null) {
-                        String value = field._field.get_Text();
-                        if (field._transformer != null) {
-                            String transformed = field._transformer.transform(value);
-                            if (!transformed.equals(value)) {
-                                // update the field ourselves in case transformed is the same value
-                                // currently held in field.text(), and therefore the update below
-                                // will NOOP.
-                                field._field.set_Text(transformed);
-                            }
-                            value = transformed;
-                        }
-                        field.text().update(value);
-                    }
-                }}));
+                    if (field != null) field.handleNewValue();
+                }}),
+            // dispatches text end notifications
+            didEnd = new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
+                @Override public void Invoke (NSNotification nf) {
+                    IOSNativeTextField field = _activeFields.get(nf.get_Object());
+                    if (field != null) field.didFinish();
+                }});
 
-        // fire the finishedEditing signal when editing is ended
-        NSNotificationCenter.get_DefaultCenter().AddObserver(
-            UITextField.get_TextDidEndEditingNotification(),
-            new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(
-                new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
-                    @Override public void Invoke (NSNotification nf) {
-                        IOSNativeTextField field = _activeFields.get(nf.get_Object());
-                        if (field != null) field.didFinish();
-                    }
-                }));
+        NSNotificationCenter center = NSNotificationCenter.get_DefaultCenter();
+
+        // observe UITextField
+        center.AddObserver(UITextField.get_TextFieldTextDidChangeNotification(), change);
+        center.AddObserver(UITextField.get_TextDidEndEditingNotification(), didEnd);
+
+        // observe UITextView
+        center.AddObserver(UITextView.get_TextDidChangeNotification(), change);
+        center.AddObserver(UITextView.get_TextDidEndEditingNotification(), didEnd);
 
         // slide the game view up when the keyboard is displayed
-        NSNotificationCenter.get_DefaultCenter().AddObserver(
-            UIKeyboard.get_DidShowNotification(),
+        center.AddObserver(UIKeyboard.get_DidShowNotification(),
             new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
                 @Override public void Invoke (NSNotification nf) {
                     if (_gameViewTransformed) {
@@ -93,7 +84,7 @@ public class IOSTextFieldHandler
                     // figure out how we need to transform the game view
                     SizeF size = ((NSValue) nf.get_UserInfo().get_Item(
                         UIKeyboard.get_FrameBeginUserInfoKey())).get_RectangleFValue().get_Size();
-                    RectangleF fieldFrame = firstResponder._field.get_Frame();
+                    RectangleF fieldFrame = firstResponder.getView().get_Frame();
                     // oddly, the size given for keyboard dimensions is portrait, always.
                     float targetOffset = -size.get_Width() +
                         _overlay.get_Bounds().get_Height() - fieldFrame.get_Bottom();
@@ -117,8 +108,7 @@ public class IOSTextFieldHandler
                     _keyboardActive.update(true);
                 }}));
 
-        NSNotificationCenter.get_DefaultCenter().AddObserver(
-            UIKeyboard.get_WillHideNotification(),
+        center.AddObserver(UIKeyboard.get_WillHideNotification(),
             new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
                 @Override public void Invoke (NSNotification nf) {
                     // bail if not transformed; this might be ok, if the keyboard was shown outside
@@ -159,21 +149,21 @@ public class IOSTextFieldHandler
     }
 
     public void activate (IOSNativeTextField field) {
-        _activeFields.put(field._field, field);
-        _overlay.Add(field._field);
+        _activeFields.put(field.getView(), field);
+        _overlay.Add(field.getView());
     }
 
     public void deactivate (IOSNativeTextField field) {
-        field._field.RemoveFromSuperview();
-        _activeFields.remove(field._field);
+        field.getView().RemoveFromSuperview();
+        _activeFields.remove(field.getView());
     }
 
-    public boolean isAdded (UITextField field) {
+    public boolean isAdded (UIView field) {
         return field.IsDescendantOfView(_overlay);
     }
 
     protected IOSNativeTextField findFirstResponder () {
-        for (Map.Entry<UITextField, IOSNativeTextField> entry : _activeFields.entrySet()) {
+        for (Map.Entry<UIView, IOSNativeTextField> entry : _activeFields.entrySet()) {
             if (entry.getKey().get_IsFirstResponder()) return entry.getValue();
         }
         return null;
@@ -186,7 +176,7 @@ public class IOSTextFieldHandler
 
         @Override public void TouchesBegan (NSSet touches, UIEvent uiEvent) {
             IOSNativeTextField firstResponder = findFirstResponder();
-            if (firstResponder != null) firstResponder._field.ResignFirstResponder();
+            if (firstResponder != null) firstResponder.getView().ResignFirstResponder();
             // call super, otherwise the TouchesEnded event for this touch are never dispatched
             super.TouchesBegan(touches, uiEvent);
         }
@@ -196,7 +186,8 @@ public class IOSTextFieldHandler
             if (!hideVirtualKeyboardAt(pointF)) return false;
             // allow through touches that hit text fields we manage
             for (IOSNativeTextField field : _activeFields.values())
-                if (field._field.PointInside(ConvertPointToView(pointF, field._field), uiEvent))
+                if (field.getView().PointInside(
+                        ConvertPointToView(pointF, field.getView()), uiEvent))
                     return false;
             // else absorb the hit at this point so that we can hide the keyboard in TouchesBegan
             return true;
@@ -211,8 +202,8 @@ public class IOSTextFieldHandler
     }
 
     protected final UIView _overlay;
-    protected final Map<UITextField, IOSNativeTextField> _activeFields =
-        new HashMap<UITextField, IOSNativeTextField>();
+    protected final Map<UIView, IOSNativeTextField> _activeFields =
+        new HashMap<UIView, IOSNativeTextField>();
     protected final Value<Boolean> _keyboardActive = Value.create(false);
 
     // we specifically track whether we've transformed the game view in a boolean because

@@ -258,7 +258,11 @@ public class Field extends TextWidget<Field>
                 mode = NativeTextField.Mode.MULTI_LINE;
             }
 
-            _nativeField = _nativeField.refreshMode(mode);
+            NativeTextField newField = _nativeField.refreshMode(mode);
+            if (newField != _nativeField) {
+                _nativeField.remove();
+                _nativeField = newField;
+            }
             _nativeField.setTextType(resolveStyle(TEXT_TYPE))
                 .setFont(resolveStyle(Style.FONT))
                 .setAutocapitalization(resolveStyle(AUTOCAPITALIZATION))
