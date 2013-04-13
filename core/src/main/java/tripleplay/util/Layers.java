@@ -7,12 +7,12 @@ package tripleplay.util;
 
 import playn.core.Canvas;
 import playn.core.CanvasImage;
-import playn.core.CanvasSurface;
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.ImmediateLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
+import playn.core.canvas.CanvasSurface;
 import pythagoras.f.AffineTransform;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
