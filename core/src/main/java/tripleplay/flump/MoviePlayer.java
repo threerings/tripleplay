@@ -136,6 +136,7 @@ public class MoviePlayer
         }
 
         @Override protected void init (float time) {
+            super.init(time);
             play(_name);
             _playing = movie();
         }
