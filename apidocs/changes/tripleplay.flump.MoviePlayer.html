@@ -18,7 +18,7 @@ tripleplay.flump.MoviePlayer
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/MoviePlayer.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/MoviePlayer.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,14 +31,14 @@ tripleplay.flump.MoviePlayer
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.flump.Movie.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.flump.Texture.Symbol.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.Texture.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.flump.MoviePlayer.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
 <a href="#methods">METHODS</a>&nbsp;|&nbsp;
-FIELDS
+<a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
 </TABLE>
@@ -47,9 +47,24 @@ FIELDS
 <H2>
 Class tripleplay.flump.<A HREF="../tripleplay/flump/MoviePlayer.html" target="_top"><tt>MoviePlayer</tt></A>
 </H2>
-<p><font size="+1">Added interface <code>tripleplay.util.Destroyable</code>.<br></font>
+<p><font size="+1">Added interface <code>tripleplay.util.Paintable</code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
+<p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.MoviePlayer.update_removed(float)"></A>
+  <nobr><code>void</code>&nbsp;update(<code>float</code>)</nobr>
+  </TD>
+  <TD>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
 <p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
@@ -58,21 +73,29 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/MoviePlayer.html" target="_t
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.MoviePlayer.animate_added(java.lang.String)"></A>
-  <nobr><code>Animation</code>&nbsp;<A HREF="../tripleplay/flump/MoviePlayer.html#animate(java.lang.String)" target="_top"><tt>animate</tt></A>(<code>String</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Creates an <A HREF="../Animation.html"><TT>Animation</TT></A> that plays a one-shot movie.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.MoviePlayer.destroy_added()"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/MoviePlayer.html#destroy()" target="_top"><tt>destroy</tt></A>()</nobr>
+  <A NAME="tripleplay.flump.MoviePlayer.paint_added(playn.core.util.Clock)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/MoviePlayer.html#paint(playn.core.util.Clock)" target="_top"><tt>paint</tt></A>(<code>Clock</code>)</nobr>
   </TD>
   <TD>&nbsp;</TD>
 </TR>
 </TABLE>
 &nbsp;
 <a NAME="fields"></a>
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.MoviePlayer.movie"></A>
+  <nobr><code>Value&lt;Movie&gt;</code>&nbsp;<A HREF="../tripleplay/flump/MoviePlayer.html#movie" target="_top"><tt>movie</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">The currently playing movie, if any.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -80,7 +103,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/MoviePlayer.html" target="_t
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/MoviePlayer.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/MoviePlayer.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -93,7 +116,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/MoviePlayer.html" target="_t
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.flump.Movie.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.flump.Texture.Symbol.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.Texture.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.flump.MoviePlayer.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

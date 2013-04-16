@@ -18,7 +18,7 @@ tripleplay.flump.Movie
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,7 +30,7 @@ tripleplay.flump.Movie
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.flump.KeyframeData.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.Instance.html"><B>PREV CLASS</B></A>
 &nbsp;<A HREF="tripleplay.flump.MoviePlayer.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
@@ -50,6 +50,21 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.Movie.update_removed(float)"></A>
+  <nobr><code>void</code>&nbsp;update(<code>float</code>)</nobr>
+  </TD>
+  <TD>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -57,31 +72,17 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.getInstances_added(java.lang.String)"></A>
-  <nobr><code>List&lt;Instance&gt;</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#getInstances(java.lang.String)" target="_top"><tt>getInstances</tt></A>(<code>String</code>)</nobr>
+  <A NAME="tripleplay.flump.Movie.paint_added(float)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#paint(float)" target="_top"><tt>paint</tt></A>(<code>float</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Returns all of the {@Instance}s on a named layer.</TD>
+  <TD>&nbsp;</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.getNamedLayer_added(java.lang.String)"></A>
-  <nobr><code>Layer</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#getNamedLayer(java.lang.String)" target="_top"><tt>getNamedLayer</tt></A>(<code>String</code>)</nobr>
+  <A NAME="tripleplay.flump.Movie.paint_added(playn.core.util.Clock)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#paint(playn.core.util.Clock)" target="_top"><tt>paint</tt></A>(<code>Clock</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Retrieves a named layer.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.namedLayers_added()"></A>
-  <nobr>(<code>Map&lt;String, Layer&gt;</code>)&nbsp;<A HREF="../tripleplay/flump/Movie.html#namedLayers()" target="_top"><tt>namedLayers</tt></A>()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Retrieves all named layers.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.setNamedLayer_added(java.lang.String, tripleplay.flump.Instance)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#setNamedLayer(java.lang.String, tripleplay.flump.Instance)" target="_top"><tt>setNamedLayer</tt></A>(<code>String,</nobr> Instance<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Replaces the instance on a named layer.</TD>
+  <TD>&nbsp;</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -93,7 +94,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -105,7 +106,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.flump.KeyframeData.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.Instance.html"><B>PREV CLASS</B></A>
 &nbsp;<A HREF="tripleplay.flump.MoviePlayer.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;

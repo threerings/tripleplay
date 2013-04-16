@@ -18,7 +18,7 @@ tripleplay.ui
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Package</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1"> &nbsp;<FONT CLASS="NavBarFont1">Class</FONT>&nbsp;</TD>
@@ -30,8 +30,8 @@ tripleplay.ui
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="pkg_tripleplay.syncdb.html"><B>PREV PACKAGE</B></A>
-&nbsp;<A HREF="pkg_tripleplay.ui.layout.html"><B>NEXT PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.sound.html"><B>PREV PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.ui.util.html"><B>NEXT PACKAGE</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="pkg_tripleplay.ui.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -55,39 +55,74 @@ Package <A HREF="../tripleplay/ui/package-summary.html" target="_top"><tt>triple
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Interface.TaskHandle"></A>
-  <nobr><A HREF="../tripleplay/ui/Interface.TaskHandle.html" target="_top"><tt><I>Interface.TaskHandle</I></tt></A></nobr>
+  <A NAME="Icon"></A>
+  <nobr><A HREF="../tripleplay/ui/Icon.html" target="_top"><tt><I>Icon</I></tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">An object that can be used to remove a previously added task.</TD>
+  <TD VALIGN="TOP">An interface for icons.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="LongPressButton"></A>
-  <nobr><A HREF="../tripleplay/ui/LongPressButton.html" target="_top"><tt>LongPressButton</tt></A></nobr>
+  <A NAME="Icons"></A>
+  <nobr><A HREF="../tripleplay/ui/Icons.html" target="_top"><tt>Icons</tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">A button that supports an action on a "long press".</TD>
+  <TD VALIGN="TOP">Contains icon related utility methods, mostly basic icon factories.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="ValueLabel"></A>
-  <nobr><A HREF="../tripleplay/ui/ValueLabel.html" target="_top"><tt>ValueLabel</tt></A></nobr>
+  <A NAME="ImageIcon"></A>
+  <nobr><A HREF="../tripleplay/ui/ImageIcon.html" target="_top"><tt>ImageIcon</tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">A label that displays a <A HREF="../tripleplay/ui/ValueLabel/ValueView.html"><TT>ValueView</TT></A>.</TD>
+  <TD VALIGN="TOP">Use <A HREF="../tripleplay/ui/ImageIcon/Icons.html#image"><TT>Icons.image</TT></A>.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="PagedMenu"></A>
+  <nobr><A HREF="../tripleplay/ui/PagedMenu.html" target="_top"><tt>PagedMenu</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">A menu that is also capable of showing one page of its items at a time.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="Style.Flag"></A>
+  <nobr><A HREF="../tripleplay/ui/Style.Flag.html" target="_top"><tt>Style.Flag</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">A Boolean style, with convenient members for on & off bindings.</TD>
 </TR>
 </TABLE>
 &nbsp;
 <p>
 <a NAME="Changed"></a>
-<TABLE summary="Changed Classes" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TABLE summary="Changed Classes and Interfaces" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Changed Classes</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Changed Classes and Interfaces</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Background.Instance"></A>
-  <nobr><A HREF="tripleplay.ui.Background.Instance.html">Background.Instance</A></nobr>
+  <A NAME="Button"></A>
+  <nobr><A HREF="tripleplay.ui.Button.html">Button</A></nobr>
   </TD>
-  <TD VALIGN="TOP">An instantiation of a particular background template.</TD>
+  <TD VALIGN="TOP">A button that displays text, or an icon, or both.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="CheckBox"></A>
+  <nobr><A HREF="tripleplay.ui.CheckBox.html">CheckBox</A></nobr>
+  </TD>
+  <TD VALIGN="TOP">Displays a checkbox which can be toggled.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="Constraints"></A>
+  <nobr><A HREF="tripleplay.ui.Constraints.html">Constraints</A></nobr>
+  </TD>
+  <TD VALIGN="TOP">Provides various user interface constraints.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="Element"></A>
+  <nobr><A HREF="tripleplay.ui.Element.html">Element</A></nobr>
+  </TD>
+  <TD VALIGN="TOP">The root of the interface element hierarchy.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
@@ -105,24 +140,46 @@ Package <A HREF="../tripleplay/ui/package-summary.html" target="_top"><tt>triple
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="MenuHost"></A>
-  <nobr><A HREF="tripleplay.ui.MenuHost.html">MenuHost</A></nobr>
+  <A NAME="Interface.Task"></A>
+  <nobr><A HREF="tripleplay.ui.Interface.Task.html"><I>Interface.Task</I></A></nobr>
   </TD>
-  <TD VALIGN="TOP">Provides a context for popping up a menu.</TD>
+  <TD VALIGN="TOP">A time based task that requires an update per frame.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Root"></A>
-  <nobr><A HREF="tripleplay.ui.Root.html">Root</A></nobr>
+  <A NAME="Label"></A>
+  <nobr><A HREF="tripleplay.ui.Label.html">Label</A></nobr>
   </TD>
-  <TD VALIGN="TOP">The root of a display hierarchy.</TD>
+  <TD VALIGN="TOP">A widget that displays one or more lines of text and/or an icon image.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Scroller"></A>
-  <nobr><A HREF="tripleplay.ui.Scroller.html">Scroller</A></nobr>
+  <A NAME="LongPressButton"></A>
+  <nobr><A HREF="tripleplay.ui.LongPressButton.html">LongPressButton</A></nobr>
   </TD>
-  <TD VALIGN="TOP">A composite element that manages horizontal and vertical scrolling of a single content element.</TD>
+  <TD VALIGN="TOP">A button that supports an action on a "long press".</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="MenuHost.Pop"></A>
+  <nobr><A HREF="tripleplay.ui.MenuHost.Pop.html">MenuHost.Pop</A></nobr>
+  </TD>
+  <TD VALIGN="TOP">An event type for triggering a menu popup.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="MenuItem"></A>
+  <nobr><A HREF="tripleplay.ui.MenuItem.html">MenuItem</A></nobr>
+  </TD>
+  <TD VALIGN="TOP">An item in a menu.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="Slider"></A>
+  <nobr><A HREF="tripleplay.ui.Slider.html">Slider</A></nobr>
+  </TD>
+  <TD VALIGN="TOP">Displays a bar and a thumb that can be slid along the bar, representing a floating point value
+ between some minimum and maximum.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
@@ -138,6 +195,13 @@ Package <A HREF="../tripleplay/ui/package-summary.html" target="_top"><tt>triple
   </TD>
   <TD VALIGN="TOP">A composite {@code Elements} that implements tabbing.</TD>
 </TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="ToggleButton"></A>
+  <nobr><A HREF="tripleplay.ui.ToggleButton.html">ToggleButton</A></nobr>
+  </TD>
+  <TD VALIGN="TOP">A toggle button that displays text, or an icon, or both.</TD>
+</TR>
 </TABLE>
 &nbsp;
 <HR>
@@ -147,7 +211,7 @@ Package <A HREF="../tripleplay/ui/package-summary.html" target="_top"><tt>triple
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Package</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1"> &nbsp;<FONT CLASS="NavBarFont1">Class</FONT>&nbsp;</TD>
@@ -159,8 +223,8 @@ Package <A HREF="../tripleplay/ui/package-summary.html" target="_top"><tt>triple
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="pkg_tripleplay.syncdb.html"><B>PREV PACKAGE</B></A>
-&nbsp;<A HREF="pkg_tripleplay.ui.layout.html"><B>NEXT PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.sound.html"><B>PREV PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.ui.util.html"><B>NEXT PACKAGE</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="pkg_tripleplay.ui.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

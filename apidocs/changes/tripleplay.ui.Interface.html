@@ -18,7 +18,7 @@ tripleplay.ui.Interface
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,7 +31,7 @@ tripleplay.ui.Interface
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.ui.Field.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.MenuHost.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Interface.Task.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Interface.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -47,23 +47,9 @@ FIELDS
 <H2>
 Class tripleplay.ui.<A HREF="../tripleplay/ui/Interface.html" target="_top"><tt>Interface</tt></A>
 </H2>
+<p><font size="+1">Added interface <code>tripleplay.util.Paintable</code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Interface.removeTask_removed(tripleplay.ui.Interface.Task)"></A>
-  <nobr><code>void</code>&nbsp;removeTask(<code>Task</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Removes a previously added task.</TD>
-</TR>
-</TABLE>
-&nbsp;
 <p>
 <a NAME="Changed"></a>
 <TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
@@ -72,13 +58,23 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Interface.html" target="_top"><tt>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Interface.addTask_changed(tripleplay.ui.Interface.Task)"></A>
-  <nobr><code>TaskHandle</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#addTask(tripleplay.ui.Interface.Task)" target="_top"><tt>addTask</tt></A>(<code>Task</code>)  </nobr>
+  <A NAME="tripleplay.ui.Interface.paint_changed(playn.core.util.Clock)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#paint(playn.core.util.Clock)" target="_top"><tt>paint</tt></A>(<code>Clock</code>)  </nobr>
   </TD>
   <TD VALIGN="TOP" WIDTH="30%">
-Change in return type from <code>void</code> to <code>TaskHandle</code>.<br>
+Change in signature from <code>float</code> to <code>Clock</code>.<br>
   </TD>
-  <TD VALIGN="TOP">Adds a task that will henceforth be updated once per game update.</TD>
+  <TD VALIGN="TOP">"Paints" the elements in this interface.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Interface.update_changed(int)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#update(int)" target="_top"><tt>update</tt></A>(<code>int</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>float</code> to <code>int</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Updates the elements in this interface.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -90,7 +86,7 @@ Change in return type from <code>void</code> to <code>TaskHandle</code>.<br>
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -103,7 +99,7 @@ Change in return type from <code>void</code> to <code>TaskHandle</code>.<br>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.ui.Field.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.MenuHost.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Interface.Task.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Interface.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

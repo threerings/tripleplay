@@ -18,7 +18,7 @@ tripleplay.platform.NativeTextField
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/NativeTextField.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/NativeTextField.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.platform.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,7 +31,7 @@ tripleplay.platform.NativeTextField
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.platform.TPPlatform.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.platform.NativeTextField.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -50,6 +50,21 @@ Interface tripleplay.platform.<A HREF="../tripleplay/platform/NativeTextField.ht
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.NativeTextField.setSecureTextEntry_removed(boolean)"></A>
+  <nobr><code>NativeTextField</code>&nbsp;setSecureTextEntry(<code>boolean</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Configures the secure entry behavior of the field.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -57,17 +72,24 @@ Interface tripleplay.platform.<A HREF="../tripleplay/platform/NativeTextField.ht
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setTransformer_added(tripleplay.platform.NativeTextField.Transformer)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#setTransformer(tripleplay.platform.NativeTextField.Transformer)" target="_top"><tt>setTransformer</tt></A>(<code>Transformer</code>)</nobr>
+  <A NAME="tripleplay.platform.NativeTextField.hasFocus_added()"></A>
+  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#hasFocus()" target="_top"><tt>hasFocus</tt></A>()</nobr>
   </TD>
-  <TD VALIGN="TOP">Sets the transformer for use with this native field.</TD>
+  <TD VALIGN="TOP">Returns true if this native text field currently has focus.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setValidator_added(tripleplay.platform.NativeTextField.Validator)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#setValidator(tripleplay.platform.NativeTextField.Validator)" target="_top"><tt>setValidator</tt></A>(<code>Validator</code>)</nobr>
+  <A NAME="tripleplay.platform.NativeTextField.refreshMode_added(tripleplay.platform.NativeTextField.Mode)"></A>
+  <nobr><code>NativeTextField</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#refreshMode(tripleplay.platform.NativeTextField.Mode)" target="_top"><tt>refreshMode</tt></A>(<code>Mode</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Sets the validator for use with this native field.</TD>
+  <TD VALIGN="TOP">Updates or creates a new native text field with the given mode.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.NativeTextField.setReturnKeyLabel_added(java.lang.String)"></A>
+  <nobr><code>NativeTextField</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#setReturnKeyLabel(java.lang.String)" target="_top"><tt>setReturnKeyLabel</tt></A>(<code>String</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Configures the label of the return key on virtual keyboards.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -79,7 +101,7 @@ Interface tripleplay.platform.<A HREF="../tripleplay/platform/NativeTextField.ht
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/NativeTextField.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/NativeTextField.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.platform.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -92,7 +114,7 @@ Interface tripleplay.platform.<A HREF="../tripleplay/platform/NativeTextField.ht
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.platform.TPPlatform.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.platform.NativeTextField.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

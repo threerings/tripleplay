@@ -18,7 +18,7 @@ tripleplay.anim.Animator
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,8 +30,8 @@ tripleplay.anim.Animator
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.anim.Animation.Repeat.html"><B>PREV CLASS</B></A>
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.anim.Animation.Handle.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Flicker.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.anim.Animator.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -47,8 +47,7 @@ FIELDS
 <H2>
 Class tripleplay.anim.<A HREF="../tripleplay/anim/Animator.html" target="_top"><tt>Animator</tt></A>
 </H2>
-<p><font size="+1">The superclass changed from <code>java.lang.Object</code> to <code>tripleplay.anim.AnimBuilder</code>.<br></font>
-<p><font size="+1">Changed from abstract to non-abstract.</font>
+<p><font size="+1">Added interface <code>tripleplay.util.Paintable</code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
@@ -59,336 +58,25 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/Animator.html" target="_top"><
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.add_removed(playn.core.GroupLayer, playn.core.Layer)"></A>
-  <nobr><code>Action</code>&nbsp;add(<code>GroupLayer,</nobr> Layer<nobr><nobr></code>)</nobr>
+  <A NAME="tripleplay.anim.Animator.update_removed(float)"></A>
+  <nobr><code>void</code>&nbsp;update(<code>float</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Adds the supplied child to the supplied parent.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.addAt_removed(playn.core.GroupLayer, playn.core.Layer, float, float)"></A>
-  <nobr><code>Action</code>&nbsp;addAt(<code>GroupLayer,</nobr> Layer<nobr>,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Adds the supplied child to the supplied parent at the specified translation.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.addAt_removed(playn.core.GroupLayer, playn.core.Layer, pythagoras.f.XY)"></A>
-  <nobr><code>Action</code>&nbsp;addAt(<code>GroupLayer,</nobr> Layer<nobr>,</nobr> XY<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Adds the supplied child to the supplied parent at the specified translation.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.flipbook_removed(playn.core.GroupLayer, tripleplay.anim.Flipbook)"></A>
-  <nobr><code>Flip</code>&nbsp;flipbook(<code>GroupLayer,</nobr> Flipbook<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Starts a flipbook animation in a new image layer which is created and added to {@code box}.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.flipbook_removed(playn.core.ImageLayer, tripleplay.anim.Flipbook)"></A>
-  <nobr><code>Flip</code>&nbsp;flipbook(<code>ImageLayer,</nobr> Flipbook<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Starts a flipbook animation that displays in {@code layer}.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.flipbookAt_removed(playn.core.GroupLayer, float, float, tripleplay.anim.Flipbook)"></A>
-  <nobr><code>Animation</code>&nbsp;flipbookAt(<code>GroupLayer,</nobr> float<nobr>,</nobr> float<nobr>,</nobr> Flipbook<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Starts a flipbook animation that displays the supplied {@code book} at the specified
- position in the supplied parent.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.flipbookAt_removed(playn.core.GroupLayer, pythagoras.f.XY, tripleplay.anim.Flipbook)"></A>
-  <nobr><code>Animation</code>&nbsp;flipbookAt(<code>GroupLayer,</nobr> XY<nobr>,</nobr> Flipbook<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Starts a flipbook animation that displays the supplied {@code book} at the specified
- position in the supplied parent.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.play_removed(playn.core.Sound)"></A>
-  <nobr><code>Action</code>&nbsp;play(<code>Sound</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Plays the supplied sound.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.play_removed(tripleplay.sound.Playable)"></A>
-  <nobr><code>Action</code>&nbsp;play(<code>Playable</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Plays the supplied clip or loop.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.stop_removed(playn.core.Sound)"></A>
-  <nobr><code>Action</code>&nbsp;stop(<code>Sound</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Stops the supplied sound from playing.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.stop_removed(tripleplay.sound.Playable)"></A>
-  <nobr><code>Action</code>&nbsp;stop(<code>Playable</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Stops the supplied clip or loop.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenVolume_removed(playn.core.Sound)"></A>
-  <nobr><code>One</code>&nbsp;tweenVolume(<code>Sound</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Tweens the volumne of the supplied sound.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenVolume_removed(tripleplay.sound.Playable)"></A>
-  <nobr><code>One</code>&nbsp;tweenVolume(<code>Playable</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Tweens the volumne of the supplied playable.</TD>
+  <TD VALIGN="TOP">Performs per-frame animation processing.</TD>
 </TR>
 </TABLE>
 &nbsp;
 <p>
-<a NAME="Changed"></a>
-<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Added"></a>
+<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.action_changed(java.lang.Runnable)"></A>
-  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#action(java.lang.Runnable)" target="_top"><tt>action</tt></A>(<code>Runnable</code>)  </nobr>
+  <A NAME="tripleplay.anim.Animator.paint_added(playn.core.util.Clock)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/anim/Animator.html#paint(playn.core.util.Clock)" target="_top"><tt>paint</tt></A>(<code>Clock</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#action(java.lang.Runnable)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Creates an animation that executes the supplied runnable and immediately completes.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.create_changed()"></A>
-  <nobr><code>Animator</code>&nbsp;<A HREF="../tripleplay/anim/Animator.html#create()" target="_top"><tt>create</tt></A>()  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-<b>Now deprecated</b>.<br>
-  </TD>
-  <TD VALIGN="TOP">Just construct Animator directly now.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.delay_changed(float)"></A>
-  <nobr><code>Delay</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#delay(float)" target="_top"><tt>delay</tt></A>(<code>float</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#delay(float)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Creates an animation that delays for the specified number of seconds.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.destroy_changed(playn.core.Layer)"></A>
-  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#destroy(playn.core.Layer)" target="_top"><tt>destroy</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#destroy(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Destroys the specified layer.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.increment_changed(react.Value<java.lang.Integer>, int)"></A>
-  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#increment(react.Value<java.lang.Integer>, int)" target="_top"><tt>increment</tt></A>(<code>Value&lt;Integer&gt;,</nobr> int<nobr><nobr></code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#increment(react.Value<java.lang.Integer>, int)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Increments (or decrements if {@code amount} is negative} an int value.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.reparent_changed(playn.core.GroupLayer, playn.core.Layer)"></A>
-  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#reparent(playn.core.GroupLayer, playn.core.Layer)" target="_top"><tt>reparent</tt></A>(<code>GroupLayer,</nobr> Layer<nobr><nobr></code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#reparent(playn.core.GroupLayer, playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Reparents the supplied child to the supplied new parent.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.repeat_changed(playn.core.Layer)"></A>
-  <nobr><code>AnimBuilder</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#repeat(playn.core.Layer)" target="_top"><tt>repeat</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in return type from <code>Animator</code> to <code>AnimBuilder</code>.<br>
- Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#repeat(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Returns a builder which can be used to construct an animation that will be repeated until
- the supplied layer has been removed from its parent.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.setDepth_changed(playn.core.Layer, float)"></A>
-  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#setDepth(playn.core.Layer, float)" target="_top"><tt>setDepth</tt></A>(<code>Layer,</nobr> float<nobr><nobr></code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#setDepth(playn.core.Layer, float)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Sets the specified layer's depth to the specified value.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.setValue_changed(react.Value<T>, T)"></A>
-  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#setValue(react.Value<T>, T)" target="_top"><tt>setValue</tt></A>(<code>Value&lt;T&gt;,</nobr> T<nobr><nobr></code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#setValue(react.Value<T>, T)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Sets a value to the supplied constant.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.setVisible_changed(playn.core.Layer, boolean)"></A>
-  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#setVisible(playn.core.Layer, boolean)" target="_top"><tt>setVisible</tt></A>(<code>Layer,</nobr> boolean<nobr><nobr></code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#setVisible(playn.core.Layer, boolean)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Sets the specified layer to visible or not.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.shake_changed(playn.core.Layer)"></A>
-  <nobr><code>Shake</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#shake(playn.core.Layer)" target="_top"><tt>shake</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#shake(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Creates a shake animation on the specified layer.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tween_changed(tripleplay.anim.Animation.Value)"></A>
-  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tween(tripleplay.anim.Animation.Value)" target="_top"><tt>tween</tt></A>(<code>Value</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tween(tripleplay.anim.Animation.Value)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween using the supplied custom value.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenAlpha_changed(playn.core.Layer)"></A>
-  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenAlpha(playn.core.Layer)" target="_top"><tt>tweenAlpha</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenAlpha(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's transparency.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenRotation_changed(playn.core.Layer)"></A>
-  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenRotation(playn.core.Layer)" target="_top"><tt>tweenRotation</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenRotation(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's rotation.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenScale_changed(playn.core.Layer)"></A>
-  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenScale(playn.core.Layer)" target="_top"><tt>tweenScale</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenScale(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's x/y-scale.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenScaleX_changed(playn.core.Layer)"></A>
-  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenScaleX(playn.core.Layer)" target="_top"><tt>tweenScaleX</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenScaleX(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's x-scale.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenScaleXY_changed(playn.core.Layer)"></A>
-  <nobr><code>Two</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenScaleXY(playn.core.Layer)" target="_top"><tt>tweenScaleXY</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenScaleXY(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's x/y-scale.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenScaleY_changed(playn.core.Layer)"></A>
-  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenScaleY(playn.core.Layer)" target="_top"><tt>tweenScaleY</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenScaleY(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's y-scale.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenTranslation_changed(playn.core.Layer)"></A>
-  <nobr><code>Two</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenTranslation(playn.core.Layer)" target="_top"><tt>tweenTranslation</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenTranslation(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's x/y-translation.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenX_changed(playn.core.Layer)"></A>
-  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenX(playn.core.Layer)" target="_top"><tt>tweenX</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenX(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's x-translation.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenXY_changed(playn.core.Layer)"></A>
-  <nobr><code>Two</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenXY(playn.core.Layer)" target="_top"><tt>tweenXY</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenXY(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's x/y-translation.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.tweenY_changed(playn.core.Layer)"></A>
-  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenY(playn.core.Layer)" target="_top"><tt>tweenY</tt></A>(<code>Layer</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Method was locally defined, but is now inherited from <a href="../tripleplay/anim/AnimBuilder.html#tweenY(playn.core.Layer)" target="_top"><tt>AnimBuilder</tt></a>.
-  </TD>
-  <TD VALIGN="TOP">Starts a tween on the supplied layer's y-translation.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.add_changed(T extends tripleplay.anim.Animation)"></A>
-  <nobr><code>Animation</code>&nbsp;<A HREF="../tripleplay/anim/Animator.html#add(T extends tripleplay.anim.Animation)" target="_top"><tt>add</tt></A>(<code>Animation</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Changed from abstract to non-abstract.
-  </TD>
-  <TD VALIGN="TOP">Registers an animation with this animator.</TD>
+  <TD VALIGN="TOP">Performs per-frame animation processing.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -400,7 +88,7 @@ Changed from abstract to non-abstract.
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -412,8 +100,8 @@ Changed from abstract to non-abstract.
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.anim.Animation.Repeat.html"><B>PREV CLASS</B></A>
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.anim.Animation.Handle.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Flicker.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.anim.Animator.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

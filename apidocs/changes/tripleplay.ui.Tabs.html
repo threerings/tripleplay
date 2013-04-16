@@ -18,7 +18,7 @@ tripleplay.ui.Tabs
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Tabs.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Tabs.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,14 +31,14 @@ tripleplay.ui.Tabs
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.ui.Style.html"><B>PREV CLASS</B></A>
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.ui.ToggleButton.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Tabs.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
-METHODS&nbsp;|&nbsp;
-<a href="#fields">FIELDS</a>
+<a href="#methods">METHODS</a>&nbsp;|&nbsp;
+FIELDS
   </FONT></TD>
 </TR>
 </TABLE>
@@ -49,22 +49,51 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Tabs.html" target="_top"><tt>Tabs<
 </H2>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
-<a NAME="fields"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Tabs.NOOP_HIGHLIGHTER"></A>
-  <nobr><code>Highlighter</code>&nbsp;<A HREF="../tripleplay/ui/Tabs.html#NOOP_HIGHLIGHTER" target="_top"><tt>NOOP_HIGHLIGHTER</tt></A></nobr>
+  <A NAME="tripleplay.ui.Tabs.add_removed(java.lang.String, playn.core.Image, tripleplay.ui.Element<?>)"></A>
+  <nobr><code>Tab</code>&nbsp;add(<code>String,</nobr> Image<nobr>,</nobr> Element&lt;?&gt;<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">A no-op highlighter to use if you want to make highlighting do nothing.</TD>
+  <TD VALIGN="TOP">Adds a new tab to the container with a pre-constructed element for its content.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Tabs.add_removed(java.lang.String, playn.core.Image, tripleplay.ui.util.Supplier)"></A>
+  <nobr><code>Tab</code>&nbsp;add(<code>String,</nobr> Image<nobr>,</nobr> Supplier<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Adds a new tab to the container with the given label, icon and supplier.</TD>
 </TR>
 </TABLE>
 &nbsp;
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Tabs.add_added(java.lang.String, tripleplay.ui.Icon, tripleplay.ui.Element<?>)"></A>
+  <nobr><code>Tab</code>&nbsp;<A HREF="../tripleplay/ui/Tabs.html#add(java.lang.String, tripleplay.ui.Icon, tripleplay.ui.Element<?>)" target="_top"><tt>add</tt></A>(<code>String,</nobr> Icon<nobr>,</nobr> Element&lt;?&gt;<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Adds a new tab to the container with a pre-constructed element for its content.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Tabs.add_added(java.lang.String, tripleplay.ui.Icon, tripleplay.ui.util.Supplier)"></A>
+  <nobr><code>Tab</code>&nbsp;<A HREF="../tripleplay/ui/Tabs.html#add(java.lang.String, tripleplay.ui.Icon, tripleplay.ui.util.Supplier)" target="_top"><tt>add</tt></A>(<code>String,</nobr> Icon<nobr>,</nobr> Supplier<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Adds a new tab to the container with the given label, icon and supplier.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<a NAME="fields"></a>
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -72,7 +101,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Tabs.html" target="_top"><tt>Tabs<
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Tabs.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.6</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Tabs.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -85,7 +114,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Tabs.html" target="_top"><tt>Tabs<
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.ui.Style.html"><B>PREV CLASS</B></A>
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.ui.ToggleButton.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Tabs.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
