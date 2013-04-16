@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.googlecode.playn</groupId>
     <artifactId>playn-project</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
   </parent>
 
   <groupId>com.threerings</groupId>
@@ -44,7 +44,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <playn.version>1.7-SNAPSHOT</playn.version>
+    <playn.version>1.7</playn.version>
   </properties>
 
   <modules>
