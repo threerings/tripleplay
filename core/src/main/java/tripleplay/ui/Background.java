@@ -25,6 +25,7 @@ import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.RoundRectBackground;
 import tripleplay.ui.bgs.Scale9Background;
 import tripleplay.ui.bgs.SolidBackground;
+import tripleplay.ui.util.Insets;
 import tripleplay.util.Destroyable;
 
 /**
@@ -138,30 +139,25 @@ public abstract class Background
         return delegate.instantiate(size);
     }
 
-    /** The insets of this background. */
-    public float top, right, bottom, left;
+    /** The insets of this background, added to get the overall Element size. */
+    public Insets insets = Insets.ZERO;
 
     /** The alpha transparency of this background (or null if no alpha has been configured). */
     public Float alpha;
 
-    /** Returns this background's adjustment to an element's width. */
-    public float width () {
-        return left + right;
-    }
-
-    /** Returns this background's adjustment to an element's height. */
-    public float height () {
-        return top + bottom;
+    /**
+     * Configures insets on this background.
+     */
+    public Background insets (Insets insets) {
+        this.insets = insets;
+        return this;
     }
 
     /**
      * Configures uniform insets on this background.
      */
     public Background inset (float uniformInset) {
-        this.top = uniformInset;
-        this.right = uniformInset;
-        this.bottom = uniformInset;
-        this.left = uniformInset;
+        insets = Insets.uniform(uniformInset);
         return this;
     }
 
@@ -169,10 +165,7 @@ public abstract class Background
      * Configures horizontal and vertical insets on this background.
      */
     public Background inset (float horiz, float vert) {
-        this.top = vert;
-        this.right = horiz;
-        this.bottom = vert;
-        this.left = horiz;
+        insets = Insets.symmetric(horiz, vert);
         return this;
     }
 
@@ -180,10 +173,7 @@ public abstract class Background
      * Configures non-uniform insets on this background.
      */
     public Background inset (float top, float right, float bottom, float left) {
-        this.top = top;
-        this.right = right;
-        this.bottom = bottom;
-        this.left = left;
+        insets = new Insets(top, right, bottom, left);
         return this;
     }
 
@@ -191,7 +181,7 @@ public abstract class Background
      * Sets the left inset for this background.
      */
     public Background insetLeft (float left) {
-        this.left = left;
+        insets = insets.mutable().left(left);
         return this;
     }
 
@@ -199,7 +189,7 @@ public abstract class Background
      * Sets the right inset for this background.
      */
     public Background insetRight (float right) {
-        this.right = right;
+        insets = insets.mutable().right(right);
         return this;
     }
 
@@ -207,7 +197,7 @@ public abstract class Background
      * Sets the top inset for this background.
      */
     public Background insetTop (float top) {
-        this.top = top;
+        insets = insets.mutable().top(top);
         return this;
     }
 
@@ -215,7 +205,7 @@ public abstract class Background
      * Sets the bottom inset for this background.
      */
     public Background insetBottom (float bottom) {
-        this.bottom = bottom;
+        insets = insets.mutable().bottom(bottom);
         return this;
     }
 
@@ -225,15 +215,6 @@ public abstract class Background
     public Background alpha (float alpha) {
         this.alpha = alpha;
         return this;
-    }
-
-    /**
-     * Adds this background's insets to the supplied dimensions. Returns {@code size} for chaining.
-     */
-    Dimension addInsets (Dimension size) {
-        size.width += width();
-        size.height += height();
-        return size;
     }
 
     /**

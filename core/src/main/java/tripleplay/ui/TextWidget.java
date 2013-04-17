@@ -95,7 +95,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             boolean haveText = (curtext != null && curtext.length() > 0);
 
             // start with hints minus background insets
-            Dimension hints = new Dimension(hintX - bg.width(), hintY - bg.height());
+            Dimension hints = bg.insets.subtractFrom(new Dimension(hintX, hintY));
 
             // accommodate our icon
             accommodateIcon(hints, haveText);

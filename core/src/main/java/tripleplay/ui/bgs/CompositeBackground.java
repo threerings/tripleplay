@@ -11,6 +11,7 @@ import playn.core.PlayN;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import tripleplay.ui.Background;
+import tripleplay.ui.util.Insets;
 
 /**
  * A background consisting of multiple other backgrounds. Note: callers should not inset this
@@ -27,10 +28,7 @@ public class CompositeBackground extends Background
     public CompositeBackground (Background... constituents) {
         _constituents = constituents;
         for (Background bg : constituents) {
-            top += bg.top;
-            right += bg.right;
-            bottom += bg.bottom;
-            left += bg.left;
+            insets = insets.mutable().add(bg.insets);
         }
     }
 
@@ -49,21 +47,18 @@ public class CompositeBackground extends Background
         GroupLayer layer = PlayN.graphics().createGroupLayer();
         final Instance[] instances = new Instance[_constituents.length];
 
-        float top = 0, left = 0, width = size.width(), height = size.height();
+        Insets current = Insets.ZERO;
         for (int ii = 0, ll = _constituents.length; ii < ll; ii++) {
             Background bg = _constituents[ii];
 
             // create and save off the instance so we can destroy it later
-            instances[ii] = instantiate(bg, new Dimension(width, height));
+            instances[ii] = instantiate(bg, current.subtractFrom(new Dimension(size)));
 
             // add to our composite layer and translate the layers added
-            instances[ii].addTo(layer, left, top, 0);
+            instances[ii].addTo(layer, current.left(), current.top(), 0);
 
             // adjust the bounds
-            top += bg.top;
-            left += bg.left;
-            width -= bg.width();
-            height -= bg.height();
+            current = current.mutable().add(bg.insets);
         }
 
         if (_reverseDepth) {

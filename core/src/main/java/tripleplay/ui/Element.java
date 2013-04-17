@@ -20,6 +20,7 @@ import playn.core.GroupLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
 
+import tripleplay.ui.util.Insets;
 import tripleplay.util.Ref;
 
 /**
@@ -472,8 +473,9 @@ public abstract class Element<T extends Element<T>>
      */
     protected Dimension computeSize (float hintX, float hintY) {
         LayoutData ldata = _ldata = createLayoutData(hintX, hintY);
-        Dimension size = ldata.computeSize(hintX - ldata.bg.width(), hintY - ldata.bg.height());
-        return ldata.bg.addInsets(size);
+        Insets insets = ldata.bg.insets;
+        Dimension size = ldata.computeSize(hintX - insets.width(), hintY - insets.height());
+        return insets.addTo(size);
     }
 
     /**
@@ -499,8 +501,9 @@ public abstract class Element<T extends Element<T>>
         }
 
         // do our actual layout
-        ldata.layout(ldata.bg.left, ldata.bg.top,
-                     width - ldata.bg.width(), height - ldata.bg.height());
+        Insets insets = ldata.bg.insets;
+        ldata.layout(insets.left(), insets.top(),
+                     width - insets.width(), height - insets.height());
 
         // finally clear our cached layout data
         clearLayoutData();

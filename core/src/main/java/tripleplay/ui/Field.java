@@ -22,6 +22,7 @@ import react.Value;
 
 import tripleplay.platform.NativeTextField;
 import tripleplay.platform.TPPlatform;
+import tripleplay.ui.util.Insets;
 
 /**
  * Displays text which can be edited via the {@link Keyboard#getText} popup.
@@ -240,10 +241,10 @@ public class Field extends TextWidget<Field>
 
     protected Rectangle getNativeFieldBounds () {
         // TODO: handle alignments other than HAlign.LEFT and VAlign.TOP
-        Background bg = resolveStyle(Style.BACKGROUND);
-        Point screenCoords = Layer.Util.layerToScreen(layer, bg.left, bg.top);
+        Insets insets = resolveStyle(Style.BACKGROUND).insets;
+        Point screenCoords = Layer.Util.layerToScreen(layer, insets.left(), insets.top());
         return new Rectangle(screenCoords.x, screenCoords.y,
-                             _size.width - bg.width(), _size.height - bg.height());
+                             _size.width - insets.width(), _size.height - insets.height());
     }
 
     protected void updateMode (boolean nativeField) {
