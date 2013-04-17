@@ -267,7 +267,8 @@ public class Field extends TextWidget<Field>
                 .setFont(resolveStyle(Style.FONT))
                 .setAutocapitalization(resolveStyle(AUTOCAPITALIZATION))
                 .setAutocorrection(resolveStyle(AUTOCORRECTION))
-                .setReturnKeyLabel(resolveStyle(RETURN_KEY_LABEL));
+                .setReturnKeyLabel(resolveStyle(RETURN_KEY_LABEL))
+                .setEnabled(isEnabled());
             updateNativeFieldBounds();
             _nativeField.add();
             setGlyphLayerAlpha(0);

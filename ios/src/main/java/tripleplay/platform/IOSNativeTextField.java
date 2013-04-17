@@ -61,6 +61,11 @@ public abstract class IOSNativeTextField implements NativeTextField
             });
         }
 
+        @Override public SingleLine setEnabled (boolean enabled) {
+            _field.set_Enabled(enabled);
+            return this;
+        }
+
         @Override public NativeTextField refreshMode (Mode mode) {
             if (mode == Mode.MULTI_LINE) return new MultiLine(_handler, this);
             _field.set_SecureTextEntry(mode == Mode.SECURE);
@@ -103,6 +108,11 @@ public abstract class IOSNativeTextField implements NativeTextField
             _field = (UITextView)_view;
             _field.set_Editable(true);
             // TODO: do we need to call set_Delegate?
+        }
+
+        @Override public MultiLine setEnabled (boolean enabled) {
+            _field.set_Editable(enabled);
+            return this;
         }
 
         @Override public NativeTextField refreshMode (Mode mode) {

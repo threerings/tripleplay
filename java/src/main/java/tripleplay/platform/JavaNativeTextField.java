@@ -141,6 +141,12 @@ public class JavaNativeTextField
         return this;
     }
 
+    @Override
+    public JavaNativeTextField setEnabled (boolean enabled) {
+        _field.setEnabled(enabled);
+        return this;
+    }
+
     @Override public JavaNativeTextField refreshMode (Mode mode) {
         if (_mode != mode) {
             _mode = mode;

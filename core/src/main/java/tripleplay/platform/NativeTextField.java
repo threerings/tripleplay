@@ -82,6 +82,11 @@ public interface NativeTextField
      * @return {@code this} for call chaining. */
     NativeTextField setReturnKeyLabel (String label);
 
+    /**
+     * Sets the enabled state of the field.
+     */
+    NativeTextField setEnabled (boolean enabled);
+
     /** Updates or creates a new native text field with the given mode. If a value != this is
      * returned, the caller must then repopulate all the properties of the fields.*/
     NativeTextField refreshMode (Mode mode);
