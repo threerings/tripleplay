@@ -261,18 +261,13 @@ public class MenuHost
         // if there is no explicit constraint area requested, use the graphics
         if (pop.bounds == null) pop.inScreenArea(_screenArea);
 
-        // set up the menu root
+        // set up the menu root, the RootLayout will do the complicated bounds jockeying
         final Root menuRoot = iface.createRoot(new RootLayout(), _stylesheet, rootLayer);
         menuRoot.layer.setDepth(1);
         menuRoot.layer.setHitTester(null); // get hits from out of bounds
         menuRoot.add(pop.menu.setConstraint(pop));
         menuRoot.pack();
-
-        // position the menu
-        Point loc = Layer.Util.screenToLayer(rootLayer,
-            pop.position.x() + pop._halign.offset(menuRoot.size().width(), 0),
-            pop.position.y() + pop._valign.offset(menuRoot.size().height(), 0));
-        menuRoot.layer.setTranslation(loc.x, loc.y);
+        menuRoot.layer.setTranslation(pop.position.x(), pop.position.y());
 
         // set up the activation
         final Activation activation = new Activation(pop);
@@ -343,25 +338,103 @@ public class MenuHost
             // get the constraint, it will always be a Pop
             Pop pop = (Pop)elems.childAt(0).constraint();
 
+            // figure out the best place to put the menu, in screen coordinates; starting with
+            // the requested popup position
+            Rectangle bounds = new Rectangle(
+                pop.position.x() + pop._halign.offset(width, 0),
+                pop.position.y() + pop._valign.offset(height, 0), width, height);
+
             // make sure the menu lies inside the requested bounds if the menu doesn't do
             // that itself
             if (pop.menu.automaticallyConfine()) {
-                IRectangle bounds = pop.bounds;
-                Point tl = Layer.Util.screenToLayer(elems.layer, bounds.x(), bounds.y());
-                Point br = Layer.Util.screenToLayer(elems.layer,
-                    bounds.x() + bounds.width(), bounds.y() + bounds.height());
-                // nudge location
-                left = Math.min(Math.max(left, tl.x), br.x - width);
-                top = Math.min(Math.max(top, tl.y), br.y - height);
+                confine(pop.bounds, bounds);
+
+                // keep the bounds from overlapping the position
+                float fudge = 2;
+                if (bounds.width > fudge * 2 && bounds.height > fudge * 2) {
+                    Rectangle ibounds = new Rectangle(bounds);
+                    ibounds.grow(-fudge, -fudge);
+                    if (ibounds.contains(pop.position)) {
+                        avoidPoint(pop.bounds, ibounds, pop.position);
+                        bounds.setLocation(ibounds.x() - fudge, ibounds.y() - fudge);
+                    }
+                }
             }
 
-            setBounds(elems.childAt(0), left, top, width, height);
+            // save a copy of bounds in screen coordinates
+            Rectangle screenBounds = new Rectangle(bounds);
+
+            // relocate to layer coordinates
+            bounds.setLocation(Layer.Util.screenToLayer(elems.layer, bounds.x, bounds.y));
+
+            // set the menu bounds
+            setBounds(elems.childAt(0), bounds.x, bounds.y, bounds.width, bounds.height);
 
             // tell the UI overlay to let the real dimensions of the menu through
-            Rectangle bounds = elems.childAt(0).bounds(new Rectangle());
-            bounds.setLocation(Layer.Util.layerToScreen(elems.childAt(0).layer, 0, 0));
-            PlayN.uiOverlay().hideOverlay(bounds);
+            PlayN.uiOverlay().hideOverlay(screenBounds);
         }
+
+    }
+
+    /** Tries to place the inner bounds within the outer bounds, such that the inner bounds does
+     * not contain the position. */
+    protected static void avoidPoint (IRectangle outer, Rectangle inner, IPoint pos)
+    {
+        Rectangle checkBounds = new Rectangle();
+        Rectangle best = new Rectangle(inner);
+        float bestDist = Float.MAX_VALUE;
+
+        float dx = pos.x() - outer.x(), dy = pos.y() - outer.y();
+
+        // confine to the left
+        checkBounds.setBounds(outer.x(), outer.y(), dx, outer.height());
+        bestDist = compareAndConfine(checkBounds, inner, best, bestDist);
+
+        // right
+        checkBounds.setBounds(pos.x(), outer.y(), outer.width() - dx, outer.height());
+        bestDist = compareAndConfine(checkBounds, inner, best, bestDist);
+
+        // top
+        checkBounds.setBounds(outer.x(), outer.y(), outer.width(), dy);
+        bestDist = compareAndConfine(checkBounds, inner, best, bestDist);
+
+        // bottom
+        checkBounds.setBounds(outer.x(), pos.y(), outer.width(), outer.height() - dy);
+        bestDist = compareAndConfine(checkBounds, inner, best, bestDist);
+
+        inner.setBounds(best);
+    }
+
+    /** Confines a rectangle and updates the current best fit based on the moved distance. */
+    protected static float compareAndConfine (
+        IRectangle outer, IRectangle inner, Rectangle best, float bestDist) {
+
+        // don't bother if there isn't even enough space
+        if (outer.width() <= inner.width() || outer.height() < inner.height()) return bestDist;
+
+        // confine
+        Rectangle confined = confine(outer, new Rectangle(inner));
+
+        // check distance and overwrite the best fit if we have a new winner
+        float dx = confined.x - inner.x(), dy = confined.y - inner.y();
+        float dist = dx * dx + dy * dy;
+        if (dist < bestDist) {
+            best.setBounds(confined);
+            bestDist = dist;
+        }
+
+        return bestDist;
+    }
+
+    /** Moves ths given inner rectangle such that it lies within the given outer rectangle.
+     * The results are undefined if either the inner width or height is greater that the outer's
+     * width or height, respectively. */
+    protected static Rectangle confine (IRectangle outer, Rectangle inner) {
+        float dx = outer.x() - inner.x(), dy = outer.y() - inner.y();
+        if (dx <= 0) dx = Math.min(0, outer.maxX() - inner.maxX());
+        if (dy <= 0) dy = Math.min(0, outer.maxY() - inner.maxY());
+        inner.translate(dx, dy);
+        return inner;
     }
 
     /** Holds a few variables related to the menu's activation. */
