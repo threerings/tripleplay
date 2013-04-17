@@ -164,7 +164,7 @@ public class MenuHost
 
         /**
          * Optionally confines the menu area to the given screen area. By default the menu is
-         * confined by the size of the application (see {@link playn.core.Graphics}).
+         * confined by the hosts's screen area (see {@link MenuHost#getScreenArea()}).
          */
         public Pop inScreenArea (IRectangle area) {
             bounds = new Rectangle(area);
@@ -173,7 +173,7 @@ public class MenuHost
 
         /**
          * Optionally confines the menu area to the given element. By default the menu is confined
-         * by the size of the application area (see {@link playn.core.Graphics}).
+         * by the hosts's screen area (see {@link MenuHost#getScreenArea()}).
          */
         public Pop inElement (Element<?> elem) {
             Point tl = Layer.Util.layerToScreen(elem.layer, 0, 0);
@@ -237,13 +237,29 @@ public class MenuHost
     }
 
     /**
+     * Sets the area to which menus should be confined when there isn't any other associated
+     * bounds.
+     */
+    public void setScreenArea (IRectangle screenArea) {
+        _screenArea.setBounds(screenArea);
+    }
+
+    /**
+     * Gets the area to which menus should be confined when there isn't any other associated
+     * bounds. By default, the entire available area is used, as given by
+     * {@link playn.core.Graphics}.
+     */
+    public IRectangle getScreenArea () {
+        return _screenArea;
+    }
+
+    /**
      * Displays the menu specified by the given pop, incorporating all the configured attributes
      * therein.
      */
     public void popup (final Pop pop) {
         // if there is no explicit constraint area requested, use the graphics
-        if (pop.bounds == null) pop.inScreenArea(new Rectangle(
-            0, 0, graphics().width(), graphics().height()));
+        if (pop.bounds == null) pop.inScreenArea(_screenArea);
 
         // set up the menu root
         final Root menuRoot = iface.createRoot(new RootLayout(), _stylesheet, rootLayer);
@@ -388,4 +404,8 @@ public class MenuHost
 
     /** Currently active. */
     protected Activation _active;
+
+    /** When confining the menu to the graphics' bounds, use this. */
+    protected final Rectangle _screenArea = new Rectangle(
+        0, 0, graphics().width(), graphics().height());
 }
