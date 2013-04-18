@@ -167,15 +167,17 @@ public abstract class AxisLayout extends Layout
     /**
      * Configures the supplied element with a {@link #stretched} constraint.
      */
-    public static <T extends Element<T>> T stretch (T elem) {
-        return elem.setConstraint(stretched());
+    public static <T extends Element<?>> T stretch (T elem) {
+        elem.setConstraint(stretched());
+        return elem;
     }
 
     /**
      * Configures the supplied element with a weighted {@link #stretched(float)} constraint.
      */
-    public static <T extends Element<T>> T stretch (T elem, float weight) {
-        return elem.setConstraint(stretched(weight));
+    public static <T extends Element<?>> T stretch (T elem, float weight) {
+        elem.setConstraint(stretched(weight));
+        return elem;
     }
 
     /**
