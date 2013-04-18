@@ -24,8 +24,7 @@ public class Root extends Elements<Root>
         _iface = iface;
         setStylesheet(sheet);
 
-        // TODO: once method is removed, just default to true
-        set(Flag.HIT_ABSORB, absorbsClicks());
+        set(Flag.HIT_ABSORB, true);
     }
 
     /**
@@ -146,13 +145,6 @@ public class Root extends Elements<Root>
             _menuHost = new MenuHost(_iface, this);
         }
         return _menuHost;
-    }
-
-    /**
-     * @deprecated use {@link #setAbsorbsClicks(boolean)} instead
-     */
-    @Deprecated protected boolean absorbsClicks () {
-        return true;
     }
 
     protected final Interface _iface;
