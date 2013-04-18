@@ -10,7 +10,7 @@ import react.SignalView;
 /**
  * Implemented by {@link Element}s that can be clicked.
  */
-public interface Clickable<T extends Element<T>>
+public interface Clickable<T extends Element<?>>
 {
     /** A signal that is emitted when this element is clicked. */
     SignalView<T> clicked ();
