@@ -688,23 +688,40 @@ public abstract class Element<T extends Element<T>>
         }
 
         @Override public Dimension computeSize (float hintX, float hintY) {
-            // hint the delegate with our preferred width or height or both
-            hintX = select(prefWidth, hintX);
-            hintY = select(prefHeight, hintY);
-
-            // get the usual size
-            Dimension dim = sizeDelegate == null ? new Dimension(prefWidth, prefHeight) :
-                sizeDelegate.computeSize(hintX, hintY);
-
-            // swap in our preferred width or height or both
-            dim.width = widthFn.apply(prefWidth, dim.width);
-            dim.height = heightFn.apply(prefHeight, dim.height);
-
-            return dim;
+            // hint the delegate with our preferred width or height or both,
+            // then swap in our preferred function on that (min, max, or subclass)
+            return adjustSize(sizeDelegate == null ? new Dimension(prefWidth, prefHeight) :
+                sizeDelegate.computeSize(resolveHintX(hintX), resolveHintY(hintY)));
         }
 
         @Override public void layout (float left, float top, float width, float height) {
             if (layoutDelegate != null) layoutDelegate.layout(left, top, width, height);
+        }
+
+        /**
+         * Refines the given x hint for the delegate to consume. By default uses our configured
+         * preferred width if not zero, otherwise the passed-in x hint.
+         */
+        protected float resolveHintX (float hintX) {
+            return select(prefWidth, hintX);
+        }
+
+        /**
+         * Refines the given y hint for the delegate to consume. By default uses our configured
+         * preferred height if not zero, otherwise the passed-in y hint.
+         */
+        protected float resolveHintY (float hintY) {
+            return select(prefHeight, hintY);
+        }
+
+        /**
+         * Adjusts the dimension computed by the delegate to get the final preferred size. By
+         * default, uses the previously configured {@link Take} values.
+         */
+        protected Dimension adjustSize (Dimension dim) {
+            dim.width = widthFn.apply(prefWidth, dim.width);
+            dim.height = heightFn.apply(prefHeight, dim.height);
+            return dim;
         }
 
         protected float select (float pref, float base) {
