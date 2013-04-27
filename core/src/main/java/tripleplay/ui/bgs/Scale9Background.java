@@ -115,11 +115,29 @@ public class Scale9Background extends Background
         yaxis = new Axis3(image.height());
     }
 
+    /**
+     * Will ensure that the Axis3 passed in does not exceed the length given. An equal chunk will
+     * be removed from the outer chunks if it is too long. The given Axis3 is modified and returned.
+     */
+    public static Axis3 clamp (Axis3 axis, float length) {
+        float left = axis.size(0);
+        float right = axis.size(2);
+        if (left + right > length) {
+            // eat equal chunks out of each end so that we don't end up overlapping
+            float remove = (left + right - length) / 2;
+            axis.set(0, 0, left - remove);
+            axis.set(1, left - remove, 0);
+            axis.set(2, left - remove, right - remove);
+        }
+        return axis;
+    }
+
     @Override
     protected Instance instantiate (final IDimension size) {
         return new LayerInstance(size, new ImmediateLayer.Renderer() {
             // The axes of our destination surface.
-            Axis3 dx = new Axis3(size.width(), xaxis), dy = new Axis3(size.height(), yaxis);
+            Axis3 dx = clamp(new Axis3(size.width(), xaxis), size.width());
+            Axis3 dy = clamp(new Axis3(size.height(), yaxis), size.height());
             public void render (Surface surf) {
                 surf.save();
                 if (alpha != null) surf.setAlpha(alpha);
