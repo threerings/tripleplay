@@ -121,8 +121,14 @@ public class Scale9Background extends Background
      */
     public static Axis3 clamp (Axis3 axis, float length) {
         float left = axis.size(0);
+        float middle = axis.size(1);
         float right = axis.size(2);
-        if (left + right > length) {
+        if (left + middle + right > length && middle > 0 && left + right < length) {
+            // the special case where for some reason the total is too wide, but the middle is non
+            // zero, and it can absorb the extra all on its own.
+            axis.set(1, left, length - left - right);
+            axis.set(2, length - right, right);
+        } else if (left + right > length) {
             // eat equal chunks out of each end so that we don't end up overlapping
             float remove = (left + right - length) / 2;
             axis.set(0, 0, left - remove);
