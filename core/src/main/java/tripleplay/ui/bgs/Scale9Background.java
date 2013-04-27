@@ -95,26 +95,6 @@ public class Scale9Background extends Background
         protected final float[] _lengths;
     }
 
-    /** The axes of our source image. */
-    public final Axis3 xaxis, yaxis;
-
-    /** Creates a new background using the given image. The subdivision of the image into a 3x3
-     * grid is automatic.
-     *
-     * <p>NOTE: the image must be preloaded since we need to determine the stretching factor.
-     * If this cannot be arranged using the application resource strategy, callers may consider
-     * setting the background style from the images callback.</p>
-     */
-    public Scale9Background (Image image) {
-        if (!image.isReady()) {
-            // complain about this, we don't support asynch images
-            PlayN.log().warn("Scale9 image not preloaded: " + image);
-        }
-        _image = image;
-        xaxis = new Axis3(image.width());
-        yaxis = new Axis3(image.height());
-    }
-
     /**
      * Will ensure that the Axis3 passed in does not exceed the length given. An equal chunk will
      * be removed from the outer chunks if it is too long. The given Axis3 is modified and returned.
@@ -136,6 +116,26 @@ public class Scale9Background extends Background
             axis.set(2, left - remove, right - remove);
         }
         return axis;
+    }
+
+    /** The axes of our source image. */
+    public final Axis3 xaxis, yaxis;
+
+    /** Creates a new background using the given image. The subdivision of the image into a 3x3
+     * grid is automatic.
+     *
+     * <p>NOTE: the image must be preloaded since we need to determine the stretching factor.
+     * If this cannot be arranged using the application resource strategy, callers may consider
+     * setting the background style from the images callback.</p>
+     */
+    public Scale9Background (Image image) {
+        if (!image.isReady()) {
+            // complain about this, we don't support asynch images
+            PlayN.log().warn("Scale9 image not preloaded: " + image);
+        }
+        _image = image;
+        xaxis = new Axis3(image.width());
+        yaxis = new Axis3(image.height());
     }
 
     @Override
