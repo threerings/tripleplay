@@ -62,15 +62,25 @@ public class LabelDemo extends DemoScreen
                                                     Style.OUTLINE_WIDTH.is(2f))),
                 new Label("Shadow").addStyles(
                                        bigLabel.add(Style.TEXT_EFFECT.shadow))),
+            new Label("Underlining").addStyles(Style.HALIGN.center),
             new Group(AxisLayout.horizontal().gap(10)).add(
-                new Label("Plain Underline").addStyles(smallUnderlined),
-                new Label("Pixel Outline Underline").addStyles(
+                new Label("Plain").addStyles(smallUnderlined),
+                new Label("gjpqy").addStyles(smallUnderlined),
+                new Label("Pixel Outline").addStyles(
+                                       smallUnderlined.add(Style.TEXT_EFFECT.pixelOutline)),
+                new Label("gjpqy").addStyles(
                                        smallUnderlined.add(Style.TEXT_EFFECT.pixelOutline))),
-                new Label("Vector Outline Underline").addStyles(
+            new Group(AxisLayout.horizontal().gap(10)).add(
+                new Label("Vector Outline").addStyles(
                                        smallUnderlined.add(Style.TEXT_EFFECT.vectorOutline,
                                                            Style.OUTLINE_WIDTH.is(2f))),
-                new Label("Shadow Underline").addStyles(
-                                       smallUnderlined.add(Style.TEXT_EFFECT.shadow)));
+                new Label("gjpqy").addStyles(
+                                       smallUnderlined.add(Style.TEXT_EFFECT.vectorOutline,
+                                                           Style.OUTLINE_WIDTH.is(2f))),
+                new Label("Shadow").addStyles(
+                                       smallUnderlined.add(Style.TEXT_EFFECT.shadow)),
+                new Label("gjpqy").addStyles(
+                                       smallUnderlined.add(Style.TEXT_EFFECT.shadow))));
     }
 
     protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
