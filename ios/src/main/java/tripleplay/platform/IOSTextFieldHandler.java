@@ -154,8 +154,8 @@ public class IOSTextFieldHandler
     }
 
     public void deactivate (IOSNativeTextField field) {
-        field.getView().RemoveFromSuperview();
         _activeFields.remove(field.getView());
+        field.getView().RemoveFromSuperview();
     }
 
     public boolean isAdded (UIView field) {
