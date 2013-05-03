@@ -58,6 +58,26 @@ public abstract class Interpolator
         }
     };
 
+    /** An interpolator that undershoots the starting value, then speeds up into the final value */
+    public static Interpolator EASE_IN_BACK = new Interpolator() {
+        @Override public float apply (float start, float range, float dt, float t) {
+            if (t == 0) return start + range;
+            float curvature = 1.70158f;
+            float dtt = dt / t;
+            return range * dtt*dtt * ((curvature+1) * dtt - curvature) + start;
+        }
+    };
+
+    /** An interpolator that eases into the final value and overshoots it before settling on it. */
+    public static Interpolator EASE_OUT_BACK = new Interpolator() {
+        @Override public float apply (float start, float range, float dt, float t) {
+            if (t == 0) return start + range;
+            float curvature = 1.70158f;
+            float dtt = dt / t - 1;
+            return range * (dtt*dtt * ((curvature + 1) * dtt + curvature) + 1) + start;
+        }
+    };
+
     /**
      * Interpolates between two values.
      *

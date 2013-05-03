@@ -97,6 +97,16 @@ public abstract class Animation
             return using(Interpolator.EASE_INOUT);
         }
 
+        /** Uses an ease-in-back interpolator for this animation. */
+        public R easeInBack () {
+            return using(Interpolator.EASE_IN_BACK);
+        }
+
+        /** Uses an ease-out-back interpolator for this animation. */
+        public R easeOutBack () {
+            return using(Interpolator.EASE_OUT_BACK);
+        }
+
         /** Configures the duration for this animation (in milliseconds). Default: 1000. */
         public R in (float duration) {
             _duration = duration;
