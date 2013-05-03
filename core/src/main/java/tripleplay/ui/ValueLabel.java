@@ -22,6 +22,7 @@ public class ValueLabel extends TextWidget<ValueLabel>
      * display as this label's text. */
     public ValueLabel (ValueView<?> text) {
         text.connect(textDidChange());
+        // TODO: connect in onAdd, disconnect in onRemove?
         this.text = text;
     }
 
