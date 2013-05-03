@@ -54,6 +54,31 @@ public class ParticleBuffer
     /** A liveness flag for each particle. */
     public final int[] alive;
 
+    /** Returns a string representation of the specified particle's data. */
+    public static String dump (float[] data, int index, int start) {
+        return index + " tx:" + data[start + M00] + "," + data[start + M01] + "," +
+            data[start + M10] + "," + data[start + M11] + "," +
+            data[start + TX] + "," + data[start + TY] +
+            " vel:" + data[start + VEL_X] + "," + data[start + VEL_Y] +
+            " life:" + data[start + BIRTH] + "," + data[start + LIFESPAN] +
+            " color:" + data[start + RED] + "," + data[start + GREEN] + "," +
+            data[start + BLUE] + "," + data[start + ALPHA];
+    }
+
+    /** Multiplies the specified particle's transform with the supplied matrix. */
+    public static void multiply (float[] data, int start,
+                                 float m00, float m01, float m10, float m11, float tx, float ty) {
+        float pm00 = data[start + M00], pm01 = data[start + M01];
+        float pm10 = data[start + M10], pm11 = data[start + M11];
+        float ptx  = data[start + TX],  pty  = data[start + TY];
+        data[start + M00] = pm00 * m00 + pm10 * m01;
+        data[start + M01] = pm01 * m00 + pm11 * m01;
+        data[start + M10] = pm00 * m10 + pm10 * m11;
+        data[start + M11] = pm01 * m10 + pm11 * m11;
+        data[start + TX]  = pm00 *  tx + pm10 *  ty + ptx;
+        data[start + TY]  = pm01 *  tx + pm11 *  ty + pty;
+    }
+
     /** Creates a particle buffer that can hold up to {@code maxParticles} particles. */
     public ParticleBuffer (int maxParticles) {
         _maxParticles = maxParticles;
