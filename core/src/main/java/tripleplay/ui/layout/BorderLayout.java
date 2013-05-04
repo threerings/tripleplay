@@ -6,7 +6,6 @@
 package tripleplay.ui.layout;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import pythagoras.f.Dimension;
@@ -188,20 +187,15 @@ public class BorderLayout extends Layout
 
         Slots (Elements<?> elems) {
             for (Element<?> elem : elems) {
+                if (!elem.isVisible()) continue;
                 Position p = Position.positionOf(elem.constraint());
                 if (p == null) {
-                    throw new IllegalStateException("Element with a non-BorderLayout constraint");
+                    throw new IllegalStateException(
+                        "Element with a non-BorderLayout constraint: " + elem.toString());
                 }
                 if (elements.put(p, elem) != null) {
                     throw new IllegalStateException(
                         "Multiple elements with the same constraint: " + p);
-                }
-            }
-
-            // remove invisibles
-            for (Iterator<Element<?>> it = elements.values().iterator(); it.hasNext(); ) {
-                if (!it.next().isVisible()) {
-                    it.remove();
                 }
             }
         }
