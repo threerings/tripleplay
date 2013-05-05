@@ -163,7 +163,7 @@ public class Tabs extends Elements<Tabs>
 
         add(buttons, contentArea.setConstraint(AxisLayout.stretched()));
 
-        final Selector tabButtonSelector = new Selector(buttons, null);
+        final Selector tabButtonSelector = new Selector(buttons, null).preventDeselection();
         tabButtonSelector.selected.connect(new Slot<Element<?>> () {
             @Override public void onEmit (Element<?> button) {
                 selected.update(forWidget(button));

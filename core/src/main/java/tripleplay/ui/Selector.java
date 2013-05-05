@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.PlayN;
 import react.Slot;
 import react.Value;
 import react.ValueView;
@@ -51,6 +52,13 @@ public class Selector
         }
         elements.childAdded().connect(_addSlot);
         elements.childRemoved().connect(_removeSlot);
+        return this;
+    }
+
+    /** Prevent a deselection (null {@link #selected}.get()) occurring as a result of toggling
+     * the currently selected button off. */
+    public Selector preventDeselection () {
+        _preventDeselection = true;
         return this;
     }
 
@@ -114,7 +122,21 @@ public class Selector
 
     protected final Slot<Element<?>> _clickSlot = new Slot<Element<?>>() {
         @Override public void onEmit (Element<?> clicked) {
-            selected.update(get(clicked).get() ? clicked : null);
+            final Value<Boolean> sel = get(clicked);
+            if (_preventDeselection) {
+                if (!sel.get()) {
+                    PlayN.invokeLater(new Runnable() {
+                        @Override
+                        public void run () {
+                            sel.update(true);
+                        }
+                    });
+                    return;
+                }
+            }
+            selected.update(sel.get() ? clicked : null);
         }
     };
+
+    protected boolean _preventDeselection;
 }
