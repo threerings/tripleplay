@@ -77,6 +77,15 @@ public abstract class EffectRenderer
             canvas.fillText(text, x+1, y+1);
             canvas.restore();
         }
+
+        @Override public boolean equals (Object obj) {
+            if (!(obj instanceof PixelOutline)) return false;
+            return outlineColor == ((PixelOutline)obj).outlineColor;
+        }
+
+        @Override public int hashCode () {
+            return outlineColor;
+        }
     }
 
     public static class VectorOutline extends EffectRenderer {
@@ -122,6 +131,18 @@ public abstract class EffectRenderer
             canvas.fillText(text, x+outlineWidth, y+outlineWidth);
             canvas.restore();
         }
+
+        @Override public boolean equals (Object obj) {
+            if (!(obj instanceof VectorOutline)) return false;
+            VectorOutline that = (VectorOutline)obj;
+            return outlineColor == that.outlineColor && outlineWidth == that.outlineWidth &&
+                    outlineCap == that.outlineCap && outlineJoin == that.outlineJoin;
+        }
+
+        @Override public int hashCode () {
+            return outlineColor ^ (int)outlineWidth ^ outlineCap.hashCode() ^
+                    outlineJoin.hashCode();
+        }
     }
 
     public static class Shadow extends EffectRenderer {
@@ -158,6 +179,17 @@ public abstract class EffectRenderer
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+tx, y+ty);
             canvas.restore();
+        }
+
+        @Override public boolean equals (Object obj) {
+            if (!(obj instanceof Shadow)) return false;
+            Shadow that = (Shadow)obj;
+            return shadowColor == that.shadowColor &&
+                    shadowX == that.shadowX && shadowY == that.shadowY;
+        }
+
+        @Override public int hashCode () {
+            return shadowColor ^ (int)shadowX ^ (int)shadowY;
         }
     }
 }

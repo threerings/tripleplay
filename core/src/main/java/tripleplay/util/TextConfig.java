@@ -49,7 +49,7 @@ public class TextConfig
         if (!(other instanceof TextConfig)) return false;
 
         TextConfig that = (TextConfig)other;
-        return format.equals(that.format) && effect == that.effect &&
+        return format.equals(that.format) && effect.equals(that.effect) &&
             underlined == that.underlined && textColor == that.textColor;
     }
 
