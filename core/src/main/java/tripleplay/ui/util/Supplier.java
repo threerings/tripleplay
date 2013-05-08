@@ -37,6 +37,25 @@ public abstract class Supplier
     }
 
     /**
+     * Creates a supplier that wraps another supplier and on destroy also destroys the created
+     * element, if it implements {@link Destroyable}.
+     */
+    public static Supplier withDestroy (final Supplier other) {
+        return new Supplier() {
+            Element<?> created;
+            @Override public Element<?> get () {
+                return created = other.get();
+            }
+            @Override public void destroy () {
+                other.destroy();
+                if (created instanceof Destroyable) {
+                    ((Destroyable)created).destroy();
+                }
+            }
+        };
+    }
+
+    /**
      * Gets the element. Ownership of the element's resources (its layer) must also be transferred.
      * For example, if you don't add the element to any hierarchy, you need to call its {@code
      * layer.destroy} later.
