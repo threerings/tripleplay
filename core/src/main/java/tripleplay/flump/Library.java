@@ -5,10 +5,11 @@
 
 package tripleplay.flump;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import playn.core.Asserts;
 import playn.core.Image;
@@ -17,6 +18,8 @@ import playn.core.util.Callback;
 import static playn.core.PlayN.*;
 
 import react.Value;
+
+import tripleplay.util.TexturePacker;
 
 public class Library
 {
@@ -32,7 +35,7 @@ public class Library
         final Map<String,Symbol> symbols = new HashMap<String,Symbol>();
         this.symbols = Collections.unmodifiableMap(symbols);
 
-        final ArrayList<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
+        final List<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
         for (Json.Object movieJson : json.getArray("movies", Json.Object.class)) {
             Movie.Symbol movie = new Movie.Symbol(this, movieJson);
             movies.add(movie);
@@ -100,6 +103,32 @@ public class Library
                 }
             }
         });
+    }
+
+    /** Pack multiple libraries into a single group of atlases. The libraries will be modified so
+     * that their symbols point at the new atlases. */
+    public static void pack (List<Library> libs) {
+        // Add all texture symbols to the packer
+        TexturePacker packer = new TexturePacker();
+        for (int ii = 0, ll = libs.size(); ii < ll; ++ii) {
+            Library lib = libs.get(ii);
+            for (Symbol symbol : lib.symbols.values()) {
+                if (symbol instanceof Texture.Symbol) {
+                    packer.add(ii+":"+symbol.name(), ((Texture.Symbol)symbol).region);
+                }
+            }
+        }
+
+        // Pack and update all texture symbols to the new regions
+        Map<String,Image.Region> images = packer.pack();
+        for (int ii = 0, ll = libs.size(); ii < ll; ++ii) {
+            Library lib = libs.get(ii);
+            for (Symbol symbol : lib.symbols.values()) {
+                if (symbol instanceof Texture.Symbol) {
+                    ((Texture.Symbol)symbol).region = images.get(ii+":"+symbol.name());
+                }
+            }
+        }
     }
 
     /** Creates an instance of a symbol, or throws if the symbol name is not in this library. */

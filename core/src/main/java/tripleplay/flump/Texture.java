@@ -19,7 +19,7 @@ public class Texture
     public static class Symbol
         implements tripleplay.flump.Symbol
     {
-        public final Image.Region region;
+        public Image.Region region;
         public final IPoint origin;
 
         protected Symbol (Json.Object json, Image atlas) {
