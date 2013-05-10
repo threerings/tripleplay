@@ -127,13 +127,18 @@ public class IOSTextFieldHandler
                     _keyboardActive.update(false);
                 }}));
 
+        _currentOrientation = UIDevice.get_CurrentDevice().get_Orientation().Value;
         center.AddObserver(UIDevice.get_OrientationDidChangeNotification(),
             new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
                 @Override
                 public void Invoke (NSNotification nf) {
                     UIDeviceOrientation orient = UIDevice.get_CurrentDevice().get_Orientation();
-                    if (_gameViewTransformed &&
-                        ((IOSPlatform)PlayN.platform()).supportedOrients().isSupported(orient)) {
+                    if (orient.Value == _currentOrientation) return; // NOOP
+                    if (!((IOSPlatform)PlayN.platform()).supportedOrients().isSupported(orient))
+                        return; // unsupported orientation, no rotation
+                    _currentOrientation = orient.Value;
+
+                    if (_gameViewTransformed) {
                         // the game rotated, and we've transformed it, kill the keyboard so it can
                         // get back to normal
                         IOSNativeTextField firstResponder = findFirstResponder();
@@ -228,6 +233,7 @@ public class IOSTextFieldHandler
     // CGAffineTransform is a value class and cannot be null
     protected boolean _gameViewTransformed;
     protected CGAffineTransform _gameViewTransform;
+    protected int _currentOrientation;
 
     protected TouchDetector _touchDetector;
     protected VirtualKeyboardController _virtualKeyboardCtrl;
