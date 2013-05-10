@@ -13,6 +13,8 @@ import cli.MonoTouch.Foundation.NSNotification;
 import cli.MonoTouch.Foundation.NSNotificationCenter;
 import cli.MonoTouch.Foundation.NSSet;
 import cli.MonoTouch.Foundation.NSValue;
+import cli.MonoTouch.UIKit.UIDevice;
+import cli.MonoTouch.UIKit.UIDeviceOrientation;
 import cli.MonoTouch.UIKit.UIEvent;
 import cli.MonoTouch.UIKit.UIFont;
 import cli.MonoTouch.UIKit.UIKeyboard;
@@ -24,7 +26,9 @@ import cli.System.Drawing.RectangleF;
 import cli.System.Drawing.SizeF;
 
 import playn.core.Font;
+import playn.core.PlayN;
 import playn.ios.IOSFont;
+import playn.ios.IOSPlatform;
 import pythagoras.f.Point;
 import react.Value;
 import react.ValueView;
@@ -121,6 +125,20 @@ public class IOSTextFieldHandler
                     _gameViewTransformed = false;
                     _touchDetector.RemoveFromSuperview();
                     _keyboardActive.update(false);
+                }}));
+
+        center.AddObserver(UIDevice.get_OrientationDidChangeNotification(),
+            new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
+                @Override
+                public void Invoke (NSNotification nf) {
+                    UIDeviceOrientation orient = UIDevice.get_CurrentDevice().get_Orientation();
+                    if (_gameViewTransformed &&
+                        ((IOSPlatform)PlayN.platform()).supportedOrients().isSupported(orient)) {
+                        // the game rotated, and we've transformed it, kill the keyboard so it can
+                        // get back to normal
+                        IOSNativeTextField firstResponder = findFirstResponder();
+                        if (firstResponder != null) firstResponder.getView().ResignFirstResponder();
+                    }
                 }}));
     }
 
