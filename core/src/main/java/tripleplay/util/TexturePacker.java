@@ -6,6 +6,8 @@
 package tripleplay.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +49,15 @@ public class TexturePacker
      */
     public Map<String,Image.Region> pack () {
         List<Item> unpacked = new ArrayList<Item>(_items.values());
-        // TODO(bruno): Sort by some heuristic (area, perimeter)
+        Collections.sort(unpacked, new Comparator<Item>() {
+            // TODO(bruno): Experiment with different heuristics. Brute force calculate using
+            // multiple different heuristics and use the best one?
+            public int compare (Item o1, Item o2) {
+                // Sort by perimeter (instead of area). It can be harder to fit long skinny textures
+                // after the large square ones
+                return (o2.width()+o2.height()) - (o1.width()+o1.height());
+            }
+        });
 
         List<Atlas> atlases = new ArrayList<Atlas>();
         while (!unpacked.isEmpty()) {
@@ -69,16 +79,14 @@ public class TexturePacker
         for (Atlas atlas : atlases) {
             Node root = atlas.root;
             final SurfaceImage atlasImage = graphics().createSurface(root.width, root.height);
-            root.visitItems(new Slot<Node>() {
-                @Override public void onEmit (Node node) {
-                    // Draw the item to the atlas
-                    node.item.draw(atlasImage.surface(), node.x, node.y);
+            root.visitItems(new Slot<Node>() { public void onEmit (Node node) {
+                // Draw the item to the atlas
+                node.item.draw(atlasImage.surface(), node.x, node.y);
 
-                    // Record its region
-                    packed.put(node.item.id, atlasImage.subImage(
-                        node.x, node.y, node.width, node.height));
-                }
-            });
+                // Record its region
+                packed.put(node.item.id, atlasImage.subImage(
+                    node.x, node.y, node.width, node.height));
+            }});
         }
         return packed;
     }
