@@ -6,6 +6,7 @@
 package tripleplay.flump;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -107,11 +108,13 @@ public class Library
 
     /** Pack multiple libraries into a single group of atlases. The libraries will be modified so
      * that their symbols point at the new atlases. */
-    public static void pack (List<Library> libs) {
+    public static void pack (Collection<Library> libs) {
+        List<Library> list = new ArrayList<Library>(libs);
+
         // Add all texture symbols to the packer
         TexturePacker packer = new TexturePacker();
-        for (int ii = 0, ll = libs.size(); ii < ll; ++ii) {
-            Library lib = libs.get(ii);
+        for (int ii = 0, ll = list.size(); ii < ll; ++ii) {
+            Library lib = list.get(ii);
             for (Symbol symbol : lib.symbols.values()) {
                 if (symbol instanceof Texture.Symbol) {
                     packer.add(ii+":"+symbol.name(), ((Texture.Symbol)symbol).region);
@@ -121,8 +124,8 @@ public class Library
 
         // Pack and update all texture symbols to the new regions
         Map<String,Image.Region> images = packer.pack();
-        for (int ii = 0, ll = libs.size(); ii < ll; ++ii) {
-            Library lib = libs.get(ii);
+        for (int ii = 0, ll = list.size(); ii < ll; ++ii) {
+            Library lib = list.get(ii);
             for (Symbol symbol : lib.symbols.values()) {
                 if (symbol instanceof Texture.Symbol) {
                     ((Texture.Symbol)symbol).region = images.get(ii+":"+symbol.name());
