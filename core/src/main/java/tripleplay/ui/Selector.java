@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import playn.core.PlayN;
 import react.Slot;
 import react.Value;
 import react.ValueView;
@@ -125,12 +124,7 @@ public class Selector
             final Value<Boolean> sel = get(clicked);
             if (_preventDeselection) {
                 if (!sel.get()) {
-                    PlayN.invokeLater(new Runnable() {
-                        @Override
-                        public void run () {
-                            sel.update(true);
-                        }
-                    });
+                    sel.update(true);
                     return;
                 }
             }
