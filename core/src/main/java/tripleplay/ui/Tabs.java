@@ -45,9 +45,6 @@ import tripleplay.ui.util.Supplier;
  * <p>NOTE: The inheritance from Elements is an implementation detail, callers should not add
  * and remove child elements directly.</p>
  *
- * TODO: we may need to do something about ToggleButton behavior here, it allows the tabs to be
- * deselected, which is not what you'd usually expect
- *
  * TODO: do we care about scrolling buttons?
  */
 public class Tabs extends Elements<Tabs>
