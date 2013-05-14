@@ -14,6 +14,7 @@ import react.Slot;
 import react.Value;
 import react.ValueView;
 import tripleplay.ui.layout.AxisLayout;
+import tripleplay.ui.layout.FlowLayout;
 import tripleplay.ui.util.Supplier;
 
 /**
@@ -128,7 +129,7 @@ public class Tabs extends Elements<Tabs>
         NOOP_HIGHLIGHTER);
 
     /** The row of buttons, one per tab. */
-    public final Group buttons = new Group(AxisLayout.horizontal().gap(3));
+    public final Group buttons = new Group(new FlowLayout().gaps(3));
 
     /** The content group. */
     public final Group contentArea = new Group(
