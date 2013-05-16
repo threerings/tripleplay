@@ -69,6 +69,25 @@ public class GestureDirector
         return _greedy;
     }
 
+    /**
+     * Returns the number of milliseconds to wait after the last touch event to transition the
+     * current gestures to PAUSE.
+     */
+    public int pauseDelay () {
+        return _pauseDelay;
+    }
+
+    /**
+     * Sets the number of milliseconds to wait after the last touch even to transition the
+     * current guestures to PAUSE. The default is 500 (half a second).
+     *
+     * @return this GestureDirector for call chaining.
+     */
+    public GestureDirector setPauseDelay (int value) {
+        _pauseDelay = value;
+        return this;
+    }
+
     @Override public void onTouchStart (Event touch) {
         if (!touchInBounds(touch)) return;
 
@@ -114,7 +133,7 @@ public class GestureDirector
         Handle handle = _currentMoves.remove(node.touch.id());
         if (handle != null) handle.cancel();
         if (node.type == GestureNode.Type.MOVE || node.type == GestureNode.Type.START) {
-            handle = _timer.after(PAUSE_DELAY, new Runnable() {
+            handle = _timer.after(_pauseDelay, new Runnable() {
                 @Override public void run () { onTouchPause(node.touch); }
             });
             _currentMoves.put(node.touch.id(), handle);
@@ -151,11 +170,11 @@ public class GestureDirector
         }
     }
 
-    protected static final int PAUSE_DELAY = 500; // in ms.
-
     protected Timer _timer;
     protected Map<Integer, Event> _currentTouches = new HashMap<Integer, Event>();
     protected Map<Integer, Handle> _currentMoves = new HashMap<Integer, Handle>();
     protected Set<Gesture<?>> _gestures = new HashSet<Gesture<?>>();
     protected Value<Gesture<?>> _greedy = Value.create(null);
+
+    protected int _pauseDelay = 500; // in ms, .5 second default.
 }
