@@ -65,6 +65,13 @@ public class XYFlicker implements Pointer.Listener
         float dx = _cur.x - _start.x, dy = _cur.y - _start.y;
         setPosition(_origPos.x + dx, _origPos.y + dy);
         _maxDeltaSq = Math.max(dx * dx + dy * dy, _maxDeltaSq);
+
+        // for the purposes of capturing the event stream, dx and dy are capped by their ranges
+        dx = _position.x - _origPos.x;
+        dy = _position.y - _origPos.y;
+        if (dx * dx + dy * dy >= maxClickDeltaSq()) {
+            event.flags().capture();
+        }
     }
 
     @Override public void onPointerEnd (Pointer.Event event) {
