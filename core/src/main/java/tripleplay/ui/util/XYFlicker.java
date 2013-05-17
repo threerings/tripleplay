@@ -181,7 +181,7 @@ public class XYFlicker implements Pointer.Listener
     /** Returns the square of the maximum distance (in pixels) the pointer is allowed to travel
      * while pressed and still register as a click. */
     protected float maxClickDeltaSq () {
-        return 25;
+        return 225;
     }
 
     protected static float applyAccelertion (float v, float a, float dt) {
