@@ -191,12 +191,13 @@ public class BorderLayout extends Layout
                 Position p = Position.positionOf(elem.constraint());
                 if (p == null) {
                     throw new IllegalStateException(
-                        "Element with a non-BorderLayout constraint: " + elem.toString());
+                        "Element with a non-BorderLayout constraint: " + elem);
                 }
-                if (elements.put(p, elem) != null) {
+                Element<?> existing = elements.put(p, elem);
+                if (existing != null) {
                     throw new IllegalStateException(
-                        "Multiple elements: " + elem + " and " + elements.get(p) +
-                        " with the same constraint: " + p);
+                        "Multiple elements: " + elem + " and " + existing +
+                        " with the same BorderLayout constraint: " + p);
                 }
             }
         }
