@@ -5,6 +5,7 @@
 
 package tripleplay.platform;
 
+import playn.core.Keyboard;
 import playn.ios.IOSPlatform;
 import react.ValueView;
 
@@ -33,6 +34,10 @@ public class IOSTPPlatform extends TPPlatform
 
     @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
         _fieldHandler.setVirtualKeyboardController(ctrl);
+    }
+
+    @Override public void setVirtualKeyboardListener (Keyboard.Listener listener) {
+        _fieldHandler.setKeyboardListener(listener);
     }
 
     @Override public ValueView<Boolean> virtualKeyboardActive () {

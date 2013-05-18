@@ -5,6 +5,7 @@
 
 package tripleplay.platform;
 
+import playn.core.Keyboard;
 import react.Value;
 import react.ValueView;
 
@@ -51,6 +52,11 @@ public abstract class TPPlatform
     public abstract void setVirtualKeyboardController (VirtualKeyboardController ctrl);
 
     /**
+     * Set a keyboard listener to receive onKeyTyped events when a native field is active.
+     */
+    public abstract void setVirtualKeyboardListener (Keyboard.Listener listener);
+
+    /**
      * A value indicating whether the virtual keyboard is currently active or not (if the platform
      * has one).
      */
@@ -72,6 +78,7 @@ public abstract class TPPlatform
             throw new UnsupportedOperationException();
         }
         @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) { }
+        @Override public void setVirtualKeyboardListener (Keyboard.Listener listener) { }
         @Override public ValueView<Boolean> virtualKeyboardActive () { return _false; }
         protected final Value<Boolean> _false = Value.create(false);
     }

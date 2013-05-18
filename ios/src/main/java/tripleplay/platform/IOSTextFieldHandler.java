@@ -26,6 +26,7 @@ import cli.System.Drawing.RectangleF;
 import cli.System.Drawing.SizeF;
 
 import playn.core.Font;
+import playn.core.Keyboard;
 import playn.core.PlayN;
 import playn.ios.IOSFont;
 import playn.ios.IOSPlatform;
@@ -151,6 +152,13 @@ public class IOSTextFieldHandler
         _virtualKeyboardCtrl = ctrl;
     }
 
+    /**
+     * Set a keyboard listener to receive onKeyTyped events when a native field is active.
+     */
+    public void setKeyboardListener (Keyboard.Listener listener) {
+        _keyboardListener = listener;
+    }
+
     public ValueView<Boolean> virtualKeyboardActive () {
         return _keyboardActive;
     }
@@ -237,4 +245,5 @@ public class IOSTextFieldHandler
 
     protected TouchDetector _touchDetector;
     protected VirtualKeyboardController _virtualKeyboardCtrl;
+    protected Keyboard.Listener _keyboardListener;
 }

@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 
 import org.lwjgl.opengl.Display;
 
+import playn.core.Keyboard;
 import playn.java.JavaPlatform;
 import react.Value;
 import react.ValueView;
@@ -57,6 +58,10 @@ public class JavaTPPlatform extends TPPlatform
     }
 
     @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
+        // nada, no virtual keyboard
+    }
+
+    @Override public void setVirtualKeyboardListener (Keyboard.Listener listener) {
         // nada, no virtual keyboard
     }
 

@@ -20,6 +20,7 @@ import cli.MonoTouch.UIKit.UITextView;
 import cli.MonoTouch.UIKit.UIView;
 import cli.System.Drawing.RectangleF;
 
+import playn.core.Events;
 import pythagoras.f.IRectangle;
 
 import playn.core.Font;
@@ -53,8 +54,17 @@ public abstract class IOSNativeTextField implements NativeTextField
                 }
                 @Override public boolean ShouldChangeCharacters (UITextField uiTextField,
                         NSRange nsRange, String s) {
+                    if (_handler._keyboardListener != null && s.length() < 2) {
+                        double time = System.currentTimeMillis();
+                        // 8 is java.awt.event.KeyEvent.VK_BACK_SPACE, use it if it looks like
+                        // the incoming change is a delete.
+                        char keyChar = s.length() == 0 ? (char)8 : s.charAt(0);
+                        _handler._keyboardListener.onKeyTyped(new Keyboard.TypedEvent.Impl(
+                            new Events.Flags.Impl(), time, keyChar));
+                    }
+
                     if (_validator == null) return true;
-                    String newString =  new NSString(uiTextField.get_Text())
+                    String newString = new NSString(uiTextField.get_Text())
                         .Replace(nsRange, new NSString(s)).ToString();
                     return _validator.isValid(newString);
                 }
