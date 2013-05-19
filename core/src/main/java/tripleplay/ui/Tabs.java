@@ -104,8 +104,18 @@ public class Tabs extends Elements<Tabs>
             button.setVisible(visible);
         }
 
+        public boolean isVisible () {
+            return button.isVisible();
+        }
+
         public Tabs parent () {
             return Tabs.this;
+        }
+
+        /** Gets the displayed name of the tab. This is a convenience for accessing the text of
+         * the {@link #button}. */
+        public String name () {
+            return button.text.get();
         }
 
         /** The index of this tab in the parent {@link Tabs} instance. */
@@ -292,8 +302,14 @@ public class Tabs extends Elements<Tabs>
 
     @Override protected void wasAdded () {
         super.wasAdded();
-        if (selected.get() == null && tabCount() > 0) {
-            selected.update(tabAt(0));
+        // if we don't have a selected tab, select the first one that's visible
+        if (selected.get() == null) {
+            for (int ii = 0; ii < tabCount(); ii++) {
+                if (tabAt(ii).isVisible()) {
+                    selected.update(tabAt(ii));
+                    break;
+                }
+            }
         }
     }
 
