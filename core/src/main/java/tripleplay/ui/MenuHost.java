@@ -272,9 +272,9 @@ public class MenuHost
         // set up the activation
         final Activation activation = new Activation(pop);
 
-        // connect to deactivation signal and do our cleanup
-        activation.deactivated = pop.menu.deactivated().connect(new Slot<Menu>() {
-            @Override public void onEmit (Menu event) {
+        // cleanup
+        final Runnable cleanup = new Runnable() {
+            @Override public void run () {
                 // check parentage, it's possible the menu has been repopped already
                 if (pop.menu.parent() == menuRoot) {
                     // free the constraint to gc
@@ -291,14 +291,19 @@ public class MenuHost
                 // clear all connections
                 activation.clear();
 
-                // TODO: do we need to stop menu animation here? it should be automatic since
-                // by the time we reach this method, the deactivation animation is complete
-
                 // always kill off the transient root
                 iface.destroyRoot(menuRoot);
 
                 // if this was our active menu, clear it
-                if (_active != null && _active.pop.menu == event) _active = null;
+                if (_active != null && _active.pop == pop) _active = null;
+            }
+        };
+
+        // connect to deactivation signal and do our cleanup
+        activation.deactivated = pop.menu.deactivated().connect(new Slot<Menu>() {
+            @Override public void onEmit (Menu event) {
+                // due to animations, deactivation can happen during layout, so do it next frame
+                PlayN.invokeLater(cleanup);
             }
         });
 
