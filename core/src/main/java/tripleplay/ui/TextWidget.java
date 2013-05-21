@@ -83,12 +83,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final Style.Pos iconPos = resolveStyle(Style.ICON_POS);
         public final int iconGap = resolveStyle(Style.ICON_GAP);
         public final boolean iconCuddle = resolveStyle(Style.ICON_CUDDLE);
+        public final IconEffect iconEffect = resolveStyle(Style.ICON_EFFECT);
         public final int color = resolveStyle(Style.COLOR);
         public final boolean underlined = resolveStyle(Style.UNDERLINE);
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
 
         public final TextLayout text;
         public final EffectRenderer renderer;
+        public final Icon icon = iconEffect.apply(icon());
 
         public TextLayoutData (float hintX, float hintY) {
             String curtext = text();
@@ -117,7 +119,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             Dimension size = new Dimension();
             addTextSize(size);
 
-            Icon icon = icon();
             if (icon != null) {
                 switch (iconPos) {
                 case LEFT:
@@ -140,7 +141,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         @Override public void layout (float left, float top, float width, float height) {
             float tx = left, ty = top, usedWidth = 0, usedHeight = 0;
 
-            Icon icon = icon();
             if (icon != null && iconPos != null) {
                 float ix = left, iy = top;
                 float iwidth = icon.width(), iheight = icon.height();
@@ -195,7 +195,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         // this is broken out so that subclasses can extend this action
         protected void accommodateIcon (Dimension hints, boolean haveText) {
-            Icon icon = icon();
             if (icon != null) {
                 // remove the icon space from our hint dimensions
                 switch (iconPos) {

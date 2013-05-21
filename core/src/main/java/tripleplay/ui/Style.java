@@ -209,6 +209,9 @@ public abstract class Style<V>
      * false, the icon is placed next to the border with extra space between icon and label. */
     public static final Flag ICON_CUDDLE = newFlag(false, false);
 
+    /** The effect to apply to the icon. */
+    public static final Style<IconEffect> ICON_EFFECT = newStyle(false, IconEffect.NONE);
+
     /** The sound to be played when this element's action is triggered. */
     public static final Style<Sound> ACTION_SOUND = newStyle(false, (Sound)null);
 
