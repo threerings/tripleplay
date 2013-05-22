@@ -90,7 +90,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         public final TextLayout text;
         public final EffectRenderer renderer;
-        public final Icon icon = iconEffect.apply(icon());
+        public final Icon icon;
 
         public TextLayoutData (float hintX, float hintY) {
             String curtext = text();
@@ -98,6 +98,10 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
             // start with hints minus background insets
             Dimension hints = bg.insets.subtractFrom(new Dimension(hintX, hintY));
+
+            // apply effects to the icon, if we have one
+            Icon icon = icon();
+            this.icon = icon == null ? null : iconEffect.apply(icon);
 
             // accommodate our icon
             accommodateIcon(hints, haveText);
