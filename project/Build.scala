@@ -40,7 +40,8 @@ object TriplePlayBuild extends Build {
       )
       case "demo-java" => LWJGLPlugin.lwjglSettings ++ Seq(
         publish := false,
-        publishLocal := false
+        publishLocal := false,
+        LWJGLPlugin.lwjgl.version := pom.getAttr("lwjgl.version").get
       )
       case _ => Nil
     }
