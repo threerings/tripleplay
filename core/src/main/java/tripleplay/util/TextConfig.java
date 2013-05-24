@@ -13,6 +13,7 @@ import playn.core.ImageLayer;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 import static playn.core.PlayN.graphics;
+import static pythagoras.f.FloatMath.ceil;
 
 /**
  * Encapsulates a styled text configuration and provides utility methods for rendering it in
@@ -119,8 +120,8 @@ public class TextConfig
      * method does not render the layout into the image, use {@link #toImage} for that.
      */
     public CanvasImage createImage (TextLayout layout) {
-        return graphics().createImage(effect.adjustWidth(layout.width()),
-                                      effect.adjustHeight(layout.height()));
+        return graphics().createImage(effect.adjustWidth(ceil(layout.width())),
+                                      effect.adjustHeight(ceil(layout.height())));
     }
 
     /**
