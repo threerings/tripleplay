@@ -19,6 +19,16 @@
     <url>http://github.com/threerings/tripleplay/issues</url>
   </issueManagement>
 
+  <repositories>
+    <repository>
+      <!-- when we depend on a snapshot PlayN, get that from SonaType's OSS repository -->
+      <id>sonatype-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <releases><enabled>false</enabled></releases>
+      <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+  </repositories>
+
   <licenses>
     <license>
       <name>The (New) BSD License</name>
