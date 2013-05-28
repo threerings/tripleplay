@@ -70,7 +70,7 @@ public class XYFlicker implements Pointer.Listener
         dx = _position.x - _origPos.x;
         dy = _position.y - _origPos.y;
         if (dx * dx + dy * dy >= maxClickDeltaSq()) {
-            event.flags().capture();
+            event.capture();
         }
     }
 
