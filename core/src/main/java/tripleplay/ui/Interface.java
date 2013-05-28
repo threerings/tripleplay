@@ -187,6 +187,13 @@ public class Interface
         root.layer.destroy();
     }
 
+    /**
+     * Removes and destroys all roots in this interface.
+     */
+    public void destroyRoots () {
+        while (!_roots.isEmpty()) destroyRoot(_roots.get(0));
+    }
+
     protected final List<Root> _roots = new ArrayList<Root>();
     protected final List<Runnable> _actions = new ArrayList<Runnable>();
     protected final Animator _animator = new Animator();
