@@ -130,6 +130,9 @@ public class Menu extends Elements<Menu>
         // already active, nothing to do
         if (_active) return;
 
+        // Undefunct
+        _defunct = false;
+
         Runnable doActivation = new Runnable() {
             @Override public void run () {
                 // skip to the end!
@@ -162,6 +165,7 @@ public class Menu extends Elements<Menu>
 
         // disable input and animate closure
         _active = false;
+        _defunct = true;
         _complete = new Runnable() {
             @Override public void run () {
                 onClosed();
@@ -393,6 +397,9 @@ public class Menu extends Elements<Menu>
 
     /** Whether the menu is ready for use input. */
     protected boolean _active;
+
+    /** Whether the menu is closed. */
+    protected boolean _defunct;
 
     /** Input events that may have occurred prior to the menu being ready. */
     protected Pointer.Event _pendingDrag, _pendingEnd;

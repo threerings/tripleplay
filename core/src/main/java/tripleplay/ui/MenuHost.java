@@ -375,8 +375,13 @@ public class MenuHost
             // set the menu bounds
             setBounds(elems.childAt(0), bounds.x, bounds.y, bounds.width, bounds.height);
 
-            // tell the UI overlay to let the real dimensions of the menu through
-            PlayN.uiOverlay().hideOverlay(screenBounds);
+            // check if menu is closed (layout can still occur in this state)
+            if (!pop.menu._defunct) {
+                // tell the UI overlay to let the real dimensions of the menu through
+                // TODO: this looks wrong if the menu has any transparent border - fix
+                // by using an image overlay instead, with the root captured onto it
+                PlayN.uiOverlay().hideOverlay(screenBounds);
+            }
         }
 
     }
