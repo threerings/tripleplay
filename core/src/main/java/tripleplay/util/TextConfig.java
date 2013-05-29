@@ -66,10 +66,31 @@ public class TextConfig
     }
 
     /**
-     * Returns a new text config with a text format updated to use the specified font.
+     * Returns a new text config updated to use the specified font.
      */
     public TextConfig withFont (Font font) {
         return new TextConfig(format.withFont(font), textColor, effect, underlined);
+    }
+
+    /**
+     * Returns a new text config with the wrap width and alignment configured as specified.
+     */
+    public TextConfig withWrapping (float wrapWidth, TextFormat.Alignment align) {
+        return new TextConfig(format.withWrapping(wrapWidth, align), textColor, effect, underlined);
+    }
+
+    /**
+     * Returns a new text config with the wrap width configured as specified.
+     */
+    public TextConfig withWrapWidth (float wrapWidth) {
+        return new TextConfig(format.withWrapWidth(wrapWidth), textColor, effect, underlined);
+    }
+
+    /**
+     * Returns a new text config the alignment configured as specified.
+     */
+    public TextConfig withAlignment (TextFormat.Alignment align) {
+        return new TextConfig(format.withAlignment(align), textColor, effect, underlined);
     }
 
     /**
