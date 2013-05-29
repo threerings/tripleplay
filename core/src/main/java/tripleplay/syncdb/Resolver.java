@@ -17,31 +17,31 @@ public interface Resolver<T>
         }
     };
 
-    /** Uses the smallest of the client and server integers. */
-    Resolver<Integer> INTMIN = new Resolver<Integer>() {
-        public <V extends Integer> V resolve (V client, V server) {
-            return (client > server) ? server : client;
+    /** Uses the smallest of the client and server integral numbers. */
+    Resolver<Number> INTMIN = new Resolver<Number>() {
+        public <V extends Number> V resolve (V client, V server) {
+            return (client.longValue() > server.longValue()) ? server : client;
         }
     };
 
-    /** Uses the largest of the client and server integers. */
-    Resolver<Integer> INTMAX = new Resolver<Integer>() {
-        public <V extends Integer> V resolve (V client, V server) {
-            return (client > server) ? client : server;
+    /** Uses the largest of the client and server integral numbers. */
+    Resolver<Number> INTMAX = new Resolver<Number>() {
+        public <V extends Number> V resolve (V client, V server) {
+            return (client.longValue() > server.longValue()) ? client : server;
         }
     };
 
-    /** Uses the largest of the client and server longs. */
-    Resolver<Long> LONGMAX = new Resolver<Long>() {
-        public <V extends Long> V resolve (V client, V server) {
-            return (client > server) ? client : server;
+    /** Uses the smallest of the client and server floating point numbers. */
+    Resolver<Number> FLOATMIN = new Resolver<Number>() {
+        public <V extends Number> V resolve (V client, V server) {
+            return (client.doubleValue() > server.doubleValue()) ? server : client;
         }
     };
 
-    /** Uses the largest of the client and server floats. */
-    Resolver<Float> FLOATMAX = new Resolver<Float>() {
-        public <V extends Float> V resolve (V client, V server) {
-            return (client > server) ? client : server;
+    /** Uses the largest of the client and server floating point numbers. */
+    Resolver<Number> FLOATMAX = new Resolver<Number>() {
+        public <V extends Number> V resolve (V client, V server) {
+            return (client.doubleValue() > server.doubleValue()) ? client : server;
         }
     };
 

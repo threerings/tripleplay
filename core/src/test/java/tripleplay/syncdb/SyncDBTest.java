@@ -30,7 +30,7 @@ public class SyncDBTest
         public final Value<Boolean> falseBool = value(
             "falseBool", true, Codec.BOOLEAN, Resolver.FALSE);
         public final Value<Integer> maxInt = value("maxInt", 0, Codec.INT, Resolver.INTMAX);
-        public final Value<Long> maxLong = value("maxLong", 0L, Codec.LONG, Resolver.LONGMAX);
+        public final Value<Long> maxLong = value("maxLong", 0L, Codec.LONG, Resolver.INTMAX);
         public final Value<String> serverString = value(
             "serverString", null, Codec.STRING, Resolver.SERVER);
         public final RSet<String> unionSet = set("unionSet", Codec.STRING, SetResolver.UNION);
