@@ -10,6 +10,7 @@ import playn.core.PlayN;
 import playn.core.Pointer;
 import react.Signal;
 import react.SignalView;
+import react.Slot;
 
 /**
  * A button that supports an action on a "long press". A long press is when the user holds the
@@ -68,6 +69,13 @@ public class LongPressButton extends Button
     public void longPress () {
         if (_actionSound != null) _actionSound.play();
         _longPressed.emit(this);
+    }
+
+    /** A convenience method for registering a long press handler. Assumes you don't need the
+     * result of {@link SignalView#connect}, because it throws it away. */
+    public LongPressButton onLongPress (Slot<? super Button> onLongPress) {
+        longPressed().connect(onLongPress);
+        return this;
     }
 
     @Override protected void layout () {

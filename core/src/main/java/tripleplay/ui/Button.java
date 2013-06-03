@@ -10,6 +10,7 @@ import playn.core.Pointer;
 import playn.core.Sound;
 import react.Signal;
 import react.SignalView;
+import react.Slot;
 import react.Value;
 
 /**
@@ -70,6 +71,13 @@ public class Button extends ClickableTextWidget<Button>
     public void click () {
         if (_actionSound != null) _actionSound.play();
         _clicked.emit(this); // emit a click event
+    }
+
+    /** A convenience method for registering a click handler. Assumes you don't need the result of
+     * {@link SignalView#connect}, because it throws it away. */
+    public Button onClick (Slot<? super Button> onClick) {
+        clicked().connect(onClick);
+        return this;
     }
 
     @Override public SignalView<Button> clicked () {
