@@ -1,5 +1,5 @@
 // we use pom-util to read metadata from the Maven POMs
-libraryDependencies += "com.samskivert" % "sbt-pom-util" % "0.4"
+libraryDependencies += "com.samskivert" % "sbt-pom-util" % "0.6-SNAPSHOT"
 
 // we use proguard to package up our tools
 resolvers += Resolver.url(
