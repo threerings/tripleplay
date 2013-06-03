@@ -209,6 +209,7 @@ public class Field extends TextWidget<Field>
         if (!isEnabled() || fulltimeNativeField()) return;
 
         if (_nativeField != null) {
+            event.capture();
             updateMode(true);
             _nativeField.focus();
 
