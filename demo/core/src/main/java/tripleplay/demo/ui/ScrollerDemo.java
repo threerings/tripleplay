@@ -69,14 +69,13 @@ public class ScrollerDemo extends DemoScreen
         xpos.value.connect(updatePos);
         ypos.value.connect(updatePos);
 
-        Button beh = new Button(Behavior.BOTH.name());
-        beh.clicked().connect(new Slot<Button>() {
-            @Override public void onEmit (Button event) {
+        Button beh = new Button(Behavior.BOTH.name()).onClick(new Slot<Button>() {
+            @Override public void onEmit (Button source) {
                 Behavior[] behs = Behavior.values();
-                Behavior beh = Behavior.valueOf(event.text.get());
+                Behavior beh = Behavior.valueOf(source.text.get());
                 beh = behs[(beh.ordinal() + 1) % behs.length];
                 scroll.setBehavior(beh);
-                event.text.update(beh.name());
+                source.text.update(beh.name());
                 xpos.setVisible(beh.hasHorizontal());
                 ypos.setVisible(beh.hasVertical());
                 updateSize.onEmit();

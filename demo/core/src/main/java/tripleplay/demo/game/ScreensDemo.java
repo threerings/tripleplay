@@ -42,33 +42,27 @@ public class ScreensDemo extends DemoScreen
     protected void addUI (final Screen screen, Elements<?> root, final int depth) {
         root.add(new Label("Screen " + depth));
 
-        addButton(root, "Slide", new UnitSlot() { public void onEmit () {
+        root.add(new Button("Slide").onClick(new UnitSlot() { public void onEmit () {
             _stack.push(createScreen(depth+1), _stack.slide());
-        }});
-        addButton(root, "Turn", new UnitSlot() { public void onEmit () {
+        }}));
+        root.add(new Button("Turn").onClick(new UnitSlot() { public void onEmit () {
             _stack.push(createScreen(depth+1), _stack.pageTurn());
-        }});
-        addButton(root, "Flip", new UnitSlot() { public void onEmit () {
+        }}));
+        root.add(new Button("Flip").onClick(new UnitSlot() { public void onEmit () {
             _stack.push(createScreen(depth+1), _stack.flip());
-        }});
+        }}));
 
         if (depth > 0) {
-            addButton(root, "Replace", new UnitSlot() { public void onEmit () {
+            root.add(new Button("Replace").onClick(new UnitSlot() { public void onEmit () {
                 _stack.replace(createScreen(depth+1), _stack.slide().left());
-            }});
-            addButton(root, "Back", new UnitSlot() { public void onEmit () {
+            }}));
+            root.add(new Button("Back").onClick(new UnitSlot() { public void onEmit () {
                 _stack.remove(screen, _stack.flip().unflip());
-            }});
-            addButton(root, "Top", new UnitSlot() { public void onEmit () {
+            }}));
+            root.add(new Button("Top").onClick(new UnitSlot() { public void onEmit () {
                 _stack.popTo(ScreensDemo.this, _stack.slide().right());
-            }});
+            }}));
         }
-    }
-
-    protected void addButton (Elements<?> root, String label, UnitSlot onClick) {
-        Button button = new Button(label);
-        button.clicked().connect(onClick);
-        root.add(button);
     }
 
     protected Screen createScreen (final int depth) {

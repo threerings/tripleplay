@@ -45,32 +45,25 @@ public class BorderLayoutDemo extends DemoScreen
             AxisLayout.horizontal(),
             Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF).inset(5))));
 
-        for (String edge : Panel.EDGES) {
-            Button butt = new Button(edge);
-            buttons.add(butt);
-            final String fedge = edge;
-            butt.clicked().connect(new UnitSlot() {
+        for (final String edge : Panel.EDGES) {
+            buttons.add(new Button(edge).onClick(new UnitSlot() {
                 @Override public void onEmit () {
-                    _panel.toggleEdge(fedge);
+                    _panel.toggleEdge(edge);
                 }
-            });
+            }));
         }
 
-        Button gaps = new Button("Toggle Gaps");
-        buttons.add(new Shim(10, 1)).add(gaps);
-        gaps.clicked().connect(new UnitSlot() {
+        buttons.add(new Shim(10, 1)).add(new Button("Toggle Gaps").onClick(new UnitSlot() {
             @Override public void onEmit () {
                 setPanel(_panel.useGroups, _panel.gaps == 0 ? 5 : 0);
             }
-        });
+        }));
 
-        Button useGroups = new Button("Toggle Sizing");
-        buttons.add(new Shim(10, 1)).add(useGroups);
-        useGroups.clicked().connect(new UnitSlot() {
+        buttons.add(new Shim(10, 1)).add(new Button("Toggle Sizing").onClick(new UnitSlot() {
             @Override public void onEmit () {
                 setPanel(!_panel.useGroups, _panel.gaps);
             }
-        });
+        }));
 
         _root = new Group(AxisLayout.vertical().offStretch()).setConstraint(AxisLayout.stretched());
         _root.add(buttons);
@@ -127,7 +120,8 @@ public class BorderLayoutDemo extends DemoScreen
 
             } else {
                 Background colorBg = Background.solid(bgColor).inset(5);
-                e = new Label(text).addStyles(Style.BACKGROUND.is(colorBg)).setConstraint(constraint);
+                e = new Label(text).addStyles(Style.BACKGROUND.is(colorBg)).
+                    setConstraint(constraint);
             }
             edges.put(text, e);
             return e;
@@ -135,18 +129,14 @@ public class BorderLayoutDemo extends DemoScreen
     }
 
     protected static Button getSizer (SizableGroup g, String text, float dw, float dh) {
-        Button b = new Button(text);
-        b.clicked().connect(getSizer(g.preferredSize, dw, dh));
-        return b;
+        return new Button(text).onClick(getSizer(g.preferredSize, dw, dh));
     }
 
-    protected static UnitSlot getSizer (
-            final DimensionValue base, final float dw, final float dh) {
+    protected static UnitSlot getSizer (final DimensionValue base, final float dw, final float dh) {
         return new UnitSlot() {
             @Override public void onEmit () {
-                base.update(
-                    Math.max(0, base.get().width() + dw),
-                    Math.max(0, base.get().height() + dh));
+                base.update(Math.max(0, base.get().width() + dw),
+                            Math.max(0, base.get().height() + dh));
             }
         };
     }

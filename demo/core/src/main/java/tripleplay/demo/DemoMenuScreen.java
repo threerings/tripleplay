@@ -78,14 +78,12 @@ public class DemoMenuScreen extends UIScreen
             if (screen == null) {
                 grid.add(new Shim(1, 1));
             } else {
-                Button button = new Button(screen.name());
-                button.clicked().connect(new UnitSlot() { public void onEmit () {
+                grid.add(new Button(screen.name()).onClick(new UnitSlot() { public void onEmit () {
                     _stack.push(screen);
                     screen.back.clicked().connect(new UnitSlot() { public void onEmit () {
                         _stack.remove(screen);
                     }});
-                }});
-                grid.add(button);
+                }}));
                 // push this screen immediately if it was specified on the command line
                 if (shown++ == toShow) _stack.push(screen, ScreenStack.NOOP);
             }
@@ -98,15 +96,13 @@ public class DemoMenuScreen extends UIScreen
     }
 
     protected Button screen (String title, final ScreenFactory factory) {
-        Button button = new Button(title);
-        button.clicked().connect(new UnitSlot() { public void onEmit () {
+        return new Button(title).onClick(new UnitSlot() { public void onEmit () {
             final DemoScreen screen = factory.apply();
             _stack.push(screen);
             screen.back.clicked().connect(new UnitSlot() { public void onEmit () {
                 _stack.remove(screen);
             }});
         }});
-        return button;
     }
 
     protected interface ScreenFactory {

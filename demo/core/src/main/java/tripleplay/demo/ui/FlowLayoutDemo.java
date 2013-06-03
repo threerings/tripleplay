@@ -40,41 +40,26 @@ public class FlowLayoutDemo extends DemoScreen
             Background.bordered(0xFFFFFFFF, 0xff000000, 2).inset(4))));
 
         Group buttons = new Group(AxisLayout.horizontal());
-        for (ElemType type : ElemType.values()) {
-            Button butt = new Button("Add " + type.toString());
-            buttons.add(butt);
-            final ElemType ftype = type;
-            butt.clicked().connect(new UnitSlot() {
-                @Override public void onEmit () {
-                    panel.add(create(ftype));
-                }
-            });
+        for (final ElemType type : ElemType.values()) {
+            buttons.add(new Button("Add " + type.toString()).onClick(new UnitSlot() {
+                @Override public void onEmit () { panel.add(create(type)); }
+            }));
         }
         root.add(buttons);
 
         buttons = new Group(AxisLayout.horizontal());
         buttons.add(new Label("HAlign:"));
-        for (Style.HAlign halign : Style.HAlign.values()) {
-            Button butt = new Button(halign.toString().substring(0, 1));
-            buttons.add(butt);
-            final Style.HAlign fhalign = halign;
-            butt.clicked().connect(new UnitSlot() {
-                @Override public void onEmit () {
-                    panel.addStyles(Style.HALIGN.is(fhalign));
-                }
-            });
+        for (final Style.HAlign halign : Style.HAlign.values()) {
+            buttons.add(new Button(halign.toString().substring(0, 1)).onClick(new UnitSlot() {
+                @Override public void onEmit () { panel.addStyles(Style.HALIGN.is(halign)); }
+            }));
         }
 
         buttons.add(new Label("VAlign:"));
-        for (Style.VAlign valign : Style.VAlign.values()) {
-            Button butt = new Button(valign.toString().substring(0, 1));
-            buttons.add(butt);
-            final Style.VAlign fvalign = valign;
-            butt.clicked().connect(new UnitSlot() {
-                @Override public void onEmit () {
-                    panel.addStyles(Style.VALIGN.is(fvalign));
-                }
-            });
+        for (final Style.VAlign valign : Style.VAlign.values()) {
+            buttons.add(new Button(valign.toString().substring(0, 1)).onClick(new UnitSlot() {
+                @Override public void onEmit () { panel.addStyles(Style.VALIGN.is(valign)); }
+            }));
         }
         root.add(buttons);
 

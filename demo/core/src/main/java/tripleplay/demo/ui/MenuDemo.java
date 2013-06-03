@@ -51,31 +51,28 @@ public class MenuDemo extends DemoScreen
 
     @Override protected Group createIface () {
         final MenuHost menuHost = new MenuHost(iface, _root);
-        final Button direction = new Button("Select a direction \u25BC");
-        final Button tree = new Button("Select a tree \u25BC");
-        final Button type = new Button("Select a type \u25BC");
-        direction.clicked().connect(new UnitSlot() {
-            @Override public void onEmit () {
-                MenuHost.Pop pop = new MenuHost.Pop(direction,
+        Button direction = new Button("Select a direction \u25BC").onClick(new Slot<Button>() {
+            @Override public void onEmit (Button self) {
+                MenuHost.Pop pop = new MenuHost.Pop(self,
                     createMenu("Directions", "North", "South", "East", "West")).toRight(2).toTop(0);
-                pop.menu.itemTriggered().connect(updater(direction));
+                pop.menu.itemTriggered().connect(updater(self));
                 addIcons(pop.menu);
                 menuHost.popup(pop);
             }
         });
-        tree.clicked().connect(new UnitSlot() {
-            @Override public void onEmit () {
-                MenuHost.Pop pop = new MenuHost.Pop(tree,
+        Button tree = new Button("Select a tree \u25BC").onClick(new Slot<Button>() {
+            @Override public void onEmit (Button self) {
+                MenuHost.Pop pop = new MenuHost.Pop(self,
                     createMenu("Trees", "Elm", "Ash", "Maple", "Oak")).toBottom(2).toLeft(0);
-                pop.menu.itemTriggered().connect(updater(tree));
+                pop.menu.itemTriggered().connect(updater(self));
                 menuHost.popup(pop);
             }
         });
-        type.clicked().connect(new UnitSlot() {
-            @Override public void onEmit () {
-                MenuHost.Pop pop = new MenuHost.Pop(type,
+        Button type = new Button("Select a type \u25BC").onClick(new Slot<Button>() {
+            @Override public void onEmit (Button self) {
+                MenuHost.Pop pop = new MenuHost.Pop(self,
                     createMenu(null, "Road", "Street", "Boulevard", "Avenue")).toBottom(2).toLeft(0);
-                pop.menu.itemTriggered().connect(updater(type));
+                pop.menu.itemTriggered().connect(updater(self));
                 pop.menu.addStyles(Menu.OPENER.is(new AnimFn() {
                     @Override public Animation go (Menu menu, Animator animator) {
                         // TODO: fix short delay where menu is visible at this scale
@@ -133,7 +130,8 @@ public class MenuDemo extends DemoScreen
                 Group g = new Group(new TableLayout(10));
                 g.setStylesheet(Stylesheet.builder().add(MenuItem.class, Styles.none().
                     add(Style.BACKGROUND.is(Background.blank().inset(5, 1))).
-                    addSelected(Style.BACKGROUND.is(Background.solid(Colors.BLACK).inset(5, 1)))).create());
+                    addSelected(Style.BACKGROUND.is(Background.solid(Colors.BLACK).inset(5, 1)))).
+                    create());
                 for (int col = 0; col < 10; col++) {
                     for (int row = 0; row < 10; row++) {
                        g.add(new MenuItem(letters.substring(col, col+1) + (row + 1)));
@@ -185,11 +183,9 @@ public class MenuDemo extends DemoScreen
                 menu.add(new Label("Select a byte").addStyles(Style.COLOR.is(0xFFFFFFFF),
                     Style.BACKGROUND.is(Background.beveled(0xFF8F8F8F, 0xFF4F4F4F, 0xFFCFCFCF).
                         inset(4))).setConstraint(new TableLayout.Colspan(2)));
-                final Button prev = new Button("<< Previous");
-                final Button next = new Button("Next >>");
+                final Button prev = new Button("<< Previous").onClick(menu.incrementPage(-1));
+                final Button next = new Button("Next >>").onClick(menu.incrementPage(1));
                 menu.add(prev, next);
-                prev.clicked().connect(menu.incrementPage(-1));
-                next.clicked().connect(menu.incrementPage(1));
                 UnitSlot updateEnabling = new UnitSlot() {
                     @Override public void onEmit () {
                         prev.setEnabled(menu.page().get() > 0);

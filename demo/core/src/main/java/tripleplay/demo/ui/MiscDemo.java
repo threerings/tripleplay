@@ -112,24 +112,16 @@ public class MiscDemo extends DemoScreen
             public String apply (Boolean selected) { return selected ? "Enabled" : "Disabled"; }
         }).connectNotify(disabled.text.slot());
 
-        LongPressButton longPress = new LongPressButton("Long Pressable");
         final Label pressResult = new Label();
-        longPress.clicked().connect(new UnitSlot() {
-            public void onEmit () {
-                pressResult.text.update("Clicked");
-            }
-        });
-        longPress.longPressed().connect(new UnitSlot() {
-            public void onEmit () {
-                pressResult.text.update("Long pressed");
-            }
-        });
-
         return new Group(AxisLayout.vertical().offEqualize()).add(
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 toggle3, AxisLayout.stretch(disabled)),
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
-                longPress, AxisLayout.stretch(pressResult)));
+                new LongPressButton("Long Pressable").onLongPress(new UnitSlot() {
+                    public void onEmit () { pressResult.text.update("Long pressed"); }
+                }).onClick(new UnitSlot() {
+                    public void onEmit () { pressResult.text.update("Clicked"); }
+                }), AxisLayout.stretch(pressResult)));
     }
 
     protected Icon tile (Image image, int index) {

@@ -37,51 +37,22 @@ public class TabsDemo extends DemoScreen
         final int [] lastTab = {0};
         final Tabs tabs = new Tabs().addStyles(Style.BACKGROUND.is(
             Background.bordered(Colors.WHITE, Colors.BLACK, 1).inset(1)));
-        final Button addTab = new Button("Add");
-        final Button removeTab = new Button("Remove...");
-        final Button moveRight = new Button("Move Right").setEnabled(false);
-        final Button hide = new Button("Hide").setEnabled(false);
-        final Button showAll = new Button("Show All");
-        final Button highlight = new Button("Highlight...");
-        addTab.clicked().connect(new UnitSlot() {
-            @Override public void onEmit () {
-                String label = _prefix + ++lastTab[0];
-                tabs.add(label, tabContent(label));
-            }
-        });
-        removeTab.clicked().connect(new TabSelector(tabs) {
-            @Override public void handle (Tabs.Tab tab) {
-                tabs.destroyTab(tab);
-            }
-        });
-        highlight.clicked().connect(new TabSelector(tabs) {
-            @Override public void handle (Tabs.Tab tab) {
-                tabs.highlighter().highlight(tab, true);
-            }
-        });
-        moveRight.clicked().connect(new UnitSlot() {
+        final Button moveRight = new Button("Move Right").onClick(new UnitSlot() {
             @Override public void onEmit () {
                 Tabs.Tab tab = tabs.selected.get();
                 if (movable(tab)) {
                     tabs.repositionTab(tab, tab.index() + 1);
                 }
             }
-        });
-        hide.clicked().connect(new UnitSlot() {
+        }).setEnabled(false);
+        final Button hide = new Button("Hide").onClick(new UnitSlot() {
             @Override public void onEmit () {
                 Tabs.Tab tab = tabs.selected.get();
                 if (tab != null) {
                     tab.setVisible(false);
                 }
             }
-        });
-        showAll.clicked().connect(new UnitSlot() {
-            @Override public void onEmit () {
-                for (int ii = 0; ii < tabs.tabCount(); ii++) {
-                    tabs.tabAt(ii).setVisible(true);
-                }
-            }
-        });
+        }).setEnabled(false);
         tabs.selected.connect(new Slot<Tabs.Tab>() {
             @Override public void onEmit (Tabs.Tab tab) {
                 moveRight.setEnabled(movable(tab));
@@ -90,7 +61,28 @@ public class TabsDemo extends DemoScreen
         });
         return new Group(AxisLayout.vertical().offStretch()).add(
             new Group(AxisLayout.horizontal()).add(
-                addTab, removeTab, highlight, moveRight, hide, showAll),
+                new Button("Add").onClick(new UnitSlot() {
+                    @Override public void onEmit () {
+                        String label = _prefix + ++lastTab[0];
+                        tabs.add(label, tabContent(label));
+                    }
+                }),
+                new Button("Remove...").onClick(new TabSelector(tabs) {
+                    @Override public void handle (Tabs.Tab tab) {
+                        tabs.destroyTab(tab);
+                    }
+                }),
+                new Button("Highlight...").onClick(new TabSelector(tabs) {
+                    @Override public void handle (Tabs.Tab tab) {
+                        tabs.highlighter().highlight(tab, true);
+                    }
+                }), moveRight, hide, new Button("Show All").onClick(new UnitSlot() {
+                    @Override public void onEmit () {
+                        for (int ii = 0; ii < tabs.tabCount(); ii++) {
+                            tabs.tabAt(ii).setVisible(true);
+                        }
+                    }
+                })),
             tabs.setConstraint(AxisLayout.stretched()));
     }
 
