@@ -19,6 +19,7 @@ public abstract class EffectRenderer
         public void render (Canvas canvas, TextLayout layout, int textColor, boolean underlined,
             float x, float y) {
             canvas.save();
+            canvas.setFillColor(textColor);
             if (underlined) {
                 canvas.setStrokeColor(textColor);
                 for (int ii = 0; ii < layout.lineCount(); ii++) {
@@ -28,7 +29,6 @@ public abstract class EffectRenderer
                     canvas.fillRect(sx, sy, bounds.width(), 1);
                 }
             }
-            canvas.setFillColor(textColor);
             canvas.fillText(layout, x, y);
             canvas.restore();
         }
