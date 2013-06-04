@@ -777,5 +777,5 @@ public abstract class Element<T extends Element<T>>
         Flag (int mask) {
             this.mask = mask;
         }
-    };
+    }
 }

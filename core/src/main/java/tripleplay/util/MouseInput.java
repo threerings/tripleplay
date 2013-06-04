@@ -68,7 +68,7 @@ public class MouseInput extends Input<Mouse.Listener>
 
         protected Mouse.Listener _target;
         protected boolean _down;
-    };
+    }
 
     protected final MouseReactor _reactor = new MouseReactor();
     public final Mouse.Listener mlistener = _reactor;

@@ -55,7 +55,7 @@ public abstract class Style<V>
         };
 
         public abstract float offset (float size, float extent);
-    };
+    }
 
     /** Defines vertical alignment choices. */
     public static enum VAlign {
@@ -74,7 +74,7 @@ public abstract class Style<V>
         };
 
         public abstract float offset (float size, float extent);
-    };
+    }
 
     /** Defines icon position choices. */
     public static enum Pos {
@@ -90,7 +90,8 @@ public abstract class Style<V>
         /** Draws a shadow below and to the right of the text in the shadow color. */
         SHADOW,
         /** No text effect. */
-        NONE };
+        NONE
+    }
 
     /** Used to provide concise HAlign style declarations. */
     public static class HAlignStyle extends Style<HAlign> {

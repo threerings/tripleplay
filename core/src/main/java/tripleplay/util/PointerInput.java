@@ -65,5 +65,5 @@ public class PointerInput extends Input<Pointer.Listener>
             }
         }
         protected Pointer.Listener _active;
-    };
+    }
 }

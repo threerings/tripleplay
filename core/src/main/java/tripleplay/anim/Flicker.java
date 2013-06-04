@@ -68,7 +68,7 @@ public class Flicker extends Pointer.Adapter
     /** Returns the position of this flicker as an animation value. */
     public Animation.Value posValue () {
         return new Animation.Value() {
-            public float initial () { return position; };
+            public float initial () { return position; }
             public void set (float value) { position = value; }
         };
     }

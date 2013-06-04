@@ -35,7 +35,7 @@ public class ScreenStack
     /** Implements a particular screen transition. */
     public interface Transition {
         /** Direction constants, used by transitions. */
-        enum Dir { UP, DOWN, LEFT, RIGHT; };
+        enum Dir { UP, DOWN, LEFT, RIGHT; }
 
         /** Allows the transition to pre-compute useful values. This will immediately be followed
          * by call to {@link #update} with an elapsed time of zero. */
