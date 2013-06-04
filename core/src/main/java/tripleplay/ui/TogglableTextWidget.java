@@ -27,7 +27,7 @@ public abstract class TogglableTextWidget<T extends TogglableTextWidget<T>> exte
     protected TogglableTextWidget () {
         enableInteraction();
         selected.connect(new Slot<Boolean>() {
-            public void onEmit (Boolean selected) {
+            @Override public void onEmit (Boolean selected) {
                 if (selected != isSelected()) {
                     set(Flag.SELECTED, selected);
                     invalidate();

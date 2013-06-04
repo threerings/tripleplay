@@ -104,7 +104,7 @@ public class ScreenStack
         } else {
             final Screen otop = top();
             transition(new Transitor(otop, screen, trans) {
-                protected void onComplete() { hide(otop); }
+                @Override protected void onComplete() { hide(otop); }
             });
         }
     }
@@ -136,7 +136,7 @@ public class ScreenStack
                 last = screen;
             }
             transition(new Transitor(otop, last, trans) {
-                protected void onComplete() { hide(otop); }
+                @Override protected void onComplete() { hide(otop); }
             });
         }
     }
@@ -183,7 +183,7 @@ public class ScreenStack
             final Screen otop = _screens.remove(0);
             // log.info("Removed " + otop + ", new top " + top());
             transition(new Transitor(otop, screen, trans) {
-                protected void onComplete () {
+                @Override protected void onComplete () {
                     hide(otop);
                     wasRemoved(otop);
                 }
@@ -212,7 +212,7 @@ public class ScreenStack
             final Screen otop = _screens.remove(0);
             // log.info("Removed " + otop + ", new top " + top());
             transition(new Untransitor(otop, top(), trans) {
-                protected void onComplete () {
+                @Override protected void onComplete () {
                     hide(otop);
                     wasRemoved(otop);
                 }

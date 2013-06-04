@@ -193,7 +193,7 @@ public abstract class Element<T extends Element<T>>
      */
     public Slot<Boolean> enabledSlot () {
         return new Slot<Boolean>() {
-            public void onEmit (Boolean value) {
+            @Override public void onEmit (Boolean value) {
                 setEnabled(value);
             }
         };
@@ -234,7 +234,7 @@ public abstract class Element<T extends Element<T>>
      */
     public Slot<Boolean> visibleSlot () {
         return new Slot<Boolean>() {
-            public void onEmit (Boolean value) {
+            @Override public void onEmit (Boolean value) {
                 setVisible(value);
             }
         };

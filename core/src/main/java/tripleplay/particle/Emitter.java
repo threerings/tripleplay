@@ -64,7 +64,7 @@ public class Emitter
      * Configures this emitter to self-destruct when it runs out of particles.
      */
     public void destroyOnEmpty () {
-        onEmpty.connect(new UnitSlot() { public void onEmit () { destroy(); }});
+        onEmpty.connect(new UnitSlot() { @Override public void onEmit () { destroy(); }});
     }
 
     Emitter (Particles parts, final int maxParticles, final Image image) {

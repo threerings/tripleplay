@@ -39,12 +39,14 @@ public class SoundBoard
     public Value<Boolean> muted = Value.create(false);
 
     public SoundBoard () {
-        volume.connect(new Slot<Float>() { public void onEmit (Float volume) {
-            for (LoopImpl active : _active) active.updateVolume(volume);
-        }});
-        muted.connect(new Slot<Boolean>() { public void onEmit (Boolean muted) {
-            for (LoopImpl active : _active) active.fadeForMute(muted);
-        }});
+        volume.connect(new Slot<Float>() {
+            @Override public void onEmit (Float volume) {
+                for (LoopImpl active : _active) active.updateVolume(volume);
+            }});
+        muted.connect(new Slot<Boolean>() {
+            @Override public void onEmit (Boolean muted) {
+                for (LoopImpl active : _active) active.fadeForMute(muted);
+            }});
     }
 
     /**
@@ -68,7 +70,7 @@ public class SoundBoard
      */
     public Clip getClip (final String path) {
         return new ClipImpl() {
-            protected String path () { return path; }
+            @Override protected String path () { return path; }
         };
     }
 
@@ -80,7 +82,7 @@ public class SoundBoard
      */
     public Loop getLoop (final String path) {
         return new LoopImpl() {
-            protected String path () { return path; }
+            @Override protected String path () { return path; }
         };
     }
 
@@ -202,7 +204,7 @@ public class SoundBoard
             if (!isPlaying()) prepareSound().play();
             sound.setVolume(0); // start at zero, fade in from there
             _faders.add(new Fader() {
-                public boolean update (int delta) {
+                @Override public boolean update (int delta) {
                     _elapsed += delta;
                     float vol = Interpolator.LINEAR.apply(0, _range, _elapsed, fadeMillis);
                     updateVolume(vol);
@@ -215,7 +217,7 @@ public class SoundBoard
 
         protected void startFadeOut (final float fadeMillis) {
             if (isPlaying()) _faders.add(new Fader() {
-                public boolean update (int delta) {
+                @Override public boolean update (int delta) {
                     _elapsed += delta;
                     float vol = Interpolator.LINEAR.apply(_start, -_start, _elapsed, fadeMillis);
                     updateVolume(vol);

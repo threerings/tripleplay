@@ -25,7 +25,7 @@ public class Velocity
      */
     public static Initializer constant (final Vector velocity) {
         return new VelocityInitializer() {
-            protected void initVelocity (Vector vel) {
+            @Override protected void initVelocity (Vector vel) {
                 vel.set(velocity);
             }
         };
@@ -49,7 +49,7 @@ public class Velocity
                                             final float minX, final float maxX,
                                             final float minY, final float maxY) {
         return new VelocityInitializer() {
-            protected void initVelocity (Vector vel) {
+            @Override protected void initVelocity (Vector vel) {
                 vel.set(rando.getInRange(minX, maxX), rando.getInRange(minY, maxY));
             }
         };
@@ -71,7 +71,7 @@ public class Velocity
                                             final float xMean, final float xDev,
                                             final float yMean, final float yDev) {
         return new VelocityInitializer() {
-            protected void initVelocity (Vector vel) {
+            @Override protected void initVelocity (Vector vel) {
                 vel.set(rando.getNormal(xMean, xDev), rando.getNormal(yMean, yDev));
             }
         };
@@ -91,7 +91,7 @@ public class Velocity
      */
     public static Initializer randomCircle (final Randoms rando, final float min, final float max) {
         return new VelocityInitializer() {
-            protected void initVelocity (Vector vel) {
+            @Override protected void initVelocity (Vector vel) {
                 float angle = rando.getFloat(FloatMath.TWO_PI);
                 float magnitude = min + rando.getFloat(max-min);
                 vel.set(FloatMath.sin(angle)*magnitude, FloatMath.cos(angle)*magnitude);

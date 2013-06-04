@@ -48,7 +48,7 @@ public class SyncDBTest
             super(platform);
         }
 
-        public TestDB clone () {
+        @Override public TestDB clone () {
             return new TestDB(_platform);
         }
 
@@ -91,7 +91,8 @@ public class SyncDBTest
     @Test public void testModsWhileSyncing () {
         final TestDB one = new TestDB(), two = new TestDB();
         Protocol.Session session = new Protocol.Session(new TestServer()) {
-            protected void onSyncSuccess (SyncDB db, Map<String,Integer> mods, Protocol.Response rsp) {
+            @Override protected void onSyncSuccess (SyncDB db, Map<String,Integer> mods,
+                                                    Protocol.Response rsp) {
                 // simulate a concurrent modification by modifying values in one just before we
                 // note that our sync has completed
                 if (rsp.cleanSync) {
@@ -100,7 +101,7 @@ public class SyncDBTest
                 }
                 super.onSyncSuccess(db, mods, rsp);
             }
-            protected void onSyncFailure (SyncDB db, Throwable cause) {
+            @Override protected void onSyncFailure (SyncDB db, Throwable cause) {
                 System.err.println("Sync failure " + cause);
             }
         };
@@ -293,7 +294,7 @@ public class SyncDBTest
 
     protected static Protocol.Session testSession () {
         return new Protocol.Session(new TestServer()) {
-            protected void onSyncFailure (SyncDB db, Throwable cause) {
+            @Override protected void onSyncFailure (SyncDB db, Throwable cause) {
                 System.err.println("Sync failure " + cause);
             }
         };

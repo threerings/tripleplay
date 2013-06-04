@@ -41,15 +41,15 @@ public abstract class Style<V>
     /** Defines horizontal alignment choices. */
     public static enum HAlign {
         LEFT {
-            public float offset (float size, float extent) {
+            @Override public float offset (float size, float extent) {
                 return 0;
             }
         }, RIGHT {
-            public float offset (float size, float extent) {
+            @Override public float offset (float size, float extent) {
                 return (extent - size);
             }
         }, CENTER {
-            public float offset (float size, float extent) {
+            @Override public float offset (float size, float extent) {
                 return (extent - size)/2;
             }
         };
@@ -60,15 +60,15 @@ public abstract class Style<V>
     /** Defines vertical alignment choices. */
     public static enum VAlign {
         TOP {
-            public float offset (float size, float extent) {
+            @Override public float offset (float size, float extent) {
                 return 0;
             }
         }, BOTTOM {
-            public float offset (float size, float extent) {
+            @Override public float offset (float size, float extent) {
                 return (extent - size);
             }
         }, CENTER {
-            public float offset (float size, float extent) {
+            @Override public float offset (float size, float extent) {
                 return (extent - size)/2;
             }
         };
@@ -135,14 +135,14 @@ public abstract class Style<V>
 
     /** The foreground color for an element. Inherited. */
     public static final Style<Integer> COLOR = new Style<Integer>(true) {
-        public Integer getDefault (Element<?> elem) {
+        @Override public Integer getDefault (Element<?> elem) {
             return elem.isEnabled() ? 0xFF000000 : 0xFF666666;
         }
     };
 
     /** The highlight color for an element. Inherited. */
     public static final Style<Integer> HIGHLIGHT = new Style<Integer>(true) {
-        public Integer getDefault (Element<?> elem) {
+        @Override public Integer getDefault (Element<?> elem) {
             return elem.isEnabled() ? 0xAAFFFFFF : 0xAACCCCCC;
         }
     };
@@ -155,7 +155,7 @@ public abstract class Style<V>
             super(inherited);
             _default = defaultVal;
         }
-        public Boolean getDefault (Element<?> mode) { return _default; }
+        @Override public Boolean getDefault (Element<?> mode) { return _default; }
         protected final Boolean _default;
     }
 
@@ -272,7 +272,7 @@ public abstract class Style<V>
      */
     public static <V> Style<V> newStyle (boolean inherited, final V defaultValue) {
         return new Style<V>(inherited) {
-            public V getDefault (Element<?> elem) {
+            @Override public V getDefault (Element<?> elem) {
                 return defaultValue;
             }
         };

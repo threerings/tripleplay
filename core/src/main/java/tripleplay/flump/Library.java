@@ -51,7 +51,7 @@ public class Library
         final Value<Integer> remainingAtlases = Value.create(atlases.length());
 
         remainingAtlases.connectNotify(new Value.Listener<Integer>() {
-            public void onChange (Integer remaining, Integer _) {
+            @Override public void onChange (Integer remaining, Integer _) {
                 if (remaining > 0) return;
 
                 // When all the symbols have been loaded, go through and resolve references

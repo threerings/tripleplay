@@ -59,6 +59,7 @@ public abstract class Animation
             setFrame(0);
         }
 
+        @Override
         protected float apply (float time) {
             float dt = time - _start;
             int newIdx = _curIdx;

@@ -40,7 +40,7 @@ public class Particles
      */
     public Emitter createEmitter (int maxParticles, Image image, GroupLayer onLayer) {
         final Emitter emitter = new Emitter(this, maxParticles, image);
-        emitter._conn = _onPaint.connect(new Slot<Now>() { public void onEmit (Now now) {
+        emitter._conn = _onPaint.connect(new Slot<Now>() { @Override public void onEmit (Now now) {
             emitter.update(now.time, now.dt);
         }});
         onLayer.add(emitter.layer);

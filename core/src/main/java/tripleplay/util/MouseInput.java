@@ -26,6 +26,7 @@ public class MouseInput extends Input<Mouse.Listener>
      *
      * @return a handle that can be used to clear this registration.
      */
+    @Override
     public Registration register (Region region, Mouse.Listener listener) {
         return _reactor.register(region, listener);
     }

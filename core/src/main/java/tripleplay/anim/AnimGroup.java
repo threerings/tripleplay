@@ -79,19 +79,19 @@ public class AnimGroup extends AnimBuilder
         final Animation[] groupAnims = _anims.toArray(new Animation[_anims.size()]);
         _anims = null;
         return new Animation() {
-            protected void init (float time) {
+            @Override protected void init (float time) {
                 super.init(time);
                 for (int ii = 0; ii < groupAnims.length; ii++) {
                     (_curAnims[ii] = groupAnims[ii]).init(time);
                 }
             }
 
-            protected float apply (Animator animator, float time) {
+            @Override protected float apply (Animator animator, float time) {
                 _animator = animator;
                 return super.apply(animator, time);
             }
 
-            protected float apply (float time) {
+            @Override protected float apply (float time) {
                 float remain = Float.NEGATIVE_INFINITY;
                 int processed = 0;
                 for (int ii = 0; ii < _curAnims.length; ii++) {

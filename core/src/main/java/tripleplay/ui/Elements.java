@@ -38,7 +38,7 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
     /**
      * Returns the stylesheet configured for this group, or null.
      */
-    public Stylesheet stylesheet () {
+    @Override public Stylesheet stylesheet () {
         return _sheet;
     }
 
@@ -132,12 +132,12 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
         invalidate();
     }
 
-    protected void didAdd (Element<?> child) {
+    @Override protected void didAdd (Element<?> child) {
         super.didAdd(child);
         _childAdded.emit(child);
     }
 
-    protected void didRemove (Element<?> child, boolean destroy) {
+    @Override protected void didRemove (Element<?> child, boolean destroy) {
         super.didRemove(child, destroy);
         _childRemoved.emit(child);
     }

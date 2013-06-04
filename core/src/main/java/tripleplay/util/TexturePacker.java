@@ -79,7 +79,7 @@ public class TexturePacker
         for (Atlas atlas : atlases) {
             Node root = atlas.root;
             final SurfaceImage atlasImage = graphics().createSurface(root.width, root.height);
-            root.visitItems(new Slot<Node>() { public void onEmit (Node node) {
+            root.visitItems(new Slot<Node>() { @Override public void onEmit (Node node) {
                 // Draw the item to the atlas
                 node.item.draw(atlasImage.surface(), node.x, node.y);
 
@@ -125,9 +125,9 @@ public class TexturePacker
             this.image = image;
         }
 
-        public int width () { return (int)image.width(); }
-        public int height () { return (int)image.height(); }
-        public void draw (Surface surface, int x, int y) {
+        @Override public int width () { return (int)image.width(); }
+        @Override public int height () { return (int)image.height(); }
+        @Override public void draw (Surface surface, int x, int y) {
             surface.drawImage(image, x, y);
         }
     }
@@ -143,9 +143,9 @@ public class TexturePacker
             this.renderer = renderer;
         }
 
-        public int width () { return width; }
-        public int height () { return height; }
-        public void draw (Surface surface, int x, int y) {
+        @Override public int width () { return width; }
+        @Override public int height () { return height; }
+        @Override public void draw (Surface surface, int x, int y) {
             renderer.render(surface, new Rectangle(x, y, width, height));
         }
     }

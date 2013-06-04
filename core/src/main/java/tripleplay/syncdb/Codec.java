@@ -32,27 +32,27 @@ public abstract class Codec<T>
 
     /** A codec for strings. The identity codec. */
     public static final Codec<String> STRING = new Codec<String>() {
-        public String encode (String value) {
+        @Override public String encode (String value) {
             return value;
         }
-        public String decode (String data) {
+        @Override public String decode (String data) {
             return data;
         }
     };
 
     /** A codec for ints. */
     public static final Codec<Integer> INT = new Codec<Integer>() {
-        public String encode (Integer value) {
+        @Override public String encode (Integer value) {
             return Base90.encodeInt(value);
         }
-        public Integer decode (String data) {
+        @Override public Integer decode (String data) {
             return Base90.decodeInt(data);
         }
     };
 
     /** A codec for int arrays. */
     public static final Codec<int[]> INTS = new Codec<int[]>() {
-        public String encode (int[] values) {
+        @Override public String encode (int[] values) {
             StringBuilder buf = new StringBuilder();
             for (int value : values) {
                 if (buf.length() > 0) buf.append("\t");
@@ -60,7 +60,7 @@ public abstract class Codec<T>
             }
             return buf.toString();
         }
-        public int[] decode (String data) {
+        @Override public int[] decode (String data) {
             if (data.length() == 0) return new int[0];
             String[] encs = data.split("\t");
             int[] values = new int[encs.length];
@@ -71,20 +71,20 @@ public abstract class Codec<T>
 
     /** A codec for longs. */
     public static final Codec<Long> LONG = new Codec<Long>() {
-        public String encode (Long value) {
+        @Override public String encode (Long value) {
             return Base90.encodeLong(value);
         }
-        public Long decode (String data) {
+        @Override public Long decode (String data) {
             return Base90.decodeLong(data);
         }
     };
 
     /** A codec for booleans. Encodes to the string {@code t} or {@code f}. */
     public static final Codec<Boolean> BOOLEAN = new Codec<Boolean>() {
-        public String encode (Boolean value) {
+        @Override public String encode (Boolean value) {
             return value ? "t" : "f";
         }
-        public Boolean decode (String data) {
+        @Override public Boolean decode (String data) {
             return "t".equals(data);
         }
     };

@@ -266,7 +266,7 @@ public class Flicker extends Pointer.Adapter
     };
 
     protected final State SCROLLING = new State() {
-        public void paint (float dt) {
+        @Override public void paint (float dt) {
             // update our velocity based on the current (friction) acceleration
             float prevVel = _vel;
             _vel += _accel * dt;
@@ -279,11 +279,11 @@ public class Flicker extends Pointer.Adapter
                 allowRebound() ? DECELERATE : STOPPED);
         }
 
-        public String toString () { return "SCROLLING"; }
+        @Override public String toString () { return "SCROLLING"; }
     };
 
     protected final State DECELERATE = new State() {
-        public void paint (float dt) {
+        @Override public void paint (float dt) {
             // update our acceleration based on the pixel distance back to the edge
             float retpix = (position < min) ? (min - position) : (max - position);
             _accel = retpix / (1000 * decelerateSnap());
@@ -296,16 +296,16 @@ public class Flicker extends Pointer.Adapter
             if (Math.signum(prevVel) != Math.signum(_vel)) setState(SNAPBACK);
         }
 
-        public String toString () { return "DECELERATE"; }
+        @Override public String toString () { return "DECELERATE"; }
     };
 
     protected final State SNAPBACK = new State() {
-        public void becameActive () {
+        @Override public void becameActive () {
             _vel = 0;
             _snapdist = (position < min) ? (min - position) : (max - position);
         }
 
-        public void paint (float dt) {
+        @Override public void paint (float dt) {
             // if we're in the first 30% of the snapback, accelerate, otherwise switch to easeback
             float retpix = (position < min) ? (min - position) : (max - position);
             float retpct = retpix / _snapdist;
@@ -313,20 +313,20 @@ public class Flicker extends Pointer.Adapter
             else setState(EASEBACK);
         }
 
-        public String toString () { return "SNAPBACK"; }
+        @Override public String toString () { return "SNAPBACK"; }
 
         protected float _snapdist;
     };
 
     protected final State EASEBACK = new State() {
-        public void becameActive () {
+        @Override public void becameActive () {
             _vel = 0; // we animate based on timestamps now
             _spos = position;
             _delta = 0;
             _time = easebackTime();
         }
 
-        public void paint (float dt) {
+        @Override public void paint (float dt) {
             // from here we just interpolate to our final position
             _delta += dt;
             float target = (position <= min) ? min : max;
@@ -338,18 +338,18 @@ public class Flicker extends Pointer.Adapter
             }
         }
 
-        public String toString () { return "EASEBACK"; }
+        @Override public String toString () { return "EASEBACK"; }
 
         protected float _time, _spos, _delta;
     };
 
     protected final State STOPPED = new State() {
-        public void becameActive () {
+        @Override public void becameActive () {
             position = MathUtil.clamp(position, min, max);
             _vel = 0;
         }
 
-        public String toString () { return "STOPPED"; }
+        @Override public String toString () { return "STOPPED"; }
     };
 
     protected State _state = STOPPED;

@@ -60,7 +60,7 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
 
     /** Notifies this widget that the pointer or mouse has been pressed and release inside the
      * bounds of the widget. */
-    protected void onClick (Pointer.Event event) {
+    @Override protected void onClick (Pointer.Event event) {
         // nothing by default
     }
 

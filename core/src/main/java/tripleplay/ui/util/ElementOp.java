@@ -21,7 +21,7 @@ public abstract class ElementOp<T extends Element<?>>
      */
     public static ElementOp<Element<?>> setEnabled (final boolean enabled) {
         return new ElementOp<Element<?>>() {
-            public void apply (Element<?> elem) {
+            @Override public void apply (Element<?> elem) {
                 elem.setEnabled(enabled);
             }
         };

@@ -32,7 +32,7 @@ public class ParticleBufferTest
 
         final int[] applied = new int[] { 0 };
         buffer.apply(Collections.singletonList(new Effector() {
-            public void apply (int index, float[] data, int start, float now, float dt) {
+            @Override public void apply (int index, float[] data, int start, float now, float dt) {
                 assertEquals(index, start/ParticleBuffer.NUM_FIELDS);
                 assertTrue(lives.contains(index));
                 applied[0] += 1;
@@ -49,7 +49,7 @@ public class ParticleBufferTest
         buffer.add(100, 0, new ArrayList<Initializer>());
         final int[] applied = new int[] { 0 };
         buffer.apply(Collections.singletonList(new Effector() {
-            public void apply (int index, float[] data, int start, float now, float dt) {
+            @Override public void apply (int index, float[] data, int start, float now, float dt) {
                 applied[0] += 1;
             }
         }), 0, 0);

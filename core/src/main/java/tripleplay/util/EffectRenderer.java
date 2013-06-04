@@ -16,8 +16,8 @@ public abstract class EffectRenderer
 {
     /** An "effect" that just renders the text normally. */
     public static final EffectRenderer NONE = new EffectRenderer() {
-        public void render (Canvas canvas, TextLayout layout, int textColor, boolean underlined,
-            float x, float y) {
+        @Override public void render (Canvas canvas, TextLayout layout, int textColor,
+            boolean underlined, float x, float y) {
             canvas.save();
             canvas.setFillColor(textColor);
             if (underlined) {
@@ -47,11 +47,11 @@ public abstract class EffectRenderer
             this.outlineColor = outlineColor;
         }
 
-        public float adjustWidth (float width) { return width + 2; }
-        public float adjustHeight (float height) { return height + 2; }
+        @Override public float adjustWidth (float width) { return width + 2; }
+        @Override public float adjustHeight (float height) { return height + 2; }
 
-        public void render (Canvas canvas, TextLayout text, int textColor, boolean underlined,
-            float x, float y) {
+        @Override public void render (Canvas canvas, TextLayout text, int textColor,
+            boolean underlined, float x, float y) {
             canvas.save();
             if (underlined) {
                 for (int ii = 0; ii < text.lineCount(); ii++) {
@@ -106,11 +106,11 @@ public abstract class EffectRenderer
             this.outlineJoin = join;
         }
 
-        public float adjustWidth (float width) { return width + 2*outlineWidth; }
-        public float adjustHeight (float height) { return height + 2*outlineWidth; }
+        @Override public float adjustWidth (float width) { return width + 2*outlineWidth; }
+        @Override public float adjustHeight (float height) { return height + 2*outlineWidth; }
 
-        public void render (Canvas canvas, TextLayout text, int textColor, boolean underlined,
-            float x, float y) {
+        @Override public void render (Canvas canvas, TextLayout text, int textColor,
+            boolean underlined, float x, float y) {
             canvas.save();
             if (underlined) {
                 for (int ii = 0; ii < text.lineCount(); ii++) {
@@ -155,11 +155,11 @@ public abstract class EffectRenderer
             this.shadowY = shadowY;
         }
 
-        public float adjustWidth (float width) { return width + Math.abs(shadowX); }
-        public float adjustHeight (float height) { return height + Math.abs(shadowY); }
+        @Override public float adjustWidth (float width) { return width + Math.abs(shadowX); }
+        @Override public float adjustHeight (float height) { return height + Math.abs(shadowY); }
 
-        public void render (Canvas canvas, TextLayout text, int textColor, boolean underlined,
-            float x, float y) {
+        @Override public void render (Canvas canvas, TextLayout text, int textColor,
+            boolean underlined, float x, float y) {
             float tx = (shadowX < 0) ? -shadowX : 0, ty = (shadowY < 0) ? -shadowY : 0;
             float sx = (shadowX < 0) ? 0 : shadowX, sy = (shadowY < 0) ? 0 : shadowY;
             canvas.save();

@@ -181,7 +181,7 @@ public class TypedStorage
     public Value<String> valueFor (final String key, String defval) {
         Value<String> value = Value.create(get(key, defval));
         value.connect(new Slot<String>() {
-            public void onEmit (String value) {
+            @Override public void onEmit (String value) {
                 set(key, value);
             }
         });
@@ -198,7 +198,7 @@ public class TypedStorage
     public Value<Integer> valueFor (final String key, int defval) {
         Value<Integer> value = Value.create(get(key, defval));
         value.connect(new Slot<Integer>() {
-            public void onEmit (Integer value) {
+            @Override public void onEmit (Integer value) {
                 set(key, value);
             }
         });
@@ -215,7 +215,7 @@ public class TypedStorage
     public Value<Long> valueFor (final String key, long defval) {
         Value<Long> value = Value.create(get(key, defval));
         value.connect(new Slot<Long>() {
-            public void onEmit (Long value) {
+            @Override public void onEmit (Long value) {
                 set(key, value);
             }
         });
@@ -232,7 +232,7 @@ public class TypedStorage
     public Value<Double> valueFor (final String key, double defval) {
         Value<Double> value = Value.create(get(key, defval));
         value.connect(new Slot<Double>() {
-            public void onEmit (Double value) {
+            @Override public void onEmit (Double value) {
                 set(key, value);
             }
         });
@@ -249,7 +249,7 @@ public class TypedStorage
     public Value<Boolean> valueFor (final String key, boolean defval) {
         Value<Boolean> value = Value.create(get(key, defval));
         value.connect(new Slot<Boolean>() {
-            public void onEmit (Boolean value) {
+            @Override public void onEmit (Boolean value) {
                 set(key, value);
             }
         });
@@ -266,7 +266,7 @@ public class TypedStorage
     public <E extends Enum<E>> Value<E> valueFor (final String key, E defval) {
         Value<E> value = Value.create(get(key, defval));
         value.connect(new Slot<E>() {
-            public void onEmit (E value) {
+            @Override public void onEmit (E value) {
                 set(key, value);
             }
         });

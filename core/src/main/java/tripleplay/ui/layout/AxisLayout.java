@@ -33,22 +33,22 @@ public abstract class AxisLayout extends Layout
     /** Specifies the off-axis layout policy. */
     public static enum Policy {
         DEFAULT {
-            public float computeSize (float size, float maxSize, float extent) {
+            @Override public float computeSize (float size, float maxSize, float extent) {
                 return Math.min(size, extent);
             }
         },
         STRETCH {
-            public float computeSize (float size, float maxSize, float extent) {
+            @Override public float computeSize (float size, float maxSize, float extent) {
                 return extent;
             }
         },
         EQUALIZE {
-            public float computeSize (float size, float maxSize, float extent) {
+            @Override public float computeSize (float size, float maxSize, float extent) {
                 return Math.min(maxSize, extent);
             }
         },
         CONSTRAIN {
-            public float computeSize (float size, float maxSize, float extent) {
+            @Override public float computeSize (float size, float maxSize, float extent) {
                 return Math.min(size, extent);
             }
         };

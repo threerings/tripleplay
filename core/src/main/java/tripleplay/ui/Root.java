@@ -71,7 +71,7 @@ public class Root extends Elements<Root>
     /**
      * Sets the size of this root element.
      */
-    public Root setSize (float width, float height) {
+    @Override public Root setSize (float width, float height) {
         _size.setSize(width, height);
         invalidate();
         return this;
