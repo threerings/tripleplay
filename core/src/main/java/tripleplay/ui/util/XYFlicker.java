@@ -103,7 +103,7 @@ public class XYFlicker implements Pointer.Listener
         _accel.set(0, 0);
     }
 
-    public void update (int delta) {
+    public void update (float delta) {
         if (_vel.x == 0 && _vel.y == 0) return;
 
         _prev.set(_position);

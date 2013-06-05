@@ -7,6 +7,12 @@ package tripleplay.ui;
 
 import java.util.ArrayList;
 
+import pythagoras.f.Dimension;
+import pythagoras.f.IDimension;
+import pythagoras.f.IPoint;
+import pythagoras.f.Point;
+import pythagoras.f.Rectangle;
+
 import playn.core.Asserts;
 import playn.core.Color;
 import playn.core.GroupLayer;
@@ -17,12 +23,10 @@ import playn.core.PlayN;
 import playn.core.Pointer;
 import playn.core.Surface;
 import playn.core.Mouse.WheelEvent;
-import pythagoras.f.Dimension;
-import pythagoras.f.IDimension;
-import pythagoras.f.IPoint;
-import pythagoras.f.Point;
-import pythagoras.f.Rectangle;
+
 import react.Signal;
+
+import tripleplay.anim.Animation;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.util.XYFlicker;
 import tripleplay.util.Colors;
@@ -428,7 +432,7 @@ public class Scroller extends Elements<Scroller>
     }
 
     /** Prepares the scroll group for the next frame, at t = t + delta. */
-    protected void update (int delta) {
+    protected void update (float delta) {
         _flicker.update(delta);
         update(false);
 
@@ -470,16 +474,24 @@ public class Scroller extends Elements<Scroller>
 
     @Override protected void wasAdded () {
         super.wasAdded();
-        _updater = root().iface().addTask(new Interface.Task() {
-            @Override public void update (int delta) {
-                Scroller.this.update(delta);
+        _updater = root().iface().animator().add(new Animation() {
+            float current = 0;
+            @Override protected void init (float time) {
+                super.init(time);
+                current = time;
             }
-        });
+            @Override protected float apply (float time) {
+                float dt = time - current;
+                current = time;
+                Scroller.this.update(dt);
+                return 1;
+            }
+        }).handle();
     }
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        _updater.remove();
+        _updater.cancel();
     }
 
     /** Hides the layers of any children of the content that are currently visible but outside
@@ -634,7 +646,7 @@ public class Scroller extends Elements<Scroller>
     protected final XYFlicker _flicker;
     protected final Clippable _clippable;
     protected final Dimension _contentSize = new Dimension();
-    protected Interface.TaskHandle _updater;
+    protected Animation.Handle _updater;
     protected Layer _barLayer;
     protected Point _queuedScroll;
     protected float _barAlpha;
