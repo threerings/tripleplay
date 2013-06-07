@@ -11,6 +11,7 @@ import playn.core.Image;
 import playn.core.ImmediateLayer;
 import playn.core.PlayN;
 import playn.core.Surface;
+import playn.core.Tint;
 
 import tripleplay.ui.Background;
 
@@ -147,6 +148,7 @@ public class Scale9Background extends Background
             public void render (Surface surf) {
                 surf.save();
                 if (alpha != null) surf.setAlpha(alpha);
+                if (_tint != Tint.NOOP_TINT) surf.setTint(_tint);
                 // issue the 9 draw calls
                 for (int yy = 0; yy < 3; ++yy) for (int xx = 0; xx < 3; ++xx) {
                     drawPart(surf, xx, yy);
@@ -158,11 +160,30 @@ public class Scale9Background extends Background
             protected void drawPart (Surface surf, int x, int y) {
                 if (dx.size(x) ==0 || dy.size(y) == 0) return;
                 surf.drawImage(_image,
-                               dx.coord(x), dy.coord(y), dx.size(x), dy.size(y),
-                               xaxis.coord(x), yaxis.coord(y), xaxis.size(x), yaxis.size(y));
+                    dx.coord(x), dy.coord(y), dx.size(x), dy.size(y),
+                    xaxis.coord(x), yaxis.coord(y), xaxis.size(x), yaxis.size(y));
             }
         });
     }
 
+    /**
+     * Sets the tint for this background, as {@code ARGB}.
+     *
+     * <p> <em>NOTE:</em> this will overwrite any value configured via {@link #alpha}. Either
+     * include your desired alpha in the high bits of {@code tint} or set {@link #alpha} after
+     * calling this method. </p>
+     *
+     * <p> <em>NOTE:</em> the RGB components of a layer's tint only work on GL-based backends. It is
+     * not possible to tint layers using the HTML5 canvas and Flash backends. </p>
+     */
+    public Scale9Background setTint (int tint)
+    {
+        _tint = tint;
+        this.alpha = ((tint >> 24) & 0xFF) / 255f;
+        return this;
+    }
+
     protected Image _image;
+
+    protected int _tint = Tint.NOOP_TINT;
 }
