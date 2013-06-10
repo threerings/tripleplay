@@ -1,8 +1,8 @@
 Triple Play
 ===========
 
-Triple Play is a collection of game-related utility classes that can be used
-with the [PlayN] library on all of its myriad platform targets.
+Triple Play is a collection of game-related utility classes that can be used with the [PlayN]
+library on all of its myriad platform targets.
 
 Various documentation-like-things are available:
 * [Release Notes]
@@ -12,55 +12,71 @@ Various documentation-like-things are available:
 Building
 --------
 
-The library is built using [SBT] or [Maven].
+The library is built using [Maven] or [SBT].
 
-Invoke `xsbt publish-local` to build and install the library to your local
-Ivy repository (i.e. `~/.ivy2/local`).
+Invoke `mvn install` to build and install the library to your local Maven repository (i.e.
+`~/.m2/repository`).
 
-Invoke `mvn install` to build and install the library to your local Maven
-repository (i.e. `~/.m2/repository`).
+Invoke `sbt publish-local` to build and install the library to your local Ivy repository (i.e.
+`~/.ivy2/local`).
 
 Artifacts
 ---------
 
-To add a Triple Play dependency to a Maven project, add the following to your
-`pom.xml`:
+To add a Triple Play dependency to a Maven project, add the following to your `pom.xml`:
 
     <dependencies>
       <dependency>
         <groupId>com.threerings</groupId>
         <artifactId>tripleplay</artifactId>
-        <version>1.5</version>
+        <version>${playn.version}</version>
       </dependency>
     </dependencies>
 
-To add it to an Ivy, SBT, or other Maven repository using project, simply
-remove the vast majority of the boilerplate above.
+GWT/HTML5
+---------
 
-If you prefer to download pre-built binaries, those can be had here:
+When using Triple Play in a [PlayN] game that targets the HTML5 or Flash backends, you must make
+some additional changes.
 
-* [tripleplay-1.5.jar](http://repo2.maven.org/maven2/com/threerings/tripleplay/1.5/tripleplay-1.5.jar)
+Add the following to your `html/pom.xml` (and/or `flash/pom.xml`):
 
-GWT
----
+    <dependencies>
+      <dependency>
+        <groupId>com.threerings</groupId>
+        <artifactId>tripleplay</artifactId>
+        <version>${playn.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+    </dependencies>
 
-When using Triple Play in a [PlayN] game that targets the HTML5 or Flash
-backends, you must also add a reference to the [GWT] module to your
-`FooGame.gwt.xml` file, like so:
+Add a reference to the Triple Play [GWT] module to your `FooGame.gwt.xml` file, like so:
 
     <inherits name="tripleplay.TriplePlay"/>
+
+Finally modify the gwt-maven-plugin to override `disableClassMetadata` which PlayN enables by
+default:
+
+    <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>gwt-maven-plugin</artifactId>
+      <configuration>
+        <disableClassMetadata>false</disableClassMetadata>
+      </configuration>
+      ...
+    </plugin>
 
 Distribution
 ------------
 
-Triple Play is released under the New BSD License. The most recent version of
-the library is available at http://github.com/threerings/tripleplay
+Triple Play is released under the New BSD License. The most recent version of the library is
+available at https://github.com/threerings/tripleplay
 
 Contact
 -------
 
-Questions, comments, and other worldly endeavors can be handled via the [Three
-Rings Libraries](http://groups.google.com/group/ooo-libs) Google Group.
+Questions, comments, and other worldly endeavors can be handled via the
+[Three Rings Libraries](http://groups.google.com/group/ooo-libs) Google Group.
 
 [API documentation]: http://threerings.github.com/tripleplay/apidocs/overview-summary.html
 [GWT]: http://code.google.com/webtoolkit/
