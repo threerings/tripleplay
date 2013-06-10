@@ -361,11 +361,11 @@ public class ScreenStack
         }
 
         public void init () {
+            _oscreen.hideTransitionStarted();
+            showNewScreen();
             _trans.init(_oscreen, _nscreen);
             // disable pointer interactions while we transition; disallowing interaction
             pointer().setEnabled(false);
-            _oscreen.hideTransitionStarted();
-            showNewScreen();
         }
 
         public void update (int delta) {
