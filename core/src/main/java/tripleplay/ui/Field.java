@@ -280,6 +280,18 @@ public class Field extends TextWidget<Field>
         }
     }
 
+    @Override public Field setVisible (boolean visible)
+    {
+        if (_nativeField != null) {
+            if (visible) {
+                _nativeField.add();
+            } else {
+                _nativeField.remove();
+            }
+        }
+        return super.setVisible(visible);
+    }
+
     protected void setGlyphLayerAlpha (float alpha) {
         if (_tglyph.layer() != null) _tglyph.layer().setAlpha(alpha);
     }
