@@ -154,6 +154,16 @@ public class TextConfig
     }
 
     /**
+     * Renders the supplied layout into the supplied canvas at the specified coordinates, using
+     * this config's text color and effect. The text will be centered on the specified x
+     * coordinate.
+     */
+    public void renderCX (Canvas canvas, TextLayout layout, float x, float y) {
+        float width = effect.adjustWidth(layout.width());
+        effect.render(canvas, layout, textColor, underlined, Math.round(x - width/2), y);
+    }
+
+    /**
      * Lays out the supplied text, creates an image large enough to accommodate the text, renders
      * the text into it, and returns the image.
      */
