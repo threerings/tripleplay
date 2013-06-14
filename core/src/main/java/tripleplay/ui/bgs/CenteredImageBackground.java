@@ -17,8 +17,8 @@ import tripleplay.ui.Background;
 /**
  * Displays a background image, centered in the space defined for the background. BEWARE: this may
  * mean blank space around the edges or that the background spills over the edges of the element's
- * bounds. You probably want {@link Scale9Background} or {@link ImageBackground}. This background
- * is only useful in special circumstances.
+ * bounds. You probably want {@link CroppedImageBackground}, {@link Scale9Background} or
+ * {@link ImageBackground}. This background is only useful in special circumstances.
  */
 public class CenteredImageBackground extends Background
 {
