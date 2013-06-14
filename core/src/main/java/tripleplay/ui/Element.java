@@ -15,6 +15,7 @@ import react.Signal;
 import react.SignalView;
 import react.Slot;
 import react.UnitSlot;
+import react.ValueView;
 
 import playn.core.GroupLayer;
 import playn.core.Layer;
@@ -228,6 +229,15 @@ public abstract class Element<T extends Element<T>>
                 setVisible(value);
             }
         };
+    }
+
+    /**
+     * Binds the visibility of this element to the supplied value view. The current visibility will
+     * be adjusted to match the state of {@code isVisible}.
+     */
+    public T bindVisible (ValueView<Boolean> isVisible) {
+        isVisible.connectNotify(visibleSlot());
+        return asT();
     }
 
     /**
