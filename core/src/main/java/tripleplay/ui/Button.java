@@ -12,6 +12,7 @@ import react.Signal;
 import react.SignalView;
 import react.Slot;
 import react.Value;
+import react.ValueView;
 
 /**
 * A button that displays text, or an icon, or both.
@@ -63,6 +64,24 @@ public class Button extends ClickableTextWidget<Button>
         this.icon.update(icon);
         this.text.connect(textDidChange());
         this.icon.connect(iconDidChange());
+    }
+
+    /**
+     * Binds the text of this button to the supplied reactive value. The current text will be
+     * adjusted to match the state of {@code text}.
+     */
+    public Button bindText (ValueView<String> text) {
+        text.connectNotify(this.text.slot());
+        return this;
+    }
+
+    /**
+     * Binds the icon of this button to the supplied reactive value. The current icon will be
+     * adjusted to match the state of {@code icon}.
+     */
+    public Button bindIcon (ValueView<Icon> icon) {
+        icon.connectNotify(this.icon.slot());
+        return this;
     }
 
     /** Programmatically triggers a click of this button. This triggers the action sound, but does
