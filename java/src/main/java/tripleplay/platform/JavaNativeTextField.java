@@ -6,10 +6,11 @@
 package tripleplay.platform;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
+import javax.swing.JLayeredPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -31,7 +32,7 @@ import react.Value;
 public class JavaNativeTextField
     implements NativeTextField
 {
-    public JavaNativeTextField (Container root) {
+    public JavaNativeTextField (JLayeredPane root) {
         _root = root;
 
         setupField();
@@ -56,7 +57,7 @@ public class JavaNativeTextField
                 boolean focused = oldField.isFocusOwner();
 
                 _root.remove(oldField);
-                _root.add(_field);
+                _root.add(_field, JLayeredPane.POPUP_LAYER);
                 _field.setCaretPosition(oldField.getCaretPosition());
                 if (focused) _field.requestFocus();
             }
@@ -188,7 +189,7 @@ public class JavaNativeTextField
         return java.awt.Font.PLAIN;
     }
 
-    protected Container _root;
+    protected JLayeredPane _root;
     protected JTextComponent _field;
 
     protected Value<String> _text = Value.create("");
