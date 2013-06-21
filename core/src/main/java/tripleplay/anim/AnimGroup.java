@@ -63,6 +63,7 @@ public class AnimGroup extends AnimBuilder
      * {@link AnimBuilder} fluent methods) after {@link #toAnim} has been called.
      */
     @Override public <T extends Animation> T add (T anim) {
+        if (anim == null) throw new IllegalArgumentException("Animation can't be null.");
         if (_anims == null) throw new IllegalStateException("AnimGroup already animated.");
         _anims.add(anim);
         return anim;
