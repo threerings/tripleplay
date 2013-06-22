@@ -200,6 +200,15 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
+     * Binds the enabledness of this element to the supplied value view. The current enabledness will
+     * be adjusted to match the state of {@code isEnabled}.
+     */
+    public T bindEnabled (ValueView<Boolean> isEnabled) {
+        isEnabled.connectNotify(enabledSlot());
+        return asT();
+    }
+
+    /**
      * Returns whether this element is visible.
      */
     public boolean isVisible () {
