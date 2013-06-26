@@ -17,6 +17,11 @@
     <guava.version>13.0.1</guava.version>
   </properties>
 
+  <modules>
+    <module>assets</module>
+    <module>core</module>
+  </modules>
+
   <profiles>
     <profile>
       <id>java</id>
@@ -39,10 +44,6 @@
       <modules><module>flash</module></modules>
     </profile>
   </profiles>
-
-  <modules>
-    <module>core</module>
-  </modules>
 
   <build>
     <plugins>

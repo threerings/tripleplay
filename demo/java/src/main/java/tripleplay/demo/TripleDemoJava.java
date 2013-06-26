@@ -14,7 +14,6 @@ public class TripleDemoJava
     public static void main (String[] args) {
         JavaPlatform.Config config = new JavaPlatform.Config();
         JavaPlatform platform = JavaPlatform.register(config);
-        platform.assets().setPathPrefix("tripleplay/rsrc");
         TripleDemo.mainArgs = args;
 
         // TODO: upgrade to include other systems
