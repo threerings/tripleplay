@@ -11,10 +11,9 @@ import react.Slot;
 import react.Value;
 
 /**
- * Extends the {@link ClickableTextWidget} with toggling behavior.
+ * Extends the {@link TextWidget} with toggling behavior.
  */
-public abstract class TogglableTextWidget<T extends TogglableTextWidget<T>>
-    extends ClickableTextWidget<T>
+public abstract class TogglableTextWidget<T extends TogglableTextWidget<T>> extends TextWidget<T>
     implements Togglable<T>
 {
     /** Indicates whether this widget is selected. It may be listened to, and updated. */
@@ -26,6 +25,7 @@ public abstract class TogglableTextWidget<T extends TogglableTextWidget<T>>
     }
 
     protected TogglableTextWidget () {
+        enableInteraction();
         selected.connect(new Slot<Boolean>() {
             public void onEmit (Boolean selected) {
                 if (selected != isSelected()) {

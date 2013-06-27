@@ -21,7 +21,7 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
         set(Flag.HIT_DESCEND, false);
         set(Flag.HIT_ABSORB, true);
 
-        // add a pointer listener for handling mouse events
+        // add a pointer listener for handling input events
         layer.addListener(new Pointer.Listener() {
             public void onPointerStart (Pointer.Event event) {
                 Widget.this.onPointerStart(event, event.localX(), event.localY());
@@ -38,6 +38,44 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
         });
     }
 
+    /** Called when the pointer is clicked on this widget. */
+    protected void onPress (Pointer.Event event) {
+        set(Flag.SELECTED, true);
+        invalidate();
+    }
+
+    /** Called as the user drags the pointer around with the widget depressed. */
+    protected void onHover (Pointer.Event event, boolean inBounds) {
+        if (inBounds != isSelected()) {
+            set(Flag.SELECTED, inBounds);
+            invalidate();
+        }
+    }
+
+    /** Called when the pointer is released after having been pressed on this widget. This should
+     * {@link #onClick} if appropriate. */
+    protected void onRelease (Pointer.Event event) {
+        if (isSelected()) {
+            set(Flag.SELECTED, false);
+            invalidate();
+            onClick(event);
+        }
+    }
+
+    /** Called when the interaction is canceled after having been pressed on this widget. This
+     * should not result in a call to {@link #onClick}. */
+    protected void onCancel (Pointer.Event event) {
+        if (isSelected()) {
+            set(Flag.SELECTED, false);
+            invalidate();
+        }
+    }
+
+    /** Called when the pointer is pressed and released over this widget. */
+    protected void onClick (Pointer.Event event) {
+        // nada by default
+    }
+
     /**
      * Called when the a touch/drag is started within the bounds of this component.
      *
@@ -46,6 +84,7 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
      * @param y the y-coordinate of the event, translated into this element's coordinates.
      */
     protected void onPointerStart (Pointer.Event event, float x, float y) {
+        if (isEnabled()) onPress(event);
     }
 
     /**
@@ -58,6 +97,7 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
      * @param y the y-coordinate of the event, translated into this element's coordinates.
      */
     protected void onPointerDrag (Pointer.Event event, float x, float y) {
+        if (isEnabled()) onHover(event, contains(x, y));
     }
 
     /**
@@ -70,6 +110,7 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
      * @param y the y-coordinate of the event, translated into this element's coordinates.
      */
     protected void onPointerEnd (Pointer.Event event, float x, float y) {
+        onRelease(event);
     }
 
     /**
@@ -79,6 +120,7 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
      * @param event the pointer event that triggered this call.
      */
     protected void onPointerCancel (Pointer.Event event) {
+        onCancel(event);
     }
 
     /**

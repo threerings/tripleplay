@@ -16,7 +16,7 @@ import playn.core.Sound;
  * Displays a checkbox which can be toggled. The checkbox must be configured with either a
  * font-based checkmark, or a checkmark icon, which will be shown when it is checked.
  */
-public class CheckBox extends ClickableTextWidget<CheckBox>
+public class CheckBox extends TextWidget<CheckBox>
 {
     /** The checked status of this widget. */
     public final Value<Boolean> checked = Value.create(false);
@@ -41,6 +41,7 @@ public class CheckBox extends ClickableTextWidget<CheckBox>
     }
 
     protected CheckBox (char checkChar, Icon checkIcon) {
+        enableInteraction();
         _checkStr = String.valueOf(checkChar);
         _checkIcon = checkIcon;
         checked.connect(new Slot<Boolean> () {

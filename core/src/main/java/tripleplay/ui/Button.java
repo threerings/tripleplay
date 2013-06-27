@@ -17,7 +17,7 @@ import react.ValueView;
 /**
 * A button that displays text, or an icon, or both.
 */
-public class Button extends ClickableTextWidget<Button>
+public class Button extends TextWidget<Button>
     implements Clickable<Button>
 {
     /** A delay (in milliseconds) during which a button will remain unclickable after it has been
@@ -60,6 +60,7 @@ public class Button extends ClickableTextWidget<Button>
 
     /** Creates a button with the supplied text and icon. */
     public Button (String text, Icon icon) {
+        enableInteraction();
         this.text.update(text);
         this.icon.update(icon);
         this.text.connect(textDidChange());
