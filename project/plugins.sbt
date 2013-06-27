@@ -7,6 +7,3 @@ resolvers += Resolver.url(
   url("http://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/"))(Resolver.ivyStylePatterns)
 
 addSbtPlugin("org.scala-sbt" % "xsbt-proguard-plugin" % "0.1.3")
-
-// this is needed to wire up LWJGL when running the java version
-addSbtPlugin("com.github.philcali" % "sbt-lwjgl-plugin" % "3.1.4")

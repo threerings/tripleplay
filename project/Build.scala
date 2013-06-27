@@ -31,21 +31,14 @@ object TriplePlayBuild extends samskivert.MavenBuild {
       proguardOptions += keepMain("tripleplay.tools.FramePacker"),
       proguardOptions += "-dontnote scala.Enumeration"
     )
-    case "demo-core" => Seq(
-      // copy resources from playn/tests/resources
-      unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java",
-      excludeFilter in unmanagedResources ~= { _ || "*.java" },
+    case name if (name startsWith "demo-") => seq(
       publish := false,
       publishLocal := false
-    )
-    case "demo-java" => LWJGLPlugin.lwjglSettings ++ Seq(
-      publish := false,
-      publishLocal := false,
-      LWJGLPlugin.lwjgl.version := pom.getAttr("lwjgl.version").get
     )
     case _ => Nil
   }
 
   override protected def projects (builder :samskivert.ProjectBuilder) =
-    super.projects(builder) ++ Seq(builder("demo-core"), builder("demo-java"))
+    super.projects(builder) ++ Seq(
+      builder("demo-assets"), builder("demo-core"), builder("demo-java"))
 }
