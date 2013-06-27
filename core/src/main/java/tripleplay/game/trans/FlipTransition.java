@@ -36,6 +36,7 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
         if (pct >= 0.5f && !_flipped) {
             nscreen.layer.setDepth(0);
             oscreen.layer.setDepth(-1);
+            _flipped = true;
         }
         if (_unflip) pct = -pct;
         _oshader.angle = FloatMath.PI * pct;
