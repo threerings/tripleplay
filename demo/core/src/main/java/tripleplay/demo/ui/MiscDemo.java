@@ -10,6 +10,7 @@ import playn.core.Log;
 import playn.core.PlayN;
 
 import react.Function;
+import react.IntValue;
 import react.UnitSlot;
 
 import tripleplay.ui.Background;
@@ -20,11 +21,13 @@ import tripleplay.ui.Field;
 import tripleplay.ui.Group;
 import tripleplay.ui.Icon;
 import tripleplay.ui.Icons;
+import tripleplay.ui.ImageButton;
 import tripleplay.ui.Label;
 import tripleplay.ui.LongPressButton;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
 import tripleplay.ui.ToggleButton;
+import tripleplay.ui.ValueLabel;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
 
@@ -67,18 +70,18 @@ public class MiscDemo extends DemoScreen
                     label2 = new Label("Label 2"),
                     new Label("Label 3", smiley))),
             // buttons, toggle buttons, wirey uppey
-            buttonsSection(),
+            buttonsSection(squares),
 
             new Label("Icon positioning"),
             new Label("Text editing"),
             // labels with varying icon alignment
             new Group(AxisLayout.horizontal().gap(10), GREENBG).add(
-                new Label("Left", tile(squares, 0)).setStyles(Style.ICON_POS.left),
-                new Label("Right", tile(squares, 1)).setStyles(Style.ICON_POS.right),
-                new Label("Above", tile(squares, 2)).setStyles(Style.ICON_POS.above,
-                                                               Style.HALIGN.center),
-                new Label("Below", tile(squares, 3)).setStyles(Style.ICON_POS.below,
-                                                               Style.HALIGN.center)),
+                new Label("Left", tileIcon(squares, 0)).setStyles(Style.ICON_POS.left),
+                new Label("Right", tileIcon(squares, 1)).setStyles(Style.ICON_POS.right),
+                new Label("Above", tileIcon(squares, 2)).setStyles(Style.ICON_POS.above,
+                                                                   Style.HALIGN.center),
+                new Label("Below", tileIcon(squares, 3)).setStyles(Style.ICON_POS.below,
+                                                                   Style.HALIGN.center)),
             // an editable text field
             new Group(AxisLayout.vertical()).add(
                 new Group(AxisLayout.horizontal().gap(10)).add(
@@ -90,7 +93,7 @@ public class MiscDemo extends DemoScreen
         toggle.checked.connect(label2.visibleSlot());
         toggle2.checked.map(new Function<Boolean,Icon>() {
             public Icon apply (Boolean checked) {
-                return checked ? tile(squares, 0) : null;
+                return checked ? tileIcon(squares, 0) : null;
             }
         }).connect(label2.icon.slot());
 
@@ -104,7 +107,7 @@ public class MiscDemo extends DemoScreen
         return iface;
     }
 
-    protected Group buttonsSection () {
+    protected Group buttonsSection (Image squares) {
         ToggleButton toggle3 = new ToggleButton("Toggle Enabled");
         Button disabled = new Button("Disabled");
         toggle3.selected.connectNotify(disabled.enabledSlot());
@@ -113,6 +116,7 @@ public class MiscDemo extends DemoScreen
         }).connectNotify(disabled.text.slot());
 
         final Label pressResult = new Label();
+        final IntValue clickCount = new IntValue(0);
         return new Group(AxisLayout.vertical().offEqualize()).add(
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 toggle3, AxisLayout.stretch(disabled)),
@@ -121,12 +125,21 @@ public class MiscDemo extends DemoScreen
                     public void onEmit () { pressResult.text.update("Long pressed"); }
                 }).onClick(new UnitSlot() {
                     public void onEmit () { pressResult.text.update("Clicked"); }
-                }), AxisLayout.stretch(pressResult)));
+                }), AxisLayout.stretch(pressResult)),
+            new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
+                new Label("Image button"),
+                new ImageButton(tile(squares, 0), tile(squares, 1)).onClick(new UnitSlot() {
+                    public void onEmit () { clickCount.increment(1); }
+                }),
+                new ValueLabel(clickCount)));
     }
 
-    protected Icon tile (Image image, int index) {
+    protected Image tile (Image image, int index) {
         final float iwidth = 16, iheight = 16;
-        return Icons.image(image.subImage(index*iwidth, 0, iwidth, iheight));
+        return image.subImage(index*iwidth, 0, iwidth, iheight);
+    }
+    protected Icon tileIcon (Image image, int index) {
+        return Icons.image(tile(image, index));
     }
 
     protected static final Styles GREENBG = Styles.make(
