@@ -13,23 +13,8 @@ import react.Function;
 import react.IntValue;
 import react.UnitSlot;
 
-import tripleplay.ui.Background;
-import tripleplay.ui.Button;
-import tripleplay.ui.CheckBox;
-import tripleplay.ui.Constraints;
-import tripleplay.ui.Field;
-import tripleplay.ui.Group;
-import tripleplay.ui.Icon;
-import tripleplay.ui.Icons;
-import tripleplay.ui.ImageButton;
-import tripleplay.ui.Label;
-import tripleplay.ui.LongPressButton;
-import tripleplay.ui.Style;
-import tripleplay.ui.Styles;
-import tripleplay.ui.ToggleButton;
-import tripleplay.ui.ValueLabel;
-import tripleplay.ui.layout.AxisLayout;
-import tripleplay.ui.layout.TableLayout;
+import tripleplay.ui.*;
+import tripleplay.ui.layout.*;
 
 import tripleplay.demo.DemoScreen;
 
@@ -117,6 +102,7 @@ public class MiscDemo extends DemoScreen
 
         final Label pressResult = new Label();
         final IntValue clickCount = new IntValue(0);
+        final Box box = new Box();
         return new Group(AxisLayout.vertical().offEqualize()).add(
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 toggle3, AxisLayout.stretch(disabled)),
@@ -131,7 +117,15 @@ public class MiscDemo extends DemoScreen
                 new ImageButton(tile(squares, 0), tile(squares, 1)).onClick(new UnitSlot() {
                     public void onEmit () { clickCount.increment(1); }
                 }),
-                new ValueLabel(clickCount)));
+                new ValueLabel(clickCount)),
+            new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
+                new Button("Fill Box").onClick(new UnitSlot() {
+                    public void onEmit () {
+                        box.set(new Label(box.contents() == null ? "Filled" : "Refilled"));
+                    }
+                }),
+                box)
+            );
     }
 
     protected Image tile (Image image, int index) {
