@@ -62,9 +62,10 @@ public class Button extends TextWidget<Button>
     public Button (String text, Icon icon) {
         enableInteraction();
         this.text.update(text);
-        this.icon.update(icon);
         this.text.connect(textDidChange());
+        // update after connect so we trigger iconDidChange, in case our icon is a not-ready-image
         this.icon.connect(iconDidChange());
+        this.icon.update(icon);
     }
 
     /**

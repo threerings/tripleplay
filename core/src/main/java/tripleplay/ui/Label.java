@@ -49,9 +49,10 @@ public class Label extends TextWidget<Label>
     /** Creates a label with the supplied text and icon. */
     public Label (String text, Icon icon) {
         this.text.update(text);
-        this.icon.update(icon);
         this.text.connect(textDidChange());
+        // update after connect so we trigger iconDidChange, in case our icon is a not-ready-image
         this.icon.connect(iconDidChange());
+        this.icon.update(icon);
     }
 
     @Override public String toString () {

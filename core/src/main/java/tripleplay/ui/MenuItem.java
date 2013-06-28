@@ -49,10 +49,11 @@ public class MenuItem extends TogglableTextWidget<MenuItem>
      * Creates a new menu item with the given label and icon.
      */
     public MenuItem (String label, Icon icon) {
-        text.update(label);
-        this.icon.update(icon);
-        text.connect(textDidChange());
+        this.text.update(label);
+        this.text.connect(textDidChange());
+        // update after connect so we trigger iconDidChange, in case our icon is a not-ready-image
         this.icon.connect(iconDidChange());
+        this.icon.update(icon);
     }
 
     /**
