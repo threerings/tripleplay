@@ -52,6 +52,11 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
         return _clicked;
     }
 
+    @Override public void click () {
+        if (_actionSound != null) _actionSound.play();
+        _clicked.emit(this); // emit a click event
+    }
+
     @Override public String toString () {
         return "ToggleButton(" + text.get() + ")";
     }
@@ -74,8 +79,7 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
     }
 
     @Override protected void onClick (Pointer.Event event) {
-        if (_actionSound != null) _actionSound.play();
-        _clicked.emit(this); // emit a click event
+        click();
     }
 
     protected final Signal<ToggleButton> _clicked = Signal.create();

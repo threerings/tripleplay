@@ -15,8 +15,8 @@ import react.Value;
 import react.ValueView;
 
 /**
-* A button that displays text, or an icon, or both.
-*/
+ * A button that displays text, or an icon, or both.
+ */
 public class Button extends TextWidget<Button>
     implements Clickable<Button>
 {
@@ -85,14 +85,6 @@ public class Button extends TextWidget<Button>
         return this;
     }
 
-    /** Programmatically triggers a click of this button. This triggers the action sound, but does
-     * not cause any change in the button's visualization. <em>Note:</em> this does not check the
-     * button's enabled state, so the caller must handle that if appropriate. */
-    public void click () {
-        if (_actionSound != null) _actionSound.play();
-        _clicked.emit(this); // emit a click event
-    }
-
     /** A convenience method for registering a click handler. Assumes you don't need the result of
      * {@link SignalView#connect}, because it throws it away. */
     public Button onClick (Slot<? super Button> onClick) {
@@ -102,6 +94,11 @@ public class Button extends TextWidget<Button>
 
     @Override public SignalView<Button> clicked () {
         return _clicked;
+    }
+
+    @Override public void click () {
+        if (_actionSound != null) _actionSound.play();
+        _clicked.emit(this); // emit a click event
     }
 
     @Override public String toString () {

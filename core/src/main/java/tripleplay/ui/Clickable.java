@@ -14,4 +14,7 @@ public interface Clickable<T extends Element<?>>
 {
     /** A signal that is emitted when this element is clicked. */
     SignalView<T> clicked ();
+
+    /** Programmatically triggers a click of this element. */
+    void click ();
 }
