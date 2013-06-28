@@ -26,7 +26,7 @@ import tripleplay.util.Ref;
 
 /**
  * The root of the interface element hierarchy. See {@link Widget} for the root of all interactive
- * elements, and {@link Elements} for the root of all grouping elements.
+ * elements, and {@link Container} for the root of all container elements.
  *
  * @param T used as a "self" type; when subclassing {@code Element}, T must be the type of the
  * subclass.
@@ -97,7 +97,7 @@ public abstract class Element<T extends Element<T>>
     /**
      * Returns the parent of this element, or null.
      */
-    public Elements<?> parent () {
+    public Container<?> parent () {
         return _parent;
     }
 
@@ -253,7 +253,7 @@ public abstract class Element<T extends Element<T>>
      * Returns true only if this element and all its parents' {@link #isVisible()} return true.
      */
     public boolean isShowing () {
-        Elements<?> parent;
+        Container<?> parent;
         return isVisible() && ((parent = parent()) != null) && parent.isShowing();
     }
 
@@ -300,7 +300,7 @@ public abstract class Element<T extends Element<T>>
      * {@link #wasAdded}, otherwise the {@link #wasAdded} call will come later when the parent is
      * added to a root.
      */
-    protected void wasParented (Elements<?> parent) {
+    protected void wasParented (Container<?> parent) {
         _parent = parent;
     }
 
@@ -754,7 +754,7 @@ public abstract class Element<T extends Element<T>>
     }
 
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
-    protected Elements<?> _parent;
+    protected Container<?> _parent;
     protected Dimension _preferredSize;
     protected Dimension _size = new Dimension();
     protected Styles _styles = Styles.none();

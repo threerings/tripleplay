@@ -19,7 +19,7 @@ import react.SignalView;
 /**
  * Contains other elements and lays them out according to a layout policy.
  */
-public abstract class Elements<T extends Elements<T>> extends Element<T>
+public abstract class Elements<T extends Elements<T>> extends Container<T>
     implements Iterable<Element<?>>
 {
     /**
@@ -62,7 +62,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     public T add (Element<?>... children) {
         // remove the children from existing parents, if any
         for (Element<?> child : children) {
-            Elements<?> parent = child.parent();
+            Container<?> parent = child.parent();
             if (parent != null) {
                 parent.remove(child);
             }
@@ -78,7 +78,7 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
 
     public T add (int index, Element<?> child) {
         // remove the child from an existing parent, if it has one
-        Elements<?> parent = child.parent();
+        Container<?> parent = child.parent();
         if (parent != null) {
             parent.remove(child);
         }
@@ -135,26 +135,12 @@ public abstract class Elements<T extends Elements<T>> extends Element<T>
     }
 
     protected void didAdd (Element<?> child) {
-        layer.add(child.layer);
-        child.wasParented(this);
-        // bar n-child from being added twice
-        if (isAdded() && !child.willAdd()) {
-            child.set(Flag.IS_ADDING, true);
-            child.wasAdded();
-        }
+        super.didAdd(child);
         _childAdded.emit(child);
     }
 
     protected void didRemove (Element<?> child, boolean destroy) {
-        if (destroy) child.set(Flag.WILL_DESTROY, true);
-        layer.remove(child.layer);
-        boolean needsRemove = child.willRemove(); // early removal of a scheduled n-child
-        child.wasUnparented();
-        if (isAdded() || needsRemove) {
-            child.set(Flag.IS_REMOVING, true);
-            child.wasRemoved();
-        }
-        if (destroy) child.layer.destroy();
+        super.didRemove(child, destroy);
         _childRemoved.emit(child);
     }
 

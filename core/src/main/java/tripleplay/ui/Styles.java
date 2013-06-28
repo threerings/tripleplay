@@ -143,7 +143,8 @@ public final class Styles
         if (value != null) return value;
 
         // now check for the style in the appropriate stylesheets
-        Elements<?> group = (element instanceof Elements) ? (Elements<?>)element : element.parent();
+        Container<?> group = (element instanceof Container<?>) ?
+            (Container<?>)element : element.parent();
         for (; group != null; group = group.parent()) {
             Stylesheet sheet = group.stylesheet();
             if (sheet == null) continue;
