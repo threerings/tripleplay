@@ -14,7 +14,8 @@ import playn.core.Surface;
 import tripleplay.ui.Background;
 
 /**
- * Displays a background image, centered in the space defined for the background and cropped.
+ * Displays a background image, centered in the space defined for the background and cropped. If
+ * the image is smaller than the needed space, in either dimension, it will be tiled.
  */
 public class CroppedImageBackground extends Background
 {
@@ -24,26 +25,33 @@ public class CroppedImageBackground extends Background
 
     @Override protected Instance instantiate (IDimension size) {
         final float swidth = size.width(),   sheight = size.height();
-        float iwidth = _image.width(), iheight = _image.height();
-        final float sx, sy, dx, dy;
+        final float iwidth = _image.width(), iheight = _image.height();
+        final float cwidth = Math.min(swidth, iwidth), cheight = Math.min(sheight, iheight);
+        final float sx, sy;
         if (swidth > iwidth) {
             sx = 0;
-            dx = (swidth - iwidth)/2;
         } else {
             sx = (iwidth - swidth)/2;
-            dx = 0;
         }
         if (sheight > iheight) {
             sy = 0;
-            dy = (sheight - iheight)/2;
         } else {
             sy = (iheight - sheight)/2;
-            dy = 0;
         }
         return new LayerInstance(size, new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
                 if (alpha != null) surf.setAlpha(alpha);
-                surf.drawImage(_image, dx, dy, swidth, sheight, sx, sy, swidth, sheight);
+                float dy = 0;
+                while (dy < sheight) {
+                    float dheight = Math.min(cheight, sheight-dy);
+                    float dx = 0;
+                    while (dx < swidth) {
+                        float dwidth = Math.min(cwidth, swidth-dx);
+                        surf.drawImage(_image, dx, dy, dwidth, dheight, sx, sy, dwidth, dheight);
+                        dx += cwidth;
+                    }
+                    dy += cheight;
+                }
             }
         });
     }
