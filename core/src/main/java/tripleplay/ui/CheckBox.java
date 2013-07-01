@@ -40,6 +40,16 @@ public class CheckBox extends TextWidget<CheckBox>
         this((char)0, Icons.image(checkIcon));
     }
 
+    /**
+     * Updates the selected state of this checkbox. This method is called when the user taps and
+     * releases the checkbox. One can override this method if they want to react to only
+     * user-interaction-initiated changes to the checkbox's state (versus listening to {@link
+     * #checked} which could be updated programmatically).
+     */
+    public void select (boolean selected) {
+        checked.update(selected);
+    }
+
     protected CheckBox (char checkChar, Icon checkIcon) {
         enableInteraction();
         _checkStr = String.valueOf(checkChar);
@@ -65,7 +75,7 @@ public class CheckBox extends TextWidget<CheckBox>
 
     @Override protected void onClick (Pointer.Event event) {
         if (_actionSound != null) _actionSound.play();
-        checked.update(!checked.get());
+        select(!checked.get());
     }
 
     @Override protected void layout () {
