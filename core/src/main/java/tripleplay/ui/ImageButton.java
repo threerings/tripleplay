@@ -102,7 +102,7 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
         }
 
         @Override public void layout (float left, float top, float width, float height) {
-            _ilayer.setImage(isSelected() ? _up : _down);
+            _ilayer.setImage(isSelected() ? _down : _up);
             _ilayer.setTranslation(left, top);
         }
     }
