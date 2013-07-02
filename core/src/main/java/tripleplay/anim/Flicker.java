@@ -38,7 +38,7 @@ public class Flicker extends Pointer.Adapter
     implements Paintable
 {
     /** This flicker's bounds. */
-    public final float min, max;
+    public float min, max;
 
     /** The current position value. */
     public float position;
