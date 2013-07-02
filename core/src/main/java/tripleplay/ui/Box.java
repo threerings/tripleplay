@@ -28,16 +28,10 @@ public class Box extends Container<Box> {
         return _contents;
     }
 
-    /** Updates the box's contents. */
+    /** Updates the box's contents. The previous contents, if any, is removed but not destroyed.
+     * To destroy the old contents and set the new, use {@code destroyContents().set(contents)}.*/
     public Box set (Element<?> contents) {
-        if (_contents != null) {
-            didRemove(_contents, false);
-        }
-        _contents = contents;
-        if (contents != null) {
-            didAdd(contents);
-        }
-        invalidate();
+        if (contents != _contents) set(contents, false);
         return this;
     }
 
@@ -46,12 +40,21 @@ public class Box extends Container<Box> {
         return set(null);
     }
 
+    /** Clears out the box's current contents and destroys it immediately. */
+    public Box destroyContents () {
+        return set((Element<?>)null, true);
+    }
+
     @Override public Stylesheet stylesheet () {
         return null; // boxes provide no styles
     }
 
     @Override public void remove (Element<?> child) {
         if (_contents == child) clear();
+    }
+
+    @Override public void destroy (Element<?> child) {
+        if (_contents == child) destroyContents();
     }
 
     @Override protected Class<?> getStyleClass () {
@@ -73,6 +76,18 @@ public class Box extends Container<Box> {
             _contents.set(Flag.IS_REMOVING, true);
             _contents.wasRemoved();
         }
+    }
+
+    protected Box set (Element<?> contents, boolean destroy) {
+        if (_contents != null) {
+            didRemove(_contents, destroy);
+        }
+        _contents = contents;
+        if (contents != null) {
+            didAdd(contents);
+        }
+        invalidate();
+        return this;
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {

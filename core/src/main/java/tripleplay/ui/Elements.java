@@ -89,14 +89,14 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
         return asT();
     }
 
-    public void remove (Element<?> child) {
+    @Override public void remove (Element<?> child) {
         if (_children.remove(child)) {
             didRemove(child, false);
             invalidate();
         }
     }
 
-    public void destroy (Element<?> child) {
+    @Override public void destroy (Element<?> child) {
         if (_children.remove(child)) {
             didRemove(child, true);
             invalidate();

@@ -12,6 +12,8 @@ public abstract class Container<T extends Container<T>> extends Element<T> {
 
     public abstract void remove (Element<?> child);
 
+    public abstract void destroy (Element<?> child);
+
     /**
      * Returns the stylesheet associated with this parent, or null. Styles are resolved by
      * searching up the container hierarchy. Only {@link Elements} actually provides styles to its
