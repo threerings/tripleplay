@@ -97,6 +97,10 @@ public class Movie
         setFrame(nextFrame, dt);
     }
 
+    @Override public void destroy () {
+        _root.destroy();
+    }
+
     /** The playback position, in milliseconds. */
     public float position () {
         return _position;

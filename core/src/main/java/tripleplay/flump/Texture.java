@@ -56,5 +56,9 @@ public class Texture
     @Override public void paint (float dt) {
     }
 
+    @Override public void destroy () {
+        _layer.destroy();
+    }
+
     protected ImageLayer _layer;
 }
