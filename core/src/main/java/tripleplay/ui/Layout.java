@@ -20,6 +20,16 @@ public abstract class Layout
             // nothing needed by default
         }
 
+        /** Allows a layout constraint to adjust an element's x hint. */
+        public float adjustHintX (float hintX) {
+            return hintX; // no adjustments by default
+        }
+
+        /** Allows a layout constraint to adjust an element's y hint. */
+        public float adjustHintY (float hintY) {
+            return hintY; // no adjustments by default
+        }
+
         /** Allows a layout constraint to adjust an element's preferred size. */
         public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
             // no adjustments by default

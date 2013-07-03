@@ -31,6 +31,9 @@ public class Constraints
      */
     public static Layout.Constraint fixedWidth (final float width) {
         return new Layout.Constraint() {
+            @Override public float adjustHintX (float hintX) {
+                return Math.min(width, hintX);
+            }
             @Override public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
                 psize.width = width;
             }
@@ -42,6 +45,9 @@ public class Constraints
      */
     public static Layout.Constraint fixedHeight (final float height) {
         return new Layout.Constraint() {
+            @Override public float adjustHintY (float hintY) {
+                return Math.min(height, hintY);
+            }
             @Override public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
                 psize.height = height;
             }
@@ -54,6 +60,12 @@ public class Constraints
      */
     public static Layout.Constraint fixedSize (final float width, final float height) {
         return new Layout.Constraint() {
+            @Override public float adjustHintX (float hintX) {
+                return Math.min(width, hintX);
+            }
+            @Override public float adjustHintY (float hintY) {
+                return Math.min(height, hintY);
+            }
             @Override public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
                 psize.width = width;
                 psize.height = height;
@@ -67,6 +79,9 @@ public class Constraints
      */
     public static Layout.Constraint maxWidth (final float width) {
         return new Layout.Constraint() {
+            @Override public float adjustHintX (float hintX) {
+                return Math.min(width, hintX);
+            }
             @Override public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
                 psize.width = Math.min(psize.width, width);
             }
@@ -79,6 +94,9 @@ public class Constraints
      */
     public static Layout.Constraint maxHeight (final float height) {
         return new Layout.Constraint() {
+            @Override public float adjustHintY (float hintY) {
+                return Math.min(height, hintY);
+            }
             @Override public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
                 psize.height = Math.min(psize.height, height);
             }
@@ -91,6 +109,12 @@ public class Constraints
      */
     public static Layout.Constraint maxSize (final float width, final float height) {
         return new Layout.Constraint() {
+            @Override public float adjustHintX (float hintX) {
+                return Math.min(width, hintX);
+            }
+            @Override public float adjustHintY (float hintY) {
+                return Math.min(height, hintY);
+            }
             @Override public void adjustPreferredSize (Dimension psize, float hintX, float hintY) {
                 psize.width = Math.min(psize.width, width);
                 psize.height = Math.min(psize.height, height);

@@ -441,6 +441,10 @@ public abstract class Element<T extends Element<T>>
      */
     protected IDimension preferredSize (float hintX, float hintY) {
         if (_preferredSize == null) {
+            if (_constraint != null) {
+                hintX = _constraint.adjustHintX(hintX);
+                hintY = _constraint.adjustHintX(hintY);
+            }
             Dimension psize = computeSize(hintX, hintY);
             if (_constraint != null) _constraint.adjustPreferredSize(psize, hintX, hintY);
             // round our preferred size up to the nearest whole number; if we allow it to remain
