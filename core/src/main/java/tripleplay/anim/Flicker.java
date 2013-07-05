@@ -8,6 +8,7 @@ package tripleplay.anim;
 import pythagoras.f.MathUtil;
 
 import react.Signal;
+import react.Value;
 
 import playn.core.Pointer;
 import playn.core.util.Clock;
@@ -46,6 +47,15 @@ public class Flicker extends Pointer.Adapter
     /** A signal that is emitted (with the pointer end event) on click. */
     public Signal<Pointer.Event> clicked = Signal.create();
 
+    /** Whether or not this flicker is enabled (responding to pointer events). Disabling a flicker
+     * does not stop any existing physical behavior, it just prevents the user from introducing any
+     * further behavior by flicking or tapping.
+     *
+     * <p>Note that if a pointer interaction has already started when the flicker is disabled, that
+     * interaction will be allowed to complete. Otherwise the flicker would be left in an
+     * unpredictable state.</p> */
+    public Value<Boolean> enabled = Value.create(true);
+
     /**
      * Creates a flicker with the specified initial, minimum and maximum values.
      */
@@ -78,6 +88,8 @@ public class Flicker extends Pointer.Adapter
     }
 
     @Override public void onPointerStart (Pointer.Event event) {
+        if (!enabled.get()) return;
+
         _vel = 0;
         _maxDelta = 0;
         _minFlickExceeded = false;
@@ -89,6 +101,9 @@ public class Flicker extends Pointer.Adapter
     }
 
     @Override public void onPointerDrag (Pointer.Event event) {
+        // check whether we are processing this interaction
+        if (_state != DRAGGING) return;
+
         _prev = _cur;
         _prevStamp = _curStamp;
         _cur = getPosition(event);
@@ -113,8 +128,14 @@ public class Flicker extends Pointer.Adapter
     }
 
     @Override public void onPointerEnd (Pointer.Event event) {
+        // check whether we are processing this interaction
+        if (_state != DRAGGING) return;
+
         // check whether we should call onClick
-        if (_maxDelta < maxClickDelta()) clicked.emit(event);
+        if (_maxDelta < maxClickDelta()) {
+            clicked.emit(event);
+            setState(STOPPED);
+        }
         // if not, determine whether we should impart velocity to the tower
         else {
             float dragTime = (float)(_curStamp - _prevStamp);
