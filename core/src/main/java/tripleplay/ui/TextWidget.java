@@ -9,6 +9,7 @@ import pythagoras.f.Dimension;
 import pythagoras.f.FloatMath;
 import pythagoras.f.MathUtil;
 
+import playn.core.Font;
 import playn.core.Layer;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
@@ -87,8 +88,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final int color = resolveStyle(Style.COLOR);
         public final boolean underlined = resolveStyle(Style.UNDERLINE);
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
+        public final boolean autoShrink = resolveStyle(Style.AUTO_SHRINK);
 
-        public final TextLayout text;
+        public TextLayout text; // mostly final, only changed by autoShrink
         public final EffectRenderer renderer;
         public final Icon icon;
 
@@ -231,6 +233,18 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float twidth = FloatMath.ceil(textWidth()), theight = FloatMath.ceil(textHeight());
             if (twidth <= 0 || theight <= 0 || availWidth <= 0 || availHeight <= 0) return;
 
+            // if autoShrink is enabled, and our text is too wide, re-lay it out with successively
+            // smaller fonts until it fits
+            if (autoShrink && twidth > availWidth) {
+                String curtext = text();
+                TextFormat format = Style.createTextFormat(TextWidget.this);
+                while (twidth > availWidth && format.font.size() > MIN_FONT_SIZE) {
+                    format = format.withFont(shrinkFont(format.font));
+                    text = graphics().layoutText(curtext, format);
+                    twidth = FloatMath.ceil(textWidth());
+                }
+            }
+
             // create a canvas no larger than the text, constrained to the available size
             float tgwidth = Math.min(availWidth, twidth), tgheight = Math.min(availHeight, theight);
             _tglyph.prepare(tgwidth, tgheight);
@@ -248,8 +262,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         protected float textWidth () { return renderer.adjustWidth(text.width()); }
         protected float textHeight () { return renderer.adjustHeight(text.height()); }
+
+        protected Font shrinkFont (Font font) {
+            return graphics().createFont(font.name(), font.style(), font.size()-1);
+        }
     }
 
     protected final Glyph _tglyph = new Glyph();
     protected Layer _ilayer;
+
+    protected static final float MIN_FONT_SIZE = 6; // TODO: make customizable?
 }
