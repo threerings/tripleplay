@@ -49,7 +49,7 @@ public abstract class AxisLayout extends Layout
         },
         CONSTRAIN {
             public float computeSize (float size, float maxSize, float extent) {
-                return Math.min(maxSize, size);
+                return Math.min(size, extent);
             }
         };
 
