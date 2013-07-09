@@ -176,7 +176,8 @@ public class IOSTextFieldHandler
         }
 
         // font not found, use the default font at the given size, and style
-        return getUIFont(new IOSFont(IOSFont.defaultFont().iosName(), font.style(), font.size()));
+        return getUIFont(new IOSFont(null, IOSFont.defaultFont().iosName(),
+                                     font.style(), font.size()));
     }
 
     public void activate (IOSNativeTextField field) {
