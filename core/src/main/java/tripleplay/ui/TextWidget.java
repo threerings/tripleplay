@@ -9,7 +9,6 @@ import pythagoras.f.Dimension;
 import pythagoras.f.FloatMath;
 import pythagoras.f.MathUtil;
 
-import playn.core.Font;
 import playn.core.Layer;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
@@ -239,7 +238,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 String curtext = text();
                 TextFormat format = Style.createTextFormat(TextWidget.this);
                 while (twidth > availWidth && format.font.size() > MIN_FONT_SIZE) {
-                    format = format.withFont(shrinkFont(format.font));
+                    format = format.withFont(format.font.derive(format.font.size()-1));
                     text = graphics().layoutText(curtext, format);
                     twidth = FloatMath.ceil(textWidth());
                 }
@@ -262,10 +261,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         protected float textWidth () { return renderer.adjustWidth(text.width()); }
         protected float textHeight () { return renderer.adjustHeight(text.height()); }
-
-        protected Font shrinkFont (Font font) {
-            return graphics().createFont(font.name(), font.style(), font.size()-1);
-        }
     }
 
     protected final Glyph _tglyph = new Glyph();
