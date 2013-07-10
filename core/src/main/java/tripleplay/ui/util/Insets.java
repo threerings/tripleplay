@@ -128,6 +128,11 @@ public class Insets
         return new Mutable(this);
     }
 
+    /** Returns a new instance which is the supplied adjustments added to these insets. */
+    public Insets adjust (float dtop, float dright, float dbottom, float dleft) {
+        return new Insets(_top + dtop, _right + dright, _bottom + dbottom, _left + dleft);
+    }
+
     /** The amount to inset an edge. */
     protected float _top, _right, _bottom, _left;
 }
