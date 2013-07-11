@@ -20,7 +20,6 @@ import react.SignalView;
  * Contains other elements and lays them out according to a layout policy.
  */
 public abstract class Elements<T extends Elements<T>> extends Container<T>
-    implements Iterable<Element<?>>
 {
     /**
      * Creates a collection with the specified layout.
@@ -49,14 +48,6 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
     public T setStylesheet (Stylesheet sheet) {
         _sheet = sheet;
         return asT();
-    }
-
-    public int childCount () {
-        return _children.size();
-    }
-
-    public Element<?> childAt (int index) {
-        return _children.get(index);
     }
 
     public T add (Element<?>... children) {
@@ -89,11 +80,35 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
         return asT();
     }
 
+    @Override public int childCount () {
+        return _children.size();
+    }
+
+    @Override public Element<?> childAt (int index) {
+        return _children.get(index);
+    }
+
+    @Override public Iterator<Element<?>> iterator () {
+        return Collections.unmodifiableList(_children).iterator();
+    }
+
     @Override public void remove (Element<?> child) {
         if (_children.remove(child)) {
             didRemove(child, false);
             invalidate();
         }
+    }
+
+    @Override public void removeAt (int index) {
+        didRemove(_children.remove(index), false);
+        invalidate();
+    }
+
+    @Override public void removeAll () {
+        while (!_children.isEmpty()) {
+            removeAt(_children.size()-1);
+        }
+        invalidate();
     }
 
     @Override public void destroy (Element<?> child) {
@@ -105,33 +120,16 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
         }
     }
 
-    public void removeAt (int index) {
-        didRemove(_children.remove(index), false);
-        invalidate();
-    }
-
-    public void destroyAt (int index) {
+    @Override public void destroyAt (int index) {
         didRemove(_children.remove(index), true);
         invalidate();
     }
 
-    public void removeAll () {
-        while (!_children.isEmpty()) {
-            removeAt(_children.size()-1);
-        }
-        invalidate();
-    }
-
-    public void destroyAll () {
+    @Override public void destroyAll () {
         while (!_children.isEmpty()) {
             destroyAt(_children.size()-1);
         }
         invalidate();
-    }
-
-    /** Returns an unmodifiable iterator over the children of this Elements.  */
-    public Iterator<Element<?>> iterator () {
-        return Collections.unmodifiableList(_children).iterator();
     }
 
     protected void didAdd (Element<?> child) {

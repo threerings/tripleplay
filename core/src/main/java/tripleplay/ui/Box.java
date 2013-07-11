@@ -5,6 +5,9 @@
 
 package tripleplay.ui;
 
+import java.util.Collections;
+import java.util.Iterator;
+
 import pythagoras.f.Dimension;
 
 /**
@@ -49,12 +52,45 @@ public class Box extends Container<Box> {
         return null; // boxes provide no styles
     }
 
+    @Override public int childCount () {
+        return (_contents == null) ? 0 : 1;
+    }
+
+    @Override public Element<?> childAt (int index) {
+        if (_contents == null || index != 0) throw new IndexOutOfBoundsException();
+        return _contents;
+    }
+
+    @Override public Iterator<Element<?>> iterator () {
+        return (_contents == null) ?
+            Collections.<Element<?>>emptyList().iterator() :
+            Collections.<Element<?>>singleton(_contents).iterator();
+    }
+
     @Override public void remove (Element<?> child) {
         if (_contents == child) clear();
     }
 
+    @Override public void removeAt (int index) {
+        if (_contents == null || index != 0) throw new IndexOutOfBoundsException();
+        clear();
+    }
+
+    @Override public void removeAll () {
+        clear();
+    }
+
     @Override public void destroy (Element<?> child) {
         if (_contents == child) destroyContents();
+    }
+
+    @Override public void destroyAt (int index) {
+        if (_contents == null || index != 0) throw new IndexOutOfBoundsException();
+        destroyContents();
+    }
+
+    @Override public void destroyAll () {
+        destroyContents();
     }
 
     @Override protected Class<?> getStyleClass () {
