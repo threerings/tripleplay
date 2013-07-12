@@ -37,6 +37,7 @@ public class RotateYShader extends IndexedTrisShader
         return VERT_UNIFS +
             "uniform float u_Angle;\n" +
             VERT_ATTRS +
+            PER_VERT_ATTRS +
             VERT_VARS +
 
             "void main(void) {\n" +
