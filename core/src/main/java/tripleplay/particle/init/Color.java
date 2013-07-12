@@ -29,10 +29,8 @@ public class Color
     public static Initializer constant (final float r, final float g, final float b, final float a) {
         return new Initializer() {
             @Override public void init (int index, float[] data, int start) {
-                data[start+ParticleBuffer.RED] = r;
-                data[start+ParticleBuffer.GREEN] = g;
-                data[start+ParticleBuffer.BLUE] = b;
-                data[start+ParticleBuffer.ALPHA] = a;
+                data[start+ParticleBuffer.ALPHA_RED]  = playn.core.Color.encode(a, r);
+                data[start+ParticleBuffer.GREEN_BLUE] = playn.core.Color.encode(g, b);
             }
         };
     }

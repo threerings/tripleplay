@@ -5,6 +5,8 @@
 
 package tripleplay.particle.effect;
 
+import playn.core.Color;
+
 import tripleplay.particle.Effector;
 import tripleplay.util.Interpolator;
 import static tripleplay.particle.ParticleBuffer.*;
@@ -32,8 +34,10 @@ public class Alpha
         final float rangeAlpha = endAlpha - startAlpha;
         return new Effector() {
             @Override public void apply (int index, float[] data, int start, float now, float dt) {
-                data[start + ALPHA] = interp.apply(
+                float alpha = interp.apply(
                     startAlpha, rangeAlpha, now - data[start + BIRTH], data[start + LIFESPAN]);
+                float red = Color.decodeLower(data[start + ALPHA_RED]);
+                data[start + ALPHA_RED] = Color.encode(alpha, red);
             }
         };
     }

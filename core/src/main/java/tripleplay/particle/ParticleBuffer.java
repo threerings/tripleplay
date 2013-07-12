@@ -7,6 +7,8 @@ package tripleplay.particle;
 
 import java.util.List;
 
+import playn.core.Color;
+
 /**
  * Contains the basic metadata for an array of particles: position, velocity, scale, rotation,
  * birth time, lifespan.
@@ -36,17 +38,15 @@ public class ParticleBuffer
     /** The offset of the ty trasform element in the particle buffer. */
     public static final int TY = TX+1;
 
-    /** The offset of the red in the particle buffer. */
-    public static final int RED = TY+1;
-    /** The offset of the green in the particle buffer. */
-    public static final int GREEN = RED+1;
-    /** The offset of the blue in the particle buffer. */
-    public static final int BLUE = GREEN+1;
-    /** The offset of the alpha in the particle buffer. */
-    public static final int ALPHA = BLUE+1;
+    /** The offset of the alpha + red tint in the particle buffer.
+     * This is (A*256+R) where A and R are integer values in the range [0...256). */
+    public static final int ALPHA_RED = TY+1;
+    /** The offset of the green + blue tint in the particle buffer.
+     * This is (G*256+B) where G and B are integer values in the range [0...256). */
+    public static final int GREEN_BLUE = ALPHA_RED+1;
 
     /** The total number of fields per particle. */
-    public static final int NUM_FIELDS = ALPHA+1;
+    public static final int NUM_FIELDS = GREEN_BLUE+1;
 
     /** The particle data. */
     public final float[] data;
@@ -56,13 +56,16 @@ public class ParticleBuffer
 
     /** Returns a string representation of the specified particle's data. */
     public static String dump (float[] data, int index, int start) {
+        float a = Color.decodeUpper(data[start + ALPHA_RED]);
+        float r = Color.decodeLower(data[start + ALPHA_RED]);
+        float g = Color.decodeUpper(data[start + GREEN_BLUE]);
+        float b = Color.decodeLower(data[start + GREEN_BLUE]);
         return index + " tx:" + data[start + M00] + "," + data[start + M01] + "," +
             data[start + M10] + "," + data[start + M11] + "," +
             data[start + TX] + "," + data[start + TY] +
             " vel:" + data[start + VEL_X] + "," + data[start + VEL_Y] +
             " life:" + data[start + BIRTH] + "," + data[start + LIFESPAN] +
-            " color:" + data[start + RED] + "," + data[start + GREEN] + "," +
-            data[start + BLUE] + "," + data[start + ALPHA];
+            " color:" + r + "," + g + "," + b + "," + a;
     }
 
     /** Multiplies the specified particle's transform with the supplied matrix. */
