@@ -82,8 +82,8 @@ public class ParticleShader extends GLShader
 
         "void main(void) {\n" +
         "  vec4 texcol = texture2D(u_Texture, v_TexCoord);\n" +
-        "  vec4 tinted = vec4(texcol.rgb * (v_Color.rgb * texcol.a + (1.0 - texcol.a)), texcol.a);\n" +
-        "  gl_FragColor = tinted * v_Color.a;\n" +
+		"  texcol.rgb *= v_Color.rgb;\n" +
+		"  gl_FragColor = texcol * v_Color.a;\n" +
         "}";
 
     protected static final int VERTEX_SIZE = 14; // 14 floats per vertex
