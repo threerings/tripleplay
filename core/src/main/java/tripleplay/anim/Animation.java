@@ -28,6 +28,18 @@ public abstract class Animation
         void set (float value);
     }
 
+    /** Used by animations to update a target value. */
+    public interface XYValue {
+        /** Returns the initial x value. */
+        float initialX ();
+
+        /** Returns the initial y value. */
+        float initialY ();
+
+        /** Updates the x/y value. */
+        void set (float x, float y);
+    }
+
     /** Used to cancel animations after they've been started. See {@link #handle}. */
     public interface Handle {
         /** Cancels this animation. It will remove itself from its animator the next frame. */
@@ -161,9 +173,8 @@ public abstract class Animation
 
     /** Animates a pair of scalar values (usually a position). */
     public static class Two extends Interped<Two> {
-        public Two (Value x, Value y) {
-            _x = x;
-            _y = y;
+        public Two (XYValue value) {
+            _value = value;
         }
 
         /** Configures the starting values. Default: the values of the scalar at the time that the
@@ -195,24 +206,23 @@ public abstract class Animation
         @Override
         protected void init (float time) {
             super.init(time);
-            if (_fromx == Float.MIN_VALUE) _fromx = _x.initial();
-            if (_fromy == Float.MIN_VALUE) _fromy = _y.initial();
+            if (_fromx == Float.MIN_VALUE) _fromx = _value.initialX();
+            if (_fromy == Float.MIN_VALUE) _fromy = _value.initialY();
         }
 
         @Override
         protected float apply (float time) {
             float dt = time-_start;
             if (dt < _duration) {
-                _x.set(_interp.apply(_fromx, _tox-_fromx, dt, _duration));
-                _y.set(_interp.apply(_fromy, _toy-_fromy, dt, _duration));
+                _value.set(_interp.apply(_fromx, _tox-_fromx, dt, _duration),
+                           _interp.apply(_fromy, _toy-_fromy, dt, _duration));
             } else {
-                _x.set(_tox);
-                _y.set(_toy);
+                _value.set(_tox, _toy);
             }
             return _duration - dt;
         }
 
-        protected final Value _x, _y;
+        protected final XYValue _value;
         protected float _fromx = Float.MIN_VALUE, _fromy = Float.MIN_VALUE;
         protected float _tox, _toy;
     }

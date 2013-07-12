@@ -43,7 +43,7 @@ public abstract class AnimBuilder
      * Starts a tween on the supplied layer's x/y-translation.
      */
     public Animation.Two tweenXY (Layer layer) {
-        return add(new Animation.Two(onX(layer), onY(layer)));
+        return add(new Animation.Two(onXY(layer)));
     }
 
     /**
@@ -58,6 +58,13 @@ public abstract class AnimBuilder
      */
     public Animation.One tweenY (Layer layer) {
         return tween(onY(layer));
+    }
+
+    /**
+     * Starts a tween on the supplied layer's origin.
+     */
+    public Animation.Two tweenOrigin (Layer layer) {
+        return add(new Animation.Two(onOrigin(layer)));
     }
 
     /**
@@ -86,7 +93,7 @@ public abstract class AnimBuilder
      * Starts a tween on the supplied layer's x/y-scale.
      */
     public Animation.Two tweenScaleXY (Layer layer) {
-        return add(new Animation.Two(onScaleX(layer), onScaleY(layer)));
+        return add(new Animation.Two(onScaleXY(layer)));
     }
 
     /**
@@ -362,6 +369,15 @@ public abstract class AnimBuilder
         };
     }
 
+    protected static Animation.XYValue onXY (final Layer layer) {
+        Asserts.checkNotNull(layer);
+        return new Animation.XYValue() {
+            public float initialX () { return layer.tx(); }
+            public float initialY () { return layer.ty(); }
+            public void set (float x, float y) { layer.setTranslation(x, y); }
+        };
+    }
+
     protected static Animation.Value onScaleX (final Layer layer) {
         Asserts.checkNotNull(layer);
         return new Animation.Value() {
@@ -375,6 +391,24 @@ public abstract class AnimBuilder
         return new Animation.Value() {
             public float initial () { return layer.scaleY(); }
             public void set (float value) { layer.setScaleY(value); }
+        };
+    }
+
+    protected static Animation.XYValue onScaleXY (final Layer layer) {
+        Asserts.checkNotNull(layer);
+        return new Animation.XYValue() {
+            public float initialX () { return layer.scaleX(); }
+            public float initialY () { return layer.scaleY(); }
+            public void set (float x, float y) { layer.setScale(x, y); }
+        };
+    }
+
+    protected static Animation.XYValue onOrigin (final Layer layer) {
+        Asserts.checkNotNull(layer);
+        return new Animation.XYValue() {
+            public float initialX () { return layer.originX(); }
+            public float initialY () { return layer.originY(); }
+            public void set (float x, float y) { layer.setOrigin(x, y); }
         };
     }
 }
