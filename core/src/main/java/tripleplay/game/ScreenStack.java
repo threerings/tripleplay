@@ -366,6 +366,14 @@ public class ScreenStack
             _trans.init(_oscreen, _nscreen);
             // disable pointer interactions while we transition; disallowing interaction
             pointer().setEnabled(false);
+
+            // Force a complete if the Transition is a noop, so that we don't have to wait until
+            // the next update. We should consider checking some property of the Transition object
+            // rather than checking against noop, in the odd case that we have a custom 0-duration
+            // transition.
+            if (_trans == NOOP) {
+                complete();
+            }
         }
 
         public void update (int delta) {
