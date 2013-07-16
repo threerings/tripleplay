@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.threerings</groupId>
     <artifactId>tripleplay-demo</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.7.3</version>
   </parent>
 
   <artifactId>tripleplay-demo-java</artifactId>
@@ -67,8 +65,8 @@
             <phase>test</phase>
             <configuration>
               <target>
-                <java fork="true" classname="${mainClass}" classpathref="maven.test.classpath">
-                  <sysproperty key="java.library.path" value="target/natives"/>
+                <java classpathref="maven.test.classpath" classname="${mainClass}" fork="true">
+                  <sysproperty value="target/natives" key="java.library.path" />
                 </java>
               </target>
             </configuration>
