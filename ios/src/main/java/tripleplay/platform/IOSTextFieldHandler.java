@@ -135,8 +135,9 @@ public class IOSTextFieldHandler
                 public void Invoke (NSNotification nf) {
                     UIDeviceOrientation orient = UIDevice.get_CurrentDevice().get_Orientation();
                     if (orient.Value == _currentOrientation) return; // NOOP
-                    if (!((IOSPlatform)PlayN.platform()).supportedOrients().isSupported(orient))
+                    if (!((IOSPlatform)PlayN.platform()).supportedOrients().isSupported(orient)) {
                         return; // unsupported orientation, no rotation
+                    }
                     _currentOrientation = orient.Value;
 
                     if (_gameViewTransformed) {
@@ -217,10 +218,12 @@ public class IOSTextFieldHandler
             // let through any touch that the virtual keyboard controller wants to allow.
             if (!hideVirtualKeyboardAt(pointF)) return false;
             // allow through touches that hit text fields we manage
-            for (IOSNativeTextField field : _activeFields.values())
+            for (IOSNativeTextField field : _activeFields.values()) {
                 if (field.getView().PointInside(
-                        ConvertPointToView(pointF, field.getView()), uiEvent))
+                        ConvertPointToView(pointF, field.getView()), uiEvent)) {
                     return false;
+                }
+            }
             // else absorb the hit at this point so that we can hide the keyboard in TouchesBegan
             return true;
         }

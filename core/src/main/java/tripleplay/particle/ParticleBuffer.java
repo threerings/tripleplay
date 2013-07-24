@@ -151,8 +151,9 @@ public class ParticleBuffer
                 }
 
                 // the particle lives, apply the effectors
-                for (int ee = 0; ee < ecount; ee++)
+                for (int ee = 0; ee < ecount; ee++) {
                     effectors.get(ee).apply(pp, data, ppos, now, dt);
+                }
                 living++;
             }
 
