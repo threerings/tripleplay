@@ -26,7 +26,7 @@ public class ParticleShader extends IndexedTrisShader
     }
 
     @Override
-    protected Core createTextureCore() {
+    protected Core createTextureCore () {
         return core = new ParticleCore(vertexShader(), textureFragmentShader());
     }
 
