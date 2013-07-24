@@ -33,9 +33,9 @@ public class ParticleBuffer
     public static final int M10 = M01+1;
     /** The offset of the m11 transform element in the particle buffer. */
     public static final int M11 = M10+1;
-    /** The offset of the tx trasform element in the particle buffer. */
+    /** The offset of the tx transform element in the particle buffer. */
     public static final int TX = M11+1;
-    /** The offset of the ty trasform element in the particle buffer. */
+    /** The offset of the ty transform element in the particle buffer. */
     public static final int TY = TX+1;
 
     /** The offset of the alpha + red tint in the particle buffer.
