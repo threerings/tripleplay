@@ -69,4 +69,24 @@ public abstract class Container<T extends Container<T>> extends Element<T>
         if (destroy) child.layer.destroy();
     }
 
+    @Override protected void wasAdded () {
+        super.wasAdded();
+        for (int ii = 0, count = childCount(); ii < count; ii++) {
+            Element<?> child = childAt(ii);
+            child.set(Flag.IS_ADDING, true);
+            child.wasAdded();
+        }
+    }
+
+    @Override protected void wasRemoved () {
+        super.wasRemoved();
+        boolean willDestroy = isSet(Flag.WILL_DESTROY);
+        for (int ii = 0, count = childCount(); ii < count; ii++) {
+            Element<?> child = childAt(ii);
+            if (willDestroy) child.set(Flag.WILL_DESTROY, true);
+            child.set(Flag.IS_REMOVING, true);
+            child.wasRemoved();
+        }
+        // if we're added again, we'll be re-laid-out
+    }
 }

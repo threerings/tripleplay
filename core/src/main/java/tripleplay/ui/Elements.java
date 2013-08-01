@@ -142,25 +142,6 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
         _childRemoved.emit(child);
     }
 
-    @Override protected void wasAdded () {
-        super.wasAdded();
-        for (Element<?> child : _children) {
-            child.set(Flag.IS_ADDING, true);
-            child.wasAdded();
-        }
-    }
-
-    @Override protected void wasRemoved () {
-        super.wasRemoved();
-        boolean willDestroy = isSet(Flag.WILL_DESTROY);
-        for (Element<?> child : _children) {
-            if (willDestroy) child.set(Flag.WILL_DESTROY, true);
-            child.set(Flag.IS_REMOVING, true);
-            child.wasRemoved();
-        }
-        // if we're added again, we'll be re-laid-out
-    }
-
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         return new ElementsLayoutData();
     }
