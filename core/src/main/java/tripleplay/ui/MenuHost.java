@@ -332,11 +332,11 @@ public class MenuHost
     /** Simple layout for positioning the menu within the transient {@code Root}. */
     protected static class RootLayout extends Layout
     {
-        @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
+        @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
             return new Dimension(preferredSize(elems.childAt(0), hintX, hintY));
         }
 
-        @Override public void layout (Elements<?> elems, float left, float top, float width,
+        @Override public void layout (Container<?> elems, float left, float top, float width,
                                       float height) {
             if (elems.childCount() == 0) return;
 

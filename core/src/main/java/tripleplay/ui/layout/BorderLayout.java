@@ -11,8 +11,8 @@ import java.util.Map;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.Rectangle;
+import tripleplay.ui.Container;
 import tripleplay.ui.Element;
-import tripleplay.ui.Elements;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Style;
 
@@ -153,12 +153,12 @@ public class BorderLayout extends Layout
     }
 
     @Override
-    public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
+    public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
         return new Slots(elems).computeSize(hintX, hintY);
     }
 
     @Override
-    public void layout (Elements<?> elems, float left, float top, float width, float height) {
+    public void layout (Container<?> elems, float left, float top, float width, float height) {
         Style.HAlign halign = resolveStyle(elems, Style.HALIGN);
         Style.VAlign valign = resolveStyle(elems, Style.VALIGN);
         Slots slots = new Slots(elems);
@@ -185,7 +185,7 @@ public class BorderLayout extends Layout
     {
         final Map<Position, Element<?>> elements = new HashMap<Position, Element<?>>();
 
-        Slots (Elements<?> elems) {
+        Slots (Container<?> elems) {
             for (Element<?> elem : elems) {
                 if (!elem.isVisible()) continue;
                 Position p = Position.positionOf(elem.constraint());

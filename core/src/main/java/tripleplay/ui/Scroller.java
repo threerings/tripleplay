@@ -593,7 +593,7 @@ public class Scroller extends Elements<Scroller>
      * Scroller up to date. */
     protected class ScrollLayout extends Layout
     {
-        @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
+        @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
             // the content is always the 1st child, get the preferred size with extended hints
             Asserts.checkArgument(elems.childCount() == 1 && elems.childAt(0) == content);
             _contentSize.setSize(preferredSize(elems.childAt(0),
@@ -601,7 +601,7 @@ public class Scroller extends Elements<Scroller>
             return new Dimension(_contentSize);
         }
 
-        @Override public void layout (Elements<?> elems, float left, float top, float width,
+        @Override public void layout (Container<?> elems, float left, float top, float width,
                                       float height) {
             Asserts.checkArgument(elems.childCount() == 1 && elems.childAt(0) == content);
             // reset range of scroll bars

@@ -167,12 +167,12 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
 
     protected class ElementsLayoutData extends LayoutData {
         @Override public Dimension computeSize (float hintX, float hintY) {
-            return _layout.computeSize(Elements.this, hintX, hintY);
+            return _layout.computeSize((Container<?>)Elements.this, hintX, hintY);
         }
 
         @Override public void layout (float left, float top, float width, float height) {
             // layout our children
-            _layout.layout(Elements.this, left, top, width, height);
+            _layout.layout((Container<?>)Elements.this, left, top, width, height);
             // layout is only called as part of revalidation, so now we validate our children
             for (Element<?> child : _children) child.validate();
         }

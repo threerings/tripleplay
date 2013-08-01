@@ -13,8 +13,8 @@ import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 
+import tripleplay.ui.Container;
 import tripleplay.ui.Element;
-import tripleplay.ui.Elements;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Style.HAlign;
 import tripleplay.ui.Style.VAlign;
@@ -141,7 +141,7 @@ public class AbsoluteLayout extends Layout
         return elem;
     }
 
-    @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
+    @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
         // report a size large enough to contain all of our elements
         Rectangle bounds = new Rectangle();
         for (Element<?> elem : elems) {
@@ -153,7 +153,7 @@ public class AbsoluteLayout extends Layout
         return new Dimension(bounds.width, bounds.height);
     }
 
-    @Override public void layout (Elements<?> elems,
+    @Override public void layout (Container<?> elems,
                                   float left, float top, float width, float height) {
         for (Element<?> elem : elems) {
             if (!elem.isVisible()) continue;

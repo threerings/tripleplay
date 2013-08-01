@@ -11,8 +11,8 @@ import playn.core.Asserts;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 
+import tripleplay.ui.Container;
 import tripleplay.ui.Element;
-import tripleplay.ui.Elements;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Style;
 
@@ -164,12 +164,12 @@ public class TableLayout extends Layout
         return _columns.length;
     }
 
-    @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
+    @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
         Metrics m = computeMetrics(elems, hintX, hintY);
         return new Dimension(m.totalWidth(_colgap), m.totalHeight(_rowgap));
     }
 
-    @Override public void layout (Elements<?> elems,
+    @Override public void layout (Container<?> elems,
                                   float left, float top, float width, float height) {
         Metrics m = computeMetrics(elems, width, height);
         int columns = m.columns(), row = 0, col = 0;
@@ -222,7 +222,7 @@ public class TableLayout extends Layout
         return freeWeight;
     }
 
-    protected Metrics computeMetrics (Elements<?> elems, float hintX, float hintY) {
+    protected Metrics computeMetrics (Container<?> elems, float hintX, float hintY) {
         int columns = _columns.length;
         int cells = 0;
         for (Element<?> elem : elems) cells += colspan(elem);

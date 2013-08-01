@@ -8,8 +8,8 @@ package tripleplay.ui.layout;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 
+import tripleplay.ui.Container;
 import tripleplay.ui.Element;
-import tripleplay.ui.Elements;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Style;
 
@@ -73,12 +73,12 @@ public abstract class AxisLayout extends Layout
 
     /** A vertical axis layout. */
     public static class Vertical extends AxisLayout {
-        @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
+        @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
             Metrics m = computeMetrics(elems, hintX, hintY, true);
             return new Dimension(m.maxWidth, m.prefHeight + m.gaps(_gap));
         }
 
-        @Override public void layout (Elements<?> elems,
+        @Override public void layout (Container<?> elems,
                                       float left, float top, float width, float height) {
             Style.HAlign halign = resolveStyle(elems, Style.HALIGN);
             Style.VAlign valign = resolveStyle(elems, Style.VALIGN);
@@ -100,12 +100,12 @@ public abstract class AxisLayout extends Layout
 
     /** A horizontal axis layout. */
     public static class Horizontal extends AxisLayout {
-        @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
+        @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
             Metrics m = computeMetrics(elems, hintX, hintY, false);
             return new Dimension(m.prefWidth + m.gaps(_gap), m.maxHeight);
         }
 
-        @Override public void layout (Elements<?> elems,
+        @Override public void layout (Container<?> elems,
                                       float left, float top, float width, float height) {
             Style.HAlign halign = resolveStyle(elems, Style.HALIGN);
             Style.VAlign valign = resolveStyle(elems, Style.VALIGN);
@@ -229,7 +229,7 @@ public abstract class AxisLayout extends Layout
         return this;
     }
 
-    protected Metrics computeMetrics (Elements<?> elems, float hintX, float hintY,
+    protected Metrics computeMetrics (Container<?> elems, float hintX, float hintY,
                                       boolean vert) {
         Metrics m = new Metrics();
         for (Element<?> elem : elems) {

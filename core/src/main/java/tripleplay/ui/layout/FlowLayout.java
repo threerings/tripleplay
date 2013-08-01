@@ -10,8 +10,8 @@ import java.util.List;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
+import tripleplay.ui.Container;
 import tripleplay.ui.Element;
-import tripleplay.ui.Elements;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Style;
 
@@ -72,12 +72,12 @@ public class FlowLayout extends Layout
         return this;
     }
 
-    @Override public Dimension computeSize (Elements<?> elems, float hintX, float hintY) {
+    @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
         Metrics m = computeMetrics(elems, hintX, hintY);
         return m.size;
     }
 
-    @Override public void layout (Elements<?> elems,
+    @Override public void layout (Container<?> elems,
                                   float left, float top, float width, float height) {
         Style.HAlign halign = resolveStyle(elems, Style.HALIGN);
         Metrics m = computeMetrics(elems, width, height);
@@ -101,7 +101,7 @@ public class FlowLayout extends Layout
         }
     }
 
-    protected Metrics computeMetrics (Elements<?> elems, float width, float height) {
+    protected Metrics computeMetrics (Container<?> elems, float width, float height) {
         Metrics m = new Metrics();
 
         // adjust our maximum width if appropriate
