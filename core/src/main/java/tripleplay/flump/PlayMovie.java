@@ -7,7 +7,7 @@ package tripleplay.flump;
 
 import tripleplay.anim.Animation;
 
-/** Plays through an entire movie once. */
+/** Plays a movie until it ends. */
 public class PlayMovie extends Animation
 {
     public PlayMovie (Movie movie) {
@@ -16,14 +16,21 @@ public class PlayMovie extends Animation
 
     @Override protected void init (float time) {
         super.init(time);
-        _movie.setPosition(0);
+        _lastTime = time;
     }
 
     @Override protected float apply (float time) {
-        float elapsed = _movie.speed() * (time - _start);
-        _movie.setPosition(elapsed);
-        return _movie.symbol().duration - elapsed;
+        float dt = time - _lastTime;
+        _lastTime = time;
+
+        float remaining = _movie.symbol().duration - _movie.position() - dt*_movie.speed();
+        if (remaining < 0) {
+            dt = (_movie.symbol().duration-_movie.position()) / _movie.speed();
+        }
+        _movie.paint(dt);
+        return remaining;
     }
 
     protected Movie _movie;
+    protected float _lastTime;
 }
