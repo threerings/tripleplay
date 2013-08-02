@@ -246,31 +246,32 @@ public class Movie
             float alpha = kf.alpha;
 
             if (kf.tweened && keyframeIdx < finalFrame) {
-                // Interpolate with the next keyframe
-                float interp = (frame-kf.index) / kf.duration;
-                float ease = kf.ease;
-                if (ease != 0) {
-                    float t;
-                    if (ease < 0) {
-                        // Ease in
-                        float inv = 1 - interp;
-                        t = 1 - inv*inv;
-                        ease = -ease;
-                    } else {
-                        // Ease out
-                        t = interp*interp;
-                    }
-                    interp = ease*t + (1-ease)*interp;
-                }
-
+                // Interpolate with the next keyframe, if there's something on the next keyframe
                 KeyframeData nextKf = keyframes.get(keyframeIdx+1);
-                locX += (nextKf.loc.x()-locX) * interp;
-                locY += (nextKf.loc.y()-locY) * interp;
-                scaleX += (nextKf.scale.x()-scaleX) * interp;
-                scaleY += (nextKf.scale.y()-scaleY) * interp;
-                skewX += (nextKf.skew.x()-skewX) * interp;
-                skewY += (nextKf.skew.y()-skewY) * interp;
-                alpha += (nextKf.alpha-alpha) * interp;
+                if (nextKf.symbol() != null) {
+                    float interp = (frame-kf.index) / kf.duration;
+                    float ease = kf.ease;
+                    if (ease != 0) {
+                        float t;
+                        if (ease < 0) {
+                            // Ease in
+                            float inv = 1 - interp;
+                            t = 1 - inv*inv;
+                            ease = -ease;
+                        } else {
+                            // Ease out
+                            t = interp*interp;
+                        }
+                        interp = ease*t + (1-ease)*interp;
+                    }
+                    locX += (nextKf.loc.x()-locX) * interp;
+                    locY += (nextKf.loc.y()-locY) * interp;
+                    scaleX += (nextKf.scale.x()-scaleX) * interp;
+                    scaleY += (nextKf.scale.y()-scaleY) * interp;
+                    skewX += (nextKf.skew.x()-skewX) * interp;
+                    skewY += (nextKf.skew.y()-skewY) * interp;
+                    alpha += (nextKf.alpha-alpha) * interp;
+                }
             }
 
             float sinX = FloatMath.sin(skewX), cosX = FloatMath.cos(skewX);
