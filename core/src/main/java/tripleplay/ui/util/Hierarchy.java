@@ -7,8 +7,8 @@ package tripleplay.ui.util;
 
 import java.util.Iterator;
 
+import tripleplay.ui.Container;
 import tripleplay.ui.Element;
-import tripleplay.ui.Elements;
 
 /**
  * A view for the hierarchical structure of an {@link Element}.
@@ -96,8 +96,8 @@ public class Hierarchy
 
     protected static void forEachDescendant (Element<?> root, ElementOp<Element<?>> op) {
         op.apply(root);
-        if (root instanceof Elements<?>) {
-            Elements<?> es = (Elements<?>)root;
+        if (root instanceof Container<?>) {
+            Container<?> es = (Container<?>)root;
             for (int ii = 0, ll = es.childCount(); ii < ll; ++ii) {
                 forEachDescendant(es.childAt(ii), op);
             }
