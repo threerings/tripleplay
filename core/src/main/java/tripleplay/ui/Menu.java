@@ -395,7 +395,7 @@ public class Menu extends Elements<Menu>
     /** Method to execute after layout, used to activate the menu. */
     protected Runnable _postLayout;
 
-    /** Whether the menu is ready for use input. */
+    /** Whether the menu is ready for user input. */
     protected boolean _active;
 
     /** Whether the menu is closed. */
