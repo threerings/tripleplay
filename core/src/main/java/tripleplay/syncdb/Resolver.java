@@ -47,14 +47,16 @@ public interface Resolver<T>
 
     /** Uses whichever of the client or server is true. */
     Resolver<Boolean> TRUE = new Resolver<Boolean>() {
-        public <V extends Boolean> V resolve (V client, V server) {
+        @SuppressWarnings("unchecked")
+        public Boolean resolve (Boolean client, Boolean server) {
             return client ? client : server;
         }
     };
 
     /** Uses whichever of the client or server is false. */
     Resolver<Boolean> FALSE = new Resolver<Boolean>() {
-        public <V extends Boolean> V resolve (V client, V server) {
+        @SuppressWarnings("unchecked")
+        public Boolean resolve (Boolean client, Boolean server) {
             return client ? server : client;
         }
     };
