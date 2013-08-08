@@ -10,7 +10,7 @@ import tripleplay.flump.Texture;
  */
 public class Instances
 {
-    public interface HierarchyListener
+    public interface Op
     {
         boolean onVisit (String parentLayer, Instance instance, int depth);
     }
@@ -27,7 +27,7 @@ public class Instances
     public static String dumpHierarchy (Instance root)
     {
         final StringBuilder result = new StringBuilder();
-        HierarchyListener listener = new HierarchyListener() {
+        Op listener = new Op() {
             @Override public boolean onVisit (String parentLayer, Instance instance, int depth) {
                 String instanceDesc;
                 if (instance instanceof Movie) {
@@ -71,16 +71,16 @@ public class Instances
      *
      * @return <code>true</code> if <code>onVisit</code> returned <code>true</code>
      */
-    public static boolean applyToHierarchy (Instance root, HierarchyListener listener)
+    public static boolean applyToHierarchy (Instance root, Op listener)
     {
         return applyToHierarchy0("root", root, listener, 0);
     }
 
     /** Helper for applyToHierarchy */
-    protected static boolean applyToHierarchy0 (String layerName,
-        Instance root, HierarchyListener listener, int depth)
+    protected static boolean applyToHierarchy0 (
+        String parentLayer, Instance root, Op listener, int depth)
     {
-        if (listener.onVisit(layerName, root, depth)) {
+        if (listener.onVisit(parentLayer, root, depth)) {
             return true;
         }
 
