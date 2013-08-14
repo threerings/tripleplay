@@ -10,10 +10,8 @@ import pythagoras.f.Point;
 import playn.core.CanvasImage;
 import playn.core.Font;
 import playn.core.GroupLayer;
-import playn.core.Image;
 import playn.core.ImageLayer;
 import playn.core.Layer;
-import playn.core.util.Callback;
 import playn.core.util.Clock;
 import static playn.core.PlayN.*;
 

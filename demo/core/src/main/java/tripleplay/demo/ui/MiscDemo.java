@@ -6,7 +6,6 @@
 package tripleplay.demo.ui;
 
 import playn.core.Image;
-import playn.core.Log;
 import playn.core.PlayN;
 
 import react.Function;
