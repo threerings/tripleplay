@@ -57,9 +57,8 @@ import tripleplay.util.Layers;
  * inactivity. By default, bars are drawn as simple semi-transparent overlays. The color, size and
  * overall rendering can be overridden with styles.</p>
  *
- * <p>NOTE: the scroll group inherits from Elements as an implementation detail: add and remove
- * should never be called directly. To "add" elements, callers should set {@link #content} to a
- * {@code Group} and add things to that.</p>
+ * <p>NOTE: scroller is a composite container, so callers can't add to or remove from it. To "add"
+ * elements, callers should set {@link #content} to a {@code Group} and add things to it.</p>
  *
  * <p>NOTE: since scrolling is done by pointer events, child elements cannot be clicked directly.
  * Instead, basic click handling can be done using the {@link #contentClicked} signal.</p>
@@ -69,7 +68,7 @@ import tripleplay.util.Layers;
  * TODO: optional gutter for scroll bars?
  * TODO: more support for interacting with child elements
  */
-public class Scroller extends Elements<Scroller>
+public class Scroller extends Composite<Scroller>
 {
     /** The size of scroll bars. */
     public static final Style<Float> BAR_SIZE = Style.newStyle(true, 5f);
@@ -288,17 +287,23 @@ public class Scroller extends Elements<Scroller>
      * Graphics level clipping is always performed.</p>
      */
     public Scroller (Element<?> content) {
-        super(AxisLayout.horizontal().stretchByDefault().offStretch().gap(0));
+        setLayout(AxisLayout.horizontal().stretchByDefault().offStretch().gap(0));
+        // our only immediate child is the _scroller, and that contains the content
+        initChildren(_scroller = new Group(new ScrollLayout()) {
+            @Override protected GroupLayer createLayer () {
+                // use 1, 1 so we don't crash. the real size is set on validation
+                return PlayN.graphics().createGroupLayer(1, 1);
+            }
+        });
 
-        // out immediate child is the scroller, and that has the content
-        add(_scroller.add(this.content = content));
+        _scroller.add(this.content = content);
 
         // use the content's clipping method if it is Clippable
         if (content instanceof Clippable) {
             _clippable = (Clippable)content;
 
         } else {
-            // otherwise, clip using layer translation and GroupLayer.Clipped
+            // otherwise, clip using layer translation
             _clippable = new Clippable() {
                 @Override public void setViewArea (float width, float height) { /* noop */ }
                 @Override public void setPosition (float x, float y) {
@@ -421,16 +426,6 @@ public class Scroller extends Elements<Scroller>
         return _flicker.clicked;
     }
 
-    @Override public Scroller add (Element<?>... children) {
-        Asserts.checkState(childCount() + children.length == 1);
-        return super.add(children);
-    }
-
-    @Override public Scroller add (int index, Element<?> child) {
-        Asserts.checkState(childCount() == 0);
-        return super.add(index, child);
-    }
-
     /** Prepares the scroll group for the next frame, at t = t + delta. */
     protected void update (float delta) {
         _flicker.update(delta);
@@ -498,8 +493,8 @@ public class Scroller extends Elements<Scroller>
      * the clipping area. */
     // TODO: can we get the performance win without being so intrusive?
     protected void updateVisibility () {
-        // non-Elements can't participate, they must implement Clippable and do something else
-        if (!(content instanceof Elements)) {
+        // only Container can participate, others must implement Clippable and do something else
+        if (!(content instanceof Container)) {
             return;
         }
 
@@ -540,8 +535,8 @@ public class Scroller extends Elements<Scroller>
         }
     }
 
-    /** Extends the usual Elements layout with scroll bar setup. */
-    protected class BarsLayoutData extends ElementsLayoutData
+    /** Extends the usual layout with scroll bar setup. */
+    protected class BarsLayoutData extends CompositeLayoutData
     {
         public final int barColor = resolveStyle(BAR_COLOR);
         public final float barSize = resolveStyle(BAR_SIZE).floatValue();
@@ -589,8 +584,8 @@ public class Scroller extends Elements<Scroller>
     }
 
     /** Lays out the internal scroller group that contains the content. Performs all the jiggery
-     * pokery necessary to make the content think it is in a large area and keep the outer
-     * Scroller up to date. */
+     * pokery necessary to make the content think it is in a large area and update the outer
+     * {@code Scroller} instance. */
     protected class ScrollLayout extends Layout
     {
         @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
@@ -636,13 +631,7 @@ public class Scroller extends Elements<Scroller>
         }
     }
 
-    protected final Group _scroller = new Group(new ScrollLayout()) {
-        @Override protected GroupLayer createLayer () {
-            // use 1, 1 so we don't crash. the real size is set on validation
-            return PlayN.graphics().createGroupLayer(1, 1);
-        }
-    };
-
+    protected final Group _scroller;
     protected final XYFlicker _flicker;
     protected final Clippable _clippable;
     protected final Dimension _contentSize = new Dimension();

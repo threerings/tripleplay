@@ -154,9 +154,11 @@ public abstract class Composite<T extends Composite<T>> extends Container<T>
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         if (_layout == null) throw new IllegalStateException();
-        return new ContainerLayoutData() {
-            @Override public Layout getLayout() { return _layout; }
-        };
+        return new CompositeLayoutData();
+    }
+
+    protected class CompositeLayoutData extends ContainerLayoutData {
+        @Override public Layout getLayout() { return _layout; }
     }
 
     /** Children set by subclass. */
