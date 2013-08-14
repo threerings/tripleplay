@@ -20,7 +20,7 @@ import playn.core.gl.GLContext;
 import static playn.core.PlayN.graphics;
 
 /**
- * Maintains a (usually debugging) HUD with textual information displayed in one or two colums. The
+ * Maintains a (usually debugging) HUD with textual information displayed in one or two columns. The
  * text is all rendered to a single {@link CanvasImage} (and updated only when values change) to
  * put as little strain on the renderer as possible. Example usage:
  * <pre>{@code
