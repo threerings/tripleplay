@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import pythagoras.f.Dimension;
-
 import react.Signal;
 import react.SignalView;
 
@@ -53,10 +51,7 @@ public abstract class Elements<T extends Elements<T>> extends Container.Mutable<
     public T add (Element<?>... children) {
         // remove the children from existing parents, if any
         for (Element<?> child : children) {
-            Container<?> parent = child.parent();
-            if (parent != null) {
-                ((Container.Mutable<?>)parent).remove(child);
-            }
+            removeFromParent(child, false);
         }
 
         _children.addAll(Arrays.asList(children));
@@ -69,10 +64,7 @@ public abstract class Elements<T extends Elements<T>> extends Container.Mutable<
 
     public T add (int index, Element<?> child) {
         // remove the child from an existing parent, if it has one
-        Container<?> parent = child.parent();
-        if (parent != null) {
-            ((Container.Mutable<?>)parent).remove(child);
-        }
+        Container.removeFromParent(child, false);
 
         _children.add(index, child);
         didAdd(child);

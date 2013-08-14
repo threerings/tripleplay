@@ -15,6 +15,24 @@ import pythagoras.f.Dimension;
 public abstract class Container<T extends Container<T>> extends Element<T>
     implements Iterable<Element<?>>
 {
+    /**
+     * Removes and optionally destroys the given element from its parent, if the parent is a
+     * mutable container. This is set apart as a utility method since it is not desirable to have
+     * on all containers, but is frequently useful to have. The caller is willing to accept the
+     * class cast exception if the parent container is not mutable. Does nothing if the element
+     * has no parent.
+     * @param element the element to remove
+     * @param destroy whether to also destroy the element
+     * @return true if the element had a parent and it was removed or destroyed
+     */
+    public static boolean removeFromParent (Element<?> element, boolean destroy) {
+        if (element.parent() == null) return false;
+        Mutable<?> parent = (Mutable<?>)element.parent();
+        if (destroy) parent.destroy(element);
+        else parent.remove(element);
+        return true;
+    }
+
     /** A container that allows mutation (adding and removal) of its children. */
     public static abstract class Mutable<T extends Mutable<T>> extends Container<T> {
         /** Removes the specified child from this container. */
