@@ -10,8 +10,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import pythagoras.f.Dimension;
-
 /**
  * A container with a fixed list of children, which client code must assume is immutable.
  * Subclasses may or may not expose the children directly. Subclasses may layout via the
@@ -156,15 +154,8 @@ public abstract class Composite<T extends Composite<T>> extends Container<T>
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         if (_layout == null) throw new IllegalStateException();
-        return new LayoutData() {
-            @Override public Dimension computeSize (float hintX, float hintY) {
-                return _layout.computeSize(Composite.this, hintX, hintY);
-            }
-
-            @Override public void layout (float left, float top, float width, float height) {
-                _layout.layout(Composite.this, left, top, width, height);
-                for (Element<?> child : _children) child.validate();
-            }
+        return new ContainerLayoutData() {
+            @Override public Layout getLayout() { return _layout; }
         };
     }
 
