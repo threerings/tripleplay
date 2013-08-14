@@ -45,54 +45,6 @@ public abstract class Composite<T extends Composite<T>> extends Container<T>
     }
 
     /**
-     * Not implemented; subclasses have exclusive control via {@link #initChildren}.
-     * @throws UnsupportedOperationException
-     */
-    @Override public void remove (Element<?> child) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not implemented; subclasses have exclusive control via {@link #initChildren}.
-     * @throws UnsupportedOperationException
-     */
-    @Override public void removeAt (int index) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not implemented; subclasses have exclusive control via {@link #initChildren}.
-     * @throws UnsupportedOperationException
-     */
-    @Override public void removeAll () {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not implemented; subclasses have exclusive control via {@link #initChildren}.
-     * @throws UnsupportedOperationException
-     */
-    @Override public void destroy (Element<?> child) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not implemented; subclasses have exclusive control via {@link #initChildren}.
-     * @throws UnsupportedOperationException
-     */
-    @Override public void destroyAt (int index) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not implemented; subclasses have exclusive control via {@link #initChildren}.
-     * @throws UnsupportedOperationException
-     */
-    @Override public void destroyAll () {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Creates a new composite instance with no children. Subclasses are expected to call
      * {@link #initChildren(List)} afterwards to supply the enumeration of children.
      */

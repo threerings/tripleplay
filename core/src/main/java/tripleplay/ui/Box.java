@@ -14,7 +14,7 @@ import pythagoras.f.Dimension;
  * A container that holds zero or one widget. The box delegates everything to its current contents
  * (its preferred size is its content's preferred size, it sizes its contents to its size).
  */
-public class Box extends Container<Box> {
+public class Box extends Container.Mutable<Box> {
 
     /** Creates an empty box. */
     public Box () {

@@ -19,7 +19,7 @@ import react.SignalView;
 /**
  * Contains other elements and lays them out according to a layout policy.
  */
-public abstract class Elements<T extends Elements<T>> extends Container<T>
+public abstract class Elements<T extends Elements<T>> extends Container.Mutable<T>
 {
     /**
      * Creates a collection with the specified layout.
@@ -55,7 +55,7 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
         for (Element<?> child : children) {
             Container<?> parent = child.parent();
             if (parent != null) {
-                parent.remove(child);
+                ((Container.Mutable<?>)parent).remove(child);
             }
         }
 
@@ -71,7 +71,7 @@ public abstract class Elements<T extends Elements<T>> extends Container<T>
         // remove the child from an existing parent, if it has one
         Container<?> parent = child.parent();
         if (parent != null) {
-            parent.remove(child);
+            ((Container.Mutable<?>)parent).remove(child);
         }
 
         _children.add(index, child);
