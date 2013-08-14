@@ -210,7 +210,7 @@ public class Hud
             height += row.height();
         }
         // add in borders
-        width += 2*GAP;
+        width += 5*GAP;
         height += GAP*_rows.size()+GAP;
         // create a new image if necessary
         if (_image.width() < width || _image.height() < height) {
