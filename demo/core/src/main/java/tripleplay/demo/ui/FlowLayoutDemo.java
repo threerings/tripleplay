@@ -77,7 +77,7 @@ public class FlowLayoutDemo extends DemoScreen
         }
     }
 
-    protected enum ElemType { SMILE, TEXT, SMILE_TEXT, BUTTON };
+    protected enum ElemType { SMILE, TEXT, SMILE_TEXT, BUTTON }
 
     protected Icon _smiley = Icons.image(PlayN.assets().getImage("images/smiley.png"));
 }
