@@ -18,7 +18,7 @@ import tripleplay.ui.layout.FlowLayout;
 import tripleplay.ui.util.Supplier;
 
 /**
- * A composite {@code Elements} that implements tabbing. Has a horizontal row of buttons along
+ * A {@code Composite} that implements tabbing. Has a horizontal row of buttons along
  * the top and a stretching content group underneath. The buttons are instances of {@link
  * ToggleButton}. Each button is associated with a content element. When the button is clicked,
  * its content is shown alone in the content group.
@@ -43,12 +43,13 @@ import tripleplay.ui.util.Supplier;
  * instance. The contract of {@code Supplier} is obeyed in that {@link Supplier#destroy()} is
  * called whenever the associated tab goes out of scope.</p>
  *
- * <p>NOTE: The inheritance from Elements is an implementation detail, callers should not add
- * and remove child elements directly.</p>
+ * <p>NOTE: The inheritance from Composite means that child elements may not be added or removed
+ * directly. It you need, for example, a title bar, just use a Group with the title bar and tabs.
+ * </p>
  *
- * TODO: do we care about scrolling buttons?
+ * TODO: do we care about scrolling buttons? yes
  */
-public class Tabs extends Elements<Tabs>
+public class Tabs extends Composite<Tabs>
 {
     /**
      * Defines the highlighting of a tab. A tab button may be highlighted if the application
@@ -139,11 +140,10 @@ public class Tabs extends Elements<Tabs>
         NOOP_HIGHLIGHTER);
 
     /** The row of buttons, one per tab. */
-    public final Group buttons = new Group(new FlowLayout().gaps(3));
+    public final Group buttons;
 
     /** The content group. */
-    public final Group contentArea = new Group(
-        AxisLayout.horizontal().stretchByDefault().offStretch());
+    public final Group contentArea;
 
     /** The value containing the currently selected tab. */
     public final Value<Tab> selected = Value.create(null);
@@ -167,9 +167,12 @@ public class Tabs extends Elements<Tabs>
      * Creates a new tabbed container.
      */
     public Tabs () {
-        super(AxisLayout.vertical().gap(0).offStretch());
-
-        add(buttons, contentArea.setConstraint(AxisLayout.stretched()));
+        // use a simple vertical layout
+        setLayout(AxisLayout.vertical().gap(0).offStretch());
+        initChildren(
+            buttons = new Group(new FlowLayout().gaps(3)),
+            contentArea = new Group(AxisLayout.horizontal().stretchByDefault().offStretch()).
+                setConstraint(AxisLayout.stretched()));
 
         final Selector tabButtonSelector = new Selector(buttons, null).preventDeselection();
         tabButtonSelector.selected.connect(new Slot<Element<?>> () {
