@@ -103,10 +103,13 @@ public class ParticleBuffer
         }
     }
 
+    public boolean isFull () {
+        return _live >= _maxParticles;
+    }
+
     /** Adds {@code count} particles to this buffer, and initializes them with {@code initters}. */
     public void add (int count, float now, List<? extends Initializer> initters) {
-        // optimization when we're full
-        if (_live >= _maxParticles) return;
+        if (isFull()) return;
         // TODO: keep track of a last added position and start from there
         int pp = 0, ppos = 0, icount = initters.size(), initted = 0;
         for (int aa = 0; aa < alive.length && initted < count; aa++) {

@@ -48,6 +48,7 @@ public class Emitter
      * configures {@link #generator} with a generator that adds particles as desired.
      */
     public void addParticles (int count) {
+        if (_buffer.isFull()) return;
         for (int ii = 0, ll = initters.size(); ii < ll; ii++) initters.get(ii).willInit(count);
         _buffer.add(count, _parts.now(), initters);
     }
