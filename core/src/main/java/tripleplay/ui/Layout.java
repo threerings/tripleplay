@@ -40,50 +40,13 @@ public abstract class Layout
      * Computes and returns the size needed to arrange children of the supplied container according
      * to their preferred size, given the specified x and y size hints.
      */
-    public Dimension computeSize (Container<?> elems, float hintX, float hintY)
-    {
-        if (elems instanceof Elements) {
-            return computeSize((Elements<?>)elems, hintX, hintY);
-        } else {
-            // uh oh...
-            return new Dimension(0, 0);
-        }
-    }
-
-    /**
-     * Computes and returns the size needed to arrange children of the supplied elements according
-     * to their preferred size, given the specified x and y size hints.
-     * <p>This is deprecated and will be removed. Subclasses should change to override the
-     * Container overload instead.</p>
-     */
-    @Deprecated
-    public Dimension computeSize (Elements<?> elems, float hintX, float hintY)
-    {
-        return new Dimension(0, 0);
-    }
+    public abstract Dimension computeSize (Container<?> elems, float hintX, float hintY);
 
     /**
      * Lays out the supplied elements into a region of the specified dimensions.
      */
-    public void layout (Container<?> elems, float left, float top,
-                                 float width, float height) {
-        if (elems instanceof Elements) {
-            layout((Elements<?>)elems, left, top, width, height);
-        } else {
-            // uh oh...
-        }
-    }
-
-    /**
-     * Lays out the supplied elements into a region of the specified dimensions.
-     * <p>This is deprecated and will be removed. Subclasses should change to override the
-     * Container overload instead.</p>
-     */
-    @Deprecated
-    public void layout (Elements<?> elems, float left, float top,
-                                 float width, float height)
-    {
-    }
+    public abstract void layout (Container<?> elems, float left, float top,
+                                 float width, float height);
 
     // make Element.resolveStyle "visible" to custom layouts
     protected <V> V resolveStyle (Element<?> elem, Style<V> style) {
