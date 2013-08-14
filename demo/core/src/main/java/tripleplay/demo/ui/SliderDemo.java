@@ -32,7 +32,6 @@ public class SliderDemo extends DemoScreen
     }
 
     @Override protected Group createIface () {
-        Slider sliders[] = {null, null, null};
         Group iface = new Group(AxisLayout.vertical().gap(10)).add(
             new Shim(15, 15),
             new Label("Click and drag the slider to change the value:"),
