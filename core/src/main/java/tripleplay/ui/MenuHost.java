@@ -226,6 +226,15 @@ public class MenuHost
     }
 
     /**
+     * Deactivates the current menu, if any is showing.
+     */
+    public void deactivate () {
+        if (_active != null) {
+            _active.pop.menu.deactivate();
+        }
+    }
+
+    /**
      * Directs a menu pop signal to {@link #popup(Pop)}.
      */
     public Slot<Pop> onPopup () {
