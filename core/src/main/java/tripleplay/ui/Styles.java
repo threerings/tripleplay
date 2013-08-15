@@ -93,6 +93,7 @@ public final class Styles
      * instances define a particular style, the supplied {@code styles} will take precedence.
      */
     public Styles merge (Styles styles) {
+        if (_bindings.length == 0) return styles;
         return merge(styles._bindings);
     }
 
