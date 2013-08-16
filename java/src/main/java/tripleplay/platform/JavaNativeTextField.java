@@ -120,6 +120,8 @@ public class JavaNativeTextField extends NativeTextField
             FloatMath.round(font.size())));
 
         // TODO: Keyboard.TextType textType = resolveStyle(Field.TEXT_TYPE);
+        // TODO: Style.HAlign halign = resolveStyle(Style.HALIGN);
+        // TODO: int color = resolveStyle(Style.COLOR);
     }
 
     @Override public void setBounds (IRectangle bounds) {

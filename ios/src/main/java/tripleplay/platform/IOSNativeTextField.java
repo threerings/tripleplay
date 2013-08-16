@@ -8,10 +8,12 @@ package tripleplay.platform;
 import cli.MonoTouch.Foundation.NSRange;
 import cli.MonoTouch.Foundation.NSString;
 import cli.MonoTouch.UIKit.IUITextInputTraits;
+import cli.MonoTouch.UIKit.UIColor;
 import cli.MonoTouch.UIKit.UIControlContentVerticalAlignment;
 import cli.MonoTouch.UIKit.UIFont;
 import cli.MonoTouch.UIKit.UIKeyboardType;
 import cli.MonoTouch.UIKit.UIReturnKeyType;
+import cli.MonoTouch.UIKit.UITextAlignment;
 import cli.MonoTouch.UIKit.UITextAutocapitalizationType;
 import cli.MonoTouch.UIKit.UITextAutocorrectionType;
 import cli.MonoTouch.UIKit.UITextField;
@@ -23,6 +25,7 @@ import cli.System.Drawing.RectangleF;
 import playn.core.Events;
 import pythagoras.f.IRectangle;
 
+import playn.core.Color;
 import playn.core.Font;
 import playn.core.Keyboard;
 import react.Connection;
@@ -108,6 +111,14 @@ public abstract class IOSNativeTextField extends NativeTextField
             _pressedReturn = false;
         }
 
+        @Override protected void setAlignment (UITextAlignment halign) {
+            _field.set_TextAlignment(halign);
+        }
+
+        @Override protected void setColor(UIColor color) {
+            _field.set_TextColor(color);
+        }
+
         protected final UITextField _field;
         protected boolean _pressedReturn;
     }
@@ -152,6 +163,14 @@ public abstract class IOSNativeTextField extends NativeTextField
 
         @Override protected void didFinish () {
             _finishedEditing.emit(false);
+        }
+
+        @Override protected void setAlignment (UITextAlignment halign) {
+            _field.set_TextAlignment(halign);
+        }
+
+        @Override protected void setColor(UIColor color) {
+            _field.set_TextColor(color);
         }
 
         protected final UITextView _field;
@@ -243,6 +262,13 @@ public abstract class IOSNativeTextField extends NativeTextField
         // Return key label
         String label = resolveStyle(Field.RETURN_KEY_LABEL);
         setReturnKeyLabel(label);
+
+        Style.HAlign halign = resolveStyle(Style.HALIGN);
+        setAlignment(UITextAlignment.wrap(toMono(halign)));
+
+        // Color
+        int color = resolveStyle(Style.COLOR);
+        setColor(UIColor.FromRGB(Color.red(color), Color.green(color), Color.blue(color)));
     }
 
     protected void setReturnKeyLabel (String label) {
@@ -303,6 +329,8 @@ public abstract class IOSNativeTextField extends NativeTextField
     abstract protected String getNativeText ();
     abstract protected void setNativeText (String text);
     abstract protected IUITextInputTraits getTraits ();
+    abstract protected void setAlignment (UITextAlignment halign);
+    abstract protected void setColor (UIColor color);
     abstract protected void didFinish ();
 
     protected void handleNewValue () {
@@ -332,6 +360,14 @@ public abstract class IOSNativeTextField extends NativeTextField
             fieldBounds.set_Height(font.get_LineHeight());
         }
         _view.set_Frame(fieldBounds);
+    }
+
+    protected static int toMono (Style.HAlign halign) {
+        switch (halign) {
+        case LEFT: default: return UITextAlignment.Left;
+        case CENTER: return UITextAlignment.Center;
+        case RIGHT: return UITextAlignment.Right;
+        }
     }
 
     protected final IOSTextFieldHandler _handler;
