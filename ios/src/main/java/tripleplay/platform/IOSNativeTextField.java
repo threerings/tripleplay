@@ -271,6 +271,34 @@ public abstract class IOSNativeTextField extends NativeTextField
         setColor(UIColor.FromRGB(Color.red(color), Color.green(color), Color.blue(color)));
     }
 
+    @Override public void add () {
+        if (!_handler.isAdded(_view)) {
+            _handler.activate(this);
+            setNativeText(_text.get());
+        }
+    }
+
+    @Override public void remove () {
+        if (_handler.isAdded(_view)) _handler.deactivate(this);
+    }
+
+    @Override public void focus () {
+        _view.BecomeFirstResponder();
+    }
+
+    @Override public boolean hasFocus () {
+        return _view.get_IsFirstResponder();
+    }
+
+    abstract protected UIFont getNativeFont ();
+    abstract protected void setNativeFont (UIFont font);
+    abstract protected String getNativeText ();
+    abstract protected void setNativeText (String text);
+    abstract protected IUITextInputTraits getTraits ();
+    abstract protected void setAlignment (UITextAlignment halign);
+    abstract protected void setColor (UIColor color);
+    abstract protected void didFinish ();
+
     protected void setReturnKeyLabel (String label) {
         if (label == null || label.isEmpty()) {
             getTraits().set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Default));
@@ -304,34 +332,6 @@ public abstract class IOSNativeTextField extends NativeTextField
             getTraits().set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.EmergencyCall));
         }
     }
-
-    @Override public void add () {
-        if (!_handler.isAdded(_view)) {
-            _handler.activate(this);
-            setNativeText(_text.get());
-        }
-    }
-
-    @Override public void remove () {
-        if (_handler.isAdded(_view)) _handler.deactivate(this);
-    }
-
-    @Override public void focus () {
-        _view.BecomeFirstResponder();
-    }
-
-    @Override public boolean hasFocus () {
-        return _view.get_IsFirstResponder();
-    }
-
-    abstract protected UIFont getNativeFont ();
-    abstract protected void setNativeFont (UIFont font);
-    abstract protected String getNativeText ();
-    abstract protected void setNativeText (String text);
-    abstract protected IUITextInputTraits getTraits ();
-    abstract protected void setAlignment (UITextAlignment halign);
-    abstract protected void setColor (UIColor color);
-    abstract protected void didFinish ();
 
     protected void handleNewValue () {
         String value = getNativeText();

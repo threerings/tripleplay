@@ -179,6 +179,17 @@ public class Field extends TextWidget<Field>
         return _nativeField != null && _nativeField.hasFocus();
     }
 
+    @Override public Field setVisible (boolean visible) {
+        if (_nativeField != null) {
+            if (visible) {
+                _nativeField.add();
+            } else {
+                _nativeField.remove();
+            }
+        }
+        return super.setVisible(visible);
+    }
+
     /**
      * Used with native fields. Returning false form this method will cancel a text edit from the
      * user. The default implementation supplied here honors the MAXIMUM_INPUT_LENGTH Field style.
@@ -282,18 +293,6 @@ public class Field extends TextWidget<Field>
             _nativeField.remove();
             setGlyphLayerAlpha(1);
         }
-    }
-
-    @Override public Field setVisible (boolean visible)
-    {
-        if (_nativeField != null) {
-            if (visible) {
-                _nativeField.add();
-            } else {
-                _nativeField.remove();
-            }
-        }
-        return super.setVisible(visible);
     }
 
     protected void setGlyphLayerAlpha (float alpha) {
