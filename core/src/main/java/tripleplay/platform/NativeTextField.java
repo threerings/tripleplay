@@ -49,16 +49,13 @@ public abstract class NativeTextField extends Field.Native
     /** Updates native styles to match those currently applied to the field. */
     public abstract void validateStyles ();
 
-    /** Sets the validator for use with this native field.
-     * @return {@code this} for call chaining. */
+    /** Sets the validator for use with this native field. */
     public abstract void setValidator (Validator validator);
 
-    /** Sets the transformer for use with this native field.
-     * @return {@code this} for call chaining. */
+    /** Sets the transformer for use with this native field. */
     public abstract void setTransformer (Transformer transformer);
 
-    /** Configures the bounds of the native text field (in top-level screen coordinates).
-     * @return {@code this} for call chaining. */
+    /** Configures the bounds of the native text field (in top-level screen coordinates). */
     public abstract void setBounds (IRectangle bounds);
 
     /**
