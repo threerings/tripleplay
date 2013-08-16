@@ -308,6 +308,7 @@ public class Field extends TextWidget<Field>
         @Override  public void layout (float left, float top, float width, float height) {
             super.layout(left, top, width, height);
             if (fulltimeNativeField()) updateMode(true);
+            else if (_nativeField != null) _nativeField.validateStyles();
 
             // make sure our cached value is up to date
             _maxFieldLength = resolveStyle(MAXIMUM_INPUT_LENGTH);
