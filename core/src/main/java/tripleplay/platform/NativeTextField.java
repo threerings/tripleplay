@@ -7,17 +7,15 @@ package tripleplay.platform;
 
 import pythagoras.f.IRectangle;
 
-import playn.core.Font;
-import playn.core.Keyboard;
-
 import react.Signal;
 import react.Value;
+import tripleplay.ui.Field;
 
 /**
  * Provides access to a platform-native text field, which can be overlaid onto a PlayN game, or
  * TPUI interface.
  */
-public interface NativeTextField
+public abstract class NativeTextField extends Field.Native
 {
     public interface Validator {
         /** Return false if the text is not valid for any reason. */
@@ -42,64 +40,49 @@ public interface NativeTextField
     }
 
     /** The current value of the text field. */
-    Value<String> text ();
+    public abstract Value<String> text ();
 
     /** A signal that is dispatched when the native text field has lost focus. Value is false if
      * editing was canceled */
-    Signal<Boolean> finishedEditing ();
+    public abstract Signal<Boolean> finishedEditing ();
+
+    /** Updates native styles to match those currently applied to the field. */
+    public abstract void validateStyles ();
 
     /** Sets the validator for use with this native field.
      * @return {@code this} for call chaining. */
-    NativeTextField setValidator (Validator validator);
+    public abstract void setValidator (Validator validator);
 
     /** Sets the transformer for use with this native field.
      * @return {@code this} for call chaining. */
-    NativeTextField setTransformer (Transformer transformer);
-
-    /** Configures the type of text expected to be entered in this field.
-     * @return {@code this} for call chaining. */
-    NativeTextField setTextType (Keyboard.TextType type);
-
-    /** Configures the font used by the field to render text.
-     * @return {@code this} for call chaining. */
-    NativeTextField setFont (Font font);
+    public abstract void setTransformer (Transformer transformer);
 
     /** Configures the bounds of the native text field (in top-level screen coordinates).
      * @return {@code this} for call chaining. */
-    NativeTextField setBounds (IRectangle bounds);
-
-    /** Configures the autocapitalization behavior of the field on a virtual keyboard.
-     * @return {@code this} for call chaining. */
-    NativeTextField setAutocapitalization (boolean useAutocapitalization);
-
-    /** Configures the autocorrection behavior of the field on a virtual keyboard.
-     * @return {@code this} for call chaining. */
-    NativeTextField setAutocorrection (boolean useAutocorrection);
-
-    /** Configures the label of the return key on virtual keyboards. Underlying platform is
-     * responsible for attempting to match this value as well as it is able. Null indicates platform
-     * default.
-     * @return {@code this} for call chaining. */
-    NativeTextField setReturnKeyLabel (String label);
+    public abstract void setBounds (IRectangle bounds);
 
     /**
      * Sets the enabled state of the field.
      */
-    NativeTextField setEnabled (boolean enabled);
+    public abstract void setEnabled (boolean enabled);
 
     /** Updates or creates a new native text field with the given mode. If a value != this is
      * returned, the caller must then repopulate all the properties of the fields.*/
-    NativeTextField refreshMode (Mode mode);
+    public abstract NativeTextField refreshMode (Mode mode);
 
     /** Adds the field to the view. */
-    void add ();
+    public abstract void add ();
 
     /** Removes the field from the view. */
-    void remove ();
+    public abstract void remove ();
 
     /** Request focus for the native text field */
-    void focus ();
+    public abstract void focus ();
 
     /** Returns true if this native text field currently has focus. */
-    boolean hasFocus ();
+    public abstract boolean hasFocus ();
+
+    protected NativeTextField (Field field) {
+        super(field);
+    }
 }

@@ -29,13 +29,15 @@ import react.Connection;
 import react.Signal;
 import react.Slot;
 import react.Value;
+import tripleplay.ui.Field;
+import tripleplay.ui.Style;
 
-public abstract class IOSNativeTextField implements NativeTextField
+public abstract class IOSNativeTextField extends NativeTextField
 {
     public static class SingleLine extends IOSNativeTextField
     {
-        public SingleLine (IOSTextFieldHandler handler, IOSNativeTextField prior) {
-            super(handler, new UITextField(), prior);
+        public SingleLine (IOSTextFieldHandler handler, IOSNativeTextField prior, Field field) {
+            super(handler, new UITextField(), prior, field);
             _field = (UITextField)_view;
             _field.set_VerticalAlignment(
                 UIControlContentVerticalAlignment.wrap(UIControlContentVerticalAlignment.Center));
@@ -71,13 +73,12 @@ public abstract class IOSNativeTextField implements NativeTextField
             });
         }
 
-        @Override public SingleLine setEnabled (boolean enabled) {
+        @Override public void setEnabled (boolean enabled) {
             _field.set_Enabled(enabled);
-            return this;
         }
 
         @Override public NativeTextField refreshMode (Mode mode) {
-            if (mode == Mode.MULTI_LINE) return new MultiLine(_handler, this);
+            if (mode == Mode.MULTI_LINE) return new MultiLine(_handler, this, field);
             _field.set_SecureTextEntry(mode == Mode.SECURE);
             return this;
         }
@@ -113,20 +114,20 @@ public abstract class IOSNativeTextField implements NativeTextField
 
     public static class MultiLine extends IOSNativeTextField
     {
-        public MultiLine (IOSTextFieldHandler handler, IOSNativeTextField prior) {
-            super(handler, new UITextView(), prior);
+        public MultiLine (IOSTextFieldHandler handler, IOSNativeTextField prior, Field field) {
+            super(handler, new UITextView(), prior, field);
             _field = (UITextView)_view;
             _field.set_Editable(true);
             // TODO: do we need to call set_Delegate?
         }
 
-        @Override public MultiLine setEnabled (boolean enabled) {
+        @Override public void setEnabled (boolean enabled) {
             _field.set_Editable(enabled);
-            return this;
         }
 
         @Override public NativeTextField refreshMode (Mode mode) {
-            return mode == Mode.MULTI_LINE ? this : new SingleLine(_handler, this).refreshMode(mode);
+            return mode == Mode.MULTI_LINE ? this :
+                new SingleLine(_handler, this, field).refreshMode(mode);
         }
 
         @Override protected UIFont getNativeFont () {
@@ -156,7 +157,9 @@ public abstract class IOSNativeTextField implements NativeTextField
         protected final UITextView _field;
     }
 
-    public IOSNativeTextField (IOSTextFieldHandler handler, UIView view, IOSNativeTextField prior) {
+    public IOSNativeTextField (IOSTextFieldHandler handler, UIView view, IOSNativeTextField prior,
+            Field field) {
+        super(field);
         _handler = handler;
         _view = view;
 
@@ -191,17 +194,22 @@ public abstract class IOSNativeTextField implements NativeTextField
         return _finishedEditing;
     }
 
-    @Override public NativeTextField setValidator (Validator validator) {
+    @Override public void setValidator (Validator validator) {
         _validator = validator;
-        return this;
     }
 
-    @Override public NativeTextField setTransformer (Transformer transformer) {
+    @Override public void setTransformer (Transformer transformer) {
         _transformer = transformer;
-        return this;
     }
 
-    @Override public IOSNativeTextField setTextType (Keyboard.TextType type) {
+    @Override public void setBounds (IRectangle bounds) {
+        _requestedBounds = bounds;
+        updateBounds();
+    }
+
+    @Override public void validateStyles () {
+        // Keyboard type
+        Keyboard.TextType type = resolveStyle(Field.TEXT_TYPE);
         switch (type) {
         case NUMBER:
             getTraits().set_KeyboardType(UIKeyboardType.wrap(UIKeyboardType.NumberPad));
@@ -216,42 +224,36 @@ public abstract class IOSNativeTextField implements NativeTextField
             getTraits().set_KeyboardType(UIKeyboardType.wrap(UIKeyboardType.Default));
             break;
         }
-        return this;
-    }
 
-    @Override public IOSNativeTextField setFont (Font font) {
+        // Font
+        Font font = resolveStyle(Style.FONT);
         setNativeFont(_handler.getUIFont(font));
         updateBounds();
-        return this;
-    }
 
-    @Override public IOSNativeTextField setBounds (IRectangle bounds) {
-        _requestedBounds = bounds;
-        updateBounds();
-        return this;
-    }
-
-    @Override public IOSNativeTextField setAutocapitalization (boolean enable) {
+        // Automatic capitalization
+        boolean enable = resolveStyle(Field.AUTOCAPITALIZATION);
         getTraits().set_AutocapitalizationType(UITextAutocapitalizationType.wrap(
             enable ? UITextAutocapitalizationType.Sentences : UITextAutocapitalizationType.None));
-        return this;
-    }
 
-    @Override public IOSNativeTextField setAutocorrection (boolean enable) {
+        // Automatic correction
+        enable = resolveStyle(Field.AUTOCORRECTION);
         getTraits().set_AutocorrectionType(UITextAutocorrectionType.wrap(
             enable ? UITextAutocorrectionType.Yes : UITextAutocorrectionType.No));
-        return this;
+
+        // Return key label
+        String label = resolveStyle(Field.RETURN_KEY_LABEL);
+        setReturnKeyLabel(label);
     }
 
-    @Override public NativeTextField setReturnKeyLabel (String label) {
+    protected void setReturnKeyLabel (String label) {
         if (label == null || label.isEmpty()) {
             getTraits().set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Default));
-            return this;
+            return;
         }
         label = label.toLowerCase();
         if (label.equals(getTraits().get_ReturnKeyType().ToString().toLowerCase())) {
             // NOOP
-            return this;
+            return;
         }
 
         if (label.equals("go")) {
@@ -275,7 +277,6 @@ public abstract class IOSNativeTextField implements NativeTextField
         } else if (label.equals("emergencycall")) {
             getTraits().set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.EmergencyCall));
         }
-        return this;
     }
 
     @Override public void add () {

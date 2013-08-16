@@ -29,6 +29,22 @@ import tripleplay.ui.util.Insets;
  */
 public class Field extends TextWidget<Field>
 {
+    /** Shim class for native text field to get at styles. */
+    public static abstract class Native {
+        /** The field. */
+        public final Field field;
+
+        /** Creates the shim around the given field. */
+        protected Native (Field field) {
+            this.field = field;
+        }
+
+        /** Resolves the given style for the field. */
+        protected <T> T resolveStyle (Style<T> style) {
+            return field.resolveStyle(style);
+        }
+    }
+
     /** If on a platform that utilizes native fields and this is true, the native field is
      * displayed whenever this Field is visible, and the native field is responsible for all text
      * rendering. If false, the native field is only displayed while actively editing (after a user
@@ -85,7 +101,7 @@ public class Field extends TextWidget<Field>
         setStyles(styles);
 
         if (TPPlatform.instance().hasNativeTextFields()) {
-            _nativeField = TPPlatform.instance().createNativeTextField();
+            _nativeField = TPPlatform.instance().createNativeTextField(this);
             // set our default validator and transformer
             setValidator(null);
             setTransformer(null);
@@ -265,12 +281,8 @@ public class Field extends TextWidget<Field>
                 _nativeField.remove();
                 _nativeField = newField;
             }
-            _nativeField.setTextType(resolveStyle(TEXT_TYPE))
-                .setFont(resolveStyle(Style.FONT))
-                .setAutocapitalization(resolveStyle(AUTOCAPITALIZATION))
-                .setAutocorrection(resolveStyle(AUTOCORRECTION))
-                .setReturnKeyLabel(resolveStyle(RETURN_KEY_LABEL))
-                .setEnabled(isEnabled());
+            _nativeField.validateStyles();
+            _nativeField.setEnabled(isEnabled());
             updateNativeFieldBounds();
             _nativeField.add();
             setGlyphLayerAlpha(0);

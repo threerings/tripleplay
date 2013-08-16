@@ -8,6 +8,7 @@ package tripleplay.platform;
 import playn.core.Keyboard;
 import playn.ios.IOSPlatform;
 import react.ValueView;
+import tripleplay.ui.Field;
 
 /**
  * Implements iOS-specific TriplePlay services.
@@ -28,8 +29,8 @@ public class IOSTPPlatform extends TPPlatform
         return true;
     }
 
-    @Override public NativeTextField createNativeTextField () {
-        return new IOSNativeTextField.SingleLine(_fieldHandler, null);
+    @Override public NativeTextField createNativeTextField (Field field) {
+        return new IOSNativeTextField.SingleLine(_fieldHandler, null, field);
     }
 
     @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {

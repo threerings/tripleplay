@@ -15,6 +15,7 @@ import playn.core.Keyboard;
 import playn.java.JavaPlatform;
 import react.Value;
 import react.ValueView;
+import tripleplay.ui.Field;
 
 /**
  * Implements Java-specific TriplePlay services.
@@ -55,8 +56,8 @@ public class JavaTPPlatform extends TPPlatform
         return true;
     }
 
-    @Override public NativeTextField createNativeTextField () {
-        return new JavaNativeTextField(_frame.getLayeredPane());
+    @Override public NativeTextField createNativeTextField (Field field) {
+        return new JavaNativeTextField(_frame.getLayeredPane(), field);
     }
 
     @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {

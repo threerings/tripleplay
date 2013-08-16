@@ -8,6 +8,7 @@ package tripleplay.platform;
 import playn.core.Keyboard;
 import react.Value;
 import react.ValueView;
+import tripleplay.ui.Field;
 
 /**
  * The entry point for per-platform services made available by TriplePlay. This is akin to the
@@ -43,7 +44,7 @@ public abstract class TPPlatform
      * @exception UnsupportedOperationException thrown if the platform lacks support for native
      * text fields, use {@link #hasNativeTextFields} to check.
      */
-    public abstract NativeTextField createNativeTextField ();
+    public abstract NativeTextField createNativeTextField (Field field);
 
     /**
      * Sets the instance of VirtualKeyboardController to use for virtual keyboard management, or
@@ -74,7 +75,7 @@ public abstract class TPPlatform
         @Override public boolean hasNativeTextFields () {
             return false;
         }
-        @Override public NativeTextField createNativeTextField () {
+        @Override public NativeTextField createNativeTextField (Field field) {
             throw new UnsupportedOperationException();
         }
         @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) { }

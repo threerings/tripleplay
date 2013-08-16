@@ -22,17 +22,18 @@ import pythagoras.f.FloatMath;
 import pythagoras.f.IRectangle;
 
 import playn.core.Font;
-import playn.core.Keyboard;
 
 import react.Connection;
 import react.Signal;
 import react.Slot;
 import react.Value;
+import tripleplay.ui.Field;
+import tripleplay.ui.Style;
 
-public class JavaNativeTextField
-    implements NativeTextField
+public class JavaNativeTextField extends NativeTextField
 {
-    public JavaNativeTextField (JLayeredPane root) {
+    public JavaNativeTextField (JLayeredPane root, Field field) {
+        super(field);
         _root = root;
 
         setupField();
@@ -105,47 +106,30 @@ public class JavaNativeTextField
         return _finishedEditing;
     }
 
-    @Override public JavaNativeTextField setValidator (Validator validator) {
+    @Override public void setValidator (Validator validator) {
         // TODO
-        return this;
     }
 
-    @Override public JavaNativeTextField setTransformer (Transformer transformer) {
+    @Override public void setTransformer (Transformer transformer) {
         // TODO
-        return this;
     }
 
-    @Override public JavaNativeTextField setTextType (Keyboard.TextType type) {
-        // TODO
-        return this;
-    }
-
-    @Override public JavaNativeTextField setFont (Font font) {
+    @Override public void validateStyles () {
+        Font font = resolveStyle(Style.FONT);
         _field.setFont(new java.awt.Font(font.name(), awtFontStyle(font.style()),
             FloatMath.round(font.size())));
-        return this;
+
+        // TODO: Keyboard.TextType textType = resolveStyle(Field.TEXT_TYPE);
     }
 
-    @Override public JavaNativeTextField setBounds (IRectangle bounds) {
+    @Override public void setBounds (IRectangle bounds) {
         _field.setBounds((int)bounds.x(), (int)bounds.y(),
             (int)bounds.width(), (int)bounds.height());
-        return this;
-    }
-
-    @Override public JavaNativeTextField setAutocapitalization (boolean enable) {
-        // nada - only for virtual keyboards
-        return this;
-    }
-
-    @Override public JavaNativeTextField setAutocorrection (boolean enable) {
-        // nada - only for virtual keyboards
-        return this;
     }
 
     @Override
-    public JavaNativeTextField setEnabled (boolean enabled) {
+    public void setEnabled (boolean enabled) {
         _field.setEnabled(enabled);
-        return this;
     }
 
     @Override public JavaNativeTextField refreshMode (Mode mode) {
@@ -153,11 +137,6 @@ public class JavaNativeTextField
             _mode = mode;
             setupField();
         }
-        return this;
-    }
-
-    @Override public NativeTextField setReturnKeyLabel (String label) {
-        // nada - only for virtual keyboards
         return this;
     }
 
