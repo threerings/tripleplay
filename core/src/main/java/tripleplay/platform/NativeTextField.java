@@ -17,11 +17,6 @@ import tripleplay.ui.Field;
  */
 public abstract class NativeTextField extends Field.Native
 {
-    public interface Validator {
-        /** Return false if the text is not valid for any reason. */
-        boolean isValid (String text);
-    }
-
     public interface Transformer {
         /** Transform the specified text in some way, or simply return the text untransformed. */
         public String transform (String text);
@@ -48,9 +43,6 @@ public abstract class NativeTextField extends Field.Native
 
     /** Updates native styles to match those currently applied to the field. */
     public abstract void validateStyles ();
-
-    /** Sets the validator for use with this native field. */
-    public abstract void setValidator (Validator validator);
 
     /** Sets the transformer for use with this native field. */
     public abstract void setTransformer (Transformer transformer);

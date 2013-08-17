@@ -68,10 +68,9 @@ public abstract class IOSNativeTextField extends NativeTextField
                             new Events.Flags.Impl(), time, keyChar));
                     }
 
-                    if (_validator == null) return true;
                     String newString = new NSString(uiTextField.get_Text())
                         .Replace(nsRange, new NSString(s)).ToString();
-                    return _validator.isValid(newString);
+                    return isValid(newString);
                 }
             });
         }
@@ -211,10 +210,6 @@ public abstract class IOSNativeTextField extends NativeTextField
 
     @Override public Signal<Boolean> finishedEditing () {
         return _finishedEditing;
-    }
-
-    @Override public void setValidator (Validator validator) {
-        _validator = validator;
     }
 
     @Override public void setTransformer (Transformer transformer) {
@@ -377,6 +372,5 @@ public abstract class IOSNativeTextField extends NativeTextField
 
     protected IRectangle _requestedBounds;
     protected final Signal<Boolean> _finishedEditing;
-    protected Validator _validator;
     protected Transformer _transformer;
 }

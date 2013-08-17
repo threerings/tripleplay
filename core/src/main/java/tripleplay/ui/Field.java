@@ -29,6 +29,11 @@ import tripleplay.ui.util.Insets;
  */
 public class Field extends TextWidget<Field>
 {
+    /** Creates a style binding for the given maximum lenght. */
+    public static Style.Binding<Validator> maxLength (int max) {
+        return VALIDATOR.is(new MaxLength(max));
+    }
+
     /** Shim class for native text field to get at styles. */
     public static abstract class Native {
         /** The field. */
@@ -42,6 +47,30 @@ public class Field extends TextWidget<Field>
         /** Resolves the given style for the field. */
         protected <T> T resolveStyle (Style<T> style) {
             return field.resolveStyle(style);
+        }
+
+        /** Tests if the proposed text is valid. */
+        protected boolean isValid (String text) {
+            return field.textIsValid(text);
+        }
+    }
+
+    /** For native text fields, decides whether to block a keypress based on the proposed content
+     * of the field. */
+    public interface Validator {
+        /** Return false if the keypress causing this text should be blocked. */
+        boolean isValid (String text);
+    }
+
+    /** Blocks keypresses for a native text field when the length is at a given maximum. */
+    public static class MaxLength implements Validator {
+        /** The maximum length accepted. */
+        public final int max;
+        public MaxLength (int max) {
+            this.max = max;
+        }
+        @Override public boolean isValid (String text) {
+            return text.length() <= max;
         }
     }
 
@@ -67,10 +96,9 @@ public class Field extends TextWidget<Field>
     /** Sets the Keyboard.TextType in use by this Field. */
     public static final Style<TextType> TEXT_TYPE = Style.newStyle(false, TextType.DEFAULT);
 
-    /** Sets the maximum number of characters that can be entered by this Field. Currently only
-     * supported by Native fields. Anything less than 1 indicates unlimited (or limited by the
-     * platform only). */
-    public static final Style<Integer> MAXIMUM_INPUT_LENGTH = Style.newStyle(false, 0);
+    /** Sets the validator to use when censoring keypresses into native text fields.
+     * @see MaxLength */
+    public static final Style<Validator> VALIDATOR = Style.newStyle(true, null);
 
     /** Sets the label used on the "return" key of the virtual keyboard on native keyboards. Be
      * aware that some platforms (such as iOS) have a limited number of options. The underlying
@@ -103,7 +131,6 @@ public class Field extends TextWidget<Field>
         if (TPPlatform.instance().hasNativeTextFields()) {
             _nativeField = TPPlatform.instance().createNativeTextField(this);
             // set our default validator and transformer
-            setValidator(null);
             setTransformer(null);
             text = _nativeField.text();
             _finishedEditing = _nativeField.finishedEditing();
@@ -131,21 +158,6 @@ public class Field extends TextWidget<Field>
      */
     public Field setPopupLabel (String label) {
         _popupLabel = label;
-        return this;
-    }
-
-    /**
-     * Set the text field validator for use with this field. The default is to go through
-     * {@link #textIsValid(String)}. Pass in null to set/restore the default validator.
-     *
-     * Note that setting a custom validator will bypass checking of the
-     * {@link #MAXIMUM_INPUT_LENGTH} style.
-     *
-     * @return this for call chaining.
-     */
-    public Field setValidator (NativeTextField.Validator validator) {
-        if (_nativeField != null)
-            _nativeField.setValidator(validator == null ? _defaultValidator : validator);
         return this;
     }
 
@@ -191,13 +203,11 @@ public class Field extends TextWidget<Field>
     }
 
     /**
-     * Used with native fields. Returning false form this method will cancel a text edit from the
-     * user. The default implementation supplied here honors the MAXIMUM_INPUT_LENGTH Field style.
+     * Main entry point for deciding whether to reject keypresses on a native field. By default,
+     * consults the current validator instance, set up by {@link #VALIDATOR}.
      */
     protected boolean textIsValid (String text) {
-        int maxLength = _maxFieldLength;
-        int textLength = text == null ? 0 : text.length();
-        return maxLength < 1 || textLength <= maxLength;
+        return _validator == null ? true : _validator.isValid(text);
     }
 
     /**
@@ -311,7 +321,7 @@ public class Field extends TextWidget<Field>
             else if (_nativeField != null) _nativeField.validateStyles();
 
             // make sure our cached value is up to date
-            _maxFieldLength = resolveStyle(MAXIMUM_INPUT_LENGTH);
+            _validator = resolveStyle(VALIDATOR);
         }
     }
 
@@ -320,15 +330,9 @@ public class Field extends TextWidget<Field>
         new NativeTextField.Transformer() {
             @Override public String transform (String text) { return transformText(text); }
         };
-    protected final NativeTextField.Validator _defaultValidator =
-        new NativeTextField.Validator() {
-            @Override public boolean isValid (String text) { return textIsValid(text); }
-        };
+    protected Validator _validator;
     protected final Signal<Boolean> _finishedEditing;
 
     // used when popping up a text entry interface on mobile platforms
     protected String _popupLabel;
-
-    // Set via the MAXIMUM_INPUT_LENGTH style during widget validation
-    protected int _maxFieldLength = 0;
 }

@@ -106,10 +106,6 @@ public class JavaNativeTextField extends NativeTextField
         return _finishedEditing;
     }
 
-    @Override public void setValidator (Validator validator) {
-        // TODO
-    }
-
     @Override public void setTransformer (Transformer transformer) {
         // TODO
     }
