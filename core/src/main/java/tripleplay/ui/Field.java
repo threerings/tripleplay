@@ -53,6 +53,11 @@ public class Field extends TextWidget<Field>
         protected boolean isValid (String text) {
             return field.textIsValid(text);
         }
+
+        /** Transforms the given text. */
+        protected String transform (String text) {
+            return field.transformText(text);
+        }
     }
 
     /** For native text fields, decides whether to block a keypress based on the proposed content
@@ -60,6 +65,12 @@ public class Field extends TextWidget<Field>
     public interface Validator {
         /** Return false if the keypress causing this text should be blocked. */
         boolean isValid (String text);
+    }
+
+    /** For native text fields, transforms text during typing. */
+    public interface Transformer {
+        /** Transform the specified text. */
+        public String transform (String text);
     }
 
     /** Blocks keypresses for a native text field when the length is at a given maximum. */
@@ -100,6 +111,9 @@ public class Field extends TextWidget<Field>
      * @see MaxLength */
     public static final Style<Validator> VALIDATOR = Style.newStyle(true, null);
 
+    /** Sets the transformner to use when updating native text fields while being typed into. */
+    public static final Style<Transformer> TRANSFORMER = Style.newStyle(true, null);
+
     /** Sets the label used on the "return" key of the virtual keyboard on native keyboards. Be
      * aware that some platforms (such as iOS) have a limited number of options. The underlying
      * native implementation is responsible for attempting to match this style, but may be unable
@@ -130,8 +144,6 @@ public class Field extends TextWidget<Field>
 
         if (TPPlatform.instance().hasNativeTextFields()) {
             _nativeField = TPPlatform.instance().createNativeTextField(this);
-            // set our default validator and transformer
-            setTransformer(null);
             text = _nativeField.text();
             _finishedEditing = _nativeField.finishedEditing();
             _finishedEditing.connect(new Slot<Boolean>() {
@@ -158,18 +170,6 @@ public class Field extends TextWidget<Field>
      */
     public Field setPopupLabel (String label) {
         _popupLabel = label;
-        return this;
-    }
-
-    /**
-     * Set the text field transformer for use with this field. The default is to go through
-     * {@link #transformText(String)}. Pass in null to set/restore the default transformer.
-     *
-     * @return this for call chaining.
-     */
-    public Field setTransformer (NativeTextField.Transformer transformer) {
-        if (_nativeField != null)
-            _nativeField.setTransformer(transformer == null ? _defaultTransformer : transformer);
         return this;
     }
 
@@ -207,15 +207,16 @@ public class Field extends TextWidget<Field>
      * consults the current validator instance, set up by {@link #VALIDATOR}.
      */
     protected boolean textIsValid (String text) {
-        return _validator == null ? true : _validator.isValid(text);
+        return _validator == null || _validator.isValid(text);
     }
 
     /**
      * Called when the native field's value is changed. Override and return a modified value to
-     * perform text transformation while the user is editing the field.
+     * perform text transformation while the user is editing the field. By default, consults
+     * the current transformer instance, set up by {@link #TRANSFORMER}.
      */
     protected String transformText (String text) {
-        return text;
+        return _transformer == null ? text : _transformer.transform(text);
     }
 
     @Override protected Class<?> getStyleClass () {
@@ -322,15 +323,13 @@ public class Field extends TextWidget<Field>
 
             // make sure our cached value is up to date
             _validator = resolveStyle(VALIDATOR);
+            _transformer = resolveStyle(TRANSFORMER);
         }
     }
 
     protected NativeTextField _nativeField;
-    protected final NativeTextField.Transformer _defaultTransformer =
-        new NativeTextField.Transformer() {
-            @Override public String transform (String text) { return transformText(text); }
-        };
     protected Validator _validator;
+    protected Transformer _transformer;
     protected final Signal<Boolean> _finishedEditing;
 
     // used when popping up a text entry interface on mobile platforms

@@ -106,10 +106,6 @@ public class JavaNativeTextField extends NativeTextField
         return _finishedEditing;
     }
 
-    @Override public void setTransformer (Transformer transformer) {
-        // TODO
-    }
-
     @Override public void validateStyles () {
         Font font = resolveStyle(Style.FONT);
         _field.setFont(new java.awt.Font(font.name(), awtFontStyle(font.style()),

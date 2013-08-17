@@ -212,10 +212,6 @@ public abstract class IOSNativeTextField extends NativeTextField
         return _finishedEditing;
     }
 
-    @Override public void setTransformer (Transformer transformer) {
-        _transformer = transformer;
-    }
-
     @Override public void setBounds (IRectangle bounds) {
         _requestedBounds = bounds;
         updateBounds();
@@ -330,14 +326,12 @@ public abstract class IOSNativeTextField extends NativeTextField
 
     protected void handleNewValue () {
         String value = getNativeText();
-        if (_transformer != null) {
-            String transformed = _transformer.transform(value);
-            if (!transformed.equals(value)) {
-                // update the field ourselves in case transformed is the same value
-                // currently held in field.text(), and therefore the update below
-                // will NOOP.
-                setNativeText(transformed);
-            }
+        String transformed = transform(value);
+        if (!transformed.equals(value)) {
+            // update the field ourselves in case transformed is the same value
+            // currently held in field.text(), and therefore the update below
+            // will NOOP.
+            setNativeText(transformed);
             value = transformed;
         }
         _text.update(value);
@@ -372,5 +366,4 @@ public abstract class IOSNativeTextField extends NativeTextField
 
     protected IRectangle _requestedBounds;
     protected final Signal<Boolean> _finishedEditing;
-    protected Transformer _transformer;
 }
