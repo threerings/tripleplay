@@ -64,11 +64,6 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
         // nothing by default
     }
 
-    @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
-        super.onPointerEnd(event, x, y);
-        if (contains(x, y)) onClick(event);
-    }
-
     @Override protected BaseLayoutData createBaseLayoutData (float hintX, float hintY) {
         return new GlyphLayoutData();
     }
