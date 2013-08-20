@@ -316,7 +316,7 @@ public class Field extends TextWidget<Field>
             super(hintX, hintY);
         }
 
-        @Override  public void layout (float left, float top, float width, float height) {
+        @Override public void layout (float left, float top, float width, float height) {
             super.layout(left, top, width, height);
             if (fulltimeNativeField()) updateMode(true);
             else if (_nativeField != null) _nativeField.validateStyles();
