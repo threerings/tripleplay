@@ -81,7 +81,7 @@ public class Scroller extends Composite<Scroller>
     public static final Style<BarRenderer> BAR_RENDERER = Style.<BarRenderer>newStyle(
         false, new BarRenderer() {
             @Override public void drawBar (Surface surface, Rectangle area) {
-                surface.fillRect(area.x,  area.y,  area.width,  area.height);
+                surface.fillRect(area.x, area.y, area.width, area.height);
             }
         });
 
