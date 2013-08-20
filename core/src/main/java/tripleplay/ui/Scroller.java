@@ -86,10 +86,10 @@ public class Scroller extends Composite<Scroller>
         });
 
     /** The alpha per ms lost by the scroll bars when not moving. */
-    public static final float BAR_FADE_SPEED = 1.5f / 1000;
+    public static final Style<Float> BAR_FADE_SPEED = Style.newStyle(true, 1.5f / 1000);
 
     /** The alpha set on the scroll bars whenever they are first shown. */
-    public static final float BAR_TOP_ALPHA = 3;
+    public static final Style<Float> BAR_TOP_ALPHA = Style.newStyle(true, 3f);
 
     /**
      * Interface for customizing how content is clipped and translated.
@@ -432,7 +432,7 @@ public class Scroller extends Composite<Scroller>
         update(false);
 
         // fade out the bars
-        if (_barAlpha > 0) setBarAlpha(_barAlpha - BAR_FADE_SPEED * delta);
+        if (_barAlpha > 0 && _barFadeSpeed > 0) setBarAlpha(_barAlpha - _barFadeSpeed * delta);
     }
 
     /** Updates the position of the content to match the flicker. If force is set, then the
@@ -447,7 +447,7 @@ public class Scroller extends Composite<Scroller>
             if (!force) updateVisibility();
 
             firePositionChange();
-            setBarAlpha(BAR_TOP_ALPHA);
+            setBarAlpha(_barTopAlpha);
         }
     }
 
@@ -528,11 +528,18 @@ public class Scroller extends Composite<Scroller>
 
     /** Sets the alpha of the scroll bars layer. */
     protected void setBarAlpha (float alpha) {
-        _barAlpha = Math.min(BAR_TOP_ALPHA, Math.max(0, alpha));
+        _barAlpha = Math.min(_barTopAlpha, Math.max(0, alpha));
         if (_barLayer != null) {
             _barLayer.setAlpha(Math.min(_barAlpha, 1));
             _barLayer.setVisible(_barAlpha > 0);
         }
+    }
+
+    @Override
+    protected void layout () {
+        super.layout();
+        _barFadeSpeed = resolveStyle(BAR_FADE_SPEED);
+        _barTopAlpha = resolveStyle(BAR_TOP_ALPHA);
     }
 
     /** Extends the usual layout with scroll bar setup. */
@@ -641,4 +648,6 @@ public class Scroller extends Composite<Scroller>
     protected float _barAlpha;
     protected BarRenderer _barRenderer;
     protected List<Listener> _lners;
+    protected float _barFadeSpeed;
+    protected float _barTopAlpha;
 }
