@@ -6,13 +6,13 @@
 package tripleplay.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
-
 import playn.core.Asserts;
 import playn.core.Color;
 import playn.core.GroupLayer;
@@ -640,5 +640,5 @@ public class Scroller extends Composite<Scroller>
     protected Point _queuedScroll;
     protected float _barAlpha;
     protected BarRenderer _barRenderer;
-    protected java.util.List<Listener> _lners;
+    protected List<Listener> _lners;
 }
