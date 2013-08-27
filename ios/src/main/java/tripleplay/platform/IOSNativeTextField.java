@@ -5,6 +5,7 @@
 
 package tripleplay.platform;
 
+import cli.MonoTouch.Foundation.NSObject;
 import cli.MonoTouch.Foundation.NSRange;
 import cli.MonoTouch.Foundation.NSString;
 import cli.MonoTouch.UIKit.IUITextInputTraits;
@@ -18,6 +19,7 @@ import cli.MonoTouch.UIKit.UITextAutocapitalizationType;
 import cli.MonoTouch.UIKit.UITextAutocorrectionType;
 import cli.MonoTouch.UIKit.UITextField;
 import cli.MonoTouch.UIKit.UITextFieldDelegate;
+import cli.MonoTouch.UIKit.UITextInputDelegate;
 import cli.MonoTouch.UIKit.UITextView;
 import cli.MonoTouch.UIKit.UIView;
 import cli.System.Drawing.RectangleF;
@@ -45,6 +47,38 @@ public abstract class IOSNativeTextField extends NativeTextField
             _field.set_VerticalAlignment(
                 UIControlContentVerticalAlignment.wrap(UIControlContentVerticalAlignment.Center));
 
+            _field.set_InputDelegate(new UITextInputDelegate() {
+
+                @Override
+                public void SelectionDidChange (NSObject arg0)
+                {
+                    Log.log.info("Selection did change", "range", _field.get_SelectedTextRange());
+                    // TODO Auto-generated method stub
+                    
+                }
+
+                @Override
+                public void SelectionWillChange (NSObject arg0)
+                {
+                    // TODO Auto-generated method stub
+                    
+                }
+
+                @Override
+                public void TextDidChange (NSObject arg0)
+                {
+                    // TODO Auto-generated method stub
+                    
+                }
+
+                @Override
+                public void TextWillChange (NSObject arg0)
+                {
+                    // TODO Auto-generated method stub
+                    
+                }
+                
+            });
             // all fields close the keyboard when the return key is used
             _field.set_Delegate(new UITextFieldDelegate() {
                 @Override public boolean ShouldReturn (UITextField field) {
