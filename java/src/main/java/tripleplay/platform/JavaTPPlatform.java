@@ -5,17 +5,24 @@
 
 package tripleplay.platform;
 
-import java.awt.Dimension;
 import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.Image;
+
 import javax.swing.JFrame;
 
 import org.lwjgl.opengl.Display;
 
+import playn.core.Asserts;
 import playn.core.Keyboard;
+import playn.java.JavaImage;
 import playn.java.JavaPlatform;
 import react.Value;
 import react.ValueView;
 import tripleplay.ui.Field;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 /**
  * Implements Java-specific TriplePlay services.
@@ -79,6 +86,21 @@ public class JavaTPPlatform extends TPPlatform
      */
     public void setTitle (String title) {
         _frame.setTitle(title);
+    }
+
+    /**
+     * Sets the window icon.
+     *
+     * Takes icons of different sizes, preferring earlier ones in case of duplicate sizes.
+     */
+    public void setIcon (playn.core.Image... icons) {
+        Asserts.check(icons.length > 0);
+        _frame.setIconImages(Lists.transform(Lists.newArrayList(icons),
+            new Function<playn.core.Image, java.awt.Image>() {
+                public Image apply (playn.core.Image input) {
+                    return ((JavaImage)input).bufferedImage();
+                }
+            }));
     }
 
     /** The Java platform with which this TPPlatform was registered. */
