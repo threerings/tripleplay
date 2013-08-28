@@ -10,31 +10,15 @@ import playn.core.Image;
 import playn.core.PlayN;
 import playn.core.Pointer;
 import pythagoras.f.FloatMath;
+
 import react.Slot;
 import react.UnitSlot;
 import react.Value;
+
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.demo.DemoScreen;
-import tripleplay.ui.Background;
-import tripleplay.ui.Button;
-import tripleplay.ui.Element;
-import tripleplay.ui.Group;
-import tripleplay.ui.Icon;
-import tripleplay.ui.Icons;
-import tripleplay.ui.Label;
-import tripleplay.ui.Menu;
-import tripleplay.ui.PagedMenu;
-import tripleplay.ui.Menu.AnimFn;
-import tripleplay.ui.MenuHost;
-import tripleplay.ui.MenuItem;
-import tripleplay.ui.Scroller;
-import tripleplay.ui.Shim;
-import tripleplay.ui.SizableGroup;
-import tripleplay.ui.Slider;
-import tripleplay.ui.Style;
-import tripleplay.ui.Styles;
-import tripleplay.ui.Stylesheet;
+import tripleplay.ui.*;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
 import tripleplay.util.Colors;
@@ -73,7 +57,7 @@ public class MenuDemo extends DemoScreen
                 MenuHost.Pop pop = new MenuHost.Pop(self,
                     createMenu(null, "Road", "Street", "Boulevard", "Avenue")).toBottom(2).toLeft(0);
                 pop.menu.itemTriggered().connect(updater(self));
-                pop.menu.addStyles(Menu.OPENER.is(new AnimFn() {
+                pop.menu.addStyles(Menu.OPENER.is(new Menu.AnimFn() {
                     @Override public Animation go (Menu menu, Animator animator) {
                         // TODO: fix short delay where menu is visible at this scale
                         menu.layer.setScale(1, .25f);
@@ -312,15 +296,18 @@ public class MenuDemo extends DemoScreen
         public TrackingLabel (MenuHost menuHost, String text) {
             super(text);
             this.menuHost = menuHost;
-            enableInteraction();
         }
 
         public abstract Menu createMenu ();
 
-        @Override public void onPointerStart (Pointer.Event ev, float x, float y) {
-            MenuHost.Pop pop = makePop().atEventPos(ev);
-            pop.menu.itemTriggered().connect(updater(text, icon));
-            menuHost.popup(pop);
+        protected Behavior<Label> createBehavior () {
+            return new Behavior<Label>(this) {
+                @Override public void onPointerStart (Pointer.Event ev) {
+                    MenuHost.Pop pop = makePop().atEventPos(ev);
+                    pop.menu.itemTriggered().connect(updater(text, icon));
+                    menuHost.popup(pop);
+                }
+            };
         }
 
         protected MenuHost.Pop makePop () {

@@ -94,8 +94,8 @@ public class MiscDemo extends DemoScreen
     protected Group buttonsSection (Image squares) {
         ToggleButton toggle3 = new ToggleButton("Toggle Enabled");
         Button disabled = new Button("Disabled");
-        toggle3.selected.connectNotify(disabled.enabledSlot());
-        toggle3.selected.map(new Function<Boolean,String>() {
+        toggle3.selected().connectNotify(disabled.enabledSlot());
+        toggle3.selected().map(new Function<Boolean,String>() {
             public String apply (Boolean selected) { return selected ? "Enabled" : "Disabled"; }
         }).connectNotify(disabled.text.slot());
 

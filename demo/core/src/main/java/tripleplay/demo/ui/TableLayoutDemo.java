@@ -9,34 +9,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import playn.core.Pointer;
+
 import react.Slot;
-import tripleplay.demo.DemoScreen;
-import tripleplay.ui.Background;
-import tripleplay.ui.Button;
-import tripleplay.ui.Group;
-import tripleplay.ui.Label;
-import tripleplay.ui.Shim;
-import tripleplay.ui.SizableGroup;
-import tripleplay.ui.Slider;
-import tripleplay.ui.Style;
-import tripleplay.ui.Style.HAlign;
-import tripleplay.ui.Styles;
-import tripleplay.ui.ToggleButton;
-import tripleplay.ui.ValueLabel;
+import react.UnitSlot;
+
+import tripleplay.ui.*;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.FlowLayout;
 import tripleplay.ui.layout.TableLayout;
-import tripleplay.ui.layout.TableLayout.Column;
 import tripleplay.util.Colors;
+
+import tripleplay.demo.DemoScreen;
 
 public class TableLayoutDemo extends DemoScreen
 {
-    static class ExposedColumn extends Column
+    static class ExposedColumn extends TableLayout.Column
     {
-        public ExposedColumn (HAlign halign, boolean stretch, float weight, float minWidth) {
+        public ExposedColumn (Style.HAlign halign, boolean stretch, float weight, float minWidth) {
             super(halign, stretch, weight, minWidth);
         }
-        public HAlign halign () { return _halign; }
+        public Style.HAlign halign () { return _halign; }
         public float weight () { return _weight; }
         public float minWidth () { return _minWidth; }
         public boolean isStretch () { return _stretch; }
@@ -50,7 +42,7 @@ public class TableLayoutDemo extends DemoScreen
 
     static class ColumnEditor extends Group
     {
-        ExposedColumn col = new ExposedColumn(HAlign.CENTER, false, 1, 0);
+        ExposedColumn col = new ExposedColumn(Style.HAlign.CENTER, false, 1, 0);
         Slider weight = new Slider(col.weight(), 0, 50).setIncrement(1),
                 minWidth = new Slider(col.minWidth(), 0, 150).setIncrement(1);
         ToggleButton stretch = new ToggleButton("Stretch");
@@ -59,7 +51,7 @@ public class TableLayoutDemo extends DemoScreen
         ColumnEditor () {
             super(new FlowLayout());
             add(slider("Weight:", weight), slider("Min Width:", minWidth), stretch, halign);
-            stretch.selected.update(col.isStretch());
+            stretch.selected().update(col.isStretch());
             weight.value.connect(new Slot<Float>() {
                 @Override public void onEmit (Float event) {
                     col = new ExposedColumn(col.halign(), col.isStretch(), event, col.minWidth());
@@ -70,16 +62,16 @@ public class TableLayoutDemo extends DemoScreen
                     col = new ExposedColumn(col.halign(), col.isStretch(), col.weight(), event);
                 }
             });
-            stretch.selected.connect(new Slot<Boolean>() {
+            stretch.selected().connect(new Slot<Boolean>() {
                 @Override public void onEmit (Boolean event) {
                     col = new ExposedColumn(col.halign(), event, col.weight(), col.minWidth());
                 }
             });
             halign.clicked().connect(new Slot<Button>() {
                 @Override public void onEmit (Button event) {
-                    HAlign[] values = HAlign.values();
-                    HAlign next = values[
-                        (HAlign.valueOf(halign.text.get()).ordinal() + 1) % values.length];
+                    Style.HAlign[] values = Style.HAlign.values();
+                    Style.HAlign next = values[
+                        (Style.HAlign.valueOf(halign.text.get()).ordinal() + 1) % values.length];
                     halign.text.update(next.name());
                     col = new ExposedColumn(next, col.isStretch(), col.weight(), col.minWidth());
                 }
@@ -101,7 +93,7 @@ public class TableLayoutDemo extends DemoScreen
             Style.BACKGROUND.is(Background.bordered(Colors.WHITE, Colors.BLACK, 1).inset(5)),
             Style.VALIGN.top);
         Group table;
-        List<Column> columns = new ArrayList<Column>();
+        List<TableLayout.Column> columns = new ArrayList<TableLayout.Column>();
         Styles tableStyles = Styles.make(Style.BACKGROUND.is(Background.solid(Colors.LIGHT_GRAY)),
             Style.VALIGN.top);
 
@@ -112,24 +104,17 @@ public class TableLayoutDemo extends DemoScreen
                 CellAdder (int count) {
                     super("+" + count);
                     this.count = count;
-                }
-                @Override public void onClick (Pointer.Event event) {
-                    super.onClick(event);
-                    addCells(count);
+                    onClick(new UnitSlot() {
+                        @Override public void onEmit () { addCells(CellAdder.this.count); }
+                    });
                 }
             }
-            Button add = new Button("Add") {
-                @Override public void onClick (Pointer.Event event) {
-                    super.onClick(event);
-                    addColumn();
-                }
-            };
-            Button reset = new Button("Reset") {
-                @Override public void onClick (Pointer.Event event) {
-                    super.onClick(event);
-                    reset();
-                }
-            };
+            Button add = new Button("Add").onClick(new UnitSlot() {
+                @Override public void onEmit () { addColumn(); }
+            });
+            Button reset = new Button("Reset").onClick(new UnitSlot() {
+                @Override public void onEmit () { reset(); }
+            });
             add(column,
                 new Group(AxisLayout.horizontal()).add(
                     new Label("Columns:"), add, reset, new Shim(5, 1),
@@ -150,7 +135,7 @@ public class TableLayoutDemo extends DemoScreen
             Group oldTable = table;
             if (table != null) tableHolder.remove(table);
             tableHolder.add(table = new Group(
-                new TableLayout(columns.toArray(new Column[0])), tableStyles));
+                new TableLayout(columns.toArray(new TableLayout.Column[0])), tableStyles));
             if (oldTable!= null) {
                 while (oldTable.childCount() > 0) table.add(oldTable.childAt(0));
             }
