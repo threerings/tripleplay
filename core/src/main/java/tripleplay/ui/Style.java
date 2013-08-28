@@ -89,8 +89,20 @@ public abstract class Style<V>
         VECTOR_OUTLINE,
         /** Draws a shadow below and to the right of the text in the shadow color. */
         SHADOW,
+        /** Draws a gradient from the font color to the gradient color. */
+        GRADIENT,
         /** No text effect. */
         NONE
+    }
+
+    /** Defines different types of gradient fills. */
+    public static enum GradientType {
+        /** Gradient color on the bottom (default). */
+        BOTTOM,
+        /** Gradient color on top. */
+        TOP,
+        /** Gradient color in the center. */
+        CENTER
     }
 
     /** Used to provide concise HAlign style declarations. */
@@ -128,9 +140,18 @@ public abstract class Style<V>
         public final Binding<TextEffect> pixelOutline = is(TextEffect.PIXEL_OUTLINE);
         public final Binding<TextEffect> vectorOutline = is(TextEffect.VECTOR_OUTLINE);
         public final Binding<TextEffect> shadow = is(TextEffect.SHADOW);
+        public final Binding<TextEffect> gradient = is(TextEffect.GRADIENT);
         public final Binding<TextEffect> none = is(TextEffect.NONE);
         @Override public TextEffect getDefault (Element<?> elem) { return TextEffect.NONE; }
         TextEffectStyle() { super(true); }
+    }
+
+    public static class GradientTypeStyle extends Style<GradientType> {
+        public final Binding<GradientType> bottom = is(GradientType.BOTTOM);
+        public final Binding<GradientType> top = is(GradientType.TOP);
+        public final Binding<GradientType> center = is(GradientType.CENTER);
+        @Override public GradientType getDefault (Element<?> elem) { return GradientType.BOTTOM; }
+        GradientTypeStyle() { super(true); }
     }
 
     /** The foreground color for an element. Inherited. */
@@ -167,6 +188,12 @@ public abstract class Style<V>
 
     /** The shadow offset in pixels. Inherited. */
     public static final Style<Float> SHADOW_Y = newStyle(true, 2f);
+
+    /** The color of the gradient. Inherited. */
+    public static final Style<Integer> GRADIENT_COLOR = newStyle(true, 0xFFC70000);
+
+    /** The type of gradient. Inherited. */
+    public static final GradientTypeStyle GRADIENT_TYPE = new GradientTypeStyle();
 
     /** The stroke width of the outline, when using a vector outline. */
     public static final Style<Float> OUTLINE_WIDTH = newStyle(true, 1f);
@@ -250,6 +277,9 @@ public abstract class Style<V>
             return new EffectRenderer.Shadow(Styles.resolveStyle(elem, Style.SHADOW),
                                              Styles.resolveStyle(elem, Style.SHADOW_X),
                                              Styles.resolveStyle(elem, Style.SHADOW_Y));
+        case GRADIENT:
+            return new EffectRenderer.Gradient(Styles.resolveStyle(elem, Style.GRADIENT_COLOR),
+                                               Styles.resolveStyle(elem, Style.GRADIENT_TYPE));
         default:
             return EffectRenderer.NONE;
         }

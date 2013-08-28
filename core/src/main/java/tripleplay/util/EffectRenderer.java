@@ -6,8 +6,11 @@
 package tripleplay.util;
 
 import playn.core.Canvas;
+import playn.core.PlayN;
 import playn.core.TextLayout;
 import pythagoras.f.Rectangle;
+
+import tripleplay.ui.Style;
 
 /**
  * Handles the rendering of text with a particular effect (shadow, outline, etc.).
@@ -190,6 +193,63 @@ public abstract class EffectRenderer
 
         @Override public int hashCode () {
             return shadowColor ^ (int)shadowX ^ (int)shadowY;
+        }
+    }
+
+    public static class Gradient extends EffectRenderer {
+        public final int gradientColor;
+        public final Style.GradientType gradientType;
+
+        public Gradient (int gradientColor, Style.GradientType gradientType) {
+            this.gradientColor = gradientColor;
+            this.gradientType = gradientType;
+        }
+
+        @Override public void render (Canvas canvas, TextLayout text, int textColor,
+            boolean underlined, float x, float y) {
+
+            // Default values for BOTTOM
+            int colors[] = {textColor, gradientColor};
+            float positions[] = {0, 1};
+
+            // TOP
+            if (gradientType == Style.GradientType.TOP) {
+                colors = new int[]{gradientColor, textColor};
+            // CENTER
+            } else if (gradientType == Style.GradientType.CENTER) {
+                colors = new int[]{textColor, gradientColor, textColor};
+                positions = new float[]{0, 0.5f, 1};
+            }
+
+            playn.core.Gradient gradient =
+                PlayN.graphics().createLinearGradient(0, 0, 0, text.height(), colors, positions);
+
+            canvas.save();
+
+            canvas.setFillGradient(gradient);
+            canvas.fillText(text, x, y);
+
+            if (underlined) {
+                canvas.setStrokeColor(textColor);
+                for (int ii = 0; ii < text.lineCount(); ii++) {
+                    Rectangle bounds = text.lineBounds(ii);
+                    float sx = x + bounds.x;
+                    float sy = y + bounds.y + bounds.height() - 1;
+                    canvas.fillRect(sx, sy, bounds.width(), 1);
+                }
+            }
+
+            canvas.restore();
+        }
+
+        @Override public boolean equals (Object obj) {
+            if (!(obj instanceof Gradient)) return false;
+            Gradient that = (Gradient)obj;
+            return gradientColor == that.gradientColor && gradientType == that.gradientType;
+        }
+
+        @Override public int hashCode () {
+            return (83 * gradientColor) ^ (113 * gradientType.ordinal());
         }
     }
 }
