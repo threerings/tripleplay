@@ -228,12 +228,11 @@ public abstract class EffectRenderer
 
             // The compiler should've warned if new values showed up in the enum, but sanity check
             Asserts.checkNotNull(colors, "Unhandled gradient type: " + gradientType);
-            playn.core.Gradient gradient =
-                PlayN.graphics().createLinearGradient(0, 0, 0, text.height(), colors, positions);
 
             canvas.save();
 
-            canvas.setFillGradient(gradient);
+            canvas.setFillGradient(
+                PlayN.graphics().createLinearGradient(0, 0, 0, text.height(), colors, positions));
             canvas.fillText(text, x, y);
 
             if (underlined) {
