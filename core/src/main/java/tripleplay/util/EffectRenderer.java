@@ -5,11 +5,11 @@
 
 package tripleplay.util;
 
+import playn.core.Asserts;
 import playn.core.Canvas;
 import playn.core.PlayN;
 import playn.core.TextLayout;
 import pythagoras.f.Rectangle;
-
 import tripleplay.ui.Style;
 
 /**
@@ -208,19 +208,26 @@ public abstract class EffectRenderer
         @Override public void render (Canvas canvas, TextLayout text, int textColor,
             boolean underlined, float x, float y) {
 
-            // Default values for BOTTOM
-            int colors[] = {textColor, gradientColor};
-            float positions[] = {0, 1};
+            int colors[] = null;
+            float positions[] = null;
 
-            // TOP
-            if (gradientType == Style.GradientType.TOP) {
-                colors = new int[]{gradientColor, textColor};
-            // CENTER
-            } else if (gradientType == Style.GradientType.CENTER) {
-                colors = new int[]{textColor, gradientColor, textColor};
-                positions = new float[]{0, 0.5f, 1};
+            switch (gradientType) {
+            case BOTTOM:
+                colors = new int[] {textColor, gradientColor};
+                positions = new float[] {0, 1};
+                break;
+            case TOP:
+                colors = new int[] {gradientColor, textColor};
+                positions = new float[] {0, 1};
+                break;
+            case CENTER:
+                colors = new int[] {textColor, gradientColor, textColor};
+                positions = new float[] {0, 0.5f, 1};
+                break;
             }
 
+            // The compiler should've warned if new values showed up in the enum, but sanity check
+            Asserts.checkNotNull(colors, "Unhandled gradient type: " + gradientType);
             playn.core.Gradient gradient =
                 PlayN.graphics().createLinearGradient(0, 0, 0, text.height(), colors, positions);
 
