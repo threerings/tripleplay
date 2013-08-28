@@ -5,10 +5,6 @@
 
 package tripleplay.ui;
 
-import playn.core.Pointer;
-import playn.core.Sound;
-
-import react.Signal;
 import react.SignalView;
 import react.Value;
 
@@ -16,8 +12,7 @@ import react.Value;
  * A toggle button that displays text, or an icon, or both. Clicking the button toggles it from
  * selected to unselected, and vice versa.
  */
-public class ToggleButton extends TogglableTextWidget<ToggleButton>
-    implements Clickable<ToggleButton>
+public class ToggleButton extends TextWidget<ToggleButton> implements Togglable<ToggleButton>
 {
     /** The text displayed by this widget, or null. */
     public final Value<String> text = Value.create(null);
@@ -48,13 +43,16 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
         this.icon.connect(iconDidChange());
     }
 
+    @Override public Value<Boolean> selected () {
+        return ((Behavior.Toggle<ToggleButton>)_behave).selected;
+    }
+
     @Override public SignalView<ToggleButton> clicked () {
-        return _clicked;
+        return ((Behavior.Toggle<ToggleButton>)_behave).clicked;
     }
 
     @Override public void click () {
-        if (_actionSound != null) _actionSound.play();
-        _clicked.emit(this); // emit a click event
+        ((Behavior.Toggle<ToggleButton>)_behave).click();
     }
 
     @Override public String toString () {
@@ -73,15 +71,7 @@ public class ToggleButton extends TogglableTextWidget<ToggleButton>
         return icon.get();
     }
 
-    @Override protected void layout () {
-        super.layout();
-        _actionSound = resolveStyle(Style.ACTION_SOUND);
+    @Override protected Behavior<ToggleButton> createBehavior () {
+        return new Behavior.Toggle<ToggleButton>(asT());
     }
-
-    @Override protected void onClick (Pointer.Event event) {
-        click();
-    }
-
-    protected final Signal<ToggleButton> _clicked = Signal.create();
-    protected Sound _actionSound;
 }

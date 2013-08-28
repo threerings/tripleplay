@@ -69,7 +69,6 @@ public class Slider extends Widget<Slider>
     }
 
     public Slider (float value, float min, float max) {
-        enableInteraction();
         this.value = Value.create(value);
         range = Value.create(new Range(min, max));
         // set up our thumb layer
@@ -129,23 +128,24 @@ public class Slider extends Widget<Slider>
         return new SliderLayoutData();
     }
 
-    @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
-        super.onPointerStart(event, x, y);
-        handlePointer(x, y);
+    @Override protected Behavior<Slider> createBehavior () {
+        return new Behavior<Slider>(this) {
+            @Override public void onPointerStart (Pointer.Event event) {
+                super.onPointerStart(event);
+                handlePointer(event.localX(), event.localY());
+            }
+            @Override public void onPointerDrag (Pointer.Event event) {
+                super.onPointerDrag(event);
+                handlePointer(event.localX(), event.localY());
+            }
+            @Override public void onPointerEnd (Pointer.Event event) {
+                super.onPointerEnd(event);
+                handlePointer(event.localX(), event.localY());
+                _clicked.emit(Slider.this);
+            }
+            // nothing to do for onPointerCancel, just let the interaction stop
+        };
     }
-
-    @Override protected void onPointerDrag (Pointer.Event event, float x, float y) {
-        super.onPointerDrag(event, x, y);
-        handlePointer(x, y);
-    }
-
-    @Override protected void onPointerEnd (Pointer.Event event, float x, float y) {
-        super.onPointerEnd(event, x, y);
-        handlePointer(x, y);
-        _clicked.emit(this);
-    }
-
-    // nothing to do for onPointerCancel, just let the interaction stop
 
     protected void updateThumb () {
         Range r = range.get();

@@ -9,11 +9,8 @@ import pythagoras.f.Dimension;
 
 import playn.core.Image;
 import playn.core.ImageLayer;
-import playn.core.Pointer;
-import playn.core.Sound;
 import static playn.core.PlayN.graphics;
 
-import react.Signal;
 import react.SignalView;
 import react.Slot;
 
@@ -29,7 +26,6 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
 
     /** Creates a button with the supplied up and down images. */
     public ImageButton (Image up, Image down) {
-        enableInteraction();
         layer.add(_ilayer);
         _up = up;
         _down = down;
@@ -53,8 +49,7 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
      * not cause any change in the button's visualization. <em>Note:</em> this does not check the
      * button's enabled state, so the caller must handle that if appropriate. */
     public void click () {
-        if (_actionSound != null) _actionSound.play();
-        _clicked.emit(this); // emit a click event
+        ((Behavior.Click<ImageButton>)_behave).click();
     }
 
     /** A convenience method for registering a click handler. Assumes you don't need the result of
@@ -65,7 +60,7 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
     }
 
     @Override public SignalView<ImageButton> clicked () {
-        return _clicked;
+        return ((Behavior.Click<ImageButton>)_behave).clicked;
     }
 
     @Override public String toString () {
@@ -76,24 +71,12 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
         return ImageButton.class;
     }
 
-    @Override protected void layout () {
-        super.layout();
-        _actionSound = resolveStyle(Style.ACTION_SOUND);
-        _debounceDelay = resolveStyle(Button.DEBOUNCE_DELAY);
+    @Override protected Behavior<ImageButton> createBehavior () {
+        return new Behavior.Click<ImageButton>(this);
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         return new ImageButtonLayoutData();
-    }
-
-    @Override protected void onPress (Pointer.Event event) {
-        // ignore press events if we're still in our debounce interval
-        if (event.time() - _lastClickStamp > _debounceDelay) super.onPress(event);
-    }
-
-    @Override protected void onClick (Pointer.Event event) {
-        _lastClickStamp = event.time();
-        click();
     }
 
     protected class ImageButtonLayoutData extends LayoutData {
@@ -107,10 +90,6 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
         }
     }
 
-    protected final Signal<ImageButton> _clicked = Signal.create();
     protected final ImageLayer _ilayer = graphics().createImageLayer();
     protected Image _up, _down;
-    protected Sound _actionSound;
-    protected int _debounceDelay;
-    protected double _lastClickStamp;
 }

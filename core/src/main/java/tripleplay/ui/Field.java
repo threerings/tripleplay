@@ -139,7 +139,6 @@ public class Field extends TextWidget<Field>
     }
 
     public Field (String initialText, Styles styles) {
-        enableInteraction();
         setStyles(styles);
 
         if (TPPlatform.instance().hasNativeTextFields()) {
@@ -234,19 +233,36 @@ public class Field extends TextWidget<Field>
         return null; // fields never have an icon
     }
 
-    @Override protected void onPointerStart (Pointer.Event event, float x, float y) {
-        super.onPointerStart(event, x, y);
-        if (!isEnabled() || fulltimeNativeField()) return;
+    @Override protected void wasRemoved () {
+        super.wasRemoved();
+        // make sure the field is gone
+        updateMode(false);
+    }
 
+    @Override protected Behavior<Field> createBehavior () {
+        return new Behavior<Field>(this) {
+            @Override public void onPointerStart (Pointer.Event event) {
+                super.onPointerStart(event);
+                if (!isEnabled() || fulltimeNativeField()) return;
+                if (_nativeField != null) event.capture();
+                startEdit();
+            }
+        };
+    }
+
+    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
+        return new FieldLayoutData(hintX, hintY);
+    }
+
+    protected void startEdit () {
         if (_nativeField != null) {
-            event.capture();
             updateMode(true);
             _nativeField.focus();
 
         } else {
             // TODO: multi-line keyboard.getText
-            PlayN.keyboard().getText(resolveStyle(TEXT_TYPE), _popupLabel, text.get(),
-                new Callback<String>() { @Override public void onSuccess (String result) {
+            PlayN.keyboard().getText(_textType, _popupLabel, text.get(), new Callback<String>() {
+                @Override public void onSuccess (String result) {
                     // null result is a canceled entry dialog
                     if (result != null) text.update(result);
                     _finishedEditing.emit(result != null);
@@ -254,16 +270,6 @@ public class Field extends TextWidget<Field>
                 @Override public void onFailure (Throwable cause) { /* noop */ }
             });
         }
-    }
-
-    @Override protected void wasRemoved () {
-        super.wasRemoved();
-        // make sure the field is gone
-        updateMode(false);
-    }
-
-    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new FieldLayoutData(hintX, hintY);
     }
 
     protected boolean fulltimeNativeField () {
@@ -310,8 +316,7 @@ public class Field extends TextWidget<Field>
         if (_tglyph.layer() != null) _tglyph.layer().setAlpha(alpha);
     }
 
-    protected class FieldLayoutData extends TextLayoutData
-    {
+    protected class FieldLayoutData extends TextLayoutData {
         public FieldLayoutData (float hintX, float hintY) {
             super(hintX, hintY);
         }
@@ -321,15 +326,17 @@ public class Field extends TextWidget<Field>
             if (fulltimeNativeField()) updateMode(true);
             else if (_nativeField != null) _nativeField.validateStyles();
 
-            // make sure our cached value is up to date
+            // make sure our cached bits are up to date
             _validator = resolveStyle(VALIDATOR);
             _transformer = resolveStyle(TRANSFORMER);
+            _textType = resolveStyle(TEXT_TYPE);
         }
     }
 
     protected NativeTextField _nativeField;
     protected Validator _validator;
     protected Transformer _transformer;
+    protected TextType _textType;
     protected final Signal<Boolean> _finishedEditing;
 
     // used when popping up a text entry interface on mobile platforms

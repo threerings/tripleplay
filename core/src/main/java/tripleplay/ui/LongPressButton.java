@@ -67,7 +67,7 @@ public class LongPressButton extends Button
      * does not cause any change in the button's visualization. <em>Note:</em> this does not check
      * the button's enabled state, so the caller must handle that if appropriate. */
     public void longPress () {
-        if (_actionSound != null) _actionSound.play();
+        ((Behavior.Click<Button>)_behave).soundAction();
         _longPressed.emit(this);
     }
 
@@ -78,54 +78,55 @@ public class LongPressButton extends Button
         return this;
     }
 
-    @Override protected void layout () {
-        super.layout();
-        _longPressInterval = resolveStyle(LONG_PRESS_INTERVAL);
-    }
+    @Override protected Behavior<Button> createBehavior () {
+        return new Behavior.Click<Button>(this) {
+            @Override public void layout () {
+                super.layout();
+                _longPressInterval = resolveStyle(LONG_PRESS_INTERVAL);
+            }
 
-    @Override protected void onPress (Pointer.Event event) {
-        super.onPress(event);
-        startLongPressTimer();
-    }
+            @Override protected void onPress (Pointer.Event event) {
+                super.onPress(event);
+                if (isSelected()) startLongPressTimer();
+            }
+            @Override protected void onHover (Pointer.Event event, boolean inBounds) {
+                super.onHover(event, inBounds);
+                if (!inBounds) cancelLongPressTimer();
+                else startLongPressTimer();
+            }
+            @Override protected void onRelease (Pointer.Event event) {
+                super.onRelease(event);
+                cancelLongPressTimer();
+            }
 
-    @Override protected void onHover (Pointer.Event event, boolean inBounds) {
-        super.onHover(event, inBounds);
-        if (!inBounds) cancelLongPressTimer();
-        else startLongPressTimer();
-    }
-
-    @Override protected void onRelease (Pointer.Event event) {
-        super.onRelease(event);
-        cancelLongPressTimer();
-    }
-
-    protected void startLongPressTimer () {
-        if (_longPressInterval > 0 && _longPressReg == null) {
-            _longPressReg = root().iface().addTask(new Interface.Task() {
-                @Override public void update (int delta) {
-                    _accum += delta;
-                    if (_accum > _longPressInterval) fireLongPress();
+            protected void startLongPressTimer () {
+                if (_longPressInterval > 0 && _timerReg == null) {
+                    _timerReg = root().iface().addTask(new Interface.Task() {
+                        @Override public void update (int delta) {
+                            _accum += delta;
+                            if (_accum > _longPressInterval) fireLongPress();
+                        }
+                        protected int _accum;
+                    });
                 }
-                protected int _accum;
-            });
-        }
-    }
+            }
+            protected void cancelLongPressTimer () {
+                if (_timerReg != null) {
+                    _timerReg.remove();
+                    _timerReg = null;
+                }
+            }
+            protected void fireLongPress () {
+                // cancel the current interaction which will disarm the button
+                PlayN.pointer().cancelLayerDrags();
+                cancelLongPressTimer();
+                longPress();
+            }
 
-    protected void cancelLongPressTimer () {
-        if (_longPressReg != null) {
-            _longPressReg.remove();
-            _longPressReg = null;
-        }
-    }
-
-    protected void fireLongPress () {
-        // cancel the current interaction which will disarm the button
-        PlayN.pointer().cancelLayerDrags();
-        cancelLongPressTimer();
-        longPress();
+            protected int _longPressInterval;
+            protected Interface.TaskHandle _timerReg;
+        };
     }
 
     protected final Signal<Button> _longPressed = Signal.create();
-    protected int _longPressInterval;
-    protected Interface.TaskHandle _longPressReg;
 }

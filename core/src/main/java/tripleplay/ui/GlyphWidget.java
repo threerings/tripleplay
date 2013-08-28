@@ -31,7 +31,7 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
      * not be functional until one of the sizing methods is called (in {@link SizableWidget}.
      */
     protected GlyphWidget (boolean interactive) {
-        if (interactive) enableInteraction();
+        _interactive = interactive;
     }
 
     /**
@@ -56,12 +56,22 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
      * Paints this widget onto the given canvas. This is called by render. The canvas is from
      * the {@link #_glyph} member, which is already prepared to the correct laid out size.
      */
-    abstract protected void paint (Canvas canvas);
+    protected abstract void paint (Canvas canvas);
 
     /** Notifies this widget that the pointer or mouse has been pressed and release inside the
      * bounds of the widget. */
-    @Override protected void onClick (Pointer.Event event) {
-        // nothing by default
+    protected void onClick (Pointer.Event event) {
+        // TODO: derived classes should really configure a custom beahvior rather than this "some
+        // glyph widgets are interactive" hackery
+    }
+
+    @Override protected Behavior<T> createBehavior () {
+        return _interactive ? new Behavior<T>(asT()) {
+            @Override public void onPointerEnd (Pointer.Event event) {
+                super.onPointerEnd(event);
+                if (contains(event.localX(), event.localY())) onClick(event);
+            }
+        } : null;
     }
 
     @Override protected BaseLayoutData createBaseLayoutData (float hintX, float hintY) {
@@ -83,5 +93,6 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
         }
     }
 
+    protected final boolean _interactive;
     protected final Glyph _glyph = new Glyph();
 }

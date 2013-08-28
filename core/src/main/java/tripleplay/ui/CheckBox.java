@@ -10,7 +10,6 @@ import react.Value;
 
 import playn.core.Image;
 import playn.core.Pointer;
-import playn.core.Sound;
 
 /**
  * Displays a checkbox which can be toggled. The checkbox must be configured with either a
@@ -51,7 +50,6 @@ public class CheckBox extends TextWidget<CheckBox>
     }
 
     protected CheckBox (char checkChar, Icon checkIcon) {
-        enableInteraction();
         _checkStr = String.valueOf(checkChar);
         _checkIcon = checkIcon;
         checked.connect(new Slot<Boolean> () {
@@ -73,14 +71,17 @@ public class CheckBox extends TextWidget<CheckBox>
         return _checkIcon;
     }
 
-    @Override protected void onClick (Pointer.Event event) {
-        if (_actionSound != null) _actionSound.play();
-        select(!checked.get());
+    @Override protected Behavior<CheckBox> createBehavior () {
+        return new Behavior<CheckBox>(this) {
+            @Override protected void onClick (Pointer.Event event) {
+                soundAction();
+                _owner.select(!checked.get());
+            }
+        };
     }
 
     @Override protected void layout () {
         super.layout();
-        _actionSound = resolveStyle(Style.ACTION_SOUND);
         updateCheckViz();
     }
 
@@ -92,5 +93,4 @@ public class CheckBox extends TextWidget<CheckBox>
 
     protected final String _checkStr;
     protected final Icon _checkIcon;
-    protected Sound _actionSound;
 }
