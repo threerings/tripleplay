@@ -15,10 +15,10 @@ import react.Value;
 /**
  * Controls the behavior of a widget (how it responds to pointer events).
  */
-public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener {
+public abstract class Behavior<T extends Element<T>> implements Pointer.Listener {
     /** Implements button-like behavior: selects the element when the pointer is in bounds, and
      * deselects on release. This is a pretty common case and inherited by {@link Click}. */
-    public static class Select<T extends Widget<T>> extends Behavior<T> {
+    public static class Select<T extends Element<T>> extends Behavior<T> {
         public Select (T owner) {
             super(owner);
         }
@@ -47,7 +47,7 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
 
     /** An empty behavior that ignores everything. This allows subclasses to easily implement
      * a single {@code onX} method. */
-    public static class Empty<T extends Widget<T>> extends Behavior<T> {
+    public static class Empty<T extends Element<T>> extends Behavior<T> {
         public Empty (T owner) { super(owner); }
         @Override protected void onPress (Pointer.Event event) {}
         @Override protected void onHover (Pointer.Event event, boolean inBounds) {}
@@ -57,13 +57,13 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
     }
 
     /** Implements clicking behavior. */
-    public static class Click<T extends Widget<T>> extends Select<T> {
-        /** A delay (in milliseconds) during which a widget will remain unclickable after it has been
-         * clicked. This ensures that users don't hammer away at a widget, triggering multiple
-         * responses (which code rarely protects against). Inherited. */
+    public static class Click<T extends Element<T>> extends Select<T> {
+        /** A delay (in milliseconds) during which the owner will remain unclickable after it has
+         * been clicked. This ensures that users don't hammer away at a widget, triggering
+         * multiple responses (which code rarely protects against). Inherited. */
         public static Style<Integer> DEBOUNCE_DELAY = Style.newStyle(true, 500);
 
-        /** A signal emitted with our owning widget when clicked. */
+        /** A signal emitted with our owner when clicked. */
         public Signal<T> clicked = Signal.create();
 
         public Click (T owner) {
@@ -96,8 +96,8 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
     }
 
     /** Implements toggling behavior. */
-    public static class Toggle<T extends Widget<T>> extends Behavior<T> {
-        /** A signal emitted with our owning widget when clicked. */
+    public static class Toggle<T extends Element<T>> extends Behavior<T> {
+        /** A signal emitted with our owner when clicked. */
         public final Signal<T> clicked = Signal.create();
 
         /** Indicates whether our owner is selected. It may be listened to, and updated. */
@@ -154,18 +154,18 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
         onCancel(event);
     }
 
-    /** Called when our owning widget is laid out. If the behavior needs to resolve configuration
-     * via styles, this is where it should do it. */
+    /** Called when our owner is laid out. If the behavior needs to resolve configuration via
+     * styles, this is where it should do it. */
     public void layout () {
         _actionSound = resolveStyle(Style.ACTION_SOUND);
     }
 
-    /** Emits the action sound for our owner widget, if one is configured. */
+    /** Emits the action sound for our owner, if one is configured. */
     public void soundAction () {
         if (_actionSound != null) _actionSound.play();
     }
 
-    /** Resolves the value for the supplied style via our owner widget. */
+    /** Resolves the value for the supplied style via our owner. */
     protected <V> V resolveStyle (Style<V> style) {
         return Styles.resolveStyle(_owner, style);
     }
@@ -175,7 +175,7 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
         return _owner.root();
     }
 
-    /** Called when the pointer is pressed down on our widget. */
+    /** Called when the pointer is pressed down on our element. */
     protected abstract void onPress (Pointer.Event event);
 
     /** Called as the user drags the pointer around after pressing. Derived classes map this onto
