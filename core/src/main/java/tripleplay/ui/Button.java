@@ -8,23 +8,14 @@ package tripleplay.ui;
 import playn.core.Image;
 import react.SignalView;
 import react.Slot;
-import react.Value;
-import react.ValueView;
 
 /**
  * A button that displays text, or an icon, or both.
  */
-public class Button extends TextWidget<Button>
-    implements Clickable<Button>
+public class Button extends AbstractTextButton<Button> implements Clickable<Button>
 {
     /** @deprecated Use {@link Behavior.Click#DEBOUNCE_DELAY}. */
     @Deprecated public static Style<Integer> DEBOUNCE_DELAY = Behavior.Click.DEBOUNCE_DELAY;
-
-    /** The text displayed by this widget, or null. */
-    public final Value<String> text = Value.create((String)null);
-
-    /** The icon displayed by this widget, or null. */
-    public final Value<Icon> icon = Value.<Icon>create(null);
 
     /** Creates a button with no text or icon. */
     public Button () {
@@ -55,29 +46,7 @@ public class Button extends TextWidget<Button>
 
     /** Creates a button with the supplied text and icon. */
     public Button (String text, Icon icon) {
-        this.text.update(text);
-        this.text.connect(textDidChange());
-        // update after connect so we trigger iconDidChange, in case our icon is a not-ready-image
-        this.icon.connect(iconDidChange());
-        this.icon.update(icon);
-    }
-
-    /**
-     * Binds the text of this button to the supplied reactive value. The current text will be
-     * adjusted to match the state of {@code text}.
-     */
-    public Button bindText (ValueView<String> text) {
-        text.connectNotify(this.text.slot());
-        return this;
-    }
-
-    /**
-     * Binds the icon of this button to the supplied reactive value. The current icon will be
-     * adjusted to match the state of {@code icon}.
-     */
-    public Button bindIcon (ValueView<Icon> icon) {
-        icon.connectNotify(this.icon.slot());
-        return this;
+        super(text, icon);
     }
 
     /** A convenience method for registering a click handler. Assumes you don't need the result of
@@ -96,7 +65,7 @@ public class Button extends TextWidget<Button>
     }
 
     @Override public String toString () {
-        return "Button(" + text.get() + ")";
+        return "Button(" + text() + ")";
     }
 
     @Override protected Class<?> getStyleClass () {
@@ -105,13 +74,5 @@ public class Button extends TextWidget<Button>
 
     @Override protected Behavior<Button> createBehavior () {
         return new Behavior.Click<Button>(this);
-    }
-
-    @Override protected String text () {
-        return text.get();
-    }
-
-    @Override protected Icon icon () {
-        return icon.get();
     }
 }

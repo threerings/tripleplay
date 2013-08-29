@@ -12,14 +12,8 @@ import react.Value;
  * A toggle button that displays text, or an icon, or both. Clicking the button toggles it from
  * selected to unselected, and vice versa.
  */
-public class ToggleButton extends TextWidget<ToggleButton> implements Togglable<ToggleButton>
+public class ToggleButton extends AbstractTextButton<ToggleButton> implements Togglable<ToggleButton>
 {
-    /** The text displayed by this widget, or null. */
-    public final Value<String> text = Value.create(null);
-
-    /** The icon displayed by this widget, or null. */
-    public final Value<Icon> icon = Value.create(null);
-
     /** Creates a button with no text or icon. */
     public ToggleButton () {
         this(null, null);
@@ -37,10 +31,7 @@ public class ToggleButton extends TextWidget<ToggleButton> implements Togglable<
 
     /** Creates a button with the supplied text and icon. */
     public ToggleButton (String text, Icon icon) {
-        this.text.update(text);
-        this.icon.update(icon);
-        this.text.connect(textDidChange());
-        this.icon.connect(iconDidChange());
+        super(text, icon);
     }
 
     @Override public Value<Boolean> selected () {
@@ -56,19 +47,11 @@ public class ToggleButton extends TextWidget<ToggleButton> implements Togglable<
     }
 
     @Override public String toString () {
-        return "ToggleButton(" + text.get() + ")";
+        return "ToggleButton(" + text() + ")";
     }
 
     @Override protected Class<?> getStyleClass () {
         return ToggleButton.class;
-    }
-
-    @Override protected String text () {
-        return text.get();
-    }
-
-    @Override protected Icon icon () {
-        return icon.get();
     }
 
     @Override protected Behavior<ToggleButton> createBehavior () {
