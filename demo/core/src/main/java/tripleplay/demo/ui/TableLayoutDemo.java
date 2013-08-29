@@ -8,8 +8,6 @@ package tripleplay.demo.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.Pointer;
-
 import react.Slot;
 import react.UnitSlot;
 

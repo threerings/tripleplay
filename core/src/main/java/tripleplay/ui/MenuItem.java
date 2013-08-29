@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import playn.core.Connection;
-import playn.core.Image;
 import playn.core.Pointer;
 import pythagoras.f.Dimension;
 
@@ -35,14 +34,6 @@ public class MenuItem extends TextWidget<MenuItem> implements Togglable<MenuItem
      */
     public MenuItem (String label) {
         this(label, (Icon)null);
-    }
-
-    /**
-     * Creates a new menu item with the given label and icon.
-     */
-    @Deprecated
-    public MenuItem (String label, Image icon) {
-        this(label, Icons.image(icon));
     }
 
     /**
@@ -90,27 +81,31 @@ public class MenuItem extends TextWidget<MenuItem> implements Togglable<MenuItem
      * connect to {@link Menu#itemTriggered}.
      */
     public SignalView<MenuItem> triggered () {
-        return ((Behavior.Toggle<MenuItem>)_behave).clicked;
+        return toToggle().clicked;
     }
 
     // from Togglable and Clickable
     @Override public Value<Boolean> selected () {
-        return ((Behavior.Toggle<MenuItem>)_behave).selected;
+        return toToggle().selected;
     }
     @Override public SignalView<MenuItem> clicked () {
-        return ((Behavior.Toggle<MenuItem>)_behave).clicked;
+        return toToggle().clicked;
     }
     @Override public void click () {
-        ((Behavior.Toggle<MenuItem>)_behave).click();
+        toToggle().click();
     }
 
     protected void trigger () {
-        ((Behavior.Toggle<MenuItem>)_behave).click();
+        toToggle().click();
     }
 
     protected void setRelay (Connection relay) {
         if (_relay != null) _relay.disconnect();
         _relay = relay;
+    }
+
+    protected Behavior.Toggle<MenuItem> toToggle () {
+        return (Behavior.Toggle<MenuItem>)_behave;
     }
 
     @Override protected Class<?> getStyleClass () { return MenuItem.class; }
