@@ -94,9 +94,10 @@ public class LongPressButton extends Button
                 if (!inBounds) cancelLongPressTimer();
                 else startLongPressTimer();
             }
-            @Override protected void onRelease (Pointer.Event event) {
-                super.onRelease(event);
+            @Override protected boolean onRelease (Pointer.Event event) {
+                boolean click = super.onRelease(event);
                 cancelLongPressTimer();
+                return click;
             }
 
             protected void startLongPressTimer () {

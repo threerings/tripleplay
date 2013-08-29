@@ -66,7 +66,7 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
     }
 
     @Override protected Behavior<T> createBehavior () {
-        return _interactive ? new Behavior<T>(asT()) {
+        return _interactive ? new Behavior.Select<T>(asT()) {
             @Override public void onPointerEnd (Pointer.Event event) {
                 super.onPointerEnd(event);
                 if (contains(event.localX(), event.localY())) onClick(event);

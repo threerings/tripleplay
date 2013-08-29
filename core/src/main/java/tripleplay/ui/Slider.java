@@ -129,7 +129,7 @@ public class Slider extends Widget<Slider>
     }
 
     @Override protected Behavior<Slider> createBehavior () {
-        return new Behavior<Slider>(this) {
+        return new Behavior.Select<Slider>(this) {
             @Override public void onPointerStart (Pointer.Event event) {
                 super.onPointerStart(event);
                 handlePointer(event.localX(), event.localY());

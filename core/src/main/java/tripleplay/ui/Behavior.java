@@ -16,9 +16,48 @@ import react.Value;
  * Controls the behavior of a widget (how it responds to pointer events).
  */
 public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener {
+    /** Implements button-like behavior: selects the element when the pointer is in bounds, and
+     * deselects on release. This is a pretty common case and inherited by {@link Click}. */
+    public static class Select<T extends Widget<T>> extends Behavior<T> {
+        public Select (T owner) {
+            super(owner);
+        }
+
+        @Override protected void onPress (Pointer.Event event) {
+            updateSelected(true);
+        }
+
+        @Override protected void onHover (Pointer.Event event, boolean inBounds) {
+            updateSelected(inBounds);
+        }
+
+        @Override protected boolean onRelease (Pointer.Event event) {
+            // it's a click if we ended in bounds
+            return updateSelected(false);
+        }
+
+        @Override protected void onCancel (Pointer.Event event) {
+            updateSelected(false);
+        }
+
+        @Override protected void onClick (Pointer.Event event) {
+            // nothing by default, subclasses wire this up as needed
+        }
+    }
+
+    /** An empty behavior that ignores everything. This allows subclasses to easily implement
+     * a single {@code onX} method. */
+    public static class Empty<T extends Widget<T>> extends Behavior<T> {
+        public Empty (T owner) { super(owner); }
+        @Override protected void onPress (Pointer.Event event) {}
+        @Override protected void onHover (Pointer.Event event, boolean inBounds) {}
+        @Override protected boolean onRelease (Pointer.Event event) { return false; }
+        @Override protected void onCancel (Pointer.Event event) {}
+        @Override protected void onClick (Pointer.Event event) {}
+    }
 
     /** Implements clicking behavior. */
-    public static class Click<T extends Widget<T>> extends Behavior<T> {
+    public static class Click<T extends Widget<T>> extends Select<T> {
         /** A delay (in milliseconds) during which a widget will remain unclickable after it has been
          * clicked. This ensures that users don't hammer away at a widget, triggering multiple
          * responses (which code rarely protects against). Inherited. */
@@ -46,6 +85,7 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
             // ignore press events if we're still in our debounce interval
             if (event.time() - _lastClickStamp > _debounceDelay) super.onPress(event);
         }
+
         @Override protected void onClick (Pointer.Event event) {
             _lastClickStamp = event.time();
             click();
@@ -65,11 +105,7 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
 
         public Toggle (T owner) {
             super(owner);
-            selected.connect(new Slot<Boolean>() {
-                @Override public void onEmit (Boolean selected) {
-                    updateSelected(selected);
-                }
-            });
+            selected.connect(selectedDidChange());
         }
 
         /** Triggers a click. */
@@ -79,20 +115,16 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
         }
 
         @Override protected void onPress (Pointer.Event event) {
-            // we explicitly don't call super here
             _anchorState = _owner.isSelected();
             selected.update(!_anchorState);
         }
         @Override protected void onHover (Pointer.Event event, boolean inBounds) {
-            // we explicitly don't call super here
             selected.update(inBounds ? !_anchorState : _anchorState);
         }
-        @Override protected void onRelease (Pointer.Event event) {
-            // we explicitly don't call super here
-            if (_anchorState != _owner.isSelected()) onClick(event);
+        @Override protected boolean onRelease (Pointer.Event event) {
+            return _anchorState != _owner.isSelected();
         }
         @Override protected void onCancel (Pointer.Event event) {
-            // we explicitly don't call super here
             selected.update(_anchorState);
         }
         @Override protected void onClick (Pointer.Event event) {
@@ -115,7 +147,7 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
     }
 
     @Override public void onPointerEnd (Pointer.Event event) {
-        onRelease(event);
+        if (onRelease(event)) onClick(event);
     }
 
     @Override public void onPointerCancel (Pointer.Event event) {
@@ -143,46 +175,44 @@ public abstract class Behavior<T extends Widget<T>> implements Pointer.Listener 
         return _owner.root();
     }
 
-    /** Called when the pointer is clicked on our widget. */
-    protected void onPress (Pointer.Event event) {
-        _owner.set(Element.Flag.SELECTED, true);
-        _owner.invalidate();
-    }
+    /** Called when the pointer is pressed down on our widget. */
+    protected abstract void onPress (Pointer.Event event);
 
-    /** Called as the user drags the pointer around with the widget depressed. */
-    protected void onHover (Pointer.Event event, boolean inBounds) {
-        updateSelected(inBounds);
-    }
+    /** Called as the user drags the pointer around after pressing. Derived classes map this onto
+     * the widget state, such as updating selectedness. */
+    protected abstract void onHover (Pointer.Event event, boolean inBounds);
 
     /** Called when the pointer is released after having been pressed on this widget. This should
-     * {@link #onClick} if appropriate. */
-    protected void onRelease (Pointer.Event event) {
-        if (_owner.isSelected()) {
-            _owner.set(Element.Flag.SELECTED, false);
-            _owner.invalidate();
-            onClick(event);
-        }
-    }
+     * return true if the gesture is considered a click, in which case {@link #onClick} will
+     * be called automatically. */
+    protected abstract boolean onRelease (Pointer.Event event);
 
     /** Called when the interaction is canceled after having been pressed on this widget. This
      * should not result in a call to {@link #onClick}. */
-    protected void onCancel (Pointer.Event event) {
-        if (_owner.isSelected()) {
-            _owner.set(Element.Flag.SELECTED, false);
-            _owner.invalidate();
-        }
-    }
+    protected abstract void onCancel (Pointer.Event event);
 
-    /** Called when the pointer is pressed and released over our owning widget. */
-    protected void onClick (Pointer.Event event) {
-    }
+    /** Called when the pointer is released and the subclass decides that it is a click, i.e.
+     * returns true from {@link #onRelease(Pointer.Event)}. */
+    protected abstract void onClick (Pointer.Event event);
 
-    /** Updates the selected state of our owner, invalidating if selectedness changes. */
-    protected void updateSelected (boolean selected) {
-        if (selected != _owner.isSelected()) {
+    /** Updates the selected state of our owner, invalidating if selectedness changes.
+     * @return true if the owner was selected on entry. */
+    protected boolean updateSelected (boolean selected) {
+        boolean wasSelected = _owner.isSelected();
+        if (selected != wasSelected) {
             _owner.set(Element.Flag.SELECTED, selected);
             _owner.invalidate();
         }
+        return wasSelected;
+    }
+
+    /** Slot for calling {@link #updateSelected(boolean)}. */
+    protected Slot<Boolean> selectedDidChange () {
+        return new Slot<Boolean>() {
+            @Override public void onEmit (Boolean selected) {
+                updateSelected(selected);
+            }
+        };
     }
 
     protected final T _owner;

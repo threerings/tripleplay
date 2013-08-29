@@ -301,7 +301,7 @@ public class MenuDemo extends DemoScreen
         public abstract Menu createMenu ();
 
         protected Behavior<Label> createBehavior () {
-            return new Behavior<Label>(this) {
+            return new Behavior.Select<Label>(this) {
                 @Override public void onPointerStart (Pointer.Event ev) {
                     MenuHost.Pop pop = makePop().atEventPos(ev);
                     pop.menu.itemTriggered().connect(updater(text, icon));

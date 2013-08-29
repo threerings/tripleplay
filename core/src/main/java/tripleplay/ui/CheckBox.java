@@ -72,7 +72,7 @@ public class CheckBox extends TextWidget<CheckBox>
     }
 
     @Override protected Behavior<CheckBox> createBehavior () {
-        return new Behavior<CheckBox>(this) {
+        return new Behavior.Select<CheckBox>(this) {
             @Override protected void onClick (Pointer.Event event) {
                 soundAction();
                 _owner.select(!checked.get());
