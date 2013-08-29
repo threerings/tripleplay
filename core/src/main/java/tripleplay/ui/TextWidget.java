@@ -171,11 +171,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     usedHeight = iheight;
                     break;
                 }
-
-                // add, then remove to minimize potential texture thrash
-                Layer oilayer = _ilayer;
+                if (_ilayer != null) _ilayer.destroy();
                 layer.addAt(_ilayer = icon.render(), ix, iy);
-                if (oilayer != null) oilayer.destroy();
 
             } else if (icon == null && _ilayer != null) {
                 _ilayer.destroy();
