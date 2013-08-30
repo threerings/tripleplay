@@ -138,6 +138,17 @@ public class Root extends Elements<Root>
     }
 
     /**
+     * Sets this Root's menu host, allowing an application to more manage multiple roots with
+     * a single menu host.
+     */
+    public void setMenuHost (MenuHost host) {
+        if (_menuHost != null) {
+            _menuHost.deactivate();
+        }
+        _menuHost = host;
+    }
+
+    /**
      * Gets this Root's menu host, creating it if necessary.
      */
     public MenuHost getMenuHost () {
