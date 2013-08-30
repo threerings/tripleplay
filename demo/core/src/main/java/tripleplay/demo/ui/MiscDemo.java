@@ -83,7 +83,7 @@ public class MiscDemo extends DemoScreen
 
         final Field source = editable, target = disabled;
         setField.clicked().connect(new UnitSlot() {
-            public void onEmit () {
+            @Override public void onEmit () {
                 PlayN.log().info("Setting text to " + source.text.get());
                 target.text.update(source.text.get());
             }
@@ -107,19 +107,19 @@ public class MiscDemo extends DemoScreen
                 toggle3, AxisLayout.stretch(disabled)),
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 new LongPressButton("Long Pressable").onLongPress(new UnitSlot() {
-                    public void onEmit () { pressResult.text.update("Long pressed"); }
+                    @Override public void onEmit () { pressResult.text.update("Long pressed"); }
                 }).onClick(new UnitSlot() {
-                    public void onEmit () { pressResult.text.update("Clicked"); }
+                    @Override public void onEmit () { pressResult.text.update("Clicked"); }
                 }), AxisLayout.stretch(pressResult)),
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 new Label("Image button"),
                 new ImageButton(tile(squares, 0), tile(squares, 1)).onClick(new UnitSlot() {
-                    public void onEmit () { clickCount.increment(1); }
+                    @Override public void onEmit () { clickCount.increment(1); }
                 }),
                 new ValueLabel(clickCount)),
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 new Button("Fill Box").onClick(new UnitSlot() {
-                    public void onEmit () {
+                    @Override public void onEmit () {
                         box.set(new Label(box.contents() == null ? "Filled" : "Refilled"));
                     }
                 }),

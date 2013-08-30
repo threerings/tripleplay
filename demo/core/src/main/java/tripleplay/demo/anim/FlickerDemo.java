@@ -65,7 +65,7 @@ public class FlickerDemo extends DemoScreen
 
     protected GroupLayer _group = graphics().createGroupLayer();
     protected Flicker _flicker = new Flicker(0, height()-IMG_HEIGHT*IMG_COUNT, 0) {
-        protected float friction () { return 0.001f; }
+        @Override protected float friction () { return 0.001f; }
     };
 
     protected static final float IMG_HEIGHT = 100;

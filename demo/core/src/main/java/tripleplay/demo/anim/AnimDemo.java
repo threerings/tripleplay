@@ -40,7 +40,7 @@ public class AnimDemo extends DemoScreen
         // demo the shake animation
         final ImageLayer click = CFG.toLayer("Click to Shake");
         click.addListener(new Pointer.Adapter() {
-            public void onPointerStart (Pointer.Event event) {
+            @Override public void onPointerStart (Pointer.Event event) {
                 anim.shake(click).bounds(-3, 3, -3, 0).cycleTime(25, 25).in(1000);
             }
         });

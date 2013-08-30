@@ -51,7 +51,8 @@ public class FireworksDemo extends ParticleDemo
         explode1.layer.setTranslation(tx, ty);
         explode2.layer.setTranslation(tx, ty);
 
-        explode1.onEmpty.connect(new UnitSlot() { public void onEmit () {
+        explode1.onEmpty.connect(new UnitSlot() {
+          @Override public void onEmit () {
             float tx = 100 + rando.getFloat(graphics().width()-200);
             float ty = 100 + rando.getFloat(graphics().height()-200);
             explode1.layer.setTranslation(tx, ty);
