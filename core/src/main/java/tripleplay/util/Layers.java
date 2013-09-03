@@ -184,14 +184,19 @@ public class Layers
         return image;
     }
 
-    /** Creates a connection that will disconnect the given connections. */
+    /**
+     * Creates a connection that will disconnect multiple other connections. NOTE: for best
+     * retention practices, once the resulting connection is disconnected, the given ones
+     * will no longer be referenced and hence will only have their {@code disconnect} method
+     * called once (via the returned object).
+     */
     public static Connection join (Connection... connections) {
-        final List<Connection> connList = new ArrayList<Connection>(connections.length);
+        final List<Connection> list = new ArrayList<Connection>(connections.length);
+        for (Connection conn : connections) list.add(conn);
         return new Connection() {
             @Override public void disconnect () {
-                for (int idx = connList.size() - 1; idx >= 0; idx--) {
-                    connList.get(idx).disconnect();
-                }
+                for (int idx = list.size() - 1; idx >= 0; idx--) list.get(idx).disconnect();
+                list.clear();
             }
         };
     }
