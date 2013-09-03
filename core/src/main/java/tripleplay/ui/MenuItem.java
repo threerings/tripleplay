@@ -11,6 +11,7 @@ import pythagoras.f.Dimension;
 
 import react.SignalView;
 import react.Value;
+import tripleplay.util.Layers;
 
 /**
  * An item in a menu. This overrides clicking with a two phase click behavior: clicking an
@@ -100,7 +101,7 @@ public class MenuItem extends TextWidget<MenuItem> implements Togglable<MenuItem
     }
 
     protected void setRelay (Connection relay) {
-        if (_relay != null) _relay.disconnect();
+        _relay.disconnect();
         _relay = relay;
     }
 
@@ -136,7 +137,7 @@ public class MenuItem extends TextWidget<MenuItem> implements Togglable<MenuItem
         return new SizableLayoutData(super.createLayoutData(hintX, hintY), _preferredSize);
     }
 
-    protected Connection _relay;
+    protected Connection _relay = Layers.NOT_LISTENING;
 
     /** Size override. */
     protected final Dimension _preferredSize = new Dimension(0, 0);

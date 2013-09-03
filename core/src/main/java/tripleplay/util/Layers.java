@@ -5,8 +5,12 @@
 
 package tripleplay.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 import playn.core.Canvas;
 import playn.core.CanvasImage;
+import playn.core.Connection;
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.ImmediateLayer;
@@ -24,6 +28,13 @@ import pythagoras.f.Transform;
  */
 public class Layers
 {
+    /**
+     * No-op connection, for improving nullity assumptions.
+     */
+    public static final Connection NOT_LISTENING = new Connection() {
+        @Override public void disconnect () {}
+    };
+
     /**
      * Transforms a point from one Layer's coordinate system to another's.
      */
@@ -134,6 +145,18 @@ public class Layers
                 addBounds(root, group.get(ii), bounds, scratch);
             }
         }
+    }
+
+    /** Creates a connection that will disconnect the given connections. */
+    public static Connection join (Connection... connections) {
+        final List<Connection> connList = Arrays.asList(connections);
+        return new Connection() {
+            @Override public void disconnect () {
+                for (int size = connList.size(); size > 0; --size) {
+                    connList.remove(size - 1).disconnect();
+                }
+            }
+        };
     }
 
     /** Utility method for capture. */

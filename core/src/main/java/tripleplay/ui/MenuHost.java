@@ -22,6 +22,7 @@ import react.Slot;
 
 import tripleplay.ui.Style.HAlign;
 import tripleplay.ui.Style.VAlign;
+import tripleplay.util.Layers;
 
 import static playn.core.PlayN.graphics;
 
@@ -464,7 +465,7 @@ public class MenuHost
         public final Pop pop;
 
         /** Connects to the pointer events from the relay. */
-        public Connection pointerRelay;
+        public Connection pointerRelay = Layers.NOT_LISTENING;
 
         /** Connection to the trigger's hierarchy change. */
         public react.Connection triggerRemoved;
@@ -483,9 +484,9 @@ public class MenuHost
 
         /** Clears out the connections. */
         public void clear () {
-            if (pointerRelay != null) pointerRelay.disconnect();
             if (triggerRemoved != null) triggerRemoved.disconnect();
             if (deactivated != null) deactivated.disconnect();
+            pointerRelay.disconnect();
             pointerRelay = null;
             triggerRemoved = null;
             deactivated = null;
