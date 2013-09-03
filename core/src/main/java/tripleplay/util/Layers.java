@@ -16,6 +16,8 @@ import playn.core.ImageLayer;
 import playn.core.ImmediateLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
+import playn.core.Pointer;
+import playn.core.Surface;
 import playn.core.canvas.CanvasSurface;
 import pythagoras.f.AffineTransform;
 import pythagoras.f.IPoint;
@@ -33,6 +35,20 @@ public class Layers
      */
     public static final Connection NOT_LISTENING = new Connection() {
         @Override public void disconnect () {}
+    };
+
+    /** Prevents parent handling for pointer events. This is useful if you have for example a
+     * button inside a scrolling container and need to enable event propagation. */
+    public static class NoPropagate
+        implements Pointer.Listener
+    {
+        @Override public void onPointerStart (Pointer.Event event) { stop(event); }
+        @Override public void onPointerEnd (Pointer.Event event) { stop(event); }
+        @Override public void onPointerDrag (Pointer.Event event) { stop(event); }
+        @Override public void onPointerCancel (Pointer.Event event) { stop(event); }
+        protected void stop (Pointer.Event event) {
+            event.flags().setPropagationStopped(true);
+        }
     };
 
     /**
@@ -63,6 +79,11 @@ public class Layers
         layer.setTranslation(pos.x, pos.y);
     }
 
+    /** Destroys the children of the given group. */
+    public static void destroyChildren (GroupLayer grp) {
+        for (int ii = grp.size() - 1; ii >= 0; ii--) grp.get(ii).destroy();
+    }
+
     /**
      * Whether a GroupLayer hierarchy contains another layer somewhere in its depths.
      */
@@ -72,6 +93,42 @@ public class Layers
             if (layer == group) return true;
         }
         return false;
+    }
+
+    /**
+     * Creates a new group with the given children.
+     */
+    public static GroupLayer group (Layer... children) {
+        GroupLayer gl = PlayN.graphics().createGroupLayer();
+        for (Layer l : children) gl.add(l);
+        return gl;
+    }
+
+    /**
+     * Adds a child layer to a group and returns the child.
+     */
+    public static <T extends Layer> T addChild (GroupLayer parent, T child) {
+        parent.add(child);
+        return child;
+    }
+
+    /**
+     * Adds a child group to a parent group and returns the child.
+     */
+    public static GroupLayer addNewGroup (GroupLayer parent) {
+        return addChild(parent, PlayN.graphics().createGroupLayer());
+    }
+
+    /**
+     * Creates an immediate layer that renders a simple rectangle of the given color,
+     * width and height.
+     */
+    public static Layer solid (final int color, final float width, final float height) {
+        return PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
+            public void render (Surface surf) {
+                surf.setFillColor(color).fillRect(0, 0, width, height);
+            }
+        });
     }
 
     /**
@@ -127,6 +184,18 @@ public class Layers
         return image;
     }
 
+    /** Creates a connection that will disconnect the given connections. */
+    public static Connection join (Connection... connections) {
+        final List<Connection> connList = Arrays.asList(connections);
+        return new Connection() {
+            @Override public void disconnect () {
+                for (int size = connList.size(); size > 0; --size) {
+                    connList.remove(size - 1).disconnect();
+                }
+            }
+        };
+    }
+
     /** Helper function for {@link #totalBounds}. */
     protected static void addBounds (Layer root, Layer l, Rectangle bounds, Point scratch) {
         if (l instanceof Layer.HasSize) {
@@ -145,18 +214,6 @@ public class Layers
                 addBounds(root, group.get(ii), bounds, scratch);
             }
         }
-    }
-
-    /** Creates a connection that will disconnect the given connections. */
-    public static Connection join (Connection... connections) {
-        final List<Connection> connList = Arrays.asList(connections);
-        return new Connection() {
-            @Override public void disconnect () {
-                for (int size = connList.size(); size > 0; --size) {
-                    connList.remove(size - 1).disconnect();
-                }
-            }
-        };
     }
 
     /** Utility method for capture. */
