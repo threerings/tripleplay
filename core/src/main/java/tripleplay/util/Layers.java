@@ -5,7 +5,7 @@
 
 package tripleplay.util;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import playn.core.Canvas;
@@ -186,11 +186,11 @@ public class Layers
 
     /** Creates a connection that will disconnect the given connections. */
     public static Connection join (Connection... connections) {
-        final List<Connection> connList = Arrays.asList(connections);
+        final List<Connection> connList = new ArrayList<Connection>(connections.length);
         return new Connection() {
             @Override public void disconnect () {
-                for (int size = connList.size(); size > 0; --size) {
-                    connList.remove(size - 1).disconnect();
+                for (int idx = connList.size() - 1; idx >= 0; idx--) {
+                    connList.get(idx).disconnect();
                 }
             }
         };
