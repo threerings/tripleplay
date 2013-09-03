@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.threerings</groupId>
     <artifactId>tripleplay-parent</artifactId>
-    <version>1.7.5</version>
+    <version>1.7.5.1</version>
   </parent>
 
   <artifactId>tripleplay-ios</artifactId>
