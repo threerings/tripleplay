@@ -5,9 +5,6 @@
 
 package tripleplay.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import playn.core.Canvas;
 import playn.core.CanvasImage;
 import playn.core.Connection;
@@ -190,14 +187,14 @@ public class Layers
      * will no longer be referenced and hence will only have their {@code disconnect} method
      * called once (via the returned object).
      */
-    public static Connection join (Connection... connections) {
-        final List<Connection> list = new ArrayList<Connection>(connections.length);
-        for (Connection conn : connections) list.add(conn);
+    public static Connection join (final Connection... connections) {
         return new Connection() {
             @Override public void disconnect () {
-                for (int idx = list.size() - 1; idx >= 0; idx--) list.get(idx).disconnect();
-                list.clear();
+                if (_conns == null) return;
+                for (Connection conn : _conns) conn.disconnect();
+                _conns = null;
             }
+            protected Connection[] _conns = connections;
         };
     }
 
