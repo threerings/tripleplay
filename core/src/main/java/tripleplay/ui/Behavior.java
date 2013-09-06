@@ -45,10 +45,10 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
         }
     }
 
-    /** An empty behavior that ignores everything. This allows subclasses to easily implement
-     * a single {@code onX} method. */
-    public static class Empty<T extends Element<T>> extends Behavior<T> {
-        public Empty (T owner) { super(owner); }
+    /** A behavior that ignores everything. This allows subclasses to easily implement a single
+     * {@code onX} method. */
+    public static class Ignore<T extends Element<T>> extends Behavior<T> {
+        public Ignore (T owner) { super(owner); }
         @Override protected void onPress (Pointer.Event event) {}
         @Override protected void onHover (Pointer.Event event, boolean inBounds) {}
         @Override protected boolean onRelease (Pointer.Event event) { return false; }
