@@ -72,11 +72,6 @@ public class Layers
         layer.setTranslation(pos.x, pos.y);
     }
 
-    /** Destroys the children of the given group. */
-    public static void destroyChildren (GroupLayer grp) {
-        for (int ii = grp.size() - 1; ii >= 0; ii--) grp.get(ii).destroy();
-    }
-
     /**
      * Whether a GroupLayer hierarchy contains another layer somewhere in its depths.
      */
