@@ -6,7 +6,10 @@
 package tripleplay.ui;
 
 import playn.core.Pointer;
+import playn.core.Pointer.Event;
 import playn.core.Sound;
+import pythagoras.f.IDimension;
+import pythagoras.f.Point;
 
 import react.Signal;
 import react.Slot;
@@ -132,6 +135,104 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
         }
 
         protected boolean _anchorState;
+    }
+
+    /**
+     * Tracks the pressed position as an anchor and delegates to subclasses to update state based
+     * on anchor and drag position.
+     */
+    public static abstract class Track<T extends Element<T>> extends Ignore<T>
+    {
+        /** A distance, in event coordinates, used to decide if tracking should be temporarily
+         * cancelled. If the pointer is hovered more than this distance outside of the owner's
+         * bounds, the tracking will revert to the anchor position, just like when the pointer is
+         * cancelled. A null value indicates that the tracking will be unconfined in this way.
+         * TODO: default to 35 if no Slider uses are relying on lack of hover limit. */
+        public static Style<Float> HOVER_LIMIT = Style.newStyle(true, (Float)null);
+
+        /** Holds the necessary data for the currently active press. {@code Track} subclasses can
+         * derive if more transient information is needed. */
+        public class State {
+            /** Time the press started. */
+            public final double pressTime;
+
+            /** The press and drag positions. */
+            public final Point press, drag;
+
+            /** Creates a new tracking state with the given starting press event. */
+            public State (Pointer.Event event) {
+                pressTime = event.time();
+                toPoint(event, press = new Point());
+                drag = new Point(press);
+            }
+            /** Updates the state to the current event value and called {@link Track#onTrack()}. */
+            public void update (Pointer.Event event) {
+                boolean cancel = false;
+                if (_hoverLimit != null) {
+                    float lim = _hoverLimit, lx = event.localX(), ly = event.localY();
+                    IDimension size = _owner.size();
+                    cancel = lx + lim < 0 || ly + lim < 0 ||
+                             lx - lim >= size.width() || ly - lim >= size.height();
+                }
+                toPoint(event, drag);
+                onTrack(press, cancel ? press : drag);
+            }
+        }
+
+        protected Track (T owner) {
+            super(owner);
+        }
+
+        /**
+         * Called when the pointer is dragged. After cancel or if the pointer goes outside the
+         * hover limit, drag will be equal to anchor.
+         * @param anchor the pointer position when initially pressed
+         * @param drag the current pointer position
+         */
+        abstract protected void onTrack (Point anchor, Point drag);
+
+        /**
+         * Creates the state instance for the given press. Subclasses may return an instance
+         * of a derived {@code State} if more information is needed during tracking.
+         */
+        protected State createState (Pointer.Event press) {
+            return new State(press);
+        }
+
+        /**
+         * Converts an event to coordinates consumed by {@link #onTrack(Point, Point)}. By
+         * default, simply uses the local x, y.
+         */
+        protected void toPoint (Pointer.Event event, Point dest) {
+            dest.set(event.localX(), event.localY());
+        }
+
+        @Override protected void onPress (Event event) {
+            _state = createState(event);
+        }
+
+        @Override protected void onHover (Event event, boolean inBounds) {
+            _state.update(event);
+        }
+
+        @Override protected boolean onRelease (Event event) {
+            _state = null;
+            return false;
+        }
+
+        @Override protected void onCancel (Event event) {
+            // track to the press position to cancel
+            onTrack(_state.press, _state.press);
+            _state = null;
+        }
+
+        @Override public void layout () {
+            super.layout();
+            _hoverLimit = resolveStyle(HOVER_LIMIT);
+        }
+
+        protected State _state;
+        protected Float _hoverLimit;
     }
 
     public Behavior (T owner) {

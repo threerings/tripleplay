@@ -7,6 +7,7 @@ package tripleplay.ui;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IPoint;
+import pythagoras.f.Point;
 
 import react.Signal;
 import react.SignalView;
@@ -125,21 +126,17 @@ public class Slider extends Widget<Slider>
     }
 
     @Override protected Behavior<Slider> createBehavior () {
-        return new Behavior.Select<Slider>(this) {
-            @Override public void onPointerStart (Pointer.Event event) {
-                super.onPointerStart(event);
-                handlePointer(event.localX(), event.localY());
+        return new Behavior.Track<Slider>(this) {
+            @Override public void onTrack (Point anchor, Point drag) {
+                setValueFromPointer(drag.x);
             }
-            @Override public void onPointerDrag (Pointer.Event event) {
-                super.onPointerDrag(event);
-                handlePointer(event.localX(), event.localY());
+            @Override public boolean onRelease (Pointer.Event event) {
+                super.onRelease(event);
+                return true; // always emit a click
             }
-            @Override public void onPointerEnd (Pointer.Event event) {
-                super.onPointerEnd(event);
-                handlePointer(event.localX(), event.localY());
+            @Override public void onClick (Pointer.Event event) {
                 _clicked.emit(Slider.this);
             }
-            // nothing to do for onPointerCancel, just let the interaction stop
         };
     }
 
@@ -149,7 +146,7 @@ public class Slider extends Widget<Slider>
         _thumb.setTranslation(_thumbLeft + _thumbRange * thumbPct, _thumbY);
     }
 
-    protected void handlePointer (float x, float y) {
+    protected void setValueFromPointer (float x) {
         Range r = range.get();
         float width = _thumbRange;
         x = Math.min(width,  x - _thumbLeft);
