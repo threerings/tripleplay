@@ -36,16 +36,12 @@ public class Layers
 
     /** Prevents parent handling for pointer events. This is useful if you have for example a
      * button inside a scrolling container and need to enable event propagation. */
-    public static class NoPropagate
-        implements Pointer.Listener
-    {
+    public static final Pointer.Listener NO_PROPAGATE = new Pointer.Listener() {
         @Override public void onPointerStart (Pointer.Event event) { stop(event); }
         @Override public void onPointerEnd (Pointer.Event event) { stop(event); }
         @Override public void onPointerDrag (Pointer.Event event) { stop(event); }
         @Override public void onPointerCancel (Pointer.Event event) { stop(event); }
-        protected void stop (Pointer.Event event) {
-            event.flags().setPropagationStopped(true);
-        }
+        void stop (Pointer.Event event) { event.flags().setPropagationStopped(true); }
     };
 
     /**
