@@ -296,7 +296,7 @@ public class Movie
             if (_current != current) {
                 _current = current;
                 GroupLayer group = (GroupLayer)content;
-                group.clear();
+                group.removeAll();
                 group.add(current.layer());
             }
         }
