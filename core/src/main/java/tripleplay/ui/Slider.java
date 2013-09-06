@@ -14,8 +14,7 @@ import react.UnitSlot;
 import react.Value;
 
 import playn.core.CanvasImage;
-import playn.core.Image;
-import playn.core.ImageLayer;
+import playn.core.Layer;
 import playn.core.Pointer;
 import static playn.core.PlayN.graphics;
 
@@ -51,7 +50,7 @@ public class Slider extends Widget<Slider>
         Style.newStyle(true, Background.solid(0xFF000000));
 
     /** The image to use for the slider thumb. Inherited. */
-    public static Style<Image> THUMB_IMAGE = Style.newStyle(true, createDefaultThumbImage());
+    public static Style<Icon> THUMB_IMAGE = Style.newStyle(true, createDefaultThumbImage());
 
     /** The origin of the thumb image (used to center the thumb image over the tray). If left as
      * the default (null), the center of the thumb image will be used as its origin. Inherited. */
@@ -71,9 +70,6 @@ public class Slider extends Widget<Slider>
     public Slider (float value, float min, float max) {
         this.value = Value.create(value);
         range = Value.create(new Range(min, max));
-        // set up our thumb layer
-        layer.add(_thumb = graphics().createImageLayer());
-        _thumb.setDepth(1);
         // update our display if the slider value is changed externally
         UnitSlot updateThumb = new UnitSlot () { @Override public void onEmit () { updateThumb(); }};
         this.value.connect(updateThumb);
@@ -165,19 +161,19 @@ public class Slider extends Widget<Slider>
         value.update(r.min + pos);
     }
 
-    protected static Image createDefaultThumbImage () {
+    protected static Icon createDefaultThumbImage () {
         float size = 24;
         CanvasImage image = graphics().createImage(size, size);
         image.canvas().setFillColor(0xFF000000);
         image.canvas().fillCircle(size/2, size/2, size/2-1);
-        return image;
+        return Icons.image(image);
     }
 
     protected class SliderLayoutData extends LayoutData {
         public final float barWidth = resolveStyle(BAR_WIDTH);
         public final float barHeight = resolveStyle(BAR_HEIGHT);
         public final Background barBG = resolveStyle(BAR_BACKGROUND);
-        public final Image thumbImage = resolveStyle(THUMB_IMAGE);
+        public final Icon thumbImage = resolveStyle(THUMB_IMAGE);
         public final IPoint thumbOrigin = resolveStyle(THUMB_ORIGIN);
 
         @Override public Dimension computeSize (float hintX, float hintY) {
@@ -193,7 +189,8 @@ public class Slider extends Widget<Slider>
             _thumbY = top + height/2;
 
             // configure our thumb layer
-            _thumb.setImage(thumbImage);
+            if (_thumb != null) _thumb.destroy();
+            layer.add(_thumb = thumbImage.render().setDepth(1));
             if (thumbOrigin == null) {
                 _thumb.setOrigin(thumbWidth/2, thumbHeight/2);
             } else {
@@ -213,8 +210,8 @@ public class Slider extends Widget<Slider>
     }
 
     protected final Signal<Slider> _clicked = Signal.create();
-    protected final ImageLayer _thumb;
 
+    protected Layer _thumb;
     protected Background.Instance _barInst;
     protected float _thumbLeft, _thumbRange, _thumbY;
     protected Float _increment;

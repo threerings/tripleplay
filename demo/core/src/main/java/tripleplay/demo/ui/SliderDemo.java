@@ -13,6 +13,7 @@ import react.Function;
 import tripleplay.ui.Background;
 import tripleplay.ui.Constraints;
 import tripleplay.ui.Group;
+import tripleplay.ui.Icons;
 import tripleplay.ui.Label;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Slider;
@@ -44,7 +45,7 @@ public class SliderDemo extends DemoScreen
             sliderAndLabel(
                 new Slider(0, -50, 50).addStyles(
                     Style.BACKGROUND.is(Background.roundRect(0xFFFFFFFF, 16).inset(4)),
-                    Slider.THUMB_IMAGE.is(PlayN.assets().getImage("images/smiley.png")),
+                    Slider.THUMB_IMAGE.is(Icons.image(PlayN.assets().getImage("images/smiley.png"))),
                     Slider.BAR_HEIGHT.is(18f),
                     Slider.BAR_BACKGROUND.is(Background.roundRect(0xFFFF0000, 9))), "-00"));
 
