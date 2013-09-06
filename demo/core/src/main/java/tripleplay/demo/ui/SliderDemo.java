@@ -45,7 +45,8 @@ public class SliderDemo extends DemoScreen
             sliderAndLabel(
                 new Slider(0, -50, 50).addStyles(
                     Style.BACKGROUND.is(Background.roundRect(0xFFFFFFFF, 16).inset(4)),
-                    Slider.THUMB_IMAGE.is(Icons.image(PlayN.assets().getImage("images/smiley.png"))),
+                    Slider.THUMB_IMAGE.is(Icons.loader(
+                        PlayN.assets().getImage("images/smiley.png"), 24, 24)),
                     Slider.BAR_HEIGHT.is(18f),
                     Slider.BAR_BACKGROUND.is(Background.roundRect(0xFFFF0000, 9))), "-00"));
 
