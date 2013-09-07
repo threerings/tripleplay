@@ -72,10 +72,10 @@ public class StylesTest
     }
 
     protected static <V> void checkIsNull (Styles s, Style<V> style) {
-        assertNull(s.get(new Styles.Binding<V>(style), new Label()));
+        assertNull(s.get(style, new Label()));
     }
 
     protected static <V> void checkEquals (V value, Styles s, Style<V> style) {
-        assertEquals(value, s.get(new Styles.Binding<V>(style), new Label()));
+        assertEquals(value, s.get(style, new Label()));
     }
 }

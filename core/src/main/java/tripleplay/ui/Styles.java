@@ -97,11 +97,20 @@ public final class Styles
         return merge(styles._bindings);
     }
 
-    <V> V get (Binding<V> key, Element<?> elem) {
-        int index = Arrays.binarySearch(_bindings, key);
-        if (index < 0) return null;
-        @SuppressWarnings("unchecked") Binding<V> binding = (Binding<V>)_bindings[index];
-        return binding.get(elem);
+    <V> V get (Style<V> key, Element<?> elem) {
+        int low = 0;
+        int high = _bindings.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            @SuppressWarnings("unchecked") Binding<V> midVal = (Binding<V>)_bindings[mid];
+            int cmp = midVal.compareToStyle(key);
+
+            if (cmp < 0) low = mid + 1;
+            else if (cmp > 0) high = mid - 1;
+            else return midVal.get(elem); // key found
+        }
+        return null;
     }
 
     private Styles merge (Binding<?>[] obindings) {
@@ -139,8 +148,7 @@ public final class Styles
 
     static <V> V resolveStyle (Element<?> element, Style<V> style) {
         // first check for the style configured directly on the element
-        Binding<V> key = new Binding<V>(style);
-        V value = element.styles().<V>get(key, element);
+        V value = element.styles().<V>get(style, element);
         if (value != null) return value;
 
         // now check for the style in the appropriate stylesheets
@@ -149,7 +157,7 @@ public final class Styles
         for (; group != null; group = group.parent()) {
             Stylesheet sheet = group.stylesheet();
             if (sheet == null) continue;
-            value = sheet.<V>get(key, element.getStyleClass(), element);
+            value = sheet.<V>get(style, element.getStyleClass(), element);
             if (value != null) return value;
         }
 
@@ -219,6 +227,13 @@ public final class Styles
         @Override public int compareTo (Binding<V> other) {
             if (this.style == other.style) return 0;
             int hc = this.style.hashCode(), ohc = other.style.hashCode();
+            Asserts.checkState(hc != ohc);
+            return (hc < ohc) ? -1 : 1;
+        }
+
+        public int compareToStyle (Style<V> style) {
+            if (this.style == style) return 0;
+            int hc = this.style.hashCode(), ohc = style.hashCode();
             Asserts.checkState(hc != ohc);
             return (hc < ohc) ? -1 : 1;
         }

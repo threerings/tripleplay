@@ -59,14 +59,14 @@ public class Stylesheet
      * inherited, the style may be fetched from the configuration for a supertype of the supplied
      * element type. Returns null if no configuration can be found.
      */
-    <V> V get (Styles.Binding<V> key, Class<?> eclass, Element<?> elem) {
+    <V> V get (Style<V> key, Class<?> eclass, Element<?> elem) {
         Styles styles = _styles.get(eclass);
         V value = (styles == null) ? null : styles.<V>get(key, elem);
         if (value != null) return value;
 
         // if the style is not inherited, or we're already checking for Element.class, then we've
         // done all the searching we can
-        if (!key.style.inherited || eclass == Element.class) return null;
+        if (!key.inherited || eclass == Element.class) return null;
 
         // otherwise check our parent class
         Class<?> parent = eclass.getSuperclass();
