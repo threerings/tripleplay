@@ -141,6 +141,8 @@ public class Slider extends Widget<Slider>
     }
 
     protected void updateThumb () {
+        // bail if not laid out yet, we'll get called again layer
+        if (_thumb == null) return;
         Range r = range.get();
         float thumbPct = (value.get() - r.min) / r.range;
         _thumb.setTranslation(_thumbLeft + _thumbRange * thumbPct, _thumbY);
