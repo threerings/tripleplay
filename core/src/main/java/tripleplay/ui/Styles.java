@@ -98,14 +98,13 @@ public final class Styles
     }
 
     <V> V get (Style<V> key, Element<?> elem) {
-        int low = 0;
-        int high = _bindings.length - 1;
-
+        // we replicate Arrays.binarySearch here because we want to find the Binding with the
+        // specified Style without creating a temporary garbage instance of Style.Binding
+        int low = 0, high = _bindings.length - 1;
         while (low <= high) {
             int mid = (low + high) >>> 1;
             @SuppressWarnings("unchecked") Binding<V> midVal = (Binding<V>)_bindings[mid];
             int cmp = midVal.compareToStyle(key);
-
             if (cmp < 0) low = mid + 1;
             else if (cmp > 0) high = mid - 1;
             else return midVal.get(elem); // key found
