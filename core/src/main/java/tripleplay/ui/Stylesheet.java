@@ -59,14 +59,14 @@ public class Stylesheet
      * inherited, the style may be fetched from the configuration for a supertype of the supplied
      * element type. Returns null if no configuration can be found.
      */
-    <V> V get (Style<V> key, Class<?> eclass, Element<?> elem) {
+    <V> V get (Style<V> style, Class<?> eclass, Element<?> elem) {
         Styles styles = _styles.get(eclass);
-        V value = (styles == null) ? null : styles.<V>get(key, elem);
+        V value = (styles == null) ? null : styles.<V>get(style, elem);
         if (value != null) return value;
 
         // if the style is not inherited, or we're already checking for Element.class, then we've
         // done all the searching we can
-        if (!key.inherited || eclass == Element.class) return null;
+        if (!style.inherited || eclass == Element.class) return null;
 
         // otherwise check our parent class
         Class<?> parent = eclass.getSuperclass();
@@ -76,7 +76,7 @@ public class Stylesheet
                 "Your PlayN application must not be compiled with -XdisableClassMetadata. " +
                 "It breaks TriplePlay stylesheets.");
         }
-        return this.<V>get(key, parent, elem);
+        return this.<V>get(style, parent, elem);
     }
 
     private Stylesheet (Map<Class<?>, Styles> styles) {
