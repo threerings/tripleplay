@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import playn.core.Canvas;
-import playn.core.Pointer;
 import react.UnitSlot;
 
 /**
@@ -54,13 +53,6 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
      * the {@link #_glyph} member, which is already prepared to the correct laid out size.
      */
     protected abstract void paint (Canvas canvas);
-
-    /** Notifies this widget that the pointer or mouse has been pressed and release inside the
-     * bounds of the widget. */
-    protected void onClick (Pointer.Event event) {
-        // TODO: derived classes should really configure a custom beahvior rather than this "some
-        // glyph widgets are interactive" hackery
-    }
 
     @Override protected BaseLayoutData createBaseLayoutData (float hintX, float hintY) {
         return new GlyphLayoutData();
