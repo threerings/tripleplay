@@ -14,21 +14,12 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
     protected Widget () {
         _behave = createBehavior();
         if (_behave != null) {
-            absorbClicks();
+            // absorbs clicks and do not descend (propagate clicks to sublayers)
+            set(Flag.HIT_DESCEND, false);
+            set(Flag.HIT_ABSORB, true);
             // wire up our behavior as a layer listener
             layer.addListener(_behave);
         }
-    }
-
-    /**
-     * Activates this widget's hit tester, regardless of whether it has a {@code Behavior}.
-     * This is useful in cases where {@code Element.layer} is used independently (e.g. a drag and
-     * drop system).
-     */
-    protected final void absorbClicks () {
-        // return this layer iff hit position is in bounds
-        set(Flag.HIT_ABSORB, true);
-        set(Flag.HIT_DESCEND, false);
     }
 
     @Override protected void layout () {
