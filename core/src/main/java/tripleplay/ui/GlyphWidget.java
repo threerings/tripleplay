@@ -30,15 +30,12 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
      * Creates a new glyph widget with no initial size and optionally interactive. The widget will
      * not be functional until one of the sizing methods is called (in {@link SizableWidget}.
      */
-    protected GlyphWidget (boolean interactive) {
-        _interactive = interactive;
-    }
+    protected GlyphWidget () {}
 
     /**
      * Creates a new glyph widget with the given preferred size.
      */
-    protected GlyphWidget (boolean interactive, float width, float height) {
-        this(interactive);
+    protected GlyphWidget (float width, float height) {
         preferredSize.update(width, height);
     }
 
@@ -65,15 +62,6 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
         // glyph widgets are interactive" hackery
     }
 
-    @Override protected Behavior<T> createBehavior () {
-        return _interactive ? new Behavior.Select<T>(asT()) {
-            @Override public void onPointerEnd (Pointer.Event event) {
-                super.onPointerEnd(event);
-                if (contains(event.localX(), event.localY())) onClick(event);
-            }
-        } : null;
-    }
-
     @Override protected BaseLayoutData createBaseLayoutData (float hintX, float hintY) {
         return new GlyphLayoutData();
     }
@@ -93,6 +81,5 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
         }
     }
 
-    protected final boolean _interactive;
     protected final Glyph _glyph = new Glyph();
 }
