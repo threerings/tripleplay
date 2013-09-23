@@ -29,7 +29,7 @@ import com.google.common.collect.Lists;
  */
 public class JavaTPPlatform extends TPPlatform
 {
-    /** Registers the IOS TriplePlay platform. */
+    /** Registers the Java TriplePlay platform. */
     public static JavaTPPlatform register (JavaPlatform platform, JavaPlatform.Config config) {
         JavaTPPlatform instance = new JavaTPPlatform(platform, config);
         TPPlatform.register(instance);
@@ -63,8 +63,14 @@ public class JavaTPPlatform extends TPPlatform
         return true;
     }
 
-    @Override public NativeTextField createNativeTextField (Field field) {
-        return new JavaNativeTextField(_frame.getLayeredPane(), field);
+    @Override public NativeTextField createNativeTextField (
+            Field.Native field, NativeTextField.Mode mode) {
+        return new JavaNativeTextField(field, mode, null);
+    }
+
+    @Override public NativeTextField refreshNativeTextField (
+            NativeTextField previous, NativeTextField.Mode mode) {
+        return ((JavaNativeTextField)previous).refreshMode(mode);
     }
 
     @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {

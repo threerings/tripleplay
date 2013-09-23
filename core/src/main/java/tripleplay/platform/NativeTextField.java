@@ -5,21 +5,18 @@
 
 package tripleplay.platform;
 
-import pythagoras.f.IRectangle;
-
-import react.Signal;
-import react.Value;
-import tripleplay.ui.Field;
-
 /**
- * Provides access to a platform-native text field, which can be overlaid onto a PlayN game, or
- * TPUI interface.
+ * Provides access to a platform-native text field, which can be overlaid onto a PlayN game.
+ * A TP Field is required for integration. See {@link TPPlatform#createNativeTextField(
+ * tripleplay.ui.Field.Native, Mode)}.
  */
-public abstract class NativeTextField extends Field.Native
+public interface NativeTextField extends NativeOverlay
 {
-    /** A native text field be in one of three modes. In general, modes correspond to different
-     * underlying native classes, and must be refreshed prior to other set methods using
-     * {@link NativeTextField#refreshMode(Mode)}. */
+    /**
+     * Modes for native text fields. The set of modes corresponds to all states that may change
+     * the class of the underlying implementation for one or more platforms. For example, Java has
+     * a class for password fields, while iOS uses a property.
+     */
     public enum Mode {
         /** Single line, visible text. */
         NORMAL,
@@ -29,41 +26,15 @@ public abstract class NativeTextField extends Field.Native
         MULTI_LINE
     }
 
-    /** The current value of the text field. */
-    public abstract Value<String> text ();
-
-    /** A signal that is dispatched when the native text field has lost focus. Value is false if
-     * editing was canceled */
-    public abstract Signal<Boolean> finishedEditing ();
-
     /** Updates native styles to match those currently applied to the field. */
-    public abstract void validateStyles ();
+    void validateStyles ();
 
-    /** Configures the bounds of the native text field (in top-level screen coordinates). */
-    public abstract void setBounds (IRectangle bounds);
-
-    /**
-     * Sets the enabled state of the field.
-     */
-    public abstract void setEnabled (boolean enabled);
-
-    /** Updates or creates a new native text field with the given mode. If a value != this is
-     * returned, the caller must then repopulate all the properties of the fields.*/
-    public abstract NativeTextField refreshMode (Mode mode);
-
-    /** Adds the field to the view. */
-    public abstract void add ();
-
-    /** Removes the field from the view. */
-    public abstract void remove ();
+    /** Sets the enabled state of the field. */
+    void setEnabled (boolean enabled);
 
     /** Request focus for the native text field */
-    public abstract void focus ();
+    void focus ();
 
     /** Returns true if this native text field currently has focus. */
-    public abstract boolean hasFocus ();
-
-    protected NativeTextField (Field field) {
-        super(field);
-    }
+    boolean hasFocus ();
 }

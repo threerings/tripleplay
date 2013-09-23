@@ -29,19 +29,19 @@ import playn.core.Color;
 import playn.core.Font;
 import playn.core.Keyboard;
 import react.Connection;
-import react.Signal;
 import react.Slot;
-import react.Value;
 import tripleplay.ui.Field;
 import tripleplay.ui.Style;
 
-public abstract class IOSNativeTextField extends NativeTextField
+public abstract class IOSNativeTextField extends IOSNativeOverlay
+    implements NativeTextField
 {
     public static class SingleLine extends IOSNativeTextField
     {
-        public SingleLine (IOSTextFieldHandler handler, IOSNativeTextField prior, Field field) {
+        public SingleLine (IOSTextFieldHandler handler, IOSNativeTextField prior,
+                Field.Native field) {
             super(handler, new UITextField(), prior, field);
-            _field = (UITextField)_view;
+            _field = (UITextField)view;
             _field.set_VerticalAlignment(
                 UIControlContentVerticalAlignment.wrap(UIControlContentVerticalAlignment.Center));
 
@@ -70,7 +70,7 @@ public abstract class IOSNativeTextField extends NativeTextField
 
                     String newString = new NSString(uiTextField.get_Text())
                         .Replace(nsRange, new NSString(s)).ToString();
-                    return isValid(newString);
+                    return _element.isValid(newString);
                 }
             });
         }
@@ -79,8 +79,8 @@ public abstract class IOSNativeTextField extends NativeTextField
             _field.set_Enabled(enabled);
         }
 
-        @Override public NativeTextField refreshMode (Mode mode) {
-            if (mode == Mode.MULTI_LINE) return new MultiLine(_handler, this, field);
+        public NativeTextField refreshMode (Mode mode) {
+            if (mode == Mode.MULTI_LINE) return new MultiLine(_handler, this, _element);
             _field.set_SecureTextEntry(mode == Mode.SECURE);
             return this;
         }
@@ -106,7 +106,7 @@ public abstract class IOSNativeTextField extends NativeTextField
         }
 
         @Override protected void didFinish () {
-            _finishedEditing.emit(_pressedReturn);
+            _element.finishedEditing().emit(_pressedReturn);
             _pressedReturn = false;
         }
 
@@ -124,9 +124,10 @@ public abstract class IOSNativeTextField extends NativeTextField
 
     public static class MultiLine extends IOSNativeTextField
     {
-        public MultiLine (IOSTextFieldHandler handler, IOSNativeTextField prior, Field field) {
+        public MultiLine (IOSTextFieldHandler handler, IOSNativeTextField prior,
+                Field.Native field) {
             super(handler, new UITextView(), prior, field);
-            _field = (UITextView)_view;
+            _field = (UITextView)view;
             _field.set_Editable(true);
             // TODO: do we need to call set_Delegate?
         }
@@ -135,9 +136,9 @@ public abstract class IOSNativeTextField extends NativeTextField
             _field.set_Editable(enabled);
         }
 
-        @Override public NativeTextField refreshMode (Mode mode) {
+        public NativeTextField refreshMode (Mode mode) {
             return mode == Mode.MULTI_LINE ? this :
-                new SingleLine(_handler, this, field).refreshMode(mode);
+                new SingleLine(_handler, this, _element).refreshMode(mode);
         }
 
         @Override protected UIFont getNativeFont () {
@@ -161,7 +162,7 @@ public abstract class IOSNativeTextField extends NativeTextField
         }
 
         @Override protected void didFinish () {
-            _finishedEditing.emit(false);
+            _element.finishedEditing().emit(false);
         }
 
         @Override protected void setAlignment (UITextAlignment halign) {
@@ -176,21 +177,16 @@ public abstract class IOSNativeTextField extends NativeTextField
     }
 
     public IOSNativeTextField (IOSTextFieldHandler handler, UIView view, IOSNativeTextField prior,
-            Field field) {
-        super(field);
+            Field.Native field) {
+        super(view);
+        _element = field;
         _handler = handler;
-        _view = view;
 
-        if (prior == null) {
-            _text = Value.create("");
-            _finishedEditing = Signal.create();
-        } else {
-            _text = prior._text;
-            _finishedEditing = prior._finishedEditing;
+        if (prior != null) {
             prior._textConn.disconnect();
         }
 
-        _textConn = _text.connect(new Slot<String>() {
+        _textConn = _element.field().text.connect(new Slot<String>() {
             @Override public void onEmit (String value) {
                 String current = getNativeText();
                 if (current == null || !current.equals(value)) {
@@ -201,25 +197,12 @@ public abstract class IOSNativeTextField extends NativeTextField
     }
 
     public UIView getView () {
-        return _view;
-    }
-
-    @Override public Value<String> text () {
-        return _text;
-    }
-
-    @Override public Signal<Boolean> finishedEditing () {
-        return _finishedEditing;
-    }
-
-    @Override public void setBounds (IRectangle bounds) {
-        _requestedBounds = bounds;
-        updateBounds();
+        return view;
     }
 
     @Override public void validateStyles () {
         // Keyboard type
-        Keyboard.TextType type = resolveStyle(Field.TEXT_TYPE);
+        Keyboard.TextType type = _element.resolveStyle(Field.TEXT_TYPE);
         switch (type) {
         case NUMBER:
             getTraits().set_KeyboardType(UIKeyboardType.wrap(UIKeyboardType.NumberPad));
@@ -236,50 +219,49 @@ public abstract class IOSNativeTextField extends NativeTextField
         }
 
         // Font
-        Font font = resolveStyle(Style.FONT);
+        Font font = _element.resolveStyle(Style.FONT);
         setNativeFont(_handler.getUIFont(font));
-        updateBounds();
 
         // Automatic capitalization
-        boolean enable = resolveStyle(Field.AUTOCAPITALIZATION);
+        boolean enable = _element.resolveStyle(Field.AUTOCAPITALIZATION);
         getTraits().set_AutocapitalizationType(UITextAutocapitalizationType.wrap(
             enable ? UITextAutocapitalizationType.Sentences : UITextAutocapitalizationType.None));
 
         // Automatic correction
-        enable = resolveStyle(Field.AUTOCORRECTION);
+        enable = _element.resolveStyle(Field.AUTOCORRECTION);
         getTraits().set_AutocorrectionType(UITextAutocorrectionType.wrap(
             enable ? UITextAutocorrectionType.Yes : UITextAutocorrectionType.No));
 
         // Return key label
-        String label = resolveStyle(Field.RETURN_KEY_LABEL);
+        String label = _element.resolveStyle(Field.RETURN_KEY_LABEL);
         setReturnKeyLabel(label);
 
-        Style.HAlign halign = resolveStyle(Style.HALIGN);
+        Style.HAlign halign = _element.resolveStyle(Style.HALIGN);
         setAlignment(UITextAlignment.wrap(toMono(halign)));
 
         // Color
-        int color = resolveStyle(Style.COLOR);
+        int color = _element.resolveStyle(Style.COLOR);
         setColor(UIColor.FromRGB(Color.red(color), Color.green(color), Color.blue(color)));
     }
 
-    @Override public void add () {
-        if (!_handler.isAdded(_view)) {
-            _handler.activate(this);
-            setNativeText(_text.get());
-        }
+    @Override protected void didAdd () {
+        _handler.activate(this);
+        setNativeText(_element.field().text.get());
     }
 
-    @Override public void remove () {
-        if (_handler.isAdded(_view)) _handler.deactivate(this);
+    @Override protected void didRemove () {
+        _handler.deactivate(this);
     }
 
     @Override public void focus () {
-        _view.BecomeFirstResponder();
+        view.BecomeFirstResponder();
     }
 
     @Override public boolean hasFocus () {
-        return _view.get_IsFirstResponder();
+        return view.get_IsFirstResponder();
     }
+
+    abstract public NativeTextField refreshMode (Mode mode);
 
     abstract protected UIFont getNativeFont ();
     abstract protected void setNativeFont (UIFont font);
@@ -326,7 +308,7 @@ public abstract class IOSNativeTextField extends NativeTextField
 
     protected void handleNewValue () {
         String value = getNativeText();
-        String transformed = transform(value);
+        String transformed = _element.transform(value);
         if (!transformed.equals(value)) {
             // update the field ourselves in case transformed is the same value
             // currently held in field.text(), and therefore the update below
@@ -334,21 +316,18 @@ public abstract class IOSNativeTextField extends NativeTextField
             setNativeText(transformed);
             value = transformed;
         }
-        _text.update(value);
+        _element.field().text.update(value);
     }
 
-    protected void updateBounds () {
-        if (_requestedBounds == null) return;
-
-        UIFont font = getNativeFont();
+    @Override protected void adjustBounds (RectangleF fieldBounds) {
         // field fudged to the left 1 pixel to match PlayN text rendering.
-        RectangleF fieldBounds = new RectangleF(_requestedBounds.x() + 1, _requestedBounds.y(),
-            _requestedBounds.width(), _requestedBounds.height());
+        fieldBounds.set_X(fieldBounds.get_X() + 1);
+
+        // ensure we're tall enough for a single line of text and the text cursor
+        UIFont font = getNativeFont();
         if (fieldBounds.get_Height() < font.get_LineHeight()) {
-            // ensure we're tall enough for a single line of text and the text cursor
             fieldBounds.set_Height(font.get_LineHeight());
         }
-        _view.set_Frame(fieldBounds);
     }
 
     protected static int toMono (Style.HAlign halign) {
@@ -359,11 +338,9 @@ public abstract class IOSNativeTextField extends NativeTextField
         }
     }
 
+    protected final Field.Native _element;
     protected final IOSTextFieldHandler _handler;
-    protected final UIView _view;
-    protected final Value<String> _text;
     protected final Connection _textConn;
 
     protected IRectangle _requestedBounds;
-    protected final Signal<Boolean> _finishedEditing;
 }

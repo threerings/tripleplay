@@ -29,8 +29,18 @@ public class IOSTPPlatform extends TPPlatform
         return true;
     }
 
-    @Override public NativeTextField createNativeTextField (Field field) {
-        return new IOSNativeTextField.SingleLine(_fieldHandler, null, field);
+    @Override public NativeTextField createNativeTextField (
+            Field.Native field, NativeTextField.Mode mode) {
+        switch (mode) {
+        case MULTI_LINE: return new IOSNativeTextField.MultiLine(_fieldHandler, null, field);
+        default: return new IOSNativeTextField.SingleLine(_fieldHandler, null, field).
+                refreshMode(mode);
+        }
+    }
+
+    @Override public NativeTextField refreshNativeTextField (
+            NativeTextField previous, NativeTextField.Mode mode) {
+        return ((IOSNativeTextField)previous).refreshMode(mode);
     }
 
     @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {

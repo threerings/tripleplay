@@ -44,7 +44,15 @@ public abstract class TPPlatform
      * @exception UnsupportedOperationException thrown if the platform lacks support for native
      * text fields, use {@link #hasNativeTextFields} to check.
      */
-    public abstract NativeTextField createNativeTextField (Field field);
+    public abstract NativeTextField createNativeTextField (
+        Field.Native field, NativeTextField.Mode mode);
+
+    /**
+     * Refreshes a native text field to match the given mode. Depending on the implementation,
+     * if the mode is different, a new native field may be returned, or the given one adjusted.
+     */
+    public abstract NativeTextField refreshNativeTextField (
+        NativeTextField previous, NativeTextField.Mode mode);
 
     /**
      * Sets the instance of VirtualKeyboardController to use for virtual keyboard management, or
@@ -75,7 +83,12 @@ public abstract class TPPlatform
         @Override public boolean hasNativeTextFields () {
             return false;
         }
-        @Override public NativeTextField createNativeTextField (Field field) {
+        @Override public NativeTextField createNativeTextField (
+                Field.Native field, NativeTextField.Mode mode) {
+            throw new UnsupportedOperationException();
+        }
+        @Override public NativeTextField refreshNativeTextField (
+                NativeTextField previous, NativeTextField.Mode mode) {
             throw new UnsupportedOperationException();
         }
         @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) { }

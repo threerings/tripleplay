@@ -34,29 +34,36 @@ public class Field extends TextWidget<Field>
         return VALIDATOR.is(new MaxLength(max));
     }
 
-    /** Shim class for native text field to get at styles. */
-    public static abstract class Native {
-        /** The field. */
-        public final Field field;
+    /** Checks if the platform has native text fields. */
+    public static boolean hasNative () {
+        return TPPlatform.instance().hasNativeTextFields();
+    }
 
-        /** Creates the shim around the given field. */
-        protected Native (Field field) {
-            this.field = field;
-        }
-
+    /** Exposes protected field information required for native fields. */
+    public final class Native {
         /** Resolves the given style for the field. */
-        protected <T> T resolveStyle (Style<T> style) {
-            return field.resolveStyle(style);
+        public <T> T resolveStyle (Style<T> style) {
+            return Field.this.resolveStyle(style);
         }
 
         /** Tests if the proposed text is valid. */
-        protected boolean isValid (String text) {
-            return field.textIsValid(text);
+        public boolean isValid (String text) {
+            return Field.this.textIsValid(text);
         }
 
         /** Transforms the given text. */
-        protected String transform (String text) {
-            return field.transformText(text);
+        public String transform (String text) {
+            return Field.this.transformText(text);
+        }
+
+        /** A signal that is dispatched when the native text field has lost focus. Value is false if
+         * editing was canceled */
+        public Signal<Boolean> finishedEditing () {
+            return _finishedEditing;
+        }
+
+        public Field field () {
+            return Field.this;
         }
     }
 
@@ -141,20 +148,17 @@ public class Field extends TextWidget<Field>
     public Field (String initialText, Styles styles) {
         setStyles(styles);
 
-        if (TPPlatform.instance().hasNativeTextFields()) {
-            _nativeField = TPPlatform.instance().createNativeTextField(this);
-            text = _nativeField.text();
-            _finishedEditing = _nativeField.finishedEditing();
+        text = Value.create("");
+        _finishedEditing = Signal.create();
+
+        if (hasNative()) {
             _finishedEditing.connect(new Slot<Boolean>() {
                 @Override public void onEmit (Boolean event) {
                     if (!fulltimeNativeField()) updateMode(false);
                 }
             });
-        } else {
-            _nativeField = null;
-            text = Value.create("");
-            _finishedEditing = Signal.create();
         }
+
         this.text.update(initialText);
         this.text.connect(textDidChange());
     }
@@ -244,7 +248,7 @@ public class Field extends TextWidget<Field>
             @Override public void onPointerStart (Pointer.Event event) {
                 super.onPointerStart(event);
                 if (!isEnabled() || fulltimeNativeField()) return;
-                if (_nativeField != null) event.capture();
+                if (hasNative()) event.capture();
                 startEdit();
             }
         };
@@ -255,7 +259,7 @@ public class Field extends TextWidget<Field>
     }
 
     protected void startEdit () {
-        if (_nativeField != null) {
+        if (hasNative()) {
             updateMode(true);
             _nativeField.focus();
 
@@ -273,7 +277,7 @@ public class Field extends TextWidget<Field>
     }
 
     protected boolean fulltimeNativeField () {
-        return _nativeField != null && resolveStyle(FULLTIME_NATIVE_FIELD);
+        return hasNative() && resolveStyle(FULLTIME_NATIVE_FIELD);
     }
 
     protected Rectangle getNativeFieldBounds () {
@@ -285,7 +289,7 @@ public class Field extends TextWidget<Field>
     }
 
     protected void updateMode (boolean nativeField) {
-        if (_nativeField == null) return;
+        if (!hasNative()) return;
         if (nativeField) {
             NativeTextField.Mode mode = NativeTextField.Mode.NORMAL;
             boolean multiLine = resolveStyle(MULTILINE);
@@ -295,25 +299,23 @@ public class Field extends TextWidget<Field>
             } else if (multiLine) {
                 mode = NativeTextField.Mode.MULTI_LINE;
             }
+            _nativeField = _nativeField == null ?
+                TPPlatform.instance().createNativeTextField(new Native(), mode) :
+                TPPlatform.instance().refreshNativeTextField(_nativeField, mode);
 
-            NativeTextField newField = _nativeField.refreshMode(mode);
-            if (newField != _nativeField) {
-                _nativeField.remove();
-                _nativeField = newField;
-            }
             _nativeField.validateStyles();
             _nativeField.setEnabled(isEnabled());
             updateNativeFieldBounds();
             _nativeField.add();
-            setGlyphLayerAlpha(0);
-        } else {
+            setGlyphLayerVisible(false);
+        } else if (_nativeField != null) {
             _nativeField.remove();
-            setGlyphLayerAlpha(1);
+            setGlyphLayerVisible(true);
         }
     }
 
-    protected void setGlyphLayerAlpha (float alpha) {
-        if (_tglyph.layer() != null) _tglyph.layer().setAlpha(alpha);
+    protected void setGlyphLayerVisible (boolean visible) {
+        if (_tglyph.layer() != null) _tglyph.layer().setVisible(visible);
     }
 
     protected class FieldLayoutData extends TextLayoutData {
