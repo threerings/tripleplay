@@ -29,6 +29,9 @@ import com.google.common.collect.Lists;
  */
 public class JavaTPPlatform extends TPPlatform
 {
+    /** Possible operating systems. */
+    public enum OS { MAC, WINDOWS, LINUX, UNKNOWN }
+
     /** Registers the Java TriplePlay platform. */
     public static JavaTPPlatform register (JavaPlatform platform, JavaPlatform.Config config) {
         JavaTPPlatform instance = new JavaTPPlatform(platform, config);
@@ -57,10 +60,19 @@ public class JavaTPPlatform extends TPPlatform
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // Figure out the os
+        String osname = System.getProperty("os.name");
+        osname = (osname == null) ? "" : osname;
+        if (osname.indexOf("Windows") != -1) _os = OS.WINDOWS;
+        else if (osname.indexOf("Mac OS") != -1 || osname.indexOf("MacOS") != -1) _os = OS.MAC;
+        else if (osname.indexOf("Linux") != -1) _os = OS.LINUX;
+        else System.err.println("Unmatching os name: " + osname);
     }
 
     @Override public boolean hasNativeTextFields () {
-        return true;
+        // mac doesn't currently support native text :(
+        return _os == OS.WINDOWS || _os == OS.LINUX;
     }
 
     @Override public NativeTextField createNativeTextField (
@@ -97,6 +109,13 @@ public class JavaTPPlatform extends TPPlatform
     }
 
     /**
+     * Gets the OS this JVM is running on.
+     */
+    public OS os () {
+        return _os;
+    }
+
+    /**
      * Sets the title of the window.
      *
      * @param title the window title
@@ -124,6 +143,8 @@ public class JavaTPPlatform extends TPPlatform
     protected JavaPlatform _platform;
 
     protected JFrame _frame;
+
+    protected OS _os = OS.UNKNOWN;
 
     protected final Value<Boolean> _false = Value.create(false);
 }
