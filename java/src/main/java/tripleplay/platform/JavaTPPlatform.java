@@ -80,6 +80,13 @@ public class JavaTPPlatform extends TPPlatform
     }
 
     /**
+     * Gets the top-level window used by the tripleplay platform.
+     */
+    public JFrame frame () {
+        return _frame;
+    }
+
+    /**
      * Sets the title of the window.
      *
      * @param title the window title
