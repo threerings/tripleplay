@@ -5,6 +5,7 @@
 
 package tripleplay.platform;
 
+import playn.core.Image;
 import playn.core.Keyboard;
 import playn.ios.IOSPlatform;
 import react.ValueView;
@@ -53,6 +54,10 @@ public class IOSTPPlatform extends TPPlatform
 
     @Override public ValueView<Boolean> virtualKeyboardActive () {
         return _fieldHandler.virtualKeyboardActive();
+    }
+
+    @Override public ImageOverlay createImageOverlay (Image image) {
+        return new IOSImageOverlay(image);
     }
 
     private IOSTPPlatform (IOSPlatform platform) {

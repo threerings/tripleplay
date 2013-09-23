@@ -85,6 +85,10 @@ public class JavaTPPlatform extends TPPlatform
         return _false;
     }
 
+    @Override public ImageOverlay createImageOverlay (playn.core.Image image) {
+        return new JavaImageOverlay(image);
+    }
+
     /**
      * Gets the top-level window used by the tripleplay platform.
      */
