@@ -6,6 +6,7 @@
 package tripleplay.anim;
 
 import pythagoras.f.XY;
+import react.Signal;
 import react.Value;
 
 import playn.core.Asserts;
@@ -16,6 +17,7 @@ import playn.core.Sound;
 import static playn.core.PlayN.graphics;
 
 import tripleplay.sound.Playable;
+import tripleplay.util.Destroyable;
 import tripleplay.util.Layers;
 
 /**
@@ -253,7 +255,16 @@ public abstract class AnimBuilder
      */
     public Animation.Action destroy (final Layer layer) {
         return action(new Runnable() { public void run () {
-            layer.destroy();
+            if (!layer.destroyed()) layer.destroy();
+        }});
+    }
+
+    /**
+     * Destroys the specified destroyable.
+     */
+    public Animation.Action destroy (final Destroyable dable) {
+        return action(new Runnable() { public void run () {
+            dable.destroy();
         }});
     }
 
@@ -332,6 +343,15 @@ public abstract class AnimBuilder
     public Animation.Action stop (final Sound sound) {
         return action(new Runnable() { public void run () {
             sound.stop();
+        }});
+    }
+
+    /**
+     * Emits {@code value} on {@code signal}.
+     */
+    public <T> Animation.Action emit (final Signal<T> signal, final T value) {
+        return action(new Runnable() { public void run () {
+            signal.emit(value);
         }});
     }
 
