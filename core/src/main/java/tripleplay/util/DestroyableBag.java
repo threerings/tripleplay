@@ -53,6 +53,13 @@ public class DestroyableBag {
         });
     }
 
+    /** Removes, and <em>does not destroy</em>, {@code dable} from this bag.
+     * @return true if {@code dable} was found and removed from the bag, false if it was not in the
+     * bag. */
+    public boolean remove (Destroyable dable) {
+        return _dables.remove(dable);
+    }
+
     /** Destroys all destroyables in this bag and clears its contents. */
     public void clear () {
         MultiFailureException mfe = null;
