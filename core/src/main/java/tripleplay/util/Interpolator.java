@@ -5,6 +5,8 @@
 
 package tripleplay.util;
 
+import pythagoras.f.MathUtil;
+
 /**
  * Abstracts the process of interpolation between two values.
  */
@@ -88,4 +90,12 @@ public abstract class Interpolator
      * returned.
      */
     public abstract float apply (float start, float range, float dt, float t);
+
+    /**
+     * Interpolates between two values, as in {@link #apply} except that {@code dt} is clamped to
+     * [0..t] to avoid interpolation weirdness if {@code dt} is ever negative or exceeds {@code t}.
+     */
+    public float applyClamp (float start, float range, float dt, float t) {
+        return apply(start, range, MathUtil.clamp(dt, 0, t), t);
+    }
 }
