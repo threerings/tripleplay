@@ -168,12 +168,14 @@ public class Interface
      * root's layer has a parent, the layer will be removed from the parent as well. This leaves
      * the Root's layer in existence, so it may be used again. If you're done with the Root and all
      * of the elements inside of it, call {@link #destroyRoot} to free its resources.
+     *
+     * @return true if the root was removed, false if it was not currently added.
      */
-    public void removeRoot (Root root) {
-        if (_roots.remove(root)) {
-            root.wasRemoved();
-            if (root.layer.parent() != null) root.layer.parent().remove(root.layer);
-        }
+    public boolean removeRoot (Root root) {
+        if (!_roots.remove(root)) return false;
+        root.wasRemoved();
+        if (root.layer.parent() != null) root.layer.parent().remove(root.layer);
+        return true;
     }
 
     /**
@@ -181,13 +183,15 @@ public class Interface
      * currently added. Destroying the layer destroys the layers of all elements contained in the
      * root as well. Use this method if you're done with the Root. If you'd like to reuse it, call
      * {@link #removeRoot} instead.
+     *
+     * @return true if the root was removed and destroyed, false if it was not currently added.
      */
-    public void destroyRoot (Root root) {
-        if (_roots.remove(root)) {
-            root.set(Flag.WILL_DESTROY, true);
-            root.wasRemoved();
-            root.layer.destroy();
-        }
+    public boolean destroyRoot (Root root) {
+        if (!_roots.remove(root)) return false;
+        root.set(Flag.WILL_DESTROY, true);
+        root.wasRemoved();
+        root.layer.destroy();
+        return true;
     }
 
     /**
