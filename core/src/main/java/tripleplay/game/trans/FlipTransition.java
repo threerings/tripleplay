@@ -32,7 +32,7 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
     }
 
     @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
-        float pct = _interp.apply(0, 1, elapsed, _duration);
+        float pct = _interp.applyClamp(0, 1, elapsed, _duration);
         if (pct >= 0.5f && !_flipped) {
             nscreen.layer.setDepth(0);
             oscreen.layer.setDepth(-1);

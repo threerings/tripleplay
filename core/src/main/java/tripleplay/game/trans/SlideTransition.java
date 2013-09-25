@@ -50,11 +50,11 @@ public class SlideTransition extends InterpedTransition<SlideTransition>
     }
 
     @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
-        float ox = _interp.apply(_originX, _odx-_originX, elapsed, _duration);
-        float oy = _interp.apply(_originY, _ody-_originY, elapsed, _duration);
+        float ox = _interp.applyClamp(_originX, _odx-_originX, elapsed, _duration);
+        float oy = _interp.applyClamp(_originY, _ody-_originY, elapsed, _duration);
         oscreen.layer.setTranslation(ox, oy);
-        float nx = _interp.apply(_nsx, _originX-_nsx, elapsed, _duration);
-        float ny = _interp.apply(_nsy, _originY-_nsy, elapsed, _duration);
+        float nx = _interp.applyClamp(_nsx, _originX-_nsx, elapsed, _duration);
+        float ny = _interp.applyClamp(_nsy, _originY-_nsy, elapsed, _duration);
         nscreen.layer.setTranslation(nx, ny);
         return elapsed >= _duration;
     }

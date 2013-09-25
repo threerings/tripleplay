@@ -21,7 +21,7 @@ public class FadeTransition extends InterpedTransition<SlideTransition>
     }
 
     @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
-        float nalpha = _interp.apply(0, 1, elapsed, _duration);
+        float nalpha = _interp.applyClamp(0, 1, elapsed, _duration);
         nscreen.layer.setAlpha(nalpha);
         return elapsed >= _duration;
     }

@@ -10,7 +10,6 @@ import playn.core.Surface;
 import static playn.core.PlayN.graphics;
 
 import pythagoras.f.FloatMath;
-import pythagoras.f.MathUtil;
 
 import tripleplay.game.Screen;
 import tripleplay.shaders.RotateYShader;
@@ -71,7 +70,7 @@ public class PageTurnTransition extends InterpedTransition<PageTurnTransition>
     }
 
     protected void updateAngle (float elapsed) {
-        float pct = MathUtil.clamp(_interp.apply(0, 0.5f, elapsed, _duration), 0, 0.5f);
+        float pct = _interp.applyClamp(0, 0.5f, elapsed, _duration);
         if (_close) pct = 0.5f - pct;
         _alpha = pct;
         _shader.angle = FloatMath.PI * pct;
