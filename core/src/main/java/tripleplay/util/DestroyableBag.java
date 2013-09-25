@@ -60,7 +60,10 @@ public class DestroyableBag {
         return _dables.remove(dable);
     }
 
-    /** Destroys all destroyables in this bag and clears its contents. */
+    /** Destroys all destroyables in this bag and clears its contents.
+     * @throws MultiFailureException containing one or more exceptions if any destroyable throws an
+     * exception while being destroyed. {@code destroy} will always be called on all destroyables
+     * regardless of whether any throw an exception. */
     public void clear () {
         MultiFailureException mfe = null;
         for (Destroyable dable : _dables) {
@@ -72,7 +75,7 @@ public class DestroyableBag {
             }
         }
         _dables.clear();
-        if (mfe != null) mfe.trigger();
+        if (mfe != null) throw mfe;
     }
 
     protected List<Destroyable> _dables = new ArrayList<Destroyable>();
