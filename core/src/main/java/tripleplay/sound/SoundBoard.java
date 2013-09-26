@@ -233,9 +233,11 @@ public class SoundBoard
         }
 
         protected Sound prepareSound () {
-            if (sound == null) sound = loadSound(path());
+            if (sound == null) {
+                sound = loadSound(path());
+                sound.prepare();
+            }
             sound.setVolume(volume.get() * _volume);
-            sound.prepare();
             return sound;
         }
 
