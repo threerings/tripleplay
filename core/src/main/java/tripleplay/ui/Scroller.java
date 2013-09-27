@@ -500,7 +500,7 @@ public class Scroller extends Composite<Scroller>
 
         // hide the layer of any child of content that isn't in bounds
         float x = hbar._cpos, y = vbar._cpos, wid = hbar._size, hei = vbar._size;
-        for (Element<?> child : (Elements<?>)content) {
+        for (Element<?> child : (Container<?>)content) {
             IDimension size = child.size();
             if (child.isVisible()) child.layer.setVisible(
                 child.x() < x + wid && child.x() + size.width() > x &&
