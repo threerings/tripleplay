@@ -327,11 +327,11 @@ public abstract class Element<T extends Element<T>>
     /**
      * Called when this element (or its parent element) was removed from the interface hierarchy.
      * Also, if the element was removed directly from its parent, then the layer is orphaned prior
-     * to this call. Furthermore, if the element is being destroyed (see {@link Elements#destroy}
-     * and other methods), the destruction of the layer will occur <b>after</b> this method
-     * returns and the {@link #willDestroy()} method returns true. This allows subclasses to
-     * manage resources as needed. <p><b>NOTE</b>: the base class method must <b>always</b> be
-     * called for correct operation.</p>
+     * to this call. Furthermore, if the element is being destroyed (see {@link
+     * Container.Mutable#destroy} and other methods), the destruction of the layer will occur
+     * <b>after</b> this method returns and the {@link #willDestroy()} method returns true. This
+     * allows subclasses to manage resources as needed. <p><b>NOTE</b>: the base class method must
+     * <b>always</b> be called for correct operation.</p>
      */
     protected void wasRemoved () {
         _bginst.clear();
@@ -558,10 +558,10 @@ public abstract class Element<T extends Element<T>>
 
     /**
      * Tests if this element is about to be destroyed. Elements are destroyed via a call to one of
-     * the "destroy" methods such as {@link Elements#destroy(Element)}. This allows subclasses
-     * to manage resources appropriately during their implementation of {@link #wasRemoved}, for
-     * example clearing a child cache. <p>NOTE: at the expense of slight semantic dissonance,
-     * the flag is not cleared after destruction</p>
+     * the "destroy" methods such as {@link Container.Mutable#destroy(Element)}. This allows
+     * subclasses to manage resources appropriately during their implementation of {@link
+     * #wasRemoved}, for example clearing a child cache. <p>NOTE: at the expense of slight semantic
+     * dissonance, the flag is not cleared after destruction</p>
      */
     protected boolean willDestroy () {
         return isSet(Flag.WILL_DESTROY);

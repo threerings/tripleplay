@@ -55,8 +55,8 @@ public abstract class Container<T extends Container<T>> extends Element<T>
     }
 
     /**
-     * Returns the stylesheet associated with this parent, or null. Styles are resolved by
-     * searching up the container hierarchy. Only {@link Elements} actually provides styles to its
+     * Returns the stylesheet associated with this container, or null. Styles are resolved by
+     * searching up the container hierarchy. Only {@link Container} actually provides styles to its
      * children.
      */
     public abstract Stylesheet stylesheet ();
@@ -67,7 +67,7 @@ public abstract class Container<T extends Container<T>> extends Element<T>
     /*** Returns the child at the specified index. */
     public abstract Element<?> childAt (int index);
 
-    /** Returns an unmodifiable iterator over the children of this Elements.  */
+    /** Returns an unmodifiable iterator over the children of this Container.  */
     public abstract Iterator<Element<?>> iterator ();
 
     protected void didAdd (Element<?> child) {
