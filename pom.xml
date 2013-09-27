@@ -93,5 +93,21 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>deploy-local</id>
+      <distributionManagement>
+        <repository>
+          <id>deploy-local</id>
+          <name>Local maven repository</name>
+          <url>${deploy-local.dir}</url>
+        </repository>
+	<snapshotRepository>
+	  <uniqueVersion>false</uniqueVersion>
+	  <id>deploy-local-snapshots</id>
+	  <name>Local maven snapshot repository</name>
+	  <url>${deploy-local.dir}</url>
+	</snapshotRepository>
+      </distributionManagement>
+    </profile>
   </profiles>
 </project>
