@@ -11,6 +11,7 @@ import java.util.List;
 import playn.core.Asserts;
 import playn.core.Events;
 import playn.core.Layer;
+import playn.core.PlayN;
 import playn.core.Pointer;
 import playn.core.Pointer.Event;
 import pythagoras.f.Point;
@@ -327,8 +328,14 @@ public class Menu extends Elements<Menu>
                 Elements<?> es = (Elements<?>)elem;
                 visitElems(es);
                 for (Element<?> child : es) onEmit(child);
+            } else if (elem instanceof Container) {
+                Log.log.warning("Unsupported nested container", "elem", elem);
+                // We can't support containers or composites since there is no reliable signal for
+                // child removal
+                // for (Element<?> child : (Container<?>)elem) onEmit(child);
+            } else if (elem instanceof MenuItem) {
+                visitItem((MenuItem)elem);
             }
-            if (elem instanceof MenuItem) visitItem((MenuItem)elem);
         }
         protected abstract void visitElems (Elements<?> elems);
         protected abstract void visitItem (MenuItem item);
