@@ -93,5 +93,15 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>deploy-local</id>
+      <distributionManagement>
+        <repository>
+          <id>deploy-local</id>
+          <name>Local maven repository</name>
+          <url>${deploy-local.dir}</url>
+        </repository>
+      </distributionManagement>
+    </profile>
   </profiles>
 </project>
