@@ -28,7 +28,7 @@ public class FlumpDemo extends DemoScreen
     @Override protected Group createIface () {
         final Group root = new Group(new AbsoluteLayout());
 
-        Library.fromAssets("flump", new Callback<Library>() {
+        JsonLoader.loadLibrary("flump", new Callback<Library>() {
             public void onSuccess (Library lib) {
                 _movie = lib.createMovie("walk");
                 _movie.layer().setTranslation(graphics().width()/2, 300);
