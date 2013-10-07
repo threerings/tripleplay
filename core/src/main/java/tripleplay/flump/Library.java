@@ -14,7 +14,6 @@ import java.util.Map;
 
 import playn.core.Asserts;
 import playn.core.Image;
-import playn.core.Json;
 import playn.core.util.Callback;
 import static playn.core.PlayN.*;
 
@@ -30,80 +29,41 @@ public class Library
     /** The symbols defined in this library. */
     public final Map<String,Symbol> symbols;
 
-    protected Library (Json.Object json, String baseDir, final Callback<Library> callback) {
-        frameRate = json.getNumber("frameRate");
+    public Library (float frameRate, List<Movie.Symbol> movies, List<Texture.Symbol> textures) {
+        this.frameRate = frameRate;
 
+        // map all of our movies and textures by symbol name
         final Map<String,Symbol> symbols = new HashMap<String,Symbol>();
         this.symbols = Collections.unmodifiableMap(symbols);
-
-        final List<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
-        for (Json.Object movieJson : json.getArray("movies", Json.Object.class)) {
-            Movie.Symbol movie = new Movie.Symbol(this, movieJson);
-            movies.add(movie);
+        for (Movie.Symbol movie : movies) {
             symbols.put(movie.name(), movie);
         }
+        for (Texture.Symbol texture : textures) {
+            symbols.put(texture.name(), texture);
+        }
 
-        Json.TypedArray<Json.Object> textureGroups =
-            json.getArray("textureGroups", Json.Object.class);
-        // TODO(bruno): Support multiple scaleFactors?
-        Json.TypedArray<Json.Object> atlases =
-            textureGroups.get(0).getArray("atlases", Json.Object.class);
-        final Value<Integer> remainingAtlases = Value.create(atlases.length());
+        // go through and resolve references
+        for (Movie.Symbol movie : movies) {
+            for (LayerData layer : movie.layers) {
+                for (KeyframeData kf : layer.keyframes) {
+                    if (kf._symbolName != null) {
+                        Symbol symbol = symbols.get(kf._symbolName);
+                        Asserts.checkNotNull(symbol);
 
-        remainingAtlases.connectNotify(new Value.Listener<Integer>() {
-            @Override public void onChange (Integer remaining, Integer _) {
-                if (remaining > 0) return;
-
-                // When all the symbols have been loaded, go through and resolve references
-                for (Movie.Symbol movie : movies) {
-                    for (LayerData layer : movie.layers) {
-                        for (KeyframeData kf : layer.keyframes) {
-                            if (kf._symbolName != null) {
-                                Symbol symbol = symbols.get(kf._symbolName);
-                                Asserts.checkNotNull(symbol);
-
-                                if (layer._lastSymbol == null) layer._lastSymbol = symbol;
-                                else if (layer._lastSymbol != symbol) layer._multipleSymbols = true;
-                                kf._symbol = symbol;
-                            }
-                        }
+                        if (layer._lastSymbol == null) layer._lastSymbol = symbol;
+                        else if (layer._lastSymbol != symbol) layer._multipleSymbols = true;
+                        kf._symbol = symbol;
                     }
                 }
-
-                // We're done!
-                callback.onSuccess(Library.this);
             }
-        });
-
-        for (final Json.Object atlasJson : atlases) {
-            Image atlas = assets().getImage(baseDir + "/" + atlasJson.getString("file"));
-            atlas.addCallback(new Callback.Chain<Image>(callback) {
-                public void onSuccess (Image atlas) {
-                    for (Json.Object textureJson : atlasJson.getArray("textures", Json.Object.class)) {
-                        Texture.Symbol texture = new Texture.Symbol(textureJson, atlas);
-                        symbols.put(texture.name(), texture);
-                    }
-                    remainingAtlases.update(remainingAtlases.get() - 1);
-                }
-            });
         }
     }
 
     /**
-     * Loads a Library from PlayN assets.
-     * @param baseDir The base directory, containing library.json and texture atlases.
+     * @deprecated Use {@link JsonLoader#loadLibrary}.
      */
-    public static void fromAssets (final String baseDir, final Callback<Library> callback) {
-        Asserts.checkNotNull(callback);
-        assets().getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
-            public void onSuccess (String text) {
-                try {
-                    new Library(json().parse(text), baseDir, callback);
-                } catch (Exception err) {
-                    callback.onFailure(err);
-                }
-            }
-        });
+    @Deprecated public static void fromAssets (String baseDir, Callback<Library> callback) {
+        JsonLoader.loadLibrary(baseDir, callback);
     }
 
     /** Pack multiple libraries into a single group of atlases. The libraries will be modified so

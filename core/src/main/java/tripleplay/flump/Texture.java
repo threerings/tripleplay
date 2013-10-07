@@ -9,7 +9,6 @@ import pythagoras.f.IPoint;
 
 import playn.core.Image;
 import playn.core.ImageLayer;
-import playn.core.Json;
 import playn.core.util.Clock;
 import static playn.core.PlayN.*;
 
@@ -22,12 +21,10 @@ public class Texture
         public Image.Region region;
         public final IPoint origin;
 
-        protected Symbol (Json.Object json, Image atlas) {
-            _name = json.getString("symbol");
-            origin = KeyframeData.getPoint(json, "origin", 0, 0);
-
-            Json.TypedArray<Float> rect = json.getArray("rect", Float.class);
-            region = atlas.subImage(rect.get(0), rect.get(1), rect.get(2), rect.get(3));
+        public Symbol (String name, IPoint origin, Image.Region region) {
+            _name = name;
+            this.origin = origin;
+            this.region = region;
         }
 
         @Override public String name () {

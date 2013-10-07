@@ -8,8 +8,6 @@ package tripleplay.flump;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 
-import playn.core.Json;
-
 public class KeyframeData
 {
     public final int index;
@@ -26,22 +24,23 @@ public class KeyframeData
     public final boolean tweened;
     public final float ease;
 
-    protected KeyframeData (Json.Object json, KeyframeData prevKf) {
-        index = (prevKf != null) ? prevKf.index + prevKf.duration : 0;
-        duration = json.getInt("duration");
-        label = json.getString("label");
-
-        loc = getPoint(json, "loc", 0, 0);
-        scale = getPoint(json, "scale", 1, 1);
-        skew = getPoint(json, "skew", 0, 0);
-        pivot = getPoint(json, "pivot", 0, 0);
-        alpha = json.getNumber("alpha", 1);
-        visible = json.getBoolean("visible", true);
-        tweened = json.getBoolean("tweened", true);
-        ease = json.getNumber("ease", 0);
-
-        _symbolName = json.getString("ref");
+    public KeyframeData (int index, int duration, String label,
+                         IPoint loc, IPoint scale, IPoint skew, IPoint pivot,
+                         boolean visible, float alpha, boolean tweened, float ease,
+                         String ref) {
+        this.index = index;
+        this.duration = duration;
+        this.label = label;
+        this.loc = loc;
+        this.scale = scale;
+        this.skew = skew;
+        this.pivot = pivot;
+        this.visible = visible;
+        this.alpha = alpha;
+        this.tweened = tweened;
+        this.ease = ease;
         // Library resolves _symbol once everything has been loaded
+        _symbolName = ref;
     }
 
     /**
@@ -49,11 +48,6 @@ public class KeyframeData
      */
     public Symbol symbol () {
         return _symbol;
-    }
-
-    protected static IPoint getPoint (Json.Object json, String field, float defX, float defY) {
-        Json.TypedArray<Float> array = json.getArray(field, Float.class);
-        return (array != null) ? new Point(array.get(0), array.get(1)) : new Point(defX, defY);
     }
 
     protected Symbol _symbol;
