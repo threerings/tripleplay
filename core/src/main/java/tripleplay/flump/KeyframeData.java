@@ -6,7 +6,6 @@
 package tripleplay.flump;
 
 import pythagoras.f.IPoint;
-import pythagoras.f.Point;
 
 public class KeyframeData
 {

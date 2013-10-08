@@ -11,7 +11,6 @@ import java.util.List;
 import playn.core.Asserts;
 import playn.core.Events;
 import playn.core.Layer;
-import playn.core.PlayN;
 import playn.core.Pointer;
 import playn.core.Pointer.Event;
 import pythagoras.f.Point;

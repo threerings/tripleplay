@@ -15,9 +15,6 @@ import java.util.Map;
 import playn.core.Asserts;
 import playn.core.Image;
 import playn.core.util.Callback;
-import static playn.core.PlayN.*;
-
-import react.Value;
 
 import tripleplay.util.TexturePacker;
 
