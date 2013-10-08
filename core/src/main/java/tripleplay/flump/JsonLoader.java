@@ -19,8 +19,8 @@ import pythagoras.f.Point;
 
 import react.Value;
 
-public class JsonLoader {
-
+public class JsonLoader
+{
     /**
      * Loads a JSON encoded library via PlayN assets.
      * @param baseDir The base directory, containing library.json and texture atlases.
