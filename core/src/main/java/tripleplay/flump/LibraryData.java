@@ -8,9 +8,8 @@ package tripleplay.flump;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import pythagoras.f.Point;
 
@@ -23,18 +22,13 @@ import playn.core.PlayN;
  */
 public class LibraryData
 {
-    public float frameRate;
-    public List<MovieData> movies;
-    public List<AtlasData> atlases;
-
     public static class AtlasData
     {
-        public List<TextureData> textures;
-        public String file;
+        public final List<TextureData> textures = new ArrayList<TextureData>();
+        public final String file;
 
         public AtlasData (Json.Object json) {
             Json.Array textureArr = json.getArray("textures");
-            textures = Lists.newArrayList();
             if (textureArr != null) {
                 for (int ii = 0; ii < textureArr.length(); ++ii) {
                     textures.add(new TextureData(textureArr.getObject(ii)));
@@ -52,12 +46,10 @@ public class LibraryData
             }
             json.put("textures", textureArr);
             json.put("file", file);
-
             return json;
         }
 
         public AtlasData (DataInputStream istream) throws IOException {
-            textures = Lists.newArrayList();
             int numTextures = istream.readInt();
             for (int ii = 0; ii < numTextures; ++ii) {
                 textures.add(new TextureData(istream));
@@ -122,12 +114,11 @@ public class LibraryData
     public static class MovieData
     {
         public String id;
-        public List<LayerData> layers;
+        public List<LayerData> layers = new ArrayList<LayerData>();
 
         public MovieData (Json.Object json) {
             id = json.getString("id");
             Json.Array layerArr = json.getArray("layers");
-            layers = Lists.newArrayList();
             if (layerArr != null) {
                 for (int ii = 0; ii < layerArr.length(); ++ii) {
                     layers.add(new LayerData(layerArr.getObject(ii)));
@@ -150,7 +141,6 @@ public class LibraryData
 
         public MovieData (DataInputStream istream) throws IOException {
             id = istream.readUTF();
-            layers = Lists.newArrayList();
             int numLayers = istream.readInt();
             for (int ii = 0; ii < numLayers; ++ii) {
                 layers.add(new LayerData(istream));
@@ -169,12 +159,11 @@ public class LibraryData
     public static class LayerData
     {
         public String name;
-        public List<KeyframeData> keyframes;
+        public List<KeyframeData> keyframes = new ArrayList<KeyframeData>();
 
         public LayerData (Json.Object json) {
             name = json.getString("name");
             Json.Array keyframeArr = json.getArray("keyframes");
-            keyframes = Lists.newArrayList();
             if (keyframeArr != null) {
                 for (int ii = 0; ii < keyframeArr.length(); ++ii) {
                     keyframes.add(new KeyframeData(keyframeArr.getObject(ii)));
@@ -197,7 +186,6 @@ public class LibraryData
 
         public LayerData (DataInputStream istream) throws IOException {
             name = istream.readUTF();
-            keyframes = Lists.newArrayList();
             int numKeyframes = istream.readInt();
             for (int ii = 0; ii < numKeyframes; ++ii) {
                 keyframes.add(new KeyframeData(istream));
@@ -306,17 +294,19 @@ public class LibraryData
         }
     }
 
+    public float frameRate;
+    public List<MovieData> movies = new ArrayList<MovieData>();
+    public List<AtlasData> atlases = new ArrayList<AtlasData>();
+
     public LibraryData (Json.Object json)
     {
         Json.Array movieArr = json.getArray("movies");
-        movies = Lists.newArrayList();
         if (movieArr != null) {
             for (int ii = 0; ii < movieArr.length(); ++ii) {
                 movies.add(new MovieData(movieArr.getObject(ii)));
             }
         }
         Json.Array atlasArr = json.getArray("textureGroups").getObject(0).getArray("atlases");
-        atlases = Lists.newArrayList();
         if (atlasArr != null) {
             for (int ii = 0; ii < atlasArr.length(); ++ii) {
                 atlases.add(new AtlasData(atlasArr.getObject(ii)));
@@ -350,12 +340,10 @@ public class LibraryData
     public LibraryData (DataInputStream istream)
         throws IOException
     {
-        movies = Lists.newArrayList();
         int numMovies = istream.readInt();
         for (int ii = 0; ii < numMovies; ++ii) {
             movies.add(new MovieData(istream));
         }
-        atlases = Lists.newArrayList();
         int numAtlases = istream.readInt();
         for (int ii = 0; ii < numAtlases; ++ii) {
             atlases.add(new AtlasData(istream));
