@@ -18,6 +18,7 @@ import cli.MonoTouch.UIKit.UITextAutocapitalizationType;
 import cli.MonoTouch.UIKit.UITextAutocorrectionType;
 import cli.MonoTouch.UIKit.UITextField;
 import cli.MonoTouch.UIKit.UITextFieldDelegate;
+import cli.MonoTouch.UIKit.UITextRange;
 import cli.MonoTouch.UIKit.UITextView;
 import cli.MonoTouch.UIKit.UIView;
 import cli.System.Drawing.RectangleF;
@@ -83,6 +84,15 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
             if (mode == Mode.MULTI_LINE) return new MultiLine(_handler, this, _element);
             _field.set_SecureTextEntry(mode == Mode.SECURE);
             return this;
+        }
+
+        @Override public boolean insert (String text) {
+            UITextRange range = _field.get_SelectedTextRange();
+            if (range == null) {
+                return false;
+            }
+            _field.ReplaceText(range, text);
+            return true;
         }
 
         @Override protected UIFont getNativeFont () {
@@ -171,6 +181,15 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
 
         @Override protected void setColor(UIColor color) {
             _field.set_TextColor(color);
+        }
+
+        @Override public boolean insert (String text) {
+            UITextRange range = _field.get_SelectedTextRange();
+            if (range == null) {
+                return false;
+            }
+            _field.ReplaceText(range, text);
+            return true;
         }
 
         protected final UITextView _field;

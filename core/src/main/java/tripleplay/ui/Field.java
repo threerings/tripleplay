@@ -205,6 +205,11 @@ public class Field extends TextWidget<Field>
         return super.setVisible(visible);
     }
 
+    /** Returns this field's native text field, if it has one, otherwise null. */
+    public NativeTextField exposeNativeField () {
+        return _nativeField;
+    }
+
     /**
      * Main entry point for deciding whether to reject keypresses on a native field. By default,
      * consults the current validator instance, set up by {@link #VALIDATOR}.

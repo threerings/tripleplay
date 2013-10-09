@@ -104,6 +104,11 @@ public class JavaNativeTextField extends JavaNativeOverlay
         return component.hasFocus();
     }
 
+    @Override public boolean insert (String text) {
+        field().replaceSelection(text);
+        return true;
+    }
+
     public JTextComponent field () {
         return (JTextComponent)component;
     }
