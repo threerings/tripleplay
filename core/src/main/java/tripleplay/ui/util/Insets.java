@@ -133,6 +133,10 @@ public class Insets
         return new Insets(_top + dtop, _right + dright, _bottom + dbottom, _left + dleft);
     }
 
+    @Override public String toString () {
+        return _top + "," + _right + "," + _bottom + "," + _left;
+    }
+
     /** The amount to inset an edge. */
     protected float _top, _right, _bottom, _left;
 }
