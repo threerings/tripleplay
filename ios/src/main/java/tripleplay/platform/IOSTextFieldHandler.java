@@ -191,10 +191,6 @@ public class IOSTextFieldHandler
         field.getView().RemoveFromSuperview();
     }
 
-    public boolean isAdded (UIView field) {
-        return field.IsDescendantOfView(_overlay);
-    }
-
     protected IOSNativeTextField findFirstResponder () {
         for (Map.Entry<UIView, IOSNativeTextField> entry : _activeFields.entrySet()) {
             if (entry.getKey().get_IsFirstResponder()) return entry.getValue();
