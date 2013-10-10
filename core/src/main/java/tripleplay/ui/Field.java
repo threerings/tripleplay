@@ -29,7 +29,7 @@ import tripleplay.ui.util.Insets;
  */
 public class Field extends TextWidget<Field>
 {
-    /** Creates a style binding for the given maximum lenght. */
+    /** Creates a style binding for the given maximum length. */
     public static Style.Binding<Validator> maxLength (int max) {
         return VALIDATOR.is(new MaxLength(max));
     }
