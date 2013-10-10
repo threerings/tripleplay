@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.threerings</groupId>
     <artifactId>tripleplay-parent</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.7.7</version>
   </parent>
 
   <artifactId>tripleplay-java</artifactId>
