@@ -195,7 +195,12 @@ public class Movie
             if (data._multipleSymbols) {
                 _instances = new Instance[data.keyframes.size()];
                 for (int ii = 0, ll = _instances.length; ii < ll; ++ii) {
-                    _instances[ii] = data.keyframes.get(ii).symbol().createInstance();
+                    tripleplay.flump.Symbol sym = data.keyframes.get(ii).symbol();
+                    if (sym == null) {
+                        throw new IllegalArgumentException("Keyframe missing symbol layer=" +
+                            data.name + " frame=" + ii);
+                    }
+                    _instances[ii] = sym.createInstance();
                 }
                 content = graphics().createGroupLayer();
                 setCurrent(_instances[0]);
