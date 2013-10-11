@@ -41,10 +41,15 @@ public class Texture
     protected Texture (Symbol symbol) {
         _layer = graphics().createImageLayer(symbol.region);
         _layer.setOrigin(symbol.origin.x(), symbol.origin.y());
+        _symbol = symbol;
     }
 
     @Override public ImageLayer layer () {
         return _layer;
+    }
+
+    public Symbol symbol () {
+        return _symbol;
     }
 
     @Override public void paint (Clock clock) {
@@ -58,4 +63,6 @@ public class Texture
     }
 
     protected ImageLayer _layer;
+
+    protected Symbol _symbol;
 }
