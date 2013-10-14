@@ -250,11 +250,8 @@ public class Field extends TextWidget<Field>
 
     @Override protected Behavior<Field> createBehavior () {
         return new Behavior.Select<Field>(this) {
-            @Override public void onPointerStart (Pointer.Event event) {
-                super.onPointerStart(event);
-                if (!isEnabled() || fulltimeNativeField()) return;
-                if (hasNative()) event.capture();
-                startEdit();
+            @Override public void onClick (Pointer.Event event) {
+                if (!fulltimeNativeField()) startEdit();
             }
         };
     }
