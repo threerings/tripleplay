@@ -154,7 +154,7 @@ public class Field extends TextWidget<Field>
         if (hasNative()) {
             _finishedEditing.connect(new Slot<Boolean>() {
                 @Override public void onEmit (Boolean event) {
-                    if (!fulltimeNativeField()) updateMode(false);
+                    if (!_fullTimeNative) updateMode(false);
                 }
             });
         }
@@ -251,7 +251,7 @@ public class Field extends TextWidget<Field>
     @Override protected Behavior<Field> createBehavior () {
         return new Behavior.Select<Field>(this) {
             @Override public void onClick (Pointer.Event event) {
-                if (!fulltimeNativeField()) startEdit();
+                if (!_fullTimeNative) startEdit();
             }
         };
     }
@@ -276,10 +276,6 @@ public class Field extends TextWidget<Field>
                 @Override public void onFailure (Throwable cause) { /* noop */ }
             });
         }
-    }
-
-    protected boolean fulltimeNativeField () {
-        return hasNative() && resolveStyle(FULLTIME_NATIVE_FIELD);
     }
 
     protected Rectangle getNativeFieldBounds () {
@@ -327,7 +323,8 @@ public class Field extends TextWidget<Field>
 
         @Override public void layout (float left, float top, float width, float height) {
             super.layout(left, top, width, height);
-            if (fulltimeNativeField()) updateMode(true);
+            _fullTimeNative = hasNative() && resolveStyle(FULLTIME_NATIVE_FIELD);
+            if (_fullTimeNative) updateMode(true);
             else if (_nativeField != null) _nativeField.validateStyles();
 
             // make sure our cached bits are up to date
@@ -341,6 +338,7 @@ public class Field extends TextWidget<Field>
     protected Validator _validator;
     protected Transformer _transformer;
     protected TextType _textType;
+    protected boolean _fullTimeNative;
     protected final Signal<Boolean> _finishedEditing;
 
     // used when popping up a text entry interface on mobile platforms
