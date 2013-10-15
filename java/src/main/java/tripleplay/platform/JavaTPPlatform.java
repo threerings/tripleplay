@@ -48,6 +48,7 @@ public class JavaTPPlatform extends TPPlatform
         Canvas canvas = new Canvas();
         canvas.setName("GLCanvas");
         canvas.setPreferredSize(new Dimension(config.width, config.height));
+        canvas.setFocusable(false);
         _frame.getContentPane().add(canvas);
 
         // NOTE: This order is important. Resizability changes window decorations on some
