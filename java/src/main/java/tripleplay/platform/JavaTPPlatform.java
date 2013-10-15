@@ -42,7 +42,7 @@ public class JavaTPPlatform extends TPPlatform
     protected JavaTPPlatform (JavaPlatform platform, JavaPlatform.Config config) {
         _platform = platform;
 
-        _frame = new JFrame("Game");
+        _frame = new JFrame("");
         _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Canvas canvas = new Canvas();
