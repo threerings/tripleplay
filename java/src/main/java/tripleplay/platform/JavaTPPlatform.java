@@ -46,6 +46,7 @@ public class JavaTPPlatform extends TPPlatform
         _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Canvas canvas = new Canvas();
+        canvas.setName("GLCanvas");
         canvas.setPreferredSize(new Dimension(config.width, config.height));
         _frame.getContentPane().add(canvas);
 
