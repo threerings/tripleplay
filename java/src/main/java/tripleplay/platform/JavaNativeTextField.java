@@ -8,8 +8,9 @@ package tripleplay.platform;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -34,6 +35,7 @@ public class JavaNativeTextField extends JavaNativeOverlay
             mode == Mode.SECURE ? new JPasswordField() : new JTextField());
         _element = element;
         _mode = mode;
+        _textComp = (JTextComponent)component;
 
         if (oldField != null) {
             // reach in and disconnect the old field
@@ -42,8 +44,8 @@ public class JavaNativeTextField extends JavaNativeOverlay
             component.setBounds(oldField.component.getBounds());
         }
 
-        field().setText(element.field().text.get());
-        field().getDocument().addDocumentListener(new DocumentListener() {
+        _textComp.setText(element.field().text.get());
+        _textComp.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate (DocumentEvent event) {
                 update();
             }
@@ -54,24 +56,36 @@ public class JavaNativeTextField extends JavaNativeOverlay
                 update();
             }
             protected void update () {
-                if (!_textNotifyInProgress) _element.field().text.update(field().getText());
+                if (!_textNotifyInProgress) _element.field().text.update(_textComp.getText());
             }
         });
-        if (component instanceof JTextField) {
-            ((JTextField)component).addActionListener(new ActionListener() {
+        if (isField()) {
+            asField().addActionListener(new ActionListener() {
                 public void actionPerformed (ActionEvent event) {
                     _element.finishedEditing().emit(true);
                 }
             });
         }
-        component.setBorder(BorderFactory.createEmptyBorder());
-        component.setBackground(new Color(0xffffff, false)); // TODO(bruno): Transparency
+        _textComp.addFocusListener(new FocusListener() {
+            @Override public void focusLost (FocusEvent e) {
+                _element.finishedEditing().emit(true);
+            }
+            @Override public void focusGained (FocusEvent e) {
+            }
+        });
+
+        // transparency does actually work but the JFrame and/or its content pane is interfering
+        // TODO: figure out how to prevent JFrame from drawing a white box underneath the field
+        _textComp.setOpaque(false);
+
+        _textComp.setBorder(null);
+        _textComp.setAutoscrolls(true);
 
         _textConnection = _element.field().text.connectNotify(new Slot<String>() {
             @Override public void onEmit (String value) {
-                if (!field().getText().equals(value)) {
+                if (!_textComp.getText().equals(value)) {
                     _textNotifyInProgress = true;
-                    field().setText(value);
+                    _textComp.setText(value);
                     _textNotifyInProgress = false;
                 }
             }});
@@ -79,17 +93,32 @@ public class JavaNativeTextField extends JavaNativeOverlay
 
     @Override public void validateStyles () {
         Font font = _element.resolveStyle(Style.FONT);
-        field().setFont(new java.awt.Font(font.name(), awtFontStyle(font.style()),
+        _textComp.setFont(new java.awt.Font(font.name(), awtFontStyle(font.style()),
             FloatMath.round(font.size())));
+        Color col = new Color(_element.resolveStyle(Style.COLOR));
+        _textComp.setForeground(col);
+        _textComp.setCaretColor(col);
+
+        if (isField()) {
+            switch (_element.resolveStyle(Style.HALIGN)) {
+            case CENTER:
+                asField().setHorizontalAlignment(JTextField.CENTER);
+                break;
+            case LEFT:
+                asField().setHorizontalAlignment(JTextField.LEFT);
+                break;
+            case RIGHT:
+                asField().setHorizontalAlignment(JTextField.RIGHT);
+                break;
+            }
+        }
 
         // TODO: Keyboard.TextType textType = resolveStyle(Field.TEXT_TYPE);
-        // TODO: Style.HAlign halign = resolveStyle(Style.HALIGN);
-        // TODO: int color = resolveStyle(Style.COLOR);
     }
 
     @Override
     public void setEnabled (boolean enabled) {
-        component.setEnabled(enabled);
+        _textComp.setEnabled(enabled);
     }
 
     public JavaNativeTextField refreshMode (Mode mode) {
@@ -97,20 +126,24 @@ public class JavaNativeTextField extends JavaNativeOverlay
     }
 
     @Override public void focus () {
-        component.requestFocus();
+        _textComp.requestFocus();
     }
 
     @Override public boolean hasFocus () {
-        return component.hasFocus();
+        return _textComp.hasFocus();
     }
 
     @Override public boolean insert (String text) {
-        field().replaceSelection(text);
+        _textComp.replaceSelection(text);
         return true;
     }
 
-    public JTextComponent field () {
-        return (JTextComponent)component;
+    protected boolean isField () {
+        return _textComp instanceof JTextField;
+    }
+
+    protected JTextField asField () {
+        return (JTextField)_textComp;
     }
 
     protected static int awtFontStyle (Font.Style style) {
@@ -127,6 +160,7 @@ public class JavaNativeTextField extends JavaNativeOverlay
 
     protected final Field.Native _element;
     protected final Mode _mode;
+    protected final JTextComponent _textComp;
 
     protected Connection _textConnection;
     protected boolean _textNotifyInProgress;
