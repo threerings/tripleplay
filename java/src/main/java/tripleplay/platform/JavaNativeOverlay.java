@@ -6,7 +6,6 @@
 package tripleplay.platform;
 
 import javax.swing.JComponent;
-import javax.swing.JLayeredPane;
 
 import pythagoras.f.IRectangle;
 
@@ -32,14 +31,14 @@ public class JavaNativeOverlay implements NativeOverlay
 
     @Override public void add () {
         if (component.getParent() == null) {
-            root().add(component);
+            JavaTPPlatform.instance().addOverlay(this);
             didAdd();
         }
     }
 
     @Override public void remove () {
         if (component.getParent() != null) {
-            root().remove(component);
+            JavaTPPlatform.instance().removeOverlay(this);
             didRemove();
         }
     }
@@ -49,12 +48,4 @@ public class JavaNativeOverlay implements NativeOverlay
 
     /** Called if the view is removed from the root. */
     protected void didRemove () {}
-
-    /**
-     * Gets the parent view for all Java native overlays, i.e. the layered pane of
-     * {@link JavaTPPlatform#frame()}.
-     */
-    protected static JLayeredPane root () {
-        return ((JavaTPPlatform)TPPlatform.instance()).frame().getLayeredPane();
-    }
 }

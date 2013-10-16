@@ -6,8 +6,12 @@
 package tripleplay.platform;
 
 import java.awt.Canvas;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Set;
 
 import javax.swing.JFrame;
 
@@ -15,6 +19,7 @@ import org.lwjgl.opengl.Display;
 
 import playn.core.Asserts;
 import playn.core.Keyboard;
+import playn.core.PlayN;
 import playn.java.JavaImage;
 import playn.java.JavaPlatform;
 import react.Value;
@@ -23,6 +28,9 @@ import tripleplay.ui.Field;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
+import static tripleplay.platform.Log.log;
 
 /**
  * Implements Java-specific TriplePlay services.
@@ -39,6 +47,21 @@ public class JavaTPPlatform extends TPPlatform
         return instance;
     }
 
+    public static JavaTPPlatform instance () {
+        return (JavaTPPlatform)TPPlatform.instance();
+    }
+
+    public void addOverlay (JavaNativeOverlay overlay) {
+        _overlays.add(overlay);
+        _frame.getLayeredPane().add(overlay.component);
+    }
+
+    public void removeOverlay (JavaNativeOverlay overlay) {
+        if (_overlays.remove(overlay)) {
+            _frame.getLayeredPane().remove(overlay.component);
+        }
+    }
+
     protected JavaTPPlatform (JavaPlatform platform, JavaPlatform.Config config) {
         _platform = platform;
 
@@ -48,8 +71,22 @@ public class JavaTPPlatform extends TPPlatform
         Canvas canvas = new Canvas();
         canvas.setName("GLCanvas");
         canvas.setPreferredSize(new Dimension(config.width, config.height));
-        canvas.setFocusable(false);
         _frame.getContentPane().add(canvas);
+
+        canvas.addMouseListener(new MouseAdapter() {
+            @Override public void mousePressed (MouseEvent e) {
+                for (JavaNativeOverlay overlay : _overlays) {
+                    final Component comp = overlay.component;
+                    if (comp.contains(e.getX() - comp.getX(), e.getY() - comp.getY())) {
+                        PlayN.invokeLater(new Runnable() {
+                            @Override public void run () { comp.requestFocus(); }
+                        });
+                        log.debug("Dispatched focus from misdirected mouse press", "event", e);
+                        return;
+                    }
+                }
+            }
+        });
 
         // NOTE: This order is important. Resizability changes window decorations on some
         // platforms/themes and we need the packing to happen last to take that into account.
@@ -104,13 +141,6 @@ public class JavaTPPlatform extends TPPlatform
     }
 
     /**
-     * Gets the top-level window used by the tripleplay platform.
-     */
-    public JFrame frame () {
-        return _frame;
-    }
-
-    /**
      * Gets the OS this JVM is running on.
      */
     public OS os () {
@@ -147,6 +177,8 @@ public class JavaTPPlatform extends TPPlatform
     protected JFrame _frame;
 
     protected OS _os = OS.UNKNOWN;
+
+    protected Set<JavaNativeOverlay> _overlays = Sets.newHashSet();
 
     protected final Value<Boolean> _false = Value.create(false);
 }
