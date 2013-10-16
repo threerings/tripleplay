@@ -74,8 +74,8 @@ public class JavaNativeTextField extends JavaNativeOverlay
             }
         });
 
-        // transparency does actually work but the JFrame and/or its content pane is interfering
-        // TODO: figure out how to prevent JFrame from drawing a white box underneath the field
+        // this should cause the field to have no background, but isn't working
+        // TODO: figure out how to *really* not draw a white box underneath the field
         _textComp.setOpaque(false);
 
         _textComp.setBorder(null);
