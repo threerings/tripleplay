@@ -81,7 +81,7 @@ public class Menu extends Elements<Menu>
         layer.setHitTester(new Layer.HitTester() {
             @Override public Layer hitTest (Layer layer, Point p) {
                 Layer descendant = layer.hitTestDefault(p);
-                return descendant == null ? layer : descendant;
+                return descendant == null ? absorbHits() ? layer : null : descendant;
             }
         });
 
@@ -184,6 +184,11 @@ public class Menu extends Elements<Menu>
     /** Tests if this menu's position should be adjusted by the host such that the menu's bounds
      * lies within the requested area. */
     protected boolean automaticallyConfine () {
+        return true;
+    }
+
+    /** Tests if this menu should trap all positional events. */
+    protected boolean absorbHits () {
         return true;
     }
 
