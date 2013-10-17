@@ -37,6 +37,12 @@ public class MoviePlayer
         _root = root;
     }
 
+    /** Sets the library all further movies we load will come from. */
+    public void setLibrary (Library lib)
+    {
+        _lib = lib;
+    }
+
     /** The layer the movies are placed on. */
     public Layer layer () {
         return _root;
