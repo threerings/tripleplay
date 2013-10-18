@@ -120,6 +120,11 @@ public abstract class Animation
             return using(Interpolator.EASE_OUT_BACK);
         }
 
+        /** Uses an ease-out-back interpolator for this animation. */
+        public R bounceOut () {
+            return using(Interpolator.BOUNCE_OUT);
+        }
+
         /** Configures the duration for this animation (in milliseconds). Default: 1000. */
         public R in (float duration) {
             _duration = duration;

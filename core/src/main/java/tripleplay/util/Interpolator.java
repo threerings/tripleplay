@@ -80,6 +80,26 @@ public abstract class Interpolator
         }
     };
 
+    public static Interpolator BOUNCE_OUT = new Interpolator() {
+        @Override public float apply (float start, float range, float dt, float t) {
+
+            float dtt = dt / t;
+
+            if ((dtt) < (1/2.75f)) {
+                return range*(7.5625f*dtt*dtt) + start;
+            } else if (dtt < (2/2.75f)) {
+                float dttBounce = dtt - (1.5f/2.75f);
+                return range*(7.5625f*dttBounce*dttBounce + .75f) + start;
+            } else if (dtt < (2.5/2.75)) {
+                float dttBounce = dtt - (2.25f/2.75f);
+                return range*(7.5625f*dttBounce*dttBounce + .9375f) + start;
+            } else {
+                float dttBounce = dtt - (2.625f/2.75f);
+                return range*(7.5625f*dttBounce*dttBounce + .984375f) + start;
+            }
+        }
+    };
+
     /**
      * Interpolates between two values.
      *
