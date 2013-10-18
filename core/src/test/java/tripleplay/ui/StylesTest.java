@@ -31,41 +31,41 @@ public class StylesTest
         checkIsNull(s, Style.COLOR);
         Styles s1 = s.add(Style.COLOR.is(0xFFAABBCC));
         checkIsNull(s, Style.COLOR);
-        checkEquals((Integer)0xFFAABBCC, s1, Style.COLOR);
+        checkEquals(0xFFAABBCC, s1, Style.COLOR);
     }
 
     @Test public void testAddsGets () {
         Styles s = Styles.make(Style.COLOR.is(0xFFAABBCC),
                                Style.SHADOW.is(0xFF333333),
                                Style.HIGHLIGHT.is(0xFFAAAAAA));
-        checkEquals((Integer)0xFFAABBCC, s, Style.COLOR);
-        checkEquals((Integer)0xFF333333, s, Style.SHADOW);
-        checkEquals((Integer)0xFFAAAAAA, s, Style.HIGHLIGHT);
+        checkEquals(0xFFAABBCC, s, Style.COLOR);
+        checkEquals(0xFF333333, s, Style.SHADOW);
+        checkEquals(0xFFAAAAAA, s, Style.HIGHLIGHT);
     }
 
     @Test public void testOverwrite () {
         Styles s = Styles.make(Style.COLOR.is(0xFFAABBCC),
                                Style.SHADOW.is(0xFF333333));
-        checkEquals((Integer)0xFFAABBCC, s, Style.COLOR);
-        checkEquals((Integer)0xFF333333, s, Style.SHADOW);
+        checkEquals(0xFFAABBCC, s, Style.COLOR);
+        checkEquals(0xFF333333, s, Style.SHADOW);
 
         Styles ns = s.add(Style.COLOR.is(0xFFBBAACC));
-        checkEquals((Integer)0xFFBBAACC, ns, Style.COLOR);
+        checkEquals(0xFFBBAACC, ns, Style.COLOR);
 
         ns = s.add(Style.COLOR.is(0xFFBBAACC), Style.HIGHLIGHT.is(0xFFAAAAAA));
-        checkEquals((Integer)0xFFBBAACC, ns, Style.COLOR);
-        checkEquals((Integer)0xFFAAAAAA, ns, Style.HIGHLIGHT);
+        checkEquals(0xFFBBAACC, ns, Style.COLOR);
+        checkEquals(0xFFAAAAAA, ns, Style.HIGHLIGHT);
 
         ns = s.add(Style.HIGHLIGHT.is(0xFFAAAAAA), Style.COLOR.is(0xFFBBAACC));
-        checkEquals((Integer)0xFFBBAACC, ns, Style.COLOR);
-        checkEquals((Integer)0xFFAAAAAA, ns, Style.HIGHLIGHT);
+        checkEquals(0xFFBBAACC, ns, Style.COLOR);
+        checkEquals(0xFFAAAAAA, ns, Style.HIGHLIGHT);
     }
 
     @Test public void testClear () {
         Styles s = Styles.make(Style.COLOR.is(0xFFAABBCC),
                                Style.SHADOW.is(0xFF333333));
-        checkEquals((Integer)0xFFAABBCC, s, Style.COLOR);
-        checkEquals((Integer)0xFF333333, s, Style.SHADOW);
+        checkEquals(0xFFAABBCC, s, Style.COLOR);
+        checkEquals(0xFF333333, s, Style.SHADOW);
 
         s = s.clear(Style.Mode.DEFAULT, Style.COLOR);
         checkEquals(null, s, Style.COLOR);
