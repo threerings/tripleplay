@@ -186,14 +186,16 @@ public class MenuHost
 
         /**
          * Pops up this instance on the trigger's root's menu host. See {@link MenuHost#popup(Pop)}.
+         * For convenience, returns the host that was used to perform the popup.
          */
-        public void popup () {
+        public MenuHost popup () {
             Root root = trigger.root();
             if (root == null) {
                 Log.log.warning("Menu trigger not on a root?", "trigger", trigger);
-                return;
+                return null;
             }
             root.getMenuHost().popup(this);
+            return root.getMenuHost();
         }
 
         /** Whether we should keep the menu around (i.e. not destroy it). */
@@ -335,6 +337,10 @@ public class MenuHost
         // activate
         _active = activation;
         pop.menu.activate();
+    }
+
+    public Pop activePop () {
+        return _active != null ? _active.pop : null;
     }
 
     public Menu active () {
