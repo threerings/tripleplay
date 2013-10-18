@@ -60,6 +60,7 @@ public class MenuHost
 
         /** Creates a new event and initializes {@link #trigger} and {@link #menu}. */
         public Pop (Element<?> trigger, Menu menu) {
+            if (menu == null) throw new IllegalArgumentException();
             this.menu = menu;
             this.trigger = trigger;
             position = new Point(0, 0);
@@ -165,7 +166,7 @@ public class MenuHost
 
         /**
          * Optionally confines the menu area to the given screen area. By default the menu is
-         * confined by the hosts's screen area (see {@link MenuHost#getScreenArea()}).
+         * confined by the host's screen area (see {@link MenuHost#getScreenArea()}).
          */
         public Pop inScreenArea (IRectangle area) {
             bounds = new Rectangle(area);
@@ -174,7 +175,7 @@ public class MenuHost
 
         /**
          * Optionally confines the menu area to the given element. By default the menu is confined
-         * by the hosts's screen area (see {@link MenuHost#getScreenArea()}).
+         * by the host's screen area (see {@link MenuHost#getScreenArea()}).
          */
         public Pop inElement (Element<?> elem) {
             Point tl = Layer.Util.layerToScreen(elem.layer, 0, 0);
