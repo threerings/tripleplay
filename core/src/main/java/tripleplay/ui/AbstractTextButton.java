@@ -11,7 +11,7 @@ import react.Value;
 /**
  * An abstract base class for buttons with text labels.
  */
-abstract class AbstractTextButton<T extends AbstractTextButton<T>> extends TextWidget<T>
+public abstract class AbstractTextButton<T extends AbstractTextButton<T>> extends TextWidget<T>
 {
     /** The text displayed by this button, or null. */
     public final Value<String> text = Value.create((String)null);
