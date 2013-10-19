@@ -125,6 +125,11 @@ public abstract class Animation
             return using(Interpolator.BOUNCE_OUT);
         }
 
+        /** Uses an ease-out-elastic interpolator for this animation. */
+        public R easeOutElastic () {
+            return using(Interpolator.EASE_OUT_ELASTIC);
+        }
+
         /** Configures the duration for this animation (in milliseconds). Default: 1000. */
         public R in (float duration) {
             _duration = duration;

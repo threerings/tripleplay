@@ -100,6 +100,20 @@ public abstract class Interpolator
         }
     };
 
+    /** An interpolator that eases past the final value then back towards it elastically. */
+    public static Interpolator EASE_OUT_ELASTIC = new Interpolator() {
+        @Override public float apply (float start, float range, float dt, float t) {
+            if (dt==0) return range;
+            float dtt = dt / t;
+            if (dtt == 1) return range+start;
+            float p = t * .3f;
+            float a = start;
+            float s = p/4;
+            return (a*(float)Math.pow(2,-10*dtt) *
+                (float)Math.sin((dtt*t-s) * (2*(float)Math.PI)/p) + start + range);
+        }
+    };
+
     /**
      * Interpolates between two values.
      *
