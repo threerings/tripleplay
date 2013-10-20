@@ -84,4 +84,4 @@ Questions, comments, and other worldly endeavors can be handled via the
 [PlayN]: http://code.google.com/p/playn
 [Release Notes]: https://github.com/threerings/tripleplay/wiki/ReleaseNotes
 [SBT]: http://github.com/harrah/xsbt/wiki/Setup
-[demo of the UI toolkit]: http://threerings.github.com/tripleplay/widgetdemo.html
+[demo of the UI toolkit]: http://tripleplay-ui-demo.appspot.com/
