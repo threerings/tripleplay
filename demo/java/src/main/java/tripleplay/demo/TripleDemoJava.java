@@ -34,6 +34,7 @@ public class TripleDemoJava
         TripleDemo.mainArgs = mainArgs.toArray(new String[0]);
 
         JavaTPPlatform.register(platform, config);
+        JavaTPPlatform.instance().setTitle("Tripleplay Demo");
 
         PlayN.run(new TripleDemo());
     }
