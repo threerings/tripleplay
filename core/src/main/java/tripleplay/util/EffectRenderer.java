@@ -55,30 +55,7 @@ public abstract class EffectRenderer
 
         @Override public void render (Canvas canvas, TextLayout text, int textColor,
             boolean underlined, float x, float y) {
-            canvas.save();
-            if (underlined) {
-                for (int ii = 0; ii < text.lineCount(); ii++) {
-                    Rectangle bounds = text.lineBounds(ii);
-                    float sx = x + bounds.x + 1;
-                    float sy = y + bounds.y + bounds.height();
-                    canvas.setFillColor(outlineColor);
-                    canvas.fillRect(sx-1, sy-1, bounds.width()+3, 3);
-                    canvas.setFillColor(textColor);
-                    canvas.fillRect(sx, sy, bounds.width(), 1);
-                }
-            }
-            canvas.setFillColor(outlineColor);
-            canvas.fillText(text, x+0, y+0);
-            canvas.fillText(text, x+0, y+1);
-            canvas.fillText(text, x+0, y+2);
-            canvas.fillText(text, x+1, y+0);
-            canvas.fillText(text, x+1, y+2);
-            canvas.fillText(text, x+2, y+0);
-            canvas.fillText(text, x+2, y+1);
-            canvas.fillText(text, x+2, y+2);
-            canvas.setFillColor(textColor);
-            canvas.fillText(text, x+1, y+1);
-            canvas.restore();
+            text.outline(canvas, textColor, outlineColor, underlined, x, y);
         }
 
         @Override public boolean equals (Object obj) {
