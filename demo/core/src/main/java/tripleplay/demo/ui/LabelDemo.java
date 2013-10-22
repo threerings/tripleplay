@@ -17,6 +17,7 @@ import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
 import tripleplay.ui.layout.AxisLayout;
+import tripleplay.util.Colors;
 
 import tripleplay.demo.DemoScreen;
 
@@ -56,7 +57,9 @@ public class LabelDemo extends DemoScreen
             new Group(AxisLayout.horizontal().gap(10)).add(
                 new Label("Plain").addStyles(bigLabel),
                 new Label("Pixel Outline").addStyles(
-                                       bigLabel.add(Style.TEXT_EFFECT.pixelOutline)),
+                                       bigLabel.add(Style.TEXT_EFFECT.pixelOutline).
+                                       add(Style.COLOR.is(Colors.WHITE)).
+                                       add(Style.HIGHLIGHT.is(Colors.GRAY))),
                 new Label("Vector Outline").addStyles(
                                        bigLabel.add(Style.TEXT_EFFECT.vectorOutline,
                                                     Style.OUTLINE_WIDTH.is(2f))),
