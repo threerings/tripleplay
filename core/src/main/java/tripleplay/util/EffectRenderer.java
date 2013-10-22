@@ -55,7 +55,7 @@ public abstract class EffectRenderer
 
         @Override public void render (Canvas canvas, TextLayout text, int textColor,
             boolean underlined, float x, float y) {
-            text.outline(canvas, textColor, outlineColor, underlined, x, y);
+            canvas.outlineText(text, textColor, outlineColor, underlined, x, y);
         }
 
         @Override public boolean equals (Object obj) {
