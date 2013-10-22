@@ -13,12 +13,14 @@ import playn.core.Layer;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 import playn.core.util.Callback;
+
 import static playn.core.PlayN.graphics;
 
 import react.Slot;
 import react.UnitSlot;
 
 import tripleplay.util.EffectRenderer;
+import tripleplay.util.Glyph;
 
 /**
  * An abstract base class for widgets that contain text.
@@ -263,7 +265,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         protected float textHeight () { return renderer.adjustHeight(text.height()); }
     }
 
-    protected final Glyph _tglyph = new Glyph();
+    protected final Glyph _tglyph = new Glyph(layer);
     protected Layer _ilayer;
 
     protected static final float MIN_FONT_SIZE = 6; // TODO: make customizable?

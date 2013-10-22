@@ -6,7 +6,10 @@
 package tripleplay.ui;
 
 import playn.core.Canvas;
+
 import react.UnitSlot;
+
+import tripleplay.util.Glyph;
 
 /**
  * Base for widgets that consist of a single glyph. Performs all boilerplate layout stuff and
@@ -73,5 +76,5 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
         }
     }
 
-    protected final Glyph _glyph = new Glyph();
+    protected final Glyph _glyph = new Glyph(layer);
 }

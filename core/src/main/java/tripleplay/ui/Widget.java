@@ -35,14 +35,5 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
         return null;
     }
 
-    /**
-     * Extends base Glyph to automatically wire up to this Widget's {@link #layer}.
-     */
-    protected class Glyph extends tripleplay.util.Glyph {
-        public Glyph () {
-            super(layer);
-        }
-    }
-
     protected final Behavior<T> _behave;
 }

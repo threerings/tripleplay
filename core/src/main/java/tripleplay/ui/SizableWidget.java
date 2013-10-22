@@ -6,7 +6,9 @@
 package tripleplay.ui;
 
 import pythagoras.f.IDimension;
+
 import tripleplay.util.DimensionValue;
+import tripleplay.util.Glyph;
 
 import static tripleplay.ui.Log.log;
 
@@ -68,7 +70,7 @@ public abstract class SizableWidget<T extends SizableWidget<T>> extends Widget<T
             return null;
         }
 
-        glyph = glyph == null ? new Glyph() : glyph;
+        glyph = glyph == null ? new Glyph(layer) : glyph;
         glyph.prepare(size);
         return glyph;
     }
