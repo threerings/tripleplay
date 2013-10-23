@@ -8,9 +8,11 @@ package tripleplay.flump;
 import java.util.ArrayList;
 
 import playn.core.Asserts;
+import playn.core.Assets;
 import playn.core.Image;
 import playn.core.Json;
 import playn.core.util.Callback;
+
 import static playn.core.PlayN.assets;
 import static playn.core.PlayN.json;
 
@@ -25,12 +27,20 @@ public class JsonLoader
      * Loads a JSON encoded library via PlayN assets.
      * @param baseDir The base directory, containing library.json and texture atlases.
      */
-    public static void loadLibrary (final String baseDir, final Callback<Library> callback) {
+    public static void loadLibrary (String baseDir, Callback<Library> callback) {
+        loadLibrary(assets(), baseDir, callback);
+    }
+
+    /**
+     * Loads a JSON encoded library via the specified PlayN assets.
+     */
+    public static void loadLibrary (final Assets assets, final String baseDir,
+                                    final Callback<Library> callback) {
         Asserts.checkNotNull(callback);
-        assets().getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
+        assets.getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
             public void onSuccess (String text) {
                 try {
-                    decodeLibrary(json().parse(text), baseDir, callback);
+                    decodeLibrary(json().parse(text), assets, baseDir, callback);
                 } catch (Exception err) {
                     callback.onFailure(err);
                 }
@@ -38,7 +48,7 @@ public class JsonLoader
         });
     }
 
-    protected static void decodeLibrary (Json.Object json, String baseDir,
+    protected static void decodeLibrary (Json.Object json, Assets assets, String baseDir,
                                          final Callback<Library> callback) {
         final float frameRate = json.getNumber("frameRate");
         final ArrayList<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
@@ -61,7 +71,7 @@ public class JsonLoader
         });
 
         for (final Json.Object atlasJson : atlases) {
-            Image atlas = assets().getImage(baseDir + "/" + atlasJson.getString("file"));
+            Image atlas = assets.getImage(baseDir + "/" + atlasJson.getString("file"));
             atlas.addCallback(new Callback.Chain<Image>(callback) {
                 public void onSuccess (Image atlas) {
                     for (Json.Object tjson : atlasJson.getArray("textures", Json.Object.class)) {
