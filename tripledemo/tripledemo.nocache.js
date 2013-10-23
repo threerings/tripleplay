@@ -113,6 +113,11 @@ function tripledemo(){
       return '';
     }
 
+    function isLocationOk(){
+      var loc = $doc_0.location;
+      return loc.href == loc.protocol + '//' + loc.host + loc.pathname + loc.search + loc.hash;
+    }
+
     var tempBase = tryMetaTag();
     if (tempBase == '') {
       tempBase = tryNocacheJsTag();
@@ -123,7 +128,7 @@ function tripledemo(){
     if (tempBase == '') {
       tempBase = tryBaseTag();
     }
-    if (tempBase == '') {
+    if (tempBase == '' && isLocationOk()) {
       tempBase = getDirectoryOfFile($doc_0.location.href);
     }
     tempBase = ensureAbsoluteUrl(tempBase);
@@ -244,7 +249,7 @@ function tripledemo(){
   $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'selectingPermutation'});
   if (!isHostedMode()) {
     try {
-      strongName = '325E871A8D08E1715675565EAB0FD206';
+      strongName = '5D74C6A3A9A65CE46CC3AAB173957931';
       var idx = strongName.indexOf(':');
       if (idx != -1) {
         softPermutationId = Number(strongName.substring(idx + 1));
