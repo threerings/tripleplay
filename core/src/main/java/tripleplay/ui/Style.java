@@ -255,10 +255,10 @@ public abstract class Style<V>
      * Creates a text format based on the supplied element's stylings.
      */
     public static TextFormat createTextFormat (Element<?> elem) {
-        TextFormat format = new TextFormat().
+        return new TextFormat().
             withFont(Styles.resolveStyle(elem, Style.FONT)).
-            withAlignment(toAlignment(Styles.resolveStyle(elem, Style.HALIGN)));
-        return format;
+            withAlignment(toAlignment(Styles.resolveStyle(elem, Style.HALIGN))).
+            withAntialias(Styles.resolveStyle(elem, Style.TEXT_EFFECT) != TextEffect.PIXEL_OUTLINE);
     }
 
     /**
