@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import playn.core.PlayN;
 import pythagoras.f.Dimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.IRectangle;
@@ -24,7 +23,8 @@ import tripleplay.ui.Style.HAlign;
 import tripleplay.ui.Style.VAlign;
 import tripleplay.util.Layers;
 
-import static playn.core.PlayN.graphics;
+import static playn.core.PlayN.*;
+import static tripleplay.ui.Log.log;
 
 /**
  * Provides a context for popping up a menu.
@@ -299,7 +299,7 @@ public class MenuHost
                     else menuRoot.destroy(pop.menu);
 
                     // remove the hidden area we added
-                    PlayN.uiOverlay().hideOverlay(null);
+                    uiOverlay().hideOverlay(null);
                 }
 
                 // clear all connections
@@ -317,7 +317,7 @@ public class MenuHost
         activation.deactivated = pop.menu.deactivated().connect(new Slot<Menu>() {
             @Override public void onEmit (Menu event) {
                 // due to animations, deactivation can happen during layout, so do it next frame
-                PlayN.invokeLater(cleanup);
+                invokeLater(cleanup);
             }
         });
 
@@ -372,15 +372,26 @@ public class MenuHost
             if (pop.menu.automaticallyConfine()) {
                 confine(pop.bounds, bounds);
 
-                // keep the bounds from overlapping the position
+                // fudge is the number of pixels around the menu that we don't need to avoid
+                // TODO: can we get the menu's Background's insets?
                 float fudge = 2;
+
+                // keep the bounds from overlapping the position
                 if (bounds.width > fudge * 2 && bounds.height > fudge * 2) {
                     Rectangle ibounds = new Rectangle(bounds);
                     ibounds.grow(-fudge, -fudge);
-                    if (ibounds.contains(pop.position)) {
-                        avoidPoint(pop.bounds, ibounds, pop.position);
-                        bounds.setLocation(ibounds.x() - fudge, ibounds.y() - fudge);
+
+                    // set up the fingerprint
+                    float fingerRadius = touch().hasTouch() ? 10 : 3;
+                    Rectangle fingerBox = new Rectangle(
+                        pop.position.x() - fingerRadius, pop.position.y() - fingerRadius,
+                        fingerRadius * 2, fingerRadius * 2);
+
+                    // try and place the menu so it isn't under the finger
+                    if (!avoidPoint(pop.bounds, ibounds, fingerBox)) {
+                        log.warning("Oh god, menu doesn't fit", "menu", pop.menu);
                     }
+                    bounds.setLocation(ibounds.x() - fudge, ibounds.y() - fudge);
                 }
             }
 
@@ -398,7 +409,7 @@ public class MenuHost
                 // tell the UI overlay to let the real dimensions of the menu through
                 // TODO: this looks wrong if the menu has any transparent border - fix
                 // by using an image overlay instead, with the root captured onto it
-                PlayN.uiOverlay().hideOverlay(screenBounds);
+                uiOverlay().hideOverlay(screenBounds);
             }
         }
 
@@ -406,31 +417,34 @@ public class MenuHost
 
     /** Tries to place the inner bounds within the outer bounds, such that the inner bounds does
      * not contain the position. */
-    protected static void avoidPoint (IRectangle outer, Rectangle inner, IPoint pos)
+    protected static boolean avoidPoint (IRectangle outer, Rectangle inner, IRectangle fingerprint)
     {
         Rectangle checkBounds = new Rectangle();
         Rectangle best = new Rectangle(inner);
-        float bestDist = Float.MAX_VALUE;
-
-        float dx = pos.x() - outer.x(), dy = pos.y() - outer.y();
+        float bestDist = Float.MAX_VALUE, edge;
 
         // confine to the left
-        checkBounds.setBounds(outer.x(), outer.y(), dx, outer.height());
+        edge = fingerprint.x();
+        checkBounds.setBounds(outer.x(), outer.y(), edge - outer.x(), outer.height());
         bestDist = compareAndConfine(checkBounds, inner, best, bestDist);
 
         // right
-        checkBounds.setBounds(pos.x(), outer.y(), outer.width() - dx, outer.height());
+        edge = fingerprint.maxX();
+        checkBounds.setBounds(edge, outer.y(), outer.width() - edge, outer.height());
         bestDist = compareAndConfine(checkBounds, inner, best, bestDist);
 
         // top
-        checkBounds.setBounds(outer.x(), outer.y(), outer.width(), dy);
+        edge = fingerprint.y();
+        checkBounds.setBounds(outer.x(), outer.y(), outer.width(), edge - outer.y());
         bestDist = compareAndConfine(checkBounds, inner, best, bestDist);
 
         // bottom
-        checkBounds.setBounds(outer.x(), pos.y(), outer.width(), outer.height() - dy);
+        edge = fingerprint.maxY();
+        checkBounds.setBounds(outer.x(), edge, outer.width(), outer.height() - edge);
         bestDist = compareAndConfine(checkBounds, inner, best, bestDist);
 
         inner.setBounds(best);
+        return bestDist < Float.MAX_VALUE;
     }
 
     /** Confines a rectangle and updates the current best fit based on the moved distance. */
