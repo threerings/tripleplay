@@ -45,7 +45,7 @@ public abstract class DemoScreen extends UIAnimScreen
 
     @Override public void wasRemoved () {
         super.wasRemoved();
-        iface.destroyRoot(_root);
+        iface.destroyRoots();
         while (layer.size() > 0) layer.get(0).destroy();
     }
 

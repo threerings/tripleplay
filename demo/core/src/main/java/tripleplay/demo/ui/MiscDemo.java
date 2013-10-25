@@ -14,6 +14,7 @@ import react.UnitSlot;
 
 import tripleplay.ui.*;
 import tripleplay.ui.layout.*;
+import tripleplay.util.Colors;
 
 import tripleplay.demo.DemoScreen;
 
@@ -28,10 +29,11 @@ public class MiscDemo extends DemoScreen
     @Override protected String title () {
         return "UI: General";
     }
-
     @Override protected Group createIface () {
         Icon smiley = Icons.image(PlayN.assets().getImage("images/smiley.png"));
         final Image squares = PlayN.assets().getImage("images/squares.png");
+        final CapturedRoot capRoot = iface.addRoot(
+            new CapturedRoot(iface, AxisLayout.horizontal(), stylesheet()));
 
         CheckBox toggle, toggle2;
         Label label2;
@@ -71,7 +73,23 @@ public class MiscDemo extends DemoScreen
                 new Group(AxisLayout.horizontal().gap(10)).add(
                     editable = new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
                     disabled = new Field("Disabled text").setEnabled(false)),
-                setField = new Button("Set -> ")));
+                setField = new Button("Set -> ")),
+            // a captured root's widget
+            new Group(AxisLayout.vertical()).addStyles(
+                Style.BACKGROUND.is(Background.solid(Colors.RED).inset(10))).add(
+                    capRoot.createWidget()));
+
+        capRoot.add(new Label("Captured Root!").addStyles(
+            Style.BACKGROUND.is(Background.blank().inset(10)))).pack();
+
+        // add a style animation to the captured root (clicking on cap roots NYI)
+        this.iface.animator().repeat(_root.layer).delay(1000).then().action(new Runnable() {
+            int cycle;
+            @Override public void run () {
+                capRoot.addStyles(Style.BACKGROUND.is(cycle++ % 2 == 0 ?
+                    Background.solid(Colors.WHITE).alpha(.5f) : Background.blank()));
+            }
+        });
 
         toggle.checked.update(true);
         toggle.checked.connect(label2.visibleSlot());
