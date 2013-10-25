@@ -158,7 +158,7 @@ public class Interface
      * be added to any other interfaces. Generally you should use {@link #createRoot}, but this
      * method is exposed for callers with special needs.
      */
-    public Root addRoot (Root root) {
+    public <R extends Root> R addRoot (R root) {
         _roots.add(root);
         return root;
     }
