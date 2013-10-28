@@ -34,7 +34,7 @@ public class BackgroundDemo extends DemoScreen
             label("Scale 9", Background.blank()),
             label("Scale 9\nSomewhat\nTaller\nAnd\nWider", Background.blank()),
         };
-        PlayN.assets().getImageSync("images/scale9.png").addCallback(new Callback<Image>() {
+        PlayN.assets().getImage("images/scale9.png").addCallback(new Callback<Image>() {
             public void onSuccess (Image image) {
                 for (Label label : scale9Labels) {
                     label.addStyles(Style.BACKGROUND.is(Background.scale9(image).inset(5)));
