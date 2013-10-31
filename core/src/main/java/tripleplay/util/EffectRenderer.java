@@ -115,6 +115,13 @@ public abstract class EffectRenderer
         @Override public void render (Canvas canvas, TextLayout text, int textColor,
             boolean underlined, float x, float y) {
             canvas.save();
+            canvas.setStrokeColor(outlineColor);
+            canvas.setStrokeWidth(outlineWidth*2);
+            canvas.setLineCap(outlineCap);
+            canvas.setLineJoin(outlineJoin);
+            canvas.strokeText(text, x+outlineWidth, y+outlineWidth);
+            canvas.setFillColor(textColor);
+            canvas.fillText(text, x+outlineWidth, y+outlineWidth);
             if (underlined) {
                 for (int ii = 0; ii < text.lineCount(); ii++) {
                     Rectangle bounds = text.lineBounds(ii);
@@ -125,13 +132,6 @@ public abstract class EffectRenderer
                     canvas.fillRect(sx, sy, bounds.width(), 1);
                 }
             }
-            canvas.setStrokeColor(outlineColor);
-            canvas.setStrokeWidth(outlineWidth*2);
-            canvas.setLineCap(outlineCap);
-            canvas.setLineJoin(outlineJoin);
-            canvas.strokeText(text, x+outlineWidth, y+outlineWidth);
-            canvas.setFillColor(textColor);
-            canvas.fillText(text, x+outlineWidth, y+outlineWidth);
             canvas.restore();
         }
 
