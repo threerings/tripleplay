@@ -4,12 +4,12 @@
   <parent>
     <groupId>com.googlecode.playn</groupId>
     <artifactId>playn-project</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.7.8</version>
   </parent>
 
   <groupId>com.threerings</groupId>
   <artifactId>tripleplay-parent</artifactId>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.7.8</version>
   <packaging>pom</packaging>
 
   <name>Triple Play Parent</name>
@@ -54,7 +54,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <playn.version>1.8-SNAPSHOT</playn.version>
+    <playn.version>1.7.8</playn.version>
   </properties>
 
   <modules>
