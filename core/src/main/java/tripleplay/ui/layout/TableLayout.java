@@ -195,6 +195,7 @@ public class TableLayout extends Layout
                 colWidth += Math.max(0, m.columnWidths[col + ii] +
                     (freeWeight == 0 ? 0 : freeExtra * _columns[col + ii]._weight));
             }
+            colWidth += (colspan - 1) * _colgap;
 
             Column ccfg = _columns[col];
             float rowHeight = m.rowHeights[row];
@@ -243,7 +244,13 @@ public class TableLayout extends Layout
             if (elem.isVisible() && _columns[col]._weight == 0) {
                 IDimension psize = preferredSize(elem, hintX, hintY);
                 metrics.rowHeights[row] = Math.max(metrics.rowHeights[row], psize.height());
-                metrics.columnWidths[col] = Math.max(metrics.columnWidths[col], psize.width());
+
+                // Elements which stretch across multiple columns shouldn't force their first column
+                //  to have a large size. Ideally, this should somehow force the sum of the columns
+                //  to be as wide as itself.
+                if (colspan(elem) == 1) {
+                    metrics.columnWidths[col] = Math.max(metrics.columnWidths[col], psize.width());
+                }
             }
             ii += colspan(elem);
         }
