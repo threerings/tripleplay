@@ -75,6 +75,11 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         }
     }
 
+    protected EffectRenderer createEffectRenderer ()
+    {
+        return Style.createEffectRenderer(this);
+    }
+
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         return new TextLayoutData(hintX, hintY);
     }
@@ -111,7 +116,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
             // layout our text, if we have any
             if (haveText) {
-                renderer = Style.createEffectRenderer(TextWidget.this);
+                renderer = createEffectRenderer();
                 TextFormat format = Style.createTextFormat(TextWidget.this);
                 if (hints.width > 0 && wrap) format = format.withWrapWidth(hints.width);
                 // TODO: should we do something with a y-hint?
