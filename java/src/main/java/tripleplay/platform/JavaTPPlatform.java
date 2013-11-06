@@ -21,6 +21,8 @@ import playn.core.Asserts;
 import playn.core.PlayN;
 import playn.java.JavaImage;
 import playn.java.JavaPlatform;
+import react.Signal;
+import react.Value;
 import tripleplay.ui.Field;
 
 import com.google.common.base.Function;
@@ -154,6 +156,26 @@ public class JavaTPPlatform extends TPPlatform
                     return ((JavaImage)input).bufferedImage();
                 }
             }));
+    }
+
+    static <T> void updateOnMainThread (final Value<T> value, final T nvalue)
+    {
+        PlayN.invokeLater(new Runnable() {
+            @Override
+            public void run () {
+                value.update(nvalue);
+            }
+        });
+    }
+
+    static <T> void emitOnMainThread (final Signal<T> signal, final T emission)
+    {
+        PlayN.invokeLater(new Runnable() {
+            @Override
+            public void run () {
+                signal.emit(emission);
+            }
+        });
     }
 
     /** The Java platform with which this TPPlatform was registered. */

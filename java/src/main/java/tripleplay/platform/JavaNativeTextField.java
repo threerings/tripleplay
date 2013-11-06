@@ -56,19 +56,20 @@ public class JavaNativeTextField extends JavaNativeOverlay
                 update();
             }
             protected void update () {
-                if (!_textNotifyInProgress) _element.field().text.update(_textComp.getText());
+                if (!_textNotifyInProgress) JavaTPPlatform.updateOnMainThread(
+                    _element.field().text, _textComp.getText());
             }
         });
         if (isField()) {
             asField().addActionListener(new ActionListener() {
                 public void actionPerformed (ActionEvent event) {
-                    _element.finishedEditing().emit(true);
+                    JavaTPPlatform.emitOnMainThread(_element.finishedEditing(), true);
                 }
             });
         }
         _textComp.addFocusListener(new FocusListener() {
             @Override public void focusLost (FocusEvent e) {
-                _element.finishedEditing().emit(false);
+                JavaTPPlatform.emitOnMainThread(_element.finishedEditing(), false);
             }
             @Override public void focusGained (FocusEvent e) {
             }
@@ -163,5 +164,5 @@ public class JavaNativeTextField extends JavaNativeOverlay
     protected final JTextComponent _textComp;
 
     protected Connection _textConnection;
-    protected boolean _textNotifyInProgress;
+    protected volatile boolean _textNotifyInProgress;
 }
