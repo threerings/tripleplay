@@ -8,7 +8,7 @@ package tripleplay.platform;
 import playn.core.Image;
 import playn.core.Keyboard;
 import playn.ios.IOSPlatform;
-import react.ValueView;
+import react.Value;
 import tripleplay.ui.Field;
 
 /**
@@ -52,12 +52,13 @@ public class IOSTPPlatform extends TPPlatform
         _fieldHandler.setKeyboardListener(listener);
     }
 
-    @Override public ValueView<Boolean> virtualKeyboardActive () {
-        return _fieldHandler.virtualKeyboardActive();
-    }
-
     @Override public ImageOverlay createImageOverlay (Image image) {
         return new IOSImageOverlay(image);
+    }
+
+    /** Gets the mutable keyabord value for the field handler. */
+    Value<Boolean> keyboardActive () {
+        return _keyboardActive;
     }
 
     private IOSTPPlatform (IOSPlatform platform) {

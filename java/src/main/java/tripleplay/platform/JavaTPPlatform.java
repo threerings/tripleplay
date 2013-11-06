@@ -18,12 +18,9 @@ import javax.swing.JFrame;
 import org.lwjgl.opengl.Display;
 
 import playn.core.Asserts;
-import playn.core.Keyboard;
 import playn.core.PlayN;
 import playn.java.JavaImage;
 import playn.java.JavaPlatform;
-import react.Value;
-import react.ValueView;
 import tripleplay.ui.Field;
 
 import com.google.common.base.Function;
@@ -124,18 +121,6 @@ public class JavaTPPlatform extends TPPlatform
         return ((JavaNativeTextField)previous).refreshMode(mode);
     }
 
-    @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
-        // nada, no virtual keyboard
-    }
-
-    @Override public void setVirtualKeyboardListener (Keyboard.Listener listener) {
-        // nada, no virtual keyboard
-    }
-
-    @Override public ValueView<Boolean> virtualKeyboardActive () {
-        return _false;
-    }
-
     @Override public ImageOverlay createImageOverlay (playn.core.Image image) {
         return new JavaImageOverlay(image);
     }
@@ -179,6 +164,4 @@ public class JavaTPPlatform extends TPPlatform
     protected OS _os = OS.UNKNOWN;
 
     protected Set<JavaNativeOverlay> _overlays = Sets.newHashSet();
-
-    protected final Value<Boolean> _false = Value.create(false);
 }

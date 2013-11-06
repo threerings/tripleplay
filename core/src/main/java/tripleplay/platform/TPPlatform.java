@@ -37,7 +37,9 @@ public abstract class TPPlatform
     /**
      * Returns true if this platform supports native text fields.
      */
-    public abstract boolean hasNativeTextFields ();
+    public boolean hasNativeTextFields () {
+        return false;
+    }
 
     /**
      * Creates a native text field, if this platform supports it.
@@ -45,34 +47,42 @@ public abstract class TPPlatform
      * @exception UnsupportedOperationException thrown if the platform lacks support for native
      * text fields, use {@link #hasNativeTextFields} to check.
      */
-    public abstract NativeTextField createNativeTextField (
-        Field.Native field, NativeTextField.Mode mode);
+    public NativeTextField createNativeTextField (
+        Field.Native field, NativeTextField.Mode mode) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Refreshes a native text field to match the given mode. Depending on the implementation,
      * if the mode is different, a new native field may be returned, or the given one adjusted.
      */
-    public abstract NativeTextField refreshNativeTextField (
-        NativeTextField previous, NativeTextField.Mode mode);
+    public NativeTextField refreshNativeTextField (
+            NativeTextField previous, NativeTextField.Mode mode) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Sets the instance of VirtualKeyboardController to use for virtual keyboard management, or
      * null for none.
      */
-    public abstract void setVirtualKeyboardController (VirtualKeyboardController ctrl);
+    public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {}
 
     /**
      * Set a keyboard listener to receive onKeyTyped events when a native field is active.
      */
-    public abstract void setVirtualKeyboardListener (Keyboard.Listener listener);
+    public void setVirtualKeyboardListener (Keyboard.Listener listener) {}
 
     /**
      * A value indicating whether the virtual keyboard is currently active or not (if the platform
      * has one).
      */
-    public abstract ValueView<Boolean> virtualKeyboardActive ();
+    public ValueView<Boolean> virtualKeyboardActive () {
+        return _keyboardActive;
+    }
 
-    public abstract ImageOverlay createImageOverlay (Image image);
+    public ImageOverlay createImageOverlay (Image image) {
+        throw new UnsupportedOperationException();
+    }
 
     /** Called by the static register methods in the per-platform backends. */
     static void register (TPPlatform instance) {
@@ -82,27 +92,8 @@ public abstract class TPPlatform
         _instance = instance;
     }
 
-    protected static class Stub extends TPPlatform {
-        @Override public boolean hasNativeTextFields () {
-            return false;
-        }
-        @Override public NativeTextField createNativeTextField (
-                Field.Native field, NativeTextField.Mode mode) {
-            throw new UnsupportedOperationException();
-        }
-        @Override public NativeTextField refreshNativeTextField (
-                NativeTextField previous, NativeTextField.Mode mode) {
-            throw new UnsupportedOperationException();
-        }
-        @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) { }
-        @Override public void setVirtualKeyboardListener (Keyboard.Listener listener) { }
-        @Override public ValueView<Boolean> virtualKeyboardActive () { return _false; }
-        @Override public ImageOverlay createImageOverlay (final Image image) {
-            throw new UnsupportedOperationException();
-        }
-        protected final Value<Boolean> _false = Value.create(false);
-    }
+    protected Value<Boolean> _keyboardActive = Value.create(false);
 
-    protected static TPPlatform _default = new Stub();
+    protected static TPPlatform _default = new TPPlatform() {};
     protected static TPPlatform _instance = _default;
 }

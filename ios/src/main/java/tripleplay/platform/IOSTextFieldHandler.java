@@ -43,6 +43,7 @@ public class IOSTextFieldHandler
 {
     public IOSTextFieldHandler (IOSTPPlatform platform) {
         _overlay = platform.platform.uiOverlay();
+        _keyboardActive = platform.keyboardActive();
         _touchDetector = new TouchDetector(_overlay.get_Bounds());
 
         cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_
@@ -235,7 +236,7 @@ public class IOSTextFieldHandler
     protected final UIView _overlay;
     protected final Map<UIView, IOSNativeTextField> _activeFields =
         new HashMap<UIView, IOSNativeTextField>();
-    protected final Value<Boolean> _keyboardActive = Value.create(false);
+    protected final Value<Boolean> _keyboardActive;
 
     // we specifically track whether we've transformed the game view in a boolean because
     // CGAffineTransform is a value class and cannot be null
