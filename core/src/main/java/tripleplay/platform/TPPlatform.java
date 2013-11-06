@@ -7,7 +7,6 @@ package tripleplay.platform;
 
 import playn.core.Image;
 import playn.core.Keyboard;
-import pythagoras.f.IRectangle;
 import react.Value;
 import react.ValueView;
 import tripleplay.ui.Field;
@@ -99,13 +98,7 @@ public abstract class TPPlatform
         @Override public void setVirtualKeyboardListener (Keyboard.Listener listener) { }
         @Override public ValueView<Boolean> virtualKeyboardActive () { return _false; }
         @Override public ImageOverlay createImageOverlay (final Image image) {
-            return new ImageOverlay() {
-                @Override public void setBounds (IRectangle bounds) {}
-                @Override public void add () {}
-                @Override public void remove () {}
-                @Override public Image image () { return image; }
-                @Override public void repaint () {}
-            };
+            throw new UnsupportedOperationException();
         }
         protected final Value<Boolean> _false = Value.create(false);
     }
