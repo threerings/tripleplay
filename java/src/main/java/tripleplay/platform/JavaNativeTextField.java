@@ -68,7 +68,7 @@ public class JavaNativeTextField extends JavaNativeOverlay
         }
         _textComp.addFocusListener(new FocusListener() {
             @Override public void focusLost (FocusEvent e) {
-                _element.finishedEditing().emit(true);
+                _element.finishedEditing().emit(false);
             }
             @Override public void focusGained (FocusEvent e) {
             }
