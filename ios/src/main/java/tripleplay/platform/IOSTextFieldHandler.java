@@ -40,6 +40,7 @@ import static tripleplay.platform.Log.log;
 public class IOSTextFieldHandler
 {
     public IOSTextFieldHandler (IOSTPPlatform platform) {
+        _platform = platform;
         _overlay = platform.platform.uiOverlay();
         _touchDetector = new TouchDetector(_overlay.get_Bounds());
 
@@ -130,7 +131,7 @@ public class IOSTextFieldHandler
                     _gameViewTransform = null;
                     _gameViewTransformed = false;
                     _touchDetector.RemoveFromSuperview();
-                    TPPlatform.instance()._focus.update(null);
+                    _platform._focus.update(null);
                 }}));
 
         _currentOrientation = UIDevice.get_CurrentDevice().get_Orientation().Value;
@@ -152,10 +153,6 @@ public class IOSTextFieldHandler
                         if (firstResponder != null) firstResponder.getView().ResignFirstResponder();
                     }
                 }}));
-    }
-
-    public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
-        _virtualKeyboardCtrl = ctrl;
     }
 
     /**
@@ -228,11 +225,12 @@ public class IOSTextFieldHandler
         protected boolean hideVirtualKeyboardAt (PointF pointF) {
             PointF overlay = ConvertPointToView(pointF, _overlay);
             Point pythagOverlay = new Point(overlay.get_X(), overlay.get_Y());
-            return _virtualKeyboardCtrl == null ||
-                _virtualKeyboardCtrl.hideKeyboardForTouch(pythagOverlay);
+            return _platform._kfc == null ||
+                    _platform._kfc.unfocusForLocation(pythagOverlay);
         }
     }
 
+    protected IOSTPPlatform _platform;
     protected final UIView _overlay;
     protected final Map<UIView, IOSNativeTextField> _activeFields =
         new HashMap<UIView, IOSNativeTextField>();
@@ -244,6 +242,5 @@ public class IOSTextFieldHandler
     protected int _currentOrientation;
 
     protected TouchDetector _touchDetector;
-    protected VirtualKeyboardController _virtualKeyboardCtrl;
     protected Keyboard.Listener _keyboardListener;
 }

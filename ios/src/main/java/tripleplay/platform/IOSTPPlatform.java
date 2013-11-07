@@ -8,7 +8,6 @@ package tripleplay.platform;
 import playn.core.Image;
 import playn.core.Keyboard;
 import playn.ios.IOSPlatform;
-import react.Value;
 import tripleplay.ui.Field;
 
 /**
@@ -42,10 +41,6 @@ public class IOSTPPlatform extends TPPlatform
     @Override public NativeTextField refreshNativeTextField (
             NativeTextField previous, NativeTextField.Mode mode) {
         return ((IOSNativeTextField)previous).refreshMode(mode);
-    }
-
-    @Override public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {
-        _fieldHandler.setVirtualKeyboardController(ctrl);
     }
 
     @Override public void setVirtualKeyboardListener (Keyboard.Listener listener) {

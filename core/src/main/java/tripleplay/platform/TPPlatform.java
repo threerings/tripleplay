@@ -61,11 +61,11 @@ public abstract class TPPlatform
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Sets the instance of VirtualKeyboardController to use for virtual keyboard management, or
-     * null for none.
-     */
-    public void setVirtualKeyboardController (VirtualKeyboardController ctrl) {}
+    /** Sets the instance of KeyboardFocusController to use for keyboard focus management, or
+     * null for none. */
+    public void setKeyboardFocusController (KeyboardFocusController ctrl) {
+        _kfc = ctrl;
+    }
 
     /**
      * Set a keyboard listener to receive onKeyTyped events when a native field is active.
@@ -92,6 +92,7 @@ public abstract class TPPlatform
     }
 
     protected Value<Field> _focus = Value.create(null);
+    protected KeyboardFocusController _kfc;
 
     protected static TPPlatform _default = new TPPlatform() {};
     protected static TPPlatform _instance = _default;

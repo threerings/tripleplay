@@ -50,8 +50,8 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
             _field.set_Delegate(new UITextFieldDelegate() {
                 @Override public boolean ShouldReturn (UITextField field) {
                     _pressedReturn = true;
-                    if (_handler._virtualKeyboardCtrl == null ||
-                        _handler._virtualKeyboardCtrl.hideKeyboardOnEnter()) {
+                    if (_handler._platform._kfc == null ||
+                        _handler._platform._kfc.unfocusForEnter()) {
                         field.ResignFirstResponder();
                     } else {
                         didFinish();
