@@ -104,6 +104,8 @@ public class Glyph
         prepare(config.effect.adjustWidth(layout.width()),
             config.effect.adjustHeight(layout.height()));
         config.render(canvas(), layout, 0, 0);
+
+        _layer.get().setTranslation(config.effect.offsetX(), config.effect.offsetY());
     }
 
     protected final GroupLayer _parent;

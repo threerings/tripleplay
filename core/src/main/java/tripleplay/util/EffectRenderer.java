@@ -39,6 +39,8 @@ public abstract class EffectRenderer
 
     public float adjustWidth (float width) { return width; }
     public float adjustHeight (float height) { return height; }
+    public float offsetX () { return 0; }
+    public float offsetY () { return 0; }
 
     public abstract void render (Canvas canvas, TextLayout layout, int textColor,
         boolean underlined, float x, float y);

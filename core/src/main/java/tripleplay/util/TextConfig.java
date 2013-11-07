@@ -194,6 +194,8 @@ public class TextConfig
      * an image layer containing the image.
      */
     public ImageLayer toLayer (TextLayout layout) {
-        return graphics().createImageLayer(toImage(layout));
+        ImageLayer layer = graphics().createImageLayer(toImage(layout));
+        layer.setTranslation(effect.offsetX(), effect.offsetY());
+        return layer;
     }
 }

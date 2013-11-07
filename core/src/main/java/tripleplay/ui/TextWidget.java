@@ -263,7 +263,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float oy = MathUtil.ifloor(valign.offset(theight, availHeight));
             renderer.render(_tglyph.canvas(), text, color, underlined,
                 Math.min(ox, 0), Math.min(oy, 0));
-            _tglyph.layer().setTranslation(tx + Math.max(ox, 0), ty + Math.max(oy, 0));
+            _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + renderer.offsetX(),
+                ty + Math.max(oy, 0) + renderer.offsetY());
         }
 
         protected float textWidth () { return renderer.adjustWidth(text.width()); }
