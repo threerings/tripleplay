@@ -31,8 +31,6 @@ import playn.core.PlayN;
 import playn.ios.IOSFont;
 import playn.ios.IOSPlatform;
 import pythagoras.f.Point;
-import react.Value;
-import react.ValueView;
 
 import static tripleplay.platform.Log.log;
 
@@ -43,7 +41,6 @@ public class IOSTextFieldHandler
 {
     public IOSTextFieldHandler (IOSTPPlatform platform) {
         _overlay = platform.platform.uiOverlay();
-        _keyboardActive = platform.keyboardActive();
         _touchDetector = new TouchDetector(_overlay.get_Bounds());
 
         cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_
@@ -55,6 +52,12 @@ public class IOSTextFieldHandler
                     IOSNativeTextField field = _activeFields.get(nf.get_Object());
                     if (field != null) field.handleNewValue();
                 }}),
+            // dispatches text starting edit
+            didBegin = new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
+                @Override public void Invoke (NSNotification nf) {
+                    IOSNativeTextField field = _activeFields.get(nf.get_Object());
+                    if (field != null) field.didStart();
+                }}),
             // dispatches text end notifications
             didEnd = new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_(new cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_.Method() {
                 @Override public void Invoke (NSNotification nf) {
@@ -65,10 +68,12 @@ public class IOSTextFieldHandler
         NSNotificationCenter center = NSNotificationCenter.get_DefaultCenter();
 
         // observe UITextField
+        center.AddObserver(UITextField.get_TextDidBeginEditingNotification(), didBegin);
         center.AddObserver(UITextField.get_TextFieldTextDidChangeNotification(), change);
         center.AddObserver(UITextField.get_TextDidEndEditingNotification(), didEnd);
 
         // observe UITextView
+        center.AddObserver(UITextView.get_TextDidBeginEditingNotification(), didBegin);
         center.AddObserver(UITextView.get_TextDidChangeNotification(), change);
         center.AddObserver(UITextView.get_TextDidEndEditingNotification(), didEnd);
 
@@ -111,7 +116,6 @@ public class IOSTextFieldHandler
 
                     // touches outside of the keyboard will close the keyboard
                     _overlay.Add(_touchDetector);
-                    _keyboardActive.update(true);
                 }}));
 
         center.AddObserver(UIKeyboard.get_WillHideNotification(),
@@ -126,7 +130,7 @@ public class IOSTextFieldHandler
                     _gameViewTransform = null;
                     _gameViewTransformed = false;
                     _touchDetector.RemoveFromSuperview();
-                    _keyboardActive.update(false);
+                    TPPlatform.instance()._focus.update(null);
                 }}));
 
         _currentOrientation = UIDevice.get_CurrentDevice().get_Orientation().Value;
@@ -159,10 +163,6 @@ public class IOSTextFieldHandler
      */
     public void setKeyboardListener (Keyboard.Listener listener) {
         _keyboardListener = listener;
-    }
-
-    public ValueView<Boolean> virtualKeyboardActive () {
-        return _keyboardActive;
     }
 
     public UIFont getUIFont (Font font) {
@@ -236,7 +236,6 @@ public class IOSTextFieldHandler
     protected final UIView _overlay;
     protected final Map<UIView, IOSNativeTextField> _activeFields =
         new HashMap<UIView, IOSNativeTextField>();
-    protected final Value<Boolean> _keyboardActive;
 
     // we specifically track whether we've transformed the game view in a boolean because
     // CGAffineTransform is a value class and cannot be null

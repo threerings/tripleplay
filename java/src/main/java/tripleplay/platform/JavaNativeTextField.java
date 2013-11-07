@@ -6,6 +6,7 @@
 package tripleplay.platform;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -26,6 +27,8 @@ import react.Connection;
 import react.Slot;
 import tripleplay.ui.Field;
 import tripleplay.ui.Style;
+
+import static tripleplay.platform.JavaTPPlatform.*;
 
 public class JavaNativeTextField extends JavaNativeOverlay
     implements NativeTextField
@@ -56,22 +59,26 @@ public class JavaNativeTextField extends JavaNativeOverlay
                 update();
             }
             protected void update () {
-                if (!_textNotifyInProgress) JavaTPPlatform.updateOnMainThread(
-                    _element.field().text, _textComp.getText());
+                if (!_textNotifyInProgress)
+                    updateOnMainThread(_element.field().text, _textComp.getText());
             }
         });
         if (isField()) {
             asField().addActionListener(new ActionListener() {
                 public void actionPerformed (ActionEvent event) {
-                    JavaTPPlatform.emitOnMainThread(_element.finishedEditing(), true);
+                    emitOnMainThread(_element.finishedEditing(), true);
                 }
             });
         }
         _textComp.addFocusListener(new FocusListener() {
+            @Override public void focusGained (FocusEvent e) {
+                updateOnMainThread(instance()._focus, _element.field());
+            }
             @Override public void focusLost (FocusEvent e) {
                 JavaTPPlatform.emitOnMainThread(_element.finishedEditing(), false);
-            }
-            @Override public void focusGained (FocusEvent e) {
+                Component opposite = e.getOppositeComponent();
+                if (opposite == null || !hasOverlayFor(opposite))
+                    updateOnMainThread(instance()._focus, null);
             }
         });
 

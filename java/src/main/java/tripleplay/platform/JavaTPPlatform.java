@@ -158,8 +158,7 @@ public class JavaTPPlatform extends TPPlatform
             }));
     }
 
-    static <T> void updateOnMainThread (final Value<T> value, final T nvalue)
-    {
+    static <T> void updateOnMainThread (final Value<T> value, final T nvalue) {
         PlayN.invokeLater(new Runnable() {
             @Override
             public void run () {
@@ -168,14 +167,26 @@ public class JavaTPPlatform extends TPPlatform
         });
     }
 
-    static <T> void emitOnMainThread (final Signal<T> signal, final T emission)
-    {
+    static <T> void emitOnMainThread (final Signal<T> signal, final T emission) {
         PlayN.invokeLater(new Runnable() {
             @Override
             public void run () {
                 signal.emit(emission);
             }
         });
+    }
+
+    static JavaNativeOverlay findOverlayFor (Component comp) {
+        for (JavaNativeOverlay overlay : instance()._overlays) {
+            if (overlay.component.isAncestorOf(comp)) {
+                return overlay;
+            }
+        }
+        return null;
+    }
+
+    static boolean hasOverlayFor (Component comp) {
+        return findOverlayFor(comp) != null;
     }
 
     /** The Java platform with which this TPPlatform was registered. */

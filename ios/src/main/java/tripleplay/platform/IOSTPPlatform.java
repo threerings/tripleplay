@@ -56,11 +56,6 @@ public class IOSTPPlatform extends TPPlatform
         return new IOSImageOverlay(image);
     }
 
-    /** Gets the mutable keyabord value for the field handler. */
-    Value<Boolean> keyboardActive () {
-        return _keyboardActive;
-    }
-
     private IOSTPPlatform (IOSPlatform platform) {
         this.platform = platform;
         _fieldHandler = new IOSTextFieldHandler(this);

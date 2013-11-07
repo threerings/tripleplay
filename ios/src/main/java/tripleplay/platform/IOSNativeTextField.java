@@ -291,6 +291,10 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
     abstract protected void setColor (UIColor color);
     abstract protected void didFinish ();
 
+    protected void didStart () {
+        TPPlatform.instance()._focus.update(_element.field());
+    }
+
     protected void setReturnKeyLabel (String label) {
         if (label == null || label.isEmpty()) {
             getTraits().set_ReturnKeyType(UIReturnKeyType.wrap(UIReturnKeyType.Default));

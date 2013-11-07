@@ -72,16 +72,15 @@ public abstract class TPPlatform
      */
     public void setVirtualKeyboardListener (Keyboard.Listener listener) {}
 
-    /**
-     * A value indicating whether the virtual keyboard is currently active or not (if the platform
-     * has one).
-     */
-    public ValueView<Boolean> virtualKeyboardActive () {
-        return _keyboardActive;
-    }
-
     public ImageOverlay createImageOverlay (Image image) {
         throw new UnsupportedOperationException();
+    }
+
+    /** Gets a view of the Field that is currently in focus. Implemented in iOS and JRE if
+     * {@link #hasNativeTextFields()}, otherwise remains null. Corresponds to the tripleplay
+     * field currently receiving native keyboard input. */
+    public ValueView<Field> focus () {
+        return _focus;
     }
 
     /** Called by the static register methods in the per-platform backends. */
@@ -92,7 +91,7 @@ public abstract class TPPlatform
         _instance = instance;
     }
 
-    protected Value<Boolean> _keyboardActive = Value.create(false);
+    protected Value<Field> _focus = Value.create(null);
 
     protected static TPPlatform _default = new TPPlatform() {};
     protected static TPPlatform _instance = _default;
