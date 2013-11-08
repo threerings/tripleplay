@@ -35,6 +35,8 @@ import static tripleplay.platform.Log.log;
 
 /**
  * Implements Java-specific TriplePlay services.
+ * TODO: reconcile the main thread use with AWT EDT - there are a bunch of places where we
+ * need to synchronize
  */
 public class JavaTPPlatform extends TPPlatform
 {
