@@ -21,6 +21,7 @@ import react.Slot;
 
 import tripleplay.ui.Style.HAlign;
 import tripleplay.ui.Style.VAlign;
+import tripleplay.ui.util.BoxPoint;
 import tripleplay.util.Layers;
 
 import static playn.core.PlayN.*;
@@ -31,6 +32,47 @@ import static tripleplay.ui.Log.log;
  */
 public class MenuHost
 {
+    /** Defines how to obtain the point on a trigger where a menu popup originates. */
+    public interface TriggerPoint
+    {
+        /** For the given trigger and pointer position, gets the screen coordinates where the
+         * menu popup should originate. */
+        public Point getLocation (Element<?> trigger, IPoint pointer);
+    }
+
+    /** Gets a trigger point relative to an element using the given box point. */
+    public static TriggerPoint relative (final BoxPoint location) {
+        return new TriggerPoint() {
+            @Override public Point getLocation (Element<?> trigger, IPoint pointer) {
+                return location.resolve(trigger, new Point());
+            }
+        };
+    }
+
+    /** Gets a fixed trigger point for the given screen coordinates. */
+    public static TriggerPoint absolute (final float x, final float y) {
+        return new Absolute(x, y);
+    }
+
+    /** Gets a trigger point exactly under the pointer position. */
+    public static TriggerPoint pointer () {
+        return new TriggerPoint() {
+            @Override public Point getLocation (Element<?> trigger, IPoint pointer) {
+                return new Point(pointer);
+            }
+        };
+    }
+
+    /** The point on an element where menus should be placed (subject to boundary constraints).
+     * This is only used if the element is set to a {@link Pop#trigger}. By default, uses the
+     * top left cornder of the trigger. */
+    public static final Style<TriggerPoint> TRIGGER_POINT =
+            Style.newStyle(true, relative(BoxPoint.TL));
+
+    /** The point on a menu that lie on top of the popup point, subject to bounding constraints.
+     * This is only used if the element is set to a {@link Pop#menu}. */
+    public static final Style<BoxPoint> POPUP_ORIGIN = Style.newStyle(true, BoxPoint.TL);
+
     /** The root layer that will contain all menus that pop up. It should normally be close to the
      * top of the hierarchy so that it draws on top of everything. */
     public final GroupLayer rootLayer;
@@ -39,11 +81,9 @@ public class MenuHost
     public final Interface iface;
 
     /**
-     * An event type for triggering a menu popup. Also acts as a menu constraint so the integrated
-     * host layout can make sure the whole menu is on screen and near to the triggering event
-     * position or element.
+     * An event type for triggering a menu popup.
      */
-    public static class Pop extends Layout.Constraint
+    public static class Pop
     {
         /** The element that triggered the popup. {@link #position} is relative to this. */
         public final Element<?> trigger;
@@ -51,19 +91,36 @@ public class MenuHost
         /** The menu to show. */
         public final Menu menu;
 
-        /** The position where the menu should pop up, e.g. a touch event position. Relative to
-         * {@link #trigger}. */
-        public IPoint position;
+        /** The position of the pointer, if given during construction, otherwise null. */
+        public final IPoint pointer;
 
         /** The bounds to confine the menu, in screen coordinates; usually the whole screen. */
         public IRectangle bounds;
 
+        // legacy position value to keep supporting the placement calls below
+        private Absolute _position;
+
         /** Creates a new event and initializes {@link #trigger} and {@link #menu}. */
         public Pop (Element<?> trigger, Menu menu) {
+            this(trigger, menu, null);
+        }
+
+        /** Creates a new event and initializes {@link #trigger} and {@link #menu}. */
+        public Pop (Element<?> trigger, Menu menu, Events.Position pointer) {
             if (menu == null) throw new IllegalArgumentException();
             this.menu = menu;
             this.trigger = trigger;
-            position = new Point(0, 0);
+            this.pointer = pointer == null ? null : Events.Util.screenPos(pointer);
+        }
+
+        private Point legacyPos () {
+            if (_position == null) _position = new Absolute(0, 0);
+            return _position.pos;
+        }
+
+        private BoxPoint legacyAlign () {
+            if (_menuAlign == null) _menuAlign = BoxPoint.TL;
+            return _menuAlign;
         }
 
         /**
@@ -78,71 +135,86 @@ public class MenuHost
 
         /**
          * Positions the menu popup at the given positional event.
+         * @deprecated use add a POPUP_POINT style on the trigger
          */
+        @Deprecated
         public Pop atEventPos (Events.Position pos) {
             return atScreenPos(pos.x(), pos.y());
         }
 
         /**
          * Positions the menu popup at the given screen position.
+         * @deprecated use add a POPUP_POINT style on the trigger
          */
+        @Deprecated
         public Pop atScreenPos (float x, float y) {
-            position = new Point(x, y);
+            legacyPos().set(x, y);
             return this;
         }
 
         /**
          * Positions the menu horizontally relative to the given layer, with an offset. The
-         * vertical position remains unchanged.
+         * @deprecated use add a POPUP_POINT style on the trigger
          */
+        @Deprecated
         public Pop atLayerX (Layer layer, float x) {
-            return atScreenPos(Layer.Util.layerToScreen(layer, x, 0).x, position.y());
+            return atScreenPos(Layer.Util.layerToScreen(layer, x, 0).x, legacyPos().y());
         }
 
         /**
          * Positions the menu vertically relative to the given layer, with an offset. The
          * horizontal position remains unchanged.
+         * @deprecated use add a POPUP_POINT style on the trigger
          */
+        @Deprecated
         public Pop atLayerY (Layer layer, float y) {
-            return atScreenPos(position.x(), Layer.Util.layerToScreen(layer, 0, y).y);
+            return atScreenPos(legacyPos().x(), Layer.Util.layerToScreen(layer, 0, y).y);
         }
 
         /**
          * Sets the horizontal alignment of the menu relative to the popup position.
+         * @deprecated use add a POPUP_ORIGIN style on the menu
          */
+        @Deprecated
         public Pop halign (HAlign halign) {
-            _halign = halign;
+            _menuAlign = legacyAlign().left();
             return this;
         }
 
         /**
          * Sets the vertical alignment of the menu relative to the popup position.
+         * @deprecated use add a POPUP_ORIGIN style on the menu
          */
+        @Deprecated
         public Pop valign (VAlign valign) {
-            _valign = valign;
+            _menuAlign = legacyAlign().valign(valign);
             return this;
         }
 
         /**
          * Positions the right edge of the menu relative to the left edge of the trigger, offset
          * by the given value.
+         * @deprecated use add a POPUP_ORIGIN style on the menu and a POPUP_POINT style on the trigger
          */
+        @Deprecated
         public Pop toLeft (float x) {
             return atLayerX(trigger.layer, x).halign(HAlign.RIGHT);
         }
 
         /**
          * Positions the left edge of the menu relative to the right edge of the trigger, offset
-         * by the given value.
+         * @deprecated use add a POPUP_ORIGIN style on the menu and a POPUP_POINT style on the trigger
          */
+        @Deprecated
         public Pop toRight (float x) {
             return atLayerX(trigger.layer, trigger.size().width() + x).halign(HAlign.LEFT);
         }
 
         /**
          * Positions the top edge of the menu relative to the top edge of the trigger, offset
-         * by the given value.
+         * @deprecated use add a POPUP_ORIGIN style on the menu and a POPUP_POINT style on the trigger
          */
+        @Deprecated
         public Pop toTop (float y) {
             return atLayerY(trigger.layer, y).valign(VAlign.TOP);
         }
@@ -150,7 +222,9 @@ public class MenuHost
         /**
          * Positions the bottom edge of the menu relative to the bottom edge of the trigger, offset
          * by the given value.
+         * @deprecated use add a POPUP_ORIGIN style on the menu and a POPUP_POINT style on the trigger
          */
+        @Deprecated
         public Pop toBottom (float y) {
             return atLayerY(trigger.layer, trigger.size().height() + y).valign(VAlign.BOTTOM);
         }
@@ -204,8 +278,7 @@ public class MenuHost
         /** The layer that will be sending pointer drag and end events to us. */
         protected Layer _relayTarget;
 
-        protected HAlign _halign = HAlign.LEFT;
-        protected VAlign _valign = VAlign.TOP;
+        private BoxPoint _menuAlign;
     }
 
     public static Connection relayEvents (Layer from, final Menu to) {
@@ -276,12 +349,9 @@ public class MenuHost
         if (pop.bounds == null) pop.inScreenArea(_screenArea);
 
         // set up the menu root, the RootLayout will do the complicated bounds jockeying
-        final Root menuRoot = iface.createRoot(new RootLayout(), _stylesheet, rootLayer);
-        menuRoot.layer.setDepth(1);
-        menuRoot.layer.setHitTester(null); // get hits from out of bounds
-        menuRoot.add(pop.menu.setConstraint(pop));
+        final MenuRoot menuRoot = iface.addRoot(new MenuRoot(iface, _stylesheet, pop));
+        rootLayer.add(menuRoot.layer);
         menuRoot.pack();
-        menuRoot.layer.setTranslation(pop.position.x(), pop.position.y());
 
         // set up the activation
         final Activation activation = new Activation(pop);
@@ -347,6 +417,19 @@ public class MenuHost
         return _active != null ? _active.pop.menu : null;
     }
 
+    protected static class MenuRoot extends Root
+    {
+        public final Pop pop;
+
+        public MenuRoot (Interface iface, Stylesheet sheet, Pop pop) {
+            super(iface, new RootLayout(), sheet);
+            this.pop = pop;
+            layer.setDepth(1);
+            layer.setHitTester(null); // get hits from out of bounds
+            add(pop.menu);
+        }
+    }
+
     /** Simple layout for positioning the menu within the transient {@code Root}. */
     protected static class RootLayout extends Layout
     {
@@ -358,14 +441,24 @@ public class MenuHost
                                       float height) {
             if (elems.childCount() == 0) return;
 
-            // get the constraint, it will always be a Pop
-            Pop pop = (Pop)elems.childAt(0).constraint();
+            MenuRoot menuRoot = (MenuRoot)elems;
+            Pop pop = menuRoot.pop;
+
+            // get the trigger point from the trigger
+            TriggerPoint position = resolveStyle(pop.trigger, TRIGGER_POINT);
+            if (pop._position != null) position = pop._position;
+
+            // get the origin point from the menu
+            BoxPoint origin = resolveStyle(pop.menu, POPUP_ORIGIN);
+            if (pop._menuAlign != null) origin = pop._menuAlign;
+
+            // get the desired position, may be relative to trigger or pointer
+            Point tpos = position.getLocation(pop.trigger, pop.pointer);
+            Point mpos = origin.resolve(0, 0, width, height, new Point());
 
             // figure out the best place to put the menu, in screen coordinates; starting with
             // the requested popup position
-            Rectangle bounds = new Rectangle(
-                pop.position.x() + pop._halign.offset(width, 0),
-                pop.position.y() + pop._valign.offset(height, 0), width, height);
+            Rectangle bounds = new Rectangle(tpos.x + mpos.x, tpos.y + mpos.y, width, height);
 
             // make sure the menu lies inside the requested bounds if the menu doesn't do
             // that itself
@@ -376,6 +469,9 @@ public class MenuHost
                 // TODO: can we get the menu's Background's insets?
                 float fudge = 2;
 
+                // TODO: do we need any of this finger avoidance stuff if the popup is not
+                // relative to the pointer? E.g. a combo box with its menu off to the right
+
                 // keep the bounds from overlapping the position
                 if (bounds.width > fudge * 2 && bounds.height > fudge * 2) {
                     Rectangle ibounds = new Rectangle(bounds);
@@ -383,8 +479,9 @@ public class MenuHost
 
                     // set up the fingerprint
                     float fingerRadius = touch().hasTouch() ? 10 : 3;
+                    IPoint fingerPos = pop.pointer == null ? tpos : pop.pointer;
                     Rectangle fingerBox = new Rectangle(
-                        pop.position.x() - fingerRadius, pop.position.y() - fingerRadius,
+                        fingerPos.x() - fingerRadius, fingerPos.y() - fingerRadius,
                         fingerRadius * 2, fingerRadius * 2);
 
                     // try and place the menu so it isn't under the finger
@@ -412,7 +509,6 @@ public class MenuHost
                 uiOverlay().hideOverlay(screenBounds);
             }
         }
-
     }
 
     /** Tries to place the inner bounds within the outer bounds, such that the inner bounds does
@@ -511,6 +607,19 @@ public class MenuHost
             pointerRelay = null;
             triggerRemoved = null;
             deactivated = null;
+        }
+    }
+
+    protected static class Absolute implements TriggerPoint
+    {
+        public final Point pos;
+
+        protected Absolute (float x, float y) {
+            pos = new Point(x, y);
+        }
+
+        @Override public Point getLocation (Element<?> trigger, IPoint pointer) {
+            return new Point(pos);
         }
     }
 

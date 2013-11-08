@@ -21,6 +21,7 @@ import tripleplay.demo.DemoScreen;
 import tripleplay.ui.*;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
+import tripleplay.ui.util.BoxPoint;
 import tripleplay.util.Colors;
 
 public class MenuDemo extends DemoScreen
@@ -35,38 +36,46 @@ public class MenuDemo extends DemoScreen
 
     @Override protected Group createIface () {
         final MenuHost menuHost = new MenuHost(iface, _root);
-        Button direction = new Button("Select a direction \u25BC").onClick(new Slot<Button>() {
-            @Override public void onEmit (Button self) {
-                MenuHost.Pop pop = new MenuHost.Pop(self,
-                    createMenu("Directions", "North", "South", "East", "West")).toRight(2).toTop(0);
-                pop.menu.itemTriggered().connect(updater(self));
-                addIcons(pop.menu);
-                menuHost.popup(pop);
-            }
-        });
-        Button tree = new Button("Select a tree \u25BC").onClick(new Slot<Button>() {
-            @Override public void onEmit (Button self) {
-                MenuHost.Pop pop = new MenuHost.Pop(self,
-                    createMenu("Trees", "Elm", "Ash", "Maple", "Oak")).toBottom(2).toLeft(0);
-                pop.menu.itemTriggered().connect(updater(self));
-                menuHost.popup(pop);
-            }
-        });
-        Button type = new Button("Select a type \u25BC").onClick(new Slot<Button>() {
-            @Override public void onEmit (Button self) {
-                MenuHost.Pop pop = new MenuHost.Pop(self,
-                    createMenu(null, "Road", "Street", "Boulevard", "Avenue")).toBottom(2).toLeft(0);
-                pop.menu.itemTriggered().connect(updater(self));
-                pop.menu.addStyles(Menu.OPENER.is(new Menu.AnimFn() {
-                    @Override public Animation go (Menu menu, Animator animator) {
-                        // TODO: fix short delay where menu is visible at this scale
-                        menu.layer.setScale(1, .25f);
-                        return animator.tweenScaleY(menu.layer).to(1).easeOut().in(125);
-                    }
-                }));
-                menuHost.popup(pop);
-            }
-        });
+        BoxPoint popRight = new BoxPoint(1, 0, 2, 0);
+        BoxPoint popUnder = new BoxPoint(0, 1, 0, 2);
+        Button direction = new Button("Select a direction \u25BC").
+            addStyles(MenuHost.TRIGGER_POINT.is(MenuHost.relative(popRight))).
+            onClick(new Slot<Button>() {
+                @Override public void onEmit (Button self) {
+                    MenuHost.Pop pop = new MenuHost.Pop(self,
+                        createMenu("Directions", "North", "South", "East", "West"));
+                    pop.menu.itemTriggered().connect(updater(self));
+                    addIcons(pop.menu);
+                    menuHost.popup(pop);
+                }
+            });
+        Button tree = new Button("Select a tree \u25BC").
+            addStyles(MenuHost.TRIGGER_POINT.is(MenuHost.relative(popUnder))).
+            onClick(new Slot<Button>() {
+                @Override public void onEmit (Button self) {
+                    MenuHost.Pop pop = new MenuHost.Pop(self,
+                        createMenu("Trees", "Elm", "Ash", "Maple", "Oak"));
+                    pop.menu.itemTriggered().connect(updater(self));
+                    menuHost.popup(pop);
+                }
+            });
+        Button type = new Button("Select a type \u25BC").
+            addStyles(MenuHost.TRIGGER_POINT.is(MenuHost.relative(popUnder))).
+            onClick(new Slot<Button>() {
+                @Override public void onEmit (Button self) {
+                    MenuHost.Pop pop = new MenuHost.Pop(self,
+                        createMenu(null, "Road", "Street", "Boulevard", "Avenue"));
+                    pop.menu.itemTriggered().connect(updater(self));
+                    pop.menu.addStyles(Menu.OPENER.is(new Menu.AnimFn() {
+                        @Override public Animation go (Menu menu, Animator animator) {
+                            // TODO: fix short delay where menu is visible at this scale
+                            menu.layer.setScale(1, .25f);
+                            return animator.tweenScaleY(menu.layer).to(1).easeOut().in(125);
+                        }
+                    }));
+                    menuHost.popup(pop);
+                }
+            });
 
         TrackingLabel subject = new TrackingLabel(menuHost, "Subject \u25BC") {
             @Override public Menu createMenu () {
@@ -124,8 +133,8 @@ public class MenuDemo extends DemoScreen
                 return menu.add(g);
             }
 
-            @Override public MenuHost.Pop makePop () {
-                return super.makePop().retainMenu();
+            @Override public MenuHost.Pop makePop (Pointer.Event ev) {
+                return super.makePop(ev).retainMenu();
             }
 
             @Override protected void wasRemoved () {
@@ -296,6 +305,7 @@ public class MenuDemo extends DemoScreen
         public TrackingLabel (MenuHost menuHost, String text) {
             super(text);
             this.menuHost = menuHost;
+            addStyles(MenuHost.TRIGGER_POINT.is(MenuHost.pointer()));
         }
 
         public abstract Menu createMenu ();
@@ -303,15 +313,15 @@ public class MenuDemo extends DemoScreen
         @Override protected Behavior<Label> createBehavior () {
             return new Behavior.Select<Label>(this) {
                 @Override public void onPointerStart (Pointer.Event ev) {
-                    MenuHost.Pop pop = makePop().atEventPos(ev);
+                    MenuHost.Pop pop = makePop(ev);
                     pop.menu.itemTriggered().connect(updater(text, icon));
                     menuHost.popup(pop);
                 }
             };
         }
 
-        protected MenuHost.Pop makePop () {
-            return new MenuHost.Pop(this, createMenu()).relayEvents(layer);
+        protected MenuHost.Pop makePop (Pointer.Event ev) {
+            return new MenuHost.Pop(this, createMenu(), ev).relayEvents(layer);
         }
     }
 
