@@ -8,6 +8,7 @@ package tripleplay.platform;
 import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -21,6 +22,7 @@ import playn.core.Asserts;
 import playn.core.PlayN;
 import playn.java.JavaImage;
 import playn.java.JavaPlatform;
+import pythagoras.f.Point;
 import react.Signal;
 import react.Value;
 import tripleplay.ui.Field;
@@ -77,12 +79,21 @@ public class JavaTPPlatform extends TPPlatform
                 for (JavaNativeOverlay overlay : _overlays) {
                     final Component comp = overlay.component;
                     if (comp.contains(e.getX() - comp.getX(), e.getY() - comp.getY())) {
-                        PlayN.invokeLater(new Runnable() {
+                        EventQueue.invokeLater(new Runnable() {
                             @Override public void run () { comp.requestFocus(); }
                         });
                         log.debug("Dispatched focus from misdirected mouse press", "event", e);
                         return;
                     }
+                }
+
+                // by default, we lose focus, so test if we need to try and preempt it
+                if (_focus.get() != null && _kfc != null &&
+                        !_kfc.unfocusForLocation(new Point(e.getX(), e.getY()))) {
+                    final Component comp = ((JavaNativeTextField)_focus.get().exposeNativeField()).component;
+                    EventQueue.invokeLater(new Runnable() {
+                        @Override public void run () { comp.requestFocus(); }
+                    });
                 }
             }
         });
