@@ -1,6 +1,6 @@
 import sbt._
 import Keys._
-import ProguardPlugin._
+// import ProguardPlugin._
 
 object TriplePlayBuild extends samskivert.MavenBuild {
 
@@ -26,11 +26,11 @@ object TriplePlayBuild extends samskivert.MavenBuild {
         "com.novocode" % "junit-interface" % "0.7" % "test->default"
       )
     )
-    case "tools" => proguardSettings ++ seq(
-      mainClass in (Compile, run) := Some("tripleplay.tools.FramePacker"),
-      proguardOptions += keepMain("tripleplay.tools.FramePacker"),
-      proguardOptions += "-dontnote scala.Enumeration"
-    )
+    // case "tools" => proguardSettings ++ seq(
+    //   mainClass in (Compile, run) := Some("tripleplay.tools.FramePacker"),
+    //   proguardOptions += keepMain("tripleplay.tools.FramePacker"),
+    //   proguardOptions += "-dontnote scala.Enumeration"
+    // )
     case name if (name startsWith "demo-") => seq(
       publish := false,
       publishLocal := false
