@@ -26,6 +26,9 @@ public class BoxPoint
     /** The bottom right corner. */
     public static final BoxPoint BR = new BoxPoint(1, 1);
 
+    /** The center of the box. */
+    public static final BoxPoint CENTER = new BoxPoint(.5f, .5f);
+
     /** Normalized x, y coordinates. For example, nx = 1 is the right edge. */
     public final float nx, ny;
 
