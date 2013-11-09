@@ -60,7 +60,9 @@ public class MenuDemo extends DemoScreen
                 }
             });
         Button type = new Button("Select a type \u25BC").
-            addStyles(MenuHost.TRIGGER_POINT.is(MenuHost.relative(popUnder))).
+            addStyles(
+                MenuHost.TRIGGER_POINT.is(MenuHost.relative(popUnder)),
+                MenuHost.POPUP_ORIGIN.is(BoxPoint.BR)).
             onClick(new Slot<Button>() {
                 @Override public void onEmit (Button self) {
                     MenuHost.Pop pop = new MenuHost.Pop(self,
