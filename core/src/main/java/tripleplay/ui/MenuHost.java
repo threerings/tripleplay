@@ -450,7 +450,7 @@ public class MenuHost
             if (pop._position != null) position = pop._position;
 
             // get the origin point from the menu
-            BoxPoint origin = resolveStyle(pop.menu, POPUP_ORIGIN);
+            BoxPoint origin = resolveStyle(pop.trigger, POPUP_ORIGIN);
             if (pop._menuAlign != null) origin = pop._menuAlign;
 
             // get the desired position, may be relative to trigger or pointer
