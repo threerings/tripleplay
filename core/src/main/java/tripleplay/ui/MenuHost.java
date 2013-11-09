@@ -63,14 +63,15 @@ public class MenuHost
         };
     }
 
-    /** The point on an element where menus should be placed (subject to boundary constraints).
+    /** The point on an element where menus should be placed, subject to boundary constraints.
      * This is only used if the element is set to a {@link Pop#trigger}. By default, uses the
-     * top left cornder of the trigger. */
+     * top left corner of the trigger. */
     public static final Style<TriggerPoint> TRIGGER_POINT =
             Style.newStyle(true, relative(BoxPoint.TL));
 
-    /** The point on a menu that lie on top of the popup point, subject to bounding constraints.
-     * This is only used if the element is set to a {@link Pop#menu}. */
+    /** The point on the menu that should be placed directly on top of the trigger point, subject
+     * to bounding constraints. This is only used if the element is set to a {@link Pop#trigger}.
+     * By default, the top, left corner is the origin. */
     public static final Style<BoxPoint> POPUP_ORIGIN = Style.newStyle(true, BoxPoint.TL);
 
     /** The root layer that will contain all menus that pop up. It should normally be close to the
@@ -135,7 +136,7 @@ public class MenuHost
 
         /**
          * Positions the menu popup at the given positional event.
-         * @deprecated use add a POPUP_POINT style on the trigger
+         * @deprecated use TRIGGER_POINT
          */
         @Deprecated
         public Pop atEventPos (Events.Position pos) {
@@ -144,7 +145,7 @@ public class MenuHost
 
         /**
          * Positions the menu popup at the given screen position.
-         * @deprecated use add a POPUP_POINT style on the trigger
+         * @deprecated use TRIGGER_POINT
          */
         @Deprecated
         public Pop atScreenPos (float x, float y) {
@@ -154,7 +155,7 @@ public class MenuHost
 
         /**
          * Positions the menu horizontally relative to the given layer, with an offset. The
-         * @deprecated use add a POPUP_POINT style on the trigger
+         * @deprecated use TRIGGER_POINT
          */
         @Deprecated
         public Pop atLayerX (Layer layer, float x) {
@@ -164,7 +165,7 @@ public class MenuHost
         /**
          * Positions the menu vertically relative to the given layer, with an offset. The
          * horizontal position remains unchanged.
-         * @deprecated use add a POPUP_POINT style on the trigger
+         * @deprecated use TRIGGER_POINT
          */
         @Deprecated
         public Pop atLayerY (Layer layer, float y) {
@@ -173,7 +174,7 @@ public class MenuHost
 
         /**
          * Sets the horizontal alignment of the menu relative to the popup position.
-         * @deprecated use add a POPUP_ORIGIN style on the menu
+         * @deprecated use POPUP_ORIGIN
          */
         @Deprecated
         public Pop halign (HAlign halign) {
@@ -183,7 +184,7 @@ public class MenuHost
 
         /**
          * Sets the vertical alignment of the menu relative to the popup position.
-         * @deprecated use add a POPUP_ORIGIN style on the menu
+         * @deprecated use POPUP_ORIGIN
          */
         @Deprecated
         public Pop valign (VAlign valign) {
@@ -194,7 +195,7 @@ public class MenuHost
         /**
          * Positions the right edge of the menu relative to the left edge of the trigger, offset
          * by the given value.
-         * @deprecated use add a POPUP_ORIGIN style on the menu and a POPUP_POINT style on the trigger
+         * @deprecated use POPUP_ORIGIN and TRIGGER_POINT
          */
         @Deprecated
         public Pop toLeft (float x) {
@@ -203,7 +204,7 @@ public class MenuHost
 
         /**
          * Positions the left edge of the menu relative to the right edge of the trigger, offset
-         * @deprecated use add a POPUP_ORIGIN style on the menu and a POPUP_POINT style on the trigger
+         * @deprecated use POPUP_ORIGIN and TRIGGER_POINT
          */
         @Deprecated
         public Pop toRight (float x) {
@@ -212,7 +213,7 @@ public class MenuHost
 
         /**
          * Positions the top edge of the menu relative to the top edge of the trigger, offset
-         * @deprecated use add a POPUP_ORIGIN style on the menu and a POPUP_POINT style on the trigger
+         * @deprecated use POPUP_ORIGIN and TRIGGER_POINT
          */
         @Deprecated
         public Pop toTop (float y) {
@@ -222,7 +223,7 @@ public class MenuHost
         /**
          * Positions the bottom edge of the menu relative to the bottom edge of the trigger, offset
          * by the given value.
-         * @deprecated use add a POPUP_ORIGIN style on the menu and a POPUP_POINT style on the trigger
+         * @deprecated use POPUP_ORIGIN and TRIGGER_POINT
          */
         @Deprecated
         public Pop toBottom (float y) {
