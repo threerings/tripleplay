@@ -459,7 +459,7 @@ public class MenuHost
 
             // figure out the best place to put the menu, in screen coordinates; starting with
             // the requested popup position
-            Rectangle bounds = new Rectangle(tpos.x + mpos.x, tpos.y + mpos.y, width, height);
+            Rectangle bounds = new Rectangle(tpos.x - mpos.x, tpos.y - mpos.y, width, height);
 
             // make sure the menu lies inside the requested bounds if the menu doesn't do
             // that itself
