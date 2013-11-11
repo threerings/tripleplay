@@ -18,7 +18,7 @@ public interface Playable
      * will be the configured volume multiplied by the master volume of the owning soundboard. */
     void setVolume (float volume);
 
-    /** Returns true if this playable is currently playing, false othwerise. */
+    /** Returns true if this playable is currently playing, false otherwise. */
     boolean isPlaying ();
 
     /** Starts this clip or loop playing. If the sound data is not yet loaded it will be loaded and
