@@ -26,7 +26,6 @@ import cli.System.Drawing.RectangleF;
 import cli.System.Drawing.SizeF;
 
 import playn.core.Font;
-import playn.core.Keyboard;
 import playn.core.PlayN;
 import playn.ios.IOSFont;
 import playn.ios.IOSPlatform;
@@ -155,13 +154,6 @@ public class IOSTextFieldHandler
                 }}));
     }
 
-    /**
-     * Set a keyboard listener to receive onKeyTyped events when a native field is active.
-     */
-    public void setKeyboardListener (Keyboard.Listener listener) {
-        _keyboardListener = listener;
-    }
-
     public UIFont getUIFont (Font font) {
         if (font == null) font = IOSFont.defaultFont();
 
@@ -242,5 +234,4 @@ public class IOSTextFieldHandler
     protected int _currentOrientation;
 
     protected TouchDetector _touchDetector;
-    protected Keyboard.Listener _keyboardListener;
 }

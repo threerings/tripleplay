@@ -6,7 +6,8 @@
 package tripleplay.platform;
 
 import playn.core.Image;
-import playn.core.Keyboard;
+import react.SignalView;
+import react.UnitSignal;
 import react.Value;
 import react.ValueView;
 import tripleplay.ui.Field;
@@ -67,10 +68,11 @@ public abstract class TPPlatform
         _kfc = ctrl;
     }
 
-    /**
-     * Set a keyboard listener to receive onKeyTyped events when a native field is active.
-     */
-    public void setVirtualKeyboardListener (Keyboard.Listener listener) {}
+    /** Signal emitted when the user interacts with a native text field. This allows games to
+     * qualify native text field usage as non-idle user behavior. */
+    public SignalView<Void> keyboardActivity () {
+        return _activity;
+    }
 
     public ImageOverlay createImageOverlay (Image image) {
         throw new UnsupportedOperationException();
@@ -93,6 +95,7 @@ public abstract class TPPlatform
 
     protected Value<Field> _focus = Value.create(null);
     protected KeyboardFocusController _kfc;
+    protected UnitSignal _activity = new UnitSignal();
 
     protected static TPPlatform _default = new TPPlatform() {};
     protected static TPPlatform _instance = _default;
