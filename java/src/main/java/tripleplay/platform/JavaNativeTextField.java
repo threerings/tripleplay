@@ -7,6 +7,7 @@ package tripleplay.platform;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -112,12 +113,16 @@ public class JavaNativeTextField extends JavaNativeOverlay
         _textComp.setAutoscrolls(true);
 
         _textConnection = _element.field().text.connectNotify(new Slot<String>() {
-            @Override public void onEmit (String value) {
-                if (!_textComp.getText().equals(value)) {
-                    _textNotifyInProgress = true;
-                    _textComp.setText(value);
-                    _textNotifyInProgress = false;
-                }
+            @Override public void onEmit (final String value) {
+                EventQueue.invokeLater(new Runnable() {
+                    @Override public void run () {
+                        if (!_textComp.getText().equals(value)) {
+                            _textNotifyInProgress = true;
+                            _textComp.setText(value);
+                            _textNotifyInProgress = false;
+                        }
+                    }
+                });
             }});
     }
 
