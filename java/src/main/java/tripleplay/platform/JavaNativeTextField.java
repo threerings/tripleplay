@@ -25,7 +25,6 @@ import pythagoras.f.FloatMath;
 
 import playn.core.Font;
 import playn.core.Key;
-import playn.core.Keyboard;
 import playn.core.PlayN;
 import playn.java.JavaKeyboard;
 
