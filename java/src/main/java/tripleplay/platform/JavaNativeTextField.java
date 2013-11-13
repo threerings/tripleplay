@@ -164,10 +164,6 @@ public class JavaNativeTextField extends JavaNativeOverlay
         _textComp.requestFocus();
     }
 
-    @Override public boolean hasFocus () {
-        return _textComp.hasFocus();
-    }
-
     @Override public boolean insert (String text) {
         _textComp.replaceSelection(text);
         return true;

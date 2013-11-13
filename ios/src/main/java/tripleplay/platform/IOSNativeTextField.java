@@ -270,10 +270,6 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
         view.BecomeFirstResponder();
     }
 
-    @Override public boolean hasFocus () {
-        return view.get_IsFirstResponder();
-    }
-
     abstract public NativeTextField refreshMode (Mode mode);
 
     abstract protected UIFont getNativeFont ();

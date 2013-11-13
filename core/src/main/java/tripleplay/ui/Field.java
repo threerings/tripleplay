@@ -186,12 +186,11 @@ public class Field extends TextWidget<Field>
         return this;
     }
 
-    /**
-     * Returns true if this Field is backed by a native field and that field currently has keyboard
-     * (virtual or physical) focus.
-     */
-    public boolean hasFocus () {
-        return _nativeField != null && _nativeField.hasFocus();
+    /** Attempt to focus on this field, if it is backed by a native field. If the platform
+     * uses a virtual keyboard, this will cause it slide up, just as though the use had tapped
+     * the field. For hardware keyboard, a blinking caret will appear in the field. */
+    public void focus () {
+        if (_nativeField != null) _nativeField.focus();
     }
 
     @Override public Field setVisible (boolean visible) {

@@ -35,9 +35,6 @@ public interface NativeTextField extends NativeOverlay
     /** Request focus for the native text field */
     void focus ();
 
-    /** Returns true if this native text field currently has focus. */
-    boolean hasFocus ();
-
     /** Inserts the given text at the current caret position, or if there is a selected region,
      * replaces the region with the given text.
      * @return true if the operation was successful */
