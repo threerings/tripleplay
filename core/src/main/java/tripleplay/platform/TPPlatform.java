@@ -85,6 +85,10 @@ public abstract class TPPlatform
         return _focus;
     }
 
+    /** Clears the currently focused field, if any. */
+    public void clearFocus () {
+    }
+
     /** Called by the static register methods in the per-platform backends. */
     static void register (TPPlatform instance) {
         if (_instance != _default) {

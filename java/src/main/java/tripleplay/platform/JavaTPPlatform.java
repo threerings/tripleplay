@@ -140,6 +140,14 @@ public class JavaTPPlatform extends TPPlatform
         return new JavaImageOverlay(image);
     }
 
+    @Override public void clearFocus () {
+        EventQueue.invokeLater(new Runnable() {
+            @Override public void run () {
+                _frame.getContentPane().getComponent(0).requestFocus();
+            }
+        });
+    }
+
     /**
      * Gets the OS this JVM is running on.
      */
