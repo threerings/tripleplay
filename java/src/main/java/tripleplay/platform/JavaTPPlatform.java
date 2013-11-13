@@ -101,10 +101,10 @@ public class JavaTPPlatform extends TPPlatform
         });
 
         // NOTE: This order is important. Resizability changes window decorations on some
-        // platforms/themes and we need the packing to happen last to take that into account.
+        // platforms/themes and we need the packing afterwards to take that into account.
         _frame.setResizable(false);
-        _frame.setVisible(true);
         _frame.pack();
+        _frame.setVisible(true);
 
         try {
             Display.setParent(canvas);
