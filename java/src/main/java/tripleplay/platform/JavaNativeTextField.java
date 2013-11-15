@@ -162,7 +162,7 @@ public class JavaNativeTextField extends JavaNativeOverlay
 
     @Override public void focus () {
         EventQueue.invokeLater(new Runnable() {
-            @Override public void run () { _textComp.requestFocus(); }
+            @Override public void run () { _textComp.requestFocusInWindow(); }
         });
     }
 

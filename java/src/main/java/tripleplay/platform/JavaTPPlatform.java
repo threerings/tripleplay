@@ -82,7 +82,7 @@ public class JavaTPPlatform extends TPPlatform
                     final Component comp = overlay.component;
                     if (comp.contains(e.getX() - comp.getX(), e.getY() - comp.getY())) {
                         EventQueue.invokeLater(new Runnable() {
-                            @Override public void run () { comp.requestFocus(); }
+                            @Override public void run () { comp.requestFocusInWindow(); }
                         });
                         log.debug("Dispatched focus from misdirected mouse press", "event", e);
                         return;
@@ -94,7 +94,7 @@ public class JavaTPPlatform extends TPPlatform
                         !_kfc.unfocusForLocation(new Point(e.getX(), e.getY()))) {
                     final Component comp = ((JavaNativeTextField)_focus.get().exposeNativeField()).component;
                     EventQueue.invokeLater(new Runnable() {
-                        @Override public void run () { comp.requestFocus(); }
+                        @Override public void run () { comp.requestFocusInWindow(); }
                     });
                 }
             }
@@ -143,7 +143,7 @@ public class JavaTPPlatform extends TPPlatform
     @Override public void clearFocus () {
         EventQueue.invokeLater(new Runnable() {
             @Override public void run () {
-                _frame.getContentPane().getComponent(0).requestFocus();
+                _frame.getContentPane().getComponent(0).requestFocusInWindow();
             }
         });
     }
