@@ -70,26 +70,12 @@ import tripleplay.util.Layers;
  */
 public class Scroller extends Composite<Scroller>
 {
-    /** The size of scroll bars. */
-    public static final Style<Float> BAR_SIZE = Style.newStyle(true, 5f);
-
-    /** The color of scroll bars. */
-    public static final Style<Integer> BAR_COLOR = Style.newStyle(
-        true, Color.withAlpha(Colors.BLACK, 128));
-
-    /** The renderer for scroll bars, by default a simple {@code Surface.fillRect}. */
-    public static final Style<BarRenderer> BAR_RENDERER = Style.<BarRenderer>newStyle(
-        false, new BarRenderer() {
-            @Override public void drawBar (Surface surface, Rectangle area) {
-                surface.fillRect(area.x, area.y, area.width, area.height);
-            }
-        });
-
-    /** The alpha per ms lost by the scroll bars when not moving. */
-    public static final Style<Float> BAR_FADE_SPEED = Style.newStyle(true, 1.5f / 1000);
-
-    /** The alpha set on the scroll bars whenever they are first shown. */
-    public static final Style<Float> BAR_TOP_ALPHA = Style.newStyle(true, 3f);
+    /** The type of bars to use. */
+    public static final Style<BarType> BAR_TYPE = Style.<BarType>newStyle(true, new BarType() {
+        @Override public Bars createBars (Scroller scroller) {
+            return new TouchBars(Color.withAlpha(Colors.BLACK, 128), 5f, 3f, 1.5f / 1000);
+        }
+    });
 
     /**
      * Interface for customizing how content is clipped and translated.
@@ -113,15 +99,13 @@ public class Scroller extends Composite<Scroller>
     }
 
     /**
-     * Draws a scroll bar onto a surface.
+     * Handles creating the scroll bars.
      */
-    public interface BarRenderer {
+    public static abstract class BarType {
         /**
-         * Draws the bar of the given area. The fill color if the surface is set to the resolved
-         * {@link #BAR_COLOR} style. {@link Surface#save()} and restore are called automatically.
-         * TODO: we may want an orientation passed too
+         * Creates the scroll bars.
          */
-        void drawBar (Surface surface, Rectangle area);
+        public abstract Bars createBars (Scroller scroller);
     }
 
     /**
@@ -181,6 +165,24 @@ public class Scroller extends Composite<Scroller>
             return _max != 0;
         }
 
+        /** Gets the size of the content along this range's axis. */
+        public float contentSize () {
+            return _on ? _csize : _size;
+        }
+
+        /** Gets the size of the view along this scroll bar's axis. */
+        public float viewSize () {
+            return _size;
+        }
+
+        protected void setOn (boolean on) {
+            _on = on;
+        }
+
+        protected boolean on () {
+            return _on;
+        }
+
         /** Set the view size and content size along this range's axis. */
         protected float setRange (float viewSize, float contentSize) {
             _size = viewSize;
@@ -206,11 +208,6 @@ public class Scroller extends Composite<Scroller>
             _cpos = cpos;
             _pos = _max == 0 ? 0 : cpos / _max * (_size - _extent);
             return true;
-        }
-
-        /** Gets the size of the content along this range's axis. */
-        protected float getContentSize () {
-            return _on ? _csize : _size;
         }
 
         /** During size computation, extends the provided hint. */
@@ -240,6 +237,117 @@ public class Scroller extends Composite<Scroller>
 
         /** The maximum position the content can have. */
         protected float _max;
+    }
+
+    /**
+     * Handles the appearance and animation of scroll bars.
+     */
+    public static abstract class Bars
+    {
+        /**
+         * Sets the bar instances. This will be called after creation, but before the call to
+         * {@link #layer()}.
+         */
+        public void init (Range hrange, Range vrange) {
+            _hrange = hrange;
+            _vrange = vrange;
+        }
+
+        /**
+         * Gets the layer to display the scroll bars. It gets added to the same parent as the
+         * content's.
+         */
+        public abstract Layer layer ();
+
+        /**
+         * Updates the scroll bars' time based animation, if any, after the given time delta.
+         */
+        public void update (float dt) {}
+
+        /**
+         * Updates the scroll bars' positions. Not necessary for immediate layer bars.
+         */
+        public void updatePosition () {}
+
+        /**
+         * Destroys the resources created by the bars.
+         */
+        public void destroy () {
+            layer().destroy();
+        }
+
+        /**
+         * Space consumed by active scroll bars.
+         */
+        public float size () {
+            return 0;
+        }
+
+        protected Range _hrange, _vrange;
+    }
+
+    /**
+     * Plain rectangle scroll bars that fade out, ideal for drag scrolling.
+     */
+    public static class TouchBars extends Bars
+        implements ImmediateLayer.Renderer 
+    {
+        @Override public void update (float delta) {
+            // fade out the bars
+            if (_alpha > 0 && _fadeSpeed > 0) setBarAlpha(_alpha - _fadeSpeed * delta);
+        }
+
+        @Override public void updatePosition () {
+            // whenever the position changes, update to full visibility
+            setBarAlpha(_topAlpha);
+        }
+
+        @Override public Layer layer () {
+            return _layer;
+        }
+
+        @Override public void render (Surface surface) {
+            surface.save();
+            surface.setFillColor(_color);
+
+            if (_hrange.active()) {
+                _tempArea.setBounds(_hrange._pos, _vrange._size - _size, _hrange._extent, _size);
+                drawBar(surface, _tempArea);
+            }
+
+            if (_vrange.active()) {
+                _tempArea.setBounds(_hrange._size - _size, _vrange._pos, _size, _vrange._extent);
+                drawBar(surface, _tempArea);
+            }
+
+            surface.restore();
+        }
+
+        protected TouchBars (int color, float size, float topAlpha, float fadeSpeed) {
+            _color = color;
+            _size = size;
+            _topAlpha = topAlpha;
+            _fadeSpeed = fadeSpeed;
+            _layer = PlayN.graphics().createImmediateLayer(this);
+        }
+
+        protected void setBarAlpha (float alpha) {
+            _alpha = Math.min(_topAlpha, Math.max(0, alpha));
+            _layer.setAlpha(Math.min(_alpha, 1));
+            _layer.setVisible(_alpha > 0);
+        }
+
+        protected void drawBar (Surface surface, Rectangle area) {
+            surface.fillRect(area.x, area.y, area.width, area.height);
+        }
+
+        protected Rectangle _tempArea = new Rectangle();
+        protected float _alpha;
+        protected float _topAlpha;
+        protected float _fadeSpeed;
+        protected int _color;
+        protected float _size;
+        protected Layer _layer;
     }
 
     /**
@@ -335,8 +443,8 @@ public class Scroller extends Composite<Scroller>
      * Sets the behavior of this scroller.
      */
     public Scroller setBehavior (Behavior beh) {
-        hrange._on = beh.hasHorizontal();
-        vrange._on = beh.hasVertical();
+        hrange.setOn(beh.hasHorizontal());
+        vrange.setOn(beh.hasVertical());
         invalidate();
         return this;
     }
@@ -432,9 +540,7 @@ public class Scroller extends Composite<Scroller>
     protected void update (float delta) {
         _flicker.update(delta);
         update(false);
-
-        // fade out the bars
-        if (_barAlpha > 0 && _barFadeSpeed > 0) setBarAlpha(_barAlpha - _barFadeSpeed * delta);
+        if (_bars != null) _bars.update(delta);
     }
 
     /** Updates the position of the content to match the flicker. If force is set, then the
@@ -449,7 +555,7 @@ public class Scroller extends Composite<Scroller>
             if (!force) updateVisibility();
 
             firePositionChange();
-            setBarAlpha(_barTopAlpha);
+            if (_bars != null) _bars.updatePosition();
         }
     }
 
@@ -485,11 +591,13 @@ public class Scroller extends Composite<Scroller>
                 return 1;
             }
         }).handle();
+        invalidate();
     }
 
     @Override protected void wasRemoved () {
-        super.wasRemoved();
         _updater.cancel();
+        updateBars(null); // make sure bars get destroyed in case we don't get added again
+        super.wasRemoved();
     }
 
     /** Hides the layers of any children of the content that are currently visible but outside
@@ -529,67 +637,27 @@ public class Scroller extends Composite<Scroller>
         }
     }
 
-    /** Sets the alpha of the scroll bars layer. */
-    protected void setBarAlpha (float alpha) {
-        _barAlpha = Math.min(_barTopAlpha, Math.max(0, alpha));
-        if (_barLayer != null) {
-            _barLayer.setAlpha(Math.min(_barAlpha, 1));
-            _barLayer.setVisible(_barAlpha > 0);
+    protected void updateBars (BarType barType) {
+        if (_bars != null) {
+            if (_barType == barType) return;
+            _bars.destroy();
+            _bars = null;
         }
-    }
-
-    @Override
-    protected void layout () {
-        super.layout();
-        _barFadeSpeed = resolveStyle(BAR_FADE_SPEED);
-        _barTopAlpha = resolveStyle(BAR_TOP_ALPHA);
+        _barType = barType;
+        if (_barType != null) _bars = _barType.createBars(this);
     }
 
     /** Extends the usual layout with scroll bar setup. */
     protected class BarsLayoutData extends CompositeLayoutData
     {
-        public final int barColor = resolveStyle(BAR_COLOR);
-        public final float barSize = resolveStyle(BAR_SIZE).floatValue();
-        public final BarRenderer barRenderer = resolveStyle(BAR_RENDERER);
+        public final BarType barType = resolveStyle(BAR_TYPE);
 
         @Override
         public void layout (float left, float top, final float width, final float height) {
+            // set the bars first so the ScrollLayout can use it
+            updateBars(barType);
             super.layout(left, top, width, height);
-
-            // all children are now validated, update layer visibility
-            updateVisibility();
-
-            ImmediateLayer bars = null;
-
-            if (barRenderer != null && (hrange.active() || vrange.active())) {
-                // make a new layer to render the scroll bars
-                bars = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-
-                    final Rectangle area = new Rectangle();
-
-                    @Override public void render (Surface surface) {
-                        surface.save();
-                        surface.setFillColor(barColor);
-
-                        if (hrange.active()) {
-                            area.setBounds(hrange._pos, height - barSize, hrange._extent, barSize);
-                            barRenderer.drawBar(surface, area);
-                        }
-
-                        if (vrange.active()) {
-                            area.setBounds(width - barSize, vrange._pos, barSize, vrange._extent);
-                            barRenderer.drawBar(surface, area);
-                        }
-
-                        surface.restore();
-                    }
-                });
-            }
-
-            // out with the old, in with the new
-            if (_barLayer != null) _barLayer.destroy();
-            if ((_barLayer = bars) != null) _scroller.layer.add(
-                _barLayer.setDepth(1).setAlpha(_barAlpha));
+            if (_bars != null) layer.add(_bars.layer().setDepth(1).setTranslation(left,  top));
         }
     }
 
@@ -609,12 +677,20 @@ public class Scroller extends Composite<Scroller>
         @Override public void layout (Container<?> elems, float left, float top, float width,
                                       float height) {
             Asserts.checkArgument(elems.childCount() == 1 && elems.childAt(0) == content);
-            // reset range of scroll bars
+
+            // if we're going to have H or V scrolling, make room on the bottom and/or right
+            if (hrange.on() && _contentSize.width > width) height -= _bars.size();
+            if (vrange.on() && _contentSize.height > height) width -= _bars.size();
+
+            // reset ranges
             left = hrange.setRange(width, _contentSize.width);
             top = vrange.setRange(height, _contentSize.height);
 
+            // let the bars know about the range change
+            if (_bars != null) _bars.init(hrange, vrange);
+
             // set the content bounds to the large virtual area starting at 0, 0
-            setBounds(content, 0, 0, hrange.getContentSize(), vrange.getContentSize());
+            setBounds(content, 0, 0, hrange.contentSize(), vrange.contentSize());
 
             // clip the content in its own special way
             _clippable.setViewArea(width, height);
@@ -646,11 +722,12 @@ public class Scroller extends Composite<Scroller>
     protected final Clippable _clippable;
     protected final Dimension _contentSize = new Dimension();
     protected Animation.Handle _updater;
-    protected Layer _barLayer;
     protected Point _queuedScroll;
-    protected float _barAlpha;
-    protected BarRenderer _barRenderer;
     protected List<Listener> _lners;
-    protected float _barFadeSpeed;
-    protected float _barTopAlpha;
+
+    /** Scroll bar type, used to determine if the bars need to be recreated. */
+    protected BarType _barType;
+
+    /** Scroll bars, created during layout, based on the {@link BarType}. */
+    protected Bars _bars;
 }
