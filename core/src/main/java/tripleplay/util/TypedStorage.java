@@ -307,8 +307,9 @@ public class TypedStorage
                 if (rset.isEmpty()) remove(key);
                 else {
                     StringBuilder buf = new StringBuilder();
+                    int ii = 0;
                     for (E value : rset) {
-                        if (buf.length() > 0) buf.append(",");
+                        if (ii++ > 0) buf.append(",");
                         buf.append(fromFunc.apply(value));
                     }
                     set(key, buf.toString());
