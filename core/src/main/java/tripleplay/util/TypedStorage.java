@@ -301,13 +301,18 @@ public class TypedStorage
             }
         }
         rset.connect(new RSet.Listener<E>() {
-            @Override public void onAdd (E unused) {
-                StringBuilder buf = new StringBuilder();
-                for (E value : rset) {
-                    if (buf.length() > 0) buf.append(",");
-                    buf.append(fromFunc.apply(value));
+            @Override public void onAdd (E unused) { save(); }
+            @Override public void onRemove (E unused) { save(); }
+            protected void save () {
+                if (rset.isEmpty()) remove(key);
+                else {
+                    StringBuilder buf = new StringBuilder();
+                    for (E value : rset) {
+                        if (buf.length() > 0) buf.append(",");
+                        buf.append(fromFunc.apply(value));
+                    }
+                    set(key, buf.toString());
                 }
-                set(key, buf.toString());
             }
         });
         return rset;
