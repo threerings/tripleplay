@@ -162,24 +162,26 @@ public class Scroller extends Composite<Scroller>
     }
 
     /**
-     * A horizontal or vertical scroll bar.
+     * A range along an axis for representing scroll bars. Using the content and view extent,
+     * calculates the relative sizes.
      */
-    public static class Bar {
+    public static class Range {
         /**
-         * Returns the maximum value that this scroll bar can have, in content offset coordinates.
+         * Returns the maximum value that this range can have, in content offset coordinates.
          */
         public float max () {
             return _max;
         }
 
         /**
-         * Tests if the scroll bar is currently active.
+         * Tests if the range is currently active. A range is inactive if it's turned off
+         * explicitly or if the view size is larger than the content size.
          */
         public boolean active () {
             return _max != 0;
         }
 
-        /** Set the view size and content size along this bar's axis. */
+        /** Set the view size and content size along this range's axis. */
         protected float setRange (float viewSize, float contentSize) {
             _size = viewSize;
             _csize = contentSize;
@@ -198,7 +200,7 @@ public class Scroller extends Composite<Scroller>
             }
         }
 
-        /** Sets the position of the content along this bar's axis. */
+        /** Sets the position of the content along this range's axis. */
         protected boolean set (float cpos) {
             if (cpos == _cpos) return false;
             _cpos = cpos;
@@ -206,7 +208,7 @@ public class Scroller extends Composite<Scroller>
             return true;
         }
 
-        /** Gets the size of the content along this scroll bar's axis. */
+        /** Gets the size of the content along this range's axis. */
         protected float getContentSize () {
             return _on ? _csize : _size;
         }
@@ -218,7 +220,7 @@ public class Scroller extends Composite<Scroller>
             return _on ? 100000 : hint;
         }
 
-        /** If this scroll bar is in use. Set according to {@link Scroller.Behavior}. */
+        /** If this range is in use. Set according to {@link Scroller.Behavior}. */
         protected boolean _on = true;
 
         /** View size. */
@@ -277,8 +279,8 @@ public class Scroller extends Composite<Scroller>
     /** The content contained in the scroll group. */
     public final Element<?> content;
 
-    /** Scroll bars. */
-    public final Bar hbar = createBar(), vbar = createBar();
+    /** Scroll ranges. */
+    public final Range hrange = createRange(), vrange = createRange();
 
     /**
      * Creates a new scroll group containing the given content and with {@link Behavior#BOTH}.
@@ -320,7 +322,7 @@ public class Scroller extends Composite<Scroller>
             @Override public void onMouseWheelScroll (WheelEvent event) {
                 // scale so each wheel notch is 1/4 the screen dimension
                 float delta = event.velocity() * .25f;
-                if (vbar.active()) scrollY(ypos() + (int)(delta * viewSize().height()));
+                if (vrange.active()) scrollY(ypos() + (int)(delta * viewSize().height()));
                 else scrollX(xpos() + (int)(delta * viewSize().width()));
             }
         });
@@ -330,17 +332,17 @@ public class Scroller extends Composite<Scroller>
     }
 
     /**
-     * Sets the behavior of this scroll bar.
+     * Sets the behavior of this scroller.
      */
     public Scroller setBehavior (Behavior beh) {
-        hbar._on = beh.hasHorizontal();
-        vbar._on = beh.hasVertical();
+        hrange._on = beh.hasHorizontal();
+        vrange._on = beh.hasVertical();
         invalidate();
         return this;
     }
 
     /**
-     * Adds a listener to be notified of this scroll group's changes.
+     * Adds a listener to be notified of this scroller's changes.
      */
     public void addListener (Listener lner) {
         if (_lners == null) _lners = new ArrayList<Listener>();
@@ -348,7 +350,7 @@ public class Scroller extends Composite<Scroller>
     }
 
     /**
-     * Removes a previously added listener from this scroll group.
+     * Removes a previously added listener from this scroller.
      */
     public void removeListener (Listener lner) {
         if (_lners != null) _lners.remove(lner);
@@ -358,14 +360,14 @@ public class Scroller extends Composite<Scroller>
      * Returns the offset of the left edge of the view area relative to that of the content.
      */
     public float xpos () {
-        return hbar._cpos;
+        return hrange._cpos;
     }
 
     /**
      * Returns the offset of the top edge of the view area relative to that of the content.
      */
     public float ypos () {
-        return vbar._cpos;
+        return vrange._cpos;
     }
 
     /**
@@ -389,8 +391,8 @@ public class Scroller extends Composite<Scroller>
      * clipped to be within their respective valid ranges.
      */
     public void scroll (float x, float y) {
-        x = Math.max(0, Math.min(x, hbar._max));
-        y = Math.max(0, Math.min(y, vbar._max));
+        x = Math.max(0, Math.min(x, hrange._max));
+        y = Math.max(0, Math.min(y, vrange._max));
         _flicker.positionChanged(x, y);
     }
 
@@ -439,7 +441,7 @@ public class Scroller extends Composite<Scroller>
      * relevant values will be updated even if there was no change. */
     protected void update (boolean force) {
         IPoint pos = _flicker.position();
-        boolean dx = hbar.set(pos.x()), dy = vbar.set(pos.y());
+        boolean dx = hrange.set(pos.x()), dy = vrange.set(pos.y());
         if (dx || dy || force) {
             _clippable.setPosition(-pos.x(), -pos.y());
 
@@ -452,11 +454,12 @@ public class Scroller extends Composite<Scroller>
     }
 
     /**
-     * A method for creating our Bar instances. This is called once each for hbar and vbar at object
-     * creation time. Overriding this method will allow subclasses to customize Bar behavior.
+     * A method for creating our {@code Range} instances. This is called once each for {@code
+     * hrange} and {@code vrange} at creation time. Overriding this method will allow subclasses
+     * to customize {@code Range} behavior.
      */
-    protected Bar createBar ()  {
-        return new Bar();
+    protected Range createRange ()  {
+        return new Range();
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
@@ -499,7 +502,7 @@ public class Scroller extends Composite<Scroller>
         }
 
         // hide the layer of any child of content that isn't in bounds
-        float x = hbar._cpos, y = vbar._cpos, wid = hbar._size, hei = vbar._size;
+        float x = hrange._cpos, y = vrange._cpos, wid = hrange._size, hei = vrange._size;
         for (Element<?> child : (Container<?>)content) {
             IDimension size = child.size();
             if (child.isVisible()) child.layer.setVisible(
@@ -558,7 +561,7 @@ public class Scroller extends Composite<Scroller>
 
             ImmediateLayer bars = null;
 
-            if (barRenderer != null && (hbar.active() || vbar.active())) {
+            if (barRenderer != null && (hrange.active() || vrange.active())) {
                 // make a new layer to render the scroll bars
                 bars = PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
 
@@ -568,13 +571,13 @@ public class Scroller extends Composite<Scroller>
                         surface.save();
                         surface.setFillColor(barColor);
 
-                        if (hbar.active()) {
-                            area.setBounds(hbar._pos, height - barSize, hbar._extent, barSize);
+                        if (hrange.active()) {
+                            area.setBounds(hrange._pos, height - barSize, hrange._extent, barSize);
                             barRenderer.drawBar(surface, area);
                         }
 
-                        if (vbar.active()) {
-                            area.setBounds(width - barSize, vbar._pos, barSize, vbar._extent);
+                        if (vrange.active()) {
+                            area.setBounds(width - barSize, vrange._pos, barSize, vrange._extent);
                             barRenderer.drawBar(surface, area);
                         }
 
@@ -599,7 +602,7 @@ public class Scroller extends Composite<Scroller>
             // the content is always the 1st child, get the preferred size with extended hints
             Asserts.checkArgument(elems.childCount() == 1 && elems.childAt(0) == content);
             _contentSize.setSize(preferredSize(elems.childAt(0),
-                hbar.extendHint(hintX), vbar.extendHint(hintY)));
+                hrange.extendHint(hintX), vrange.extendHint(hintY)));
             return new Dimension(_contentSize);
         }
 
@@ -607,11 +610,11 @@ public class Scroller extends Composite<Scroller>
                                       float height) {
             Asserts.checkArgument(elems.childCount() == 1 && elems.childAt(0) == content);
             // reset range of scroll bars
-            left = hbar.setRange(width, _contentSize.width);
-            top = vbar.setRange(height, _contentSize.height);
+            left = hrange.setRange(width, _contentSize.width);
+            top = vrange.setRange(height, _contentSize.height);
 
             // set the content bounds to the large virtual area starting at 0, 0
-            setBounds(content, 0, 0, hbar.getContentSize(), vbar.getContentSize());
+            setBounds(content, 0, 0, hrange.getContentSize(), vrange.getContentSize());
 
             // clip the content in its own special way
             _clippable.setViewArea(width, height);
@@ -620,7 +623,7 @@ public class Scroller extends Composite<Scroller>
             ((GroupLayer.Clipped)_scroller.layer).setSize(width, height);
 
             // reset the flicker (it retains its current position)
-            _flicker.reset(hbar.max(), vbar.max());
+            _flicker.reset(hrange.max(), vrange.max());
 
             // scroll the content
             if (_queuedScroll != null) {

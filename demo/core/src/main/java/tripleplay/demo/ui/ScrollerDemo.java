@@ -61,8 +61,8 @@ public class ScrollerDemo extends DemoScreen
         // updates the scroll offset
         UnitSlot updatePos = new UnitSlot() {
             @Override public void onEmit () {
-                float x = xpos.value.get() * scroll.hbar.max();
-                float y = ypos.value.get() * scroll.vbar.max();
+                float x = xpos.value.get() * scroll.hrange.max();
+                float y = ypos.value.get() * scroll.vrange.max();
                 scroll.scroll(x, y);
             }
         };
@@ -92,12 +92,12 @@ public class ScrollerDemo extends DemoScreen
         scroll.addListener(new Scroller.Listener() {
             @Override public void viewChanged (IDimension contentSize, IDimension scrollSize) {}
             @Override public void positionChanged (float x, float y) {
-                update(xpos, x, scroll.hbar);
-                update(ypos, y, scroll.vbar);
+                update(xpos, x, scroll.hrange);
+                update(ypos, y, scroll.vrange);
             }
 
-            void update (Slider pos, float val, Scroller.Bar bar) {
-                if (bar.max() > 0) pos.value.update(val / bar.max());
+            void update (Slider pos, float val, Scroller.Range range) {
+                if (range.max() > 0) pos.value.update(val / range.max());
             }
         });
 
