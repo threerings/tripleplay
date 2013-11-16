@@ -12,7 +12,12 @@ object TriplePlayBuild extends samskivert.MavenBuild {
     javaOptions   ++= Seq("-ea"),
     // disable doc publishing, TODO: reenable when scaladoc doesn't choke on our code
     publishArtifact in (Compile, packageDoc) := false,
-    fork in Compile := true
+    fork in Compile := true,
+    // wire junit into SBT
+    libraryDependencies ++= Seq(
+      "com.novocode" % "junit-interface" % "0.10" % "test->default"
+    ),
+    testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-v")
   )
 
   override def moduleSettings (name :String, pom :pomutil.POM) = name match {
@@ -20,11 +25,7 @@ object TriplePlayBuild extends samskivert.MavenBuild {
       // no scala-library dependency here
       autoScalaLibrary := false,
       // include source in our jar for GWT
-      unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java",
-      // wire junit into SBT
-      libraryDependencies ++= Seq(
-        "com.novocode" % "junit-interface" % "0.7" % "test->default"
-      )
+      unmanagedResourceDirectories in Compile <+= baseDirectory / "src/main/java"
     )
     // case "tools" => proguardSettings ++ seq(
     //   mainClass in (Compile, run) := Some("tripleplay.tools.FramePacker"),
@@ -32,8 +33,8 @@ object TriplePlayBuild extends samskivert.MavenBuild {
     //   proguardOptions += "-dontnote scala.Enumeration"
     // )
     case name if (name startsWith "demo-") => seq(
-      publish := false,
-      publishLocal := false
+      publish := (),
+      publishLocal := ()
     )
     case _ => Nil
   }
