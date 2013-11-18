@@ -174,6 +174,11 @@ public class Scroller extends Composite<Scroller>
             return _size;
         }
 
+        /** Gets the current content offset. */
+        public float contentPos () {
+            return _cpos;
+        }
+
         protected void setOn (boolean on) {
             _on = on;
         }
