@@ -72,7 +72,7 @@ public class Scroller extends Composite<Scroller>
     /** The type of bars to use. */
     public static final Style<BarType> BAR_TYPE = Style.<BarType>newStyle(true, new BarType() {
         @Override public Bars createBars (Scroller scroller) {
-            return new TouchBars(Color.withAlpha(Colors.BLACK, 128), 5f, 3f, 1.5f / 1000);
+            return new TouchBars(scroller, Color.withAlpha(Colors.BLACK, 128), 5f, 3f, 1.5f / 1000);
         }
     });
 
@@ -244,13 +244,10 @@ public class Scroller extends Composite<Scroller>
     public static abstract class Bars
     {
         /**
-         * Sets the bar instances. This will be called after creation, but before the call to
-         * {@link #layer()}.
+         * Updates the scroll bars to match the current view and content size. This will be
+         * called during layout, prior to the call to {@link #layer()}.
          */
-        public void init (Range hrange, Range vrange) {
-            _hrange = hrange;
-            _vrange = vrange;
-        }
+        public void updateView () {}
 
         /**
          * Gets the layer to display the scroll bars. It gets added to the same parent as the
@@ -282,7 +279,14 @@ public class Scroller extends Composite<Scroller>
             return 0;
         }
 
-        protected Range _hrange, _vrange;
+        /**
+         * Creates new bars for the given {@code Scroller}.
+         */
+        protected Bars (Scroller scroller) {
+            _scroller = scroller;
+        }
+
+        protected final Scroller _scroller;
     }
 
     /**
@@ -309,16 +313,16 @@ public class Scroller extends Composite<Scroller>
             surface.save();
             surface.setFillColor(_color);
 
-            if (_hrange.active()) drawBar(surface,
-                _hrange._pos, _vrange._size - _size, _hrange._extent, _size);
-
-            if (_vrange.active()) drawBar(surface,
-                _hrange._size - _size, _vrange._pos, _size, _vrange._extent);
+            Range h = _scroller.hrange, v = _scroller.vrange;
+            if (h.active()) drawBar(surface, h._pos, v._size - _size, h._extent, _size);
+            if (v.active()) drawBar(surface, h._size - _size, v._pos, _size, v._extent);
 
             surface.restore();
         }
 
-        protected TouchBars (int color, float size, float topAlpha, float fadeSpeed) {
+        protected TouchBars (Scroller scroller,
+                int color, float size, float topAlpha, float fadeSpeed) {
+            super(scroller);
             _color = color;
             _size = size;
             _topAlpha = topAlpha;
@@ -681,7 +685,7 @@ public class Scroller extends Composite<Scroller>
             top = vrange.setRange(height, _contentSize.height);
 
             // let the bars know about the range change
-            if (_bars != null) _bars.init(hrange, vrange);
+            if (_bars != null) _bars.updateView();
 
             // set the content bounds to the large virtual area starting at 0, 0
             setBounds(content, 0, 0, hrange.contentSize(), vrange.contentSize());
