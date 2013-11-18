@@ -12,7 +12,6 @@ import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
-import pythagoras.f.Rectangle;
 import playn.core.Asserts;
 import playn.core.Color;
 import playn.core.GroupLayer;
@@ -310,15 +309,11 @@ public class Scroller extends Composite<Scroller>
             surface.save();
             surface.setFillColor(_color);
 
-            if (_hrange.active()) {
-                _tempArea.setBounds(_hrange._pos, _vrange._size - _size, _hrange._extent, _size);
-                drawBar(surface, _tempArea);
-            }
+            if (_hrange.active()) drawBar(surface,
+                _hrange._pos, _vrange._size - _size, _hrange._extent, _size);
 
-            if (_vrange.active()) {
-                _tempArea.setBounds(_hrange._size - _size, _vrange._pos, _size, _vrange._extent);
-                drawBar(surface, _tempArea);
-            }
+            if (_vrange.active()) drawBar(surface,
+                _hrange._size - _size, _vrange._pos, _size, _vrange._extent);
 
             surface.restore();
         }
@@ -337,11 +332,10 @@ public class Scroller extends Composite<Scroller>
             _layer.setVisible(_alpha > 0);
         }
 
-        protected void drawBar (Surface surface, Rectangle area) {
-            surface.fillRect(area.x, area.y, area.width, area.height);
+        protected void drawBar (Surface surface, float x, float y, float w, float h) {
+            surface.fillRect(x, y, w, h);
         }
 
-        protected Rectangle _tempArea = new Rectangle();
         protected float _alpha;
         protected float _topAlpha;
         protected float _fadeSpeed;
