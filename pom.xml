@@ -61,6 +61,7 @@
     <module>core</module>
     <module>ios</module>
     <module>java</module>
+    <module>swt-java</module>
     <module>tools</module>
     <module>demo</module>
   </modules>
