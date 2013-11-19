@@ -11,13 +11,16 @@ import com.google.common.collect.Lists;
 
 import playn.core.PlayN;
 import playn.java.JavaPlatform;
+import playn.java.SWTPlatform;
 import tripleplay.platform.JavaTPPlatform;
+import tripleplay.platform.SWTTPPlatform;
 
 public class TripleDemoJava
 {
     public static void main (String[] args) {
         JavaPlatform.Config config = new JavaPlatform.Config();
 
+        boolean swt = false;
         List<String> mainArgs = Lists.newArrayList();
         for (int ii = 0; ii < args.length; ii++) {
             String size = "--size=";
@@ -27,15 +30,24 @@ public class TripleDemoJava
                 config.height = Integer.parseInt(wh[1]);
                 continue;
             }
+            if (args[ii].equals("--swt")) {
+                swt = true;
+                continue;
+            }
             mainArgs.add(args[ii]);
         }
 
-        JavaPlatform platform = JavaPlatform.register(config);
         TripleDemo.mainArgs = mainArgs.toArray(new String[0]);
 
-        JavaTPPlatform.register(platform, config);
-        JavaTPPlatform.instance().setTitle("Tripleplay Demo");
-
+        if (swt) {
+            SWTPlatform platform = SWTPlatform.register(config);
+            SWTTPPlatform.register(platform, config);
+            platform.setTitle("Tripleplay Demo (SWT)");
+        } else {
+            JavaPlatform platform = JavaPlatform.register(config);
+            JavaTPPlatform.register(platform, config);
+            JavaTPPlatform.instance().setTitle("Tripleplay Demo (Java)");
+        }
         PlayN.run(new TripleDemo());
     }
 }

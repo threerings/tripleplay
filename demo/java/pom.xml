@@ -38,6 +38,12 @@
       <artifactId>tripleplay-java</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay-swt-java</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
