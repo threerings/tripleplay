@@ -28,6 +28,10 @@
       <modules><module>java</module></modules>
     </profile>
     <profile>
+      <id>swt-java</id>
+      <modules><module>swt-java</module></modules>
+    </profile>
+    <profile>
       <id>android</id>
       <modules><module>android</module></modules>
     </profile>
