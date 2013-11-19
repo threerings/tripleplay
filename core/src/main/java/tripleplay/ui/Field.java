@@ -288,19 +288,10 @@ public class Field extends TextWidget<Field>
     protected void updateMode (boolean nativeField) {
         if (!hasNative()) return;
         if (nativeField) {
-            NativeTextField.Mode mode = NativeTextField.Mode.NORMAL;
-            boolean multiLine = resolveStyle(MULTILINE);
-            if (resolveStyle(SECURE_TEXT_ENTRY)) {
-                if (multiLine) Log.log.warning("Ignoring MULTILINE Style");
-                mode = NativeTextField.Mode.SECURE;
-            } else if (multiLine) {
-                mode = NativeTextField.Mode.MULTI_LINE;
-            }
             _nativeField = _nativeField == null ?
-                TPPlatform.instance().createNativeTextField(new Native(), mode) :
-                TPPlatform.instance().refreshNativeTextField(_nativeField, mode);
+                TPPlatform.instance().createNativeTextField(new Native()) :
+                TPPlatform.instance().refresh(_nativeField);
 
-            _nativeField.validateStyles();
             _nativeField.setEnabled(isEnabled());
             updateNativeFieldBounds();
             _nativeField.add();
@@ -323,8 +314,7 @@ public class Field extends TextWidget<Field>
         @Override public void layout (float left, float top, float width, float height) {
             super.layout(left, top, width, height);
             _fullTimeNative = hasNative() && resolveStyle(FULLTIME_NATIVE_FIELD);
-            if (_fullTimeNative) updateMode(true);
-            else if (_nativeField != null) _nativeField.validateStyles();
+            if (_fullTimeNative || _nativeField != null) updateMode(true);
 
             // make sure our cached bits are up to date
             _validator = resolveStyle(VALIDATOR);

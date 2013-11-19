@@ -43,22 +43,22 @@ public abstract class TPPlatform
     }
 
     /**
-     * Creates a native text field, if this platform supports it.
+     * Creates a native text field, if this platform supports it. If the platform requires it,
+     * the field's styles may be resolved at this time.
      *
      * @exception UnsupportedOperationException thrown if the platform lacks support for native
      * text fields, use {@link #hasNativeTextFields} to check.
      */
-    public NativeTextField createNativeTextField (
-        Field.Native field, NativeTextField.Mode mode) {
+    public NativeTextField createNativeTextField (Field.Native field) {
         throw new UnsupportedOperationException();
     }
 
     /**
-     * Refreshes a native text field to match the given mode. Depending on the implementation,
-     * if the mode is different, a new native field may be returned, or the given one adjusted.
+     * Refreshes a native text field to match the current styles of its associated field instance.
+     * Depending on the implementation, a new native field may be returned, or the given one
+     * adjusted.
      */
-    public NativeTextField refreshNativeTextField (
-            NativeTextField previous, NativeTextField.Mode mode) {
+    public NativeTextField refresh (NativeTextField previous) {
         throw new UnsupportedOperationException();
     }
 

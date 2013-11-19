@@ -126,14 +126,14 @@ public class JavaTPPlatform extends TPPlatform
         return _os == OS.WINDOWS || _os == OS.LINUX;
     }
 
-    @Override public NativeTextField createNativeTextField (
-            Field.Native field, NativeTextField.Mode mode) {
-        return new JavaNativeTextField(field, mode, null);
+    @Override public NativeTextField createNativeTextField (Field.Native field) {
+        return refresh(new JavaNativeTextField(field));
     }
 
-    @Override public NativeTextField refreshNativeTextField (
-            NativeTextField previous, NativeTextField.Mode mode) {
-        return ((JavaNativeTextField)previous).refreshMode(mode);
+    @Override public NativeTextField refresh (NativeTextField previous) {
+        JavaNativeTextField jfield = ((JavaNativeTextField)previous).refresh();
+        jfield.validateStyles();
+        return jfield;
     }
 
     @Override public ImageOverlay createImageOverlay (playn.core.Image image) {

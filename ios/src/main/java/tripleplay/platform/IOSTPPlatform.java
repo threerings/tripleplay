@@ -28,18 +28,14 @@ public class IOSTPPlatform extends TPPlatform
         return true;
     }
 
-    @Override public NativeTextField createNativeTextField (
-            Field.Native field, NativeTextField.Mode mode) {
-        switch (mode) {
-        case MULTI_LINE: return new IOSNativeTextField.MultiLine(_fieldHandler, null, field);
-        default: return new IOSNativeTextField.SingleLine(_fieldHandler, null, field).
-                refreshMode(mode);
-        }
+    @Override public NativeTextField createNativeTextField (Field.Native field) {
+        if (field.resolveStyle(Field.MULTILINE))
+            return new IOSNativeTextField.MultiLine(_fieldHandler, null, field);
+        return new IOSNativeTextField.SingleLine(_fieldHandler, null, field);
     }
 
-    @Override public NativeTextField refreshNativeTextField (
-            NativeTextField previous, NativeTextField.Mode mode) {
-        return ((IOSNativeTextField)previous).refreshMode(mode);
+    @Override public NativeTextField refresh (NativeTextField previous) {
+        return ((IOSNativeTextField)previous).refresh();
     }
 
     @Override public ImageOverlay createImageOverlay (Image image) {

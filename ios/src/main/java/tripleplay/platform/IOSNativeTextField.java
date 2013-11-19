@@ -74,10 +74,8 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
             _field.set_Enabled(enabled);
         }
 
-        public NativeTextField refreshMode (Mode mode) {
-            if (mode == Mode.MULTI_LINE) return new MultiLine(_handler, this, _element);
-            _field.set_SecureTextEntry(mode == Mode.SECURE);
-            return this;
+        @Override public IOSNativeTextField refresh (boolean multiLine) {
+            return multiLine ? new MultiLine(_handler, this, _element) : this;
         }
 
         @Override public boolean insert (String text) {
@@ -140,9 +138,8 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
             _field.set_Editable(enabled);
         }
 
-        public NativeTextField refreshMode (Mode mode) {
-            return mode == Mode.MULTI_LINE ? this :
-                new SingleLine(_handler, this, _element).refreshMode(mode);
+        @Override public IOSNativeTextField refresh (boolean multiLine) {
+            return multiLine ? this : new SingleLine(_handler, this, _element);
         }
 
         @Override protected UIFont getNativeFont () {
@@ -213,7 +210,8 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
         return view;
     }
 
-    @Override public void validateStyles () {
+    /** Re-applies the current Field styles to the underlying native field. */
+    public void validateStyles () {
         // Keyboard type
         Keyboard.TextType type = _element.resolveStyle(Field.TEXT_TYPE);
         switch (type) {
@@ -245,10 +243,14 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
         getTraits().set_AutocorrectionType(UITextAutocorrectionType.wrap(
             enable ? UITextAutocorrectionType.Yes : UITextAutocorrectionType.No));
 
+        // Hidden typing
+        getTraits().set_SecureTextEntry(_element.resolveStyle(Field.SECURE_TEXT_ENTRY));
+
         // Return key label
         String label = _element.resolveStyle(Field.RETURN_KEY_LABEL);
         setReturnKeyLabel(label);
 
+        // Alignment
         Style.HAlign halign = _element.resolveStyle(Style.HALIGN);
         setAlignment(UITextAlignment.wrap(toMono(halign)));
 
@@ -270,8 +272,13 @@ public abstract class IOSNativeTextField extends IOSNativeOverlay
         view.BecomeFirstResponder();
     }
 
-    abstract public NativeTextField refreshMode (Mode mode);
+    public final IOSNativeTextField refresh () {
+        IOSNativeTextField nfield = refresh(_element.resolveStyle(Field.MULTILINE));
+        nfield.validateStyles();
+        return nfield;
+    }
 
+    abstract protected IOSNativeTextField refresh (boolean multiLine);
     abstract protected UIFont getNativeFont ();
     abstract protected void setNativeFont (UIFont font);
     abstract protected String getNativeText ();

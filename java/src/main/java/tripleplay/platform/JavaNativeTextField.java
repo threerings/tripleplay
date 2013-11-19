@@ -39,11 +39,27 @@ import static tripleplay.platform.JavaTPPlatform.*;
 public class JavaNativeTextField extends JavaNativeOverlay
     implements NativeTextField
 {
-    public JavaNativeTextField (Field.Native element, Mode mode, JavaNativeTextField oldField) {
-        super(mode == Mode.MULTI_LINE ? new JTextArea() :
-            mode == Mode.SECURE ? new JPasswordField() : new JTextField());
+    public static Class<? extends JTextComponent> resolveComponentType (Field.Native elem) {
+        return elem.resolveStyle(Field.MULTILINE) ? JTextArea.class :
+            elem.resolveStyle(Field.SECURE_TEXT_ENTRY) ? JPasswordField.class : JTextField.class;
+    }
+
+    public static JTextComponent create (Class<? extends JTextComponent> type) {
+        try {
+            return type.newInstance();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public JavaNativeTextField (Field.Native element) {
+        this(element, null, resolveComponentType(element));
+    }
+
+    public JavaNativeTextField (Field.Native element, JavaNativeTextField oldField,
+            Class<? extends JTextComponent> type) {
+        super(create(type));
         _element = element;
-        _mode = mode;
         _textComp = (JTextComponent)component;
 
         if (oldField != null) {
@@ -126,7 +142,8 @@ public class JavaNativeTextField extends JavaNativeOverlay
             }});
     }
 
-    @Override public void validateStyles () {
+    /** Re-applies the current Field styles to the text component. */
+    public void validateStyles () {
         Font font = _element.resolveStyle(Style.FONT);
         _textComp.setFont(new java.awt.Font(font.name(), awtFontStyle(font.style()),
             FloatMath.round(font.size())));
@@ -156,8 +173,9 @@ public class JavaNativeTextField extends JavaNativeOverlay
         _textComp.setEnabled(enabled);
     }
 
-    public JavaNativeTextField refreshMode (Mode mode) {
-        return _mode == mode ? this : new JavaNativeTextField(_element, mode, this);
+    public JavaNativeTextField refresh () {
+        Class<? extends JTextComponent> type = resolveComponentType(_element);
+        return type == component.getClass() ? this : new JavaNativeTextField(_element, this, type);
     }
 
     @Override public void focus () {
@@ -379,7 +397,6 @@ public class JavaNativeTextField extends JavaNativeOverlay
     }
 
     protected final Field.Native _element;
-    protected final Mode _mode;
     protected final JTextComponent _textComp;
 
     protected Connection _textConnection;
