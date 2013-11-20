@@ -29,9 +29,9 @@ public class IOSTPPlatform extends TPPlatform
     }
 
     @Override public NativeTextField createNativeTextField (Field.Native field) {
-        if (field.resolveStyle(Field.MULTILINE))
-            return new IOSNativeTextField.MultiLine(_fieldHandler, null, field);
-        return new IOSNativeTextField.SingleLine(_fieldHandler, null, field);
+        return (field.resolveStyle(Field.MULTILINE) ?
+            new IOSNativeTextField.MultiLine(_fieldHandler, null, field) :
+            new IOSNativeTextField.SingleLine(_fieldHandler, null, field)).refresh();
     }
 
     @Override public NativeTextField refresh (NativeTextField previous) {
