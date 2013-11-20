@@ -26,13 +26,14 @@ public abstract class SWTNativeOverlay implements NativeOverlay
 
     @Override public void setBounds (IRectangle bounds) {
         this.bounds.setBounds(bounds);
+        if (ctrl != null) updateBounds();
     }
 
     @Override public void add () {
         if (ctrl != null) return;
-        ctrl = createControl(SWTTPPlatform.instance().shellContent());
-        ctrl.setBounds(
-            (int)bounds.x(), (int)bounds.y(), (int)bounds.width(), (int)bounds.height());
+        ctrl = createControl(SWTTPPlatform.instance().overlayParent());
+        updateBounds();
+        ctrl.moveAbove(null);
         didCreate();
         SWTTPPlatform.instance().addOverlay(this);
     }
@@ -43,6 +44,12 @@ public abstract class SWTNativeOverlay implements NativeOverlay
         willDispose();
         ctrl.dispose();
         ctrl = null;
+    }
+
+    protected void updateBounds () {
+        Log.log.info("Updating bounds", "val", bounds);
+        ctrl.setBounds(
+            (int)bounds.x(), (int)bounds.y(), (int)bounds.width(), (int)bounds.height());
     }
 
     /** Caleld after the SWT {@code Control} has been created. */

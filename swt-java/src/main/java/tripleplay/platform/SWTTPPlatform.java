@@ -8,7 +8,6 @@ package tripleplay.platform;
 import java.util.Set;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
 import playn.java.JavaPlatform;
 import playn.java.SWTPlatform;
@@ -49,6 +48,8 @@ public class SWTTPPlatform extends TPPlatform
 
     protected SWTTPPlatform (SWTPlatform platform, JavaPlatform.Config config) {
         _platform = platform;
+        _overlay = _platform.composite();
+
 
         // Figure out the os
         String osname = System.getProperty("os.name");
@@ -60,8 +61,7 @@ public class SWTTPPlatform extends TPPlatform
     }
 
     @Override public boolean hasNativeTextFields () {
-        // mac doesn't currently support native text :(
-        return _os == OS.WINDOWS || _os == OS.LINUX;
+        return true;
     }
 
     @Override public NativeTextField createNativeTextField (Field.Native field) {
@@ -82,7 +82,7 @@ public class SWTTPPlatform extends TPPlatform
             _convert = new SWTConvert();
         }
         // TODO: is display lifetime suitable to avoid this?
-        _convert.display = shell().getDisplay();
+        _convert.display = _platform.shell().getDisplay();
         return _convert;
     }
 
@@ -93,12 +93,8 @@ public class SWTTPPlatform extends TPPlatform
         return _os;
     }
 
-    public Shell shell () {
-        return _platform.shell();
-    }
-
-    public Composite shellContent () {
-        return _platform.composite();
+    public Composite overlayParent () {
+        return _overlay;
     }
 
     /**
@@ -114,13 +110,13 @@ public class SWTTPPlatform extends TPPlatform
         if (icons.length > 1) {
             log.info("Ignoring additional icons");
         }
-        shell().setImage(convert().image(icons[0]));
-            
+        _platform.shell().setImage(convert().image(icons[0]));
     }
 
     /** The SWT platform with which this TPPlatform was registered. */
     protected SWTPlatform _platform;
     protected SWTConvert _convert;
+    protected Composite _overlay;
 
     protected OS _os = OS.UNKNOWN;
 

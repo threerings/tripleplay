@@ -33,28 +33,31 @@ public class SWTNativeTextField extends SWTNativeOverlay
         _textConnection = _element.field().text.connectNotify(new Slot<String>() {
             @Override public void onEmit (final String value) {
                 if (_textCtrl == null) return;
-                if (!_textCtrl.getText().equals(value)) {
-                    _textNotifyInProgress = true;
-                    _textCtrl.setText(value);
+                if (_textCtrl.getText().equals(value)) return;
+
+                _textNotifyInProgress = true;
+                try {
+                    setText(value);
+                } finally {
                     _textNotifyInProgress = false;
                 }
-            }});
+            }
+        });
     }
 
     @Override protected Control createControl (Composite parent) {
-        int style = (_element.resolveStyle(Field.MULTILINE) ? SWT.MULTI : SWT.SINGLE) |
-            (_element.resolveStyle(Field.SECURE_TEXT_ENTRY) ? SWT.PASSWORD : 0);
-        switch (_element.resolveStyle(Style.HALIGN)) {
-        case CENTER: style |= SWT.CENTER; break;
-        case LEFT: style |= SWT.LEFT; break;
-        case RIGHT: style |= SWT.RIGHT; break;
-        }
-        return new Text(parent, style);
+        // TODO: transparent background. these style flags don't work
+        return new Text(parent, resolveStyle() | SWT.NO_BACKGROUND | SWT.TRANSPARENT);
     }
 
     @Override protected void didCreate () {
+        // get our casted member
         _textCtrl = (Text)ctrl;
-        _textCtrl.setText(_element.field().text.get());
+
+        // copy in the tp field text
+        setText(_element.field().text.get());
+
+        // listen for changes and propagate back to field
         _textCtrl.addModifyListener(new ModifyListener() {
             @Override public void modifyText (ModifyEvent e) {
                 if (!_textNotifyInProgress) _element.field().text.update(_textCtrl.getText());
@@ -69,6 +72,8 @@ public class SWTNativeTextField extends SWTNativeOverlay
                 }
             });
         }*/
+
+        // listen for focus changes and dispatch via the platform
         _textCtrl.addFocusListener(new FocusListener() {
             @Override public void focusLost (FocusEvent e) {
                 _element.finishedEditing().emit(false);
@@ -82,6 +87,8 @@ public class SWTNativeTextField extends SWTNativeOverlay
                 SWTTPPlatform.instance()._focus.update(_element.field());
             }
         });
+
+        // listen for keypresses and dispatch via platform (for apps to handle tab/arrows etc)
         _textCtrl.addKeyListener(new KeyListener() {
             void post (int code, boolean pressed) {
                 SWTKeyboard keyboard = (SWTKeyboard)PlayN.keyboard();
@@ -99,34 +106,46 @@ public class SWTNativeTextField extends SWTNativeOverlay
             }
         });
 
-        // TODO _textComp.setBorder(null);
-        // TODO _textComp.setAutoscrolls(true);
-        _textCtrl.setEnabled(_enabled);
-
-        Font font = _element.resolveStyle(Style.FONT);
-        _textCtrl.setFont(SWTTPPlatform.instance().convert().font(font));
-        _textCtrl.setForeground(convert().color(_element.resolveStyle(Style.COLOR)));
-
-        // TODO: Keyboard.TextType textType = resolveStyle(Field.TEXT_TYPE);
+        refresh();
     }
 
-    @Override
-    protected void willDispose () {
-        _textConnection.disconnect();
-        _textConnection = null;
-        // NOTE: all of our added SWT listeners are released in dispose()
+    @Override protected void willDispose () {
+        _textCtrl = null;
     }
 
-    @Override
-    public void setEnabled (boolean enabled) {
+    @Override public void setEnabled (boolean enabled) {
         _enabled = enabled;
         if (_textCtrl != null) _textCtrl.setEnabled(enabled);
     }
 
     public void refresh () {
-        boolean add = ctrl != null;
-        remove();
-        if (add) add();
+        if (ctrl == null) return;
+
+        // check the desired style against the existing ones; the mask is needed to filter
+        // SWT's other internal styles
+        int style = resolveStyle();
+        if (style != (_textCtrl.getStyle() & REALLOC_STYLES)) {
+            // we need a new instance, just remove and add (this is recursive but next time, the
+            // else branch will be taken)
+            remove();
+            add();
+            return;
+        }
+
+        // TODO _textComp.setBorder(null);
+        // TODO _textComp.setAutoscrolls(true);
+
+        _textCtrl.setEnabled(_enabled);
+
+        // don't set the font unless it's changed, it makes the caret disappear
+        Font nfont = _element.resolveStyle(Style.FONT);
+        if (_font == null || !_font.equals(nfont))
+            _textCtrl.setFont(convert().font(_font = nfont));
+
+        // set foreground
+        _textCtrl.setForeground(convert().color(_element.resolveStyle(Style.COLOR)));
+        // TODO: Keyboard.TextType textType = resolveStyle(Field.TEXT_TYPE);
+        updateBounds();
     }
 
     @Override public void focus () {
@@ -139,14 +158,36 @@ public class SWTNativeTextField extends SWTNativeOverlay
         return true;
     }
 
-    SWTConvert convert () {
+    protected void setText (String val)
+    {
+        _textCtrl.setText(val);
+        Log.log.info("Set text", "val", val, "nval", _textCtrl.getText());
+    }
+
+    protected int resolveStyle () {
+        int style = (_element.resolveStyle(Field.MULTILINE) ? SWT.MULTI : SWT.SINGLE) |
+            (_element.resolveStyle(Field.SECURE_TEXT_ENTRY) ? SWT.PASSWORD : 0);
+        switch (_element.resolveStyle(Style.HALIGN)) {
+        case CENTER: style |= SWT.CENTER; break;
+        case LEFT: style |= SWT.LEFT; break;
+        case RIGHT: style |= SWT.RIGHT; break;
+        }
+        return style;
+    }
+
+    protected SWTConvert convert () {
         return SWTTPPlatform.instance().convert();
     }
 
     protected final Field.Native _element;
     protected Text _textCtrl;
     protected boolean _enabled = true;
+    protected Font _font;
 
     protected Connection _textConnection;
     protected volatile boolean _textNotifyInProgress;
+
+    /** Styles that force reallocation of the text control if changed. */
+    protected static int REALLOC_STYLES = SWT.MULTI | SWT.SINGLE | SWT.PASSWORD |
+            SWT.CENTER | SWT.LEFT | SWT.RIGHT;
 }
