@@ -70,10 +70,9 @@ public class MiscDemo extends DemoScreen
                                                                    Style.HALIGN.center)),
             // an editable text field
             new Group(AxisLayout.vertical()).add(
-                new Group(AxisLayout.horizontal().gap(10)).add(
-                    editable = new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
-                    disabled = new Field("Disabled text").setEnabled(false)),
-                setField = new Button("Set -> ")),
+                editable = new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
+                setField = new Button("Set -> "),
+                disabled = new Field("Disabled text").setEnabled(false)),
             // a captured root's widget
             new Group(AxisLayout.vertical()).addStyles(
                 Style.BACKGROUND.is(Background.solid(Colors.RED).inset(10))).add(
