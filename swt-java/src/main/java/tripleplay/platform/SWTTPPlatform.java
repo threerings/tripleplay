@@ -50,6 +50,12 @@ public class SWTTPPlatform extends TPPlatform
         _platform = platform;
         _overlay = _platform.composite();
 
+        // weird! if I enable this, the whiteout problem goes away
+        /*Text text = new Text(_overlay, SWT.SINGLE);
+        text.setText("Whip the llama");
+        text.setBounds(10, 40, 160, 18);
+        text.moveAbove(null);*/
+
 
         // Figure out the os
         String osname = System.getProperty("os.name");
