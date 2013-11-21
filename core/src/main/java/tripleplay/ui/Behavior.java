@@ -235,6 +235,87 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
         protected Float _hoverLimit;
     }
 
+    /** A click behavior that captures the pointer and optionally issues clicks based on some time
+     * based function. */
+    public static abstract class Capturing<T extends Element<T>> extends Click<T>
+        implements Interface.Task
+    {
+        protected Capturing (T owner) {
+            super(owner);
+        }
+
+        @Override protected void onPress (Event event) {
+            super.onPress(event);
+            event.capture();
+            _task = _owner.root().iface().addTask(this);
+        }
+
+        @Override protected void onCancel (Event event) {
+            super.onCancel(event);
+            cancelTask();
+        }
+
+        @Override protected boolean onRelease (Event event) {
+            super.onRelease(event);
+            cancelTask();
+            return false;
+        }
+
+        /** Cancels the time-based task. This is called automatically by the pointer release
+         * and cancel events. */
+        protected void cancelTask () {
+            if (_task == null) return;
+            _task.remove();
+            _task = null;
+        }
+
+        protected Interface.TaskHandle _task;
+    }
+
+    /** Captures the pointer and dispatches one click on press, a second after an initial delay
+     * and at regular intervals after that. */
+    public static class RapidFire<T extends Element<T>> extends Capturing<T>
+    {
+        /** Milliseconds after the first click that the second click is dispatched. */
+        public static final Style<Integer> INITIAL_DELAY = Style.newStyle(true, 200);
+
+        /** Milliseconds between repeated click dispatches. */
+        public static final Style<Integer> REPEAT_DELAY = Style.newStyle(true, 75);
+
+        /** Creates a new rapid fire behavior for the given owner. */
+        public RapidFire (T owner) {
+            super(owner);
+        }
+
+        @Override protected void onPress (Event event) {
+            super.onPress(event);
+            _timeInBounds = 0;
+            click();
+        }
+
+        @Override protected void onHover (Event event, boolean inBounds) {
+            super.onHover(event, inBounds);
+            if (!inBounds) _timeInBounds = -1;
+        }
+
+        @Override public void update (int delta) {
+            if (_timeInBounds < 0) return;
+            int was = _timeInBounds;
+            _timeInBounds += delta;
+            int limit = was < _initDelay ? _initDelay :
+                _initDelay + _repDelay * ((was - _initDelay) / _repDelay + 1);
+            if (was < limit && _timeInBounds >= limit) click();
+        }
+
+        @Override public void layout () {
+            super.layout();
+            _initDelay = _owner.resolveStyle(INITIAL_DELAY);
+            _repDelay = _owner.resolveStyle(REPEAT_DELAY);
+        }
+
+        protected int _initDelay, _repDelay, _timeInBounds;
+    }
+
     public Behavior (T owner) {
         _owner = owner;
     }
