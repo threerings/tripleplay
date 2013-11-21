@@ -212,7 +212,7 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
         }
 
         @Override protected void onHover (Event event, boolean inBounds) {
-            _state.update(event);
+            if (_state != null) _state.update(event);
         }
 
         @Override protected boolean onRelease (Event event) {
@@ -222,7 +222,7 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
 
         @Override protected void onCancel (Event event) {
             // track to the press position to cancel
-            onTrack(_state.press, _state.press);
+            if (_state != null) onTrack(_state.press, _state.press);
             _state = null;
         }
 
