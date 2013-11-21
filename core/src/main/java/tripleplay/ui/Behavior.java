@@ -296,6 +296,10 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
         @Override protected void onHover (Event event, boolean inBounds) {
             super.onHover(event, inBounds);
             if (!inBounds) _timeInBounds = -1;
+            else if (_timeInBounds < 0) {
+                _timeInBounds = 0;
+                click();
+            }
         }
 
         @Override public void update (int delta) {
