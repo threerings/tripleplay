@@ -16,13 +16,8 @@ import pythagoras.f.Rectangle;
  */
 public abstract class SWTNativeOverlay implements NativeOverlay
 {
-    /** SWT widget that is being overlaid. */
+    /** SWT widget that is overlaid on the canvas. */
     public Control ctrl;
-
-    /**
-     * Creates the control, from scratch.
-     */
-    abstract protected Control createControl (Composite parent);
 
     @Override public void setBounds (IRectangle bounds) {
         this.bounds.setBounds(bounds);
@@ -46,8 +41,12 @@ public abstract class SWTNativeOverlay implements NativeOverlay
         ctrl = null;
     }
 
+    /**
+     * Creates the control, from scratch.
+     */
+    abstract protected Control createControl (Composite parent);
+
     protected void updateBounds () {
-        Log.log.info("Updating bounds", "val", bounds);
         ctrl.setBounds(
             (int)bounds.x(), (int)bounds.y(), (int)bounds.width(), (int)bounds.height());
     }

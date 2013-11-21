@@ -37,7 +37,7 @@ public class SWTNativeTextField extends SWTNativeOverlay
 
                 _textNotifyInProgress = true;
                 try {
-                    setText(value);
+                    _textCtrl.setText(value);
                 } finally {
                     _textNotifyInProgress = false;
                 }
@@ -55,7 +55,7 @@ public class SWTNativeTextField extends SWTNativeOverlay
         _textCtrl = (Text)ctrl;
 
         // copy in the tp field text
-        setText(_element.field().text.get());
+        _textCtrl.setText(_element.field().text.get());
 
         // listen for changes and propagate back to field
         _textCtrl.addModifyListener(new ModifyListener() {
@@ -156,12 +156,6 @@ public class SWTNativeTextField extends SWTNativeOverlay
         if (_textCtrl == null) return false;
         _textCtrl.insert(text);
         return true;
-    }
-
-    protected void setText (String val)
-    {
-        _textCtrl.setText(val);
-        Log.log.info("Set text", "val", val, "nval", _textCtrl.getText());
     }
 
     protected int resolveStyle () {

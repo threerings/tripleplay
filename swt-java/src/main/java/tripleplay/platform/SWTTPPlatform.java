@@ -7,6 +7,8 @@ package tripleplay.platform;
 
 import java.util.Set;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 
 import playn.java.JavaPlatform;
@@ -18,9 +20,8 @@ import com.google.common.collect.Sets;
 import static tripleplay.platform.Log.log;
 
 /**
- * Implements Java-specific TriplePlay services.
- * TODO: reconcile the main thread use with AWT EDT - there are a bunch of places where we
- * need to synchronize
+ * Implements SWT-specific TriplePlay services. Please note this does not follow the pattern of
+ * inheriting from JavaTPPlatform, because that can die in a fire.
  */
 public class SWTTPPlatform extends TPPlatform
 {
@@ -50,13 +51,6 @@ public class SWTTPPlatform extends TPPlatform
         _platform = platform;
         _overlay = _platform.composite();
 
-        // weird! if I enable this, the whiteout problem goes away
-        /*Text text = new Text(_overlay, SWT.SINGLE);
-        text.setText("Whip the llama");
-        text.setBounds(10, 40, 160, 18);
-        text.moveAbove(null);*/
-
-
         // Figure out the os
         String osname = System.getProperty("os.name");
         osname = (osname == null) ? "" : osname;
@@ -64,6 +58,18 @@ public class SWTTPPlatform extends TPPlatform
         else if (osname.indexOf("Mac OS") != -1 || osname.indexOf("MacOS") != -1) _os = OS.MAC;
         else if (osname.indexOf("Linux") != -1) _os = OS.LINUX;
         else System.err.println("Unmatching os name: " + osname);
+
+        if (_os == OS.MAC) {
+            // TODO: figure out why this hack allows native text fields to work on Mac
+            // In my investigation so far, the hack has to be added on startup, moveAbove must be
+            // called and the bounds must overlap with the canvas'.
+            Composite hack = new Composite(_overlay, SWT.NONE);
+            hack.moveAbove(null);
+
+            // make the hack small and black; TODO: expose color to apps if this hack is permanent
+            hack.setBounds(0, 0, 1, 1);
+            hack.setBackground(new Color(_platform.shell().getDisplay(), 0, 0, 0));
+        }
     }
 
     @Override public boolean hasNativeTextFields () {
@@ -84,9 +90,7 @@ public class SWTTPPlatform extends TPPlatform
     }
 
     public SWTConvert convert () {
-        if (_convert == null) {
-            _convert = new SWTConvert();
-        }
+        if (_convert == null) _convert = new SWTConvert();
         // TODO: is display lifetime suitable to avoid this?
         _convert.display = _platform.shell().getDisplay();
         return _convert;
