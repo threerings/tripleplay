@@ -6,6 +6,7 @@
 package tripleplay.platform;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.ComponentColorModel;
 import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
@@ -70,6 +71,23 @@ public class SWTConvert
                 for (int x = 0; x < data.width; x++) {
                     raster.getPixel(x, y, pixelArray);
                     data.setPixel(x, y, pixelArray[0]);
+                }
+            }
+            return data;
+        } else if (image.getColorModel() instanceof ComponentColorModel) {
+            ComponentColorModel cmodel = (ComponentColorModel)image.getColorModel();
+            PaletteData palette = new PaletteData(0x0000FF, 0x00FF00, 0xFF0000); // BGR
+            ImageData data = new ImageData(image.getWidth(), image.getHeight(), 24, palette);
+            if (cmodel.hasAlpha()) data.alphaData = new byte[image.getWidth() * image.getHeight()];
+            WritableRaster raster = image.getRaster();
+            int[] pixelArray = new int[4];
+            for (int y = 0; y < data.height; y++) {
+                for (int x = 0; x < data.width; x++) {
+                    raster.getPixel(x, y, pixelArray);
+                    data.setPixel(x, y,
+                        (pixelArray[2] << 16) | (pixelArray[1] << 8) | (pixelArray[0]));
+                    if (data.alphaData != null)
+                        data.alphaData[y*data.width + x] = (byte)pixelArray[3];
                 }
             }
             return data;
