@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import playn.core.Image;
 import playn.core.PlayN;
 import playn.java.JavaPlatform;
 import playn.java.SWTPlatform;
@@ -38,16 +39,21 @@ public class TripleDemoJava
         }
 
         TripleDemo.mainArgs = mainArgs.toArray(new String[0]);
-
         if (swt) {
             SWTPlatform platform = SWTPlatform.register(config);
             SWTTPPlatform.register(platform, config);
             platform.setTitle("Tripleplay Demo (SWT)");
+            SWTTPPlatform.instance().setIcon(loadIcon());
         } else {
             JavaPlatform platform = JavaPlatform.register(config);
             JavaTPPlatform.register(platform, config);
             JavaTPPlatform.instance().setTitle("Tripleplay Demo (Java)");
+            JavaTPPlatform.instance().setIcon(loadIcon());
         }
         PlayN.run(new TripleDemo());
+    }
+
+    protected static Image loadIcon () {
+        return PlayN.assets().getImageSync("icon.png");
     }
 }
