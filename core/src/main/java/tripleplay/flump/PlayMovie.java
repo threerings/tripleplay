@@ -17,6 +17,7 @@ public class PlayMovie extends Animation
     @Override protected void init (float time) {
         super.init(time);
         _lastTime = time;
+        _movie.setPosition(0);
     }
 
     @Override protected float apply (float time) {
