@@ -39,44 +39,55 @@ public class MiscDemo extends DemoScreen
         Label label2;
         Field editable, disabled;
         Button setField;
-        Group iface = new Group(new TableLayout(2).gaps(10, 10)).add(
-            new Label("Toggling visibility"),
-            new Label("Buttons"),
-            // labels, visibility and icon toggling
-            new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
-                new Group(AxisLayout.vertical()).add(
-                    new Group(AxisLayout.horizontal()).add(
-                        toggle = new CheckBox(),
-                        new Label("Toggle Viz")),
-                    new Group(AxisLayout.horizontal()).add(
-                        toggle2 = new CheckBox(),
-                        new Label("Toggle Icon"))),
-                new Group(AxisLayout.vertical()).add(
-                    new Label("Label 1").addStyles(REDBG),
-                    label2 = new Label("Label 2"),
-                    new Label("Label 3", smiley))),
-            // buttons, toggle buttons, wirey uppey
-            buttonsSection(squares),
 
-            new Label("Icon positioning"),
-            new Label("Text editing"),
-            // labels with varying icon alignment
-            new Group(AxisLayout.horizontal().gap(10), GREENBG).add(
-                new Label("Left", tileIcon(squares, 0)).setStyles(Style.ICON_POS.left),
-                new Label("Right", tileIcon(squares, 1)).setStyles(Style.ICON_POS.right),
-                new Label("Above", tileIcon(squares, 2)).setStyles(Style.ICON_POS.above,
-                                                                   Style.HALIGN.center),
-                new Label("Below", tileIcon(squares, 3)).setStyles(Style.ICON_POS.below,
-                                                                   Style.HALIGN.center)),
-            // an editable text field
+        Group iface = new Group(AxisLayout.horizontal().stretchByDefault()).add(
+            // left column
             new Group(AxisLayout.vertical()).add(
+                // labels, visibility and icon toggling
+                new Label("Toggling visibility"),
+                new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
+                    new Group(AxisLayout.vertical()).add(
+                        new Group(AxisLayout.horizontal()).add(
+                            toggle = new CheckBox(),
+                            new Label("Toggle Viz")),
+                        new Group(AxisLayout.horizontal()).add(
+                            toggle2 = new CheckBox(),
+                            new Label("Toggle Icon"))),
+                    new Group(AxisLayout.vertical()).add(
+                        new Label("Label 1").addStyles(REDBG),
+                        label2 = new Label("Label 2"),
+                        new Label("Label 3", smiley))),
+                new Shim(5, 10),
+
+                // labels with varying icon alignment
+                new Label("Icon positioning"),
+                new Group(AxisLayout.horizontal().gap(10), GREENBG).add(
+                    new Label("Left", tileIcon(squares, 0)).setStyles(Style.ICON_POS.left),
+                    new Label("Right", tileIcon(squares, 1)).setStyles(Style.ICON_POS.right),
+                    new Label("Above", tileIcon(squares, 2)).setStyles(Style.ICON_POS.above,
+                                                                       Style.HALIGN.center),
+                    new Label("Below", tileIcon(squares, 3)).setStyles(Style.ICON_POS.below,
+                                                                       Style.HALIGN.center)),
+                new Shim(5, 10),
+
+                // a captured root's widget
+                new Label("Root capture"),
+                new Group(AxisLayout.vertical()).addStyles(
+                    Style.BACKGROUND.is(Background.solid(Colors.RED).inset(10))).add(
+                        capRoot.createWidget())),
+
+            // right column
+            new Group(AxisLayout.vertical()).add(
+                // buttons, toggle buttons, wirey uppey
+                new Label("Buttons"),
+                buttonsSection(squares),
+                new Shim(5, 10),
+
+                // an editable text field
+                new Label("Text editing"),
                 editable = new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
                 setField = new Button("Set -> "),
-                disabled = new Field("Disabled text").setEnabled(false)),
-            // a captured root's widget
-            new Group(AxisLayout.vertical()).addStyles(
-                Style.BACKGROUND.is(Background.solid(Colors.RED).inset(10))).add(
-                    capRoot.createWidget()));
+                disabled = new Field("Disabled text").setEnabled(false)));
 
         capRoot.add(new Label("Captured Root!").addStyles(
             Style.BACKGROUND.is(Background.blank().inset(10)))).pack();
