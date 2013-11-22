@@ -170,10 +170,6 @@ public class SWTNativeTextField extends SWTNativeOverlay
         return style;
     }
 
-    protected SWTConvert convert () {
-        return SWTTPPlatform.instance().convert();
-    }
-
     protected final Field.Native _element;
     protected Text _textCtrl;
     protected boolean _enabled = true;

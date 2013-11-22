@@ -57,5 +57,9 @@ public abstract class SWTNativeOverlay implements NativeOverlay
     /** Called just before the SWT {@code Control} is disposed. */
     protected void willDispose () {}
 
+    protected SWTConvert convert () {
+        return SWTTPPlatform.instance().convert();
+    }
+
     protected final Rectangle bounds = new Rectangle();
 }
