@@ -20,6 +20,7 @@ public class TripleDemoJava
 {
     public static void main (String[] args) {
         JavaPlatform.Config config = new JavaPlatform.Config();
+        config.appName = "Tripleplay Demo";
 
         boolean swt = false;
         List<String> mainArgs = Lists.newArrayList();
@@ -40,14 +41,13 @@ public class TripleDemoJava
 
         TripleDemo.mainArgs = mainArgs.toArray(new String[0]);
         if (swt) {
+            config.appName += " (SWT)";
             SWTPlatform platform = SWTPlatform.register(config);
             SWTTPPlatform.register(platform, config);
-            platform.setTitle("Tripleplay Demo (SWT)");
             SWTTPPlatform.instance().setIcon(loadIcon());
         } else {
             JavaPlatform platform = JavaPlatform.register(config);
             JavaTPPlatform.register(platform, config);
-            JavaTPPlatform.instance().setTitle("Tripleplay Demo (Java)");
             JavaTPPlatform.instance().setIcon(loadIcon());
         }
         PlayN.run(new TripleDemo());
