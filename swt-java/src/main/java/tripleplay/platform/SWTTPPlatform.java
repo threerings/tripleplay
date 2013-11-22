@@ -10,6 +10,7 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 
 import playn.java.JavaPlatform;
 import playn.java.SWTPlatform;
@@ -50,6 +51,7 @@ public class SWTTPPlatform extends TPPlatform
     protected SWTTPPlatform (SWTPlatform platform, JavaPlatform.Config config) {
         _platform = platform;
         _overlay = _platform.composite();
+        _convert = new SWTConvert(display());
 
         // Figure out the os
         String osname = System.getProperty("os.name");
@@ -68,7 +70,7 @@ public class SWTTPPlatform extends TPPlatform
 
             // make the hack small and black; TODO: expose color to apps if this hack is permanent
             hack.setBounds(0, 0, 1, 1);
-            hack.setBackground(new Color(_platform.shell().getDisplay(), 0, 0, 0));
+            hack.setBackground(new Color(display(), 0, 0, 0));
         }
     }
 
@@ -89,10 +91,11 @@ public class SWTTPPlatform extends TPPlatform
         // TODO
     }
 
+    public Display display () {
+        return _platform.shell().getDisplay();
+    }
+
     public SWTConvert convert () {
-        if (_convert == null) _convert = new SWTConvert();
-        // TODO: is display lifetime suitable to avoid this?
-        _convert.display = _platform.shell().getDisplay();
         return _convert;
     }
 

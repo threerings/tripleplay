@@ -24,10 +24,12 @@ import playn.java.JavaImage;
 
 public class SWTConvert
 {
-    Display display;
+    public SWTConvert (Display display) {
+        _display = display;
+    }
 
     public Image image (playn.core.Image image) {
-        return new Image(display, image(((JavaImage)image).bufferedImage()));
+        return new Image(_display, image(((JavaImage)image).bufferedImage()));
     }
 
     public ImageData image (BufferedImage image) {
@@ -113,13 +115,15 @@ public class SWTConvert
             break;
         }
 
-        Font swt = new Font(display, font.name(), (int)(font.size()), style); //font.style());
+        Font swt = new Font(_display, font.name(), (int)(font.size()), style); //font.style());
         return swt;
     }
 
     public Color color (int color)
     {
         class Pl extends playn.core.Color {};
-        return new Color(display, Pl.red(color), Pl.green(color), Pl.blue(color));
+        return new Color(_display, Pl.red(color), Pl.green(color), Pl.blue(color));
     }
+
+    protected final Display _display;
 }
