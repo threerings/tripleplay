@@ -11,6 +11,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import playn.java.JavaPlatform;
 import playn.java.SWTPlatform;
@@ -72,6 +74,12 @@ public class SWTTPPlatform extends TPPlatform
             hack.setBounds(0, 0, 1, 1);
             hack.setBackground(new Color(display(), 0, 0, 0));
         }
+
+        display().addFilter(SWT.MouseDown, new Listener() {
+            @Override public void handleEvent (Event event) {
+                if (event.widget == _platform.graphics().canvas()) clearFocus();
+            }
+        });
     }
 
     @Override public boolean hasNativeTextFields () {
@@ -88,7 +96,7 @@ public class SWTTPPlatform extends TPPlatform
     }
 
     @Override public void clearFocus () {
-        // TODO
+        _platform.graphics().canvas().setFocus();
     }
 
     public Display display () {

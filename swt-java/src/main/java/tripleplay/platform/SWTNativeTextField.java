@@ -77,6 +77,7 @@ public class SWTNativeTextField extends SWTNativeOverlay
         _textCtrl.addFocusListener(new FocusListener() {
             @Override public void focusLost (FocusEvent e) {
                 _element.finishedEditing().emit(false);
+                SWTTPPlatform.instance()._focus.update(null);
                 // TODO: is focus update required here like in swing?
                 /* Component opposite = e.getOppositeComponent();
                 if (opposite == null || !hasOverlayFor(opposite))
