@@ -8,6 +8,8 @@ package tripleplay.demo.ui;
 import playn.core.Image;
 import playn.core.PlayN;
 
+import pythagoras.f.MathUtil;
+
 import react.Function;
 import react.IntValue;
 import react.UnitSlot;
@@ -127,6 +129,24 @@ public class MiscDemo extends DemoScreen
             public String apply (Boolean selected) { return selected ? "Enabled" : "Disabled"; }
         }).connectNotify(disabled.text.slot());
 
+        class ThrobButton extends Button {
+            public ThrobButton (String title) {
+                super(title);
+            }
+            public void throb () {
+                root().iface().animator().
+                    tweenScale(layer).to(1.2f).in(300.0f).easeIn().then().
+                    tweenScale(layer).to(1.0f).in(300.0f).easeOut();
+            }
+            @Override protected void layout () {
+                super.layout();
+                float ox = MathUtil.ifloor(_size.width/2), oy = MathUtil.ifloor(_size.height/2);
+                layer.setOrigin(ox, oy);
+                layer.transform().translate(ox, oy);
+            }
+        }
+        final ThrobButton throbber = new ThrobButton("Throbber");
+
         final Label pressResult = new Label();
         final IntValue clickCount = new IntValue(0);
         final Box box = new Box();
@@ -151,7 +171,13 @@ public class MiscDemo extends DemoScreen
                         box.set(new Label(box.contents() == null ? "Filled" : "Refilled"));
                     }
                 }),
-                box)
+                box),
+            new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
+                throbber.onClick(new UnitSlot() {
+                    @Override public void onEmit () {
+                        throbber.throb();
+                    }
+                }))
             );
     }
 
