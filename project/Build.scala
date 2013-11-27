@@ -1,5 +1,6 @@
 import sbt._
 import Keys._
+import spray.revolver.RevolverPlugin.Revolver
 // import ProguardPlugin._
 
 object TriplePlayBuild extends samskivert.MavenBuild {
@@ -32,6 +33,11 @@ object TriplePlayBuild extends samskivert.MavenBuild {
     //   proguardOptions += keepMain("tripleplay.tools.FramePacker"),
     //   proguardOptions += "-dontnote scala.Enumeration"
     // )
+    case "demo-java" => Revolver.settings ++ seq(
+      publish := (),
+      publishLocal := (),
+      mainClass in Revolver.reStart := Some("tripleplay.demo.TripleDemoJava")
+    )
     case name if (name startsWith "demo-") => seq(
       publish := (),
       publishLocal := ()
