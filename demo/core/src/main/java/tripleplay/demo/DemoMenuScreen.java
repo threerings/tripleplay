@@ -21,11 +21,12 @@ import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
 
 import tripleplay.demo.anim.*;
+import tripleplay.demo.entity.*;
+import tripleplay.demo.flump.*;
 import tripleplay.demo.game.*;
 import tripleplay.demo.particle.*;
 import tripleplay.demo.ui.*;
-import tripleplay.demo.util.ColorsDemo;
-import tripleplay.demo.flump.*;
+import tripleplay.demo.util.*;
 
 /**
  * Displays a top-level menu of our various demo screens.
@@ -34,6 +35,15 @@ public class DemoMenuScreen extends UIScreen
 {
     public DemoMenuScreen (ScreenStack stack) {
         _stack = stack;
+        _rlabels = new String[] {
+            "tripleplay.ui", "", "", "",
+            "tripleplay.anim",
+            "tripleplay.game",
+            "tripleplay.entity",
+            "tripleplay.particle",
+            "tripleplay.flump",
+            "tripleplay.util"
+        };
         _screens = new DemoScreen[] {
             // tripleplay.ui
             new MiscDemo(), new LabelDemo(), new SliderDemo(),
@@ -44,6 +54,8 @@ public class DemoMenuScreen extends UIScreen
             new FramesDemo(), new AnimDemo(), new FlickerDemo(),
             // tripleplay.game
             new ScreensDemo(stack), null, null,
+            // tripleplay.entity
+            new AsteroidsDemo(), null, null,
             // tripleplay.particle
             new FountainDemo(), new FireworksDemo(), null,
             // tripleplay.flump
@@ -109,14 +121,7 @@ public class DemoMenuScreen extends UIScreen
         DemoScreen apply ();
     }
 
-    protected final String[] _rlabels = {
-        "tripleplay.ui", "", "", "",
-        "tripleplay.anim",
-        "tripleplay.game",
-        "tripleplay.particle",
-        "tripleplay.flump",
-        "tripleplay.util"
-    };
+    protected final String[] _rlabels;
     protected final DemoScreen[] _screens;
 
     protected final ScreenStack _stack;

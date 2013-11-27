@@ -16,7 +16,7 @@ public class TripleDemo extends Game.Default
     /** Args from the Java bootstrap class. */
     public static String[] mainArgs = {};
 
-    public static final int UPDATE_RATE = 50;
+    public static final int UPDATE_RATE = 25;
 
     public TripleDemo () {
         super(UPDATE_RATE);
