@@ -26,6 +26,13 @@ public class BagTest
             assertEquals(ii >= 15 && ii < 35, bag.remove(ii));
         }
         assertEquals(0, bag.size());
+        bag.add(3);
+        bag.add(5);
+        bag.add(9);
+        assertEquals((Integer)9, bag.removeLast());
+        assertEquals((Integer)5, bag.removeLast());
+        assertEquals((Integer)3, bag.removeLast());
+        assertEquals(0, bag.size());
     }
 
     @Test public void testIterator () {

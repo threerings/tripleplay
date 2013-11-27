@@ -107,8 +107,8 @@ public class Bag<E> implements Iterable<E>
     /** Removes and returns the last element of the bag.
      * @throws ArrayIndexOutOfBoundsException if the bag is empty. */
     public E removeLast () {
-        @SuppressWarnings("unchecked") E elem = (E)_elems[_size-1];
-        _elems[--_size] = null;
+        @SuppressWarnings("unchecked") E elem = (E)_elems[--_size];
+        _elems[_size] = null;
         return elem;
     }
 
@@ -131,6 +131,15 @@ public class Bag<E> implements Iterable<E>
             }
             protected int _pos;
         };
+    }
+
+    @Override public String toString () {
+        StringBuilder buf = new StringBuilder("{");
+        for (int ii = 0, ll = _size; ii < ll; ii++) {
+            if (ii > 0) buf.append(",");
+            buf.append(_elems[ii]);
+        }
+        return buf.append("}").toString();
     }
 
     private void expand (int capacity) {
