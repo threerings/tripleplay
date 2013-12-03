@@ -8,8 +8,6 @@ package tripleplay.platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,8 +17,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 import playn.core.Font;
-import playn.core.PlayN;
-import playn.java.SWTKeyboard;
 
 import react.Connection;
 import react.Slot;
@@ -82,24 +78,6 @@ public class SWTNativeTextField extends SWTNativeOverlay
 
             @Override public void focusGained (FocusEvent e) {
                 SWTTPPlatform.instance().onFocusChange();
-            }
-        });
-
-        // listen for keypresses and dispatch via platform (for apps to handle tab/arrows etc)
-        _textCtrl.addKeyListener(new KeyListener() {
-            void post (int code, boolean pressed) {
-                SWTKeyboard keyboard = (SWTKeyboard)PlayN.keyboard();
-                // TODO: is post necessary here? could be just dispatch
-                // NOTE: no support for typed char; shouldn't be a problem for most uses
-                keyboard.post(keyboard.translateKey(code), pressed, '\u0000');
-            }
-
-            @Override public void keyReleased (KeyEvent e) {
-                post(e.keyCode, false);
-            }
-
-            @Override public void keyPressed (KeyEvent e) {
-                post(e.keyCode, true);
             }
         });
 
