@@ -10,12 +10,15 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import playn.core.PlayN;
 import playn.java.JavaPlatform;
 import playn.java.SWTPlatform;
+import pythagoras.f.Point;
 import tripleplay.ui.Field;
 
 import com.google.common.collect.Sets;
@@ -77,7 +80,10 @@ public class SWTTPPlatform extends TPPlatform
 
         display().addFilter(SWT.MouseDown, new Listener() {
             @Override public void handleEvent (Event event) {
-                if (event.widget == _platform.graphics().canvas()) clearFocus();
+                if (event.widget == _platform.graphics().canvas() &&
+                    (_kfc == null || _kfc.unfocusForLocation(new Point(event.x, event.y)))) {
+                    clearFocus();
+                }
             }
         });
     }
@@ -116,6 +122,32 @@ public class SWTTPPlatform extends TPPlatform
 
     public Composite overlayParent () {
         return _overlay;
+    }
+
+    /**
+     * Processes a change to the currently focused control.
+     */
+    public void onFocusChange () {
+        // deal with this on the next frame, avoiding platform-specific issues
+        PlayN.invokeLater(new Runnable() {
+            @Override public void run () {
+                Control focus = display().getFocusControl();
+
+                // ignore focusing on null, this seems to happen on window deactivation
+                if (focus == null) return;
+
+                // find a native text field corresponding to the new focus
+                for (SWTNativeOverlay overlay : _overlays) {
+                    if (overlay instanceof SWTNativeTextField && overlay.ctrl == focus) {
+                        _focus.update(((SWTNativeTextField)overlay).field());
+                        return;
+                    }
+                }
+
+                // any other focus for our purposes is a loss of focus
+                _focus.update(null);
+            }
+        });
     }
 
     /**

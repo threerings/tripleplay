@@ -77,16 +77,11 @@ public class SWTNativeTextField extends SWTNativeOverlay
         // listen for focus changes and dispatch via the platform
         _textCtrl.addFocusListener(new FocusListener() {
             @Override public void focusLost (FocusEvent e) {
-                _element.finishedEditing().emit(false);
-                SWTTPPlatform.instance()._focus.update(null);
-                // TODO: is focus update required here like in swing?
-                /* Component opposite = e.getOppositeComponent();
-                if (opposite == null || !hasOverlayFor(opposite))
-                    updateOnMainThread(instance()._focus, null); */
+                SWTTPPlatform.instance().onFocusChange();
             }
 
             @Override public void focusGained (FocusEvent e) {
-                SWTTPPlatform.instance()._focus.update(_element.field());
+                SWTTPPlatform.instance().onFocusChange();
             }
         });
 
@@ -118,6 +113,10 @@ public class SWTNativeTextField extends SWTNativeOverlay
     @Override public void setEnabled (boolean enabled) {
         _enabled = enabled;
         if (_textCtrl != null) _textCtrl.setEnabled(enabled);
+    }
+
+    public Field field () {
+        return _element.field();
     }
 
     public void refresh () {
