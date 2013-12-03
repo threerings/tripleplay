@@ -407,6 +407,11 @@ public class Scroller extends Composite<Scroller>
                 // use 1, 1 so we don't crash. the real size is set on validation
                 return PlayN.graphics().createGroupLayer(1, 1);
             }
+            @Override protected void layout () {
+                super.layout();
+                // do this after children have validated their bounding boxes
+                updateVisibility();
+            }
         });
 
         _scroller.add(this.content = content);
