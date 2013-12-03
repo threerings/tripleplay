@@ -12,6 +12,8 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
@@ -64,14 +66,13 @@ public class SWTNativeTextField extends SWTNativeOverlay
             }
         });
 
-        // TODO: add action listener for return key
-        /* if (isField()) {
-            asField().addActionListener(new ActionListener() {
-                public void actionPerformed (ActionEvent event) {
-                    emitOnMainThread(_element.finishedEditing(), true);
-                }
-            });
-        }*/
+        _textCtrl.addSelectionListener(new SelectionListener() {
+            @Override public void widgetDefaultSelected (SelectionEvent ev) {
+                _element.finishedEditing().emit(true);
+            }
+
+            @Override public void widgetSelected (SelectionEvent ev) {}
+        });
 
         // listen for focus changes and dispatch via the platform
         _textCtrl.addFocusListener(new FocusListener() {
