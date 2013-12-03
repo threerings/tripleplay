@@ -25,7 +25,6 @@ import playn.core.Mouse.WheelEvent;
 
 import react.Signal;
 
-import tripleplay.anim.Animation;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.util.XYFlicker;
 import tripleplay.util.Colors;
@@ -586,24 +585,16 @@ public class Scroller extends Composite<Scroller>
 
     @Override protected void wasAdded () {
         super.wasAdded();
-        _updater = root().iface().animator().add(new Animation() {
-            float current = 0;
-            @Override protected void init (float time) {
-                super.init(time);
-                current = time;
-            }
-            @Override protected float apply (float time) {
-                float dt = time - current;
-                current = time;
+        _updater = root().iface().addTask(new Interface.Task() {
+            @Override public void update (int dt) {
                 Scroller.this.update(dt);
-                return 1;
             }
-        }).handle();
+        });
         invalidate();
     }
 
     @Override protected void wasRemoved () {
-        _updater.cancel();
+        _updater.remove();
         updateBars(null); // make sure bars get destroyed in case we don't get added again
         super.wasRemoved();
     }
@@ -729,7 +720,7 @@ public class Scroller extends Composite<Scroller>
     protected final XYFlicker _flicker;
     protected final Clippable _clippable;
     protected final Dimension _contentSize = new Dimension();
-    protected Animation.Handle _updater;
+    protected Interface.TaskHandle _updater;
     protected Point _queuedScroll;
     protected List<Listener> _lners;
 
