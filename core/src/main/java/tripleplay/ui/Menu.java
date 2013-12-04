@@ -11,6 +11,7 @@ import java.util.List;
 import playn.core.Asserts;
 import playn.core.Events;
 import playn.core.Layer;
+import playn.core.Mouse;
 import playn.core.Pointer;
 import playn.core.Pointer.Event;
 import pythagoras.f.Point;
@@ -259,7 +260,9 @@ public class Menu extends Elements<Menu>
      * instance of MenuItem. */
     protected void connectItem (MenuItem item) {
         _items.add(item);
-        item.setRelay(item.layer.addListener(_itemListener));
+        item.setRelay(Layers.join(
+            item.layer.addListener((Pointer.Listener)_itemListener),
+            item.layer.addListener((Mouse.LayerListener)_itemListener)));
     }
 
     /** Disconnects the menu item. This gets called when any descendant is removed that is an
@@ -346,6 +349,33 @@ public class Menu extends Elements<Menu>
         protected abstract void visitItem (MenuItem item);
     }
 
+    protected class ItemListener extends Mouse.LayerAdapter
+        implements Pointer.Listener
+    {
+        @Override public void onPointerStart (Event event) {
+            Menu.this.onPointerDrag(event);
+        }
+
+        @Override public void onPointerDrag (Event event) {
+            Menu.this.onPointerDrag(event);
+        }
+
+        @Override public void onPointerEnd (Event event) {
+            Menu.this.onPointerEnd(event);
+        }
+
+        @Override public void onPointerCancel (Event event) {
+        }
+
+        @Override public void onMouseOver (Mouse.MotionEvent event) {
+            if (_active) _selector.selected.update(getHover(event));
+        }
+
+        @Override public void onMouseOut (Mouse.MotionEvent event) {
+            if (_active) _selector.selected.update(null);
+        }
+    }
+
     protected final Slot<Element<?>> _descendantAdded = new DescendingSlot() {
         @Override protected void visitElems (Elements<?> elems) {
             elems.childAdded().connect(_descendantAdded);
@@ -366,22 +396,7 @@ public class Menu extends Elements<Menu>
         }
     };
 
-    protected Pointer.Listener _itemListener = new Pointer.Listener() {
-        @Override public void onPointerStart (Event event) {
-            Menu.this.onPointerDrag(event);
-        }
-
-        @Override public void onPointerDrag (Event event) {
-            Menu.this.onPointerDrag(event);
-        }
-
-        @Override public void onPointerEnd (Event event) {
-            Menu.this.onPointerEnd(event);
-        }
-
-        @Override public void onPointerCancel (Event event) {
-        }
-    };
+    protected ItemListener _itemListener = new ItemListener();
 
     /** Dispatched when the menu is deactivated. */
     protected final Signal<Menu> _deactivated = Signal.create();
