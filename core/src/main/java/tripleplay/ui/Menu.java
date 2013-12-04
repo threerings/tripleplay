@@ -20,6 +20,7 @@ import react.Slot;
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.ui.MenuItem.ShowText;
+import tripleplay.util.Layers;
 
 /**
  * Holds a collection of {@link MenuItem}s, dispatching a {@link Menu#itemTriggered} signal
@@ -266,7 +267,7 @@ public class Menu extends Elements<Menu>
     protected void disconnectItem (MenuItem item) {
         int itemIdx = _items.indexOf(item);
         _items.remove(itemIdx);
-        item.setRelay(null);
+        item.setRelay(Layers.NOT_LISTENING);
         didDisconnectItem(item, itemIdx);
     }
 
