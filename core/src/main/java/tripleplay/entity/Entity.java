@@ -23,6 +23,8 @@ public class Entity
     public Entity (World world, Component... components) {
         this.world = world;
         this.id = world.claimId();
+        _sysMasks = new int[world.maxSystems()/32];
+        _compsMasks = new int[world.maxComponents()/32];
         for (Component component : components) component.add(this);
         world.toAdd.add(this);
     }
@@ -56,7 +58,7 @@ public class Entity
 
     /** Returns true if this entity has the component {@code comp}, false otherwise. */
     public boolean has (Component comp) {
-        return (componentsMask & comp.mask) != 0;
+        return (_compsMasks[comp.id / 32] & (1L << (comp.id % 32))) != 0;
     }
 
     /** Adds the specified component to this entity. This will queue the component up to be added
@@ -112,13 +114,19 @@ public class Entity
 
     void noteAdded () { _flags |= ADDED; }
     void clearChanging () { _flags &= ~CHANGING; }
-    void noteRemoved () { /* TODO: if (isDestroyed()) onDestroyed.emit(this); */ }
+
+    void noteHas (int compId) { _compsMasks[compId / 32] |= (1 << (compId % 32)); }
+    void noteHasnt (int compId) { _compsMasks[compId / 32] &= ~(1 << (compId % 32)); }
+
+    boolean in (int sysId) { return (_sysMasks[sysId / 32] & (1 << (sysId % 32))) != 0; }
+    void noteIn  (int sysId) { _sysMasks[sysId / 32] |=  (1 << (sysId % 32)); }
+    void noteOut (int sysId) { _sysMasks[sysId / 32] &= ~(1 << (sysId % 32)); }
 
     /** A bit mask indicating which systems are processing this entity. */
-    long systemsMask;
+    private final int[] _sysMasks;
 
     /** A bit mask indicating which components are possessed by this entity. */
-    long componentsMask;
+    private final int[] _compsMasks;
 
     /** Flags pertaining to this entity's state. */
     protected int _flags;

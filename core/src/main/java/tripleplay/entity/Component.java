@@ -229,7 +229,7 @@ public abstract class Component
 
     protected Component (World world) {
         this.world = world;
-        mask = (1L << world.register(this));
+        id = world.register(this);
     }
 
     /** Ensures that space is allocated for the component at {@code index}. */
@@ -239,17 +239,17 @@ public abstract class Component
     protected void clear (int index) {} // noop by default
 
     void add (Entity entity) {
-        entity.componentsMask |= mask;
+        entity.noteHas(id);
         init(entity.id);
     }
 
     void remove (Entity entity) {
-        entity.componentsMask &= ~mask;
+        entity.noteHasnt(id);
         clear(entity.id);
     }
 
-    /** This component's unique bit mask. */
-    final long mask;
+    /** This component's unique id (used in bit masks). */
+    final int id;
 
     /** The number of components in a single block. */
     protected static final int BLOCK = 256;

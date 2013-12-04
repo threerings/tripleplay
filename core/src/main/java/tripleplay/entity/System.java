@@ -44,7 +44,7 @@ public abstract class System
     protected System (World world, int priority) {
         this.world = world;
         this.priority = priority;
-        _mask = (1L << world.register(this));
+        _id = world.register(this);
     }
 
     /** Called when an entity is added to our world (or an already added entity is changed) which
@@ -97,14 +97,14 @@ public abstract class System
     }
 
     void entityChanged (Entity entity) {
-        boolean wasAdded = ((entity.systemsMask & _mask) != 0);
+        boolean wasAdded = entity.in(_id);
         boolean haveInterest = isInterested(entity);
         if (haveInterest && !wasAdded) addEntity(entity);
         else if (!haveInterest && wasAdded) removeEntity(entity);
     }
 
     void entityRemoved (Entity entity) {
-        if ((entity.systemsMask & _mask) != 0) removeEntity(entity);
+        if (entity.in(_id)) removeEntity(entity);
     }
 
     void update (int delta) {
@@ -119,14 +119,14 @@ public abstract class System
 
     private void addEntity (Entity entity) {
         _active.add(entity.id);
-        entity.systemsMask |= _mask;
+        entity.noteIn(_id);
         wasAdded(entity);
     }
 
     private void removeEntity (Entity entity) {
         // TODO: this is O(N), would be nice if it was O(log N) or O(1)
         int idx = _active.remove(entity.id);
-        entity.systemsMask &= ~_mask;
+        entity.noteOut(_id);
         wasRemoved(entity, idx);
     }
 
@@ -136,8 +136,8 @@ public abstract class System
     /** Our active entities. */
     protected final IntBag _active = new IntBag();
 
-    /** This system's unique bit mask. */
-    private final long _mask;
+    /** This system's unique id (used in bit masks). */
+    private final int _id;
 
     /** Whether or not this system is enabled. */
     private boolean _enabled = true;

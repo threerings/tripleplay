@@ -116,7 +116,6 @@ public class World
             _entities[entity.id] = null;
             entityRemoved.emit(entity);
             if (entity.isDestroyed()) _ids.add(entity.id);
-            entity.noteRemoved();
         }
         // and finally update all of our systems
         for (int ii = 0, ll = _systems.size(); ii < ll; ii++) {
@@ -131,6 +130,18 @@ public class World
         }
     }
 
+    /** Returns the maximum number of systems that can be registered with this world. Defaults to
+     * 64. Override this method and return a larger multiple of 32 if needed. This value must be
+     * constant for the lifetime of the world, and is hardcoded to simplify logic and increase
+     * performance. */
+    public int maxSystems () { return 64; }
+
+    /** Returns the maximum number of components that can be registered with this world. Defaults
+     * to 64. Override this method and return a larger multiple of 32 if needed. This value must be
+     * constant for the lifetime of the world, and is hardcoded to simplify logic and increase
+     * performance. */
+    public int maxComponents () { return 64; }
+
     /** Returns the next unused entity id. */
     int claimId () {
         return _ids.isEmpty() ? _nextEntityId++ : _ids.removeLast();
@@ -140,8 +151,8 @@ public class World
      * @return a unique index assigned to the system for use in bitmasks.
      */
     int register (System system) {
-        if (_systems.size() == MAX_SYSTEMS) throw new IllegalStateException(
-            "Only " + MAX_SYSTEMS + " systems can be used in a world.");
+        if (_systems.size() == maxSystems()) throw new IllegalStateException(
+            "Max systems exceeded. Override maxSystems() and provide a larger value.");
         int idx = 0; // insert the system based on its priority
         for (int ii = _systems.size()-1; ii >= 0; ii--) {
             if (_systems.get(ii).priority >= system.priority) {
@@ -157,8 +168,8 @@ public class World
      * @return a unique index assigned to the component for use in bitmasks.
      */
     int register (Component component) {
-        if (_comps.size() == MAX_COMPS) throw new IllegalStateException(
-            "Only " + MAX_COMPS + " components can be used in a world.");
+        if (_comps.size() == maxComponents()) throw new IllegalStateException(
+            "Max components exceeded. Override maxComponents() and provide a larger value.");
         _comps.add(component);
         return _comps.size()-1;
     }
@@ -174,8 +185,4 @@ public class World
     protected final IntBag _ids = new IntBag();
     protected Entity[] _entities = new Entity[64];
     protected int _nextEntityId = 1;
-
-    // currently limited to 64 system types and 64 component types in a world due to using a long
-    // as a bitmask; when GWT supports BitSet we can relax this limitation
-    protected static final int MAX_SYSTEMS = 64, MAX_COMPS = 64;
 }
