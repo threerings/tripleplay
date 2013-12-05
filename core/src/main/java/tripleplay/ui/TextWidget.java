@@ -253,7 +253,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
             // create a canvas no larger than the text, constrained to the available size
             float tgwidth = Math.min(availWidth, twidth), tgheight = Math.min(availHeight, theight);
-            _tglyph.prepare(tgwidth, tgheight);
 
             // we do some extra fiddling here because one may want to constrain the height of a
             // button such that the text is actually cut off on the top and/or bottom because fonts
@@ -261,8 +260,23 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             // snugly into your button
             float ox = MathUtil.ifloor(halign.offset(twidth, availWidth));
             float oy = MathUtil.ifloor(valign.offset(theight, availHeight));
-            renderer.render(_tglyph.canvas(), text, color, underlined,
-                Math.min(ox, 0), Math.min(oy, 0));
+
+            boolean needsRerender = tgwidth != _renderedGlyphWidth ||
+                tgheight != _renderedGlyphHeight || !renderer.equals(_renderedRenderer) ||
+                !text.format().equals(_renderedTextFormat) || !text().equals(_renderedTextStr);
+
+            if (needsRerender) {
+                _tglyph.prepare(tgwidth, tgheight);
+                renderer.render(_tglyph.canvas(), text, color, underlined,
+                    Math.min(ox, 0), Math.min(oy, 0));
+
+                _renderedGlyphWidth = tgwidth;
+                _renderedGlyphHeight = tgheight;
+                _renderedTextFormat = text.format();
+                _renderedTextStr = text();
+                _renderedRenderer = renderer;
+            }
+
             _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + renderer.offsetX(),
                 ty + Math.max(oy, 0) + renderer.offsetY());
         }
@@ -272,6 +286,11 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     }
 
     protected final Glyph _tglyph = new Glyph(layer);
+    protected float _renderedGlyphWidth = Float.NaN;
+    protected float _renderedGlyphHeight = Float.NaN;
+    protected TextFormat _renderedTextFormat = null;
+    protected String _renderedTextStr = null;
+    protected EffectRenderer _renderedRenderer = null;
     protected Layer _ilayer;
 
     protected static final float MIN_FONT_SIZE = 6; // TODO: make customizable?
