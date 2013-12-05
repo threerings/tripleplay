@@ -267,19 +267,19 @@ public class AsteroidsDemo extends DemoScreen
             }
 
             public void fireBullet () {
-                float ang = sprite.get(_ship.id).rotation();
-                float vx = vel.getX(_ship.id), vy = vel.getY(_ship.id);
+                int sid = _ship.id;
+                float ang = sprite.get(sid).rotation();
+                float vx = vel.getX(sid), vy = vel.getY(sid);
                 float bvx = vx+BULLET_VEL*FloatMath.cos(ang), bvy = vy+BULLET_VEL*FloatMath.sin(ang);
-                createBullet(pos.getX(_ship.id), pos.getY(_ship.id), bvx, bvy, ang,
-                             now + BULLET_LIFE);
-                vel.set(_ship.id, vx-bvx/100, vy-bvy/100); // decrease ship's velocity a smidgen
+                createBullet(pos.getX(sid), pos.getY(sid), bvx, bvy, ang, now + BULLET_LIFE);
+                vel.set(sid, vx-bvx/100, vy-bvy/100); // decrease ship's velocity a smidgen
             }
 
             @Override protected void update (int delta, Entities entities) {
+                Vector v = _vel;
                 for (int ii = 0, ll = entities.size(); ii < ll; ii++) {
                     int eid = entities.get(ii);
                     spin.set(eid, _angvel);
-                    Vector v = _vel;
                     if (_accel != 0) {
                         Layer s = sprite.get(eid);
                         float ang = s.rotation();
@@ -300,8 +300,8 @@ public class AsteroidsDemo extends DemoScreen
                 return type.get(entity.id) == SHIP;
             }
 
-            protected float _angvel, _accel;
             protected Vector _vel = new Vector();
+            protected float _angvel, _accel;
             protected Entity _ship;
         };
 
@@ -372,10 +372,10 @@ public class AsteroidsDemo extends DemoScreen
 
         protected String typeName (int id) {
             switch (type.get(id)) {
-            case SHIP: return "ship";
-            case BULLET: return "bullet";
+            case     SHIP: return "ship";
+            case   BULLET: return "bullet";
             case ASTEROID: return "asteroid";
-            default: return "unknown:" + type.get(id);
+            default:       return "unknown:" + type.get(id);
             }
         }
 
