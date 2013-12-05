@@ -75,8 +75,8 @@ public final class Entity
     /** Adds the specified components to this entity. This will queue the component up to be added
      * or removed to appropriate systems on the next update. <em>Note:</em> this method uses varags
      * and thus creates an array every time it is called. If you are striving to eliminate all
-     * unnecessary memory allocation, use repeated calls to {@link #add(Component)} instead of this
-     * method.
+     * unnecessary garbage generation, use repeated calls to {@link #add(Component)}, or {@link
+     * #add(Component[])} with a pre-allocated array.
      *
      * @return this entity for call chaining.
      */
@@ -85,6 +85,30 @@ public final class Entity
         c1.add(this);
         c2.add(this);
         for (Component cn : rest) cn.add(this);
+        queueChange();
+        return this;
+    }
+
+    /** Adds the supplied components to this entity. This will queue the component up to be added
+     * or removed to appropriate systems on the next update. This avoids the garbage generation of
+     * the varags {@code add} method, and is slightly more efficient than a sequence of calls to
+     * {@link #add(Component)}. The expectation is that you would keep an array around with the
+     * components for a particular kind of entity, like so:
+     *
+     * <pre>{@code
+     * Entity createFoo (...) {
+     *   Entity foo = create(true).add(FOO_COMPS);
+     *   // init foo...
+     *   return foo;
+     * }
+     * private static final Component[] FOO_COMPS = { pos, vel, etc. };
+     * }</pre>
+     *
+     * @return this entity for call chaining.
+     */
+    public Entity add (Component[] comps) {
+        checkDestroyed("Cannot add components to destroyed entity.");
+        for (Component comp : comps) comp.add(this);
         queueChange();
         return this;
     }
