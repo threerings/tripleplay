@@ -36,15 +36,27 @@ public class AsteroidsDemo extends DemoScreen
 {
     public final Image asteroids = assets().getImage("images/asteroids.png");
 
+    enum Size {
+        TINY(20), SMALL(40), MEDIUM(60), LARGE(80);
+        public final int size;
+        Size (int size) { this.size = size; }
+    };
+
     class AsteroidsWorld extends World {
         public final GroupLayer stage;
         public final float swidth, sheight;
         public final Randoms rando = Randoms.with(new Random());
 
+        public static final int SHIP     = (1 << 0);
+        public static final int ASTEROID = (1 << 1);
+        public static final int BULLET   = (1 << 2);
+
+        public final Component.IMask type = new Component.IMask(this);
         public final Component.XY opos = new Component.XY(this);
         public final Component.XY pos = new Component.XY(this);
         public final Component.XY vel = new Component.XY(this); // pixels/ms
         public final Component.Generic<Layer> sprite = new Component.Generic<Layer>(this);
+        public final Component.Generic<Size> size = new Component.Generic<Size>(this);
         public final Component.FScalar spin = new Component.FScalar(this); // rads/ms
         public final Component.FScalar radius = new Component.FScalar(this);
         public final Component.IScalar expires = new Component.IScalar(this);
@@ -181,18 +193,18 @@ public class AsteroidsDemo extends DemoScreen
             }
 
             private void collide (Entity e1, Entity e2) {
-                switch (mask(e1) | mask(e2)) {
+                switch (type.get(e1.id) | type.get(e2.id)) {
                 case SHIP_ASTEROID:
-                    explode(e1 instanceof Ship ? e1 : e2, 10, 0.75f);
+                    explode(type.get(e1.id) == SHIP ? e1 : e2, 10, 0.75f);
                     setMessage("Game Over. Press 's' to restart");
                     _wave = -1;
                     break;
                 case BULLET_ASTEROID:
-                    if (e1 instanceof Asteroid) {
-                        ((Asteroid)e1).sunder(AsteroidsWorld.this);
+                    if (type.get(e1.id) == ASTEROID) {
+                        sunder(e1);
                         e2.destroy();
                     } else {
-                        ((Asteroid)e2).sunder(AsteroidsWorld.this);
+                        sunder(e2);
                         e1.destroy();
                     }
                     break;
@@ -200,17 +212,6 @@ public class AsteroidsDemo extends DemoScreen
                 default: break; // nada
                 }
             }
-
-            private int mask (Entity e) {
-                if (e instanceof Ship)     return SHIP;
-                if (e instanceof Asteroid) return ASTEROID;
-                if (e instanceof Bullet)   return BULLET;
-                return 0;
-            }
-
-            protected static final int SHIP     = (1 << 0);
-            protected static final int ASTEROID = (1 << 1);
-            protected static final int BULLET   = (1 << 2);
 
             protected static final int SHIP_ASTEROID = SHIP|ASTEROID;
             protected static final int BULLET_ASTEROID = BULLET|ASTEROID;
@@ -222,7 +223,7 @@ public class AsteroidsDemo extends DemoScreen
         public final System waver = new System(this, 0) {
             @Override protected void update (int delta, Entities entities) {
                 // if the only entity left is the player's ship; move to the next wave
-                if (entities.size() == 1 && world.entity(entities.get(0)) instanceof Ship) {
+                if (entities.size() == 1 && type.get(entities.get(0)) == SHIP) {
                     startWave(++_wave);
                 }
             }
@@ -244,10 +245,10 @@ public class AsteroidsDemo extends DemoScreen
                 keyDown.connect(new Slot<Key>() {
                     public void onEmit (Key key) {
                         switch (key) {
-                        case LEFT:  _angvel = -ROT; break;
-                        case RIGHT: _angvel =  ROT; break;
+                        case LEFT:  _angvel = -ROT;   break;
+                        case RIGHT: _angvel =  ROT;   break;
                         case UP:    _accel  =  ACCEL; break;
-                        case SPACE: fireBullet(); break;
+                        case SPACE: if (_wave >=  0) fireBullet(); break;
                         case S:     if (_wave == -1) startWave(0); break;
                         default: break;
                         }
@@ -269,9 +270,9 @@ public class AsteroidsDemo extends DemoScreen
                 float ang = sprite.get(_ship.id).rotation();
                 float vx = vel.getX(_ship.id), vy = vel.getY(_ship.id);
                 float bvx = vx+BULLET_VEL*FloatMath.cos(ang), bvy = vy+BULLET_VEL*FloatMath.sin(ang);
-                new Bullet(AsteroidsWorld.this, pos.getX(_ship.id), pos.getY(_ship.id),
-                           bvx, bvy, ang, now + BULLET_LIFE);
-                // vel.set(_ship.id, vx-bvx/100, vy-bvy/100); // decrease ship's velocity a smidgen
+                createBullet(pos.getX(_ship.id), pos.getY(_ship.id), bvx, bvy, ang,
+                             now + BULLET_LIFE);
+                vel.set(_ship.id, vx-bvx/100, vy-bvy/100); // decrease ship's velocity a smidgen
             }
 
             @Override protected void update (int delta, Entities entities) {
@@ -292,16 +293,16 @@ public class AsteroidsDemo extends DemoScreen
 
             @Override protected void wasAdded (Entity entity) {
                 super.wasAdded(entity);
-                if (entity instanceof Ship) _ship = (Ship)entity;
+                _ship = entity;
             }
 
             @Override protected boolean isInterested (Entity entity) {
-                return entity instanceof Ship;
+                return type.get(entity.id) == SHIP;
             }
 
             protected float _angvel, _accel;
             protected Vector _vel = new Vector();
-            protected Ship _ship;
+            protected Entity _ship;
         };
 
         public AsteroidsWorld (GroupLayer stage, float swidth, float sheight) {
@@ -329,8 +330,8 @@ public class AsteroidsDemo extends DemoScreen
         }
 
         public void attract () {
-            for (int ii = 0; ii < 5; ii++) new Asteroid(
-                this, Size.LARGE, rando.getFloat(swidth), rando.getFloat(sheight));
+            for (int ii = 0; ii < 5; ii++) createAsteroid(
+                Size.LARGE, rando.getFloat(swidth), rando.getFloat(sheight));
             setMessage("Press 's' to start.");
             _wave = -1;
         }
@@ -340,13 +341,13 @@ public class AsteroidsDemo extends DemoScreen
             if (wave == 0) {
                 Iterator<Entity> iter = entities();
                 while (iter.hasNext()) iter.next().destroy();
-                new Ship(this, swidth/2, sheight/2);
+                createShip(swidth/2, sheight/2);
                 setMessage(null);
             }
             for (int ii = 0, ll = Math.min(10, wave+2); ii < ll; ii++) {
                 float x = rando.getFloat(swidth), y = rando.getFloat(sheight);
                 // TODO: make sure x/y doesn't overlap ship
-                new Asteroid(this, Size.LARGE, x, y);
+                createAsteroid(Size.LARGE, x, y);
             }
             _wave = wave;
         }
@@ -358,7 +359,7 @@ public class AsteroidsDemo extends DemoScreen
                 float ang = rando.getInRange(-FloatMath.PI, FloatMath.PI);
                 float vel = rando.getInRange(maxvel/3, maxvel);
                 float vx = FloatMath.cos(ang)*vel, vy = FloatMath.sin(ang)*vel;
-                new Bullet(AsteroidsWorld.this, x, y, vx, vy, ang, now + 300/*ms*/);
+                createBullet(x, y, vx, vy, ang, now + 300/*ms*/);
             }
             // and destroy the target
             target.destroy();
@@ -369,85 +370,22 @@ public class AsteroidsDemo extends DemoScreen
             super.update(delta);
         }
 
-        protected int _wave = -1;
-        protected ImageLayer _msg;
-    }
-
-    abstract class Body extends Entity {
-        public final AsteroidsWorld world;
-
-        protected Body (AsteroidsWorld world, Component... comps) {
-            super(world, comps);
-            this.world = world;
-        }
-
-        @Override public String toString () {
-            String name = getClass().getName();
-            name = name.substring(name.lastIndexOf('$')+1);
-            return name + "@" + world.pos.getX(id) + "/" + world.pos.getY(id);
-        }
-    }
-
-    enum Size {
-        TINY(20), SMALL(40), MEDIUM(60), LARGE(80);
-        public final int size;
-        Size (int size) { this.size = size; }
-    };
-
-    class Asteroid extends Body {
-        public static final float MAXVEL = 0.02f;
-        public static final float MAXSPIN = 0.001f;
-
-        public final Size size;
-
-        public Asteroid (AsteroidsWorld world, Size size, float x, float y) {
-            this(world, size, x, y, world.rando.getInRange(-MAXVEL, MAXVEL),
-                 world.rando.getInRange(-MAXVEL, MAXVEL));
-        }
-
-        public Asteroid (AsteroidsWorld world, Size size, float x, float y, float vx, float vy) {
-            super(world, world.sprite, world.opos, world.pos, world.vel, world.spin, world.radius);
-
-            this.size = size;
-
-            float side = size.size;
-            int iidx = world.rando.getInt(8);
-            float ah = asteroids.height();
-            ImageLayer layer = graphics().createImageLayer(asteroids.subImage(iidx*ah, 0, ah, ah));
-            layer.setOrigin(ah/2, ah/2);
-            layer.setScale(side/ah);
-            layer.setRotation(world.rando.getFloat(MathUtil.TAU));
-
-            world.sprite.set(id, layer);
-            world.spin.set(id, world.rando.getInRange(-MAXSPIN, MAXSPIN));
-            world.opos.set(id, x, y);
-            world.pos.set(id, x, y);
-            world.vel.set(id, vx, vy);
-            world.radius.set(id, side*0.425f);
-        }
-
-        public void sunder (AsteroidsWorld world) {
-            Size smaller;
-            switch (size) {
-            default:
-            case TINY: world.explode(this, 4, 0.25f); return;
-            case SMALL: smaller = Size.TINY; break;
-            case MEDIUM: smaller = Size.SMALL; break;
-            case LARGE: smaller = Size.MEDIUM; break;
+        protected String typeName (int id) {
+            switch (type.get(id)) {
+            case SHIP: return "ship";
+            case BULLET: return "bullet";
+            case ASTEROID: return "asteroid";
+            default: return "unknown:" + type.get(id);
             }
-            float x = world.pos.getX(id), y = world.pos.getY(id);
-            float vx = world.vel.getX(id), vy = world.vel.getY(id);
-            // break the asteroid into two pieces, spinning in opposite directions and headed at
-            // roughly right angles to the original
-            new Asteroid(world, smaller, x, y, -vy, vx);
-            new Asteroid(world, smaller, x, y, vy, -vx);
-            destroy(); // and destroy ourself
         }
-    }
 
-    class Ship extends Body {
-        public Ship (AsteroidsWorld world, float x, float y) {
-            super(world, world.sprite, world.opos, world.pos, world.vel, world.spin, world.radius);
+        protected String toString (int id) {
+            return typeName(id) + ":" + id + "@" + pos.getX(id) + "/" + pos.getY(id);
+        }
+
+        protected Entity createShip (float x, float y) {
+            Entity ship = create(true);
+            ship.add(type, sprite, opos, pos, vel, spin, radius);
 
             CanvasImage bitmap = graphics().createImage(30, 20);
             Path path = bitmap.canvas().createPath();
@@ -457,19 +395,51 @@ public class AsteroidsDemo extends DemoScreen
             layer.setOrigin(15, 10);
             layer.setRotation(-MathUtil.HALF_PI);
 
-            world.sprite.set(id, layer);
-            world.opos.set(id, x, y);
-            world.pos.set(id, x, y);
-            world.vel.set(id, 0, 0);
-            world.radius.set(id, 10);
+            int id = ship.id;
+            type.set(id, SHIP);
+            sprite.set(id, layer);
+            opos.set(id, x, y);
+            pos.set(id, x, y);
+            vel.set(id, 0, 0);
+            radius.set(id, 10);
+            return ship;
         }
-    }
 
-    class Bullet extends Body {
-        public Bullet (AsteroidsWorld world, float x, float y, float vx, float vy, float angle,
-                       int expires) {
-            super(world, world.sprite, world.opos, world.pos, world.vel, world.radius,
-                  world.expires);
+        protected static final float MAXVEL = 0.02f;
+        protected static final float MAXSPIN = 0.001f;
+
+        protected Entity createAsteroid (Size size, float x, float y) {
+            return createAsteroid(size, x, y, rando.getInRange(-MAXVEL, MAXVEL),
+                                  rando.getInRange(-MAXVEL, MAXVEL));
+        }
+
+        protected Entity createAsteroid (Size sz, float x, float y, float vx, float vy) {
+            Entity ast = create(true);
+            ast.add(type, size, sprite, opos, pos, vel, spin, radius);
+
+            float side = sz.size;
+            int iidx = rando.getInt(8);
+            float ah = asteroids.height();
+            ImageLayer layer = graphics().createImageLayer(asteroids.subImage(iidx*ah, 0, ah, ah));
+            layer.setOrigin(ah/2, ah/2);
+            layer.setScale(side/ah);
+            layer.setRotation(rando.getFloat(MathUtil.TAU));
+
+            int id = ast.id;
+            type.set(id, ASTEROID);
+            size.set(id, sz);
+            sprite.set(id, layer);
+            spin.set(id, rando.getInRange(-MAXSPIN, MAXSPIN));
+            opos.set(id, x, y);
+            pos.set(id, x, y);
+            vel.set(id, vx, vy);
+            radius.set(id, side*0.425f);
+            return ast;
+        }
+
+        protected Entity createBullet (float x, float y, float vx, float vy, float angle, int exps) {
+            Entity bullet = create(true);
+            bullet.add(type, sprite, opos, pos, vel, radius, expires);
 
             CanvasImage bitmap = graphics().createImage(5, 2);
             bitmap.canvas().setFillColor(0xFFFFFFFF).fillRect(0, 0, 5, 2);
@@ -477,13 +447,37 @@ public class AsteroidsDemo extends DemoScreen
             layer.setOrigin(2.5f, 1);
             layer.setRotation(angle);
 
-            world.sprite.set(id, layer);
-            world.opos.set(id, x, y);
-            world.pos.set(id, x, y);
-            world.vel.set(id, vx, vy);
-            world.radius.set(id, 2);
-            world.expires.set(id, expires);
+            int id = bullet.id;
+            type.set(id, BULLET);
+            sprite.set(id, layer);
+            opos.set(id, x, y);
+            pos.set(id, x, y);
+            vel.set(id, vx, vy);
+            radius.set(id, 2);
+            expires.set(id, exps);
+            return bullet;
         }
+
+        protected void sunder (Entity ast) {
+            Size smaller;
+            switch (size.get(ast.id)) {
+            default:
+            case TINY: explode(ast, 4, 0.25f); return;
+            case SMALL: smaller = Size.TINY; break;
+            case MEDIUM: smaller = Size.SMALL; break;
+            case LARGE: smaller = Size.MEDIUM; break;
+            }
+            float x = pos.getX(ast.id), y = pos.getY(ast.id);
+            float vx = vel.getX(ast.id), vy = vel.getY(ast.id);
+            // break the asteroid into two pieces, spinning in opposite directions and headed at
+            // roughly right angles to the original
+            createAsteroid(smaller, x, y, -vy, vx);
+            createAsteroid(smaller, x, y, vy, -vx);
+            ast.destroy(); // and destroy ourself
+        }
+
+        protected int _wave = -1;
+        protected ImageLayer _msg;
     }
 
     @Override public void wasRemoved () {

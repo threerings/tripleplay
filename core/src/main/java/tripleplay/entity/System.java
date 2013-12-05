@@ -97,14 +97,14 @@ public abstract class System
     }
 
     void entityChanged (Entity entity) {
-        boolean wasAdded = entity.in(_id);
+        boolean wasAdded = entity.systems.isSet(_id);
         boolean haveInterest = isInterested(entity);
         if (haveInterest && !wasAdded) addEntity(entity);
         else if (!haveInterest && wasAdded) removeEntity(entity);
     }
 
     void entityRemoved (Entity entity) {
-        if (entity.in(_id)) removeEntity(entity);
+        if (entity.systems.isSet(_id)) removeEntity(entity);
     }
 
     void update (int delta) {
@@ -119,14 +119,14 @@ public abstract class System
 
     private void addEntity (Entity entity) {
         _active.add(entity.id);
-        entity.noteIn(_id);
+        entity.systems.set(_id);
         wasAdded(entity);
     }
 
     private void removeEntity (Entity entity) {
         // TODO: this is O(N), would be nice if it was O(log N) or O(1)
         int idx = _active.remove(entity.id);
-        entity.noteOut(_id);
+        entity.systems.clear(_id);
         wasRemoved(entity, idx);
     }
 

@@ -22,7 +22,7 @@ import pythagoras.f.Vector;
 public abstract class Component
 {
     /** A component implementation for arbitrary objects. */
-    public static class Generic<T> extends Component {
+    public static final class Generic<T> extends Component {
         public Generic (World world) { super(world); }
 
         /** Returns the value of this component for {@code entityId}. */
@@ -65,7 +65,7 @@ public abstract class Component
     }
 
     /** A component implementation for a single scalar {@code int}. */
-    public static class IScalar extends Component {
+    public static final class IScalar extends Component {
         public IScalar (World world) { super(world); }
 
         /** Returns the value of this component for {@code entityId}. */
@@ -93,11 +93,11 @@ public abstract class Component
             if (_blocks[blockIdx] == null) _blocks[blockIdx] = new int[BLOCK];
         }
 
-        protected int[][] _blocks = new int[INDEX_BLOCKS][];
+        private int[][] _blocks = new int[INDEX_BLOCKS][];
     }
 
     /** A component implementation for a single scalar {@code float}. */
-    public static class FScalar extends Component {
+    public static final class FScalar extends Component {
         public FScalar (World world) { super(world); }
 
         /** Returns the value of this component for {@code entityId}. */
@@ -125,11 +125,11 @@ public abstract class Component
             if (_blocks[blockIdx] == null) _blocks[blockIdx] = new float[BLOCK];
         }
 
-        protected float[][] _blocks = new float[INDEX_BLOCKS][];
+        private float[][] _blocks = new float[INDEX_BLOCKS][];
     }
 
     /** A component implementation for a pair of {@code float}s. */
-    public static class XY extends Component {
+    public static final class XY extends Component {
         public XY (World world) { super(world); }
 
         /** Returns the x component of the point for {@code entityId}. */
@@ -221,7 +221,44 @@ public abstract class Component
             if (_blocks[blockIdx] == null) _blocks[blockIdx] = new float[2*BLOCK];
         }
 
-        protected float[][] _blocks = new float[INDEX_BLOCKS][];
+        private float[][] _blocks = new float[INDEX_BLOCKS][];
+    }
+
+    /** A component implementation for a single {@code int} bit mask. */
+    public static final class IMask extends Component {
+        public IMask (World world) { super(world); }
+
+        /** Returns the value of this component for {@code entityId}. */
+        public int get (int entityId) {
+            return _blocks[entityId / BLOCK][entityId % BLOCK];
+        }
+
+        /** Updates the entire mask for {@code entityId}. */
+        public void set (int entityId, int value) {
+            _blocks[entityId / BLOCK][entityId % BLOCK] = value;
+        }
+
+        /** Sets the mask for {@code entityId} to {@code current & mask}. */
+        public void setAnd (int entityId, int mask) {
+            _blocks[entityId / BLOCK][entityId % BLOCK] &= mask;
+        }
+
+        /** Sets the mask for {@code entityId} to {@code current | mask}. */
+        public void setOr (int entityId, int mask) {
+            _blocks[entityId / BLOCK][entityId % BLOCK] |= mask;
+        }
+
+        @Override protected void init (int entityId) {
+            int blockIdx = entityId / BLOCK;
+            if (blockIdx >= _blocks.length) {
+                int[][] blocks = new int[_blocks.length*2][];
+                java.lang.System.arraycopy(_blocks, 0, blocks, 0, _blocks.length);
+                _blocks = blocks;
+            }
+            if (_blocks[blockIdx] == null) _blocks[blockIdx] = new int[BLOCK];
+        }
+
+        private int[][] _blocks = new int[INDEX_BLOCKS][];
     }
 
     /** The world in which this component exists. */
@@ -239,12 +276,12 @@ public abstract class Component
     protected void clear (int index) {} // noop by default
 
     void add (Entity entity) {
-        entity.noteHas(id);
+        entity.comps.set(id);
         init(entity.id);
     }
 
     void remove (Entity entity) {
-        entity.noteHasnt(id);
+        entity.comps.clear(id);
         clear(entity.id);
     }
 

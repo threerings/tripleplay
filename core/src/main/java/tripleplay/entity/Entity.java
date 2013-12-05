@@ -5,10 +5,13 @@
 
 package tripleplay.entity;
 
+import tripleplay.util.BitVec;
+
 /**
- * An entity is a collection of components.
+ * Tracks the state of a single entity. This includes its enabled state, as well as the components
+ * which are attached to this entity.
  */
-public class Entity
+public final class Entity
 {
     /** The world to which this entity belongs. */
     public final World world;
@@ -20,13 +23,9 @@ public class Entity
     /** Creates an entity in the specified world, initializes it with the supplied set of
      * components and queues it to be added to the world on the next update.
      */
-    public Entity (World world, Component... components) {
+    public Entity (World world, int id) {
         this.world = world;
-        this.id = world.claimId();
-        _sysMasks = new int[world.maxSystems()/32];
-        _compsMasks = new int[world.maxComponents()/32];
-        for (Component component : components) component.add(this);
-        world.toAdd.add(this);
+        this.id = id;
     }
 
     /** Returns whether this entity has been destroyed. */
@@ -58,25 +57,46 @@ public class Entity
 
     /** Returns true if this entity has the component {@code comp}, false otherwise. */
     public boolean has (Component comp) {
-        return (_compsMasks[comp.id / 32] & (1L << (comp.id % 32))) != 0;
+        return comps.isSet(comp.id);
     }
 
     /** Adds the specified component to this entity. This will queue the component up to be added
      * or removed to appropriate systems on the next update.
+     *
+     * @return this entity for call chaining.
      */
-    public void add (Component comp) {
+    public Entity add (Component comp) {
         checkDestroyed("Cannot add components to destroyed entity.");
         comp.add(this);
         queueChange();
+        return this;
+    }
+
+    /** Adds the specified components to this entity. This will queue the component up to be added
+     * or removed to appropriate systems on the next update. <em>Note:</em> this method uses varags
+     * and thus creates an array every time it is called. If you are striving to eliminate all
+     * unnecessary memory allocation, use repeated calls to {@link #add(Component)} instead of this
+     * method.
+     *
+     * @return this entity for call chaining.
+     */
+    public Entity add (Component c1, Component c2, Component... rest) {
+        checkDestroyed("Cannot add components to destroyed entity.");
+        c1.add(this);
+        c2.add(this);
+        for (Component cn : rest) cn.add(this);
+        queueChange();
+        return this;
     }
 
     /** Removes the specified component from this entity. This will queue the component up to be
      * added or removed to appropriate systems on the next update.
      */
-    public void remove (Component comp) {
+    public Entity remove (Component comp) {
         checkDestroyed("Cannot remove components from destroyed entity.");
         comp.remove(this);
         queueChange();
+        return this;
     }
 
     /** Destroys this entity, causing it to be removed from the world on the next update. */
@@ -114,19 +134,13 @@ public class Entity
 
     void noteAdded () { _flags |= ADDED; }
     void clearChanging () { _flags &= ~CHANGING; }
+    void reset () { _flags = 0; }
 
-    void noteHas (int compId) { _compsMasks[compId / 32] |= (1 << (compId % 32)); }
-    void noteHasnt (int compId) { _compsMasks[compId / 32] &= ~(1 << (compId % 32)); }
-
-    boolean in (int sysId) { return (_sysMasks[sysId / 32] & (1 << (sysId % 32))) != 0; }
-    void noteIn  (int sysId) { _sysMasks[sysId / 32] |=  (1 << (sysId % 32)); }
-    void noteOut (int sysId) { _sysMasks[sysId / 32] &= ~(1 << (sysId % 32)); }
-
-    /** A bit mask indicating which systems are processing this entity. */
-    private final int[] _sysMasks;
+    /** A bit mask indicating which systems are interested in this entity. */
+    final BitVec systems = new BitVec(2);
 
     /** A bit mask indicating which components are possessed by this entity. */
-    private final int[] _compsMasks;
+    final BitVec comps = new BitVec(2);
 
     /** Flags pertaining to this entity's state. */
     protected int _flags;
