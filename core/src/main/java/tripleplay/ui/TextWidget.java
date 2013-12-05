@@ -20,7 +20,7 @@ import react.Slot;
 import react.UnitSlot;
 
 import tripleplay.util.EffectRenderer;
-import tripleplay.util.Glyph;
+import tripleplay.util.TextGlyph;
 
 /**
  * An abstract base class for widgets that contain text.
@@ -75,8 +75,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         }
     }
 
-    protected EffectRenderer createEffectRenderer ()
-    {
+    // this is broken out so that subclasses can extend this action
+    protected EffectRenderer createEffectRenderer () {
         return Style.createEffectRenderer(this);
     }
 
@@ -261,36 +261,17 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float ox = MathUtil.ifloor(halign.offset(twidth, availWidth));
             float oy = MathUtil.ifloor(valign.offset(theight, availHeight));
 
-            boolean needsRerender = tgwidth != _renderedGlyphWidth ||
-                tgheight != _renderedGlyphHeight || !renderer.equals(_renderedRenderer) ||
-                !text.format().equals(_renderedTextFormat) || !text().equals(_renderedTextStr);
-
-            if (needsRerender) {
-                _tglyph.prepare(tgwidth, tgheight);
-                renderer.render(_tglyph.canvas(), text, color, underlined,
-                    Math.min(ox, 0), Math.min(oy, 0));
-
-                _renderedGlyphWidth = tgwidth;
-                _renderedGlyphHeight = tgheight;
-                _renderedTextFormat = text.format();
-                _renderedTextStr = text();
-                _renderedRenderer = renderer;
-            }
-
+            _tglyph.renderText(tgwidth, tgheight, text, renderer, color, underlined,
+                               Math.min(ox, 0), Math.min(oy, 0));
             _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + renderer.offsetX(),
-                ty + Math.max(oy, 0) + renderer.offsetY());
+                                           ty + Math.max(oy, 0) + renderer.offsetY());
         }
 
         protected float textWidth () { return renderer.adjustWidth(text.width()); }
         protected float textHeight () { return renderer.adjustHeight(text.height()); }
     }
 
-    protected final Glyph _tglyph = new Glyph(layer);
-    protected float _renderedGlyphWidth = Float.NaN;
-    protected float _renderedGlyphHeight = Float.NaN;
-    protected TextFormat _renderedTextFormat = null;
-    protected String _renderedTextStr = null;
-    protected EffectRenderer _renderedRenderer = null;
+    protected final TextGlyph _tglyph = new TextGlyph(layer);
     protected Layer _ilayer;
 
     protected static final float MIN_FONT_SIZE = 6; // TODO: make customizable?
