@@ -262,7 +262,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float oy = MathUtil.ifloor(valign.offset(theight, availHeight));
 
             // only re-render our text if something actually changed
-            if (text.text().equals(_renderedText) || !tconfig.equals(_renderedTConfig) ||
+            if (!text.text().equals(_renderedText) || !tconfig.equals(_renderedTConfig) ||
                 tgwidth != _tglyph.preparedWidth() || tgheight != _tglyph.preparedHeight()) {
                 _tglyph.prepare(tgwidth, tgheight);
                 tconfig.render(_tglyph.canvas(), text, Math.min(ox, 0), Math.min(oy, 0));
