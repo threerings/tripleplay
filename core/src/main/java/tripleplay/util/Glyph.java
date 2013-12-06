@@ -72,6 +72,8 @@ public class Glyph
     @Override public void destroy () {
         _layer.clear();
         _image = null;
+        _preparedWidth = 0;
+        _preparedHeight = 0;
     }
 
     /**
