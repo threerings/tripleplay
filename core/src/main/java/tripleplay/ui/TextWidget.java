@@ -20,7 +20,8 @@ import react.Slot;
 import react.UnitSlot;
 
 import tripleplay.util.EffectRenderer;
-import tripleplay.util.TextGlyph;
+import tripleplay.util.TextConfig;
+import tripleplay.util.Glyph;
 
 /**
  * An abstract base class for widgets that contain text.
@@ -91,13 +92,11 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final int iconGap = resolveStyle(Style.ICON_GAP);
         public final boolean iconCuddle = resolveStyle(Style.ICON_CUDDLE);
         public final IconEffect iconEffect = resolveStyle(Style.ICON_EFFECT);
-        public final int color = resolveStyle(Style.COLOR);
-        public final boolean underlined = resolveStyle(Style.UNDERLINE);
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
         public final boolean autoShrink = resolveStyle(Style.AUTO_SHRINK);
 
+        public final TextConfig tconfig;
         public TextLayout text; // mostly final, only changed by autoShrink
-        public final EffectRenderer renderer;
         public final Icon icon;
 
         public TextLayoutData (float hintX, float hintY) {
@@ -116,13 +115,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
             // layout our text, if we have any
             if (haveText) {
-                renderer = createEffectRenderer();
                 TextFormat format = Style.createTextFormat(TextWidget.this);
                 if (hints.width > 0 && wrap) format = format.withWrapWidth(hints.width);
+                tconfig = new TextConfig(format, resolveStyle(Style.COLOR), createEffectRenderer(),
+                                         resolveStyle(Style.UNDERLINE));
                 // TODO: should we do something with a y-hint?
                 text = graphics().layoutText(curtext, format);
             } else {
-                renderer = null;
+                tconfig = null;
                 text = null;
             }
         }
@@ -261,17 +261,23 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float ox = MathUtil.ifloor(halign.offset(twidth, availWidth));
             float oy = MathUtil.ifloor(valign.offset(theight, availHeight));
 
-            _tglyph.renderText(tgwidth, tgheight, text, renderer, color, underlined,
-                               Math.min(ox, 0), Math.min(oy, 0));
-            _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + renderer.offsetX(),
-                                           ty + Math.max(oy, 0) + renderer.offsetY());
+            // only re-render our text if something actually changed
+            if (text.text().equals(_renderedText) || !tconfig.equals(_renderedTConfig) ||
+                tgwidth != _tglyph.preparedWidth() || tgheight != _tglyph.preparedHeight()) {
+                _tglyph.prepare(tgwidth, tgheight);
+                tconfig.render(_tglyph.canvas(), text, Math.min(ox, 0), Math.min(oy, 0));
+                _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + tconfig.effect.offsetX(),
+                                               ty + Math.max(oy, 0) + tconfig.effect.offsetY());
+            }
         }
 
-        protected float textWidth () { return renderer.adjustWidth(text.width()); }
-        protected float textHeight () { return renderer.adjustHeight(text.height()); }
+        protected float textWidth () { return tconfig.effect.adjustWidth(text.width()); }
+        protected float textHeight () { return tconfig.effect.adjustHeight(text.height()); }
     }
 
-    protected final TextGlyph _tglyph = new TextGlyph(layer);
+    protected final Glyph _tglyph = new Glyph(layer);
+    protected String _renderedText;
+    protected TextConfig _renderedTConfig;
     protected Layer _ilayer;
 
     protected static final float MIN_FONT_SIZE = 6; // TODO: make customizable?
