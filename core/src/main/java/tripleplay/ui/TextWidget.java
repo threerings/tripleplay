@@ -268,6 +268,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 tconfig.render(_tglyph.canvas(), text, Math.min(ox, 0), Math.min(oy, 0));
                 _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + tconfig.effect.offsetX(),
                                                ty + Math.max(oy, 0) + tconfig.effect.offsetY());
+                _renderedText = text.text();
+                _renderedTConfig = tconfig;
             }
         }
 
