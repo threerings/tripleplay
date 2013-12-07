@@ -266,11 +266,13 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 tgwidth != _tglyph.preparedWidth() || tgheight != _tglyph.preparedHeight()) {
                 _tglyph.prepare(tgwidth, tgheight);
                 tconfig.render(_tglyph.canvas(), text, Math.min(ox, 0), Math.min(oy, 0));
-                _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + tconfig.effect.offsetX(),
-                                               ty + Math.max(oy, 0) + tconfig.effect.offsetY());
                 _renderedText = text.text();
                 _renderedTConfig = tconfig;
             }
+
+            // always set the translation since other non-text style changes can affect it
+            _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + tconfig.effect.offsetX(),
+                                           ty + Math.max(oy, 0) + tconfig.effect.offsetY());
         }
 
         protected float textWidth () { return tconfig.effect.adjustWidth(text.width()); }
