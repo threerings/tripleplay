@@ -243,7 +243,7 @@ public class AsteroidsDemo extends DemoScreen
 
             /* ctor */ {
                 keyDown.connect(new Slot<Key>() {
-                    public void onEmit (Key key) {
+                    @Override public void onEmit (Key key) {
                         switch (key) {
                         case LEFT:  _angvel = -ROT;   break;
                         case RIGHT: _angvel =  ROT;   break;
@@ -255,7 +255,7 @@ public class AsteroidsDemo extends DemoScreen
                     }
                 });
                 keyUp.connect(new Slot<Key>() {
-                    public void onEmit (Key key) {
+                    @Override public void onEmit (Key key) {
                         switch (key) {
                         case LEFT:  _angvel = 0; break;
                         case RIGHT: _angvel = 0; break;
@@ -311,10 +311,10 @@ public class AsteroidsDemo extends DemoScreen
             this.sheight = sheight;
 
             keyboard().setListener(new Keyboard.Adapter() {
-                public void onKeyDown (Keyboard.Event event) {
+                @Override public void onKeyDown (Keyboard.Event event) {
                     keyDown.emit(event.key());
                 }
-                public void onKeyUp (Keyboard.Event event) {
+                @Override public void onKeyUp (Keyboard.Event event) {
                     keyUp.emit(event.key());
                 }
             });
@@ -506,7 +506,7 @@ public class AsteroidsDemo extends DemoScreen
 
     @Override protected Group createIface () {
         return new Group(AxisLayout.vertical()) {
-            protected void layout () {
+            @Override protected void layout () {
                 super.layout();
                 if (_world == null) {
                     _world = new AsteroidsWorld(layer, size().width(), size().height());
