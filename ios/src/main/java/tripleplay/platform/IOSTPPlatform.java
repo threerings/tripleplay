@@ -87,6 +87,10 @@ public class IOSTPPlatform extends TPPlatform
         _uiOverlay.setHiddenArea(_hidden);
     }
 
+    @Override public void refreshNativeBounds () {
+        _fieldHandler.refreshNativeBounds();
+    }
+
     IOSUIOverlay overlay () {
         return _uiOverlay;
     }

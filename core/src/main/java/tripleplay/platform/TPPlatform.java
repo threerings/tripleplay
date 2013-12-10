@@ -91,6 +91,11 @@ public abstract class TPPlatform
     public void clearFocus () {
     }
 
+    /** Updates the bounds of all known native fields. This is useful for animating a {@code Root}
+     * containing some {@code Field} instances and changes its transform. */
+    public void refreshNativeBounds () {
+    }
+
     /** Hides the native widgets under the given screen area, using platform clipping if
      * supported. The PlayN layers underneath the area should show through. Pointer events should
      * also not interact with the native widgets within the area.

@@ -62,6 +62,12 @@ public class Field extends TextWidget<Field>
             return _finishedEditing;
         }
 
+        /** Refreshes the bounds of this field's native field. Used as a platform callback to
+         * support some degree of animation for UI containing native fields. */
+        public void refreshBounds () {
+            updateNativeFieldBounds();
+        }
+
         public Field field () {
             return Field.this;
         }
@@ -303,6 +309,10 @@ public class Field extends TextWidget<Field>
 
     protected void setGlyphLayerVisible (boolean visible) {
         if (_tglyph.layer() != null) _tglyph.layer().setVisible(visible);
+    }
+
+    @Override protected void validate () {
+        super.validate();
     }
 
     protected class FieldLayoutData extends TextLayoutData {

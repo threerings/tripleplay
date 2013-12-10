@@ -181,6 +181,12 @@ public class IOSTextFieldHandler
         field.getView().RemoveFromSuperview();
     }
 
+    public void refreshNativeBounds () {
+        for (IOSNativeTextField field : _activeFields.values()) {
+            field._element.refreshBounds();
+        }
+    }
+
     protected IOSNativeTextField findFirstResponder () {
         for (Map.Entry<UIView, IOSNativeTextField> entry : _activeFields.entrySet()) {
             if (entry.getKey().get_IsFirstResponder()) return entry.getValue();
