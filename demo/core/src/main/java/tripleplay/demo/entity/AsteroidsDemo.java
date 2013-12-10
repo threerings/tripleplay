@@ -40,7 +40,7 @@ public class AsteroidsDemo extends DemoScreen
         TINY(20), SMALL(40), MEDIUM(60), LARGE(80);
         public final int size;
         Size (int size) { this.size = size; }
-    };
+    }
 
     class AsteroidsWorld extends World {
         public final GroupLayer stage;
