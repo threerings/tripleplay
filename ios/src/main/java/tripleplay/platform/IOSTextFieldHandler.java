@@ -40,7 +40,7 @@ public class IOSTextFieldHandler
 {
     public IOSTextFieldHandler (IOSTPPlatform platform) {
         _platform = platform;
-        _overlay = platform.platform.uiOverlay();
+        _overlay = platform.overlay();
         _touchDetector = new TouchDetector(_overlay.get_Bounds());
 
         cli.System.Action$$00601_$$$_Lcli__MonoTouch__Foundation__NSNotification_$$$$_

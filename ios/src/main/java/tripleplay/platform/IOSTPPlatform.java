@@ -5,6 +5,9 @@
 
 package tripleplay.platform;
 
+import cli.MonoTouch.CoreGraphics.CGAffineTransform;
+import cli.MonoTouch.UIKit.UIScreen;
+import cli.System.Drawing.RectangleF;
 import playn.core.Image;
 import playn.ios.IOSPlatform;
 import tripleplay.ui.Field;
@@ -13,11 +16,13 @@ import tripleplay.ui.Field;
  * Implements iOS-specific TriplePlay services.
  */
 public class IOSTPPlatform extends TPPlatform
+    implements IOSPlatform.OrientationChangeListener
 {
     /** Registers the IOS TriplePlay platform. */
     public static IOSTPPlatform register (IOSPlatform platform) {
         IOSTPPlatform instance = new IOSTPPlatform(platform);
         TPPlatform.register(instance);
+        platform.setOrientationChangeListener(instance);
         return instance;
     }
 
@@ -42,10 +47,36 @@ public class IOSTPPlatform extends TPPlatform
         return new IOSImageOverlay(image);
     }
 
+    @Override public void orientationChanged (CGAffineTransform trans, boolean landscape) {
+        _uiOverlay.set_Transform(trans);
+
+        RectangleF overlayBounds = _uiOverlay.get_Bounds();
+        if ((overlayBounds.get_Width() > overlayBounds.get_Height()) != landscape) {
+          // swap the width and height
+          float width = overlayBounds.get_Width();
+          overlayBounds.set_Width(overlayBounds.get_Height());
+          overlayBounds.set_Height(width);
+          _uiOverlay.set_Bounds(overlayBounds);
+        }
+        // update the overlay's hidden area, if any
+        _uiOverlay.setHiddenArea(_hidden);
+    }
+
+    @Override public void updateHidden () {
+        _uiOverlay.setHiddenArea(_hidden);
+    }
+
+    IOSUIOverlay overlay () {
+        return _uiOverlay;
+    }
+
     private IOSTPPlatform (IOSPlatform platform) {
         this.platform = platform;
+        platform.gameView().Add(
+            _uiOverlay = new IOSUIOverlay(UIScreen.get_MainScreen().get_Bounds()));
         _fieldHandler = new IOSTextFieldHandler(this);
     }
 
     protected final IOSTextFieldHandler _fieldHandler;
+    protected final IOSUIOverlay _uiOverlay;
 }

@@ -6,6 +6,8 @@
 package tripleplay.platform;
 
 import playn.core.Image;
+import pythagoras.f.IRectangle;
+import pythagoras.f.Rectangle;
 import react.SignalView;
 import react.UnitSignal;
 import react.Value;
@@ -89,6 +91,20 @@ public abstract class TPPlatform
     public void clearFocus () {
     }
 
+    /** Hides the native widgets under the given screen area, using platform clipping if
+     * supported. The PlayN layers underneath the area should show through. Pointer events should
+     * also not interact with the native widgets within the area.
+     * @param area the new area to hide, in screen coordinates, or null to show all */
+    public void hideNativeOverlays (IRectangle area) {
+        if ((_hidden == null && area == null) ||
+                (_hidden != null && _hidden.equals(area))) return;
+        _hidden = area == null ? null : new Rectangle(area);
+        updateHidden();
+    }
+
+    protected void updateHidden () {
+    }
+
     /** Called by the static register methods in the per-platform backends. */
     static void register (TPPlatform instance) {
         if (_instance != _default) {
@@ -100,6 +116,7 @@ public abstract class TPPlatform
     protected Value<Field> _focus = Value.create(null);
     protected KeyboardFocusController _kfc;
     protected UnitSignal _activity = new UnitSignal();
+    protected Rectangle _hidden;
 
     protected static TPPlatform _default = new TPPlatform() {};
     protected static TPPlatform _instance = _default;

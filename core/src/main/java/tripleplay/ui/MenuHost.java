@@ -19,6 +19,7 @@ import playn.core.Pointer;
 
 import react.Slot;
 
+import tripleplay.platform.TPPlatform;
 import tripleplay.ui.Style.HAlign;
 import tripleplay.ui.Style.VAlign;
 import tripleplay.ui.util.BoxPoint;
@@ -370,7 +371,7 @@ public class MenuHost
                     else menuRoot.destroy(pop.menu);
 
                     // remove the hidden area we added
-                    uiOverlay().hideOverlay(null);
+                    TPPlatform.instance().hideNativeOverlays(null);
                 }
 
                 // clear all connections
@@ -507,7 +508,7 @@ public class MenuHost
                 // tell the UI overlay to let the real dimensions of the menu through
                 // TODO: this looks wrong if the menu has any transparent border - fix
                 // by using an image overlay instead, with the root captured onto it
-                uiOverlay().hideOverlay(screenBounds);
+                TPPlatform.instance().hideNativeOverlays(screenBounds);
             }
         }
     }

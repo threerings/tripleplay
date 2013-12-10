@@ -7,7 +7,6 @@ package tripleplay.platform;
 
 import cli.MonoTouch.UIKit.UIView;
 import cli.System.Drawing.RectangleF;
-import playn.core.PlayN;
 import playn.ios.IOSPlatform;
 import pythagoras.f.IRectangle;
 
@@ -68,7 +67,7 @@ public class IOSNativeOverlay
      * Gets the parent view for all iOS native overlays, i.e. {@link IOSPlatform#uiOverlay()}.
      */
     protected static UIView root () {
-        return ((IOSPlatform)PlayN.platform()).uiOverlay();
+        return ((IOSTPPlatform)TPPlatform.instance()).overlay();
     }
 
     /**
