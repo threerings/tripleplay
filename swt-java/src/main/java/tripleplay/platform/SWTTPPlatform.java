@@ -105,6 +105,13 @@ public class SWTTPPlatform extends TPPlatform
         _platform.graphics().canvas().setFocus();
     }
 
+    @Override public void refreshNativeBounds () {
+        if (_pendingRefresh == null) {
+            _pendingRefresh = new PendingRefresh();
+        }
+        _pendingRefresh.request();
+    }
+
     public Display display () {
         return _platform.shell().getDisplay();
     }
@@ -172,11 +179,38 @@ public class SWTTPPlatform extends TPPlatform
         _platform.shell().setImage(convert().image(icons[0]));
     }
 
+    protected class PendingRefresh
+    {
+        public PendingRefresh () {
+            PlayN.invokeLater(_buddy);
+        }
+
+        protected void request () {
+            _req = System.currentTimeMillis();
+        }
+
+        protected Runnable _buddy = new Runnable () {
+            @Override public void run () {
+                long now = System.currentTimeMillis();
+                if (now - _req > 75) {
+                    _pendingRefresh = null;
+                    for (SWTNativeOverlay overlay : _overlays) {
+                        overlay.refreshBounds();
+                    }
+                } else {
+                    PlayN.invokeLater(this);
+                }
+            }
+        };
+
+        protected long _req;
+    }
+
     /** The SWT platform with which this TPPlatform was registered. */
     protected SWTPlatform _platform;
     protected SWTConvert _convert;
     protected Composite _overlay;
-
+    protected PendingRefresh _pendingRefresh;
     protected OS _os = OS.UNKNOWN;
 
     protected Set<SWTNativeOverlay> _overlays = Sets.newHashSet();

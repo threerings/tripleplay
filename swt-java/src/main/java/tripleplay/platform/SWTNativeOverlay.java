@@ -46,6 +46,8 @@ public abstract class SWTNativeOverlay implements NativeOverlay
      */
     abstract protected Control createControl (Composite parent);
 
+    abstract protected void refreshBounds ();
+
     protected void updateBounds () {
         ctrl.setBounds(
             (int)bounds.x(), (int)bounds.y(), (int)bounds.width(), (int)bounds.height());

@@ -137,6 +137,10 @@ public class SWTNativeTextField extends SWTNativeOverlay
         return true;
     }
 
+    @Override protected void refreshBounds () {
+        _element.refreshBounds();
+    }
+
     protected int resolveStyle () {
         int style = (_element.resolveStyle(Field.MULTILINE) ? SWT.MULTI : SWT.SINGLE) |
             (_element.resolveStyle(Field.SECURE_TEXT_ENTRY) ? SWT.PASSWORD : 0);
