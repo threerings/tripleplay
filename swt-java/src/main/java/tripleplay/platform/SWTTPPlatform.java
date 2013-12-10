@@ -124,6 +124,12 @@ public class SWTTPPlatform extends TPPlatform
         return _overlay;
     }
 
+    @Override protected void updateHidden () {
+        for (SWTNativeOverlay overlay : _overlays) {
+            overlay.ctrl.setVisible(_hidden == null);
+        }
+    }
+
     /**
      * Processes a change to the currently focused control.
      */
