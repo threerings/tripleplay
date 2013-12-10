@@ -278,7 +278,6 @@ public class Field extends TextWidget<Field>
     }
 
     protected Rectangle getNativeFieldBounds () {
-        // TODO: handle alignments other than HAlign.LEFT and VAlign.TOP
         Insets insets = resolveStyle(Style.BACKGROUND).insets;
         Point screenCoords = Layer.Util.layerToScreen(layer, insets.left(), insets.top());
         return new Rectangle(screenCoords.x, screenCoords.y,
