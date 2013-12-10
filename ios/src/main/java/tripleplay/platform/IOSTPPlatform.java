@@ -6,10 +6,12 @@
 package tripleplay.platform;
 
 import cli.MonoTouch.CoreGraphics.CGAffineTransform;
+import cli.MonoTouch.UIKit.UIDeviceOrientation;
 import cli.MonoTouch.UIKit.UIScreen;
 import cli.System.Drawing.RectangleF;
 import playn.core.Image;
 import playn.ios.IOSPlatform;
+import pythagoras.f.FloatMath;
 import tripleplay.ui.Field;
 
 /**
@@ -47,7 +49,26 @@ public class IOSTPPlatform extends TPPlatform
         return new IOSImageOverlay(image);
     }
 
-    @Override public void orientationChanged (CGAffineTransform trans, boolean landscape) {
+    @Override public void orientationChanged (int orientationValue) {
+        CGAffineTransform trans = CGAffineTransform.MakeIdentity();
+        boolean landscape = false;
+        switch (orientationValue) {
+        default:
+        case UIDeviceOrientation.Portrait:
+          break;
+        case UIDeviceOrientation.PortraitUpsideDown:
+          trans.Rotate(FloatMath.PI);
+          break;
+        case UIDeviceOrientation.LandscapeLeft:
+          landscape = true;
+          trans.Rotate(FloatMath.PI / 2);
+          break;
+        case UIDeviceOrientation.LandscapeRight:
+          landscape = true;
+          trans.Rotate(-FloatMath.PI / 2);
+          break;
+        }
+
         _uiOverlay.set_Transform(trans);
 
         RectangleF overlayBounds = _uiOverlay.get_Bounds();
