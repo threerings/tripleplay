@@ -143,7 +143,8 @@ public class SWTNativeTextField extends SWTNativeOverlay
 
     protected int resolveStyle () {
         int style = (_element.resolveStyle(Field.MULTILINE) ? SWT.MULTI : SWT.SINGLE) |
-            (_element.resolveStyle(Field.SECURE_TEXT_ENTRY) ? SWT.PASSWORD : 0);
+            (_element.resolveStyle(Field.SECURE_TEXT_ENTRY) ? SWT.PASSWORD : 0) |
+            (_element.resolveStyle(Style.TEXT_WRAP) ? SWT.WRAP : 0);
         switch (_element.resolveStyle(Style.HALIGN)) {
         case CENTER: style |= SWT.CENTER; break;
         case LEFT: style |= SWT.LEFT; break;
@@ -162,5 +163,5 @@ public class SWTNativeTextField extends SWTNativeOverlay
 
     /** Styles that force reallocation of the text control if changed. */
     protected static int REALLOC_STYLES = SWT.MULTI | SWT.SINGLE | SWT.PASSWORD |
-            SWT.CENTER | SWT.LEFT | SWT.RIGHT;
+            SWT.CENTER | SWT.LEFT | SWT.RIGHT | SWT.WRAP;
 }
