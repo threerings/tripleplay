@@ -311,10 +311,6 @@ public class Field extends TextWidget<Field>
         if (_tglyph.layer() != null) _tglyph.layer().setVisible(visible);
     }
 
-    @Override protected void validate () {
-        super.validate();
-    }
-
     protected class FieldLayoutData extends TextLayoutData {
         public FieldLayoutData (float hintX, float hintY) {
             super(hintX, hintY);
