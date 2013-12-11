@@ -5,7 +5,10 @@
 
 package tripleplay.util;
 
+import java.io.StringWriter;
+
 import playn.core.Json;
+import playn.core.PlayN;
 
 /**
  * Facilities for parsing JSON data
@@ -162,6 +165,21 @@ public class JsonUtil
     {
         requireKey(json, key);
         return json.getArray(key);
+    }
+
+    /**
+     * @returns a String representation of the given Json
+     */
+    public static String toString (Json.Object json, boolean verbose)
+    {
+        Json.Writer writer = PlayN.json().newWriter().useVerboseFormat(verbose);
+        writer.object();
+        json.write(writer);
+        writer.end();
+
+        StringWriter out = new StringWriter();
+        out.write(writer.write());
+        return out.toString();
     }
 
     protected static void requireKey (Json.Object json, String key)
