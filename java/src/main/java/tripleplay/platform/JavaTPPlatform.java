@@ -73,7 +73,9 @@ public class JavaTPPlatform extends TPPlatform
 
         Canvas canvas = new Canvas();
         canvas.setName("GLCanvas");
-        canvas.setPreferredSize(new Dimension(config.width, config.height));
+        int width = platform.graphics().ctx().scale.scaledCeil(config.width);
+        int height = platform.graphics().ctx().scale.scaledCeil(config.height);
+        canvas.setPreferredSize(new Dimension(width, height));
         _frame.getContentPane().add(canvas);
 
         canvas.addMouseListener(new MouseAdapter() {
@@ -92,7 +94,8 @@ public class JavaTPPlatform extends TPPlatform
                 // by default, we lose focus, so test if we need to try and preempt it
                 if (_focus.get() != null && _kfc != null &&
                         !_kfc.unfocusForLocation(new Point(e.getX(), e.getY()))) {
-                    final Component comp = ((JavaNativeTextField)_focus.get().exposeNativeField()).component;
+                    final Component comp =
+                        ((JavaNativeTextField)_focus.get().exposeNativeField()).component;
                     EventQueue.invokeLater(new Runnable() {
                         @Override public void run () { comp.requestFocusInWindow(); }
                     });
