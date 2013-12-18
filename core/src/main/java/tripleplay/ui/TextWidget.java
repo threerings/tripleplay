@@ -10,18 +10,16 @@ import pythagoras.f.FloatMath;
 import pythagoras.f.MathUtil;
 
 import playn.core.Layer;
-import playn.core.TextFormat;
-import playn.core.TextLayout;
+import playn.core.TextWrap;
 import playn.core.util.Callback;
-
-import static playn.core.PlayN.graphics;
 
 import react.Slot;
 import react.UnitSlot;
 
 import tripleplay.util.EffectRenderer;
-import tripleplay.util.TextConfig;
 import tripleplay.util.Glyph;
+import tripleplay.util.StyledText;
+import tripleplay.util.TextStyle;
 
 /**
  * An abstract base class for widgets that contain text.
@@ -95,8 +93,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
         public final boolean autoShrink = resolveStyle(Style.AUTO_SHRINK);
 
-        public final TextConfig tconfig;
-        public TextLayout text; // mostly final, only changed by autoShrink
+        public StyledText.Plain text; // mostly final, only changed by autoShrink
         public final Icon icon;
 
         public TextLayoutData (float hintX, float hintY) {
@@ -115,15 +112,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
             // layout our text, if we have any
             if (haveText) {
-                TextFormat format = Style.createTextFormat(TextWidget.this);
-                if (hints.width > 0 && wrap) format = format.withWrapWidth(hints.width);
-                tconfig = new TextConfig(format, resolveStyle(Style.COLOR), createEffectRenderer(),
-                                         resolveStyle(Style.UNDERLINE));
+                TextStyle style = Style.createTextStyle(TextWidget.this);
                 // TODO: should we do something with a y-hint?
-                text = graphics().layoutText(curtext, format);
-            } else {
-                tconfig = null;
-                text = null;
+                if (hints.width > 0 && wrap) {
+                    text = new StyledText.Block(curtext, style, new TextWrap(hints.width),
+                                                Style.toAlignment(resolveStyle(Style.HALIGN)));
+                } else {
+                    text = new StyledText.Span(curtext, style);
+                }
             }
         }
 
@@ -227,7 +223,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         // this is broken out so that subclasses can extend this action
         protected void addTextSize (Dimension size) {
             if (_constraint instanceof Constraints.TextConstraint) {
-                ((Constraints.TextConstraint)_constraint).addTextSize(size, text);
+                Dimension tsize = (text == null) ? null : new Dimension(textWidth(), textHeight());
+                ((Constraints.TextConstraint)_constraint).addTextSize(size, tsize);
             } else if (text != null) {
                 size.width += textWidth();
                 size.height += textHeight();
@@ -242,11 +239,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             // if autoShrink is enabled, and our text is too wide, re-lay it out with successively
             // smaller fonts until it fits
             if (autoShrink && twidth > availWidth) {
-                String curtext = text();
-                TextFormat format = Style.createTextFormat(TextWidget.this);
-                while (twidth > availWidth && format.font.size() > MIN_FONT_SIZE) {
-                    format = format.withFont(format.font.derive(format.font.size()-1));
-                    text = graphics().layoutText(curtext, format);
+                while (twidth > availWidth && text.style.font.size() > MIN_FONT_SIZE) {
+                    text = text.resize(text.style.font.size()-1);
                     twidth = FloatMath.ceil(textWidth());
                 }
             }
@@ -262,26 +256,24 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float oy = MathUtil.ifloor(valign.offset(theight, availHeight));
 
             // only re-render our text if something actually changed
-            if (!text.text().equals(_renderedText) || !tconfig.equals(_renderedTConfig) ||
-                tgwidth != _tglyph.preparedWidth() || tgheight != _tglyph.preparedHeight()) {
+            if (!text.equals(_renderedText) || tgwidth != _tglyph.preparedWidth() ||
+                tgheight != _tglyph.preparedHeight()) {
                 _tglyph.prepare(tgwidth, tgheight);
-                tconfig.render(_tglyph.canvas(), text, Math.min(ox, 0), Math.min(oy, 0));
-                _renderedText = text.text();
-                _renderedTConfig = tconfig;
+                text.render(_tglyph.canvas(), Math.min(ox, 0), Math.min(oy, 0));
+                _renderedText = text;
             }
 
             // always set the translation since other non-text style changes can affect it
-            _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + tconfig.effect.offsetX(),
-                                           ty + Math.max(oy, 0) + tconfig.effect.offsetY());
+            _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + text.style.effect.offsetX(),
+                                           ty + Math.max(oy, 0) + text.style.effect.offsetY());
         }
 
-        protected float textWidth () { return tconfig.effect.adjustWidth(text.width()); }
-        protected float textHeight () { return tconfig.effect.adjustHeight(text.height()); }
+        protected float textWidth () { return text.width(); }
+        protected float textHeight () { return text.height(); }
     }
 
     protected final Glyph _tglyph = new Glyph(layer);
-    protected String _renderedText;
-    protected TextConfig _renderedTConfig;
+    protected StyledText.Plain _renderedText;
     protected Layer _ilayer;
 
     protected static final float MIN_FONT_SIZE = 6; // TODO: make customizable?

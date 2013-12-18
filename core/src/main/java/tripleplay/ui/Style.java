@@ -10,7 +10,9 @@ import playn.core.Font;
 import playn.core.PlayN;
 import playn.core.Sound;
 import playn.core.TextFormat;
+import playn.core.util.TextBlock;
 import tripleplay.util.EffectRenderer;
+import tripleplay.util.TextStyle;
 
 /**
  * Defines style properties for interface elements. Some style properties are inherited, such that
@@ -251,14 +253,21 @@ public abstract class Style<V>
     /** Indicates whether or not this style property is inherited. */
     public final boolean inherited;
 
+    /** @deprecated Use {@link #createTextStyle}. */
+    @Deprecated public static TextFormat createTextFormat (Element<?> elem) {
+        return createTextStyle(elem);
+    }
+
     /**
-     * Creates a text format based on the supplied element's stylings.
+     * Creates a text style instance based on the supplied element's stylings.
      */
-    public static TextFormat createTextFormat (Element<?> elem) {
-        return new TextFormat().
-            withFont(Styles.resolveStyle(elem, Style.FONT)).
-            withAlignment(toAlignment(Styles.resolveStyle(elem, Style.HALIGN))).
-            withAntialias(Styles.resolveStyle(elem, Style.TEXT_EFFECT) != TextEffect.PIXEL_OUTLINE);
+    public static TextStyle createTextStyle (Element<?> elem) {
+        return new TextStyle(
+            Styles.resolveStyle(elem, Style.FONT),
+            Styles.resolveStyle(elem, Style.TEXT_EFFECT) != TextEffect.PIXEL_OUTLINE,
+            Styles.resolveStyle(elem, Style.COLOR),
+            Style.createEffectRenderer(elem),
+            Styles.resolveStyle(elem, Style.UNDERLINE));
     }
 
     /**
@@ -319,12 +328,12 @@ public abstract class Style<V>
         this.inherited = inherited;
     }
 
-    protected static TextFormat.Alignment toAlignment (HAlign align) {
+    protected static TextBlock.Align toAlignment (HAlign align) {
         switch (align) {
         default:
-        case LEFT: return TextFormat.Alignment.LEFT;
-        case RIGHT: return TextFormat.Alignment.RIGHT;
-        case CENTER: return TextFormat.Alignment.CENTER;
+        case   LEFT: return TextBlock.Align.LEFT;
+        case  RIGHT: return TextBlock.Align.RIGHT;
+        case CENTER: return TextBlock.Align.CENTER;
         }
     }
 }

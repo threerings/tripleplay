@@ -5,11 +5,13 @@
 
 package tripleplay.util;
 
+import pythagoras.f.IRectangle;
+
 import playn.core.Asserts;
 import playn.core.Canvas;
 import playn.core.PlayN;
 import playn.core.TextLayout;
-import pythagoras.f.Rectangle;
+
 import tripleplay.ui.Style;
 
 /**
@@ -24,13 +26,9 @@ public abstract class EffectRenderer
             canvas.save();
             canvas.setFillColor(textColor);
             if (underlined) {
-                canvas.setStrokeColor(textColor);
-                for (int ii = 0; ii < layout.lineCount(); ii++) {
-                    Rectangle bounds = layout.lineBounds(ii);
-                    float sx = x + bounds.x;
-                    float sy = y + bounds.y + bounds.height() - 1;
-                    canvas.fillRect(sx, sy, bounds.width(), 1);
-                }
+                IRectangle bounds = layout.bounds();
+                float sx = x + bounds.x(), sy = y + bounds.y() + bounds.height() + 1;
+                canvas.fillRect(sx, sy, bounds.width(), 1);
             }
             canvas.fillText(layout, x, y);
             canvas.restore();
@@ -59,15 +57,10 @@ public abstract class EffectRenderer
             boolean underlined, float x, float y) {
             canvas.save();
             if (underlined) {
-                for (int ii = 0; ii < text.lineCount(); ii++) {
-                    Rectangle bounds = text.lineBounds(ii);
-                    float sx = x + bounds.x + 1;
-                    float sy = y + bounds.y + bounds.height();
-                    canvas.setFillColor(outlineColor);
-                    canvas.fillRect(sx-1, sy-1, bounds.width()+3, 3);
-                    canvas.setFillColor(textColor);
-                    canvas.fillRect(sx, sy, bounds.width(), 1);
-                }
+                IRectangle bounds = text.bounds();
+                float sx = x + bounds.x() + 1, sy = y + bounds.y() + bounds.height() + 2;
+                canvas.setFillColor(outlineColor).fillRect(sx-1, sy-1, bounds.width()+3, 3);
+                canvas.setFillColor(textColor).fillRect(sx, sy, bounds.width(), 1);
             }
             canvas.setFillColor(outlineColor);
             canvas.fillText(text, x+0, y+0);
@@ -125,14 +118,10 @@ public abstract class EffectRenderer
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+outlineWidth, y+outlineWidth);
             if (underlined) {
-                for (int ii = 0; ii < text.lineCount(); ii++) {
-                    Rectangle bounds = text.lineBounds(ii);
-                    float sx = x + bounds.x + outlineWidth;
-                    float sy = y + bounds.y + bounds.height() - 1 + outlineWidth;
-                    canvas.drawLine(sx, sy, sx+bounds.width(), sy);
-                    canvas.setFillColor(textColor);
-                    canvas.fillRect(sx, sy, bounds.width(), 1);
-                }
+                IRectangle bounds = text.bounds();
+                float sx = x + bounds.x() + outlineWidth;
+                float sy = y + bounds.y() + bounds.height() + outlineWidth + 1;
+                canvas.fillRect(sx, sy, bounds.width(), 1);
             }
             canvas.restore();
         }
@@ -169,15 +158,11 @@ public abstract class EffectRenderer
             float sx = (shadowX < 0) ? 0 : shadowX, sy = (shadowY < 0) ? 0 : shadowY;
             canvas.save();
             if (underlined) {
-                for (int ii = 0; ii < text.lineCount(); ii++) {
-                    Rectangle bounds = text.lineBounds(ii);
-                    canvas.setFillColor(shadowColor);
-                    canvas.fillRect(sx+bounds.x+x, sy+bounds.y+bounds.height()-1,
-                        bounds.width()+1, 1);
-                    canvas.setFillColor(textColor);
-                    canvas.fillRect(tx+bounds.x+x, ty+bounds.y+bounds.height()-1,
-                        bounds.width()+1, 1);
-                }
+                IRectangle bounds = text.bounds();
+                canvas.setFillColor(shadowColor).fillRect(
+                    sx+bounds.x()+x, sy+bounds.y()+bounds.height()+1, bounds.width()+1, 1);
+                canvas.setFillColor(textColor).fillRect(
+                    tx+bounds.x()+x, ty+bounds.y()+bounds.height()+1, bounds.width()+1, 1);
             }
             canvas.setFillColor(shadowColor);
             canvas.fillText(text, x+sx, y+sy);
@@ -238,13 +223,9 @@ public abstract class EffectRenderer
             canvas.fillText(text, x, y);
 
             if (underlined) {
-                canvas.setStrokeColor(textColor);
-                for (int ii = 0; ii < text.lineCount(); ii++) {
-                    Rectangle bounds = text.lineBounds(ii);
-                    float sx = x + bounds.x;
-                    float sy = y + bounds.y + bounds.height() - 1;
-                    canvas.fillRect(sx, sy, bounds.width(), 1);
-                }
+                IRectangle bounds = text.bounds();
+                float sx = x + bounds.x(), sy = y + bounds.y() + bounds.height() + 1;
+                canvas.fillRect(sx, sy, bounds.width(), 1);
             }
 
             canvas.restore();

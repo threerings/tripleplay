@@ -95,18 +95,22 @@ public class Glyph
     /**
      * Prepares the canvas and renders the supplied text at 0, 0 using the given config.
      */
-    public void renderText (TextConfig config, String text) {
+    public void renderText (StyledText.Plain text) {
+        prepare(text.width(), text.height());
+        text.render(canvas(), 0, 0);
+        _layer.get().setTranslation(text.style.effect.offsetX(), text.style.effect.offsetY());
+    }
+
+    /** @deprecated Use {@link #renderText(StyledText)}. */
+    @Deprecated public void renderText (TextConfig config, String text) {
         renderText(config, config.layout(text));
     }
 
-    /**
-     * Prepares the canvas and renders the supplied layout at 0, 0 using the given config.
-     */
-    public void renderText (TextConfig config, TextLayout layout) {
+    /** @deprecated Use {@link #renderText(StyledText)}. */
+    @Deprecated public void renderText (TextConfig config, TextLayout layout) {
         prepare(config.effect.adjustWidth(layout.width()),
-            config.effect.adjustHeight(layout.height()));
+                config.effect.adjustHeight(layout.height()));
         config.render(canvas(), layout, 0, 0);
-
         _layer.get().setTranslation(config.effect.offsetX(), config.effect.offsetY());
     }
 

@@ -16,10 +16,9 @@ import static playn.core.PlayN.graphics;
 import static pythagoras.f.FloatMath.ceil;
 
 /**
- * Encapsulates a styled text configuration and provides utility methods for rendering it in
- * various ways.
+ * @deprecated Use {@link TextStyle} and {@link StyledText}.
  */
-public class TextConfig
+@Deprecated public class TextConfig
 {
     public final TextFormat format;
     public final int textColor;

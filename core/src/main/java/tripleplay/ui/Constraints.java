@@ -6,10 +6,12 @@
 package tripleplay.ui;
 
 import playn.core.PlayN;
-import playn.core.TextFormat;
 import playn.core.TextLayout;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.IDimension;
+
+import tripleplay.util.TextStyle;
 
 /**
  * Provides various user interface constraints.
@@ -22,8 +24,9 @@ public class Constraints
      * text constraints. */
     public static abstract class TextConstraint extends Layout.Constraint {
         /** Adds the appropriate text dimensions to the supplied size.
-         * @param layout the text widget's currently laid out text, may be null. */
-        public abstract void addTextSize (Dimension tsize, TextLayout layout);
+         * @param into the constrained size will be written into this instance.
+         * @param lsize the size of the currently laid out text, may be null. */
+        public abstract void addTextSize (Dimension into, IDimension lsize);
     }
 
     /**
@@ -167,11 +170,11 @@ public class Constraints
     public static Layout.Constraint minSize (String text) {
         return new TemplateTextConstraint(text) {
             @Override protected void addTextSize (
-                Dimension tsize, TextLayout layout, TextLayout tmplLayout) {
-                float lwidth = (layout == null) ? 0 : layout.width();
-                float lheight = (layout == null) ? 0 : layout.height();
-                tsize.width += Math.max(lwidth, tmplLayout.width());
-                tsize.height += Math.max(lheight, tmplLayout.height());
+                Dimension into, IDimension lsize, TextLayout tmplLayout) {
+                float lwidth = (lsize == null) ? 0 : lsize.width();
+                float lheight = (lsize == null) ? 0 : lsize.height();
+                into.width += Math.max(lwidth, tmplLayout.width());
+                into.height += Math.max(lheight, tmplLayout.height());
             }
         };
     }
@@ -184,9 +187,9 @@ public class Constraints
     public static Layout.Constraint fixedSize (String text) {
         return new TemplateTextConstraint(text) {
             @Override protected void addTextSize (
-                Dimension tsize, TextLayout layout, TextLayout tmplLayout) {
-                tsize.width += tmplLayout.width();
-                tsize.height += tmplLayout.height();
+                Dimension into, IDimension lsize, TextLayout tmplLayout) {
+                into.width += tmplLayout.width();
+                into.height += tmplLayout.height();
             }
         };
     }
@@ -200,13 +203,13 @@ public class Constraints
             _elem = elem;
         }
 
-        @Override public void addTextSize (Dimension tsize, TextLayout layout) {
-            TextFormat format = Style.createTextFormat(_elem);
-            addTextSize(tsize, layout, PlayN.graphics().layoutText(_tmpl, format));
+        @Override public void addTextSize (Dimension into, IDimension lsize) {
+            TextStyle style = Style.createTextStyle(_elem);
+            addTextSize(into, lsize, PlayN.graphics().layoutText(_tmpl, style));
         }
 
         protected abstract void addTextSize (
-            Dimension tsize, TextLayout layout, TextLayout tmplLayout);
+            Dimension into, IDimension lsize, TextLayout tmplLayout);
 
         protected final String _tmpl;
         protected Element<?> _elem;
