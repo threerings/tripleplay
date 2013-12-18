@@ -18,7 +18,8 @@ import static playn.core.PlayN.*;
 import tripleplay.anim.Flicker;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
-import tripleplay.util.TextConfig;
+import tripleplay.util.StyledText;
+import tripleplay.util.TextStyle;
 
 /**
  * Demonstrates the flicker.
@@ -48,7 +49,7 @@ public class FlickerDemo extends DemoScreen
             CanvasImage image = graphics().createImage(width, IMG_HEIGHT);
             StringBuffer text = new StringBuffer();
             for (int tt = 0; tt < 25; tt++) text.append(ii+1);
-            TEXT.render(image.canvas(), TEXT.layout(text.toString()), 0, 0);
+            StyledText.span(text.toString(), TEXT).render(image.canvas(), 0, 0);
             ImageLayer layer = graphics().createImageLayer(image);
             _group.addAt(layer, 0, y);
             y += layer.scaledHeight();
@@ -70,6 +71,6 @@ public class FlickerDemo extends DemoScreen
 
     protected static final float IMG_HEIGHT = 100;
     protected static final int IMG_COUNT = 20;
-    protected static final TextConfig TEXT = new TextConfig(0xFF000000).
+    protected static final TextStyle TEXT = new TextStyle().
         withFont(graphics().createFont("Helvetiva", Font.Style.PLAIN, 72));
 }

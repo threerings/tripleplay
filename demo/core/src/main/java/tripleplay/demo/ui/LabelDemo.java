@@ -35,7 +35,6 @@ public class LabelDemo extends DemoScreen
 
     @Override protected Group createIface () {
         Icon smiley = Icons.image(PlayN.assets().getImage("images/smiley.png"));
-        Styles wrapped = Styles.make(Style.TEXT_WRAP.is(true));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CC66).inset(5)));
         Styles smallUnderlined = Styles.make(
             Style.FONT.is(PlayN.graphics().createFont("Times New Roman", Font.Style.PLAIN, 20)),
@@ -44,14 +43,16 @@ public class LabelDemo extends DemoScreen
             Style.FONT.is(PlayN.graphics().createFont("Times New Roman", Font.Style.PLAIN, 32)),
             Style.HALIGN.center);
         return new Group(AxisLayout.vertical()).add(
-            // display some wrapped text
             new Shim(15, 15),
             new Label("Wrapped text").addStyles(Style.HALIGN.center),
             new Group(AxisLayout.horizontal(), greenBg.add(Style.VALIGN.top)).add(
-                AxisLayout.stretch(new Label(TEXT1, smiley).
-                                   addStyles(wrapped.add(Style.ICON_GAP.is(5)))),
-                AxisLayout.stretch(new Label(TEXT2).addStyles(wrapped)),
-                AxisLayout.stretch(new Label(TEXT3).addStyles(wrapped))),
+                AxisLayout.stretch(new Label(TEXT1, smiley).addStyles(
+                                       Style.TEXT_WRAP.is(true), Style.HALIGN.left,
+                                       Style.ICON_GAP.is(5))),
+                AxisLayout.stretch(new Label(TEXT2).addStyles(
+                                       Style.TEXT_WRAP.is(true), Style.HALIGN.center)),
+                AxisLayout.stretch(new Label(TEXT3).addStyles(
+                                       Style.TEXT_WRAP.is(true), Style.HALIGN.right))),
             new Shim(15, 15),
             new Label("Styled text").addStyles(Style.HALIGN.center),
             new Group(AxisLayout.horizontal().gap(10)).add(

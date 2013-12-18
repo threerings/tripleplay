@@ -23,7 +23,8 @@ import react.Slot;
 import tripleplay.ui.Group;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.util.Randoms;
-import tripleplay.util.TextConfig;
+import tripleplay.util.StyledText;
+import tripleplay.util.TextStyle;
 
 import tripleplay.entity.Component;
 import tripleplay.entity.Entity;
@@ -323,7 +324,7 @@ public class AsteroidsDemo extends DemoScreen
         public void setMessage (String text) {
             if (_msg != null) _msg.destroy();
             if (text != null) {
-                _msg = MSG_CFG.toLayer(text);
+                _msg = StyledText.span(text, MSG_STYLE).toLayer();
                 _msg.setDepth(1);
                 stage.addAt(_msg, (swidth-_msg.width())/2, (sheight-_msg.height())/2);
             }
@@ -519,6 +520,6 @@ public class AsteroidsDemo extends DemoScreen
     protected AsteroidsWorld _world;
     protected Group _group;
 
-    protected static final TextConfig MSG_CFG = new TextConfig(0xFFFFFFFF).
+    protected static final TextStyle MSG_STYLE = new TextStyle().withTextColor(0xFFFFFFFF).
         withFont(graphics().createFont("Helvetica", Font.Style.PLAIN, 24));
 }

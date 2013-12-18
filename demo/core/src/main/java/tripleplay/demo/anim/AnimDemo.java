@@ -15,7 +15,8 @@ import tripleplay.anim.AnimGroup;
 import tripleplay.anim.Animation;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
-import tripleplay.util.TextConfig;
+import tripleplay.util.StyledText;
+import tripleplay.util.TextStyle;
 
 public class AnimDemo extends DemoScreen
 {
@@ -38,7 +39,7 @@ public class AnimDemo extends DemoScreen
             tweenX(circle).to(50).in(1000).easeInOut();
 
         // demo the shake animation
-        final ImageLayer click = CFG.toLayer("Click to Shake");
+        final ImageLayer click = StyledText.span("Click to Shake", STYLE).toLayer();
         click.addListener(new Pointer.Adapter() {
             @Override public void onPointerStart (Pointer.Event event) {
                 anim.shake(click).bounds(-3, 3, -3, 0).cycleTime(25, 25).in(1000);
@@ -71,6 +72,6 @@ public class AnimDemo extends DemoScreen
         return group.toAnim();
     }
 
-    protected static final TextConfig CFG = new TextConfig(0xFF000000).
+    protected static final TextStyle STYLE = new TextStyle().
         withFont(graphics().createFont("Helvetica", Font.Style.PLAIN, 48));
 }
