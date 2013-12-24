@@ -9,7 +9,7 @@
 
   <groupId>com.threerings</groupId>
   <artifactId>tripleplay-parent</artifactId>
-  <version>1.8</version>
+  <version>1.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Triple Play Parent</name>
