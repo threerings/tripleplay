@@ -18,7 +18,7 @@ tripleplay.ui.Element
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Element.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Element.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,8 +30,8 @@ tripleplay.ui.Element
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Constraints.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Field.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Constraints.TextConstraint.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Elements.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Element.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -50,6 +50,28 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Element.html" target="_top"><tt>El
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
+<a NAME="Added"></a>
+<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Element.bindEnabled_added(react.ValueView<java.lang.Boolean>)"></A>
+  <nobr><code>Element&lt;T&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Element.html#bindEnabled(react.ValueView<java.lang.Boolean>)" target="_top"><tt>bindEnabled</tt></A>(<code>ValueView&lt;Boolean&gt;</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Binds the enabledness of this element to the supplied value view.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Element.bindVisible_added(react.ValueView<java.lang.Boolean>)"></A>
+  <nobr><code>Element&lt;T&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Element.html#bindVisible(react.ValueView<java.lang.Boolean>)" target="_top"><tt>bindVisible</tt></A>(<code>ValueView&lt;Boolean&gt;</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Binds the visibility of this element to the supplied value view.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Changed"></a>
 <TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -57,23 +79,13 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Element.html" target="_top"><tt>El
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Element.bounds_changed(pythagoras.f.Rectangle)"></A>
-  <nobr><code>Rectangle</code>&nbsp;<A HREF="../tripleplay/ui/Element.html#bounds(pythagoras.f.Rectangle)" target="_top"><tt>bounds</tt></A>(<code>Rectangle</code>)  </nobr>
+  <A NAME="tripleplay.ui.Element.parent_changed()"></A>
+  <nobr><code>Container&lt;?&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Element.html#parent()" target="_top"><tt>parent</tt></A>()  </nobr>
   </TD>
   <TD VALIGN="TOP" WIDTH="30%">
-Change in return type from <code>IRectangle</code> to <code>Rectangle</code>.<br>
+Change in return type from <code>Elements&lt;?&gt;</code> to <code>Container&lt;?&gt;</code>.<br>
   </TD>
-  <TD VALIGN="TOP">Writes the current bounds of this element into the supplied bounds.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Element.location_changed(pythagoras.f.Point)"></A>
-  <nobr><code>Point</code>&nbsp;<A HREF="../tripleplay/ui/Element.html#location(pythagoras.f.Point)" target="_top"><tt>location</tt></A>(<code>Point</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in return type from <code>IPoint</code> to <code>Point</code>.<br>
-  </TD>
-  <TD VALIGN="TOP">Writes the location of this element (relative to its parent) into the supplied point.</TD>
+  <TD VALIGN="TOP">Returns the parent of this element, or null.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -85,7 +97,7 @@ Change in return type from <code>IPoint</code> to <code>Point</code>.<br>
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Element.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Element.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -97,8 +109,8 @@ Change in return type from <code>IPoint</code> to <code>Point</code>.<br>
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Constraints.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Field.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Constraints.TextConstraint.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Elements.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Element.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

@@ -18,7 +18,7 @@ tripleplay.util.Layers
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Layers.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Layers.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,7 +30,7 @@ tripleplay.util.Layers
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.util.Hud.Stock.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Interpolator.html"><B>PREV CLASS</B></A>
 &nbsp;<A HREF="tripleplay.util.TextConfig.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
@@ -38,7 +38,7 @@ tripleplay.util.Layers
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
 <a href="#methods">METHODS</a>&nbsp;|&nbsp;
-FIELDS
+<a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
 </TABLE>
@@ -57,14 +57,65 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Layers.html" target="_top"><tt
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Layers.contains_added(playn.core.GroupLayer, playn.core.Layer)"></A>
-  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#contains(playn.core.GroupLayer, playn.core.Layer)" target="_top"><tt>contains</tt></A>(<code>GroupLayer,</nobr> Layer<nobr><nobr></code>)</nobr>
+  <A NAME="tripleplay.util.Layers.addChild_added(playn.core.GroupLayer, T extends playn.core.Layer)"></A>
+  <nobr><code>Layer</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#addChild(playn.core.GroupLayer, T extends playn.core.Layer)" target="_top"><tt>addChild</tt></A>(<code>GroupLayer,</nobr> Layer<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Whether a GroupLayer hierarchy contains another layer somewhere in its depths.</TD>
+  <TD VALIGN="TOP">Adds a child layer to a group and returns the child.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.addNewGroup_added(playn.core.GroupLayer)"></A>
+  <nobr><code>GroupLayer</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#addNewGroup(playn.core.GroupLayer)" target="_top"><tt>addNewGroup</tt></A>(<code>GroupLayer</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Adds a child group to a parent group and returns the child.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.group_added(playn.core.Layer[])"></A>
+  <nobr><code>GroupLayer</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#group(playn.core.Layer[])" target="_top"><tt>group</tt></A>(<code>Layer[]</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Creates a new group with the given children.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.join_added(playn.core.Connection[])"></A>
+  <nobr><code>Connection</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#join(playn.core.Connection[])" target="_top"><tt>join</tt></A>(<code>Connection[]</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Creates a connection that will disconnect multiple other connections.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.solid_added(int, float, float)"></A>
+  <nobr><code>Layer</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#solid(int, float, float)" target="_top"><tt>solid</tt></A>(<code>int,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Creates an immediate layer that renders a simple rectangle of the given color,
+ width and height.</TD>
 </TR>
 </TABLE>
 &nbsp;
 <a NAME="fields"></a>
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.NOT_LISTENING"></A>
+  <nobr><code>Connection</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#NOT_LISTENING" target="_top"><tt>NOT_LISTENING</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">No-op connection, for improving nullity assumptions.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.NO_PROPAGATE"></A>
+  <nobr><code>Listener</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#NO_PROPAGATE" target="_top"><tt>NO_PROPAGATE</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">Prevents parent handling for pointer events.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -72,7 +123,7 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Layers.html" target="_top"><tt
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Layers.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Layers.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -84,7 +135,7 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Layers.html" target="_top"><tt
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.util.Hud.Stock.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Interpolator.html"><B>PREV CLASS</B></A>
 &nbsp;<A HREF="tripleplay.util.TextConfig.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;

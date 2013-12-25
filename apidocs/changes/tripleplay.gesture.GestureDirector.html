@@ -18,7 +18,7 @@ tripleplay.gesture.GestureDirector
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/gesture/GestureDirector.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/gesture/GestureDirector.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.gesture.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,7 +31,7 @@ tripleplay.gesture.GestureDirector
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.gesture.Swipe.html"><B>NEXT CLASS</B></A>
+&nbsp;<B>NEXT CLASS</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.gesture.GestureDirector.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -57,10 +57,19 @@ Class tripleplay.gesture.<A HREF="../tripleplay/gesture/GestureDirector.html" ta
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.gesture.GestureDirector.greedyGesture_added()"></A>
-  <nobr><code>ValueView&lt;Gesture&lt;?&gt;&gt;</code>&nbsp;<A HREF="../tripleplay/gesture/GestureDirector.html#greedyGesture()" target="_top"><tt>greedyGesture</tt></A>()</nobr>
+  <A NAME="tripleplay.gesture.GestureDirector.pauseDelay_added()"></A>
+  <nobr><code>int</code>&nbsp;<A HREF="../tripleplay/gesture/GestureDirector.html#pauseDelay()" target="_top"><tt>pauseDelay</tt></A>()</nobr>
   </TD>
-  <TD>&nbsp;</TD>
+  <TD VALIGN="TOP">Returns the number of milliseconds to wait after the last touch event to transition the
+ current gestures to PAUSE.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.gesture.GestureDirector.setPauseDelay_added(int)"></A>
+  <nobr><code>GestureDirector</code>&nbsp;<A HREF="../tripleplay/gesture/GestureDirector.html#setPauseDelay(int)" target="_top"><tt>setPauseDelay</tt></A>(<code>int</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Sets the number of milliseconds to wait after the last touch even to transition the
+ current guestures to PAUSE.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -72,7 +81,7 @@ Class tripleplay.gesture.<A HREF="../tripleplay/gesture/GestureDirector.html" ta
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/gesture/GestureDirector.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/gesture/GestureDirector.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.gesture.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -85,7 +94,7 @@ Class tripleplay.gesture.<A HREF="../tripleplay/gesture/GestureDirector.html" ta
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.gesture.Swipe.html"><B>NEXT CLASS</B></A>
+&nbsp;<B>NEXT CLASS</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.gesture.GestureDirector.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

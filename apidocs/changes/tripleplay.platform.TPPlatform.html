@@ -18,7 +18,7 @@ tripleplay.platform.TPPlatform
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/TPPlatform.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/TPPlatform.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.platform.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -50,6 +50,30 @@ Class tripleplay.platform.<A HREF="../tripleplay/platform/TPPlatform.html" targe
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.setVirtualKeyboardController_removed(tripleplay.platform.VirtualKeyboardController)"></A>
+  <nobr><code>void</code>&nbsp;setVirtualKeyboardController(<code>VirtualKeyboardController</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Sets the instance of VirtualKeyboardController to use for virtual keyboard management, or
+ null for none.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.virtualKeyboardActive_removed()"></A>
+  <nobr><code>ValueView&lt;Boolean&gt;</code>&nbsp;virtualKeyboardActive()</nobr>
+  </TD>
+  <TD VALIGN="TOP">A value indicating whether the virtual keyboard is currently active or not (if the platform
+ has one).</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -57,19 +81,90 @@ Class tripleplay.platform.<A HREF="../tripleplay/platform/TPPlatform.html" targe
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.TPPlatform.setVirtualKeyboardController_added(tripleplay.platform.VirtualKeyboardController)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#setVirtualKeyboardController(tripleplay.platform.VirtualKeyboardController)" target="_top"><tt>setVirtualKeyboardController</tt></A>(<code>VirtualKeyboardController</code>)</nobr>
+  <A NAME="tripleplay.platform.TPPlatform.clearFocus_added()"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#clearFocus()" target="_top"><tt>clearFocus</tt></A>()</nobr>
   </TD>
-  <TD VALIGN="TOP">Sets the instance of VirtualKeyboardController to use for virtual keyboard management, or
- null for none.</TD>
+  <TD VALIGN="TOP">Clears the currently focused field, if any.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.TPPlatform.virtualKeyboardActive_added()"></A>
-  <nobr><code>ValueView&lt;Boolean&gt;</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#virtualKeyboardActive()" target="_top"><tt>virtualKeyboardActive</tt></A>()</nobr>
+  <A NAME="tripleplay.platform.TPPlatform.createImageOverlay_added(playn.core.Image)"></A>
+  <nobr><code>ImageOverlay</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#createImageOverlay(playn.core.Image)" target="_top"><tt>createImageOverlay</tt></A>(<code>Image</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">A value indicating whether the virtual keyboard is currently active or not (if the platform
- has one).</TD>
+  <TD>&nbsp;</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.focus_added()"></A>
+  <nobr><code>ValueView&lt;Field&gt;</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#focus()" target="_top"><tt>focus</tt></A>()</nobr>
+  </TD>
+  <TD VALIGN="TOP">Gets a view of the Field that is currently in focus.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.hideNativeOverlays_added(pythagoras.f.IRectangle)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#hideNativeOverlays(pythagoras.f.IRectangle)" target="_top"><tt>hideNativeOverlays</tt></A>(<code>IRectangle</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Hides the native widgets under the given screen area, using platform clipping if
+ supported.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.keyboardActivity_added()"></A>
+  <nobr><code>SignalView&lt;Void&gt;</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#keyboardActivity()" target="_top"><tt>keyboardActivity</tt></A>()</nobr>
+  </TD>
+  <TD VALIGN="TOP">Signal emitted when the user interacts with a native text field.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.refresh_added(tripleplay.platform.NativeTextField)"></A>
+  <nobr><code>NativeTextField</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#refresh(tripleplay.platform.NativeTextField)" target="_top"><tt>refresh</tt></A>(<code>NativeTextField</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Refreshes a native text field to match the current styles of its associated field instance.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.refreshNativeBounds_added()"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#refreshNativeBounds()" target="_top"><tt>refreshNativeBounds</tt></A>()</nobr>
+  </TD>
+  <TD VALIGN="TOP">Updates the bounds of all known native fields.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.setKeyboardFocusController_added(tripleplay.platform.KeyboardFocusController)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#setKeyboardFocusController(tripleplay.platform.KeyboardFocusController)" target="_top"><tt>setKeyboardFocusController</tt></A>(<code>KeyboardFocusController</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Sets the instance of KeyboardFocusController to use for keyboard focus management, or
+ null for none.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.createNativeTextField_changed(tripleplay.ui.Field.Native)"></A>
+  <nobr><code>NativeTextField</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#createNativeTextField(tripleplay.ui.Field.Native)" target="_top"><tt>createNativeTextField</tt></A>(<code>Native</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>void</code> to <code>Native</code>.<br>
+ Changed from abstract to non-abstract.
+  </TD>
+  <TD VALIGN="TOP">Creates a native text field, if this platform supports it.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.platform.TPPlatform.hasNativeTextFields_changed()"></A>
+  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/platform/TPPlatform.html#hasNativeTextFields()" target="_top"><tt>hasNativeTextFields</tt></A>()  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Changed from abstract to non-abstract.
+  </TD>
+  <TD VALIGN="TOP">Returns true if this platform supports native text fields.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -81,7 +176,7 @@ Class tripleplay.platform.<A HREF="../tripleplay/platform/TPPlatform.html" targe
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/TPPlatform.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/TPPlatform.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.platform.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>

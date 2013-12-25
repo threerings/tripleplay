@@ -18,7 +18,7 @@ tripleplay.ui.Interface
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,8 +30,8 @@ tripleplay.ui.Interface
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Field.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Interface.Task.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Icons.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Layout.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Interface.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -47,9 +47,23 @@ FIELDS
 <H2>
 Class tripleplay.ui.<A HREF="../tripleplay/ui/Interface.html" target="_top"><tt>Interface</tt></A>
 </H2>
-<p><font size="+1">Added interface <code>tripleplay.util.Paintable</code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Interface.destroyRoots_added()"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#destroyRoots()" target="_top"><tt>destroyRoots</tt></A>()</nobr>
+  </TD>
+  <TD VALIGN="TOP">Removes and destroys all roots in this interface.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <p>
 <a NAME="Changed"></a>
 <TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
@@ -58,23 +72,35 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Interface.html" target="_top"><tt>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Interface.paint_changed(playn.core.util.Clock)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#paint(playn.core.util.Clock)" target="_top"><tt>paint</tt></A>(<code>Clock</code>)  </nobr>
+  <A NAME="tripleplay.ui.Interface.addRoot_changed(R extends tripleplay.ui.Root)"></A>
+  <nobr><code>Root</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#addRoot(R extends tripleplay.ui.Root)" target="_top"><tt>addRoot</tt></A>(<code>Root</code>)  </nobr>
   </TD>
   <TD VALIGN="TOP" WIDTH="30%">
-Change in signature from <code>float</code> to <code>Clock</code>.<br>
+Change in return type from <code>tripleplay.ui.Root</code> to (<code>R extends tripleplay.ui.Root</code>).<br>
+ Change in signature from <code>tripleplay.ui.Root</code> to (<code>R extends tripleplay.ui.Root</code>).<br>
   </TD>
-  <TD VALIGN="TOP">"Paints" the elements in this interface.</TD>
+  <TD VALIGN="TOP">Adds a root to this interface.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Interface.update_changed(int)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#update(int)" target="_top"><tt>update</tt></A>(<code>int</code>)  </nobr>
+  <A NAME="tripleplay.ui.Interface.destroyRoot_changed(tripleplay.ui.Root)"></A>
+  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#destroyRoot(tripleplay.ui.Root)" target="_top"><tt>destroyRoot</tt></A>(<code>Root</code>)  </nobr>
   </TD>
   <TD VALIGN="TOP" WIDTH="30%">
-Change in signature from <code>float</code> to <code>int</code>.<br>
+Change in return type from <code>void</code> to <code>boolean</code>.<br>
   </TD>
-  <TD VALIGN="TOP">Updates the elements in this interface.</TD>
+  <TD VALIGN="TOP">Removes the supplied root element from this interface and destroys its layer, iff it's
+ currently added.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Interface.removeRoot_changed(tripleplay.ui.Root)"></A>
+  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/ui/Interface.html#removeRoot(tripleplay.ui.Root)" target="_top"><tt>removeRoot</tt></A>(<code>Root</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>void</code> to <code>boolean</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Removes the supplied root element from this interface, iff it's currently added.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -86,7 +112,7 @@ Change in signature from <code>float</code> to <code>int</code>.<br>
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Interface.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -98,8 +124,8 @@ Change in signature from <code>float</code> to <code>int</code>.<br>
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Field.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Interface.Task.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Icons.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Layout.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Interface.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

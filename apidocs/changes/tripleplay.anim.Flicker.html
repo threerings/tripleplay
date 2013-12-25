@@ -18,7 +18,7 @@ tripleplay.anim.Flicker
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Flicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Flicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.anim.Flicker
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.anim.Animator.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Animation.Two.html"><B>PREV CLASS</B></A>
 &nbsp;<B>NEXT CLASS</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.anim.Flicker.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
-<a href="#methods">METHODS</a>&nbsp;|&nbsp;
-FIELDS
+METHODS&nbsp;|&nbsp;
+<a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
 </TABLE>
@@ -47,40 +47,50 @@ FIELDS
 <H2>
 Class tripleplay.anim.<A HREF="../tripleplay/anim/Flicker.html" target="_top"><tt>Flicker</tt></A>
 </H2>
-<p><font size="+1">Added interface <code>tripleplay.util.Paintable</code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Flicker.update_removed(float)"></A>
-  <nobr><code>void</code>&nbsp;update(<code>float</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">This must be called every frame with <A HREF="../Game.html#update"><TT>Game.update</TT></A>'s delta.</TD>
-</TR>
-</TABLE>
-&nbsp;
+<a NAME="fields"></a>
 <p>
 <a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Flicker.paint_added(playn.core.util.Clock)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/anim/Flicker.html#paint(playn.core.util.Clock)" target="_top"><tt>paint</tt></A>(<code>Clock</code>)</nobr>
+  <A NAME="tripleplay.anim.Flicker.enabled"></A>
+  <nobr><code>Value&lt;Boolean&gt;</code>&nbsp;<A HREF="../tripleplay/anim/Flicker.html#enabled" target="_top"><tt>enabled</tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">This must be called every frame with an alpha-adjusted clock.</TD>
+  <TD VALIGN="TOP">Whether or not this flicker is enabled (responding to pointer events).</TD>
 </TR>
 </TABLE>
 &nbsp;
-<a NAME="fields"></a>
+<p>
+<a NAME="Changed"></a>
+<TABLE summary="Changed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Fields</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.Flicker.max"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/anim/Flicker.html#max" target="_top"><tt>max</tt></A></nobr>  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change from final to non-final.<br>
+  </TD>
+  <TD VALIGN="TOP">This flicker's bounds.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.Flicker.min"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/anim/Flicker.html#min" target="_top"><tt>min</tt></A></nobr>  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change from final to non-final.<br>
+  </TD>
+  <TD VALIGN="TOP">This flicker's bounds.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -88,7 +98,7 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/Flicker.html" target="_top"><t
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Flicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Flicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -100,7 +110,7 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/Flicker.html" target="_top"><t
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.anim.Animator.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Animation.Two.html"><B>PREV CLASS</B></A>
 &nbsp;<B>NEXT CLASS</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;

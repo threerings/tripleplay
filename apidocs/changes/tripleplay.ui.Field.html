@@ -18,7 +18,7 @@ tripleplay.ui.Field
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Field.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Field.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,8 +30,8 @@ tripleplay.ui.Field
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Element.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Interface.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Elements.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Icons.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Field.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -50,6 +50,43 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Field.html" target="_top"><tt>Fiel
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Field.hasFocus_removed()"></A>
+  <nobr><code>boolean</code>&nbsp;hasFocus()</nobr>
+  </TD>
+  <TD VALIGN="TOP">Returns true if this Field is backed by a native field and that field currently has keyboard
+ (virtual or physical) focus.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Field.setTextType_removed(playn.core.Keyboard.TextType)"></A>
+  <nobr><code>Field</code>&nbsp;setTextType(<code>TextType</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Configures the keyboard type to use when text is requested via a popup.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Field.setTransformer_removed(tripleplay.platform.NativeTextField.Transformer)"></A>
+  <nobr><code>Field</code>&nbsp;setTransformer(<code>Transformer</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Set the text field transformer for use with this field.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Field.setValidator_removed(tripleplay.platform.NativeTextField.Validator)"></A>
+  <nobr><code>Field</code>&nbsp;setValidator(<code>Validator</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Set the text field validator for use with this field.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -57,22 +94,57 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Field.html" target="_top"><tt>Fiel
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Field.hasFocus_added()"></A>
-  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#hasFocus()" target="_top"><tt>hasFocus</tt></A>()</nobr>
+  <A NAME="tripleplay.ui.Field.exposeNativeField_added()"></A>
+  <nobr><code>NativeTextField</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#exposeNativeField()" target="_top"><tt>exposeNativeField</tt></A>()</nobr>
   </TD>
-  <TD VALIGN="TOP">Returns true if this Field is backed by a native field and that field currently has keyboard
- (virtual or physical) focus.</TD>
+  <TD VALIGN="TOP">Returns this field's native text field, if it has one, otherwise null.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Field.updateNativeFieldBounds_added()"></A>
-  <nobr><code>Field</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#updateNativeFieldBounds()" target="_top"><tt>updateNativeFieldBounds</tt></A>()</nobr>
+  <A NAME="tripleplay.ui.Field.focus_added()"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#focus()" target="_top"><tt>focus</tt></A>()</nobr>
   </TD>
-  <TD VALIGN="TOP">Forcibly notify the NativeTextField backing this field that its screen position has changed.</TD>
+  <TD VALIGN="TOP">Attempt to focus on this field, if it is backed by a native field.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Field.hasNative_added()"></A>
+  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#hasNative()" target="_top"><tt>hasNative</tt></A>()</nobr>
+  </TD>
+  <TD VALIGN="TOP">Checks if the platform has native text fields.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Field.maxLength_added(int)"></A>
+  <nobr><code>Binding&lt;Validator&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#maxLength(int)" target="_top"><tt>maxLength</tt></A>(<code>int</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Creates a style binding for the given maximum length.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Field.setVisible_added(boolean)"></A>
+  <nobr><code>Field</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#setVisible(boolean)" target="_top"><tt>setVisible</tt></A>(<code>boolean</code>)</nobr>
+  </TD>
+  <TD>&nbsp;</TD>
 </TR>
 </TABLE>
 &nbsp;
 <a NAME="fields"></a>
+<p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Fields</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Field.MAXIMUM_INPUT_LENGTH"></A>
+  <code>Style&lt;Integer&gt;</code>&nbsp;MAXIMUM_INPUT_LENGTH
+  </TD>
+  <TD VALIGN="TOP">Sets the maximum number of characters that can be entered by this Field.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <p>
 <a NAME="Added"></a>
 <TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
@@ -81,66 +153,17 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Field.html" target="_top"><tt>Fiel
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Field.MULTILINE"></A>
-  <nobr><code>Flag</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#MULTILINE" target="_top"><tt>MULTILINE</tt></A></nobr>
+  <A NAME="tripleplay.ui.Field.TRANSFORMER"></A>
+  <nobr><code>Style&lt;Transformer&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#TRANSFORMER" target="_top"><tt>TRANSFORMER</tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">Sets the field to allow the return key to insert a line break in the text.</TD>
+  <TD VALIGN="TOP">Sets the transformner to use when updating native text fields while being typed into.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Field.RETURN_KEY_LABEL"></A>
-  <nobr><code>Style&lt;String&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#RETURN_KEY_LABEL" target="_top"><tt>RETURN_KEY_LABEL</tt></A></nobr>
+  <A NAME="tripleplay.ui.Field.VALIDATOR"></A>
+  <nobr><code>Style&lt;Validator&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#VALIDATOR" target="_top"><tt>VALIDATOR</tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">Sets the label used on the "return" key of the virtual keyboard on native keyboards.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Changed"></a>
-<TABLE summary="Changed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Field.AUTOCAPITALIZATION"></A>
-  <nobr><code>Flag</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#AUTOCAPITALIZATION" target="_top"><tt>AUTOCAPITALIZATION</tt></A></nobr>  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>Style&lt;Boolean&gt;</code> to <code>Flag</code>.<br>
-  </TD>
-  <TD VALIGN="TOP">Controls the behavior of native text fields with respect to auto-capitalization on
- platforms that support it.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Field.AUTOCORRECTION"></A>
-  <nobr><code>Flag</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#AUTOCORRECTION" target="_top"><tt>AUTOCORRECTION</tt></A></nobr>  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>Style&lt;Boolean&gt;</code> to <code>Flag</code>.<br>
-  </TD>
-  <TD VALIGN="TOP">Controls the behavior of native text fields with respect to auto-correction on platforms
- that support it.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Field.FULLTIME_NATIVE_FIELD"></A>
-  <nobr><code>Flag</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#FULLTIME_NATIVE_FIELD" target="_top"><tt>FULLTIME_NATIVE_FIELD</tt></A></nobr>  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>Style&lt;Boolean&gt;</code> to <code>Flag</code>.<br>
-  </TD>
-  <TD VALIGN="TOP">If on a platform that utilizes native fields and this is true, the native field is
- displayed whenever this Field is visible, and the native field is responsible for all text
- rendering.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Field.SECURE_TEXT_ENTRY"></A>
-  <nobr><code>Flag</code>&nbsp;<A HREF="../tripleplay/ui/Field.html#SECURE_TEXT_ENTRY" target="_top"><tt>SECURE_TEXT_ENTRY</tt></A></nobr>  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>Style&lt;Boolean&gt;</code> to <code>Flag</code>.<br>
-  </TD>
-  <TD VALIGN="TOP">Controls secure text entry on native text fields: typically this will mean dots or asterix
- displayed instead of the typed character.</TD>
+  <TD VALIGN="TOP">Sets the validator to use when censoring keypresses into native text fields.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -151,7 +174,7 @@ Change in type from <code>Style&lt;Boolean&gt;</code> to <code>Flag</code>.<br>
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Field.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Field.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -163,8 +186,8 @@ Change in type from <code>Style&lt;Boolean&gt;</code> to <code>Flag</code>.<br>
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Element.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Interface.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Elements.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Icons.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Field.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

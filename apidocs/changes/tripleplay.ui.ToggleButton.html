@@ -18,7 +18,7 @@ tripleplay.ui.ToggleButton
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/ToggleButton.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/ToggleButton.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,14 +30,14 @@ tripleplay.ui.ToggleButton
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Tabs.html"><B>PREV CLASS</B></A>
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.ui.Tabs.Tab.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Widget.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.ToggleButton.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
-<a href="#constructors">CONSTRUCTORS</a>&nbsp;|&nbsp;
-METHODS&nbsp;|&nbsp;
+CONSTRUCTORS&nbsp;|&nbsp;
+<a href="#methods">METHODS</a>&nbsp;|&nbsp;
 <a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
@@ -47,67 +47,51 @@ METHODS&nbsp;|&nbsp;
 <H2>
 Class tripleplay.ui.<A HREF="../tripleplay/ui/ToggleButton.html" target="_top"><tt>ToggleButton</tt></A>
 </H2>
+<p><font size="+1">The superclass changed from <code>tripleplay.ui.TogglableTextWidget<tripleplay.ui.ToggleButton></code> to <code>tripleplay.ui.AbstractTextButton<tripleplay.ui.ToggleButton></code>.<br> Removed interface <code>tripleplay.ui.Clickable<tripleplay.ui.ToggleButton></code>.<br> Added interface <code>tripleplay.ui.Togglable<tripleplay.ui.ToggleButton></code>.<br></font>
 <a NAME="constructors"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Constructors" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Constructors</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.ToggleButton.ctor_removed(java.lang.String, playn.core.Image)"></A>
-  <nobr>ToggleButton(<code>String,</nobr> Image<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Creates a button with the supplied text and icon.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.ToggleButton.ctor_removed(playn.core.Image)"></A>
-  <nobr>ToggleButton(<code>Image</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Creates a button with the supplied icon.</TD>
-</TR>
-</TABLE>
-&nbsp;
+<a NAME="methods"></a>
 <p>
 <a NAME="Added"></a>
-<TABLE summary="Added Constructors" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Constructors</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.ToggleButton.ctor_added(java.lang.String, tripleplay.ui.Icon)"></A>
-  <nobr><A HREF="../tripleplay/ui/ToggleButton.html#ToggleButton(java.lang.String, tripleplay.ui.Icon)" target="_top"><tt>ToggleButton</tt></A>(<code>String,</nobr> Icon<nobr><nobr></code>)</nobr>
+  <A NAME="tripleplay.ui.ToggleButton.click_added()"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/ToggleButton.html#click()" target="_top"><tt>click</tt></A>()</nobr>
   </TD>
-  <TD VALIGN="TOP">Creates a button with the supplied text and icon.</TD>
+  <TD>&nbsp;</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.ToggleButton.ctor_added(tripleplay.ui.Icon)"></A>
-  <nobr><A HREF="../tripleplay/ui/ToggleButton.html#ToggleButton(tripleplay.ui.Icon)" target="_top"><tt>ToggleButton</tt></A>(<code>Icon</code>)</nobr>
+  <A NAME="tripleplay.ui.ToggleButton.selected_added()"></A>
+  <nobr><code>Value&lt;Boolean&gt;</code>&nbsp;<A HREF="../tripleplay/ui/ToggleButton.html#selected()" target="_top"><tt>selected</tt></A>()</nobr>
   </TD>
-  <TD VALIGN="TOP">Creates a button with the supplied icon.</TD>
+  <TD>&nbsp;</TD>
 </TR>
 </TABLE>
 &nbsp;
-<a NAME="methods"></a>
 <a NAME="fields"></a>
 <p>
-<a NAME="Changed"></a>
-<TABLE summary="Changed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Removed"></a>
+<TABLE summary="Removed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Fields</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Fields</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
   <A NAME="tripleplay.ui.ToggleButton.icon"></A>
-  <nobr><code>Value&lt;Icon&gt;</code>&nbsp;<A HREF="../tripleplay/ui/ToggleButton.html#icon" target="_top"><tt>icon</tt></A></nobr>  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>Value&lt;Image&gt;</code> to <code>Value&lt;Icon&gt;</code>.<br>
+  <code>Value&lt;Icon&gt;</code>&nbsp;icon
   </TD>
   <TD VALIGN="TOP">The icon displayed by this widget, or null.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.ToggleButton.text"></A>
+  <code>Value&lt;String&gt;</code>&nbsp;text
+  </TD>
+  <TD VALIGN="TOP">The text displayed by this widget, or null.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -118,7 +102,7 @@ Change in type from <code>Value&lt;Image&gt;</code> to <code>Value&lt;Icon&gt;</
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/ToggleButton.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/ToggleButton.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -130,8 +114,8 @@ Change in type from <code>Value&lt;Image&gt;</code> to <code>Value&lt;Icon&gt;</
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Tabs.html"><B>PREV CLASS</B></A>
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.ui.Tabs.Tab.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Widget.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.ToggleButton.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

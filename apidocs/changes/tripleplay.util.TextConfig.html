@@ -18,7 +18,7 @@ tripleplay.util.TextConfig
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/TextConfig.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/TextConfig.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -47,6 +47,7 @@ FIELDS
 <H2>
 Class tripleplay.util.<A HREF="../tripleplay/util/TextConfig.html" target="_top"><tt>TextConfig</tt></A>
 </H2>
+<p><font size="+1"><b>Now deprecated</b>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
@@ -57,17 +58,32 @@ Class tripleplay.util.<A HREF="../tripleplay/util/TextConfig.html" target="_top"
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.TextConfig.equals_added(java.lang.Object)"></A>
-  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/util/TextConfig.html#equals(java.lang.Object)" target="_top"><tt>equals</tt></A>(<code>Object</code>)</nobr>
+  <A NAME="tripleplay.util.TextConfig.renderCX_added(playn.core.Canvas, playn.core.TextLayout, float, float)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/util/TextConfig.html#renderCX(playn.core.Canvas, playn.core.TextLayout, float, float)" target="_top"><tt>renderCX</tt></A>(<code>Canvas,</nobr> TextLayout<nobr>,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
   </TD>
-  <TD>&nbsp;</TD>
+  <TD VALIGN="TOP">Renders the supplied layout into the supplied canvas at the specified coordinates, using
+ this config's text color and effect.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.TextConfig.hashCode_added()"></A>
-  <nobr><code>int</code>&nbsp;<A HREF="../tripleplay/util/TextConfig.html#hashCode()" target="_top"><tt>hashCode</tt></A>()</nobr>
+  <A NAME="tripleplay.util.TextConfig.withAlignment_added(playn.core.TextFormat.Alignment)"></A>
+  <nobr><code>TextConfig</code>&nbsp;<A HREF="../tripleplay/util/TextConfig.html#withAlignment(playn.core.TextFormat.Alignment)" target="_top"><tt>withAlignment</tt></A>(<code>Alignment</code>)</nobr>
   </TD>
-  <TD>&nbsp;</TD>
+  <TD VALIGN="TOP">Returns a new text config the alignment configured as specified.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.TextConfig.withWrapWidth_added(float)"></A>
+  <nobr><code>TextConfig</code>&nbsp;<A HREF="../tripleplay/util/TextConfig.html#withWrapWidth(float)" target="_top"><tt>withWrapWidth</tt></A>(<code>float</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Returns a new text config with the wrap width configured as specified.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.TextConfig.withWrapping_added(float, playn.core.TextFormat.Alignment)"></A>
+  <nobr><code>TextConfig</code>&nbsp;<A HREF="../tripleplay/util/TextConfig.html#withWrapping(float, playn.core.TextFormat.Alignment)" target="_top"><tt>withWrapping</tt></A>(<code>float,</nobr> Alignment<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Returns a new text config with the wrap width and alignment configured as specified.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -79,7 +95,7 @@ Class tripleplay.util.<A HREF="../tripleplay/util/TextConfig.html" target="_top"
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/TextConfig.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.7</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/TextConfig.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
