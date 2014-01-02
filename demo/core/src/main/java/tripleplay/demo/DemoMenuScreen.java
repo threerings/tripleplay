@@ -48,7 +48,7 @@ public class DemoMenuScreen extends UIScreen
             // tripleplay.ui
             new MiscDemo(), new LabelDemo(), new SliderDemo(),
             new BackgroundDemo(), new LayoutDemo(), new BorderLayoutDemo(),
-            new FlowLayoutDemo(), new SelectorDemo(), new MenuDemo(),
+            new FlowLayoutDemo(), new OverlayLayoutDemo(), new SelectorDemo(), new MenuDemo(),
             new ScrollerDemo(), new TabsDemo(), new TableLayoutDemo(),
             // tripleplay.anim
             new FramesDemo(), new AnimDemo(), new FlickerDemo(),
