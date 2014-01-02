@@ -14,6 +14,22 @@ import playn.core.TextFormat;
  */
 public class TextStyle extends TextFormat
 {
+    /**
+     * Creates a text style with the specified configuration using default anti-aliasing, no effect
+     * and no underline.
+     */
+    public static TextStyle normal (Font font, int textColor) {
+        return normal(font, textColor, EffectRenderer.NONE);
+    }
+
+    /**
+     * Creates a text style with the specified configuration using default anti-aliasing (true)
+     * and no underline.
+     */
+    public static TextStyle normal (Font font, int textColor, EffectRenderer effect) {
+        return new TextStyle(font, true, textColor, effect, false);
+    }
+
     /** The color used to render the text. */
     public final int textColor;
 
