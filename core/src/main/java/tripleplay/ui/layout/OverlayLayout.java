@@ -31,14 +31,17 @@ public class OverlayLayout extends Layout
      */
     public static final class Constraint extends Layout.Constraint
     {
-        public final IPoint position;
         public final IDimension size;
+        public final boolean hstretch;
+        public final boolean vstretch;
         public final HAlign halign;
         public final VAlign valign;
 
-        public Constraint (IPoint position, IDimension size, HAlign halign, VAlign valign) {
-            this.position = position;
+        public Constraint (IDimension size, boolean hstretch, boolean vstretch, HAlign halign,
+            VAlign valign) {
             this.size = size;
+            this.hstretch = hstretch;
+            this.vstretch = vstretch;
             this.halign = halign;
             this.valign = valign;
         }
@@ -46,98 +49,75 @@ public class OverlayLayout extends Layout
         public IDimension psize (OverlayLayout layout, Element<?> elem) {
             float fwidth = size.width(), fheight = size.height();
             if (fwidth > 0 && fheight > 0) { return size; }
-            // if eiher forced width or height is zero, use preferred size in that dimension
+            // if either forced width or height is zero, use preferred size in that dimension
             IDimension psize = layout.preferredSize(elem, fwidth, fheight);
-            if (fwidth > 0) { return new Dimension(fwidth, psize.height()); } else if (fheight >
-                0) { return new Dimension(psize.width(), fheight); } else {
-                return psize;
-            }
+            if (fwidth > 0) return new Dimension(fwidth, psize.height());
+            else if (fheight > 0) return new Dimension(psize.width(), fheight);
+            else return psize;
         }
 
         public IPoint pos (IDimension psize) {
             return new Point(
-                position.x() + halign.offset(psize.width(), 0),
-                position.y() + valign.offset(psize.height(), 0));
+                halign.offset(psize.width(), 0),
+                valign.offset(psize.height(), 0));
         }
     }
 
     /**
-     * Positions {@code elem} at the specified position, in its preferred size.
+     * Positions {@code elem} to the parent center with the given horizontal and vertical
+     * stretching.
      */
-    public static <T extends Element<?>> T at (T elem, float x, float y) {
-        return at(elem, new Point(x, y));
+    public static <T extends Element<?>> T at (T elem, boolean hstretch, boolean vstretch) {
+        return at(elem, ZERO, hstretch, vstretch, HAlign.CENTER, VAlign.CENTER);
     }
 
     /**
-     * Positions {@code elem} at the specified position, in its preferred size.
+     * Positions {@code elem} to the specified alignment relative to the parent.
      */
-    public static <T extends Element<?>> T at (T elem, IPoint position) {
-        return at(elem, position, ZERO);
+    public static <T extends Element<?>> T at (T elem, HAlign halign, VAlign valign) {
+        return at(elem, ZERO, false, false, halign, valign);
     }
 
     /**
-     * Constrains {@code elem} to the specified position and size.
+     * Positions {@code elem} to specified alignment relative to the parent and with specified
+     * horizontal and vertical stretching.
      */
-    public static <T extends Element<?>> T at (T elem, float x, float y, float width,
-        float height) {
-        return at(elem, new Point(x, y), new Dimension(width, height));
+    public static <T extends Element<?>> T at (T elem, boolean hstretch, boolean vstretch,
+        HAlign halign, VAlign valign) {
+        return at(elem, ZERO, hstretch, vstretch, halign, valign);
     }
 
     /**
-     * Constrains {@code elem} to the specified position and size.
+     * Constrains {@code elem} to the specified alignment relative to the parent and with specified
+     * horizontal and vertical stretching and element size.
      */
-    public static <T extends Element<?>> T at (T elem, IPoint position, IDimension size) {
-        elem.setConstraint(new Constraint(position, size, HAlign.LEFT, VAlign.TOP));
+    public static <T extends Element<?>> T at (T elem, float width, float height, boolean hstretch,
+        boolean vstretch, HAlign halign, VAlign valign) {
+        return at(elem, new Dimension(width, height), hstretch, vstretch, halign, valign);
+    }
+
+    /**
+     * Constrains {@code elem} to the specified alignment relative to the parent and with specified
+     * horizontal and vertical stretching and element size.
+     */
+    public static <T extends Element<?>> T at (T elem, IDimension size, boolean hstretch,
+        boolean vstretch, HAlign halign, VAlign valign) {
+        elem.setConstraint(new Constraint(size, hstretch, vstretch, halign, valign));
         return elem;
     }
 
     /**
-     * Positions {@code elem} relative to the given position using the given alignments.
+     * Centers {@code elem} in the parent.
      */
-    public static <T extends Element<?>> T at (T elem, float x, float y,
-        HAlign halign, VAlign valign) {
-        return at(elem, new Point(x, y), ZERO, halign, valign);
+    public static <T extends Element<?>> T center (T elem) {
+        return center(elem, false, false);
     }
 
     /**
-     * Positions {@code elem} relative to the given position using the given alignments.
+     * Centers {@code elem} in the parent with specified horizontal and vertical stretching.
      */
-    public static <T extends Element<?>> T at (T elem, IPoint position,
-        HAlign halign, VAlign valign) {
-        return at(elem, position, ZERO, halign, valign);
-    }
-
-    /**
-     * Constrains {@code elem} to the specified size and aligns it relative to the given position
-     * using the given alignments.
-     */
-    public static <T extends Element<?>> T at (T elem, float x, float y, float width, float height,
-        HAlign halign, VAlign valign) {
-        return at(elem, new Point(x, y), new Dimension(width, height), halign, valign);
-    }
-
-    /**
-     * Constrains {@code elem} to the specified size and aligns it relative to the given position
-     * using the given alignments.
-     */
-    public static <T extends Element<?>> T at (T elem, IPoint position, IDimension size,
-        HAlign halign, VAlign valign) {
-        elem.setConstraint(new Constraint(position, size, halign, valign));
-        return elem;
-    }
-
-    /**
-     * Centers {@code elem} on the specified position, in its preferred size.
-     */
-    public static <T extends Element<?>> T centerAt (T elem, float x, float y) {
-        return centerAt(elem, new Point(x, y));
-    }
-
-    /**
-     * Centers {@code elem} on the specified position, in its preferred size.
-     */
-    public static <T extends Element<?>> T centerAt (T elem, IPoint position) {
-        elem.setConstraint(new Constraint(position, ZERO, HAlign.CENTER, VAlign.CENTER));
+    public static <T extends Element<?>> T center (T elem, boolean hstretch, boolean vstretch) {
+        elem.setConstraint(new Constraint(ZERO, hstretch, vstretch, HAlign.CENTER, VAlign.CENTER));
         return elem;
     }
 

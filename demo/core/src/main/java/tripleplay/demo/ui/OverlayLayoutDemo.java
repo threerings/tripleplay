@@ -6,7 +6,6 @@
 package tripleplay.demo.ui;
 
 import pythagoras.f.Dimension;
-import pythagoras.f.Point;
 
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.*;
@@ -28,8 +27,8 @@ public class OverlayLayoutDemo extends DemoScreen
 
         Group panel = new Group(new OverlayLayout(), Styles.make(Style.BACKGROUND.is(
             Background.bordered(0xFFFFFFFF, 0xff000000, 2).inset(4))));
-        panel.add(newSection("first", new OverlayLayout.Constraint(new Point(100.0f, 50.0f),
-            new Dimension(200.0f, 100.0f), Style.HAlign.CENTER, Style.VAlign.CENTER), 0xFFFFFF00));
+        panel.add(newSection("first", new OverlayLayout.Constraint(new Dimension(200.0f, 100.0f),
+            false, false, Style.HAlign.CENTER, Style.VAlign.CENTER), 0xFFFFFF00));
 
         root.add(panel.setConstraint(AxisLayout.stretched()));
         return root;
