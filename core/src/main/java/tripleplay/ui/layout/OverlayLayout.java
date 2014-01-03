@@ -81,6 +81,24 @@ public class OverlayLayout extends Layout
 
     /**
      * Constrains {@code elem} to the specified alignment relative to the parent and with specified
+     * size.
+     */
+    public static <T extends Element<?>> T at (T elem, float width, float height, HAlign halign,
+        VAlign valign) {
+        return at(elem, new Dimension(width, height), false, false, halign, valign);
+    }
+
+    /**
+     * Constrains {@code elem} to the specified alignment relative to the parent and with specified
+     * size.
+     */
+    public static <T extends Element<?>> T at (T elem, IDimension size, HAlign halign,
+        VAlign valign) {
+        return at(elem, size, false, false, halign, valign);
+    }
+
+    /**
+     * Constrains {@code elem} to the specified alignment relative to the parent and with specified
      * horizontal and vertical stretching and element size.
      */
     public static <T extends Element<?>> T at (T elem, float width, float height, boolean hstretch,
