@@ -131,6 +131,47 @@ public class OverlayLayout extends Layout
         return elem;
     }
 
+    /**
+     * Stretches {@code elem} in the parent.
+     */
+    public static <T extends Element<?>> T stretched (T elem) {
+        elem.setConstraint(new Constraint(ZERO, true, true, HAlign.CENTER, VAlign.CENTER));
+        return elem;
+    }
+
+    /**
+     * Configures the inter-element padding, in pixels.
+     */
+    public OverlayLayout padding (float padding) {
+        _topPadding = padding;
+        _rightPadding = padding;
+        _bottomPadding = padding;
+        _leftPadding = padding;
+        return this;
+    }
+
+    /**
+     * Configures the inter-element horizontal and vertical margins, in pixels.
+     */
+    public OverlayLayout padding (float hpadding, float vpadding) {
+        _topPadding = vpadding;
+        _rightPadding = hpadding;
+        _bottomPadding = vpadding;
+        _leftPadding = hpadding;
+        return this;
+    }
+
+    /**
+     * Configures the inter-element margins, in pixels.
+     */
+    public OverlayLayout padding (float top, float right, float bottom, float left) {
+        _topPadding = top;
+        _rightPadding = right;
+        _bottomPadding = bottom;
+        _leftPadding = left;
+        return this;
+    }
+
     @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
         // report a size large enough to contain all of our elements
         Rectangle bounds = new Rectangle();
@@ -158,6 +199,11 @@ public class OverlayLayout extends Layout
         return (Constraint) Asserts.checkNotNull(
             elem.constraint(), "Elements in OverlayLayout must have a constraint.");
     }
+
+    protected float _topPadding = 0.0f;
+    protected float _rightPadding = 0.0f;
+    protected float _bottomPadding = 0.0f;
+    protected float _leftPadding = 0.0f;
 
     protected static final Dimension ZERO = new Dimension(0, 0);
 }

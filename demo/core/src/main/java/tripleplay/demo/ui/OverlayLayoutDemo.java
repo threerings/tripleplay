@@ -25,19 +25,17 @@ public class OverlayLayoutDemo extends DemoScreen
     @Override protected Group createIface () {
         Group root = new Group(AxisLayout.vertical().offStretch()).setConstraint(AxisLayout.stretched());
 
-        Group panel = new Group(new OverlayLayout(), Styles.make(Style.BACKGROUND.is(
-            Background.bordered(0xFFFFFFFF, 0xff000000, 2).inset(4))));
-        panel.add(newSection("first", new OverlayLayout.Constraint(new Dimension(200.0f, 100.0f),
-            false, false, Style.HAlign.CENTER, Style.VAlign.CENTER), 0xFFFFFF00));
+        Group panel = new Group(new OverlayLayout().padding(10.0f, 15.0f, 20.0f, 25.0f),
+            Styles.make(Style.BACKGROUND.is(Background.bordered(0xFFFFFFFF, 0xff000000, 2).inset(4))));
+        panel.add(OverlayLayout.stretched(newSection("background", 0xFFFF0000)));
+        panel.add(OverlayLayout.center(newSection("first", 0xFFFFFF00)));
 
         root.add(panel.setConstraint(AxisLayout.stretched()));
         return root;
     }
 
-    protected Element<?> newSection (String text, OverlayLayout.Constraint constraint, int bgColor) {
+    protected Element<?> newSection (String text, int bgColor) {
         Background colorBg = Background.solid(bgColor).inset(5);
-        Element<?> e = new Label(text).addStyles(Style.BACKGROUND.is(colorBg)).
-            setConstraint(constraint);
-        return e;
+        return new Label(text).addStyles(Style.BACKGROUND.is(colorBg));
     }
 }
