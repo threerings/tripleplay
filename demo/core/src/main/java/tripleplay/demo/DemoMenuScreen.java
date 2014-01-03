@@ -36,7 +36,7 @@ public class DemoMenuScreen extends UIScreen
     public DemoMenuScreen (ScreenStack stack) {
         _stack = stack;
         _rlabels = new String[] {
-            "tripleplay.ui", "", "", "",
+            "tripleplay.ui", "", "", "", "",
             "tripleplay.anim",
             "tripleplay.game",
             "tripleplay.entity",
@@ -48,8 +48,9 @@ public class DemoMenuScreen extends UIScreen
             // tripleplay.ui
             new MiscDemo(), new LabelDemo(), new SliderDemo(),
             new BackgroundDemo(), new LayoutDemo(), new BorderLayoutDemo(),
-            new FlowLayoutDemo(), new OverlayLayoutDemo(), new SelectorDemo(), new MenuDemo(),
-            new ScrollerDemo(), new TabsDemo(), new TableLayoutDemo(),
+            new FlowLayoutDemo(), new OverlayLayoutDemo(), new SelectorDemo(),
+            new MenuDemo(), new ScrollerDemo(), new TabsDemo(),
+            new TableLayoutDemo(), null, null,
             // tripleplay.anim
             new FramesDemo(), new AnimDemo(), new FlickerDemo(),
             // tripleplay.game
