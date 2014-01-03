@@ -14,6 +14,7 @@ import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 import playn.core.Asserts;
 import playn.core.Color;
+import playn.core.Events;
 import playn.core.GroupLayer;
 import playn.core.ImmediateLayer;
 import playn.core.Layer;
@@ -51,24 +52,31 @@ import tripleplay.util.Layers;
  *     ---------------------------        ---------------------------
  * }</pre>
  *
- * <p>Scroll bars are overlaid at the edges of the view and fade out after a short period of
- * inactivity. By default, bars are drawn as simple semi-transparent overlays. The color, size and
- * overall rendering can be overridden with styles.</p>
+ * <p>Scroll bars are configurable via the {@link #BAR_TYPE} style.</p>
  *
- * <p>NOTE: scroller is a composite container, so callers can't add to or remove from it. To "add"
- * elements, callers should set {@link #content} to a {@code Group} and add things to it.</p>
+ * <p>NOTE: {@code Scroller} is a composite container, so callers can't add to or remove from it.
+ * To "add" elements, callers should set {@link #content} to a {@code Group} and add things to it
+ * instead.</p>
  *
- * <p>NOTE: since scrolling is done by pointer events, child elements cannot be clicked directly.
- * Instead, basic click handling can be done using the {@link #contentClicked} signal.</p>
+ * <p>NOTE: scrolling is done by pointer events; there are two ways to provide interactive
+ * (clickable) content.
+ * <ul><li>The first way is to call {@link PlayN#setPropagateEvents(boolean)} with {@code true}.
+ * This has global implications but allows any descendants within the content to be clicked
+ * normally. Also, with this approach, after the pointer has been dragged more than a minimum
+ * distance, the {@code Scroller} calls {@link Events.Input#capture()}, which will cancel all other
+ * pointer interactions, including clickable descendants. For buttons or toggles, this causes the
+ * element to be deselected, corresponding to popular mobile OS conventions.</li>
+ * <li>The second way is to use the {@link #contentClicked} signal. This is more light weight but
+ * only emits after the pointer is released less than a minimum distance away from its starting
+ * position.</li></ul></p>
  *
  * TODO: some way to handle keyboard events (complicated by lack of a focus element)
- * TODO: more features when Mouse.hasMouse: show some paging buttons when bars are moused over
- * TODO: optional gutter for scroll bars?
- * TODO: more support for interacting with child elements
+ * TODO: more fine-grained setPropagateEvents (add a flag to playn Layer?)
+ * TODO: temporarily allow drags past the min/max scroll positions and bounce back
  */
 public class Scroller extends Composite<Scroller>
 {
-    /** The type of bars to use. */
+    /** The type of bars to use. By default, uses an instance of {@link TouchBars}. */
     public static final Style<BarType> BAR_TYPE = Style.<BarType>newStyle(true, new BarType() {
         @Override public Bars createBars (Scroller scroller) {
             return new TouchBars(scroller, Color.withAlpha(Colors.BLACK, 128), 5f, 3f, 1.5f / 1000);
@@ -120,10 +128,9 @@ public class Scroller extends Composite<Scroller>
 
         /**
          * Notifies this listener of changes to the content offset. Note the offset values are
-         * positive numbers, so correspond to the position of the content over 0, 0 of the view
-         * area.
-         * @param xpos the horizontal amount by which the content is offset
-         * @param ypos the vertical amount by which the content is offset
+         * positive numbers, so correspond to the position of the view area over the content.
+         * @param xpos the horizontal amount by which the view is offset
+         * @param ypos the vertical amount by which the view is offset
          */
         void positionChanged (float xpos, float ypos);
     }
@@ -294,11 +301,22 @@ public class Scroller extends Composite<Scroller>
     }
 
     /**
-     * Plain rectangle scroll bars that fade out, ideal for drag scrolling.
+     * Plain rectangle scroll bars that overlay the content area, consume no additional screen
+     * space, and fade out after inactivity. Ideal for drag scrolling on a mobile device.
      */
     public static class TouchBars extends Bars
         implements ImmediateLayer.Renderer 
     {
+        public TouchBars (Scroller scroller,
+                int color, float size, float topAlpha, float fadeSpeed) {
+            super(scroller);
+            _color = color;
+            _size = size;
+            _topAlpha = topAlpha;
+            _fadeSpeed = fadeSpeed;
+            _layer = PlayN.graphics().createImmediateLayer(this);
+        }
+
         @Override public void update (float delta) {
             // fade out the bars
             if (_alpha > 0 && _fadeSpeed > 0) setBarAlpha(_alpha - _fadeSpeed * delta);
@@ -322,16 +340,6 @@ public class Scroller extends Composite<Scroller>
             if (v.active()) drawBar(surface, h._size - _size, v._pos, _size, v._extent);
 
             surface.restore();
-        }
-
-        protected TouchBars (Scroller scroller,
-                int color, float size, float topAlpha, float fadeSpeed) {
-            super(scroller);
-            _color = color;
-            _size = size;
-            _topAlpha = topAlpha;
-            _fadeSpeed = fadeSpeed;
-            _layer = PlayN.graphics().createImmediateLayer(this);
         }
 
         protected void setBarAlpha (float alpha) {
@@ -370,7 +378,7 @@ public class Scroller extends Composite<Scroller>
         if (scroller == null) return false;
 
         // the element in question may have been added and then immediately scrolled to, which
-        // means it hasn't been layed out yet and does not have its proper position; in that case
+        // means it hasn't been laid out yet and does not have its proper position; in that case
         // defer this process a tick to allow it to be laid out
         if (!scroller.isSet(Flag.VALID)) {
             PlayN.invokeLater(new Runnable() {
@@ -386,14 +394,14 @@ public class Scroller extends Composite<Scroller>
         return true;
     }
 
-    /** The content contained in the scroll group. */
+    /** The content contained in the scroller. */
     public final Element<?> content;
 
     /** Scroll ranges. */
     public final Range hrange = createRange(), vrange = createRange();
 
     /**
-     * Creates a new scroll group containing the given content and with {@link Behavior#BOTH}.
+     * Creates a new scroller containing the given content and with {@link Behavior#BOTH}.
      * <p>If the content is an instance of {@link Clippable}, then translation will occur via
      * that interface. Otherwise, the content's layer translation will be set directly.
      * Graphics level clipping is always performed.</p>
@@ -536,14 +544,14 @@ public class Scroller extends Composite<Scroller>
     }
 
     /**
-     * Gets the signal dispatched when a pointer click occurs in the scroll group. This happens
+     * Gets the signal dispatched when a pointer click occurs in the scroller. This happens
      * only when the drag was not far enough to cause appreciable scrolling.
      */
     public Signal<Pointer.Event> contentClicked () {
         return _flicker.clicked;
     }
 
-    /** Prepares the scroll group for the next frame, at t = t + delta. */
+    /** Prepares the scroller for the next frame, at t = t + delta. */
     protected void update (float delta) {
         _flicker.update(delta);
         update(false);
