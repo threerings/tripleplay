@@ -46,9 +46,12 @@ public class OverlayLayout extends Layout
             this.valign = valign;
         }
 
-        public IDimension psize (OverlayLayout layout, Element<?> elem) {
+        public IDimension psize (OverlayLayout layout, Element<?> elem, float availX,
+            float availY) {
             float fwidth = size.width(), fheight = size.height();
-            if (fwidth > 0 && fheight > 0) { return size; }
+            if (hstretch) fwidth = availX;
+            if (vstretch) fheight = availY;
+            if (fwidth > 0 && fheight > 0) return new Dimension(fwidth, fheight);
             // if either forced width or height is zero, use preferred size in that dimension
             IDimension psize = layout.preferredSize(elem, fwidth, fheight);
             if (fwidth > 0) return new Dimension(fwidth, psize.height());
@@ -56,10 +59,10 @@ public class OverlayLayout extends Layout
             else return psize;
         }
 
-        public IPoint pos (IDimension psize) {
+        public IPoint pos (IDimension psize, float availX, float availY) {
             return new Point(
-                halign.offset(psize.width(), 0),
-                valign.offset(psize.height(), 0));
+                halign.offset(psize.width(), availX),
+                valign.offset(psize.height(), availY));
         }
     }
 
@@ -145,16 +148,218 @@ public class OverlayLayout extends Layout
      */
     public static <T extends Element<?>> T center (T elem, IDimension size, boolean hstretch,
         boolean vstretch) {
-        elem.setConstraint(new Constraint(size, hstretch, vstretch, HAlign.CENTER, VAlign.CENTER));
-        return elem;
+        return at(elem, size, hstretch, vstretch, HAlign.CENTER, VAlign.CENTER);
+    }
+
+    /**
+     * Centers vertically and aligns to the left {@code elem} in the parent.
+     */
+    public static <T extends Element<?>> T centerLeft (T elem) {
+        return at(elem, ZERO, false, false, HAlign.LEFT, VAlign.CENTER);
+    }
+
+    /**
+     * Centers vertically and aligns to the left {@code elem} in the parent with specified
+     * element size.
+     */
+    public static <T extends Element<?>> T centerLeft (T elem, float width, float height) {
+        return at(elem, new Dimension(width, height), false, false, HAlign.LEFT, VAlign.CENTER);
+    }
+
+    /**
+     * Centers vertically and aligns to the left {@code elem} in the parent with specified
+     * element size.
+     */
+    public static <T extends Element<?>> T centerLeft (T elem, IDimension size) {
+        return at(elem, size, false, false, HAlign.LEFT, VAlign.CENTER);
+    }
+
+    /**
+     * Centers vertically and aligns to the right {@code elem} in the parent.
+     */
+    public static <T extends Element<?>> T centerRight (T elem) {
+        return at(elem, ZERO, false, false, HAlign.RIGHT, VAlign.CENTER);
+    }
+
+    /**
+     * Centers vertically and aligns to the right {@code elem} in the parent with specified
+     * element size.
+     */
+    public static <T extends Element<?>> T centerRight (T elem, float width, float height) {
+        return at(elem, new Dimension(width, height), false, false, HAlign.RIGHT, VAlign.CENTER);
+    }
+
+    /**
+     * Centers vertically and aligns to the right {@code elem} in the parent with specified
+     * element size.
+     */
+    public static <T extends Element<?>> T centerRight (T elem, IDimension size) {
+        return at(elem, size, false, false, HAlign.RIGHT, VAlign.CENTER);
+    }
+
+    /**
+     * Centers horizontally and aligns to the top {@code elem} in the parent.
+     */
+    public static <T extends Element<?>> T centerTop (T elem) {
+        return at(elem, ZERO, false, false, HAlign.CENTER, VAlign.TOP);
+    }
+
+    /**
+     * Centers horizontally and aligns to the top {@code elem} in the parent with specified
+     * element size.
+     */
+    public static <T extends Element<?>> T centerTop (T elem, float width, float height) {
+        return at(elem, new Dimension(width, height), false, false, HAlign.CENTER, VAlign.TOP);
+    }
+
+    /**
+     * Centers horizontally and aligns to the top {@code elem} in the parent with specified
+     * element size.
+     */
+    public static <T extends Element<?>> T centerTop (T elem, IDimension size) {
+        return at(elem, size, false, false, HAlign.CENTER, VAlign.TOP);
+    }
+
+    /**
+     * Centers horizontally and aligns to the bottom {@code elem} in the parent.
+     */
+    public static <T extends Element<?>> T centerBottom (T elem) {
+        return at(elem, ZERO, false, false, HAlign.CENTER, VAlign.BOTTOM);
+    }
+
+    /**
+     * Centers horizontally and aligns to the bottom {@code elem} in the parent with specified
+     * element size.
+     */
+    public static <T extends Element<?>> T centerBottom (T elem, float width, float height) {
+        return at(elem, new Dimension(width, height), false, false, HAlign.CENTER, VAlign.BOTTOM);
+    }
+
+    /**
+     * Centers horizontally and aligns to the bottom {@code elem} in the parent with specified
+     * element size.
+     */
+    public static <T extends Element<?>> T centerBottom (T elem, IDimension size) {
+        return at(elem, size, false, false, HAlign.CENTER, VAlign.BOTTOM);
     }
 
     /**
      * Stretches {@code elem} in the parent.
      */
-    public static <T extends Element<?>> T stretched (T elem) {
-        elem.setConstraint(new Constraint(ZERO, true, true, HAlign.CENTER, VAlign.CENTER));
-        return elem;
+    public static <T extends Element<?>> T stretch (T elem) {
+        return at(elem, ZERO, true, true, HAlign.CENTER, VAlign.CENTER);
+    }
+
+    /**
+     * Stretches and aligns to the right the {@code elem} in the parent.
+     */
+    public static <T extends Element<?>> T stretchRight (T elem) {
+        return at(elem, ZERO, false, true, HAlign.RIGHT, VAlign.CENTER);
+    }
+
+    /**
+     * Stretches and aligns to the left the {@code elem} in the parent.
+     */
+    public static <T extends Element<?>> T stretchLeft (T elem) {
+        return at(elem, ZERO, false, true, HAlign.LEFT, VAlign.CENTER);
+    }
+
+    /**
+     * Stretches and aligns to the top the {@code elem} in the parent.
+     */
+    public static <T extends Element<?>> T stretchTop (T elem) {
+        return at(elem, ZERO, true, false, HAlign.CENTER, VAlign.TOP);
+    }
+
+    /**
+     * Stretches and aligns to the bottom the {@code elem} in the parent.
+     */
+    public static <T extends Element<?>> T stretchBottom (T elem) {
+        return at(elem, ZERO, true, false, HAlign.CENTER, VAlign.BOTTOM);
+    }
+
+    /**
+     * Aligns {@code elem} to the top-left corner in the parent.
+     */
+    public static <T extends Element<?>> T topLeft (T elem) {
+        return at(elem, ZERO, false, false, HAlign.LEFT, VAlign.TOP);
+    }
+
+    /**
+     * Aligns {@code elem} to the top-left corner in the parent with specified element size.
+     */
+    public static <T extends Element<?>> T topLeft (T elem, float width, float height) {
+        return at(elem, new Dimension(width, height), false, false, HAlign.LEFT, VAlign.TOP);
+    }
+
+    /**
+     * Aligns {@code elem} to the top-left corner in the parent with specified element size.
+     */
+    public static <T extends Element<?>> T topLeft (T elem, IDimension size) {
+        return at(elem, size, false, false, HAlign.LEFT, VAlign.TOP);
+    }
+
+    /**
+     * Aligns {@code elem} to the top-right corner in the parent.
+     */
+    public static <T extends Element<?>> T topRight (T elem) {
+        return at(elem, ZERO, false, false, HAlign.RIGHT, VAlign.TOP);
+    }
+
+    /**
+     * Aligns {@code elem} to the top-right corner in the parent with specified element size.
+     */
+    public static <T extends Element<?>> T topRight (T elem, float width, float height) {
+        return at(elem, new Dimension(width, height), false, false, HAlign.RIGHT, VAlign.TOP);
+    }
+
+    /**
+     * Aligns {@code elem} to the top-right corner in the parent with specified element size.
+     */
+    public static <T extends Element<?>> T topRight (T elem, IDimension size) {
+        return at(elem, size, false, false, HAlign.RIGHT, VAlign.TOP);
+    }
+
+    /**
+     * Aligns {@code elem} to the bottom-left corner in the parent.
+     */
+    public static <T extends Element<?>> T bottomLeft (T elem) {
+        return at(elem, ZERO, false, false, HAlign.LEFT, VAlign.BOTTOM);
+    }
+
+    /**
+     * Aligns {@code elem} to the bottom-left corner in the parent with specified element size.
+     */
+    public static <T extends Element<?>> T bottomLeft (T elem, float width, float height) {
+        return at(elem, new Dimension(width, height), false, false, HAlign.LEFT, VAlign.BOTTOM);
+    }
+
+    /**
+     * Aligns {@code elem} to the bottom-left corner in the parent with specified element size.
+     */
+    public static <T extends Element<?>> T bottomLeft (T elem, IDimension size) {
+        return at(elem, size, false, false, HAlign.LEFT, VAlign.BOTTOM);
+    }
+
+    /**
+     * Aligns {@code elem} to the bottom-right corner in the parent.
+     */
+    public static <T extends Element<?>> T bottomRight (T elem) {
+        return at(elem, ZERO, false, false, HAlign.RIGHT, VAlign.BOTTOM);
+    }
+
+    /**
+     * Aligns {@code elem} to the bottom-right corner in the parent with specified element size.
+     */
+    public static <T extends Element<?>> T bottomRight (T elem, float width, float height) {
+        return at(elem, new Dimension(width, height), false, false, HAlign.RIGHT, VAlign.BOTTOM);
+    }
+
+    /**
+     * Aligns {@code elem} to the bottom-right corner in the parent with specified element size.
+     */
+    public static <T extends Element<?>> T bottomRight (T elem, IDimension size) {
+        return at(elem, size, false, false, HAlign.RIGHT, VAlign.BOTTOM);
     }
 
     /**
@@ -191,25 +396,34 @@ public class OverlayLayout extends Layout
     }
 
     @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
+        // available size without paddings
+        float availX = hintX - _leftPadding - _rightPadding;
+        float availY = hintY - _topPadding - _bottomPadding;
+
         // report a size large enough to contain all of our elements
         Rectangle bounds = new Rectangle();
         for (Element<?> elem : elems) {
-            if (!elem.isVisible()) { continue; }
+            if (!elem.isVisible()) continue;
             Constraint c = constraint(elem);
-            IDimension psize = c.psize(this, elem);
-            bounds.add(new Rectangle(c.pos(psize), psize));
+            IDimension psize = c.psize(this, elem, availX, availY);
+            bounds.add(new Rectangle(c.pos(psize, availX, availY), psize));
         }
         return new Dimension(bounds.width, bounds.height);
     }
 
     @Override public void layout (Container<?> elems, float left, float top, float width,
         float height) {
+        // available size without paddings
+        float availX = width - _leftPadding - _rightPadding;
+        float availY = height - _topPadding - _bottomPadding;
+
         for (Element<?> elem : elems) {
-            if (!elem.isVisible()) { continue; }
+            if (!elem.isVisible()) continue;
             Constraint c = constraint(elem);
-            IDimension psize = c.psize(this, elem); // this should return a cached size
-            IPoint pos = c.pos(psize);
-            setBounds(elem, left + pos.x(), top + pos.y(), psize.width(), psize.height());
+            IDimension psize = c.psize(this, elem, availX, availY); // this should return a cached size
+            IPoint pos = c.pos(psize, availX, availY);
+            setBounds(elem, _leftPadding + left + pos.x(), _topPadding + top + pos.y(),
+                psize.width(), psize.height());
         }
     }
 
