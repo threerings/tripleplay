@@ -64,14 +64,6 @@ public class OverlayLayout extends Layout
     }
 
     /**
-     * Positions {@code elem} to the parent center with the given horizontal and vertical
-     * stretching.
-     */
-    public static <T extends Element<?>> T at (T elem, boolean hstretch, boolean vstretch) {
-        return at(elem, ZERO, hstretch, vstretch, HAlign.CENTER, VAlign.CENTER);
-    }
-
-    /**
      * Positions {@code elem} to the specified alignment relative to the parent.
      */
     public static <T extends Element<?>> T at (T elem, HAlign halign, VAlign valign) {
@@ -117,7 +109,25 @@ public class OverlayLayout extends Layout
      * Centers {@code elem} in the parent with specified horizontal and vertical stretching.
      */
     public static <T extends Element<?>> T center (T elem, boolean hstretch, boolean vstretch) {
-        elem.setConstraint(new Constraint(ZERO, hstretch, vstretch, HAlign.CENTER, VAlign.CENTER));
+        return center(elem, ZERO, hstretch, vstretch);
+    }
+
+    /**
+     * Centers {@code elem} in the parent with specified horizontal and vertical stretching and
+     * element size.
+     */
+    public static <T extends Element<?>> T center (T elem, float width, float height,
+        boolean hstretch, boolean vstretch) {
+        return center(elem, new Dimension(width, height), hstretch, vstretch);
+    }
+
+    /**
+     * Centers {@code elem} in the parent with specified horizontal and vertical stretching and
+     * element size.
+     */
+    public static <T extends Element<?>> T center (T elem, IDimension size, boolean hstretch,
+        boolean vstretch) {
+        elem.setConstraint(new Constraint(size, hstretch, vstretch, HAlign.CENTER, VAlign.CENTER));
         return elem;
     }
 
@@ -133,8 +143,8 @@ public class OverlayLayout extends Layout
         return new Dimension(bounds.width, bounds.height);
     }
 
-    @Override public void layout (Container<?> elems,
-        float left, float top, float width, float height) {
+    @Override public void layout (Container<?> elems, float left, float top, float width,
+        float height) {
         for (Element<?> elem : elems) {
             if (!elem.isVisible()) { continue; }
             Constraint c = constraint(elem);
