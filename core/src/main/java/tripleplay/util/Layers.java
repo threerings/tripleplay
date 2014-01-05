@@ -152,10 +152,11 @@ public class Layers
 
         } else if (layer instanceof ImageLayer) {
             ImageLayer il = (ImageLayer)layer;
+            canvas.setAlpha(il.alpha());
             canvas.drawImage(il.image(), 0, 0);
         } else if (layer instanceof ImmediateLayer) {
             ImmediateLayer il = (ImmediateLayer)layer;
-            il.renderer().render(new CanvasSurface(canvas));
+            il.renderer().render(new CanvasSurface(canvas).setAlpha(il.alpha()));
         }
 
         canvas.restore();
