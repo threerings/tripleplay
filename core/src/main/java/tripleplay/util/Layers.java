@@ -131,31 +131,42 @@ public class Layers
     }
 
     /**
+     * Renders the given layer to the given canvas.
+     * @see #capture(Layer, Canvas, float)
+     */
+    public static void capture (Layer layer, Canvas canvas) {
+        capture(layer, canvas, 1);
+    }
+
+    /**
      * Renders the given layer to the given canvas. Group, image and immediate layers are
      * supported. Applications should not need to do this very much, but sometimes can be
      * very handy.
+     * @param alpha during recursion, the product of alpha of parent layers
      * TODO: clipping
      * TODO: surfaceLayer
      */
-    public static void capture (Layer layer, Canvas canvas) {
+    public static void capture (Layer layer, Canvas canvas, float alpha) {
         if (!layer.visible()) return;
         canvas.save();
 
         concatTransform(canvas, layer.transform());
         canvas.translate(-layer.originX(), -layer.originY());
 
+        float nalpha = alpha * layer.alpha();
         if (layer instanceof GroupLayer) {
             GroupLayer gl = (GroupLayer)layer;
             for (int ii = 0, ll = gl.size(); ii < ll; ii++) {
-                capture(gl.get(ii), canvas);
+                capture(gl.get(ii), canvas, nalpha);
             }
 
         } else if (layer instanceof ImageLayer) {
             ImageLayer il = (ImageLayer)layer;
+            canvas.setAlpha(nalpha);
             canvas.drawImage(il.image(), 0, 0);
         } else if (layer instanceof ImmediateLayer) {
             ImmediateLayer il = (ImmediateLayer)layer;
-            il.renderer().render(new CanvasSurface(canvas));
+            il.renderer().render(new CanvasSurface(canvas.setAlpha(nalpha)));
         }
 
         canvas.restore();
@@ -168,7 +179,7 @@ public class Layers
      */
     public static CanvasImage capture (Layer layer, float width, float height) {
         CanvasImage image = PlayN.graphics().createImage(width, height);
-        capture(layer, image.canvas());
+        capture(layer, image.canvas(), 1);
         return image;
     }
 
