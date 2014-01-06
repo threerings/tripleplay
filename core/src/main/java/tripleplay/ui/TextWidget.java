@@ -16,7 +16,6 @@ import playn.core.util.Callback;
 import react.Slot;
 import react.UnitSlot;
 
-import tripleplay.util.EffectRenderer;
 import tripleplay.util.Glyph;
 import tripleplay.util.StyledText;
 import tripleplay.util.TextStyle;
@@ -72,11 +71,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             _ilayer.destroy();
             _ilayer = null;
         }
-    }
-
-    // this is broken out so that subclasses can extend this action
-    protected EffectRenderer createEffectRenderer () {
-        return Style.createEffectRenderer(this);
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {

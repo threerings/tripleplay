@@ -266,7 +266,7 @@ public abstract class Style<V>
             Styles.resolveStyle(elem, Style.FONT),
             Styles.resolveStyle(elem, Style.TEXT_EFFECT) != TextEffect.PIXEL_OUTLINE,
             Styles.resolveStyle(elem, Style.COLOR),
-            Style.createEffectRenderer(elem),
+            elem.createEffectRenderer(),
             Styles.resolveStyle(elem, Style.UNDERLINE));
     }
 
