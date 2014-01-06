@@ -5,14 +5,18 @@
 
 package tripleplay.demo.anim;
 
+import pythagoras.f.FloatMath;
+
 import playn.core.CanvasImage;
 import playn.core.Font;
 import playn.core.ImageLayer;
 import playn.core.Pointer;
+import playn.core.util.Clock;
 import static playn.core.PlayN.*;
 
 import tripleplay.anim.AnimGroup;
 import tripleplay.anim.Animation;
+import tripleplay.anim.Animator;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
 import tripleplay.util.StyledText;
@@ -20,6 +24,11 @@ import tripleplay.util.TextStyle;
 
 public class AnimDemo extends DemoScreen
 {
+    @Override public void paint (Clock clock) {
+        super.paint(clock);
+        _banim.paint(clock);
+    }
+
     @Override protected String name () {
         return "Anims";
     }
@@ -58,6 +67,27 @@ public class AnimDemo extends DemoScreen
             add(dropBalls(balls, 1, 2)).then().
             add(dropBalls(balls, 3, 3));
 
+        // test barrier delay
+        CanvasImage sqimg = graphics().createImage(50, 50);
+        sqimg.canvas().setFillColor(0xFF99CCFF).fillRect(0, 0, 50, 50);
+        final ImageLayer square = graphics().createImageLayer(sqimg);
+        square.setOrigin(25, 25);
+        layer.addAt(square, 50, 300);
+        square.addListener(new Pointer.Adapter() {
+            @Override public void onPointerStart (Pointer.Event event) {
+                square.setInteractive(false);
+                _banim.tweenXY(square).to(50, 350);
+                _banim.delay(250).then().tweenRotation(square).to(FloatMath.PI).in(500);
+                _banim.addBarrier(1000);
+                _banim.tweenXY(square).to(50, 300);
+                _banim.delay(250).then().tweenRotation(square).to(0).in(500);
+                _banim.addBarrier();
+                _banim.action(new Runnable() {
+                    public void run () { square.setInteractive(true); }
+                });
+            }
+        });
+
         return null;
     }
 
@@ -71,6 +101,9 @@ public class AnimDemo extends DemoScreen
         }
         return group.toAnim();
     }
+
+    // a separate animator used for testing barriers
+    protected Animator _banim = new Animator();
 
     protected static final TextStyle STYLE = new TextStyle().
         withFont(graphics().createFont("Helvetica", Font.Style.PLAIN, 48));
