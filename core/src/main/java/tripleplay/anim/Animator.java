@@ -75,9 +75,10 @@ public class Animator extends AnimBuilder
             }
         }
 
-        // if we have no active animations, or a timed barrier has expired, unblock a barrier
-        boolean noActiveAnims = _anims.isEmpty() && _nanims.isEmpty();
-        if (!_barriers.isEmpty() && (noActiveAnims || _barriers.get(0).expired(time))) {
+        // process our barriers; if...
+        if (!_barriers.isEmpty() &&                  // we have at least one barrier
+            _anims.isEmpty() && _nanims.isEmpty() && // we have no active animations
+            _barriers.get(0).expired(time)) {        // the top barrier is expired
             Barrier barrier = _barriers.remove(0);
             _nanims.addAll(barrier.accum);
             // if we just unblocked the last barrier, start accumulating back on _nanims
@@ -111,8 +112,8 @@ public class Animator extends AnimBuilder
 
     /** Implementation details, avert your eyes. */
     protected static class Barrier {
-        public List<Animation> accum = new ArrayList<Animation>();
-        public float expireDelay;
+        public final List<Animation> accum = new ArrayList<Animation>();
+        public final float expireDelay;
         public float absoluteExpireTime;
 
         public Barrier (float expireDelay) {
@@ -120,9 +121,10 @@ public class Animator extends AnimBuilder
         }
 
         public boolean expired (float time) {
-            if (expireDelay == 0) return false;
-            if (absoluteExpireTime == 0) absoluteExpireTime = time + expireDelay;
-            return time > absoluteExpireTime;
+            if (absoluteExpireTime == 0) {
+                absoluteExpireTime = time + expireDelay;
+            }
+            return time >= absoluteExpireTime;
         }
     }
 
