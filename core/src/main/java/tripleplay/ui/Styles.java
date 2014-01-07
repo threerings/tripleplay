@@ -28,6 +28,26 @@ public final class Styles
         return none().add(Style.Mode.DEFAULT, bindings);
     }
 
+    /** Resolves the current value of {@code style} on {@code element}. */
+    public static <V> V resolveStyle (Element<?> element, Style<V> style) {
+        // first check for the style configured directly on the element
+        V value = element.styles().<V>get(style, element);
+        if (value != null) return value;
+
+        // now check for the style in the appropriate stylesheets
+        Container<?> group = (element instanceof Container<?>) ?
+            (Container<?>)element : element.parent();
+        for (; group != null; group = group.parent()) {
+            Stylesheet sheet = group.stylesheet();
+            if (sheet == null) continue;
+            value = sheet.<V>get(style, element.getStyleClass(), element);
+            if (value != null) return value;
+        }
+
+        // if we haven't found the style anywhere, return the global default
+        return style.getDefault(element);
+    }
+
     /**
      * Returns a new instance where the supplied bindings overwrite any previous bindings for the
      * specified styles in the default mode. The receiver is not modified.
@@ -143,25 +163,6 @@ public final class Styles
 
     private Styles (Binding<?>[] bindings) {
         _bindings = bindings;
-    }
-
-    static <V> V resolveStyle (Element<?> element, Style<V> style) {
-        // first check for the style configured directly on the element
-        V value = element.styles().<V>get(style, element);
-        if (value != null) return value;
-
-        // now check for the style in the appropriate stylesheets
-        Container<?> group = (element instanceof Container<?>) ?
-            (Container<?>)element : element.parent();
-        for (; group != null; group = group.parent()) {
-            Stylesheet sheet = group.stylesheet();
-            if (sheet == null) continue;
-            value = sheet.<V>get(style, element.getStyleClass(), element);
-            if (value != null) return value;
-        }
-
-        // if we haven't found the style anywhere, return the global default
-        return style.getDefault(element);
     }
 
     static <V> Binding<V> newBinding (Style.Binding<V> binding, Style.Mode mode) {
