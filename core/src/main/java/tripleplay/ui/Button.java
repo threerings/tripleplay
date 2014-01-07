@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
 import react.SignalView;
 import react.Slot;
 
@@ -14,9 +13,6 @@ import react.Slot;
  */
 public class Button extends AbstractTextButton<Button> implements Clickable<Button>
 {
-    /** @deprecated Use {@link Behavior.Click#DEBOUNCE_DELAY}. */
-    @Deprecated public static Style<Integer> DEBOUNCE_DELAY = Behavior.Click.DEBOUNCE_DELAY;
-
     /** Creates a button with no text or icon. */
     public Button () {
         this(null, (Icon)null);
@@ -30,18 +26,6 @@ public class Button extends AbstractTextButton<Button> implements Clickable<Butt
     /** Creates a button with the supplied icon. */
     public Button (Icon icon) {
         this(null, icon);
-    }
-
-    /** Creates a button with the supplied icon. */
-    @Deprecated
-    public Button (Image icon) {
-        this(null, Icons.image(icon));
-    }
-
-    /** Creates a button with the supplied text and icon. */
-    @Deprecated
-    public Button (String text, Image icon) {
-        this(text, Icons.image(icon));
     }
 
     /** Creates a button with the supplied text and icon. */

@@ -10,7 +10,6 @@ import playn.core.CanvasImage;
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 import playn.core.PlayN;
-import playn.core.TextLayout;
 import pythagoras.f.IDimension;
 
 /**
@@ -99,19 +98,6 @@ public class Glyph
         prepare(text.width(), text.height());
         text.render(canvas(), 0, 0);
         _layer.get().setTranslation(text.style.effect.offsetX(), text.style.effect.offsetY());
-    }
-
-    /** @deprecated Use {@link #renderText(StyledText)}. */
-    @Deprecated public void renderText (TextConfig config, String text) {
-        renderText(config, config.layout(text));
-    }
-
-    /** @deprecated Use {@link #renderText(StyledText)}. */
-    @Deprecated public void renderText (TextConfig config, TextLayout layout) {
-        prepare(config.effect.adjustWidth(layout.width()),
-                config.effect.adjustHeight(layout.height()));
-        config.render(canvas(), layout, 0, 0);
-        _layer.get().setTranslation(config.effect.offsetX(), config.effect.offsetY());
     }
 
     protected final GroupLayer _parent;

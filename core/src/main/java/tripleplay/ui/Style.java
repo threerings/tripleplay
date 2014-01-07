@@ -9,7 +9,6 @@ import playn.core.Canvas;
 import playn.core.Font;
 import playn.core.PlayN;
 import playn.core.Sound;
-import playn.core.TextFormat;
 import playn.core.util.TextBlock;
 import tripleplay.util.EffectRenderer;
 import tripleplay.util.TextStyle;
@@ -169,8 +168,6 @@ public abstract class Style<V>
 
     /** Used to provide concise TextEffect style declarations. */
     public static class TextEffectStyle extends Style<EffectFactory> {
-        /** @deprecated Use {@link #pixelOutline}. */
-        @Deprecated public final Binding<EffectFactory> outline = is(TextEffect.PIXEL_OUTLINE);
         public final Binding<EffectFactory> pixelOutline = is(TextEffect.PIXEL_OUTLINE);
         public final Binding<EffectFactory> vectorOutline = is(TextEffect.VECTOR_OUTLINE);
         public final Binding<EffectFactory> shadow = is(TextEffect.SHADOW);
@@ -284,11 +281,6 @@ public abstract class Style<V>
 
     /** Indicates whether or not this style property is inherited. */
     public final boolean inherited;
-
-    /** @deprecated Use {@link #createTextStyle}. */
-    @Deprecated public static TextFormat createTextFormat (Element<?> elem) {
-        return createTextStyle(elem);
-    }
 
     /**
      * Creates a text style instance based on the supplied element's stylings.

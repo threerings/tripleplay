@@ -20,8 +20,6 @@ import playn.core.Pointer;
 import react.Slot;
 
 import tripleplay.platform.TPPlatform;
-import tripleplay.ui.Style.HAlign;
-import tripleplay.ui.Style.VAlign;
 import tripleplay.ui.util.BoxPoint;
 import tripleplay.util.Layers;
 
@@ -115,16 +113,6 @@ public class MenuHost
             this.pointer = pointer == null ? null : Events.Util.screenPos(pointer);
         }
 
-        private Point legacyPos () {
-            if (_position == null) _position = new Absolute(0, 0);
-            return _position.pos;
-        }
-
-        private BoxPoint legacyAlign () {
-            if (_menuAlign == null) _menuAlign = BoxPoint.TL;
-            return _menuAlign;
-        }
-
         /**
          * Causes the menu to handle further events on the given layer. This is usually the layer
          * handling a pointer start that caused the popup. A listener will be added to the layer
@@ -133,102 +121,6 @@ public class MenuHost
         public Pop relayEvents (Layer layer) {
             _relayTarget = layer;
             return this;
-        }
-
-        /**
-         * Positions the menu popup at the given positional event.
-         * @deprecated use TRIGGER_POINT
-         */
-        @Deprecated
-        public Pop atEventPos (Events.Position pos) {
-            return atScreenPos(pos.x(), pos.y());
-        }
-
-        /**
-         * Positions the menu popup at the given screen position.
-         * @deprecated use TRIGGER_POINT
-         */
-        @Deprecated
-        public Pop atScreenPos (float x, float y) {
-            legacyPos().set(x, y);
-            return this;
-        }
-
-        /**
-         * Positions the menu horizontally relative to the given layer, with an offset. The
-         * @deprecated use TRIGGER_POINT
-         */
-        @Deprecated
-        public Pop atLayerX (Layer layer, float x) {
-            return atScreenPos(Layer.Util.layerToScreen(layer, x, 0).x, legacyPos().y());
-        }
-
-        /**
-         * Positions the menu vertically relative to the given layer, with an offset. The
-         * horizontal position remains unchanged.
-         * @deprecated use TRIGGER_POINT
-         */
-        @Deprecated
-        public Pop atLayerY (Layer layer, float y) {
-            return atScreenPos(legacyPos().x(), Layer.Util.layerToScreen(layer, 0, y).y);
-        }
-
-        /**
-         * Sets the horizontal alignment of the menu relative to the popup position.
-         * @deprecated use POPUP_ORIGIN
-         */
-        @Deprecated
-        public Pop halign (HAlign halign) {
-            _menuAlign = legacyAlign().left();
-            return this;
-        }
-
-        /**
-         * Sets the vertical alignment of the menu relative to the popup position.
-         * @deprecated use POPUP_ORIGIN
-         */
-        @Deprecated
-        public Pop valign (VAlign valign) {
-            _menuAlign = legacyAlign().valign(valign);
-            return this;
-        }
-
-        /**
-         * Positions the right edge of the menu relative to the left edge of the trigger, offset
-         * by the given value.
-         * @deprecated use POPUP_ORIGIN and TRIGGER_POINT
-         */
-        @Deprecated
-        public Pop toLeft (float x) {
-            return atLayerX(trigger.layer, x).halign(HAlign.RIGHT);
-        }
-
-        /**
-         * Positions the left edge of the menu relative to the right edge of the trigger, offset
-         * @deprecated use POPUP_ORIGIN and TRIGGER_POINT
-         */
-        @Deprecated
-        public Pop toRight (float x) {
-            return atLayerX(trigger.layer, trigger.size().width() + x).halign(HAlign.LEFT);
-        }
-
-        /**
-         * Positions the top edge of the menu relative to the top edge of the trigger, offset
-         * @deprecated use POPUP_ORIGIN and TRIGGER_POINT
-         */
-        @Deprecated
-        public Pop toTop (float y) {
-            return atLayerY(trigger.layer, y).valign(VAlign.TOP);
-        }
-
-        /**
-         * Positions the bottom edge of the menu relative to the bottom edge of the trigger, offset
-         * by the given value.
-         * @deprecated use POPUP_ORIGIN and TRIGGER_POINT
-         */
-        @Deprecated
-        public Pop toBottom (float y) {
-            return atLayerY(trigger.layer, trigger.size().height() + y).valign(VAlign.BOTTOM);
         }
 
         /**
@@ -255,7 +147,8 @@ public class MenuHost
          */
         public Pop inElement (Element<?> elem) {
             Point tl = Layer.Util.layerToScreen(elem.layer, 0, 0);
-            Point br = Layer.Util.layerToScreen(elem.layer, elem.size().width(), elem.size().height());
+            Point br = Layer.Util.layerToScreen(
+                elem.layer, elem.size().width(), elem.size().height());
             bounds = new Rectangle(tl.x(), tl.y(), br.x() - tl.x(), br.y() - tl.y());
             return this;
         }

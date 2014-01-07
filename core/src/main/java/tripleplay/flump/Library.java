@@ -14,7 +14,6 @@ import java.util.Map;
 
 import playn.core.Asserts;
 import playn.core.Image;
-import playn.core.util.Callback;
 
 import tripleplay.util.TexturePacker;
 
@@ -54,13 +53,6 @@ public class Library
                 }
             }
         }
-    }
-
-    /**
-     * @deprecated Use {@link JsonLoader#loadLibrary}.
-     */
-    @Deprecated public static void fromAssets (String baseDir, Callback<Library> callback) {
-        JsonLoader.loadLibrary(baseDir, callback);
     }
 
     /** Pack multiple libraries into a single group of atlases. The libraries will be modified so

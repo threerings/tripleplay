@@ -23,11 +23,6 @@ import tripleplay.util.Paintable;
 public class Animator extends AnimBuilder
     implements Paintable
 {
-    /** @deprecated Just construct Animator directly now. */
-    @Deprecated public static Animator create () {
-        return new Animator();
-    }
-
     /**
      * Causes this animator to delay the start of any subsequently registered animations until all
      * currently registered animations are complete.
