@@ -85,24 +85,21 @@ public class TextStyle extends TextFormat
      * Returns a copy of this text style with a shadow text effect.
      */
     public TextStyle withShadow (int shadowColor, float shadowX, float shadowY) {
-        EffectRenderer effect = new EffectRenderer.Shadow(shadowColor, shadowX, shadowY);
-        return new TextStyle(font, antialias, textColor, effect, underlined);
+        return withEffect(new EffectRenderer.Shadow(shadowColor, shadowX, shadowY));
     }
 
     /**
      * Returns a copy of this text style with a pixel outline text effect.
      */
     public TextStyle withOutline (int outlineColor) {
-        EffectRenderer effect = new EffectRenderer.PixelOutline(outlineColor);
-        return new TextStyle(font, antialias, textColor, effect, underlined);
+        return withEffect(new EffectRenderer.PixelOutline(outlineColor));
     }
 
     /**
      * Returns a copy of this text style with a vector outline text effect.
      */
     public TextStyle withOutline (int outlineColor, float outlineWidth) {
-        EffectRenderer effect = new EffectRenderer.VectorOutline(outlineColor, outlineWidth);
-        return new TextStyle(font, antialias, textColor, effect, underlined);
+        return withEffect(new EffectRenderer.VectorOutline(outlineColor, outlineWidth));
     }
 
     /**
