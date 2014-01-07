@@ -84,6 +84,7 @@ public abstract class Style<V>
 
     /** Used to create text effects. */
     public interface EffectFactory {
+        /** Creates the effect renderer to be used by this factory. */
         EffectRenderer createEffectRenderer (Element<?> elem);
     }
 
@@ -173,6 +174,13 @@ public abstract class Style<V>
         public final Binding<EffectFactory> shadow = is(TextEffect.SHADOW);
         public final Binding<EffectFactory> gradient = is(TextEffect.GRADIENT);
         public final Binding<EffectFactory> none = is(TextEffect.NONE);
+        public final Binding<EffectFactory> is (final EffectRenderer renderer) {
+            return is(new EffectFactory() {
+                public EffectRenderer createEffectRenderer (Element<?> elem) {
+                    return renderer;
+                }
+            });
+        }
         @Override public EffectFactory getDefault (Element<?> elem) { return TextEffect.NONE; }
         TextEffectStyle() { super(true); }
     }
