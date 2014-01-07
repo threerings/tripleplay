@@ -74,6 +74,12 @@ public class TextStyle extends TextFormat
         return new TextStyle(font, antialias, textColor, effect, underlined);
     }
 
+    /**
+     * Returns a copy of this text style with the effect configured as {@code effect}.
+     */
+    public TextStyle withEffect (EffectRenderer effect) {
+        return new TextStyle(font, antialias, textColor, effect, underlined);
+    }
 
     /**
      * Returns a copy of this text style with a shadow text effect.
