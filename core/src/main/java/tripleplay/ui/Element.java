@@ -22,7 +22,6 @@ import playn.core.Layer;
 import playn.core.PlayN;
 
 import tripleplay.ui.util.Insets;
-import tripleplay.util.EffectRenderer;
 import tripleplay.util.Ref;
 
 /**
@@ -159,11 +158,6 @@ public abstract class Element<T extends Element<T>>
      */
     public T addStyles (Style.Binding<?>... styles) {
         return addStyles(Styles.make(styles));
-    }
-
-    // this is broken out so that subclasses can extend this action
-    protected EffectRenderer createEffectRenderer () {
-        return Style.createEffectRenderer(this);
     }
 
     /**

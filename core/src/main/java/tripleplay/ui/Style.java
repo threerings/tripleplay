@@ -83,18 +83,50 @@ public abstract class Style<V>
         LEFT, ABOVE, RIGHT, BELOW;
     }
 
+    /** Used to create text effects. */
+    public interface EffectFactory {
+        EffectRenderer createEffectRenderer (Element<?> elem);
+    }
+
     /** Defines supported text effects. */
-    public static enum TextEffect {
+    public static enum TextEffect implements EffectFactory {
         /** Outlines the text in the highlight color. */
-        PIXEL_OUTLINE,
+        PIXEL_OUTLINE {
+            public EffectRenderer createEffectRenderer (Element<?> elem) {
+                return new EffectRenderer.PixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT));
+            }
+        },
         /** Outlines the text in the highlight color. */
-        VECTOR_OUTLINE,
+        VECTOR_OUTLINE {
+            public EffectRenderer createEffectRenderer (Element<?> elem) {
+                return new EffectRenderer.VectorOutline(
+                    Styles.resolveStyle(elem, Style.HIGHLIGHT),
+                    Styles.resolveStyle(elem, Style.OUTLINE_WIDTH),
+                    Styles.resolveStyle(elem, Style.OUTLINE_CAP),
+                    Styles.resolveStyle(elem, Style.OUTLINE_JOIN));
+            }
+        },
         /** Draws a shadow below and to the right of the text in the shadow color. */
-        SHADOW,
+        SHADOW {
+            public EffectRenderer createEffectRenderer (Element<?> elem) {
+                return new EffectRenderer.Shadow(Styles.resolveStyle(elem, Style.SHADOW),
+                                                 Styles.resolveStyle(elem, Style.SHADOW_X),
+                                                 Styles.resolveStyle(elem, Style.SHADOW_Y));
+            }
+        },
         /** Draws a gradient from the font color to the gradient color. */
-        GRADIENT,
+        GRADIENT {
+            public EffectRenderer createEffectRenderer (Element<?> elem) {
+                return new EffectRenderer.Gradient(Styles.resolveStyle(elem, Style.GRADIENT_COLOR),
+                                                   Styles.resolveStyle(elem, Style.GRADIENT_TYPE));
+            }
+        },
         /** No text effect. */
-        NONE
+        NONE {
+            public EffectRenderer createEffectRenderer (Element<?> elem) {
+                return EffectRenderer.NONE;
+            }
+        };
     }
 
     /** Defines different types of gradient fills. */
@@ -136,15 +168,15 @@ public abstract class Style<V>
     }
 
     /** Used to provide concise TextEffect style declarations. */
-    public static class TextEffectStyle extends Style<TextEffect> {
+    public static class TextEffectStyle extends Style<EffectFactory> {
         /** @deprecated Use {@link #pixelOutline}. */
-        @Deprecated public final Binding<TextEffect> outline = is(TextEffect.PIXEL_OUTLINE);
-        public final Binding<TextEffect> pixelOutline = is(TextEffect.PIXEL_OUTLINE);
-        public final Binding<TextEffect> vectorOutline = is(TextEffect.VECTOR_OUTLINE);
-        public final Binding<TextEffect> shadow = is(TextEffect.SHADOW);
-        public final Binding<TextEffect> gradient = is(TextEffect.GRADIENT);
-        public final Binding<TextEffect> none = is(TextEffect.NONE);
-        @Override public TextEffect getDefault (Element<?> elem) { return TextEffect.NONE; }
+        @Deprecated public final Binding<EffectFactory> outline = is(TextEffect.PIXEL_OUTLINE);
+        public final Binding<EffectFactory> pixelOutline = is(TextEffect.PIXEL_OUTLINE);
+        public final Binding<EffectFactory> vectorOutline = is(TextEffect.VECTOR_OUTLINE);
+        public final Binding<EffectFactory> shadow = is(TextEffect.SHADOW);
+        public final Binding<EffectFactory> gradient = is(TextEffect.GRADIENT);
+        public final Binding<EffectFactory> none = is(TextEffect.NONE);
+        @Override public EffectFactory getDefault (Element<?> elem) { return TextEffect.NONE; }
         TextEffectStyle() { super(true); }
     }
 
@@ -266,32 +298,8 @@ public abstract class Style<V>
             Styles.resolveStyle(elem, Style.FONT),
             Styles.resolveStyle(elem, Style.TEXT_EFFECT) != TextEffect.PIXEL_OUTLINE,
             Styles.resolveStyle(elem, Style.COLOR),
-            elem.createEffectRenderer(),
+            Styles.resolveStyle(elem, Style.TEXT_EFFECT).createEffectRenderer(elem),
             Styles.resolveStyle(elem, Style.UNDERLINE));
-    }
-
-    /**
-     * Creates an effect renderer based on the supplied element's stylings.
-     */
-    public static EffectRenderer createEffectRenderer (Element<?> elem) {
-        switch (Styles.resolveStyle(elem, Style.TEXT_EFFECT)) {
-        case PIXEL_OUTLINE:
-            return new EffectRenderer.PixelOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT));
-        case VECTOR_OUTLINE:
-            return new EffectRenderer.VectorOutline(Styles.resolveStyle(elem, Style.HIGHLIGHT),
-                                                    Styles.resolveStyle(elem, Style.OUTLINE_WIDTH),
-                                                    Styles.resolveStyle(elem, Style.OUTLINE_CAP),
-                                                    Styles.resolveStyle(elem, Style.OUTLINE_JOIN));
-        case SHADOW:
-            return new EffectRenderer.Shadow(Styles.resolveStyle(elem, Style.SHADOW),
-                                             Styles.resolveStyle(elem, Style.SHADOW_X),
-                                             Styles.resolveStyle(elem, Style.SHADOW_Y));
-        case GRADIENT:
-            return new EffectRenderer.Gradient(Styles.resolveStyle(elem, Style.GRADIENT_COLOR),
-                                               Styles.resolveStyle(elem, Style.GRADIENT_TYPE));
-        default:
-            return EffectRenderer.NONE;
-        }
     }
 
     /**
