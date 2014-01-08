@@ -5,6 +5,9 @@
 
 package tripleplay.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import react.Function;
 import react.IntValue;
 import react.RSet;
@@ -288,9 +291,17 @@ public class TypedStorage
      * place through the returned set will <em>not</em> be reflected in the set and will be
      * overwritten if the set changes.</p>
      */
+    public <E> RSet<E> setFor (String key, Function<String,E> toFunc, Function<E,String> fromFunc) {
+        return setFor(key, toFunc, fromFunc, new HashSet<E>());
+    }
+
+    /**
+     * Exposes the specified property as an {@link RSet} using {@code impl} as the concrete set
+     * implementation. See {@link #setFor(String,Function,Function)} for more details.
+     */
     public <E> RSet<E> setFor (final String key, Function<String,E> toFunc,
-                               final Function<E,String> fromFunc) {
-        final RSet<E> rset = RSet.create();
+                               final Function<E,String> fromFunc, Set<E> impl) {
+        final RSet<E> rset = RSet.create(impl);
         String data = get(key, (String)null);
         if (data != null) {
             for (String value : data.split(",")) {
