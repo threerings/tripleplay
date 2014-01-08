@@ -97,9 +97,6 @@ public class MenuHost
         /** The bounds to confine the menu, in screen coordinates; usually the whole screen. */
         public IRectangle bounds;
 
-        // legacy position value to keep supporting the placement calls below
-        private Absolute _position;
-
         /** Creates a new event and initializes {@link #trigger} and {@link #menu}. */
         public Pop (Element<?> trigger, Menu menu) {
             this(trigger, menu, null);
@@ -172,8 +169,6 @@ public class MenuHost
 
         /** The layer that will be sending pointer drag and end events to us. */
         protected Layer _relayTarget;
-
-        private BoxPoint _menuAlign;
     }
 
     public static Connection relayEvents (Layer from, final Menu to) {
@@ -341,11 +336,9 @@ public class MenuHost
 
             // get the trigger point from the trigger
             TriggerPoint position = resolveStyle(pop.trigger, TRIGGER_POINT);
-            if (pop._position != null) position = pop._position;
 
             // get the origin point from the menu
             BoxPoint origin = resolveStyle(pop.trigger, POPUP_ORIGIN);
-            if (pop._menuAlign != null) origin = pop._menuAlign;
 
             // get the desired position, may be relative to trigger or pointer
             Point tpos = position.getLocation(pop.trigger, pop.pointer);
