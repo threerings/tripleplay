@@ -28,12 +28,8 @@ import tripleplay.util.Paintable;
  * your hand-drawn flickable elements) on every frame tick. You must also call {@link
  * Flicker#update} on every frame tick (to process changes due to acceleration and velocity).</p>
  *
- * <p>Various flick parameters can be customized by overriding the appropriate method: {@link
- * #friction}, {@link #maxFlickVel}, etc.</p>
- *
- * <p><em>Note:</em> the flicker does not currently implement the iOS-style "bounce" that happens
- * when an entity is flicked hard against its upper or lower bounds. The flicker simply stops when
- * it reaches its bounds.</p>
+ * <p>Various flick parameters can be customized by overriding the appropriate method:
+ * {@link #friction}, {@link #maxFlickVel}, etc.</p>
  */
 public class Flicker extends Pointer.Adapter
     implements Paintable
