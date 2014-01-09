@@ -45,7 +45,7 @@ public abstract class AnimBuilder
      * Starts a tween on the supplied layer's x/y-translation.
      */
     public Animation.Two tweenXY (Layer layer) {
-        return add(new Animation.Two(onXY(layer)));
+        return tween(onXY(layer));
     }
 
     /**
@@ -66,7 +66,7 @@ public abstract class AnimBuilder
      * Starts a tween on the supplied layer's origin.
      */
     public Animation.Two tweenOrigin (Layer layer) {
-        return add(new Animation.Two(onOrigin(layer)));
+        return tween(onOrigin(layer));
     }
 
     /**
@@ -95,7 +95,7 @@ public abstract class AnimBuilder
      * Starts a tween on the supplied layer's x/y-scale.
      */
     public Animation.Two tweenScaleXY (Layer layer) {
-        return add(new Animation.Two(onScaleXY(layer)));
+        return tween(onScaleXY(layer));
     }
 
     /**
@@ -130,6 +130,13 @@ public abstract class AnimBuilder
      */
     public Animation.One tween (Animation.Value value) {
         return add(new Animation.One(value));
+    }
+
+    /**
+     * Starts a tween using the supplied custom X/Y value.
+     */
+    public Animation.Two tween (Animation.XYValue value) {
+        return add(new Animation.Two(value));
     }
 
     /**
