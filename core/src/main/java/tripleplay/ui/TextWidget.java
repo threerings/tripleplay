@@ -119,14 +119,16 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         @Override public Dimension computeSize (float hintX, float hintY) {
             Dimension size = new Dimension();
-            addTextSize(size);
 
+            float usedWidth = 0;
             if (icon != null) {
                 switch (iconPos) {
                 case LEFT:
                 case RIGHT:
                     size.width += icon.width();
                     if (text != null) size.width += iconGap;
+                    // this is only used if we also have text, so we always include the gap
+                    usedWidth += icon.width() + iconGap;
                     size.height = Math.max(size.height, icon.height());
                     break;
                 case ABOVE:
@@ -137,6 +139,20 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     break;
                 }
             }
+
+            if (text != null) {
+                // if autoShrink is enabled, and our text is too wide, re-lay it out with
+                // successively smaller fonts until it fits
+                float twidth = textWidth(), availWidth = hintX - usedWidth;
+                if (autoShrink && twidth > availWidth) {
+                    while (twidth > availWidth && text.style.font.size() > MIN_FONT_SIZE) {
+                        text = text.resize(text.style.font.size()-1);
+                        twidth = FloatMath.ceil(textWidth());
+                    }
+                }
+            }
+            addTextSize(size); // this might add something even if (text == null)
+
             return size;
         }
 
@@ -150,22 +166,22 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 case LEFT:
                     tx += iwidth + iconGap;
                     iy += valign.offset(iheight, height);
-                    usedWidth = iwidth;
+                    usedWidth = iwidth + iconGap;
                     break;
                 case ABOVE:
                     ty += iheight + iconGap;
                     ix += halign.offset(iwidth, width);
-                    usedHeight = iheight;
+                    usedHeight = iheight + iconGap;
                     break;
                 case RIGHT:
                     ix += width - iwidth;
                     iy += valign.offset(iheight, height);
-                    usedWidth = iwidth;
+                    usedWidth = iwidth + iconGap;
                     break;
                 case BELOW:
                     iy += height - iheight;
                     ix += halign.offset(iwidth, width);
-                    usedHeight = iheight;
+                    usedHeight = iheight + iconGap;
                     break;
                 }
                 if (_ilayer != null) _ilayer.destroy();
