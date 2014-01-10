@@ -26,6 +26,7 @@ import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.RoundRectBackground;
 import tripleplay.ui.bgs.Scale9Background;
 import tripleplay.ui.bgs.SolidBackground;
+import tripleplay.ui.bgs.TiledImageBackground;
 import tripleplay.ui.util.Insets;
 import tripleplay.util.Destroyable;
 
@@ -125,6 +126,13 @@ public abstract class Background
      */
     public static Background croppedImage (Image bgimage) {
         return new CroppedImageBackground(bgimage);
+    }
+
+    /**
+     * Creates a tiled image background with the specified image.
+     */
+    public static Background tiledImage (Image bgimage) {
+        return new TiledImageBackground(bgimage);
     }
 
     /**
