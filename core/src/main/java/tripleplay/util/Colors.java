@@ -51,14 +51,21 @@ public class Colors
 
     /**
      * Creates a new darkened version of the given color. This is implemented by composing a new
-     * color consisting of the components of the original color, each multiplied by 70%. The alpha
-     * channel is copied from the original.
+     * color consisting of the components of the original color, each multiplied by the dark factor.
+     * The alpha channel is copied from the original.
+     */
+    public static int darker (int color, float darkFactor) {
+        return Color.argb(Color.alpha(color),
+            Math.max((int)(Color.red(color) * darkFactor), 0),
+            Math.max((int)(Color.green(color) * darkFactor), 0),
+            Math.max((int)(Color.blue(color) * darkFactor), 0));
+    }
+
+    /**
+     * Creates a new darkened version of the given color with the default DARK_FACTOR.
      */
     public static int darker (int color) {
-        return Color.argb(Color.alpha(color),
-            Math.max((int)(Color.red(color)  * DARK_FACTOR), 0),
-            Math.max((int)(Color.green(color) * DARK_FACTOR), 0),
-            Math.max((int)(Color.blue(color) * DARK_FACTOR), 0));
+        return darker(color, DARK_FACTOR);
     }
 
     /**
