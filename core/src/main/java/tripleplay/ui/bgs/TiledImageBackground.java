@@ -27,14 +27,21 @@ public class TiledImageBackground extends Background
     @Override protected Instance instantiate (final IDimension size) {
         Layer layer = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
             public void render (Surface surf) {
+                // avoid rendering an unready image (which will have zero width/height) which will
+                // cause the infinite loopage
+                if (!_image.isReady()) return;
                 if (alpha != null) surf.setAlpha(alpha);
-                float width = size.width(), height = size.height();
-                for (float y = 0; y < height; y += _image.height()) {
-                    float h = Math.min(height-y, _image.height());
-                    for (float x = 0; x < width; x += _image.width()) {
-                        float w = Math.min(width-x, _image.width());
-                        surf.drawImage(_image, x, y, w, h, 0, 0, w, h);
+                try {
+                    float width = size.width(), height = size.height();
+                    for (float y = 0; y < height; y += _image.height()) {
+                        float h = Math.min(height-y, _image.height());
+                        for (float x = 0; x < width; x += _image.width()) {
+                            float w = Math.min(width-x, _image.width());
+                            surf.drawImage(_image, x, y, w, h, 0, 0, w, h);
+                        }
                     }
+                } finally {
+                    if (alpha != null) surf.setAlpha(1);
                 }
             }
         });
