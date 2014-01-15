@@ -4,6 +4,7 @@
   <inherits name="react"/>
 
   <source path="anim"/>
+  <source path="entity"/>
   <source path="flump"/>
   <source path="game"/>
   <source path="gesture"/>
