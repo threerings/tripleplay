@@ -18,11 +18,13 @@ import tripleplay.platform.SWTTPPlatform;
 
 public class TripleDemoJava
 {
+    enum Toolkit { NONE, AWT, SWT };
+
     public static void main (String[] args) {
         JavaPlatform.Config config = new JavaPlatform.Config();
         config.appName = "Tripleplay Demo";
 
-        boolean swt = false;
+        Toolkit tk = Toolkit.NONE;
         List<String> mainArgs = Lists.newArrayList();
         for (int ii = 0; ii < args.length; ii++) {
             String size = "--size=";
@@ -33,22 +35,35 @@ public class TripleDemoJava
                 continue;
             }
             if (args[ii].equals("--swt")) {
-                swt = true;
+                tk = Toolkit.SWT;
+                continue;
+            }
+            if (args[ii].equals("--awt")) {
+                tk = Toolkit.AWT;
                 continue;
             }
             mainArgs.add(args[ii]);
         }
 
         TripleDemo.mainArgs = mainArgs.toArray(new String[0]);
-        if (swt) {
+        switch (tk) {
+        case SWT: {
             config.appName += " (SWT)";
             SWTPlatform platform = SWTPlatform.register(config);
             SWTTPPlatform.register(platform, config);
             SWTTPPlatform.instance().setIcon(loadIcon());
-        } else {
+            break;
+        }
+        case AWT: {
             JavaPlatform platform = JavaPlatform.register(config);
             JavaTPPlatform.register(platform, config);
             JavaTPPlatform.instance().setIcon(loadIcon());
+            break;
+        }
+        default:
+            // no native integration
+            JavaPlatform.register(config);
+            break;
         }
         PlayN.run(new TripleDemo());
     }
