@@ -18,7 +18,7 @@ import tripleplay.platform.SWTTPPlatform;
 
 public class TripleDemoJava
 {
-    enum Toolkit { NONE, AWT, SWT };
+    enum Toolkit { NONE, AWT, SWT }
 
     public static void main (String[] args) {
         JavaPlatform.Config config = new JavaPlatform.Config();
