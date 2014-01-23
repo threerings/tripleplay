@@ -141,6 +141,13 @@ public abstract class Background
     public static Background scale9 (Image scale9Image) {
         return new Scale9Background(scale9Image);
     }
+    
+    /**
+     * Creates a scale3 background with the specified image. See {@link Scale3Background}.
+     */
+    public static Background scale3 (Image scale3Image) {
+        return new Scale3Background(scale3Image);
+    }
 
     /**
      * Creates a composite background with the specified backgrounds. See
