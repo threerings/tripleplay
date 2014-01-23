@@ -80,6 +80,10 @@ public abstract class Style<V>
     /** Defines icon position choices. */
     public static enum Pos {
         LEFT, ABOVE, RIGHT, BELOW;
+        /** Tests if this position is left or right. */
+        public boolean horizontal () {
+            return this == LEFT || this == RIGHT;
+        }
     }
 
     /** Used to create text effects. */

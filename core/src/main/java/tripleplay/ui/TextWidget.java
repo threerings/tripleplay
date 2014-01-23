@@ -118,9 +118,23 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         }
 
         @Override public Dimension computeSize (float hintX, float hintY) {
-            Dimension size = new Dimension();
+            if (text != null && autoShrink) {
+                float usedWidth = 0;
+                // account for the icon width and gap
+                if (icon != null && iconPos.horizontal()) usedWidth = icon.width() + iconGap;
+                // if autoShrink is enabled, and our text is too wide, re-lay it out with
+                // successively smaller fonts until it fits
+                float twidth = textWidth(), availWidth = hintX - usedWidth;
+                if (twidth > availWidth) {
+                    while (twidth > availWidth && text.style.font.size() > MIN_FONT_SIZE) {
+                        text = text.resize(text.style.font.size()-1);
+                        twidth = FloatMath.ceil(textWidth());
+                    }
+                }
+            }
 
-            float usedWidth = 0;
+            Dimension size = new Dimension();
+            addTextSize(size);
             if (icon != null) {
                 switch (iconPos) {
                 case LEFT:
@@ -128,7 +142,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     size.width += icon.width();
                     if (text != null) size.width += iconGap;
                     // this is only used if we also have text, so we always include the gap
-                    usedWidth += icon.width() + iconGap;
                     size.height = Math.max(size.height, icon.height());
                     break;
                 case ABOVE:
@@ -139,19 +152,6 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     break;
                 }
             }
-
-            if (text != null) {
-                // if autoShrink is enabled, and our text is too wide, re-lay it out with
-                // successively smaller fonts until it fits
-                float twidth = textWidth(), availWidth = hintX - usedWidth;
-                if (autoShrink && twidth > availWidth) {
-                    while (twidth > availWidth && text.style.font.size() > MIN_FONT_SIZE) {
-                        text = text.resize(text.style.font.size()-1);
-                        twidth = FloatMath.ceil(textWidth());
-                    }
-                }
-            }
-            addTextSize(size); // this might add something even if (text == null)
 
             return size;
         }
