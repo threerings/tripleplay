@@ -27,7 +27,7 @@ public class Scale3
      public final Axis xaxis;
 
      /** The height of the 3x1 grid. */
-     public final float height;
+     public float height;
 
      /** Creates a new scale to match the given width and height. Each horizontal
       * sequence is divided equally between the given values. */
