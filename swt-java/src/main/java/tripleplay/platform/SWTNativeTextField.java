@@ -85,6 +85,10 @@ public class SWTNativeTextField extends SWTNativeOverlay
     }
 
     @Override protected void willDispose () {
+        if (_font != null) _textCtrl.getFont().dispose();
+        if (_color != null) _textCtrl.getForeground().dispose();
+        _font = null;
+        _color = null;
         _textCtrl = null;
     }
 
@@ -116,13 +120,22 @@ public class SWTNativeTextField extends SWTNativeOverlay
 
         _textCtrl.setEnabled(_enabled);
 
-        // don't set the font unless it's changed, it makes the caret disappear
+        // set font (only if changed, otherwise it makes the caret disappear)
         Font nfont = _element.resolveStyle(Style.FONT);
-        if (_font == null || !_font.equals(nfont))
+        if (_font == null || !_font.equals(nfont)) {
+            // we need to dispose of the previous font, if we set it
+            if (_font != null) _textCtrl.getFont().dispose();
             _textCtrl.setFont(convert().font(_font = nfont));
+        }
 
         // set foreground
-        _textCtrl.setForeground(convert().color(_element.resolveStyle(Style.COLOR)));
+        int ncolor = _element.resolveStyle(Style.COLOR);
+        if (_color == null || _color != ncolor) {
+            // we need to dispose of the previous color, if we set it
+            if (_color != null) _textCtrl.getForeground().dispose();
+            _textCtrl.setForeground(convert().color(_color = ncolor));
+        }
+
         // TODO: Keyboard.TextType textType = resolveStyle(Field.TEXT_TYPE);
         updateBounds();
     }
@@ -157,6 +170,7 @@ public class SWTNativeTextField extends SWTNativeOverlay
     protected Text _textCtrl;
     protected boolean _enabled = true;
     protected Font _font;
+    protected Integer _color;
 
     protected Connection _textConnection;
     protected volatile boolean _textNotifyInProgress;
