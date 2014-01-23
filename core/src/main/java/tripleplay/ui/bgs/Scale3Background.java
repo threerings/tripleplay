@@ -22,11 +22,11 @@ import tripleplay.ui.util.Scale3;
  */
 public class Scale3Background extends Background
 {
-    /** Creates a new background using the given image. The image is assumed to be divided into
-     * a 3x1 grid of 3 equal pieces.
+    /** Creates a new background using the given image. The image is assumed to be divided into a
+     * 3x1 grid of 3 equal pieces.
      *
-     * <p>NOTE: the image must be preloaded since we need to determine the stretching factor.
-     * If this cannot be arranged using the application resource strategy, callers may consider
+     * <p>NOTE: the image must be preloaded since we need to determine the stretching factor. If
+     * this cannot be arranged using the application resource strategy, callers may consider
      * setting the background style from the images callback.</p>
      */
     public Scale3Background (Image image) {
@@ -38,7 +38,7 @@ public class Scale3Background extends Background
         _s3 = new Scale3(image.width(), image.height());
     }
 
-    /** Gets the scale 3 instance for mutation. Be sure and finish mutation prior to binding. */
+    /** Returns the scale 3 instance for mutation. Be sure to finish mutation prior to binding. */
     public Scale3 scale3 () {
         return _s3;
     }
@@ -60,8 +60,7 @@ public class Scale3Background extends Background
                 for (int xx = 0; xx < 3; ++xx) {
                     drawPart(surf, xx);
                 }
-                if (alpha != null)
-                {
+                if (alpha != null) {
                     surf.setAlpha(1); // alpha is not part of save/restore
                 }
                 surf.restore();
@@ -72,9 +71,8 @@ public class Scale3Background extends Background
                 if (dw == 0 || dh == 0) {
                     return;
                 }
-                surf.drawImage(_image,
-                    dest.xaxis.coord(x), 0, dw, dh,
-                    _s3.xaxis.coord(x), 0, _s3.xaxis.size(x), _s3.height);
+                surf.drawImage(_image, dest.xaxis.coord(x), 0, dw, dh,
+                               _s3.xaxis.coord(x), 0, _s3.xaxis.size(x), _s3.height);
             }
         });
     }
@@ -86,11 +84,10 @@ public class Scale3Background extends Background
      * include your desired alpha in the high bits of {@code tint} or set {@link #alpha} after
      * calling this method. </p>
      *
-     * <p> <em>NOTE:</em> the RGB components of a layer's tint only work on GL-based backends. It is
-     * not possible to tint layers using the HTML5 canvas and Flash backends. </p>
+     * <p> <em>NOTE:</em> the RGB components of a layer's tint only work on GL-based backends. It
+     * is not possible to tint layers using the HTML5 canvas and Flash backends. </p>
      */
-    public Scale3Background setTint (int tint)
-    {
+    public Scale3Background setTint (int tint) {
         _tint = tint;
         this.alpha = ((tint >> 24) & 0xFF) / 255f;
         return this;
@@ -98,6 +95,5 @@ public class Scale3Background extends Background
 
     protected Image _image;
     protected Scale3 _s3;
-
     protected int _tint = Tint.NOOP_TINT;
 }

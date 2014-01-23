@@ -38,7 +38,7 @@ public class Scale9Background extends Background
         _s9 = new Scale9(image.width(), image.height());
     }
 
-    /** Gets the scale 9 instance for mutation. Be sure and finish mutation prior to binding. */
+    /** Returns the scale 9 instance for mutation. Be sure to finish mutation prior to binding. */
     public Scale9 scale9 () {
         return _s9;
     }
@@ -63,8 +63,8 @@ public class Scale9Background extends Background
             protected void drawPart (Surface surf, int x, int y) {
                 float dw = dest.xaxis.size(x), dh = dest.yaxis.size(y);
                 if (dw == 0 || dh == 0) return;
-                surf.drawImage(_image,
-                    dest.xaxis.coord(x), dest.yaxis.coord(y), dw, dh,
+                surf.drawImage(
+                    _image, dest.xaxis.coord(x), dest.yaxis.coord(y), dw, dh,
                     _s9.xaxis.coord(x), _s9.yaxis.coord(y), _s9.xaxis.size(x), _s9.yaxis.size(y));
             }
         });
@@ -77,11 +77,10 @@ public class Scale9Background extends Background
      * include your desired alpha in the high bits of {@code tint} or set {@link #alpha} after
      * calling this method. </p>
      *
-     * <p> <em>NOTE:</em> the RGB components of a layer's tint only work on GL-based backends. It is
-     * not possible to tint layers using the HTML5 canvas and Flash backends. </p>
+     * <p> <em>NOTE:</em> the RGB components of a layer's tint only work on GL-based backends. It
+     * is not possible to tint layers using the HTML5 canvas and Flash backends. </p>
      */
-    public Scale9Background setTint (int tint)
-    {
+    public Scale9Background setTint (int tint) {
         _tint = tint;
         this.alpha = ((tint >> 24) & 0xFF) / 255f;
         return this;
@@ -89,6 +88,5 @@ public class Scale9Background extends Background
 
     protected Image _image;
     protected Scale9 _s9;
-
     protected int _tint = Tint.NOOP_TINT;
 }
