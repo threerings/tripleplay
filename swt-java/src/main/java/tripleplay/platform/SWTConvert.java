@@ -115,7 +115,8 @@ public class SWTConvert
             break;
         }
 
-        Font swt = new Font(_display, font.name(), (int)(font.size()), style); //font.style());
+        int height = (int)Math.round(font.size() * 72.0 / _display.getDPI().y);
+        Font swt = new Font(_display, font.name(), height, style);
         return swt;
     }
 
