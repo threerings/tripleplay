@@ -24,6 +24,7 @@ import tripleplay.ui.bgs.CompositeBackground;
 import tripleplay.ui.bgs.CroppedImageBackground;
 import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.RoundRectBackground;
+import tripleplay.ui.bgs.Scale3Background;
 import tripleplay.ui.bgs.Scale9Background;
 import tripleplay.ui.bgs.SolidBackground;
 import tripleplay.ui.bgs.TiledImageBackground;
