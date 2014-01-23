@@ -136,20 +136,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             Dimension size = new Dimension();
             addTextSize(size);
             if (icon != null) {
-                switch (iconPos) {
-                case LEFT:
-                case RIGHT:
+                if (iconPos.horizontal()) {
                     size.width += icon.width();
                     if (text != null) size.width += iconGap;
-                    // this is only used if we also have text, so we always include the gap
                     size.height = Math.max(size.height, icon.height());
-                    break;
-                case ABOVE:
-                case BELOW:
+                } else {
                     size.width = Math.max(size.width, icon.width());
                     size.height += icon.height();
                     if (text != null) size.height += iconGap;
-                    break;
                 }
             }
 
@@ -215,17 +209,12 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         protected void accommodateIcon (Dimension hints, boolean haveText) {
             if (icon != null) {
                 // remove the icon space from our hint dimensions
-                switch (iconPos) {
-                case LEFT:
-                case RIGHT:
+                if (iconPos.horizontal()) {
                     hints.width -= icon.width();
                     if (haveText) hints.width -= iconGap;
-                    break;
-                case ABOVE:
-                case BELOW:
+                } else {
                     hints.height -= icon.height();
                     if (haveText) hints.height -= iconGap;
-                    break;
                 }
             }
         }
