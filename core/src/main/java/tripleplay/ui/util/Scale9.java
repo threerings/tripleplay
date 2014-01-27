@@ -13,14 +13,33 @@ package tripleplay.ui.util;
  * piece is scaled both horizontally and vertically.
  * <p>By default, the cells are assumed to be of equal size (hence scale-9 image dimensions are
  * normally a multiple of 3). By using {@link #xaxis} and {@link #yaxis}, this partitioning can be
- * controlled directly. For example, if the horizontal middle of an image is a single pixel, this
- * code will do that and automatically grow the left and right edges if necessary:
- * <pre><code>
+ * controlled directly.</p><p>Here's a diagram showing the stretching and axes, H = horizontally
+ * stretched, V = vertically stretched, U = unstretched.<pre>
+ *                         xaxis
+ *
+ *                0          1          2
+ *           ---------------------------------
+ *           |          |          |          |
+ *        0  |    U     |    H     |    U     |
+ *           |          |          |          |
+ *           ---------------------------------
+ *           |          |          |          |
+ * yaxis  1  |    V     |   H&V    |    V     |
+ *           |          |          |          |
+ *           ---------------------------------
+ *           |          |          |          |
+ *        2  |    U     |    H     |    U     |
+ *           |          |          |          |
+ *           ---------------------------------
+ * </pre></p>
+ * <p><em>Example 1</em>: the horizontal middle of an image is a single pixel. This code will do
+ * that and automatically grow the left and right columns:<pre>
  *     Scale9 s9 = ...;
- *     s9.xaxis.resize(1, 1);
- * </code></pre></p>
- * <p>NOTE: Asynchronous loading of images is not supported. The caller must preload images or
- * the behavior is undefined.</p>
+ *     s9.xaxis.resize(1, 1);</pre></p>
+ * <p><em>Example 2</em>: there are no top and bottom rows. This code will stretch all of the image
+ * vertically, but keep the left and right third of the image fixed horizontally:<pre>
+ *     Scale9 s9 = ...;
+ *     s9.yaxis.resize(0, 0).resize(2, 0);</pre></p>
  */
 public class Scale9
 {
