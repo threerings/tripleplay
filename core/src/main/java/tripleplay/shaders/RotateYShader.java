@@ -90,11 +90,6 @@ public class RotateYShader extends IndexedTrisShader
         return new RotateYCore(vertexShader(), textureFragmentShader());
     }
 
-    @Override
-    protected Core createColorCore () {
-        return new RotateYCore(vertexShader(), colorFragmentShader());
-    }
-
     protected class RotateYCore extends ITCore {
         public RotateYCore (String vertShader, String fragShader) {
             super(vertShader, fragShader);

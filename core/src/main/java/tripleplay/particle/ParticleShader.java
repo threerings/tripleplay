@@ -30,11 +30,6 @@ public class ParticleShader extends IndexedTrisShader
         return core = new ParticleCore(vertexShader(), textureFragmentShader());
     }
 
-    @Override
-    protected Core createColorCore () {
-        throw new UnsupportedOperationException("Color core should not be used.");
-    }
-
     protected class ParticleCore extends ITCore {
         public ParticleCore (String vertexShader, String fragShader) {
             super(vertexShader, fragShader);
