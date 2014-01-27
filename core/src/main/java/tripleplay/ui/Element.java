@@ -443,7 +443,7 @@ public abstract class Element<T extends Element<T>>
         if (_preferredSize == null) {
             if (_constraint != null) {
                 hintX = _constraint.adjustHintX(hintX);
-                hintY = _constraint.adjustHintX(hintY);
+                hintY = _constraint.adjustHintY(hintY);
             }
             Dimension psize = computeSize(hintX, hintY);
             if (_constraint != null) _constraint.adjustPreferredSize(psize, hintX, hintY);
