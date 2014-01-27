@@ -79,7 +79,6 @@
     <None Include="demo.userprefs">
       <Visible>False</Visible>
     </None>
-    <None Include="assets\flump\library.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -97,6 +96,7 @@
     <Content Include="assets\images\spritesheet.png" />
     <Content Include="assets\images\squares.png" />
     <Content Include="assets\flump\atlas0.png" />
+    <Content Include="assets\flump\library.json" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
