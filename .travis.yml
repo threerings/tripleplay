@@ -1,3 +1,11 @@
 language: java
+before_install: "git clone https://github.com/samskivert/travis-maven-deploy.git target/travis"
+script: "mvn deploy --settings target/travis/settings.xml"
+
 jdk:
   - openjdk7
+
+env:
+  global:
+    - secure: "azTOm427TYgWCE/zGqQpSu1PU1w6CGF7noqKsxGkLMlj6tl4TDYVsywvywflFWnmOuhDykAIXiamBv/xh5RCef0P0ekfE4e9HKJ0+3NsTuqw/ecqeNv7ztT8H7KiM3cN+eRxl9jX4GiLBNoHIDc8v9913odbyXzRtwE/EViy8vI="
+    - secure: "HWZdbiwuEjCViga0sk6SflAtmRgsQihV+mO0hsgLGK43MNxJS/7xQVPpSWKoaxd1Jd5nzAu5jg/7fy3cDZgviOjG3m8A9K5XvLwWa/ltq6gKu8qG+vY/miN5myOnT0U9Xs13awptCFz0Gm30tCJ7znxdPhMmQGBix1BNdM1XGRU="
