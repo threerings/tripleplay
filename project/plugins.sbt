@@ -1,5 +1,5 @@
 // we use pom-util to read metadata from the Maven POMs
-libraryDependencies += "com.samskivert" % "sbt-pom-util" % "0.6-SNAPSHOT"
+libraryDependencies += "com.samskivert" % "sbt-pom-util" % "0.6"
 
 // this wires up JRebel; start demo with JRebel via: demo-java/re-start
 addSbtPlugin("io.spray" % "sbt-revolver" % "0.7.1")
