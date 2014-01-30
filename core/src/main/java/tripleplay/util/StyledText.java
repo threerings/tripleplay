@@ -77,7 +77,7 @@ public abstract class StyledText
             style.effect.render(canvas, _layout, style.textColor, style.underlined, x+pad, y+pad);
         }
 
-        @Override public Plain resize (float size) {
+        @Override public Span resize (float size) {
             return new Span(text, style.withFont(style.font.derive(size)));
         }
 
@@ -123,7 +123,7 @@ public abstract class StyledText
             }
         }
 
-        @Override public Plain resize (float size) {
+        @Override public Block resize (float size) {
             return new Block(text, style.withFont(style.font.derive(size)), wrap, align);
         }
 
