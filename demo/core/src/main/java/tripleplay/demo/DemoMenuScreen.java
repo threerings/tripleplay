@@ -6,7 +6,6 @@
 package tripleplay.demo;
 
 import react.UnitSlot;
-
 import tripleplay.game.ScreenStack;
 import tripleplay.game.UIScreen;
 import tripleplay.ui.Background;
@@ -19,7 +18,6 @@ import tripleplay.ui.SimpleStyles;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
-
 import tripleplay.demo.anim.*;
 import tripleplay.demo.entity.*;
 import tripleplay.demo.flump.*;
@@ -36,7 +34,7 @@ public class DemoMenuScreen extends UIScreen
     public DemoMenuScreen (ScreenStack stack) {
         _stack = stack;
         _rlabels = new String[] {
-            "tripleplay.ui", "", "", "",
+            "tripleplay.ui", "", "", "", "",
             "tripleplay.anim",
             "tripleplay.game",
             "tripleplay.entity",
@@ -50,6 +48,7 @@ public class DemoMenuScreen extends UIScreen
             new BackgroundDemo(), new LayoutDemo(), new BorderLayoutDemo(),
             new FlowLayoutDemo(), new SelectorDemo(), new MenuDemo(),
             new ScrollerDemo(), new TabsDemo(), new TableLayoutDemo(),
+            new HistoryGroupDemo(), null, null,
             // tripleplay.anim
             new FramesDemo(), new AnimDemo(), new FlickerDemo(),
             // tripleplay.game
