@@ -44,11 +44,11 @@ public class DemoMenuScreen extends UIScreen
         };
         _screens = new DemoScreen[] {
             // tripleplay.ui
-            new MiscDemo(), new LabelDemo(), new SliderDemo(),
-            new BackgroundDemo(), new LayoutDemo(), new BorderLayoutDemo(),
-            new FlowLayoutDemo(), new SelectorDemo(), new MenuDemo(),
-            new ScrollerDemo(), new TabsDemo(), new TableLayoutDemo(),
-            new HistoryGroupDemo(), new AbsoluteLayoutDemo(), null,
+            new MiscDemo(), new LabelDemo(), new MenuDemo(),
+            new SliderDemo(), new SelectorDemo(), new BackgroundDemo(),
+            new ScrollerDemo(), new TabsDemo(), new HistoryGroupDemo(),
+            new LayoutDemo(), new FlowLayoutDemo(), new BorderLayoutDemo(),
+            new TableLayoutDemo(), new AbsoluteLayoutDemo(), null,
             // tripleplay.anim
             new FramesDemo(), new AnimDemo(), new FlickerDemo(),
             // tripleplay.game
