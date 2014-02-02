@@ -6,6 +6,7 @@
 package tripleplay.ui.util;
 
 import playn.core.Layer;
+import pythagoras.f.IDimension;
 import pythagoras.f.Point;
 import tripleplay.ui.Element;
 import tripleplay.ui.Style.HAlign;
@@ -91,6 +92,12 @@ public class BoxPoint
         return new BoxPoint(nx, ny, ox, oy);
     }
 
+    /** Creates a new box point that is equivalent to this one except with the given horizontal
+     * and vertical alignment. */
+    public BoxPoint align (HAlign halign, VAlign valign) {
+        return new BoxPoint(halign.offset(0, 1), valign.offset(0, 1), ox, oy);
+    }
+
     /** Creates a new box point that is equivalent to this one except with the given y alignment.
      * This is a shortcut for calling {@link #ny(float)} with 0, .5, or 1. */
     public BoxPoint valign (VAlign valign) {
@@ -118,5 +125,11 @@ public class BoxPoint
     /** Finds the coordinates of the point, using the box defined by the given coorindates. */
     public Point resolve (float x, float y, float width, float height, Point dest) {
         return dest.set(x + ox + nx * width, y + oy + ny * height);
+    }
+
+    /** Finds the coordinates of the point, using the box with top left of 0, 0 and the given
+     * dimension. */
+    public Point resolve (IDimension size, Point dest) {
+        return resolve(0, 0, size.width(), size.height(), dest);
     }
 }

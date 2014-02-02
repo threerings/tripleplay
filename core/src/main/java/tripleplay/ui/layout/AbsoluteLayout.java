@@ -6,18 +6,17 @@
 package tripleplay.ui.layout;
 
 import playn.core.Asserts;
-
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
-
 import tripleplay.ui.Container;
 import tripleplay.ui.Element;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Style.HAlign;
 import tripleplay.ui.Style.VAlign;
+import tripleplay.ui.util.BoxPoint;
 
 /**
  * A layout that positions elements at absolute coordinates (at either their preferred size or at a
@@ -33,32 +32,38 @@ public class AbsoluteLayout extends Layout
 {
     /** Defines absolute layout constraints. */
     public static final class Constraint extends Layout.Constraint {
-        public final IPoint position;
+        public final BoxPoint position;
+        public final BoxPoint origin;
         public final IDimension size;
-        public final HAlign halign;
-        public final VAlign valign;
 
         public Constraint (IPoint position, IDimension size, HAlign halign, VAlign valign) {
-            this.position = position;
+            this.position = BoxPoint.TL.offset(position.x(), position.y());
+            this.origin = BoxPoint.TL.align(halign, valign);
             this.size = size;
-            this.halign = halign;
-            this.valign = valign;
+        }
+
+        public Constraint (BoxPoint position, BoxPoint origin, IDimension size) {
+            this.position = position;
+            this.origin = origin;
+            this.size = size;
         }
 
         public IDimension psize (AbsoluteLayout layout, Element<?> elem) {
             float fwidth = size.width(), fheight = size.height();
             if (fwidth > 0 && fheight > 0) return size;
-            // if eiher forced width or height is zero, use preferred size in that dimension
+            // if either forced width or height is zero, use preferred size in that dimension
             IDimension psize = layout.preferredSize(elem, fwidth, fheight);
             if (fwidth > 0) return new Dimension(fwidth, psize.height());
             else if (fheight > 0) return new Dimension(psize.width(), fheight);
             else return psize;
         }
 
-        public IPoint pos (IDimension psize) {
-            return new Point(
-                position.x() + halign.offset(psize.width(), 0),
-                position.y() + valign.offset(psize.height(), 0));
+        public IPoint pos (float width, float height, IDimension prefSize) {
+            Point position = this.position.resolve(0, 0, width, height, new Point());
+            Point origin = this.origin.resolve(prefSize, new Point());
+            position.x -= origin.x;
+            position.y -= origin.y;
+            return position;
         }
     }
 
@@ -148,7 +153,7 @@ public class AbsoluteLayout extends Layout
             if (!elem.isVisible()) continue;
             Constraint c = constraint(elem);
             IDimension psize = c.psize(this, elem);
-            bounds.add(new Rectangle(c.pos(psize), psize));
+            bounds.add(new Rectangle(c.pos(0, 0, psize), psize));
         }
         return new Dimension(bounds.width, bounds.height);
     }
@@ -159,7 +164,7 @@ public class AbsoluteLayout extends Layout
             if (!elem.isVisible()) continue;
             Constraint c = constraint(elem);
             IDimension psize = c.psize(this, elem); // this should return a cached size
-            IPoint pos = c.pos(psize);
+            IPoint pos = c.pos(width, height, psize);
             setBounds(elem, left + pos.x(), top + pos.y(), psize.width(), psize.height());
         }
     }
