@@ -409,10 +409,6 @@ public abstract class HistoryGroup<T, W extends Element<?>> extends Composite<Hi
             }
         }
 
-        public void invalidate () {
-            super.invalidate();
-        }
-
         protected void removeUI (int index) {
             if (childAt(index) != _renderedEntries.get(index).element)
                 throw new IllegalArgumentException("Mismatched entry and element");
