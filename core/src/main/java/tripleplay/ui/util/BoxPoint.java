@@ -122,7 +122,7 @@ public class BoxPoint
         return resolve(dest.x, dest.y, elem.size().width(), elem.size().height(), dest);
     }
 
-    /** Finds the coordinates of the point, using the box defined by the given coorindates. */
+    /** Finds the coordinates of the point, using the box defined by the given coordinates. */
     public Point resolve (float x, float y, float width, float height, Point dest) {
         return dest.set(x + ox + nx * width, y + oy + ny * height);
     }
