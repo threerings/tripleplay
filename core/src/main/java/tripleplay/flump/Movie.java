@@ -85,6 +85,11 @@ public class Movie
         _position += dt;
         if (_position > _symbol.duration) {
             _position = _position % _symbol.duration;
+        } else if (_position < 0) {
+            // Normally we shouldn't be negative, but if we're setPositioning, submovies may
+            // have completely different durations, so stepping backwards wraps around the
+            // other way
+            _position = _symbol.duration + (_position % _symbol.duration);
         }
 
         float nextFrame = _position*_symbol._framesPerMs;
@@ -103,8 +108,7 @@ public class Movie
     /** Changes the playback position. */
     public void setPosition (float position) {
         if (position < 0) position = 0;
-        _position = position;
-        paint(0); // Force the display list changes immediately
+        paint(position - _position);
     }
 
     public Symbol symbol () {
