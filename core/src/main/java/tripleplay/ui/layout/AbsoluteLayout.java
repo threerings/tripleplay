@@ -67,6 +67,16 @@ public class AbsoluteLayout extends Layout
     }
 
     /**
+     * Creates a constraint to position an element uniformly. The given box point is used for both
+     * the position and the origin. For example, if {@code BoxPoint.BR} is used, then the element
+     * will be positioned such that its bottom right corner is over the bottom right corner of
+     * the group.
+     */
+    public static Constraint uniform (BoxPoint where) {
+        return new Constraint(where, where, null);
+    }
+
+    /**
      * Positions {@code elem} at the specified position, in its preferred size.
      */
     public static <T extends Element<?>> T at (T elem, float x, float y) {
