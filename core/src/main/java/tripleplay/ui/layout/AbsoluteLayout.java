@@ -44,7 +44,7 @@ public class AbsoluteLayout extends Layout
         public Constraint (BoxPoint position, BoxPoint origin, IDimension size) {
             this.position = position;
             this.origin = origin;
-            this.size = size == null ? ZERO : size;
+            this.size = size;
         }
 
         public IDimension psize (AbsoluteLayout layout, Element<?> elem) {
@@ -73,7 +73,7 @@ public class AbsoluteLayout extends Layout
      * the group.
      */
     public static Constraint uniform (BoxPoint where) {
-        return new Constraint(where, where, null);
+        return new Constraint(where, where, ZERO);
     }
 
     /**
