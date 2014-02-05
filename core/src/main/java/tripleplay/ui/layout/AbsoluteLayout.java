@@ -37,15 +37,14 @@ public class AbsoluteLayout extends Layout
         public final IDimension size;
 
         public Constraint (IPoint position, IDimension size, HAlign halign, VAlign valign) {
-            this.position = BoxPoint.TL.offset(position.x(), position.y());
-            this.origin = BoxPoint.TL.align(halign, valign);
-            this.size = size;
+            this(BoxPoint.TL.offset(position.x(), position.y()),
+                BoxPoint.TL.align(halign, valign), size);
         }
 
         public Constraint (BoxPoint position, BoxPoint origin, IDimension size) {
             this.position = position;
             this.origin = origin;
-            this.size = size;
+            this.size = size == null ? ZERO : size;
         }
 
         public IDimension psize (AbsoluteLayout layout, Element<?> elem) {
