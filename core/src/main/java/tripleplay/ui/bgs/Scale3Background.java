@@ -20,9 +20,54 @@ import tripleplay.ui.util.Scale3;
  * A background constructed by scaling the parts of a source image to fit the target width and
  * height. Uses {@link Scale3}.
  */
-public class Scale3Background extends Background
+public abstract class Scale3Background extends Background
 {
-    /** Creates a new background using the given image. The image is assumed to be divided into a
+    public static class Horizontal extends Scale3Background {
+        public Horizontal (Image image) {
+            super(image);
+            _s3 = new Scale3(image.width(), image.height());
+        }
+
+        @Override
+        protected Scale3 getDestinationScale3 (IDimension size, Scale3 source) {
+            return new Scale3(size.width(), size.height(), source);
+        }
+
+        @Override
+        protected void drawPart (Surface surf, Scale3 destination, int partIndex) {
+            float dw = destination.axis.size(partIndex), dh = destination.offaxis;
+            if (dw == 0 || dh == 0) {
+                return;
+            }
+            surf.drawImage(_image, destination.axis.coord(partIndex), 0, dw, dh,
+                _s3.axis.coord(partIndex), 0, _s3.axis.size(partIndex), _s3.offaxis);
+        }
+    }
+
+    public static class Vertical extends Scale3Background {
+        public Vertical (Image image) {
+            super(image);
+            _s3 = new Scale3(image.height(), image.width());
+        }
+
+        @Override
+        protected Scale3 getDestinationScale3 (IDimension size, Scale3 source) {
+            return new Scale3(size.height(), size.width(), source);
+        }
+
+        @Override
+        protected void drawPart (Surface surf, Scale3 destination, int partIndex) {
+            float dw = destination.offaxis, dh = destination.axis.size(partIndex);
+            if (dw == 0 || dh == 0) {
+                return;
+            }
+            surf.drawImage(_image, 0, destination.axis.coord(partIndex), dw, dh,
+                0, _s3.axis.coord(partIndex), _s3.offaxis, _s3.axis.size(partIndex));
+        }
+    }
+
+    /**
+     * Creates a new background using the given image. The image is assumed to be divided into a
      * 3x1 grid of 3 equal pieces.
      *
      * <p>NOTE: the image must be preloaded since we need to determine the stretching factor. If
@@ -35,46 +80,11 @@ public class Scale3Background extends Background
             PlayN.log().warn("Scale3 image not preloaded: " + image);
         }
         _image = image;
-        _s3 = new Scale3(image.width(), image.height());
     }
 
     /** Returns the scale 3 instance for mutation. Be sure to finish mutation prior to binding. */
     public Scale3 scale3 () {
         return _s3;
-    }
-
-    @Override
-    protected Instance instantiate (final IDimension size) {
-        return new LayerInstance(size, new ImmediateLayer.Renderer() {
-            // The destination scale 3.
-            Scale3 dest = new Scale3(size.width(), size.height(), _s3);
-            @Override public void render (Surface surf) {
-                surf.save();
-                if (alpha != null) {
-                    surf.setAlpha(alpha);
-                }
-                if (_tint != Tint.NOOP_TINT) {
-                    surf.setTint(_tint);
-                }
-                // issue the 3 draw calls
-                for (int xx = 0; xx < 3; ++xx) {
-                    drawPart(surf, xx);
-                }
-                if (alpha != null) {
-                    surf.setAlpha(1); // alpha is not part of save/restore
-                }
-                surf.restore();
-            }
-
-            protected void drawPart (Surface surf, int x) {
-                float dw = dest.xaxis.size(x), dh = dest.height;
-                if (dw == 0 || dh == 0) {
-                    return;
-                }
-                surf.drawImage(_image, dest.xaxis.coord(x), 0, dw, dh,
-                               _s3.xaxis.coord(x), 0, _s3.xaxis.size(x), _s3.height);
-            }
-        });
     }
 
     /**
@@ -91,6 +101,41 @@ public class Scale3Background extends Background
         _tint = tint;
         this.alpha = ((tint >> 24) & 0xFF) / 255f;
         return this;
+    }
+
+    /**
+     * Horizontal and Vertical provide the correct ordering for the axes of the destination Scale3.
+     */
+    protected abstract Scale3 getDestinationScale3 (IDimension size, Scale3 source);
+
+    /**
+     * Horizontal and Vertical draw the parts in the correct order and alignment.
+     */
+    protected abstract void drawPart (Surface surf, Scale3 destination, int partIndex);
+
+    @Override
+    protected Instance instantiate (final IDimension size) {
+        return new LayerInstance(size, new ImmediateLayer.Renderer() {
+            // The destination scale 3.
+            Scale3 dest = getDestinationScale3(size, _s3);
+            @Override public void render (Surface surf) {
+                surf.save();
+                if (alpha != null) {
+                    surf.setAlpha(alpha);
+                }
+                if (_tint != Tint.NOOP_TINT) {
+                    surf.setTint(_tint);
+                }
+                // issue the 3 draw calls
+                for (int pi = 0; pi < 3; ++pi) {
+                    drawPart(surf, dest, pi);
+                }
+                if (alpha != null) {
+                    surf.setAlpha(1); // alpha is not part of save/restore
+                }
+                surf.restore();
+            }
+        });
     }
 
     protected Image _image;

@@ -142,12 +142,21 @@ public abstract class Background
     public static Background scale9 (Image scale9Image) {
         return new Scale9Background(scale9Image);
     }
-    
+
     /**
-     * Creates a scale3 background with the specified image. See {@link Scale3Background}.
+     * Creates a Scale3.Horizontal background with the specified image.
+     * See {@link Scale3Background.Horizontal}.
      */
-    public static Background scale3 (Image scale3Image) {
-        return new Scale3Background(scale3Image);
+    public static Background scale3horizontal (Image scale3Image) {
+        return new Scale3Background.Horizontal(scale3Image);
+    }
+
+    /**
+     * Creates a Scale3.Vertical background with the specified image.
+     * See {@link Scale3Background.Vertical}.
+     */
+    public static Background scale3vertical (Image scale3Image) {
+        return new Scale3Background.Vertical(scale3Image);
     }
 
     /**
@@ -249,7 +258,7 @@ public abstract class Background
 
     protected Layer createSolidLayer (final int color, final float width, final float height) {
         return graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-            public void render (Surface surf) {
+            @Override public void render (Surface surf) {
                 if (alpha != null) surf.setAlpha(alpha);
                 surf.setFillColor(color).fillRect(0, 0, width, height);
                 if (alpha != null) surf.setAlpha(1);

@@ -17,7 +17,7 @@ package tripleplay.ui.util;
  * that and automatically grow the left and right edges if necessary:
  * <pre>{@code
  *     Scale3 s3 = ...;
- *     s3.xaxis.resize(1, 1);
+ *     s3.axis.resize(1, 1);
  * }</pre></p>
  *
  * <p>NOTE: Asynchronous loading of images is not supported. The caller must preload images or the
@@ -26,22 +26,22 @@ package tripleplay.ui.util;
 public class Scale3
 {
     /** The x-axis of the 3x1 grid. */
-    public final Axis xaxis;
+    public final Axis axis;
 
     /** The height of the 3x1 grid. */
-    public float height;
+    public float offaxis;
 
     /** Creates a new scale to match the given width and height. Each horizontal sequence is
      * divided equally between the given values. */
-    public Scale3 (float width, float height) {
-        xaxis = new Axis(width);
-        this.height = height;
+    public Scale3 (float axis, float offaxis) {
+        this.axis = new Axis(axis);
+        this.offaxis = offaxis;
     }
 
     /** Creates a new scale to render the given scale onto a target of the given width and
      * height. */
-    public Scale3 (float width, float height, Scale3 source) {
-        Axis.clamp(xaxis = new Axis(width, source.xaxis), width);
-        this.height = height;
+    public Scale3 (float axis, float offaxis, Scale3 source) {
+        Axis.clamp(this.axis = new Axis(axis, source.axis), axis);
+        this.offaxis = offaxis;
     }
 }
