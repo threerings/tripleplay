@@ -159,6 +159,9 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
             /** The press and drag positions. */
             public final Point press, drag;
 
+            /** How far the pointer strayed from the starting point, squared. */
+            public float maxDistanceSq;
+
             /** Creates a new tracking state with the given starting press event. */
             public State (Pointer.Event event) {
                 pressTime = event.time();
@@ -168,13 +171,14 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
             /** Updates the state to the current event value and called {@link Track#onTrack()}. */
             public void update (Pointer.Event event) {
                 boolean cancel = false;
-                if (_hoverLimit != null) {
-                    float lim = _hoverLimit, lx = event.localX(), ly = event.localY();
-                    IDimension size = _owner.size();
-                    cancel = lx + lim < 0 || ly + lim < 0 ||
-                             lx - lim >= size.width() || ly - lim >= size.height();
-                }
                 toPoint(event, drag);
+                if (_hoverLimit != null) {
+                    float lim = _hoverLimit;
+                    IDimension size = _owner.size();
+                    cancel = drag.x + lim < 0 || drag.y + lim < 0 ||
+                            drag.x - lim >= size.width() || drag.y - lim >= size.height();
+                }
+                maxDistanceSq = Math.max(maxDistanceSq, press.distanceSq(drag));
                 onTrack(press, cancel ? press : drag);
             }
         }
