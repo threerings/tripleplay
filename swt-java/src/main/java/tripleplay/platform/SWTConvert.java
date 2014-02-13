@@ -122,7 +122,7 @@ public class SWTConvert
 
     public Color color (int color)
     {
-        class Pl extends playn.core.Color {};
+        class Pl extends playn.core.Color {}
         return new Color(_display, Pl.red(color), Pl.green(color), Pl.blue(color));
     }
 
