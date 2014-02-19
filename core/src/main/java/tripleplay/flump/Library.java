@@ -25,7 +25,8 @@ public class Library
     /** The symbols defined in this library. */
     public final Map<String,Symbol> symbols;
 
-    public Library (float frameRate, List<Movie.Symbol> movies, List<Texture.Symbol> textures) {
+    public Library (
+        float frameRate, Iterable<Movie.Symbol> movies, Iterable<Texture.Symbol> textures) {
         this.frameRate = frameRate;
 
         // map all of our movies and textures by symbol name
