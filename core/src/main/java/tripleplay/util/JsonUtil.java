@@ -5,8 +5,6 @@
 
 package tripleplay.util;
 
-import java.io.StringWriter;
-
 import playn.core.Json;
 import playn.core.PlayN;
 
@@ -177,9 +175,7 @@ public class JsonUtil
         json.write(writer);
         writer.end();
 
-        StringWriter out = new StringWriter();
-        out.write(writer.write());
-        return out.toString();
+        return writer.write();
     }
 
     protected static void requireKey (Json.Object json, String key)
