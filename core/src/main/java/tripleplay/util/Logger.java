@@ -126,10 +126,11 @@ public class Logger
     }
 
     /**
-     * Formats and returns the supplied key/value arguments as {@code [key=value, key=value, ...]}.
+     * Formats and returns the supplied message and key/value arguments as
+     * {@code message [key=value, key=value, ...]}.
      */
-    public static String format (Object... args) {
-        return format(new StringBuilder("["), args).append("]").toString();
+    public static String format (Object message, Object... args) {
+        return format(new StringBuilder(message + " ["), args).append("]").toString();
     }
 
     /**
