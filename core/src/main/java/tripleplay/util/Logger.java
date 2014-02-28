@@ -130,7 +130,7 @@ public class Logger
      * {@code message [key=value, key=value, ...]}.
      */
     public static String format (Object message, Object... args) {
-        return format(new StringBuilder(message + " ["), args).append("]").toString();
+        return format(new StringBuilder().append(message).append(" ["), args).append("]").toString();
     }
 
     /**
