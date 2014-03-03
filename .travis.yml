@@ -1,6 +1,5 @@
 language: java
-before_install: "git clone https://github.com/samskivert/travis-maven-deploy.git target/travis"
-script: "mvn deploy --settings target/travis/settings.xml"
+after_success: etc/travis-deploy.sh
 
 jdk:
   - openjdk7
