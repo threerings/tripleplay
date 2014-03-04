@@ -28,7 +28,7 @@ public abstract class StyledText
         /** The text being rendered. */
         public final String text;
 
-        /** The stlyings applied to this text. */
+        /** The stylings applied to this text. */
         public final TextStyle style;
 
         protected Plain (String text, TextStyle style) {
