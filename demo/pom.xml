@@ -14,7 +14,7 @@
   <description>A demo of the various Triple Play features.</description>
 
   <properties>
-    <guava.version>13.0.1</guava.version>
+    <guava.version>16.0.1</guava.version>
   </properties>
 
   <modules>
