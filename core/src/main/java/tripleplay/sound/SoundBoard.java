@@ -201,6 +201,7 @@ public class SoundBoard
         }
 
         protected void startFadeIn (final float fadeMillis) {
+            cancelFaders();
             if (!isPlaying()) prepareSound().play();
             sound.setVolume(0); // start at zero, fade in from there
             _faders.add(new Fader() {
@@ -210,12 +211,14 @@ public class SoundBoard
                     updateVolume(vol);
                     return (vol >= _range); // we're done when the volume hits the target
                 }
+                @Override public void cancel () {}
                 protected final float _range = volume.get();
                 protected int _elapsed;
             });
         }
 
         protected void startFadeOut (final float fadeMillis) {
+            cancelFaders();
             if (isPlaying()) _faders.add(new Fader() {
                 @Override public boolean update (int delta) {
                     _elapsed += delta;
@@ -227,9 +230,20 @@ public class SoundBoard
                         return true;
                     }
                 }
+                @Override public void cancel () {
+                    updateVolume(0);
+                    fadeOutComplete();
+                }
                 protected final float _start = volume.get();
                 protected int _elapsed;
             });
+        }
+
+        protected void cancelFaders () {
+            for (Fader fader : _faders) {
+                fader.cancel();
+            }
+            _faders.clear();
         }
 
         protected Sound prepareSound () {
@@ -252,6 +266,7 @@ public class SoundBoard
 
     protected abstract class Fader {
         public abstract boolean update (int delta);
+        public abstract void cancel ();
     }
 
     protected final Set<LoopImpl> _active = new HashSet<LoopImpl>();
