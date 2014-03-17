@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import playn.core.Asserts;
 import playn.core.Image;
 
 import tripleplay.util.TexturePacker;
@@ -45,7 +44,10 @@ public class Library
                 for (KeyframeData kf : layer.keyframes) {
                     if (kf._symbolName != null) {
                         Symbol symbol = symbols.get(kf._symbolName);
-                        Asserts.checkNotNull(symbol);
+                        // We would ideally check not null here, but neck deep in a triple-loop
+                        // is not a good place for an assert which is not actually culled for
+                        // production release.
+                        //Asserts.checkNotNull(symbol);
 
                         if (layer._lastSymbol == null) layer._lastSymbol = symbol;
                         else if (layer._lastSymbol != symbol) layer._multipleSymbols = true;
