@@ -7,7 +7,6 @@ package tripleplay.util;
 
 import pythagoras.f.IRectangle;
 
-import playn.core.Asserts;
 import playn.core.Canvas;
 import playn.core.PlayN;
 import playn.core.TextLayout;
@@ -214,7 +213,7 @@ public abstract class EffectRenderer
             }
 
             // The compiler should've warned if new values showed up in the enum, but sanity check
-            Asserts.checkNotNull(colors, "Unhandled gradient type: " + gradientType);
+            assert colors != null : "Unhandled gradient type: " + gradientType;
 
             canvas.save();
 

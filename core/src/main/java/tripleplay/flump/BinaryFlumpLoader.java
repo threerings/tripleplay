@@ -10,7 +10,6 @@ import java.io.DataInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.Asserts;
 import playn.core.Image;
 import playn.core.PlayN;
 import playn.core.util.Callback;
@@ -26,7 +25,7 @@ public class BinaryFlumpLoader
      * @param baseDir The base directory, containing library.bin and texture atlases.
      */
     public static void loadLibrary (final String baseDir, final Callback<Library> callback) {
-        Asserts.checkNotNull(callback);
+        assert callback != null;
         PlayN.assets().getBytes(baseDir + "/library.bin", new Callback.Chain<byte[]>(callback) {
             public void onSuccess (byte[] bytes) {
                 try {

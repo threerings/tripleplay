@@ -5,8 +5,6 @@
 
 package tripleplay.game.trans;
 
-import playn.core.Asserts;
-
 import tripleplay.game.Screen;
 import tripleplay.game.ScreenStack;
 
@@ -25,14 +23,14 @@ public abstract class AbstractTransition<T extends AbstractTransition<T>>
 
     /** Configures an action to be executed when this transition starts. */
     public T onStart (Runnable action) {
-        Asserts.checkState(_onStart == null, "onStart action already configured.");
+        assert _onStart == null : "onStart action already configured.";
         _onStart = action;
         return asT();
     }
 
     /** Configures an action to be executed when this transition completes. */
     public T onComplete (Runnable action) {
-        Asserts.checkState(_onComplete == null, "onComplete action already configured.");
+        assert _onComplete == null : "onComplete action already configured.";
         _onComplete = action;
         return asT();
     }

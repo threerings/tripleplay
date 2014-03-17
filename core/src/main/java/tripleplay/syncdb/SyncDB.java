@@ -18,7 +18,6 @@ import react.RMap;
 import react.RSet;
 import react.Value;
 
-import playn.core.Asserts;
 import playn.core.Platform;
 import playn.core.Storage;
 
@@ -211,7 +210,7 @@ public abstract class SyncDB
      */
     protected <T> Value<T> value (final String name, final T defval, final Codec<T> codec,
                                   final Resolver<? super T> resolver) {
-        Asserts.checkArgument(!SYNC_KEYS.contains(name), name + " is a reserved name.");
+        assert !SYNC_KEYS.contains(name) : name + " is a reserved name.";
         // create a value that reads/writes directly from/to the persistent store
         final Value<T> value = new Value<T>(null) {
             @Override public T get () {
@@ -254,7 +253,7 @@ public abstract class SyncDB
      * server modifications.
      */
     protected <E> RSet<E> set (final String name, final Codec<E> codec, final SetResolver resolver) {
-        Asserts.checkArgument(!SYNC_KEYS.contains(name), name + " is a reserved name.");
+        assert !SYNC_KEYS.contains(name) : name + " is a reserved name.";
         final RSet<E> rset = new RSet<E>(sget(name, codec)) {
             @Override protected void emitAdd (E elem) {
                 super.emitAdd(elem);

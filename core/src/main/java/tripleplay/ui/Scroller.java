@@ -12,7 +12,7 @@ import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
-import playn.core.Asserts;
+
 import playn.core.Color;
 import playn.core.Events;
 import playn.core.GroupLayer;
@@ -675,7 +675,7 @@ public class Scroller extends Composite<Scroller>
     {
         @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
             // the content is always the 1st child, get the preferred size with extended hints
-            Asserts.checkArgument(elems.childCount() == 1 && elems.childAt(0) == content);
+            assert elems.childCount() == 1 && elems.childAt(0) == content;
             _contentSize.setSize(preferredSize(elems.childAt(0),
                 hrange.extendHint(hintX), vrange.extendHint(hintY)));
             return new Dimension(_contentSize);
@@ -683,7 +683,7 @@ public class Scroller extends Composite<Scroller>
 
         @Override public void layout (Container<?> elems, float left, float top, float width,
                                       float height) {
-            Asserts.checkArgument(elems.childCount() == 1 && elems.childAt(0) == content);
+            assert elems.childCount() == 1 && elems.childAt(0) == content;
 
             // if we're going to have H or V scrolling, make room on the bottom and/or right
             if (hrange.on() && _contentSize.width > width) height -= _bars.size();

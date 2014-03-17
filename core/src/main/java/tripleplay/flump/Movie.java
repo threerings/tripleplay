@@ -13,7 +13,6 @@ import java.util.Map;
 
 import pythagoras.f.FloatMath;
 
-import playn.core.Asserts;
 import playn.core.GroupLayer;
 import playn.core.Layer;
 import playn.core.util.Clock;
@@ -146,8 +145,8 @@ public class Movie
     public void setNamedLayer (String name, Instance instance) {
         LayerAnimator animator = getNamedAnimator(name);
         if (animator != null) {
-            Asserts.checkState(animator.content instanceof GroupLayer,
-                "Layer not a container", "name", name);
+            assert animator.content instanceof GroupLayer :
+                "Layer not a container[name=" + name + "]";
             animator.setCurrent(instance);
         }
     }

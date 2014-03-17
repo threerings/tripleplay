@@ -8,8 +8,6 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.Asserts;
-
 import react.Slot;
 import react.Value;
 import react.ValueView;
@@ -261,8 +259,7 @@ public class Tabs extends Composite<Tabs>
      */
     public void repositionTab (Tab tab, int position) {
         int prev = tab.index();
-        Asserts.checkArgument(prev != -1);
-        Asserts.checkArgument(position >= 0 && position < _tabs.size());
+        assert prev != -1 && position >= 0 && position < _tabs.size();
         if (prev == position) return;
         _tabs.remove(prev);
         buttons.remove(tab.button);
@@ -275,7 +272,7 @@ public class Tabs extends Composite<Tabs>
      * Removes the given tab and destroys its resources.
      */
     public void destroyTab (Tab tab) {
-        Asserts.checkArgument(_tabs.contains(tab), "Tab isn't ours");
+        assert _tabs.contains(tab) : "Tab isn't ours";
         if (tab == selected.get()) selected.update(null);
         _tabs.remove(tab.index());
         buttons.destroy(tab.button);

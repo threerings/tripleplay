@@ -44,11 +44,7 @@ public class Library
                 for (KeyframeData kf : layer.keyframes) {
                     if (kf._symbolName != null) {
                         Symbol symbol = symbols.get(kf._symbolName);
-                        // We would ideally check not null here, but neck deep in a triple-loop
-                        // is not a good place for an assert which is not actually culled for
-                        // production release.
-                        //Asserts.checkNotNull(symbol);
-
+                        assert symbol != null;
                         if (layer._lastSymbol == null) layer._lastSymbol = symbol;
                         else if (layer._lastSymbol != symbol) layer._multipleSymbols = true;
                         kf._symbol = symbol;

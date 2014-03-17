@@ -8,7 +8,6 @@ package tripleplay.syncdb;
 import java.util.HashMap;
 import java.util.Map;
 
-import playn.core.Asserts;
 import playn.core.Net;
 import playn.core.util.Callback;
 
@@ -203,13 +202,13 @@ public class Protocol
     /** Used to encode ints and strings in one big compact string. */
     public static class PayloadWriter {
         public void writeInt (int value) {
-            Asserts.checkArgument(value >= 0, "Cannot write negative integers to payload.");
+            assert value >= 0 : "Cannot write negative integers to payload.";
             writeInt(value, false);
         }
 
         public void writeString (String value) {
-            Asserts.checkArgument(value == null || value.length() < Short.MAX_VALUE,
-                                  "Strings must be less than " + Short.MAX_VALUE + " chars.");
+            assert value == null || value.length() < Short.MAX_VALUE :
+                "Strings must be less than " + Short.MAX_VALUE + " chars.";
             if (value == null) writeInt(Short.MAX_VALUE);
             else {
                 writeInt(value.length());

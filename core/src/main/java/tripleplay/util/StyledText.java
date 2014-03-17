@@ -7,7 +7,6 @@ package tripleplay.util;
 
 import pythagoras.f.Rectangle;
 
-import playn.core.Asserts;
 import playn.core.Canvas;
 import playn.core.CanvasImage;
 import playn.core.ImageLayer;
@@ -32,8 +31,9 @@ public abstract class StyledText
         public final TextStyle style;
 
         protected Plain (String text, TextStyle style) {
-            this.text = Asserts.checkNotNull(text);
-            this.style = Asserts.checkNotNull(style);
+            assert text != null && style != null;
+            this.text = text;
+            this.style = style;
         }
 
         /** Creates a new instance equivalent to this one excepting that the font size is adjusted
@@ -98,8 +98,9 @@ public abstract class StyledText
 
         public Block (String text, TextStyle style, TextWrap wrap, TextBlock.Align align) {
             super(text, style);
-            this.wrap = Asserts.checkNotNull(wrap);
-            this.align = Asserts.checkNotNull(align);
+            assert wrap != null && align != null;
+            this.wrap = wrap;
+            this.align = align;
             _layouts = graphics().layoutText(text, style, wrap);
             _bounds = TextBlock.getBounds(_layouts, new Rectangle());
             _bounds.width = style.effect.adjustWidth(_bounds.width);

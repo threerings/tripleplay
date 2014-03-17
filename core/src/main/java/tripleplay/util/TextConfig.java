@@ -5,7 +5,6 @@
 
 package tripleplay.util;
 
-import playn.core.Asserts;
 import playn.core.Canvas;
 import playn.core.CanvasImage;
 import playn.core.Font;
@@ -39,9 +38,10 @@ import static pythagoras.f.FloatMath.ceil;
 
     public TextConfig (TextFormat format, int textColor, EffectRenderer effect,
         boolean underlined) {
-        this.format = Asserts.checkNotNull(format);
+        assert format != null && effect != null;
+        this.format = format;
         this.textColor = textColor;
-        this.effect = Asserts.checkNotNull(effect);
+        this.effect = effect;
         this.underlined = underlined;
     }
 

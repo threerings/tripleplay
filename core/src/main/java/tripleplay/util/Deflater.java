@@ -5,8 +5,6 @@
 
 package tripleplay.util;
 
-import playn.core.Asserts;
-
 /**
  * Encodes typed data into a string. This is the deflating counterpart to {@link Inflater}.
  */
@@ -46,7 +44,7 @@ public class Deflater extends Conflater
     }
 
     public Deflater addVarInt (int value) {
-        Asserts.checkArgument(value > Integer.MIN_VALUE, "Can't use varint for Int.MIN_VALUE");
+        assert value > Integer.MIN_VALUE : "Can't use varint for Int.MIN_VALUE";
         if (value < 0) {
             _buf.append(NEG_MARKER);
             value *= -1;
@@ -80,8 +78,7 @@ public class Deflater extends Conflater
     }
 
     protected final void check (int value, int min, int max, String type) {
-        Asserts.checkArgument(value >= min && value <= max,
-                              type + " must be " + min + " <= n <= " + max);
+        assert value >= min && value <= max : type + " must be " + min + " <= n <= " + max;
     }
 
     protected final StringBuilder _buf = new StringBuilder();

@@ -7,7 +7,6 @@ package tripleplay.ui.layout;
 
 import java.util.Arrays;
 
-import playn.core.Asserts;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 
@@ -89,7 +88,7 @@ public class TableLayout extends Layout
         public final int colspan;
 
         public Colspan (int colspan) {
-            Asserts.checkArgument(colspan >= 1, "Colspan must be >= 1");
+            assert colspan >= 1 : "Colspan must be >= 1";
             this.colspan = colspan;
         }
     }
@@ -188,7 +187,7 @@ public class TableLayout extends Layout
 
         for (Element<?> elem : elems) {
             int colspan = colspan(elem);
-            Asserts.checkState(col + colspan <= columns);
+            assert col + colspan <= columns;
 
             float colWidth = 0;
             for (int ii = 0; ii < colspan; ii++) {

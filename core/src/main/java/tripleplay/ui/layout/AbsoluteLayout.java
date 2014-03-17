@@ -5,7 +5,6 @@
 
 package tripleplay.ui.layout;
 
-import playn.core.Asserts;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
@@ -179,8 +178,8 @@ public class AbsoluteLayout extends Layout
     }
 
     protected static Constraint constraint (Element<?> elem) {
-        return (Constraint)Asserts.checkNotNull(
-            elem.constraint(), "Elements in AbsoluteLayout must have a constraint.");
+        assert elem.constraint() != null : "Elements in AbsoluteLayout must have a constraint.";
+        return (Constraint)elem.constraint();
     }
 
     protected static final Dimension ZERO = new Dimension(0, 0);

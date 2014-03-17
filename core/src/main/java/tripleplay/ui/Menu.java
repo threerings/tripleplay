@@ -8,7 +8,6 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.Asserts;
 import playn.core.Events;
 import playn.core.Layer;
 import playn.core.Mouse;
@@ -246,7 +245,7 @@ public class Menu extends Elements<Menu>
             _anim.cancel();
             // run our complete logic manually (this will always invoke clearAnim too)
             _complete.run();
-            Asserts.check(_anim == null && _complete == null);
+            assert _anim == null && _complete == null;
         }
     }
 

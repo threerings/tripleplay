@@ -7,7 +7,6 @@ package tripleplay.flump;
 
 import java.util.ArrayList;
 
-import playn.core.Asserts;
 import playn.core.Assets;
 import playn.core.Image;
 import playn.core.Json;
@@ -36,7 +35,6 @@ public class JsonLoader
      */
     public static void loadLibrary (final Assets assets, final String baseDir,
                                     final Callback<Library> callback) {
-        Asserts.checkNotNull(callback);
         assets.getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
             public void onSuccess (String text) {
                 try {

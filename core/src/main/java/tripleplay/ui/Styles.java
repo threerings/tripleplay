@@ -7,8 +7,6 @@ package tripleplay.ui;
 
 import java.util.Arrays;
 
-import playn.core.Asserts;
-
 /**
  * An immutable collection of styles. Used in builder-style to add, replace or remove styles.
  * Configure a group of styles and then apply them to an element via {@link Element#setStyles} or
@@ -227,14 +225,14 @@ public final class Styles
         @Override public int compareTo (Binding<V> other) {
             if (this.style == other.style) return 0;
             int hc = this.style.hashCode(), ohc = other.style.hashCode();
-            Asserts.checkState(hc != ohc);
+            assert hc != ohc;
             return (hc < ohc) ? -1 : 1;
         }
 
         public int compareToStyle (Style<V> style) {
             if (this.style == style) return 0;
             int hc = this.style.hashCode(), ohc = style.hashCode();
-            Asserts.checkState(hc != ohc);
+            assert hc != ohc;
             return (hc < ohc) ? -1 : 1;
         }
 

@@ -18,7 +18,6 @@ import javax.swing.JFrame;
 
 import org.lwjgl.opengl.Display;
 
-import playn.core.Asserts;
 import playn.core.PlayN;
 import playn.java.JavaImage;
 import playn.java.JavaPlatform;
@@ -173,7 +172,7 @@ public class JavaTPPlatform extends TPPlatform
      * Takes icons of different sizes, preferring earlier ones in case of duplicate sizes.
      */
     public void setIcon (playn.core.Image... icons) {
-        Asserts.check(icons.length > 0);
+        assert icons.length > 0;
         _frame.setIconImages(Lists.transform(Lists.newArrayList(icons),
             new Function<playn.core.Image, java.awt.Image>() {
                 public Image apply (playn.core.Image input) {

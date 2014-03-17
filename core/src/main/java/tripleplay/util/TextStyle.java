@@ -5,7 +5,6 @@
 
 package tripleplay.util;
 
-import playn.core.Asserts;
 import playn.core.Font;
 import playn.core.TextFormat;
 
@@ -53,7 +52,8 @@ public class TextStyle extends TextFormat
                       boolean underlined) {
         super(font, antialias);
         this.textColor = textColor;
-        this.effect = Asserts.checkNotNull(effect);
+        assert effect != null;
+        this.effect = effect;
         this.underlined = underlined;
     }
 
