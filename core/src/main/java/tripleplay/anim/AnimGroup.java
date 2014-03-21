@@ -131,18 +131,14 @@ public class AnimGroup extends AnimBuilder
             }
 
             protected void completeAnimation (Animation animation) {
-                // prevent recursion onto canceled/completed animations
-                if (animation._canceled) {
-                    return;
-                }
+                for (Animation anim = animation; anim != null; anim = anim.next()) {
+                    if (animation._canceled) {
+                        break;
+                    }
 
-                // complete the animation first since it's first in the animation chain
-                animation.complete();
-                animation.cancel();
-
-                // recursively complete the next animations
-                for (Animation next = animation.next(); next != null; next = next.next()) {
-                    completeAnimation(next);
+                    // complete the animation first since it's first in the animation chain
+                    animation.complete();
+                    animation.cancel();
                 }
             }
 
