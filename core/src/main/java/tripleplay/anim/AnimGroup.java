@@ -110,7 +110,7 @@ public class AnimGroup extends AnimBuilder
                 // than -infinity which would throw off any animation queued up after this one
                 return processed == 0 ? 0 : remain;
             }
-            
+
             @Override protected void complete () {
                 if (_start == 0) {
                     // animation has not being initialized so cancel all base animations
@@ -124,22 +124,22 @@ public class AnimGroup extends AnimBuilder
                         if (anim == null) {
                             continue;
                         }
-                        
+
                         completeAnimation(anim);
                     }
                 }
             }
-            
+
             protected void completeAnimation (Animation animation) {
                 // prevent recursion onto cancelled/completed animations
                 if (animation._canceled) {
                     return;
                 }
-                
+
                 // complete the animation first since it's first in the animation chain
                 animation.complete();
                 animation.cancel();
-                
+
                 // recursively complete the next animations
                 Animation next = animation.next();
                 while (next != null) {
