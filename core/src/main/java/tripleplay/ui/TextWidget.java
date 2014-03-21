@@ -242,6 +242,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     text = text.resize(text.style.font.size()-1);
                     twidth = FloatMath.ceil(textWidth());
                 }
+                theight = FloatMath.ceil(textHeight());
             }
 
             // create a canvas no larger than the text, constrained to the available size
