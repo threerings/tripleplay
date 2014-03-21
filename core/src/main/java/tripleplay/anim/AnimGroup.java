@@ -110,6 +110,43 @@ public class AnimGroup extends AnimBuilder
                 // than -infinity which would throw off any animation queued up after this one
                 return processed == 0 ? 0 : remain;
             }
+            
+            @Override protected void complete () {
+                if (_start == 0) {
+                    // animation has not being initialized so cancel all base animations
+                    for (int ii = 0; ii < groupAnims.length; ++ii) {
+                        completeAnimation(groupAnims[ii]);
+                    }
+                } else {
+                    // animation has started so cancel all active animations
+                    for (int ii = 0; ii < _curAnims.length; ++ii) {
+                        Animation anim = _curAnims[ii];
+                        if (anim == null) {
+                            continue;
+                        }
+                        
+                        completeAnimation(anim);
+                    }
+                }
+            }
+            
+            protected void completeAnimation (Animation animation) {
+                // prevent recursion onto cancelled/completed animations
+                if (animation._canceled) {
+                    return;
+                }
+                
+                // complete the animation first since it's first in the animation chain
+                animation.complete();
+                animation.cancel();
+                
+                // recursively complete the next animations
+                Animation next = animation.next();
+                while (next != null) {
+                    completeAnimation(next);
+                    next = next.next();
+                }
+            }
 
             protected Animator _animator;
             protected Animation[] _curAnims = new Animation[groupAnims.length];

@@ -31,6 +31,10 @@ public class PlayMovie extends Animation
         _movie.paint(dt);
         return remaining;
     }
+    
+    @Override protected void complete () {
+        _movie.paint((_movie.symbol().duration-_movie.position()) / _movie.speed());
+    }
 
     protected Movie _movie;
     protected float _lastTime;

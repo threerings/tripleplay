@@ -151,6 +151,13 @@ public class MoviePlayer
             // Wait until the original movie is no longer playing
             return (movie() == _playing) ? 1 : 0;
         }
+        
+        @Override protected void complete () {
+            // fast-forward the playing movie so that the next paint call will switch back to the
+            // lopping animation
+            _playing.setPosition(_playing.symbol().duration);
+            _playing = null;
+        }
 
         protected String _name;
         protected Movie _playing;

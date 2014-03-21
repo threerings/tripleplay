@@ -44,6 +44,11 @@ public abstract class Animation
     public interface Handle {
         /** Cancels this animation. It will remove itself from its animator the next frame. */
         void cancel ();
+        
+        /** Completes the animation by adjusting all properties to their final state and
+         * then cancelling the animation.  This method has no effect on animations that have
+         * already finished. */
+        void complete ();
     }
 
     /** Processes a {@link Flipbook}. */
@@ -69,6 +74,11 @@ public abstract class Animation
             while (frameEnds[newIdx] < dt) newIdx++;
             if (newIdx != _curIdx) setFrame(newIdx);
             return remain;
+        }
+        
+        @Override
+        protected void complete () {
+            setFrame(_book.frameIndexes.length - 1);
         }
 
         protected void setFrame (int idx) {
@@ -172,6 +182,11 @@ public abstract class Animation
             _target.set((dt < _duration) ? _interp.apply(_from, _to-_from, dt, _duration) : _to);
             return _duration - dt;
         }
+        
+        @Override
+        protected void complete () {
+            _target.set(_to);
+        }
 
         @Override public String toString () {
             return getClass().getName() + " start:" + _start + " to " + _to;
@@ -232,6 +247,11 @@ public abstract class Animation
             }
             return _duration - dt;
         }
+        
+        @Override
+        protected void complete () {
+            _value.set(_tox, _toy);
+        }
 
         protected final XYValue _value;
         protected float _fromx = Float.MIN_VALUE, _fromy = Float.MIN_VALUE;
@@ -248,6 +268,11 @@ public abstract class Animation
         protected float apply (float time) {
             return _start + _duration - time;
         }
+        
+        @Override
+        protected void complete() {
+            // noop
+        }
 
         protected final float _duration;
     }
@@ -262,6 +287,11 @@ public abstract class Animation
         protected float apply (float time) {
             _action.run();
             return _start - time;
+        }
+        
+        @Override
+        protected void complete () {
+            _action.run();
         }
 
         protected Runnable _action;
@@ -287,14 +317,46 @@ public abstract class Animation
         protected float apply (float time) {
             return _start - time; // immediately move to our next animation
         }
+        
+        @Override
+        protected void init (float time) {
+            super.init(time);
+            _isCompleted = false;
+        }
+        
+        @Override
+        protected void complete () {
+            boolean shouldComplete = false;
+            Animation next = _next;
+
+            // prevent iterating back onto ourselves since repeat creates a circular chain
+            while (next != null && next != this) {
+                // current animation or any animation after current should be completed
+                if (_current == null || _current == next) {
+                    shouldComplete = true;
+                }
+
+                if (shouldComplete) {
+                    next.complete();
+                }
+
+                next.cancel();
+                next = next.next();
+            }
+
+            // mark as completed to break the repetition without invalidating _layer
+            _isCompleted = true;
+        }
 
         @Override
         protected Animation next () {
             // if our target layer is no longer active, we're done
-            return (_layer.parent() == null) ? null : _next;
+            return (_isCompleted || _layer.parent() == null) ? null : _next;
         }
 
         protected Layer _layer;
+
+        protected boolean _isCompleted;
     }
 
     /** An animation that shakes a layer randomly in the x and y directions. */
@@ -369,6 +431,11 @@ public abstract class Animation
             _layer.setTranslation(nx, ny);
             return _duration - dt;
         }
+        
+        @Override
+        protected void complete () {
+            _layer.setTranslation(_startX, _startY);
+        }
 
         protected final Layer _layer;
 
@@ -409,6 +476,27 @@ public abstract class Animation
             @Override public void cancel () {
                 _root.cancel();
             }
+            
+            @Override public void complete () {
+                boolean shouldComplete = false;
+                Animation next = _root;
+
+                while (next != null) {
+                    // current animation or any animation after the current should be completed
+                    if (_root._current == null || next == _root._current) {
+                        shouldComplete = true;
+                    }
+
+                    // repeat animations must be completed
+                    if (shouldComplete || next instanceof Animation.Repeat) {
+                        next.complete();
+                    }
+
+                    next.cancel();
+                    next = next.next();
+                }
+            }
+            
             @Override public String toString () {
                 return "handle:" + Animation.this;
             }
@@ -449,6 +537,8 @@ public abstract class Animation
     protected void cancel () {
         _canceled = true;
     }
+    
+    protected abstract void complete ();
 
     protected abstract float apply (float time);
 
