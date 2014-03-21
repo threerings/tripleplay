@@ -141,10 +141,8 @@ public class AnimGroup extends AnimBuilder
                 animation.cancel();
 
                 // recursively complete the next animations
-                Animation next = animation.next();
-                while (next != null) {
+                for (Animation next = animation.next(); next != null; next = next.next()) {
                     completeAnimation(next);
-                    next = next.next();
                 }
             }
 
