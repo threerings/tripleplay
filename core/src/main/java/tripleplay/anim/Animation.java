@@ -512,7 +512,7 @@ public abstract class Animation
     }
 
     protected float apply (Animator animator, float time) {
-        // if we're cancelled, abandon ship now
+        // if we're canceled, abandon ship now
         if (_canceled) return 0;
 
         // if the current animation has completed, move the next one in our chain

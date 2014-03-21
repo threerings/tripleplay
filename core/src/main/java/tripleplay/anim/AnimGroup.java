@@ -131,7 +131,7 @@ public class AnimGroup extends AnimBuilder
             }
 
             protected void completeAnimation (Animation animation) {
-                // prevent recursion onto cancelled/completed animations
+                // prevent recursion onto canceled/completed animations
                 if (animation._canceled) {
                     return;
                 }
