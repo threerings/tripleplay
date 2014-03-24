@@ -151,10 +151,10 @@ public class MoviePlayer
             // Wait until the original movie is no longer playing
             return (movie() == _playing) ? 1 : 0;
         }
-        
-        @Override protected void complete () {
+
+        @Override protected void makeComplete () {
             // fast-forward the playing movie so that the next paint call will switch back to the
-            // lopping animation
+            // looping animation
             _playing.setPosition(_playing.symbol().duration);
             _playing = null;
         }
@@ -169,4 +169,3 @@ public class MoviePlayer
     protected Movie _oneshotMovie;
     protected Movie _loopingMovie;
 }
-

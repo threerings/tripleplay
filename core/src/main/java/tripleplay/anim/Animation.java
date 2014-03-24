@@ -5,7 +5,9 @@
 
 package tripleplay.anim;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import pythagoras.f.XY;
 
@@ -40,14 +42,15 @@ public abstract class Animation
         void set (float x, float y);
     }
 
-    /** Used to cancel animations after they've been started. See {@link #handle}. */
+    /** Used to cancel animations after they've been started. See {@link #handle}. <em>Note:</em>
+     * you cannot mix and match {@link #cancel} and {@link #complete}. Use one or the other to
+     * achieve early termination of your animations. */
     public interface Handle {
         /** Cancels this animation. It will remove itself from its animator the next frame. */
         void cancel ();
 
-        /** Completes the animation by adjusting all properties to their final state and
-         * then cancelling the animation.  This method has no effect on animations that have
-         * already finished. */
+        /** Completes the animation chain by adjusting all animations to their final state and then
+         * canceling them. This method has no effect on animations that have already finished. */
         void complete ();
     }
 
@@ -77,7 +80,7 @@ public abstract class Animation
         }
 
         @Override
-        protected void complete () {
+        protected void makeComplete () {
             setFrame(_book.frameIndexes.length - 1);
         }
 
@@ -184,7 +187,7 @@ public abstract class Animation
         }
 
         @Override
-        protected void complete () {
+        protected void makeComplete () {
             _target.set(_to);
         }
 
@@ -239,17 +242,14 @@ public abstract class Animation
         @Override
         protected float apply (float time) {
             float dt = time-_start;
-            if (dt < _duration) {
-                _value.set(_interp.apply(_fromx, _tox-_fromx, dt, _duration),
-                           _interp.apply(_fromy, _toy-_fromy, dt, _duration));
-            } else {
-                _value.set(_tox, _toy);
-            }
+            if (dt >= _duration) _value.set(_tox, _toy);
+            else _value.set(_interp.apply(_fromx, _tox-_fromx, dt, _duration),
+                            _interp.apply(_fromy, _toy-_fromy, dt, _duration));
             return _duration - dt;
         }
 
         @Override
-        protected void complete () {
+        protected void makeComplete () {
             _value.set(_tox, _toy);
         }
 
@@ -269,11 +269,6 @@ public abstract class Animation
             return _start + _duration - time;
         }
 
-        @Override
-        protected void complete() {
-            // noop
-        }
-
         protected final float _duration;
     }
 
@@ -285,13 +280,16 @@ public abstract class Animation
 
         @Override
         protected float apply (float time) {
-            _action.run();
+            makeComplete();
             return _start - time;
         }
 
         @Override
-        protected void complete () {
-            _action.run();
+        protected void makeComplete () {
+            if (_action != null) {
+                _action.run();
+                _action = null;
+            }
         }
 
         protected Runnable _action;
@@ -319,43 +317,12 @@ public abstract class Animation
         }
 
         @Override
-        protected void init (float time) {
-            super.init(time);
-            _isCompleted = false;
-        }
-
-        @Override
-        protected void complete () {
-            boolean shouldComplete = false;
-            Animation next = _next;
-
-            // prevent iterating back onto ourselves since repeat creates a circular chain
-            while (next != null && next != this) {
-                // current animation or any animation after current should be completed
-                if (_current == null || _current == next) {
-                    shouldComplete = true;
-                }
-
-                if (shouldComplete) {
-                    next.complete();
-                }
-
-                next.cancel();
-                next = next.next();
-            }
-
-            // mark as completed to break the repetition without invalidating _layer
-            _isCompleted = true;
-        }
-
-        @Override
         protected Animation next () {
             // if our target layer is no longer active, we're done
-            return (_isCompleted || _layer.parent() == null) ? null : _next;
+            return (_layer.parent() == null) ? null : _next;
         }
 
         protected Layer _layer;
-
         protected boolean _isCompleted;
     }
 
@@ -433,7 +400,7 @@ public abstract class Animation
         }
 
         @Override
-        protected void complete () {
+        protected void makeComplete () {
             _layer.setTranslation(_startX, _startY);
         }
 
@@ -476,27 +443,9 @@ public abstract class Animation
             @Override public void cancel () {
                 _root.cancel();
             }
-
             @Override public void complete () {
-                boolean shouldComplete = false;
-                Animation next = _root;
-
-                while (next != null) {
-                    // current animation or any animation after the current should be completed
-                    if (_root._current == null || next == _root._current) {
-                        shouldComplete = true;
-                    }
-
-                    // repeat animations must be completed
-                    if (shouldComplete || next instanceof Animation.Repeat) {
-                        next.complete();
-                    }
-
-                    next.cancel();
-                    next = next.next();
-                }
+                _root.completeChain();
             }
-
             @Override public String toString () {
                 return "handle:" + Animation.this;
             }
@@ -538,7 +487,29 @@ public abstract class Animation
         _canceled = true;
     }
 
-    protected abstract void complete ();
+    /**
+     * This will be called when an animation chain is requested to complete immediately. It should
+     * configure this animation to its final state. <em>NOTE</em>: this method must be idempotent
+     * and may be called after the animation is already completed. Thus any "one shot" animations
+     * should be sure to track whether they have already completed "naturally" and NOOP if this
+     * method is called.
+     */
+    protected void makeComplete () {
+        // by default, do nothing
+    }
+
+    protected void completeChain () {
+        // stop if we hit the end of the chain, or we see an animation that we've already seen
+        // (indicating a loop in the animation chain, which Repeat animations use)
+        Set<Animation> seen = new HashSet<Animation>();
+        for (Animation anim = this; anim != null && !seen.contains(anim); anim = anim.next()) {
+            if (anim._canceled) throw new IllegalStateException(
+                "Cannot complete() a canceled animation.");
+            anim.makeComplete();
+            anim.cancel();
+            seen.add(anim);
+        }
+    }
 
     protected abstract float apply (float time);
 
