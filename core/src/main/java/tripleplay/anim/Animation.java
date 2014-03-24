@@ -5,7 +5,8 @@
 
 package tripleplay.anim;
 
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Random;
 import java.util.Set;
 
@@ -500,7 +501,7 @@ public abstract class Animation
     protected void completeChain () {
         // stop if we hit the end of the chain, or we see an animation that we've already seen
         // (indicating a loop in the animation chain, which Repeat animations use)
-        Set<Animation> seen = new HashSet<Animation>();
+        Set<Animation> seen = Collections.newSetFromMap(new IdentityHashMap<Animation, Boolean>());
         for (Animation anim = this; anim != null && seen.add(anim); anim = anim.next()) {
             if (anim._canceled) throw new IllegalStateException(
                 "Cannot complete() a canceled animation.");
