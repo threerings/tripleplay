@@ -501,12 +501,11 @@ public abstract class Animation
         // stop if we hit the end of the chain, or we see an animation that we've already seen
         // (indicating a loop in the animation chain, which Repeat animations use)
         Set<Animation> seen = new HashSet<Animation>();
-        for (Animation anim = this; anim != null && !seen.contains(anim); anim = anim.next()) {
+        for (Animation anim = this; anim != null && seen.add(anim); anim = anim.next()) {
             if (anim._canceled) throw new IllegalStateException(
                 "Cannot complete() a canceled animation.");
             anim.makeComplete();
             anim.cancel();
-            seen.add(anim);
         }
     }
 
