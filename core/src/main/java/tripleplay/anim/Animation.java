@@ -323,7 +323,6 @@ public abstract class Animation
         }
 
         protected Layer _layer;
-        protected boolean _isCompleted;
     }
 
     /** An animation that shakes a layer randomly in the x and y directions. */
