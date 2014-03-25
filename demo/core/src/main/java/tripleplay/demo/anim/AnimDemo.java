@@ -51,8 +51,13 @@ public class AnimDemo extends DemoScreen
         final ImageLayer click = StyledText.span("Click to Shake", STYLE).toLayer();
         click.addListener(new Pointer.Adapter() {
             @Override public void onPointerStart (Pointer.Event event) {
-                anim.shake(click).bounds(-3, 3, -3, 0).cycleTime(25, 25).in(1000);
+                if (_shaker != null) _shaker.complete();
+                else _shaker = anim.shake(click).bounds(-3, 3, -3, 0).cycleTime(25, 25).in(1000).
+                         then().action(_clear).handle();
             }
+            protected final Runnable _clear = new Runnable() {
+                public void run () { _shaker = null; }};
+            protected Animation.Handle _shaker;
         });
         layer.addAt(click, (width-click.width())/2, 275);
 
