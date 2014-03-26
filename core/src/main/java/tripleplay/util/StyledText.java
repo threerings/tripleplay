@@ -104,7 +104,7 @@ public abstract class StyledText
             _layouts = graphics().layoutText(text, style, wrap);
             _bounds = TextBlock.getBounds(_layouts, new Rectangle());
             _bounds.width = style.effect.adjustWidth(_bounds.width);
-            _bounds.height = style.effect.adjustWidth(_bounds.height);
+            _bounds.height = style.effect.adjustHeight(_bounds.height);
         }
 
         @Override public float width () {
