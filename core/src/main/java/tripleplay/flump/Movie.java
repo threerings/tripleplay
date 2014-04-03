@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import react.Signal;
+
 import pythagoras.f.FloatMath;
 
 import playn.core.GroupLayer;
@@ -58,6 +60,8 @@ public class Movie
         protected String _name;
         protected float _framesPerMs;
     }
+
+    public final Signal<String> labelPassed = Signal.create();
 
     protected Movie (Symbol symbol) {
         _symbol = symbol;
@@ -186,7 +190,7 @@ public class Movie
     }
 
     // Controls a single Flash layer
-    protected static class LayerAnimator {
+    protected class LayerAnimator {
         public final LayerData data;
         public final Layer content;
 
@@ -221,6 +225,8 @@ public class Movie
             List<KeyframeData> keyframes = data.keyframes;
             int finalFrame = keyframes.size()-1;
 
+            int startFrame = keyframeIdx + 1;
+
             while (keyframeIdx < finalFrame && keyframes.get(keyframeIdx+1).index <= frame) {
                 ++keyframeIdx;
                 changedKeyframe = true;
@@ -236,6 +242,7 @@ public class Movie
             boolean visible = kf.symbol() != null && kf.visible;
             content.setVisible(visible);
             if (!visible) {
+                emitLabelSignals(startFrame, keyframeIdx);
                 return; // Don't bother animating invisible layers
             }
 
@@ -291,6 +298,17 @@ public class Movie
 
             if (_current != null) {
                 _current.paint(dt);
+            }
+
+            emitLabelSignals(startFrame, keyframeIdx);
+        }
+
+        protected void emitLabelSignals (int startIdx, int endIdx) {
+            for (int ii = startIdx; ii <= endIdx; ii++) {
+                String label = data.keyframes.get(ii).label;
+                if (label != null) {
+                    labelPassed.emit(label);
+                }
             }
         }
 
