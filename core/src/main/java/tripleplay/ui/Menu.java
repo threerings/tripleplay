@@ -29,12 +29,17 @@ import tripleplay.util.Layers;
  * cancellation.
  *
  * <p>Note that a menu can contain arbitrary {@code Element}s, but only those that are
- * {@code MenuItem}s are eligible for triggering.</p>
+ * {@code MenuItem}s are eligible for triggering. Changes to the children of previously added
+ * {@link Elements} instances are tracked using {@link Elements#childAdded()} and {@link Elements#
+ * childRemoved()}.</p>
+ *
+ * <p>Note about {@link Container} types other than {@code Elements}: it is assumed that the
+ * children of such containers will NOT change after addition to the menu. Such changes will
+ * result in undefined behavior, potentially including memory leaks. {@link Scroller}, for example,
+ * is safe to use since it has exactly one child element that doesn't change.</p>
  *
  * TODO: support escape key to cancel; probably in MenuHost
- * TODO: scrolling support for really big menus
  * TODO: support/implement full screen menus - this is probably what most phone apps will want
- * TODO: select menu items on hover
  */
 public class Menu extends Elements<Menu>
 {
@@ -331,15 +336,9 @@ public class Menu extends Elements<Menu>
     protected abstract class DescendingSlot extends Slot<Element<?>>
     {
         @Override public void onEmit (Element<?> elem) {
-            if (elem instanceof Elements) {
-                Elements<?> es = (Elements<?>)elem;
-                visitElems(es);
-                for (Element<?> child : es) onEmit(child);
-            } else if (elem instanceof Container) {
-                Log.log.warning("Unsupported nested container", "elem", elem);
-                // We can't support containers or composites since there is no reliable signal for
-                // child removal
-                // for (Element<?> child : (Container<?>)elem) onEmit(child);
+            if (elem instanceof Container) {
+                for (Element<?> child : (Container<?>)elem) onEmit(child);
+                if (elem instanceof Elements) visitElems((Elements<?>)elem);
             } else if (elem instanceof MenuItem) {
                 visitItem((MenuItem)elem);
             }
