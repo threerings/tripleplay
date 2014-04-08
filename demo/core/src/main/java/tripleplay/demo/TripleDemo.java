@@ -5,10 +5,11 @@
 
 package tripleplay.demo;
 
+import java.util.Arrays;
+
 import playn.core.Game;
 import playn.core.PlayN;
 import playn.core.util.Clock;
-
 import tripleplay.game.ScreenStack;
 
 public class TripleDemo extends Game.Default
@@ -24,6 +25,11 @@ public class TripleDemo extends Game.Default
 
     @Override public void init () {
         _screens.push(new DemoMenuScreen(_screens));
+
+        // propagate events so that things like buttons inside a scroller work
+        if (!Arrays.asList(mainArgs).contains("--no-propagate")) {
+            PlayN.setPropagateEvents(true);
+        }
     }
 
     @Override public void update (int delta) {
