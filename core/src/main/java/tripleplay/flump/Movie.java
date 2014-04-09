@@ -174,6 +174,10 @@ public class Movie
     }
 
     protected void setFrame (float frame, float dt) {
+        if (frame == _frame) {
+            return;
+        }
+        
         if (frame < _frame) {
             // Wrap back to the beginning
             for (int ii = 0, ll = _animators.length; ii < ll; ++ii) {
