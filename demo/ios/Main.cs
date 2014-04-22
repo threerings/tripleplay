@@ -9,7 +9,7 @@ using tripleplay.platform;
 namespace tripleplay.demo
 {
   [Register ("AppDelegate")]
-  public partial class AppDelegate : UIApplicationDelegate {
+  public partial class AppDelegate : IOSApplicationDelegate {
     public override bool FinishedLaunching (UIApplication app, NSDictionary options) {
       app.SetStatusBarHidden(true, true);
       IOSPlatform.Config config = new IOSPlatform.Config();
