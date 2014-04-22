@@ -23,6 +23,12 @@
       <artifactId>tripleplay-ios</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay-demo-assets</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
