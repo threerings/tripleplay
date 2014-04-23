@@ -75,7 +75,7 @@ public class Scale9
                 _offsets[2] -= half;
                 break;
             case 2:
-                _offsets[2] -= excess;
+                _offsets[2] += excess;
                 _lengths[1] += excess;
                 break;
             }
