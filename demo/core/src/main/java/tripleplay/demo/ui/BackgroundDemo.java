@@ -72,6 +72,7 @@ public class BackgroundDemo extends DemoScreen
     }
 
     protected Label label (String text, Background bg) {
-        return new Label(text).addStyles(Style.HALIGN.center, Style.BACKGROUND.is(bg));
+        return new Label(text).addStyles(Style.HALIGN.center, Style.BACKGROUND.is(bg),
+            Style.TEXT_WRAP.on);
     }
 }
