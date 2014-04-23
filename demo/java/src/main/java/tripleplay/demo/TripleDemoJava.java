@@ -42,6 +42,10 @@ public class TripleDemoJava
                 tk = Toolkit.AWT;
                 continue;
             }
+            if (args[ii].equals("--retina")) {
+                config.scaleFactor = 2;
+                continue;
+            }
             mainArgs.add(args[ii]);
         }
 
