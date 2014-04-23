@@ -24,7 +24,6 @@ import tripleplay.ui.bgs.CompositeBackground;
 import tripleplay.ui.bgs.CroppedImageBackground;
 import tripleplay.ui.bgs.ImageBackground;
 import tripleplay.ui.bgs.RoundRectBackground;
-import tripleplay.ui.bgs.Scale3Background;
 import tripleplay.ui.bgs.Scale9Background;
 import tripleplay.ui.bgs.SolidBackground;
 import tripleplay.ui.bgs.TiledImageBackground;
@@ -141,22 +140,6 @@ public abstract class Background
      */
     public static Background scale9 (Image scale9Image) {
         return new Scale9Background(scale9Image);
-    }
-
-    /**
-     * Creates a Scale3.Horizontal background with the specified image.
-     * See {@link Scale3Background.Horizontal}.
-     */
-    public static Background scale3horizontal (Image scale3Image) {
-        return new Scale3Background.Horizontal(scale3Image);
-    }
-
-    /**
-     * Creates a Scale3.Vertical background with the specified image.
-     * See {@link Scale3Background.Vertical}.
-     */
-    public static Background scale3vertical (Image scale3Image) {
-        return new Scale3Background.Vertical(scale3Image);
     }
 
     /**
