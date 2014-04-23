@@ -138,7 +138,7 @@ public abstract class Background
     /**
      * Creates a scale9 background with the specified image. See {@link Scale9Background}.
      */
-    public static Background scale9 (Image scale9Image) {
+    public static Scale9Background scale9 (Image scale9Image) {
         return new Scale9Background(scale9Image);
     }
 

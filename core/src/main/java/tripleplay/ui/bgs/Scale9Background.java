@@ -43,13 +43,50 @@ public class Scale9Background extends Background
         return _s9;
     }
 
+    /** Sets the width of the left and right edges of the source axes to the given value. NOTE:
+     * {@code xborder} may be zero, to indicate that the source image has no left or right pieces,
+     * i.e. just three total pieces: top, bottom and center.
+     */
+    public Scale9Background xborder (float xborder) {
+        _s9.xaxis.resize(0, xborder);
+        _s9.xaxis.resize(2, xborder);
+        return this;
+    }
+
+    /** Sets the height of the top and bottom edges of the source axes to the given value. NOTE:
+     * {@code yborder} may be zero, to indicate that the source image has no top or bottom pieces,
+     * i.e. just three pieces: left, right and center.
+     */
+    public Scale9Background yborder (float yborder) {
+        _s9.yaxis.resize(0, yborder);
+        _s9.yaxis.resize(2, yborder);
+        return this;
+    }
+
+    /** Sets all edges of the source axes to the given value. Equivalent of calling {@code
+     * xborder(border).yborder(border)}.
+     */
+    public Scale9Background corners (float size) {
+        return xborder(size).yborder(size);
+    }
+
+    /** Sets an overall destination scale for the background. When instantiated, the target width
+     * and height are divided by this value, and when rendering the layer scale is multiplied by
+     * this value. This allows games to use high res images with smaller screen sizes.
+     */
+    public Scale9Background destScale (float scale) {
+        _destScale = scale;
+        return this;
+    }
+
     @Override
     protected Instance instantiate (final IDimension size) {
         return new LayerInstance(size, new ImmediateLayer.Renderer() {
             // The destination scale 9.
-            Scale9 dest = new Scale9(size.width(), size.height(), _s9);
+            Scale9 dest = new Scale9(size.width() / _destScale, size.height() / _destScale, _s9);
             public void render (Surface surf) {
                 surf.save();
+                surf.scale(_destScale, _destScale);
                 if (alpha != null) surf.setAlpha(alpha);
                 if (_tint != Tint.NOOP_TINT) surf.setTint(_tint);
                 // issue the 9 draw calls
@@ -88,5 +125,6 @@ public class Scale9Background extends Background
 
     protected Image _image;
     protected Scale9 _s9;
+    protected float _destScale = 1;
     protected int _tint = Tint.NOOP_TINT;
 }
