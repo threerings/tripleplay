@@ -37,8 +37,8 @@ public class Scale9
         /** Creates a new axis with the given total length and 0th and 2nd lengths copied from a
          * source axis. */
         public Axis (float length, Axis src) {
-            _lengths = new float[] {src.size(0), length - src.size(0) - src.size(2), src.size(2)};
-            _offsets = new float[] {0, _lengths[0], _lengths[0] + _lengths[1]};
+            _lengths = new float[] {src.size(0), length - (src.size(0) + src.size(2)), src.size(2)};
+            _offsets = new float[] {0, src.size(0), length - src.size(2)};
         }
 
         /** Returns the coordinate of the given chunk, 0 - 2. */
