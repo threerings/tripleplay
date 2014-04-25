@@ -54,6 +54,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 } else {
                     icon.addCallback(new Callback<Icon>() {
                         public void onSuccess (Icon resource) {
+                            // clear out the rendered icon in case we got laid out before the
+                            // async load finished
+                            _renderedIcon = null;
                             clearLayoutData();
                             invalidate();
                         }
@@ -71,6 +74,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             _ilayer.destroy();
             _ilayer = null;
         }
+        _renderedIcon = null;
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
@@ -178,13 +182,20 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     usedHeight = iheight + iconGap;
                     break;
                 }
-                if (_ilayer != null) _ilayer.destroy();
-                layer.addAt(_ilayer = icon.render(), ix, iy);
+                if (_renderedIcon == icon) {
+                    // This is the same icon, just reposition its layer
+                    _ilayer.setTranslation(ix,  iy);
+                } else {
+                    // Otherwise, destroy and recreate
+                    if (_ilayer != null) _ilayer.destroy();
+                    layer.addAt(_ilayer = icon.render(), ix, iy);
+                }
 
             } else if (icon == null && _ilayer != null) {
                 _ilayer.destroy();
                 _ilayer = null;
             }
+            _renderedIcon = icon;
 
             if (text == null) _tglyph.destroy();
             else {
@@ -276,6 +287,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     protected final Glyph _tglyph = new Glyph(layer);
     protected StyledText.Plain _renderedText;
     protected Layer _ilayer;
+    protected Icon  _renderedIcon;
 
     protected static final float MIN_FONT_SIZE = 6; // TODO: make customizable?
 }
