@@ -26,27 +26,16 @@ public class TripleDemoJava
 
         Toolkit tk = Toolkit.NONE;
         List<String> mainArgs = Lists.newArrayList();
+        String size = "--size=";
         for (int ii = 0; ii < args.length; ii++) {
-            String size = "--size=";
             if (args[ii].startsWith(size)) {
                 String[] wh = args[ii].substring(size.length()).split("x");
                 config.width = Integer.parseInt(wh[0]);
                 config.height = Integer.parseInt(wh[1]);
-                continue;
-            }
-            if (args[ii].equals("--swt")) {
-                tk = Toolkit.SWT;
-                continue;
-            }
-            if (args[ii].equals("--awt")) {
-                tk = Toolkit.AWT;
-                continue;
-            }
-            if (args[ii].equals("--retina")) {
-                config.scaleFactor = 2;
-                continue;
-            }
-            mainArgs.add(args[ii]);
+            } else if (args[ii].equals("--swt")) tk = Toolkit.SWT;
+            else if (args[ii].equals("--awt")) tk = Toolkit.AWT;
+            else if (args[ii].equals("--retina")) config.scaleFactor = 2;
+            else mainArgs.add(args[ii]);
         }
 
         TripleDemo.mainArgs = mainArgs.toArray(new String[0]);
