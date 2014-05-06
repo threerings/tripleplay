@@ -177,7 +177,7 @@ public class Movie
         if (frame == _frame) {
             return;
         }
-        
+
         if (frame < _frame) {
             // Wrap back to the beginning
             for (int ii = 0, ll = _animators.length; ii < ll; ++ii) {
@@ -243,8 +243,15 @@ public class Movie
             }
 
             KeyframeData kf = keyframes.get(keyframeIdx);
-            boolean visible = kf.symbol() != null && kf.visible;
+            tripleplay.flump.Symbol currSymbol = kf.symbol();
+            boolean visible = currSymbol != null && kf.visible;
             content.setVisible(visible);
+
+            if (currSymbol != _prevFrameSymbol && _current instanceof Movie) {
+                ((Movie)_current).setPosition(0);
+            }
+            _prevFrameSymbol = currSymbol;
+
             if (!visible) {
                 emitLabelSignals(startFrame, keyframeIdx);
                 return; // Don't bother animating invisible layers
@@ -327,6 +334,9 @@ public class Movie
 
         protected Instance _current; // The instance currently visible
         protected Instance[] _instances; // Null if only 0-1 instance on this layer
+
+        /** We track this to know where we've added a new symbol and thus should reset position. */
+        protected tripleplay.flump.Symbol _prevFrameSymbol = null;
     }
 
     protected Symbol _symbol;
