@@ -143,13 +143,23 @@ public class MoviePlayer
 
         @Override protected void init (float time) {
             super.init(time);
+            _lastTime = time;
             play(_name);
             _playing = movie();
         }
 
         @Override protected float apply (float time) {
-            // Wait until the original movie is no longer playing
-            return (movie() == _playing) ? 1 : 0;
+            if (movie() != _playing) {
+                return 0;
+
+            } else {
+                float dt = time - _lastTime;
+                _lastTime = time;
+
+                float remaining = _playing.symbol().duration - _playing.position() -
+                    dt*_playing.speed();
+                return remaining;
+            }
         }
 
         @Override protected void makeComplete () {
@@ -161,6 +171,7 @@ public class MoviePlayer
 
         protected String _name;
         protected Movie _playing;
+        protected float _lastTime;
     }
 
     protected Library _lib;
