@@ -247,6 +247,9 @@ public class Movie
             boolean visible = currSymbol != null && kf.visible;
             content.setVisible(visible);
 
+            // NOTE: This has some exciting limitations regarding setPosition. If you jump to a
+            //  position, note that like flash itself, we're not smart enough to start anywhere but
+            //  at the very beginning
             if (currSymbol != _prevFrameSymbol && _current instanceof Movie) {
                 ((Movie)_current).setPosition(0);
             }
