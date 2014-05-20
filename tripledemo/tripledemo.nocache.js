@@ -55,15 +55,15 @@ function tripledemo(){
       return slashIndex >= 0?path.substring(0, slashIndex + 1):'';
     }
 
-    function ensureAbsoluteUrl(url){
-      if (url.match(/^\w+:\/\//)) {
+    function ensureAbsoluteUrl(url_0){
+      if (url_0.match(/^\w+:\/\//)) {
       }
        else {
         var img = $doc_0.createElement('img');
-        img.src = url + 'clear.cache.gif';
-        url = getDirectoryOfFile(img.src);
+        img.src = url_0 + 'clear.cache.gif';
+        url_0 = getDirectoryOfFile(img.src);
       }
-      return url;
+      return url_0;
     }
 
     function tryMetaTag(){
@@ -148,16 +148,16 @@ function tripledemo(){
         if (name_0 == 'gwt:property') {
           content_0 = meta.getAttribute('content');
           if (content_0) {
-            var value, eq = content_0.indexOf('=');
+            var value_0, eq = content_0.indexOf('=');
             if (eq >= 0) {
               name_0 = content_0.substring(0, eq);
-              value = content_0.substring(eq + 1);
+              value_0 = content_0.substring(eq + 1);
             }
              else {
               name_0 = content_0;
-              value = '';
+              value_0 = '';
             }
-            metaProps[name_0] = value;
+            metaProps[name_0] = value_0;
           }
         }
          else if (name_0 == 'gwt:onPropertyErrorFn') {
@@ -187,21 +187,21 @@ function tripledemo(){
   }
 
   function __gwt_getMetaProperty(name_0){
-    var value = metaProps[name_0];
-    return value == null?null:value;
+    var value_0 = metaProps[name_0];
+    return value_0 == null?null:value_0;
   }
 
   function computePropValue(propName){
-    var value = providers[propName](), allowedValuesMap = values[propName];
-    if (value in allowedValuesMap) {
-      return value;
+    var value_0 = providers[propName](), allowedValuesMap = values[propName];
+    if (value_0 in allowedValuesMap) {
+      return value_0;
     }
     var allowedValuesList = [];
     for (var k in allowedValuesMap) {
       allowedValuesList[allowedValuesMap[k]] = k;
     }
     if (propertyErrorFunc) {
-      propertyErrorFunc(propName, allowedValuesList, value);
+      propertyErrorFunc(propName, allowedValuesList, value_0);
     }
     throw null;
   }
@@ -249,7 +249,7 @@ function tripledemo(){
   $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'selectingPermutation'});
   if (!isHostedMode()) {
     try {
-      strongName = '5D74C6A3A9A65CE46CC3AAB173957931';
+      strongName = '5F85E06DAA4DCE9B2E61D914E4A52180';
       var idx = strongName.indexOf(':');
       if (idx != -1) {
         softPermutationId = Number(strongName.substring(idx + 1));
