@@ -7,9 +7,11 @@ package tripleplay.ui;
 
 import playn.core.GroupLayer;
 import playn.core.Image;
+import playn.core.ImageLayer;
 import playn.core.Layer;
 import playn.core.PlayN;
 import playn.core.util.Callback;
+
 import static playn.core.PlayN.graphics;
 
 /**
@@ -18,32 +20,40 @@ import static playn.core.PlayN.graphics;
 public class Icons
 {
     /**
-     * A simple icon that uses an {@code Image} to get its dimensions and a simple image layer when
-     * rendered. The the caller must ensure the image is loaded prior to invoking {@link Icon}
-     * methods.
+     * Base class for image icons just handling the image and the callback.
      */
-    public static class Preloaded implements Icon {
+    public static abstract class ImageIcon implements Icon {
         /** The image. */
         public final Image image;
 
         /** Creates a new icon for the given image. */
-        public Preloaded (Image image) { this.image = image; }
-
-        @Override public float width () { return getReady().width(); }
-        @Override public float height () { return getReady().height(); }
-        @Override public Layer render () { return graphics().createImageLayer(getReady()); }
+        public ImageIcon (Image image) { this.image = image; }
 
         @Override public void addCallback (final Callback<? super Icon> callback) {
             // delegate to the image's callback
             image.addCallback(new Callback<Image>() {
                 @Override public void onSuccess (Image result) {
-                    callback.onSuccess(Preloaded.this);
+                    callback.onSuccess(ImageIcon.this);
                 }
                 @Override public void onFailure (Throwable cause) {
                     callback.onFailure(cause);
                 }
             });
         }
+    }
+
+    /**
+     * A simple icon that uses an {@code Image} to get its dimensions and a simple image layer when
+     * rendered. The the caller must ensure the image is loaded prior to invoking {@link Icon}
+     * methods.
+     */
+    public static class Preloaded extends ImageIcon {
+        /** Creates a new icon for the given image. */
+        public Preloaded (Image image) { super(image); }
+
+        @Override public float width () { return getReady().width(); }
+        @Override public float height () { return getReady().height(); }
+        @Override public Layer render () { return graphics().createImageLayer(getReady()); }
 
         protected Image getReady () {
             if (!image.isReady()) {
@@ -59,7 +69,7 @@ public class Icons
     /**
      * An icon that supports asynchronous images.
      */
-    public static class Loader extends Preloaded
+    public static class Loader extends ImageIcon
     {
         /** The dimensions. */
         public final float width, height;
@@ -79,16 +89,22 @@ public class Icons
         @Override public float height () { return height; }
 
         @Override public Layer render () {
-            if (image.isReady()) return super.render();
+            if (image.isReady()) return renderImage();
             final GroupLayer gl = PlayN.graphics().createGroupLayer();
             image.addCallback(new Callback<Image>() {
                 @Override public void onSuccess (Image result) {
-                    if (!gl.destroyed()) { gl.add(Loader.super.render()); }
+                    if (!gl.destroyed()) { gl.add(renderImage()); }
                 }
 
                 @Override public void onFailure (Throwable cause) {}
             });
             return gl;
+        }
+
+        protected ImageLayer renderImage () {
+            ImageLayer il = PlayN.graphics().createImageLayer(image);
+            il.setSize(width, height);
+            return il;
         }
     }
 
