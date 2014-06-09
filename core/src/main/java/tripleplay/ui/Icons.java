@@ -89,21 +89,8 @@ public class Icons
         @Override public float height () { return height; }
 
         @Override public Layer render () {
-            if (image.isReady()) return renderImage();
-            final GroupLayer gl = PlayN.graphics().createGroupLayer();
-            image.addCallback(new Callback<Image>() {
-                @Override public void onSuccess (Image result) {
-                    if (!gl.destroyed()) { gl.add(renderImage()); }
-                }
-
-                @Override public void onFailure (Throwable cause) {}
-            });
-            return gl;
-        }
-
-        protected ImageLayer renderImage () {
             ImageLayer il = PlayN.graphics().createImageLayer(image);
-            il.setSize(width, height);
+            if (!image.isReady()) il.setSize(width, height);
             return il;
         }
     }
