@@ -5,7 +5,6 @@
     <groupId>com.googlecode.playn</groupId>
     <artifactId>playn-project</artifactId>
     <version>1.9-SNAPSHOT</version>
-    <relativePath></relativePath>
   </parent>
 
   <groupId>com.threerings</groupId>
