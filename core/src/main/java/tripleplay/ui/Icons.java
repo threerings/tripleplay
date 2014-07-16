@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import playn.core.CanvasImage;
 import playn.core.GroupLayer;
 import playn.core.Image;
 import playn.core.ImageLayer;
@@ -31,12 +32,9 @@ public class Icons
 
         @Override public void addCallback (final Callback<? super Icon> callback) {
             // delegate to the image's callback
-            image.addCallback(new Callback<Image>() {
+            image.addCallback(new Callback.Chain<Image>(callback) {
                 @Override public void onSuccess (Image result) {
                     callback.onSuccess(ImageIcon.this);
-                }
-                @Override public void onFailure (Throwable cause) {
-                    callback.onFailure(cause);
                 }
             });
         }
@@ -96,6 +94,89 @@ public class Icons
     }
 
     /**
+     * Defers to another icon. Subclasses decide how to modify the width and height and how to
+     * use the rendered layer. The base takes care of the callback. By default, returns the
+     * size and layer without modification.
+     */
+    public abstract static class Aggregated
+        implements Icon
+    {
+        /** Icon that is deferred to. */
+        public final Icon icon;
+
+        /** Creates a new aggregated icon that defers to the given one. */
+        public Aggregated (Icon icon) {
+            this.icon = icon;
+        }
+
+        @Override public float width () { return icon.width(); }
+        @Override public float height () { return icon.height(); }
+        @Override public Layer render () { return icon.render(); }
+        @Override public void addCallback (final Callback<? super Icon> callback) {
+            icon.addCallback(new Callback.Chain<Icon>(callback) {
+                @Override public void onSuccess (Icon result) {
+                    callback.onSuccess(Aggregated.this);
+                }
+            });
+        }
+    }
+
+    /**
+     * Aggregates and scales another icon.
+     */
+    public static class Scaled extends Aggregated
+        implements Icon
+    {
+        /** The scale to apply to the size and layer. */
+        public final float scale;
+
+        /**
+         * Creates a new icon that scale the given icon to the given scale.
+         */
+        public Scaled (Icon icon, float scale) {
+            super(icon);
+            this.scale = scale;
+        }
+
+        @Override public float width () { return super.width() * scale; }
+        @Override public float height () { return super.height() * scale; }
+        @Override public Layer render () {
+            Layer layer = super.render().setScale(scale);
+            layer.setOrigin(layer.originX() * scale, layer.originY() * scale);
+            return layer;
+        }
+    }
+
+    /**
+     * Nests another icon with an offset. The nesting is necessary since users of icon need to
+     * control the layer translation directly.
+     */
+    public static class Offset extends Aggregated
+        implements Icon
+    {
+        /** The horizontal offset. */
+        public final float tx;
+
+        /** The vertical offset. */
+        public final float ty;
+
+        /**
+         * Creates a new icon that nests and offsets the given icon by the given amounts.
+         */
+        public Offset (Icon icon, float tx, float ty) {
+            super(icon);
+            this.tx = tx;
+            this.ty = ty;
+        }
+
+        @Override public Layer render () {
+            GroupLayer layer = PlayN.graphics().createGroupLayer();
+            layer.addAt(super.render(), tx, ty);
+            return layer;
+        }
+    }
+
+    /**
      * Creates an icon using the supplied image. The the caller must ensure the image is loaded
      * prior to invoking {@link Icon} methods. See {@link Preloaded}.
      */
@@ -110,5 +191,28 @@ public class Icons
      */
     public static Icon loader (Image image, float width, float height) {
         return new Loader(image, width, height);
+    }
+
+    /**
+     * Creates an icon that applies the given scale to the given icon.
+     */
+    public static Icon scaled (Icon icon, float scale) {
+        return new Scaled(icon, scale);
+    }
+
+    /**
+     * Creates an icon that nests and offsets the given icon by the given translation.
+     */
+    public static Icon offset (Icon icon, float tx, float ty) {
+        return new Offset(icon, tx, ty);
+    }
+
+    /**
+     * Creates a solid square icon of the given size.
+     */
+    public static Icon solid (int color, float size) {
+        CanvasImage image = PlayN.graphics().createImage(1, 1);
+        image.canvas().setFillColor(color).fillRect(0, 0, 1, 1);
+        return scaled(image(image), size);
     }
 }
