@@ -140,11 +140,7 @@ public class Icons
 
         @Override public float width () { return super.width() * scale; }
         @Override public float height () { return super.height() * scale; }
-        @Override public Layer render () {
-            Layer layer = super.render().setScale(scale);
-            layer.setOrigin(layer.originX() * scale, layer.originY() * scale);
-            return layer;
-        }
+        @Override public Layer render () { return super.render().setScale(scale); }
     }
 
     /**
