@@ -84,10 +84,11 @@ public class Scroller extends Composite<Scroller>
     });
 
     /** The buffer around a child element when updating visibility ({@link #updateVisibility()}.
-     * The default value of zero causes any elements whose exact bounds lie outside the clipped
+     * The default value (0x0) causes any elements whose exact bounds lie outside the clipped
      * area to be culled. If elements are liable to have overhanging layers, the value can be set
-     * larger. */
-    public static final Style<Float> ELEMENT_BUFFER = Style.<Float>newStyle(true, 0f);
+     * larger appropriately. */
+    public static final Style<IDimension> ELEMENT_BUFFER =
+            Style.<IDimension>newStyle(true, new Dimension(0, 0));
 
     /**
      * Interface for customizing how content is clipped and translated.
@@ -624,12 +625,12 @@ public class Scroller extends Composite<Scroller>
 
         // hide the layer of any child of content that isn't in bounds
         float x = hrange._cpos, y = vrange._cpos, wid = hrange._size, hei = vrange._size;
-        float buff = _elementBuffer;
+        float bx = _elementBuffer.width(), by = _elementBuffer.height();
         for (Element<?> child : (Container<?>)content) {
             IDimension size = child.size();
             if (child.isVisible()) child.layer.setVisible(
-                child.x() - buff < x + wid && child.x() + size.width() + buff > x &&
-                child.y() - buff < y + hei && child.y() + size.height() + buff > y);
+                child.x() - bx < x + wid && child.x() + size.width() + bx > x &&
+                child.y() - by < y + hei && child.y() + size.height() + by > y);
         }
     }
 
@@ -747,5 +748,5 @@ public class Scroller extends Composite<Scroller>
     protected Bars _bars;
 
     /** Region around elements when updating visibility. */
-    protected float _elementBuffer;
+    protected IDimension _elementBuffer;
 }
