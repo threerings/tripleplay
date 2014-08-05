@@ -83,6 +83,24 @@ public class Flicker extends Pointer.Adapter
         _lastTime = now;
     }
 
+    /** Stops any active movement of this flicker. The position is immediately clamped back into
+      * {@code min/max} which may be jarring if the flicker was in the middle of a rebound and
+      * outside its bounds. */
+    public void stop () {
+        setState(STOPPED);
+    }
+
+    /** Aborts any active movement of this flicker. Zeroes out velocity and resets state to stopped.
+      * This differs from {@link #stop} in that it does not clamp the flicker's position back into
+      * {@code min/max}, so it should only be used if you plan to subsequently manually adjust the
+      * position to reflect valid values. Otherwise you may freeze the flicker while it's in a
+      * rebound state and not inside its normal bounds. */
+    public void freeze () {
+        // don't use setState as we don't want STOPPED to clamp our position into min/max
+        _vel = 0;
+        _state = STOPPED;
+    }
+
     @Override public void onPointerStart (Pointer.Event event) {
         if (!enabled.get()) return;
 
