@@ -5,12 +5,17 @@
 
 package tripleplay.flump;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.util.ArrayList;
 
 import playn.core.Assets;
 import playn.core.Image;
 import playn.core.Json;
+import playn.core.PlayN;
 import playn.core.util.Callback;
+
+import tripleplay.flump.BinaryFlumpLoader.ImageLoader;
 
 import static playn.core.PlayN.assets;
 import static playn.core.PlayN.json;
@@ -22,6 +27,21 @@ import react.Value;
 
 public class JsonLoader
 {
+    /**
+     * Loads a JSON encoded library synchronously via PlayN assets.
+     */
+    public static Library loadLibrarySync (String baseDir) throws Exception {
+        return loadLibrarySync(baseDir, assets());
+    }
+    
+    /**
+     * Loads a JSON encoded library synchronously via PlayN assets.
+     */
+    public static Library loadLibrarySync (String baseDir, Assets assets) throws Exception {
+        String text = assets.getTextSync(baseDir + "/library.json");
+        return decodeLibrarySync(json().parse(text), assets, baseDir);
+    }
+    
     /**
      * Loads a JSON encoded library via PlayN assets.
      * @param baseDir The base directory, containing library.json and texture atlases.
@@ -38,16 +58,57 @@ public class JsonLoader
         assets.getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
             public void onSuccess (String text) {
                 try {
-                    decodeLibrary(json().parse(text), assets, baseDir, callback);
+                    decodeLibraryAsync(json().parse(text), assets, baseDir, callback);
                 } catch (Exception err) {
                     callback.onFailure(err);
                 }
             }
         });
     }
+    
+    /** Helper interface to load an image from a path. */
+    protected static interface ImageLoader {
+        public Image load (String path);
+    }
+    
+    /**
+     * Decodes and returns a library synchronously.
+     */
+    protected static Library decodeLibrarySync (Json.Object json, final Assets assets,
+                                                String baseDir)
+    {
+        final Library[] libs = new Library[]{null};
+        decodeLibrary(json, baseDir, new Callback<Library>() {
+            public void onSuccess (Library result) {libs[0] = result;}
+            public void onFailure(Throwable cause) {}
+        }, new ImageLoader() {
+            @Override public Image load (String path) {
+                return assets.getImageSync(path);
+            }
+        });
+        return libs[0];
+    }
+    
+    /**
+     * Decodes and returns a library asynchronously.
+     */
+    protected static void decodeLibraryAsync (Json.Object json, final Assets assets, String baseDir,
+                                              Callback<Library> callback)
+    {
+        decodeLibrary(json, baseDir, callback, new ImageLoader() {
+            @Override public Image load (String path) {
+                return assets.getImage(path);
+            }
+        });
+    }
 
-    protected static void decodeLibrary (Json.Object json, Assets assets, String baseDir,
-                                         final Callback<Library> callback) {
+    /**
+     * Generic library decoding method.
+     */
+    protected static void decodeLibrary (Json.Object json, String baseDir,
+                                         final Callback<Library> callback,
+                                         final ImageLoader loader)
+    {
         final float frameRate = json.getNumber("frameRate");
         final ArrayList<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
         for (Json.Object movieJson : json.getArray("movies", Json.Object.class)) {
@@ -69,7 +130,7 @@ public class JsonLoader
         });
 
         for (final Json.Object atlasJson : atlases) {
-            Image atlas = assets.getImage(baseDir + "/" + atlasJson.getString("file"));
+            Image atlas = loader.load(baseDir + "/" + atlasJson.getString("file"));
             atlas.addCallback(new Callback.Chain<Image>(callback) {
                 public void onSuccess (Image atlas) {
                     for (Json.Object tjson : atlasJson.getArray("textures", Json.Object.class)) {

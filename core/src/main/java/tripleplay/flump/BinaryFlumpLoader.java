@@ -21,6 +21,15 @@ import react.Value;
 public class BinaryFlumpLoader
 {
     /**
+     * Loads a binary encoded library synchronously via PlayN assets.
+     */
+    public static Library loadLibrarySync (String baseDir) throws Exception {
+        byte[] bytes = PlayN.assets().getBytesSync(baseDir + "/library.bin");
+        LibraryData data = new LibraryData(new DataInputStream(new ByteArrayInputStream(bytes)));
+        return decodeLibrarySync(data, baseDir);
+    }
+    
+    /**
      * Loads a binary encoded library via PlayN assets.
      * @param baseDir The base directory, containing library.bin and texture atlases.
      */
@@ -31,17 +40,55 @@ public class BinaryFlumpLoader
                 try {
                     LibraryData libData =
                         new LibraryData(new DataInputStream(new ByteArrayInputStream(bytes)));
-
-                    decodeLibrary(libData, baseDir, callback);
+                    decodeLibraryAsync(libData, baseDir, callback);
                 } catch (Exception err) {
                     callback.onFailure(err);
                 }
             }
         });
     }
-
+    
+    /** Helper interface to load an image from a path. */
+    protected static interface ImageLoader {
+        public Image load (String path);
+    }
+    
+    /**
+     * Decodes and returns a library synchronously.
+     */
+    protected static Library decodeLibrarySync (LibraryData libData, String baseDir)
+    {
+        final Library[] libs = new Library[]{null};
+        decodeLibrary(libData, baseDir, new Callback<Library>() {
+            public void onSuccess (Library result) {libs[0] = result;}
+            public void onFailure(Throwable cause) {}
+        }, new ImageLoader() {
+            @Override public Image load (String path) {
+                return PlayN.assets().getImageSync(path);
+            }
+        });
+        return libs[0];
+    }
+    
+    /**
+     * Decodes and returns a library asynchronously.
+     */
+    protected static void decodeLibraryAsync (LibraryData libData, String baseDir,
+                                              Callback<Library> callback)
+    {
+        decodeLibrary(libData, baseDir, callback, new ImageLoader() {
+            @Override public Image load (String path) {
+                return PlayN.assets().getImage(path);
+            }
+        });
+    }
+    
+    /**
+     * Generic library decoding method.
+     */
     protected static void decodeLibrary (LibraryData libData, String baseDir,
-            final Callback<Library> callback)
+                                         final Callback<Library> callback,
+                                         final ImageLoader imageLoader)
     {
         final float frameRate = libData.frameRate;
         final ArrayList<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
@@ -61,7 +108,7 @@ public class BinaryFlumpLoader
         });
 
         for (final LibraryData.AtlasData atlasData : atlases) {
-            Image atlas = PlayN.assets().getImage(baseDir + "/" + atlasData.file);
+            Image atlas = imageLoader.load(baseDir + "/" + atlasData.file);
             atlas.addCallback(new Callback.Chain<Image>(callback) {
                 public void onSuccess (Image atlas) {
                     for (LibraryData.TextureData textureData : atlasData.textures) {
