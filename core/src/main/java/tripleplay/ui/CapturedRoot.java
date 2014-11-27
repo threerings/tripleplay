@@ -8,7 +8,9 @@ package tripleplay.ui;
 import playn.core.Canvas;
 import playn.core.CanvasImage;
 import playn.core.ImageLayer;
+import playn.core.Layer;
 import pythagoras.f.Dimension;
+import pythagoras.f.Point;
 import react.Connection;
 import react.Slot;
 import react.Value;
@@ -71,6 +73,16 @@ public class CapturedRoot extends Root
      * displaying the root's image on its layer.
      */
     protected class Embedded extends Widget<Embedded> {
+
+        protected Embedded() {
+            layer.setHitTester(new Layer.HitTester() {
+                @Override public Layer hitTest(Layer layer, Point point) {
+                    return CapturedRoot.this.layer.hitTest(point);
+                }
+            });
+            layer.setInteractive(true);
+        }
+
         @Override protected Class<?> getStyleClass () {
             return Embedded.class;
         }

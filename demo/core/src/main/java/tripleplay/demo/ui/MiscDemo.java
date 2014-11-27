@@ -91,8 +91,10 @@ public class MiscDemo extends DemoScreen
                 setField = new Button("Set -> "),
                 disabled = new Field("Disabled text").setEnabled(false)));
 
-        capRoot.add(new Label("Captured Root!").addStyles(
-            Style.BACKGROUND.is(Background.blank().inset(10)))).pack();
+        capRoot.add(new Group(AxisLayout.vertical())
+                        .addStyles(Style.BACKGROUND.is(Background.blank().inset(10)))
+                        .add(new Label("Captured Root!"), new Button("Captured Button"))
+                ).pack();
 
         // add a style animation to the captured root (clicking on cap roots NYI)
         this.iface.animator().repeat(_root.layer).delay(1000).then().action(new Runnable() {
