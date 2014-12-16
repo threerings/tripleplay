@@ -5,17 +5,12 @@
 
 package tripleplay.flump;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.util.ArrayList;
 
 import playn.core.Assets;
 import playn.core.Image;
 import playn.core.Json;
-import playn.core.PlayN;
 import playn.core.util.Callback;
-
-import tripleplay.flump.BinaryFlumpLoader.ImageLoader;
 
 import static playn.core.PlayN.assets;
 import static playn.core.PlayN.json;
