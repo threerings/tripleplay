@@ -202,7 +202,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 updateTextGlyph(tx, ty, width-usedWidth, height-usedHeight);
                 // if we're cuddling, adjust icon position based on the now known tex position
                 if (_ilayer != null && iconCuddle) {
-                    float ctx = _tglyph.layer().tx(), cty = _tglyph.layer().ty();
+                    Layer tlayer = _tglyph.layer();
+                    float ctx = (tlayer == null) ? 0 : tlayer.tx();
+                    float cty = (tlayer == null) ? 0 : tlayer.ty();
                     float ix = _ilayer.tx(), iy = _ilayer.ty();
                     float iwid = icon.width(), ihei = icon.height();
                     switch (iconPos) {
@@ -214,6 +216,10 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     _ilayer.setTranslation(ix, iy);
                 }
             }
+        }
+
+        @Override public String toString () {
+            return "TextLayoutData[text=" + text + ", icon=" + icon + "]";
         }
 
         // this is broken out so that subclasses can extend this action
