@@ -85,6 +85,10 @@ public abstract class StyledText
             return (other instanceof Span) && super.equals(other);
         }
 
+        @Override public String toString () {
+            return "Span '" + text + "' @ " + style;
+        }
+
         protected final TextLayout _layout;
     }
 
@@ -137,6 +141,10 @@ public abstract class StyledText
                 Plain op = (Plain)other;
                 return text.equals(op.text) && style.equals(op.style);
             } else return false;
+        }
+
+        @Override public String toString () {
+            return "Block '" + text + "' @ " + style + "/" + wrap + "/" + align;
         }
 
         protected final TextLayout[] _layouts;
