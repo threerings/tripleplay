@@ -5,6 +5,7 @@
 
 package tripleplay.platform;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
@@ -20,8 +21,6 @@ import playn.java.JavaPlatform;
 import playn.java.SWTPlatform;
 import pythagoras.f.Point;
 import tripleplay.ui.Field;
-
-import com.google.common.collect.Sets;
 
 import static tripleplay.platform.Log.log;
 
@@ -213,5 +212,5 @@ public class SWTTPPlatform extends TPPlatform
     protected PendingRefresh _pendingRefresh;
     protected OS _os = OS.UNKNOWN;
 
-    protected Set<SWTNativeOverlay> _overlays = Sets.newHashSet();
+    protected Set<SWTNativeOverlay> _overlays = new HashSet<SWTNativeOverlay>();
 }
