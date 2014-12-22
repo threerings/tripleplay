@@ -12,6 +12,10 @@ import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -25,10 +29,6 @@ import pythagoras.f.Point;
 import react.Signal;
 import react.Value;
 import tripleplay.ui.Field;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 import static tripleplay.platform.Log.log;
 
@@ -173,12 +173,9 @@ public class JavaTPPlatform extends TPPlatform
      */
     public void setIcon (playn.core.Image... icons) {
         assert icons.length > 0;
-        _frame.setIconImages(Lists.transform(Lists.newArrayList(icons),
-            new Function<playn.core.Image, java.awt.Image>() {
-                public Image apply (playn.core.Image input) {
-                    return ((JavaImage)input).bufferedImage();
-                }
-            }));
+        List<BufferedImage> images = new ArrayList<BufferedImage>();
+        for (playn.core.Image icon : icons) images.add(((JavaImage)icon).bufferedImage());
+        _frame.setIconImages(images);
     }
 
     static <T> void updateOnMainThread (final Value<T> value, final T nvalue) {
@@ -216,8 +213,6 @@ public class JavaTPPlatform extends TPPlatform
     protected JavaPlatform _platform;
 
     protected JFrame _frame;
-
     protected OS _os = OS.UNKNOWN;
-
-    protected Set<JavaNativeOverlay> _overlays = Sets.newHashSet();
+    protected Set<JavaNativeOverlay> _overlays = new HashSet<JavaNativeOverlay>();
 }
