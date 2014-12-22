@@ -6,18 +6,13 @@
 package tripleplay.demo;
 
 import react.UnitSlot;
+
 import tripleplay.game.ScreenStack;
 import tripleplay.game.UIScreen;
-import tripleplay.ui.Background;
-import tripleplay.ui.Button;
-import tripleplay.ui.Group;
-import tripleplay.ui.Label;
-import tripleplay.ui.Root;
-import tripleplay.ui.Shim;
-import tripleplay.ui.SimpleStyles;
-import tripleplay.ui.Style;
+import tripleplay.ui.*;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
+
 import tripleplay.demo.anim.*;
 import tripleplay.demo.entity.*;
 import tripleplay.demo.flump.*;
@@ -60,7 +55,7 @@ public class DemoMenuScreen extends UIScreen
             // tripleplay.flump
             new FlumpDemo(), null, null,
             // tripleplay.util
-            new ColorsDemo(), null, null,
+            new ColorsDemo(), new InterpDemo(), null,
         };
     }
 
