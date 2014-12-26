@@ -28,7 +28,7 @@ public class BinaryFlumpLoader
         LibraryData data = new LibraryData(new DataInputStream(new ByteArrayInputStream(bytes)));
         return decodeLibrarySync(data, baseDir);
     }
-    
+
     /**
      * Loads a binary encoded library via PlayN assets.
      * @param baseDir The base directory, containing library.bin and texture atlases.
@@ -47,12 +47,12 @@ public class BinaryFlumpLoader
             }
         });
     }
-    
+
     /** Helper interface to load an image from a path. */
     protected static interface ImageLoader {
         public Image load (String path);
     }
-    
+
     /**
      * Decodes and returns a library synchronously.
      */
@@ -69,7 +69,7 @@ public class BinaryFlumpLoader
         });
         return libs[0];
     }
-    
+
     /**
      * Decodes and returns a library asynchronously.
      */
@@ -82,7 +82,7 @@ public class BinaryFlumpLoader
             }
         });
     }
-    
+
     /**
      * Generic library decoding method.
      */
@@ -102,7 +102,7 @@ public class BinaryFlumpLoader
 
         final Value<Integer> remainingAtlases = Value.create(atlases.size());
         remainingAtlases.connectNotify(new Value.Listener<Integer>() {
-            @Override public void onChange (Integer remaining, Integer _) {
+            @Override public void onChange (Integer remaining, Integer unused) {
                 if (remaining == 0) callback.onSuccess(new Library(frameRate, movies, textures));
             }
         });

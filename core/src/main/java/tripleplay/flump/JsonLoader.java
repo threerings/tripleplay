@@ -28,7 +28,7 @@ public class JsonLoader
     public static Library loadLibrarySync (String baseDir) throws Exception {
         return loadLibrarySync(baseDir, assets());
     }
-    
+
     /**
      * Loads a JSON encoded library synchronously via PlayN assets.
      */
@@ -36,7 +36,7 @@ public class JsonLoader
         String text = assets.getTextSync(baseDir + "/library.json");
         return decodeLibrarySync(json().parse(text), assets, baseDir);
     }
-    
+
     /**
      * Loads a JSON encoded library via PlayN assets.
      * @param baseDir The base directory, containing library.json and texture atlases.
@@ -60,12 +60,12 @@ public class JsonLoader
             }
         });
     }
-    
+
     /** Helper interface to load an image from a path. */
     protected static interface ImageLoader {
         public Image load (String path);
     }
-    
+
     /**
      * Decodes and returns a library synchronously.
      */
@@ -83,7 +83,7 @@ public class JsonLoader
         });
         return libs[0];
     }
-    
+
     /**
      * Decodes and returns a library asynchronously.
      */
@@ -119,7 +119,7 @@ public class JsonLoader
 
         final Value<Integer> remainingAtlases = Value.create(atlases.length());
         remainingAtlases.connectNotify(new Value.Listener<Integer>() {
-            @Override public void onChange (Integer remaining, Integer _) {
+            @Override public void onChange (Integer remaining, Integer unused) {
                 if (remaining == 0) callback.onSuccess(new Library(frameRate, movies, textures));
             }
         });
