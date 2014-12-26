@@ -6,7 +6,8 @@
 package tripleplay.ui;
 
 import pythagoras.f.IDimension;
-
+import react.Signal;
+import react.SignalView;
 import tripleplay.util.Destroyable;
 
 /**
@@ -32,6 +33,13 @@ public class Root extends Elements<Root>
      */
     public Interface iface () {
         return _iface;
+    }
+
+    /**
+     * A signal emitted when this root is validated.
+     */
+    public SignalView<Root> validated () {
+        return _validated;
     }
 
     /**
@@ -112,6 +120,7 @@ public class Root extends Elements<Root>
      */
     @Override public void validate () {
         super.validate();
+        _validated.emit(this);
     }
 
     @Override protected Class<?> getStyleClass () {
@@ -159,7 +168,7 @@ public class Root extends Elements<Root>
     }
 
     protected final Interface _iface;
-    protected boolean _valid;
+    protected Signal<Root> _validated = Signal.create();
     protected Element<?> _active;
     protected MenuHost _menuHost;
 }
