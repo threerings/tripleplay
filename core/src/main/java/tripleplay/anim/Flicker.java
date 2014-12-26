@@ -136,7 +136,7 @@ public class Flicker extends Pointer.Adapter
         float absDelta = Math.abs(delta);
         if (!_minFlickExceeded && absDelta > minFlickDelta()) {
             _minFlickExceeded = true;
-            minFlickExceeded();
+            minFlickExceeded(event);
         }
         _maxDelta = Math.max(absDelta, _maxDelta);
     }
@@ -223,8 +223,9 @@ public class Flicker extends Pointer.Adapter
 
     /**
      * A method called as soon as the minimum flick distance is exceeded.
+     * @param event the drag event being processed at the time we detected this state.
      */
-    protected void minFlickExceeded () {
+    protected void minFlickExceeded (Pointer.Event event) {
         // nothing by default
     }
 
