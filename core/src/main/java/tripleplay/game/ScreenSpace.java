@@ -632,7 +632,12 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         public void paint (Clock clock) {
             outgoing.screen.paint(clock);
             incoming.screen.paint(clock);
-            elapsed += clock.dt();
+            // if this is our first frame, cap dt at 33ms because the first frame has to eat the
+            // initialization time for the to-be-introduced screen, and we don't want that to chew
+            // up a bunch of our transition time if it's slow; the user will not have seen
+            // anything happen up to now, so this won't cause a jitter in the animation
+            if (elapsed == 0) elapsed += Math.min(33, clock.dt());
+            else elapsed += clock.dt();
             float pct = Math.min(elapsed/duration, 1), ipct;
             if (startPct >= 0) ipct = startPct + (1-startPct)*interp.apply(pct);
             // if we were started with a negative startPct, we're scrolling back from an
