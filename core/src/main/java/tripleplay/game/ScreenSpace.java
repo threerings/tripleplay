@@ -417,7 +417,6 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         // previous screen awake because we could start sliding to it ay any time; otherwise we can
         // put that screen to sleep; all other screens should be sleeping
         int ss = _screens.get(0).dir.canUntrans() ? 2 : 1;
-        log().info("checkSleep " + ss);
         for (int ii = 0, ll = _screens.size(); ii < ll; ii++) _screens.get(ii).check(ii < ss);
     }
 
@@ -598,11 +597,9 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         public void check (boolean awake) {
             if (screen.awake() != awake) {
                 if (awake) {
-                    log().info("waking " + screen);
                     graphics().rootLayer().add(screen.layer);
                     screen.wake();
                 } else {
-                    log().info("sleeping " + screen);
                     graphics().rootLayer().remove(screen.layer);
                     screen.sleep();
                 }
