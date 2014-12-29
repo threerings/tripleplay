@@ -42,6 +42,10 @@ public class Root extends Elements<Root>
         return _validated;
     }
 
+    @Override public boolean isShowing () {
+        return isVisible();
+    }
+
     /**
      * Sizes this root element to its preferred size.
      */
@@ -120,19 +124,6 @@ public class Root extends Elements<Root>
      */
     @Override public void validate () {
         super.validate();
-        _validated.emit(this);
-    }
-
-    @Override protected Class<?> getStyleClass () {
-        return Root.class;
-    }
-
-    @Override public boolean isShowing () {
-        return isVisible();
-    }
-
-    @Override protected Root root () {
-        return this;
     }
 
     /**
@@ -165,6 +156,19 @@ public class Root extends Elements<Root>
             _menuHost = new MenuHost(_iface, this);
         }
         return _menuHost;
+    }
+
+    @Override protected Class<?> getStyleClass () {
+        return Root.class;
+    }
+
+    @Override protected Root root () {
+        return this;
+    }
+
+    @Override protected void layout () {
+        super.layout();
+        _validated.emit(this);
     }
 
     protected final Interface _iface;
