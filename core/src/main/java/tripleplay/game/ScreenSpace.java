@@ -71,12 +71,24 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         },
         IN {
             public void update (Screen oscreen, Screen nscreen, float pct) {
-                // TODO
+                oscreen.layer.setAlpha(1-pct);
+                nscreen.layer.setAlpha(pct);
+                // TODO: scaling
+            }
+            public void finish (Screen oscreen, Screen nscreen) {
+                super.finish(oscreen, nscreen);
+                oscreen.layer.setAlpha(1);
             }
         },
         OUT {
             public void update (Screen oscreen, Screen nscreen, float pct) {
-                // TODO
+                oscreen.layer.setAlpha(1-pct);
+                nscreen.layer.setAlpha(pct);
+                // TODO: scaling
+            }
+            public void finish (Screen oscreen, Screen nscreen) {
+                super.finish(oscreen, nscreen);
+                oscreen.layer.setAlpha(1);
             }
         },
         FLIP {
@@ -160,6 +172,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
         /** Called when this screen has become the active screen. */
         public void gainedFocus () {
+            assert awake();
         }
 
         /** Called when some other screen is about to become the active screen. This screen will be
@@ -180,6 +193,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
           * by a call to {@link #sleep}, but if there are any resources that the screen retains
           * until it is completely released, this is the place to remove them. */
         public void destroy () {
+            assert !awake();
         }
 
         /** called once per game update to allow this screen to participate in the game loop. */
@@ -411,6 +425,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         final ActiveScreen oscr = _screens.remove(0);
         Dir dir = reverse(oscr.dir);
         final ActiveScreen nscr = _screens.get(0);
+        nscr.check(true); // wake screen, if necessary
         transition(oscr, nscr, dir, startPct).onComplete.connect(new UnitSlot() {
             public void onEmit () {
                 giveFocus(nscr);
@@ -532,8 +547,8 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
             // snap our screens back to their original positions
             _udir.update(_cur.screen, _prev.screen, 0);
-            _udir.finish(_cur.screen, _prev.screen);
             _prev.screen.layer.setVisible(false);
+            _udir.finish(_cur.screen, _prev.screen);
             clear();
         }
 
