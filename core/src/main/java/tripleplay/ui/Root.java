@@ -166,8 +166,8 @@ public class Root extends Elements<Root>
         return this;
     }
 
-    @Override protected void layout () {
-        super.layout();
+    @Override protected void wasValidated () {
+        super.wasValidated();
         _validated.emit(this);
     }
 

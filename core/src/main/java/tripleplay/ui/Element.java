@@ -402,7 +402,15 @@ public abstract class Element<T extends Element<T>>
         if (!isSet(Flag.VALID)) {
             layout();
             set(Flag.VALID, true);
+            wasValidated();
         }
+    }
+
+    /**
+     * A hook method called after this element is validated. This chiefly exists for {@link Root}.
+     */
+    protected void wasValidated () {
+        // nada by default
     }
 
     /**
