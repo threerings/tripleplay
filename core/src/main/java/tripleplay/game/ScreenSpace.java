@@ -326,7 +326,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
                 takeFocus(oscr);
                 oscr.destroy();
                 _current = null;
-                pointer().setListener(null);
+                setPointerListener(null);
             }
         } else {
             // TODO: this screen may be inside UntransListener.previous so we may need to recreate
@@ -446,9 +446,9 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             // set up a listener to handle that
             ActiveScreen previous = (_screens.size() <= 1) ? null : _screens.get(1);
             if (previous != null && as.dir.canUntrans()) {
-                pointer().setListener(new UntransListener(as, previous));
+                setPointerListener(new UntransListener(as, previous));
             } else {
-                pointer().setListener(null);
+                setPointerListener(null);
             }
 
         } catch (Exception e) {
@@ -463,6 +463,14 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         } catch (Exception e) {
             log().warn("Screen choked in lostFocus() [screen=" + as.screen + "]", e);
         }
+    }
+
+    protected void setPointerListener (Pointer.Listener listener) {
+        pointer().setListener(listener);
+    }
+
+    protected void captureInteraction (Pointer.Event event) {
+        pointer().cancelLayerDrags();
     }
 
     protected final List<ActiveScreen> _screens = new ArrayList<ActiveScreen>();
@@ -513,7 +521,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
                 _untrans = _prev;
                 _udir.init(_cur.screen, _prev.screen);
                 _prev.screen.layer.setVisible(true);
-                pointer().cancelLayerDrags();
+                captureInteraction(event);
             }
 
             _udir.update(_cur.screen, _prev.screen, frac);
