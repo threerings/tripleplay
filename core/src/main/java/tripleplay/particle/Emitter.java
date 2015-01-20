@@ -19,6 +19,7 @@ import playn.core.QuadBatch;
 import playn.core.Surface;
 import playn.core.Tile;
 import playn.scene.Layer;
+import playn.scene.LayerUtil;
 
 /**
  * Emits and updates particles according to a particle system configuration.
@@ -64,13 +65,8 @@ public class Emitter
         };
         _buffer = new ParticleBuffer(maxParticles);
 
-        layer.state.connect(new Slot<Layer.State>() {
-            public void onEmit (Layer.State state) {
-                _pcon = Closeable.Util.close(_pcon);
-                if (state == Layer.State.ADDED) _pcon = paint.connect(new Slot<Clock>() {
-                    public void onEmit (Clock clock) { paint(clock); }
-                });
-            }
+        LayerUtil.bind(layer, paint, new Slot<Clock>() {
+            public void onEmit (Clock clock) { paint(clock); }
         });
     }
 
