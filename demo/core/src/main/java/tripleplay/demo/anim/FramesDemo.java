@@ -5,16 +5,19 @@
 
 package tripleplay.demo.anim;
 
-import playn.core.GroupLayer;
 import playn.core.Image;
-import playn.core.ImmediateLayer;
 import playn.core.Surface;
-import playn.core.util.Callback;
-import static playn.core.PlayN.*;
+import playn.core.Texture;
+import playn.scene.GroupLayer;
+import playn.scene.Layer;
+
+import react.RFuture;
+import react.Slot;
 
 import tripleplay.anim.Flipbook;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
+import tripleplay.ui.Root;
 import tripleplay.util.PackedFrames;
 import tripleplay.util.SimpleFrames;
 
@@ -27,51 +30,50 @@ public class FramesDemo extends DemoScreen
         return "Flipbook Demo";
     }
 
-    @Override protected Group createIface () {
-        final float width = width(), height = height();
-        ImmediateLayer bg = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-            public void render (Surface surf) {
+    @Override protected Group createIface (Root root) {
+        final float width = size().width(), height = size().height();
+        Layer bg = new Layer() {
+            @Override protected void paintImpl (Surface surf) {
                 surf.setFillColor(0xFFCCCCCC);
                 surf.fillRect(0, 0, width, height);
             }
-        });
+        };
         bg.setDepth(-1);
         layer.add(bg);
 
         // test our simple frames
-        final GroupLayer box = graphics().createGroupLayer();
+        final GroupLayer box = new GroupLayer();
         layer.addAt(box, 0, 100);
-        Image image = assets().getImage("images/spritesheet.png");
-        image.addCallback(new Callback<Image>() {
-            public void onSuccess (Image image) {
-                SimpleFrames frames = new SimpleFrames(image, 60, 60, 60);
-                anim.repeat(box).flipbook(box, new Flipbook(frames, 66));
-                anim.repeat(box).tweenX(box).to(width-frames.width()).in(2000).easeInOut().then().
+        assets().getImage("images/spritesheet.png").state.onSuccess(new Slot<Image>() {
+            public void onEmit (Image sheet) {
+                SimpleFrames frames = new SimpleFrames(sheet.texture(), 60, 60, 60);
+                iface.anim.repeat(box).flipbook(box, new Flipbook(frames, 66));
+                iface.anim.repeat(box).
+                    tweenX(box).to(width-frames.width()).in(2000).easeInOut().then().
                     tweenX(box).to(0).in(2000).easeInOut();
             }
-            public void onFailure (Throwable error) {} // n/a
         });
 
         // test our packed frames
-        final Image packed = assets().getImage("images/packed.png");
-        assets().getText("images/packed.json", new Callback<String>() {
-            public void onSuccess (String json) {
-                GroupLayer box = graphics().createGroupLayer();
-                layer.addAt(box, 100, 200);
-                anim.repeat(box).flipbook(
-                    box, new Flipbook(new PackedFrames(packed, json().parse(json)), 99)).then().
-                    setVisible(box, false).then().delay(500).then().setVisible(box, true);
-            }
+        RFuture.sequence(assets().getImage("images/packed.png").state,
+                         assets().getText("images/packed.json")).
+            onSuccess(new Slot<RFuture.T2<Image,String>>() {
+                public void onEmit (RFuture.T2<Image,String> data) {
+                    Texture packed = data.a.texture();
+                    String json = data.b;
+                    GroupLayer box = new GroupLayer();
+                    layer.addAt(box, 100, 200);
+                    iface.anim.repeat(box).flipbook(
+                        box, new Flipbook(new PackedFrames(packed, json().parse(json)), 99)).then().
+                        setVisible(box, false).then().delay(500).then().setVisible(box, true);
 
-            public void onFailure (Throwable t) {
-                t.printStackTrace(System.err);
-            }
-        });
-        GroupLayer pbox = graphics().createGroupLayer();
-        layer.addAt(pbox, 300, 200);
-        anim.repeat(pbox).flipbook(
-            pbox, new Flipbook(new PackedFrames(packed, PACKED), 99)).then().
-            setVisible(pbox, false).then().delay(500).then().setVisible(pbox, true);
+                    GroupLayer pbox = new GroupLayer();
+                    layer.addAt(pbox, 300, 200);
+                    iface.anim.repeat(pbox).flipbook(
+                        pbox, new Flipbook(new PackedFrames(packed, PACKED), 99)).then().
+                        setVisible(pbox, false).then().delay(500).then().setVisible(pbox, true);
+                }
+            });
 
         return null;
     }

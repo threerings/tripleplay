@@ -5,7 +5,7 @@
 
 package tripleplay.ui;
 
-import playn.core.PlayN;
+import playn.core.Graphics;
 import playn.core.TextLayout;
 
 import pythagoras.f.Dimension;
@@ -167,14 +167,14 @@ public class Constraints
      * is needed to accommodate the supplied template text string. This is useful for configuring
      * the size of text widgets to be that of a largest-possible value.
      */
-    public static Layout.Constraint minSize (String text) {
-        return new TemplateTextConstraint(text) {
+    public static Layout.Constraint minSize (Graphics gfx, String text) {
+        return new TemplateTextConstraint(gfx, text) {
             @Override protected void addTextSize (
                 Dimension into, IDimension lsize, TextLayout tmplLayout) {
                 float lwidth = (lsize == null) ? 0 : lsize.width();
                 float lheight = (lsize == null) ? 0 : lsize.height();
-                into.width += Math.max(lwidth, tmplLayout.width());
-                into.height += Math.max(lheight, tmplLayout.height());
+                into.width += Math.max(lwidth, tmplLayout.size.width());
+                into.height += Math.max(lheight, tmplLayout.size.height());
             }
         };
     }
@@ -184,18 +184,19 @@ public class Constraints
      * needed to accommodate the supplied template text string. This is useful for configuring the
      * size of text widgets to be that of a largest-possible value.
      */
-    public static Layout.Constraint fixedSize (String text) {
-        return new TemplateTextConstraint(text) {
+    public static Layout.Constraint fixedSize (Graphics gfx, String text) {
+        return new TemplateTextConstraint(gfx, text) {
             @Override protected void addTextSize (
                 Dimension into, IDimension lsize, TextLayout tmplLayout) {
-                into.width += tmplLayout.width();
-                into.height += tmplLayout.height();
+                into.width += tmplLayout.size.width();
+                into.height += tmplLayout.size.height();
             }
         };
     }
 
     protected static abstract class TemplateTextConstraint extends TextConstraint {
-        public TemplateTextConstraint (String tmpl) {
+        public TemplateTextConstraint (Graphics gfx, String tmpl) {
+            _gfx = gfx;
             _tmpl = tmpl;
         }
 
@@ -205,12 +206,13 @@ public class Constraints
 
         @Override public void addTextSize (Dimension into, IDimension lsize) {
             TextStyle style = Style.createTextStyle(_elem);
-            addTextSize(into, lsize, PlayN.graphics().layoutText(_tmpl, style));
+            addTextSize(into, lsize, _gfx.layoutText(_tmpl, style));
         }
 
         protected abstract void addTextSize (
             Dimension into, IDimension lsize, TextLayout tmplLayout);
 
+        protected final Graphics _gfx;
         protected final String _tmpl;
         protected Element<?> _elem;
     }

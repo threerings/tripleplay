@@ -5,10 +5,12 @@
 
 package tripleplay.demo.util;
 
-import playn.core.*;
-import playn.core.util.Clock;
+import react.Slot;
 import react.UnitSlot;
-import static playn.core.PlayN.graphics;
+
+import playn.core.*;
+import playn.scene.ImageLayer;
+import playn.scene.Layer;
 
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.*;
@@ -17,6 +19,14 @@ import tripleplay.util.Interpolator;
 
 public class InterpDemo extends DemoScreen
 {
+    public InterpDemo () {
+        paint.connect(new Slot<Clock>() {
+            public void onEmit (Clock clock) {
+                for (Driver driver : _drivers) if (driver.elapsed >= 0) driver.paint(clock);
+            }
+        });
+    }
+
     @Override protected String name () {
         return "Interps";
     }
@@ -25,14 +35,15 @@ public class InterpDemo extends DemoScreen
         return "Util: Interpolators";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         Group grid = new Group(new TableLayout(TableLayout.COL.stretch().fixed(),
                                                TableLayout.COL).gaps(10, 10));
-        CanvasImage square = graphics().createImage(20, 20);
-        square.canvas().setFillColor(0xFFFF0000).fillRect(0, 0, 20, 20);
+        Canvas square = graphics().createCanvas(20, 20);
+        square.setFillColor(0xFFFF0000).fillRect(0, 0, 20, 20);
+        Texture sqtex = square.toTexture();
 
         for (int ii = 0; ii < INTERPS.length; ii++) {
-            Layer knob = graphics().createImageLayer(square);
+            Layer knob = new ImageLayer(sqtex);
             Shim tray = new Shim(300, 20);
             tray.addStyles(Style.BACKGROUND.is(Background.solid(0xFF666666)));
             tray.layer.add(knob);
@@ -47,11 +58,6 @@ public class InterpDemo extends DemoScreen
             for (Driver driver : _drivers) driver.elapsed = 0;
         }}));
         return grid.addStyles(Style.BACKGROUND.is(Background.blank().inset(15)));
-    }
-
-    public void paint (Clock clock) {
-        super.paint(clock);
-        for (Driver driver : _drivers) if (driver.elapsed >= 0) driver.paint(clock);
     }
 
     protected void demoInterp (Interpolator interp, Layer knob) {
@@ -73,7 +79,7 @@ public class InterpDemo extends DemoScreen
                 knob.setTx(0);
                 elapsed = -1;
             } else {
-                elapsed += clock.dt();
+                elapsed += clock.dt;
                 knob.setTx(interp.applyClamp(0, 300, elapsed, 2000));
             }
         }

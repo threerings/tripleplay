@@ -5,40 +5,49 @@
 
 package tripleplay.ui;
 
-import playn.core.Canvas;
-import playn.core.CanvasImage;
-import playn.core.ImageLayer;
-import playn.core.Layer;
 import pythagoras.f.Dimension;
 import pythagoras.f.Point;
-import react.Connection;
+
+import react.Closeable;
 import react.Slot;
 import react.Value;
 import react.ValueView;
+
+import playn.core.Canvas;
+import playn.core.QuadBatch;
+import playn.core.Texture;
+import playn.core.TextureSurface;
+import playn.scene.Layer;
+import playn.scene.ImageLayer;
+
 import tripleplay.util.Layers;
 
-import static playn.core.PlayN.graphics;
-
 /**
- * A root that renders its layer into an image. See {@link Layers#capture(
- * playn.core.Layer, float, float)}. Takes care of hooking into the layout system and updating
- * the image size appropriately.
+ * A root that renders everything into a single texture. Takes care of hooking into the layout
+ * system and updating the image size appropriately. This trades off real-time rendering
+ * performance (which is much improved because the entire UI is one texture), with memory use (a
+ * backing texture is needed for the whole UI) and the expense of re-rendering the entire UI
+ * whenever anything changes.
  */
 public class CapturedRoot extends Root
 {
     /**
      * Creates a new captured root with the given values.
+     *
+     * @param defaultBatch the quad batch to use when capturing the UI scene graph. This is
+     * usually your game's default quad batch.
      */
-    public CapturedRoot (Interface iface, Layout layout, Stylesheet sheet) {
+    public CapturedRoot (Interface iface, Layout layout, Stylesheet sheet, QuadBatch defaultBatch) {
         super(iface, layout, sheet);
+        _defaultBatch = defaultBatch;
     }
 
     /**
-     * Gets the image value onto which the root is rendered. This may be null if no validation
-     * has yet occurred and may change value when the root's size changes.
+     * Gets the texture into which the root is rendered. This may be null if no validation has yet
+     * occurred and may change value when the root's size changes.
      */
-    public ValueView<CanvasImage> image () {
-        return _image;
+    public ValueView<Texture> texture () {
+        return _texture;
     }
 
     /**
@@ -53,19 +62,27 @@ public class CapturedRoot extends Root
     @Override public Root setSize (float width, float height) {
         super.setSize(width, height);
         // update the image to the new size, if it's changed
-        CanvasImage old = _image.get();
-        if (old == null || old.width() != width || old.height() != height) {
-            _image.update(graphics().createImage(width, height));
+        Texture old = _texture.get();
+        if (old == null || old.displayWidth != width || old.displayHeight != height) {
+            _texture.update(iface.plat.graphics().createTexture(width, height, textureConfig()));
         }
         return this;
     }
 
     @Override public void layout () {
         super.layout();
-        // capture the new layout
-        Canvas canvas = _image.get().canvas();
-        canvas.clear();
-        Layers.capture(layer, canvas);
+        Texture texture = _texture.get();
+        TextureSurface surf = new TextureSurface(iface.plat.graphics(), _defaultBatch, texture);
+        surf.begin().clear();
+        layer.paint(surf);
+        surf.end().close();
+    }
+
+    /**
+     * Returns the configuration to use when creating our backing texture.
+     */
+    protected Texture.Config textureConfig () {
+        return Texture.Config.DEFAULT;
     }
 
     /**
@@ -90,19 +107,19 @@ public class CapturedRoot extends Root
         @Override protected LayoutData createLayoutData (float hintX, float hintY) {
             return new LayoutData() {
                 @Override public Dimension computeSize (float hintX, float hintY) {
-                    CanvasImage image = _image.get();
-                    return image == null ? new Dimension(0, 0) :
-                        new Dimension(image.width(), image.height());
+                    Texture tex = _texture.get();
+                    return tex == null ? new Dimension(0, 0) : new Dimension(
+                        tex.displayWidth, tex.displayHeight);
                 }
             };
         }
 
         @Override protected void wasAdded () {
             super.wasAdded();
-            // connect to the root's image and update our layer
-            _conn = image().connectNotify(new Slot<CanvasImage>() {
-                @Override public void onEmit (CanvasImage event) {
-                    updateImage(event);
+            // update our layer when the texture is regenerated
+            _conn = _texture.connectNotify(new Slot<Texture>() {
+                @Override public void onEmit (Texture tex) {
+                    update(tex);
                     invalidate();
                 }
             });
@@ -110,29 +127,30 @@ public class CapturedRoot extends Root
 
         @Override protected void wasRemoved () {
             super.wasRemoved();
-            updateImage(null);
-            _conn.disconnect();
-            _conn = null;
+            update(null);
+            _conn = Closeable.Util.close(_conn);
         }
 
-        protected void updateImage (CanvasImage image) {
-            if (image == null) {
+        protected void update (Texture tex) {
+            if (tex == null) {
                 // we should never be going back to null but handle it anyway
-                if (_ilayer != null) _ilayer.destroy();
+                if (_ilayer != null) _ilayer.close();
                 _ilayer = null;
                 return;
             }
-            if (_ilayer == null) layer.add(_ilayer = graphics().createImageLayer());
-            _ilayer.setImage(image);
+            if (_ilayer == null) layer.add(_ilayer = new ImageLayer());
+            _ilayer.setTile(tex);
         }
 
         /** The captured root image layer, if set. */
         protected ImageLayer _ilayer;
 
         /** The connection to the captured root's image, or null if we're not added. */
-        protected Connection _conn;
+        protected Closeable _conn = Closeable.Util.NOOP;
     }
 
-    /** The image to with the layer is rendered. */
-    protected Value<CanvasImage> _image = Value.create(null);
+    protected final QuadBatch _defaultBatch;
+
+    /** The texure to with the layer is rendered. */
+    protected Value<Texture> _texture = Value.create(null);
 }

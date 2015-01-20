@@ -14,8 +14,8 @@ import pythagoras.f.MathUtil;
 import react.Slot;
 import react.Value;
 
+import playn.core.Platform;
 import playn.core.Sound;
-import static playn.core.PlayN.assets;
 
 import tripleplay.util.Interpolator;
 
@@ -26,8 +26,11 @@ import tripleplay.util.Interpolator;
  * might create one board for SFX and one board for music so that each could be volume controlled
  * (and disabled) separately.
  */
-public class SoundBoard
-{
+public class SoundBoard {
+
+    /** The platform on which this sound board is operating. */
+    public final Platform plat;
+
     /** Controls the volume of this sound board. */
     public Value<Float> volume = new Value<Float>(1f) {
         @Override protected Float updateAndNotifyIf (Float value) {
@@ -38,7 +41,8 @@ public class SoundBoard
     /** Controls whether this sound board is muted. When muted, no sounds will play. */
     public Value<Boolean> muted = Value.create(false);
 
-    public SoundBoard () {
+    public SoundBoard (Platform plat) {
+        this.plat = plat;
         volume.connect(new Slot<Float>() {
             @Override public void onEmit (Float volume) {
                 for (LoopImpl active : _active) active.updateVolume(volume);
@@ -107,7 +111,7 @@ public class SoundBoard
             if (isPlaying()) sound.stop();
         }
         @Override public Sound asSound () {
-            return new Sound.Silence() {
+            return new Sound() {
                 @Override public boolean play () {
                     ClipImpl.this.play();
                     return true;
@@ -121,7 +125,7 @@ public class SoundBoard
             return "clip:" + sound;
         }
         @Override protected Sound loadSound (String path) {
-            return assets().getSound(path);
+            return plat.assets().getSound(path);
         }
     }
 
@@ -158,7 +162,7 @@ public class SoundBoard
             sound = null;
         }
         @Override protected Sound loadSound (String path) {
-            return assets().getMusic(path);
+            return plat.assets().getMusic(path);
         }
     }
 

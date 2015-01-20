@@ -5,12 +5,12 @@
 
 package tripleplay.demo.particle;
 
-import playn.core.CanvasImage;
-import static playn.core.PlayN.graphics;
+import playn.core.Canvas;
+import playn.core.Tile;
 
 import tripleplay.particle.Emitter;
 import tripleplay.particle.Generator;
-import tripleplay.particle.Particles;
+import tripleplay.particle.ParticleBatch;
 import tripleplay.particle.effect.Alpha;
 import tripleplay.particle.effect.Gravity;
 import tripleplay.particle.effect.Move;
@@ -33,12 +33,13 @@ public class FountainDemo extends ParticleDemo
         return "Particles: Fountain";
     }
 
-    @Override protected void createParticles (Particles parts, Randoms rando) {
-        CanvasImage image = graphics().createImage(7, 7);
-        image.canvas().setFillColor(0xFFFFFFFF);
-        image.canvas().fillCircle(3, 3, 3);
+    @Override protected void createParticles (ParticleBatch batch, Randoms rando) {
+        Canvas image = graphics().createCanvas(7, 7);
+        image.setFillColor(0xFFFFFFFF);
+        image.fillCircle(3, 3, 3);
+        Tile tile = image.toTexture();
 
-        Emitter emitter = parts.createEmitter(5000, image);
+        Emitter emitter = new Emitter(batch, paint, 5000, tile);
         emitter.generator = Generator.constant(100);
         emitter.initters.add(Lifespan.constant(5));
         emitter.initters.add(Color.constant(0xFF99CCFF));
@@ -47,7 +48,7 @@ public class FountainDemo extends ParticleDemo
         emitter.effectors.add(new Gravity(30));
         emitter.effectors.add(new Move());
         emitter.effectors.add(Alpha.byAge(Interpolator.EASE_OUT, 1, 0));
-        emitter.layer.setTranslation(width()/2, height()/2);
-        note(emitter);
+        emitter.layer.setTranslation(size().width()/2, size().height()/2);
+        add(emitter);
     }
 }

@@ -5,9 +5,6 @@
 
 package tripleplay.demo.game;
 
-import static playn.core.PlayN.log;
-
-import tripleplay.game.UIScreen;
 import tripleplay.ui.Background;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Root;
@@ -16,53 +13,55 @@ import tripleplay.ui.Style;
 import tripleplay.ui.Stylesheet;
 import tripleplay.ui.layout.AxisLayout;
 
+import tripleplay.game.ScreenStack;
+
 /**
  * A screen that contains UI elements.
  */
-public abstract class TestScreen extends UIScreen
+public abstract class TestScreen extends ScreenStack.UIScreen
 {
     public TestScreen (int depth) {
         _depth = depth;
     }
 
-    @Override public void wasAdded () {
-        super.wasAdded();
-        _root = iface.createRoot(createLayout(), stylesheet(), layer);
-        _root.addStyles(Style.BACKGROUND.is(background()));
-        _root.setSize(width(), height());
-        createIface();
-    }
-
     @Override public void wasShown () {
         super.wasShown();
-        log().info(this + ".wasShown()");
+        game().plat.log().info(this + ".wasShown()");
     }
 
     @Override public void wasHidden () {
         super.wasHidden();
-        log().info(this + ".wasHidden()");
+        game().plat.log().info(this + ".wasHidden()");
     }
 
     @Override public void wasRemoved () {
         super.wasRemoved();
-        log().info(this + ".wasRemoved()");
-        layer.destroy();
-        iface.destroyRoot(_root);
+        game().plat.log().info(this + ".wasRemoved()");
+        layer.close();
+        iface.disposeRoot(_root);
     }
 
     @Override public void showTransitionCompleted () {
         super.showTransitionCompleted();
-        log().info(this + ".showTransitionCompleted()");
+        game().plat.log().info(this + ".showTransitionCompleted()");
     }
 
     @Override public void hideTransitionStarted () {
         super.hideTransitionStarted();
-        log().info(this + ".hideTransitionStarted()");
+        game().plat.log().info(this + ".hideTransitionStarted()");
+    }
+
+    @Override protected Root createRoot () {
+        Root root = iface.createRoot(createLayout(), stylesheet());
+        root.addStyles(Style.BACKGROUND.is(background()));
+        root.setSize(size());
+        createIface(root);
+        return root;
     }
 
     /** Returns the stylesheet to use for this screen. */
     protected Stylesheet stylesheet () {
-        return SimpleStyles.newSheet();
+        return SimpleStyles.newSheet(game().plat.graphics());
     }
 
     /** Creates the layout for the interface root. The default is a vertical axis layout. */
@@ -76,8 +75,8 @@ public abstract class TestScreen extends UIScreen
         return Background.bordered(0xFFCCCCCC, borderColor, 15).inset(15, 10);
     }
 
-    /** Override this method and create your UI in it. Add elements to {@link #_root}. */
-    protected abstract void createIface ();
+    /** Override this method and create your UI in it. Add elements to {@code root}. */
+    protected abstract void createIface (Root root);
 
     protected final int _depth;
     protected Root _root;

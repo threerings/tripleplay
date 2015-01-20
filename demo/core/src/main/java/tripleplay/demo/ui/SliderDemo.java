@@ -6,7 +6,6 @@
 package tripleplay.demo.ui;
 
 import playn.core.Font;
-import playn.core.PlayN;
 
 import react.Function;
 
@@ -16,6 +15,7 @@ import tripleplay.ui.Constraints;
 import tripleplay.ui.Group;
 import tripleplay.ui.Icons;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Slider;
 import tripleplay.ui.Style;
@@ -33,7 +33,7 @@ public class SliderDemo extends DemoScreen
         return "UI: Sliders";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         Group iface = new Group(AxisLayout.vertical().gap(10)).add(
             new Shim(15, 15),
             new Label("Click and drag the slider to change the value:"),
@@ -46,11 +46,11 @@ public class SliderDemo extends DemoScreen
             new Label("With a background, custom bar and thumb image:"),
             sliderAndLabel(
                 new Slider(0, -50, 50).addStyles(
-                    Style.BACKGROUND.is(Background.roundRect(0xFFFFFFFF, 16).inset(4)),
-                    Slider.THUMB_IMAGE.is(Icons.loader(
-                        PlayN.assets().getImage("images/smiley.png"), 24, 24)),
+                    Style.BACKGROUND.is(Background.roundRect(graphics(), 0xFFFFFFFF, 16).inset(4)),
+                    Slider.THUMB_IMAGE.is(Icons.image(assets().getImage("images/smiley.png"))),
                     Slider.BAR_HEIGHT.is(18f),
-                    Slider.BAR_BACKGROUND.is(Background.roundRect(0xFFFF0000, 9))), "-00"));
+                    Slider.BAR_BACKGROUND.is(
+                        Background.roundRect(graphics(), 0xFFFF0000, 9))), "-00"));
 
         return iface;
     }
@@ -58,7 +58,7 @@ public class SliderDemo extends DemoScreen
     protected Group sliderAndLabel (Slider slider, String minText) {
         ValueLabel label = new ValueLabel(slider.value.map(FORMATTER)).
             setStyles(Style.HALIGN.right, Style.FONT.is(FIXED)).
-            setConstraint(Constraints.minSize(minText));
+            setConstraint(Constraints.minSize(graphics(), minText));
         return new Group(AxisLayout.horizontal()).add(slider, label);
     }
 
@@ -68,5 +68,5 @@ public class SliderDemo extends DemoScreen
         }
     };
 
-    protected static Font FIXED = PlayN.graphics().createFont("Fixed", Font.Style.PLAIN, 16);
+    protected static Font FIXED = new Font("Fixed", 16);
 }

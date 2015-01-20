@@ -5,21 +5,22 @@
 
 package tripleplay.demo.ui;
 
-import playn.core.Font;
 import react.Slot;
+
+import playn.core.Font;
+
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Background;
 import tripleplay.ui.Element;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Selector;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
 import tripleplay.ui.Stylesheet;
 import tripleplay.ui.ToggleButton;
 import tripleplay.ui.layout.AxisLayout;
-
-import static playn.core.PlayN.graphics;
 
 public class SelectorDemo extends DemoScreen
 {
@@ -31,14 +32,14 @@ public class SelectorDemo extends DemoScreen
         return "UI: Selector";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         Group main = new Group(AxisLayout.vertical()), buttons;
         Selector sel;
 
-        String font = Style.FONT.getDefault(main).name();
-        Style.Binding<Font> hdr = Style.FONT.is(graphics().createFont(font, Font.Style.BOLD, 14));
-        main.setStylesheet(Stylesheet.builder().add(Label.class,
-            Style.FONT.is(graphics().createFont(font, Font.Style.PLAIN, 12))).create());
+        String font = Style.FONT.getDefault(main).name;
+        Style.Binding<Font> hdr = Style.FONT.is(new Font(font, Font.Style.BOLD, 14));
+        main.setStylesheet(Stylesheet.builder().add(
+            Label.class, Style.FONT.is(new Font(font, 12))).create());
 
         main.add(new Label("Simple").addStyles(hdr));
         main.add(new Label("A single parent with buttons - at most one is selected."));

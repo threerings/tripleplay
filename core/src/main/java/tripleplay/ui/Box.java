@@ -108,7 +108,7 @@ public class Box extends Container.Mutable<Box> {
     @Override protected void wasRemoved () {
         super.wasRemoved();
         if (_contents != null) {
-            if (isSet(Flag.WILL_DESTROY)) _contents.set(Flag.WILL_DESTROY, true);
+            if (isSet(Flag.WILL_DISPOSE)) _contents.set(Flag.WILL_DISPOSE, true);
             _contents.set(Flag.IS_REMOVING, true);
             _contents.wasRemoved();
         }

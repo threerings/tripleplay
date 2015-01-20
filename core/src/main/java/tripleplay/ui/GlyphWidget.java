@@ -25,7 +25,11 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
      * That's protected and causes all parent containers to re-layout. This simply updates the image.
      */
     public void render () {
-        if (isShowing() && _glyph.layer() != null) paint(_glyph.canvas());
+        if (isShowing() && _glyph.layer() != null) {
+            Canvas canvas = _glyph.begin();
+            paint(canvas);
+            _glyph.end();
+        }
     }
 
     /**
@@ -66,11 +70,11 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
             super.layout(left, top, width, height);
             // prepare the glyph
             if (width == 0 && height == 0) {
-                _glyph.destroy();
+                _glyph.close();
                 return;
             }
 
-            _glyph.prepare(width, height);
+            _glyph.prepare(root().iface.plat.graphics(), width, height);
             _glyph.layer().setTranslation(left, top);
             render();
         }

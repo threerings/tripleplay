@@ -5,11 +5,12 @@
 
 package tripleplay.ui.bgs;
 
-import playn.core.GroupLayer;
-import playn.core.Layer;
-import playn.core.PlayN;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
+
+import playn.scene.GroupLayer;
+import playn.scene.Layer;
+
 import tripleplay.ui.Background;
 import tripleplay.ui.util.Insets;
 
@@ -44,14 +45,14 @@ public class CompositeBackground extends Background
 
     @Override protected Instance instantiate (final IDimension size) {
         // we use one layer, and add the constituents to that
-        GroupLayer layer = PlayN.graphics().createGroupLayer();
+        GroupLayer layer = new GroupLayer();
         final Instance[] instances = new Instance[_constituents.length];
 
         Insets current = Insets.ZERO;
         for (int ii = 0, ll = _constituents.length; ii < ll; ii++) {
             Background bg = _constituents[ii];
 
-            // create and save off the instance so we can destroy it later
+            // create and save off the instance so we can dispose it later
             instances[ii] = instantiate(bg, current.subtractFrom(new Dimension(size)));
 
             // add to our composite layer and translate the layers added
@@ -64,9 +65,9 @@ public class CompositeBackground extends Background
         if (_reverseDepth) {
             // simple reversal, if optimization is needed it would be better to simply
             // instantiate the backgrounds in reverse order above
-            Layer[] temp = new Layer[layer.size()];
-            for (int ii = 0, nn = layer.size(); ii < nn; ii++) {
-                temp[ii] = layer.get(ii);
+            Layer[] temp = new Layer[layer.children()];
+            for (int ii = 0, nn = temp.length; ii < nn; ii++) {
+                temp[ii] = layer.childAt(ii);
             }
             float depth = 0;
             for (Layer l : temp) {
@@ -76,11 +77,9 @@ public class CompositeBackground extends Background
         }
 
         return new LayerInstance(size, layer) {
-            @Override public void destroy () {
-                for (Instance i : instances) {
-                    i.destroy();
-                }
-                super.destroy();
+            @Override public void close () {
+                for (Instance i : instances) i.close();
+                super.close();
             }
         };
     }

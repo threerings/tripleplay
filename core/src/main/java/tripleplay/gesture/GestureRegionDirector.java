@@ -11,15 +11,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import playn.core.Connection;
-import playn.core.Layer;
-import playn.core.Layer.HitTester;
-import playn.core.Touch;
-import playn.core.Touch.Event;
-
 import pythagoras.f.Point;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
+
+import react.Connection;
+
+import playn.core.Platform;
+import playn.scene.Layer.HitTester;
+import playn.scene.Layer;
+import playn.scene.Touch;
 
 import tripleplay.util.Timer;
 
@@ -28,13 +29,13 @@ import tripleplay.util.Timer;
  * touch start event if it originated within that director's region bounds. It is only given one of
  * the other events if that event is for a touch that started within that director's region bounds.
  */
-public class GestureRegionDirector
-    implements Touch.LayerListener
+public class GestureRegionDirector extends Touch.Listener
 {
     /**
      * Creates an uninitalized GestureRegionDirector. setLayer() must be called separately.
      */
-    public GestureRegionDirector (Timer timer) {
+    public GestureRegionDirector (Platform plat, Timer timer) {
+        _plat = plat;
         _timer = timer;
     }
 
@@ -43,8 +44,8 @@ public class GestureRegionDirector
      *
      * @param bounds The bounds in which to react to touch events.
      */
-    public GestureRegionDirector (Timer timer, Layer layer, IRectangle bounds) {
-        this(timer);
+    public GestureRegionDirector (Platform plat, Timer timer, Layer layer, IRectangle bounds) {
+        this(plat, timer);
         setLayer(layer, bounds);
     }
 
@@ -56,7 +57,7 @@ public class GestureRegionDirector
                 return _bounds.contains(p.x, p.y) ? layer : null;
             }
         });
-        _connection = layer.addListener(this);
+        _connection = layer.events().connect(this);
         return this;
     }
 
@@ -104,7 +105,7 @@ public class GestureRegionDirector
         }
 
         // new region!
-        region = new GestureDirector(regionBounds, _timer);
+        region = new GestureDirector(_plat, regionBounds, _timer);
         _regions.put(regionBounds, region);
         return region;
     }
@@ -129,51 +130,51 @@ public class GestureRegionDirector
         return getRegion(bounds.x(), bounds.y(), bounds.width(), bounds.height());
     }
 
-    @Override public void onTouchStart (Event event) {
+    @Override public void onStart (Touch.Interaction iact) {
         if (_regions.isEmpty()) return;
 
         for (GestureDirector mgr : _regions.values()) {
-            if (mgr.touchInBounds(event)) {
-                _activeTouches.put(event.id(), new TrackedTouch(mgr, event));
-                mgr.onTouchStart(event);
+            if (mgr.touchInBounds(iact)) {
+                _activeTouches.put(iact.event.id, new TrackedTouch(mgr, iact.event));
+                mgr.onStart(iact);
                 return;
             }
         }
-        _ignoredTouches.add(event.id());
+        _ignoredTouches.add(iact.event.id);
     }
 
-    @Override public void onTouchMove (Event event) {
+    @Override public void onMove (Touch.Interaction iact) {
         if (_regions.isEmpty()) return;
 
-        TrackedTouch touch = _activeTouches.get(event.id());
-        if (touch == null && !_ignoredTouches.contains(event.id())) {
-            Log.log.warning("No start for move event", "event", event);
+        TrackedTouch touch = _activeTouches.get(iact.event.id);
+        if (touch == null && !_ignoredTouches.contains(iact.event.id)) {
+            Log.log.warning("No start for move event", "event", iact.event);
         } else if (touch != null) {
-            touch.region.onTouchMove(event);
+            touch.region.onMove(iact);
         }
     }
 
-    @Override public void onTouchEnd (Event event) {
+    @Override public void onEnd (Touch.Interaction iact) {
         if (_regions.isEmpty()) return;
 
-        TrackedTouch touch = _activeTouches.remove(event.id());
+        TrackedTouch touch = _activeTouches.remove(iact.event.id);
         // set access first to ensure removal
-        if (!_ignoredTouches.remove(event.id()) && touch == null) {
-            Log.log.warning("No start for end event", "event", event);
+        if (!_ignoredTouches.remove(iact.event.id) && touch == null) {
+            Log.log.warning("No start for end event", "event", iact.event);
         } else if (touch != null) {
-            touch.region.onTouchEnd(event);
+            touch.region.onEnd(iact);
         }
     }
 
-    @Override public void onTouchCancel (Event event) {
+    @Override public void onCancel (Touch.Interaction iact) {
         if (_regions.isEmpty()) return;
 
-        TrackedTouch touch = _activeTouches.remove(event.id());
+        TrackedTouch touch = _activeTouches.remove(iact.event.id);
         // set access first to ensure removal
-        if (!_ignoredTouches.remove(event.id()) && touch == null) {
-            Log.log.warning("No start for cancel event", "event", event);
+        if (!_ignoredTouches.remove(iact.event.id) && touch == null) {
+            Log.log.warning("No start for cancel event", "event", iact.event);
         } else if (touch != null) {
-            touch.region.onTouchCancel(event);
+            touch.region.onCancel(iact);
         }
     }
 
@@ -187,15 +188,16 @@ public class GestureRegionDirector
 
     protected static class TrackedTouch {
         public final GestureDirector region;
-        public final Event startEvent;
+        public final Touch.Event startEvent;
 
-        public TrackedTouch (GestureDirector region, Event startEvent) {
+        public TrackedTouch (GestureDirector region, Touch.Event startEvent) {
             this.region = region;
             this.startEvent = startEvent;
         }
     }
 
-    protected Timer _timer;
+    protected final Platform _plat;
+    protected final Timer _timer;
     protected IRectangle _bounds;
     protected Connection _connection;
     protected Map<Integer, TrackedTouch> _activeTouches = new HashMap<Integer, TrackedTouch>();

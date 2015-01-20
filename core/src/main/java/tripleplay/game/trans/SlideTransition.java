@@ -5,7 +5,9 @@
 
 package tripleplay.game.trans;
 
-import tripleplay.game.Screen;
+import playn.core.Platform;
+
+import tripleplay.game.ScreenStack.Screen;
 import tripleplay.game.ScreenStack;
 
 /**
@@ -24,24 +26,24 @@ public class SlideTransition extends InterpedTransition<SlideTransition>
         _originY = stack.originY;
     }
 
-    @Override public void init (Screen oscreen, Screen nscreen) {
-        super.init(oscreen, nscreen);
+    @Override public void init (Platform plat, Screen oscreen, Screen nscreen) {
+        super.init(plat, oscreen, nscreen);
         switch (_dir) {
         case UP:
-            _odx = _originX; _ody = _originY-oscreen.height();
-            _nsx = _originX; _nsy = _originY+nscreen.height();
+            _odx = _originX; _ody = _originY-oscreen.size().height();
+            _nsx = _originX; _nsy = _originY+nscreen.size().height();
             break;
         case DOWN:
-            _odx = _originX; _ody = _originY+oscreen.height();
-            _nsx = _originX; _nsy = _originY-nscreen.height();
+            _odx = _originX; _ody = _originY+oscreen.size().height();
+            _nsx = _originX; _nsy = _originY-nscreen.size().height();
             break;
         case LEFT: default:
-            _odx = _originX-oscreen.width(); _ody = _originY;
-            _nsx = _originX+nscreen.width(); _nsy = _originY;
+            _odx = _originX-oscreen.size().width(); _ody = _originY;
+            _nsx = _originX+nscreen.size().width(); _nsy = _originY;
             break;
         case RIGHT:
-            _odx = _originX+oscreen.width(); _ody = _originY;
-            _nsx = _originX-nscreen.width(); _nsy = _originY;
+            _odx = _originX+oscreen.size().width(); _ody = _originY;
+            _nsx = _originX-nscreen.size().width(); _nsy = _originY;
             break;
         }
         _osx = oscreen.layer.tx();

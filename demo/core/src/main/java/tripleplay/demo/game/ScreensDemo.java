@@ -7,15 +7,18 @@ package tripleplay.demo.game;
 
 import react.UnitSlot;
 
-import tripleplay.game.Screen;
+import playn.core.Game;
+
 import tripleplay.game.ScreenStack;
 import tripleplay.ui.Button;
 import tripleplay.ui.Elements;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.layout.AxisLayout;
 
 import tripleplay.demo.DemoScreen;
+import tripleplay.demo.TripleDemo;
 
 /**
  * Tests/demonstrates screen-related things.
@@ -33,13 +36,13 @@ public class ScreensDemo extends DemoScreen
         return "Screen Stack and Transitions";
     }
 
-    @Override protected Group createIface () {
-        Group root = new Group(AxisLayout.vertical());
-        addUI(this, root, 0);
-        return root;
+    @Override protected Group createIface (Root root) {
+        Group main = new Group(AxisLayout.vertical());
+        addUI(this, main, 0);
+        return main;
     }
 
-    protected void addUI (final Screen screen, Elements<?> root, final int depth) {
+    protected void addUI (final ScreenStack.Screen screen, Elements<?> root, final int depth) {
         root.add(new Label("Screen " + depth));
 
         root.add(new Button("Slide").onClick(new UnitSlot() { public void onEmit () {
@@ -65,13 +68,12 @@ public class ScreensDemo extends DemoScreen
         }
     }
 
-    protected Screen createScreen (final int depth) {
+    protected ScreenStack.Screen createScreen (final int depth) {
         return new TestScreen(depth) {
-            @Override public String toString () {
-                return "Screen" + depth;
-            }
-            @Override protected void createIface () {
-                addUI(this, _root, depth);
+            @Override public Game game () { return TripleDemo.game; }
+            @Override public String toString () { return "Screen" + depth; }
+            @Override protected void createIface (Root root) {
+                addUI(this, root, depth);
             }
         };
     }

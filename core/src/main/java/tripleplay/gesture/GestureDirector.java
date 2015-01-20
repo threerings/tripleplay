@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import playn.core.Touch;
-import playn.core.Touch.Event;
+import playn.core.Platform;
+import playn.scene.Touch;
 
 import pythagoras.f.IRectangle;
 
@@ -30,13 +30,13 @@ import tripleplay.util.Timer.Handle;
  * Will only consider touches that start within the defined bounds, but if it is given touch events
  * that end outside of the bounds, but started inside the bounds it will react to them.
  */
-public class GestureDirector
-    implements Touch.LayerListener
+public class GestureDirector extends Touch.Listener
 {
     public final IRectangle bounds;
 
-    public GestureDirector (IRectangle bounds, Timer timer) {
+    public GestureDirector (Platform plat, IRectangle bounds, Timer timer) {
         this.bounds = bounds;
+        _plat = plat;
         _timer = timer;
     }
 
@@ -57,12 +57,12 @@ public class GestureDirector
         return _gestures.remove(gesture);
     }
 
-    public boolean touchInBounds (Event touch) {
-        return bounds.contains(touch.localX(), touch.localY());
+    public boolean touchInBounds (Touch.Interaction iact) {
+        return bounds.contains(iact.local.x, iact.local.y);
     }
 
-    public boolean trackingTouch (Event touch) {
-        return _currentTouches.containsKey(touch.id());
+    public boolean trackingTouch (Touch.Event touch) {
+        return _currentTouches.containsKey(touch.id);
     }
 
     public ValueView<Gesture<?>> greedyGesture () {
@@ -88,55 +88,56 @@ public class GestureDirector
         return this;
     }
 
-    @Override public void onTouchStart (Event touch) {
-        if (!touchInBounds(touch)) return;
+    @Override public void onStart (Touch.Interaction iact) {
+        if (!touchInBounds(iact)) return;
 
         if (_currentTouches.isEmpty()) {
             // new user interaction!
             for (Gesture<?> gesture : _gestures) gesture.start();
             _greedy.update(null);
         }
-        _currentTouches.put(touch.id(), touch);
-        evaluateGestures(new GestureNode(GestureNode.Type.START, touch));
+        _currentTouches.put(iact.event.id, iact.event);
+        evaluateGestures(new GestureNode(_plat.time(), GestureNode.Type.START, iact));
     }
 
-    @Override public void onTouchMove (Event touch) {
-        if (!trackingTouch(touch)) return;
-        _currentTouches.put(touch.id(), touch);
-        evaluateGestures(new GestureNode(GestureNode.Type.MOVE, touch));
+    @Override public void onMove (Touch.Interaction iact) {
+        if (!trackingTouch(iact.event)) return;
+        _currentTouches.put(iact.event.id, iact.event);
+        evaluateGestures(new GestureNode(_plat.time(), GestureNode.Type.MOVE, iact));
     }
 
-    @Override public void onTouchEnd (Event touch) {
-        if (!trackingTouch(touch)) return;
-        _currentTouches.remove(touch.id());
-        evaluateGestures(new GestureNode(GestureNode.Type.END, touch));
+    @Override public void onEnd (Touch.Interaction iact) {
+        if (!trackingTouch(iact.event)) return;
+        _currentTouches.remove(iact.event.id);
+        evaluateGestures(new GestureNode(_plat.time(), GestureNode.Type.END, iact));
     }
 
-    @Override public void onTouchCancel (Event touch) {
-        if (!trackingTouch(touch)) return;
-        _currentTouches.remove(touch.id());
-        evaluateGestures(new GestureNode(GestureNode.Type.CANCEL, touch));
+    @Override public void onCancel (Touch.Interaction iact) {
+        if (!trackingTouch(iact.event)) return;
+        _currentTouches.remove(iact.event.id);
+        evaluateGestures(new GestureNode(_plat.time(), GestureNode.Type.CANCEL, iact));
     }
 
-    protected void onTouchPause (Event touch) {
-        if (!trackingTouch(touch)) {
+    protected void onTouchPause (GestureNode node) {
+        if (!trackingTouch(node.touch)) {
             Log.log.warning("Bad state: received pause dispatch for an event we're not tracking",
-                "event", touch);
+                            "event", node.touch);
             return;
         }
         // no need to update _currentTouches, it already has this touch registered
-        evaluateGestures(new GestureNode(GestureNode.Type.PAUSE, touch));
+        evaluateGestures(new GestureNode(_plat.time(), GestureNode.Type.PAUSE,
+                                         node.touch, node.location));
     }
 
     protected void evaluateGestures (final GestureNode node) {
         // dispatch a pause event on touches that haven't moved for PAUSE_DELAY.
-        Handle handle = _currentMoves.remove(node.touch.id());
+        Handle handle = _currentMoves.remove(node.touch.id);
         if (handle != null) handle.cancel();
         if (node.type == GestureNode.Type.MOVE || node.type == GestureNode.Type.START) {
             handle = _timer.after(_pauseDelay, new Runnable() {
-                @Override public void run () { onTouchPause(node.touch); }
+                @Override public void run () { onTouchPause(node); }
             });
-            _currentMoves.put(node.touch.id(), handle);
+            _currentMoves.put(node.touch.id, handle);
         }
 
         Gesture<?> currentGreedy = _greedy.get();
@@ -170,8 +171,9 @@ public class GestureDirector
         }
     }
 
+    protected final Platform _plat;
     protected Timer _timer;
-    protected Map<Integer, Event> _currentTouches = new HashMap<Integer, Event>();
+    protected Map<Integer, Touch.Event> _currentTouches = new HashMap<Integer, Touch.Event>();
     protected Map<Integer, Handle> _currentMoves = new HashMap<Integer, Handle>();
     protected Set<Gesture<?>> _gestures = new HashSet<Gesture<?>>();
     protected Value<Gesture<?>> _greedy = Value.create(null);

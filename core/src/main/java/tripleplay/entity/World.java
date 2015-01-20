@@ -8,9 +8,11 @@ package tripleplay.entity;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import playn.core.util.Clock;
-
+import react.Closeable;
 import react.Signal;
+import react.Slot;
+
+import playn.core.Clock;
 
 import tripleplay.util.Bag;
 
@@ -37,13 +39,22 @@ public class World
      * disabled, as well as when it is destroyed. */
     public final Signal<Entity> entityRemoved = Signal.create();
 
+    /** Connects this world to the supplied {@code update} and {@code paint} signals.
+      * @return an object that can be used to disconnect both connections.
+      */
+    public Closeable connect (Signal<Clock> update, Signal<Clock> paint) {
+        return Closeable.Util.join(
+            update.connect(new Slot<Clock>() { public void onEmit (Clock clk) { update(clk); }}),
+            paint.connect(new Slot<Clock>() { public void onEmit (Clock clk) { paint(clk); }}));
+    }
+
     /** Creates and returns an entity. The entity may actually be obtained from a pool of free
-     * entities to avoid unnecessary garbage generation.
-     *
-     * @param enabled whether the entity should be enabled by default. If it is enabled, it will
-     * automatically be queued for addition to the world. If it is not enabled, it will remain
-     * dormant until {@link Entity#setEnabled} is used to enable it.
-     */
+      * entities to avoid unnecessary garbage generation.
+      *
+      * @param enabled whether the entity should be enabled by default. If it is enabled, it will
+      * automatically be queued for addition to the world. If it is not enabled, it will remain
+      * dormant until {@link Entity#setEnabled} is used to enable it.
+      */
     public Entity create (boolean enabled) {
         Entity e;
         if (_ids.isEmpty()) {
@@ -85,7 +96,7 @@ public class World
             protected int findNext (int idx) {
                 while (idx < _entities.length) {
                     Entity e = _entities[idx];
-                    if (e != null && !e.isDestroyed()) return idx;
+                    if (e != null && !e.isDisposed()) return idx;
                     idx++;
                 }
                 return -1;
@@ -95,9 +106,8 @@ public class World
     }
 
     /** Updates all of the {@link System}s in this world. The systems will likely in turn update
-     * the components of registered {@link Entity}s.
-     */
-    public void update (int delta) {
+      * the components of registered {@link Entity}s. */
+    public void update (Clock clock) {
         // process any pending entity additions
         for (int ii = toAdd.size()-1; ii >= 0; ii--) {
             Entity entity = toAdd.removeLast();
@@ -136,7 +146,7 @@ public class World
             }
             entityRemoved.emit(entity);
             // if the entity is destroyed, remove its components and return it to the pool
-            if (entity.isDestroyed()) {
+            if (entity.isDisposed()) {
                 for (int cc = 0, ll = _comps.size(); cc < ll; cc++) {
                     if (entity.comps.isSet(cc)) _comps.get(cc).remove(entity);
                 }
@@ -145,16 +155,12 @@ public class World
         }
 
         // and finally update all of our systems
-        for (int ii = 0, ll = _systems.size(); ii < ll; ii++) {
-            _systems.get(ii).update(delta);
-        }
+        for (int ii = 0, ll = _systems.size(); ii < ll; ii++) _systems.get(ii).update(clock);
     }
 
     /** Paints all of the {@link System}s in this world. */
     public void paint (Clock clock) {
-        for (int ii = 0, ll = _systems.size(); ii < ll; ii++) {
-            _systems.get(ii).paint(clock);
-        }
+        for (int ii = 0, ll = _systems.size(); ii < ll; ii++) _systems.get(ii).paint(clock);
     }
 
     /** Registers {@code system} with this world.

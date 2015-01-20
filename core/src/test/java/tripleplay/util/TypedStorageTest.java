@@ -19,7 +19,7 @@ public class TypedStorageTest
 {
     @Test public void testSetFor () {
         Platform pf = new StubPlatform();
-        TypedStorage ts = new TypedStorage(pf.storage());
+        TypedStorage ts = new TypedStorage(pf.log(), pf.storage());
         Function<String,String> id = Functions.identity();
 
         RSet<String> strings = ts.setFor("strings", id, id);

@@ -5,8 +5,6 @@
 
 package tripleplay.demo.ui;
 
-import playn.core.PlayN;
-
 import react.UnitSlot;
 
 import tripleplay.ui.Background;
@@ -16,6 +14,7 @@ import tripleplay.ui.Group;
 import tripleplay.ui.Icon;
 import tripleplay.ui.Icons;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
 import tripleplay.ui.layout.AxisLayout;
@@ -32,9 +31,8 @@ public class FlowLayoutDemo extends DemoScreen
         return "UI: FlowLayout";
     }
 
-    @Override protected Group createIface () {
-        Group root = new Group(
-            AxisLayout.vertical().offStretch()).setConstraint(AxisLayout.stretched());
+    @Override protected Group createIface (Root root) {
+        Group main = new Group(AxisLayout.vertical().offStretch());
 
         final Group panel = new Group(new FlowLayout(), Styles.make(Style.BACKGROUND.is(
             Background.bordered(0xFFFFFFFF, 0xff000000, 2).inset(4))));
@@ -45,7 +43,7 @@ public class FlowLayoutDemo extends DemoScreen
                 @Override public void onEmit () { panel.add(create(type)); }
             }));
         }
-        root.add(buttons);
+        main.add(buttons);
 
         buttons = new Group(AxisLayout.horizontal());
         buttons.add(new Label("HAlign:"));
@@ -61,10 +59,10 @@ public class FlowLayoutDemo extends DemoScreen
                 @Override public void onEmit () { panel.addStyles(Style.VALIGN.is(valign)); }
             }));
         }
-        root.add(buttons);
+        main.add(buttons);
 
-        root.add(panel.setConstraint(AxisLayout.stretched()));
-        return root;
+        main.add(panel.setConstraint(AxisLayout.stretched()));
+        return main;
     }
 
     public Element<?> create (ElemType type) {
@@ -79,5 +77,5 @@ public class FlowLayoutDemo extends DemoScreen
 
     protected enum ElemType { SMILE, TEXT, SMILE_TEXT, BUTTON }
 
-    protected Icon _smiley = Icons.image(PlayN.assets().getImage("images/smiley.png"));
+    protected Icon _smiley = Icons.image(assets().getImage("images/smiley.png"));
 }

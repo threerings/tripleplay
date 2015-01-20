@@ -8,8 +8,11 @@ package tripleplay.syncdb;
 import java.util.HashMap;
 import java.util.Map;
 
+import react.Function;
+import react.RFuture;
+import react.Slot;
+
 import playn.core.Net;
-import playn.core.util.Callback;
 
 /**
  * Handles the process of syncing a databse with the server.
@@ -26,9 +29,10 @@ public class Protocol
         /** Syncs the supplied database with this session's server. */
         public void sync (final SyncDB db) {
             final Map<String,Integer> mods = db.getMods();
-            _server.sendSync(db.version(), db.getDelta(), new Callback<Response>() {
-                @Override public void onSuccess (Response rsp) { onSyncSuccess(db, mods, rsp); }
-                @Override public void onFailure (Throwable cause) { onSyncFailure(db, cause); }
+            _server.sendSync(db.version(), db.getDelta()).onSuccess(new Slot<Response>() {
+                public void onEmit (Response rsp) { onSyncSuccess(db, mods, rsp); }
+            }).onFailure(new Slot<Throwable>() {
+                public void onEmit (Throwable cause) { onSyncFailure(db, cause); }
             });
         }
 
@@ -127,9 +131,8 @@ public class Protocol
 
     /** Abstracts away the sending of a sync request to the server. */
     public interface Server {
-        /** Sends a sync request to the server, receives its response and dispatches it to the
-         * supplied callback. */
-        void sendSync (int version, Map<String,String> delta, Callback<Response> onResponse);
+        /** Sends a sync request to the server, provides response via future. */
+        RFuture<Response> sendSync (int version, Map<String,String> delta);
     }
 
     /** A {@link Server} implementation that delivers deltas to the server via {@link Net}. */
@@ -140,19 +143,10 @@ public class Protocol
         }
 
         @Override
-        public void sendSync (int version, Map<String,String> delta, final Callback<Response> cb) {
+        public RFuture<Response> sendSync (int version, Map<String,String> delta) {
             String payload = encodeRequest(new Request(version, delta));
-            _net.post(syncURL(payload), payload, new Callback<String>() {
-                public void onSuccess (String payload) {
-                    try {
-                        cb.onSuccess(decodeResponse(payload));
-                    } catch (Throwable t) {
-                        onFailure(t);
-                    }
-                }
-                public void onFailure (Throwable cause) {
-                    cb.onFailure(cause);
-                }
+            return _net.post(syncURL(payload), payload).map(new Function<String,Response>() {
+                public Response apply (String payload) { return decodeResponse(payload); }
             });
         }
 

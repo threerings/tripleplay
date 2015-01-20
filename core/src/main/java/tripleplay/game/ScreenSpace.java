@@ -7,13 +7,19 @@ package tripleplay.game;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import pythagoras.f.IDimension;
+
+import react.Closeable;
+import react.Signal;
+import react.Slot;
 import react.UnitSignal;
 import react.UnitSlot;
 
-import playn.core.GroupLayer;
-import playn.core.Pointer;
-import playn.core.util.Clock;
-import static playn.core.PlayN.*;
+import playn.core.Clock;
+import playn.scene.GroupLayer;
+import playn.scene.Pointer;
+import playn.core.Game;
 
 import tripleplay.ui.Interface;
 import tripleplay.ui.Root;
@@ -32,7 +38,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         UP {
             public int vertComp () { return -1; }
             public void update (Screen oscreen, Screen nscreen, float pct) {
-                float oheight = oscreen.height();
+                float oheight = oscreen.size().height();
                 float ostart = 0, nstart = oheight, range = -oheight;
                 float offset = pct * range;
                 oscreen.layer.setTy(ostart + offset);
@@ -42,7 +48,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         DOWN {
             public int vertComp () { return 1; }
             public void update (Screen oscreen, Screen nscreen, float pct) {
-                float nheight = nscreen.height();
+                float nheight = nscreen.size().height();
                 float ostart = 0, nstart = -nheight, range = nheight;
                 float offset = pct * range;
                 oscreen.layer.setTy(ostart + offset);
@@ -52,7 +58,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         LEFT {
             public int horizComp () { return -1; }
             public void update (Screen oscreen, Screen nscreen, float pct) {
-                float owidth = oscreen.width();
+                float owidth = oscreen.size().width();
                 float ostart = 0, nstart = owidth, range = -owidth;
                 float offset = pct * range;
                 oscreen.layer.setTx(ostart + offset);
@@ -62,7 +68,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         RIGHT {
             public int horizComp () { return 1; }
             public void update (Screen oscreen, Screen nscreen, float pct) {
-                float nwidth = nscreen.width();
+                float nwidth = nscreen.size().width();
                 float ostart = 0, nstart = -nwidth, range = nwidth;
                 float offset = pct * range;
                 oscreen.layer.setTx(ostart + offset);
@@ -142,22 +148,28 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
      * the screen is no longer "at risk" of being shown, {@code sleep} will be called. When the
      * screen is finally removed from the screen space, {@code destroy} will be called.
      */
-    public static class Screen {
+    public static abstract class Screen {
 
         /** Contains the scene graph root for this screen. */
-        public final GroupLayer layer = graphics().createGroupLayer();
+        public final GroupLayer layer = new GroupLayer();
+
+        /** A signal emitted on every simulation update, while this screen is showing. */
+        public final Signal<Clock> update = Signal.create();
+
+        /** A signal emitted on every frame, while this screen is showing. */
+        public final Signal<Clock> paint = Signal.create();
+
+        /** Returns the game in which this screen is operating. */
+        public abstract Game game ();
 
         /** Called when this screen is first added to the screen space. */
         public void init () {
             // nada by default
         }
 
-        /** Returns the width of this screen, for use by transitions.
-          * Defaults to the width of the entire view. */
-        public float width () { return graphics().width(); }
-        /** Returns the height of this screen, for use by transitions.
-          * Defaults to the height of the entire view. */
-        public float height () { return graphics().height(); }
+        /** Returns the size of this screen, for use by transitions.
+          * Defaults to the size of the entire view. */
+        public IDimension size () { return game().plat.graphics().viewSize; }
 
         /** Returns true when this screen is awake. */
         public boolean awake () { return (_flags & AWAKE) != 0; }
@@ -196,14 +208,6 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             assert !awake();
         }
 
-        /** called once per game update to allow this screen to participate in the game loop. */
-        public void update (int delta) {
-        }
-
-        /** Called once per game paint to allow this screen to participate in the game loop. */
-        public void paint (Clock clock) {
-        }
-
         /** Returns whether or not an untransition gesture may be initiated via {@code dir}.
           *
           * <p>By default this requires that the screen be at its origin in x or y depending on the
@@ -218,10 +222,28 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             return true;
         }
 
+        /**
+         * Adds {@code ac} to a list of closeables which will be closed when this screen goes to
+         * sleep.
+         */
+        public void closeOnSleep (AutoCloseable ac) {
+            _closeOnSleep.add(ac);
+        }
+
         void setTransiting (boolean transiting) {
             if (transiting) _flags |= TRANSITING;
             else            _flags &= ~TRANSITING;
         }
+
+        void setActive (boolean active) {
+            _scons.close();
+            if (active) _scons = Closeable.Util.join(
+                game().update.connect(update.slot()),
+                game().paint.connect(paint.slot()));
+            else _scons = Closeable.Util.NOOP;
+            layer.setVisible(active);
+        }
+        boolean isActive () { return _scons != Closeable.Util.NOOP; }
 
         /** Flag: whether this screen is currently awake. */
         protected static final int AWAKE = 1 << 0;
@@ -229,13 +251,15 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         protected static final int TRANSITING = 1 << 1;
 
         protected int _flags;
+        protected Closeable _scons = Closeable.Util.NOOP;
+        protected final Closeable.Set _closeOnSleep = new Closeable.Set();
     }
 
     /** A {@link Screen} that takes care of basic UI setup for you. */
     public static abstract class UIScreen extends Screen {
 
         /** Manages the main UI elements for this screen. */
-        public final Interface iface = new Interface();
+        public final Interface iface = new Interface(game().plat, paint);
 
         @Override public void wake () {
             super.wake();
@@ -246,22 +270,12 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         @Override public void sleep () {
             super.sleep();
             if (_root != null) {
-                iface.destroyRoot(_root);
+                iface.disposeRoot(_root);
                 _root = null;
             }
             // a screen is completely cleared and recreated between sleep/wake calls, so clear the
             // animator after destroying the root so that unprocessed anims don't hold onto memory
-            iface.animator().clear();
-        }
-
-        @Override public void update (int delta) {
-            super.update(delta);
-            iface.update(delta);
-        }
-
-        @Override public void paint (Clock clock) {
-            super.paint(clock);
-            iface.paint(clock);
+            iface.anim.clear();
         }
 
         /** Creates the main UI root for this screen. This should also configure the size of the
@@ -271,6 +285,12 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         /** Contains the main UI for this screen.
           * Created in {@link #wake}, destroyed in {@link #sleep}. */
         protected Root _root;
+    }
+
+    /** Creates a screen space which will manage screens for {@code game}. */
+    public ScreenSpace (Game game, GroupLayer rootLayer) {
+        _game = game;
+        _rootLayer = rootLayer;
     }
 
     @Override public Iterator<Screen> iterator () {
@@ -326,7 +346,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
                 takeFocus(oscr);
                 oscr.destroy();
                 _current = null;
-                setPointerListener(null);
+                _onPointer = Closeable.Util.close(_onPointer);
             }
         } else {
             // TODO: this screen may be inside UntransListener.previous so we may need to recreate
@@ -360,24 +380,6 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     /** Returns the current screen, or {@code null} if this space is empty. */
     public Screen current () {
         return (_current == null) ? null : _current.screen;
-    }
-
-    /** Includes the screen space and its screens in the game update loop. */
-    public void update (int delta) {
-        if (_driver != null) _driver.update(delta);
-        else {
-            if (_current != null) _current.screen.update(delta);
-            if (_untrans != null) _untrans.screen.update(delta);
-        }
-    }
-
-    /** Includes the screen space and its screens in the game paint loop. */
-    public void paint (Clock clock) {
-        if (_driver != null) _driver.paint(clock);
-        else {
-            if (_current != null) _current.screen.paint(clock);
-            if (_untrans != null) _untrans.screen.paint(clock);
-        }
     }
 
     protected int indexOf (Screen screen) {
@@ -445,14 +447,13 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             // if we have a previous screen, and the direction supports manual untransitioning,
             // set up a listener to handle that
             ActiveScreen previous = (_screens.size() <= 1) ? null : _screens.get(1);
-            if (previous != null && as.dir.canUntrans()) {
-                setPointerListener(new UntransListener(as, previous));
-            } else {
-                setPointerListener(null);
-            }
+            _onPointer.close();
+            if (previous == null || !as.dir.canUntrans()) _onPointer = Closeable.Util.NOOP;
+            else _onPointer = _current.screen.layer.events().connect(
+                new UntransListener(as, previous));
 
         } catch (Exception e) {
-            log().warn("Screen choked in gainedFocus() [screen=" + as.screen + "]", e);
+            _game.plat.log().warn("Screen choked in gainedFocus() [screen=" + as.screen + "]", e);
         }
         checkSleep();
     }
@@ -461,23 +462,38 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         try {
             as.screen.lostFocus();
         } catch (Exception e) {
-            log().warn("Screen choked in lostFocus() [screen=" + as.screen + "]", e);
+            _game.plat.log().warn("Screen choked in lostFocus() [screen=" + as.screen + "]", e);
         }
     }
 
-    protected void setPointerListener (Pointer.Listener listener) {
-        pointer().setListener(listener);
+    protected class ActiveScreen {
+        public final Screen screen;
+        public final Dir dir;
+
+        public ActiveScreen (Screen screen, Dir dir) {
+            this.screen = screen;
+            this.dir = dir;
+        }
+
+        public void check (boolean awake) {
+            if (screen.awake() != awake) {
+                if (awake) {
+                    _rootLayer.add(screen.layer);
+                    screen.wake();
+                } else {
+                    _rootLayer.remove(screen.layer);
+                    screen.sleep();
+                }
+            }
+        }
+
+        public void destroy () {
+            check(false); // make sure screen is hidden/remove
+            screen.destroy();
+        }
     }
 
-    protected void captureInteraction (Pointer.Event event) {
-        pointer().cancelLayerDrags();
-    }
-
-    protected final List<ActiveScreen> _screens = new ArrayList<ActiveScreen>();
-    protected ActiveScreen _current, _untrans;
-    protected Driver _driver;
-
-    protected class UntransListener implements Pointer.Listener {
+    protected class UntransListener extends Pointer.Listener {
         // the start stamp of our gesture, or 0 if we're not in a gesture
         public double start;
         // whether we're in the middle of an untransition gesture
@@ -491,18 +507,18 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             _cur = cur; _prev = prev;
         }
 
-        @Override public void onPointerStart (Pointer.Event event) {
+        @Override public void onStart (Pointer.Interaction iact) {
             // if it's not OK to initiate an untransition gesture, or we're already in the middle
             // of animating an automatic transition, ignore this gesture
             if (!_cur.screen.canUntrans(_udir) || _driver != null) return;
-            _sx = event.x(); _sy = event.y();
-            start = currentTime();
+            _sx = iact.event.x; _sy = iact.event.y;
+            start = iact.event.time;
         }
 
-        @Override public void onPointerDrag (Pointer.Event event) {
+        @Override public void onDrag (Pointer.Interaction iact) {
             if (start == 0) return; // ignore if we were disabled at gesture start
 
-            float frac = updateFracs(event.x(), event.y());
+            float frac = updateFracs(iact.event.x, iact.event.y);
             if (!untransing) {
                 // if the beginning of the gesture is not "more" in the untrans direction than not,
                 // ignore the rest the interaction (note: _offFrac is always positive but frac is
@@ -519,24 +535,24 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
                 // the first time we start untransing, do _udir.init() & setViz
                 untransing = true;
                 _untrans = _prev;
+                _untrans.screen.setActive(true);
                 _udir.init(_cur.screen, _prev.screen);
-                _prev.screen.layer.setVisible(true);
-                captureInteraction(event);
+                iact.capture();
             }
 
             _udir.update(_cur.screen, _prev.screen, frac);
         }
 
-        @Override public void onPointerEnd (Pointer.Event event) {
+        @Override public void onEnd (Pointer.Interaction iact) {
             if (start == 0 || !untransing) return;
 
             // clean up after our current manual transition because we're going to set up a driver
             // to put the current screen back into place or to pop it off entirely
             _udir.finish(_cur.screen, _prev.screen);
 
-            float frac = updateFracs(event.x(), event.y());
+            float frac = updateFracs(iact.event.x, iact.event.y);
             // compute the "velocity" of this gesture in "screens per second"
-            float fvel = (1000*frac) / (float)(currentTime() - start);
+            float fvel = (1000*frac) / (float)(iact.event.time - start);
             // if we've revealed more than 30% of the old screen, or we're going fast enough...
             if (frac > 0.3f || fvel > 1.25f) {
                 // ...pop back to the previous screen
@@ -549,12 +565,12 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             clear();
         }
 
-        @Override public void onPointerCancel (Pointer.Event event) {
+        @Override public void onCancel (Pointer.Interaction iact) {
             if (start == 0 || !untransing) return;
 
             // snap our screens back to their original positions
             _udir.update(_cur.screen, _prev.screen, 0);
-            _prev.screen.layer.setVisible(false);
+            _prev.screen.setActive(false);
             _udir.finish(_cur.screen, _prev.screen);
             clear();
         }
@@ -569,14 +585,14 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             // project dx/dy along untransition dir's vector
             float dx = cx-_sx, dy = cy-_sy;
             int hc = _udir.horizComp(), vc = _udir.vertComp();
-            float swidth = _prev.screen.width(), sheight = _prev.screen.height();
+            IDimension ssize = _prev.screen.size();
             float frac;
             if (hc != 0) {
-                frac = (dx*hc) / swidth;
-                _offFrac = Math.abs(dy) / sheight;
+                frac = (dx*hc) / ssize.width();
+                _offFrac = Math.abs(dy) / ssize.height();
             } else {
-                frac = (dy*vc) / sheight;
-                _offFrac = Math.abs(dx) / swidth;
+                frac = (dy*vc) / ssize.height();
+                _offFrac = Math.abs(dx) / ssize.width();
             }
             return frac;
         }
@@ -587,37 +603,10 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             float tx = dx*_udir.horizComp();
             float ty = dy*_udir.vertComp();
             // the distance we've traveled over the full width/height of the screen is the frac
-            return (tx > 0) ? tx/_prev.screen.width() : ty/_prev.screen.height();
+            return (tx > 0) ? tx/_prev.screen.size().width() : ty/_prev.screen.size().height();
         }
 
         protected float _offFrac;
-    }
-
-    protected static class ActiveScreen {
-        public final Screen screen;
-        public final Dir dir;
-
-        public ActiveScreen (Screen screen, Dir dir) {
-            this.screen = screen;
-            this.dir = dir;
-        }
-
-        public void check (boolean awake) {
-            if (screen.awake() != awake) {
-                if (awake) {
-                    graphics().rootLayer().add(screen.layer);
-                    screen.wake();
-                } else {
-                    graphics().rootLayer().remove(screen.layer);
-                    screen.sleep();
-                }
-            }
-        }
-
-        public void destroy () {
-            check(false); // make sure screen is hidden/remove
-            screen.destroy();
-        }
     }
 
     /** Drives a transition via an animation. */
@@ -628,6 +617,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         public final UnitSignal onComplete = new UnitSignal();
         public final float startPct;
         public final Interpolator interp;
+        public final Closeable onPaint;
         public float elapsed;
 
         public Driver (ActiveScreen outgoing, ActiveScreen incoming, Dir dir, float startPct) {
@@ -639,25 +629,27 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             // TODO: allow Dir to provide own interpolator?
             this.interp = (startPct == 0) ? Interpolator.EASE_INOUT : Interpolator.EASE_OUT;
 
+            // activate the incoming screen (the outgoing will already be active; the incoming one
+            // may already be active as well but setActive is idempotent so it's OK)
+            incoming.screen.setActive(true);
+            assert outgoing.screen.isActive();
+
             dir.init(outgoing.screen, incoming.screen);
-            incoming.screen.layer.setVisible(true);
             dir.update(outgoing.screen, incoming.screen, startPct);
+
+            // connect to the paint signal to drive our animation
+            onPaint = _game.paint.connect(new Slot<Clock>() {
+                public void onEmit (Clock clock) { paint(clock); }
+            });
         }
 
-        public void update (int delta) {
-            outgoing.screen.update(delta);
-            incoming.screen.update(delta);
-        }
-
-        public void paint (Clock clock) {
-            outgoing.screen.paint(clock);
-            incoming.screen.paint(clock);
+        protected void paint (Clock clock) {
             // if this is our first frame, cap dt at 33ms because the first frame has to eat the
             // initialization time for the to-be-introduced screen, and we don't want that to chew
             // up a bunch of our transition time if it's slow; the user will not have seen
             // anything happen up to now, so this won't cause a jitter in the animation
-            if (elapsed == 0) elapsed += Math.min(33, clock.dt());
-            else elapsed += clock.dt();
+            if (elapsed == 0) elapsed += Math.min(33, clock.dt);
+            else elapsed += clock.dt;
             float pct = Math.min(elapsed/duration, 1), ipct;
             if (startPct >= 0) ipct = startPct + (1-startPct)*interp.apply(pct);
             // if we were started with a negative startPct, we're scrolling back from an
@@ -669,11 +661,19 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
         public void complete () {
             _driver = null;
-            outgoing.screen.layer.setVisible(false);
+            onPaint.close();
+            outgoing.screen.setActive(false);
             dir.finish(outgoing.screen, incoming.screen);
             onComplete.emit();
         }
     }
+
+    protected final Game _game;
+    protected final GroupLayer _rootLayer;
+    protected final List<ActiveScreen> _screens = new ArrayList<ActiveScreen>();
+    protected ActiveScreen _current, _untrans;
+    protected Driver _driver;
+    protected Closeable _onPointer;
 
     protected static Dir reverse (Dir dir) {
         switch (dir) {

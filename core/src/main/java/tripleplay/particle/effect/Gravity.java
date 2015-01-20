@@ -5,8 +5,6 @@
 
 package tripleplay.particle.effect;
 
-import static playn.core.PlayN.graphics;
-
 import tripleplay.particle.Effector;
 import tripleplay.particle.ParticleBuffer;
 
@@ -30,7 +28,7 @@ public class Gravity extends Effector
      * accelerates the particle toward the bottom of the screen.
      */
     public Gravity (float accel) {
-        _accel = accel * graphics().ctx().scale.factor;
+        _accel = accel;
     }
 
     // TODO: account for device orientation in willInit (will need vel vector)

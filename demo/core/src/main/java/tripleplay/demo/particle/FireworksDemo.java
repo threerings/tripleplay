@@ -7,12 +7,12 @@ package tripleplay.demo.particle;
 
 import react.UnitSlot;
 
-import playn.core.CanvasImage;
-import static playn.core.PlayN.graphics;
+import playn.core.Canvas;
+import playn.core.Tile;
 
 import tripleplay.particle.Emitter;
 import tripleplay.particle.Generator;
-import tripleplay.particle.Particles;
+import tripleplay.particle.ParticleBatch;
 import tripleplay.particle.effect.Alpha;
 import tripleplay.particle.effect.Drag;
 import tripleplay.particle.effect.Gravity;
@@ -36,25 +36,25 @@ public class FireworksDemo extends ParticleDemo
         return "Particles: Fireworks";
     }
 
-    @Override protected void createParticles (Particles parts, final Randoms rando) {
-        CanvasImage image = graphics().createImage(2, 2);
-        image.canvas().setFillColor(0xFFFFFFFF);
-        image.canvas().fillRect(0, 0, 2, 2);
+    @Override protected void createParticles (ParticleBatch batch, final Randoms rando) {
+        Canvas image = graphics().createCanvas(2, 2);
+        image.setFillColor(0xFFFFFFFF).fillRect(0, 0, 2, 2);
+        Tile tile = image.toTexture();
 
-        final Emitter explode1 = createEmitter(parts, rando, image, 0xFFFFCD82, 0.975f);
-        final Emitter explode2 = createEmitter(parts, rando, image, 0xFFF06969, 0.95f);
-        note(explode1);
-        note(explode2);
+        final Emitter explode1 = createEmitter(batch, rando, tile, 0xFFFFCD82, 0.975f);
+        final Emitter explode2 = createEmitter(batch, rando, tile, 0xFFF06969, 0.95f);
+        add(explode1);
+        add(explode2);
 
-        float tx = 100 + rando.getFloat(graphics().width()-200);
-        float ty = 100 + rando.getFloat(graphics().height()-200);
+        float tx = 100 + rando.getFloat(size().width()-200);
+        float ty = 100 + rando.getFloat(size().height()-200);
         explode1.layer.setTranslation(tx, ty);
         explode2.layer.setTranslation(tx, ty);
 
         explode1.onEmpty.connect(new UnitSlot() {
           @Override public void onEmit () {
-            float tx = 100 + rando.getFloat(graphics().width()-200);
-            float ty = 100 + rando.getFloat(graphics().height()-200);
+            float tx = 100 + rando.getFloat(size().width()-200);
+            float ty = 100 + rando.getFloat(size().height()-200);
             explode1.layer.setTranslation(tx, ty);
             explode2.layer.setTranslation(tx, ty);
             explode1.generator = Generator.impulse(200);
@@ -62,9 +62,9 @@ public class FireworksDemo extends ParticleDemo
         }});
     }
 
-    protected Emitter createEmitter (Particles parts, Randoms rando, CanvasImage image,
+    protected Emitter createEmitter (ParticleBatch batch, Randoms rando, Tile tile,
                                      int color, float drag) {
-        final Emitter explode = parts.createEmitter(200, image);
+        final Emitter explode = new Emitter(batch, paint, 200, tile);
         explode.generator = Generator.impulse(200);
         explode.initters.add(Lifespan.random(rando, 1, 1.5f));
         explode.initters.add(Color.constant(color));

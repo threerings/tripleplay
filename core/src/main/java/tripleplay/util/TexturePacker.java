@@ -13,13 +13,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pythagoras.i.IRectangle;
-import pythagoras.i.Rectangle;
+import pythagoras.f.Rectangle;
 
-import playn.core.Image;
+import playn.core.Graphics;
+import playn.core.QuadBatch;
 import playn.core.Surface;
-import playn.core.SurfaceImage;
-import static playn.core.PlayN.*;
+import playn.core.Texture;
+import playn.core.TextureSurface;
+import playn.core.Tile;
 
 import react.Slot;
 
@@ -29,17 +30,17 @@ import react.Slot;
 public class TexturePacker
 {
     public interface Renderer {
-        void render (Surface surface, IRectangle bounds);
+        void render (Surface surface, float x, float y, float width, float height);
     }
 
     /** Add an image to the packer. */
-    public TexturePacker add (String id, Image image) {
-        return addItem(new ImageItem(id, image));
+    public TexturePacker add (String id, Tile tile) {
+        return addItem(new TileItem(id, tile));
     }
 
-    /** Add a lazily rendered region to the packer. The renderer will be used to draw the region
-     * each time pack() is called. */
-    public TexturePacker add (String id, int width, int height, Renderer renderer) {
+    /** Add a lazily rendered region to the packer.
+      * The renderer will be used to draw the region each time pack() is called. */
+    public TexturePacker add (String id, float width, float height, Renderer renderer) {
         return addItem(new RenderedItem(id, width, height, renderer));
     }
 
@@ -47,15 +48,15 @@ public class TexturePacker
      * Pack all images into as few atlases as possible.
      * @return A map containing the new images, keyed by the id they were added with.
      */
-    public Map<String,Image.Region> pack () {
+    public Map<String,Tile> pack (Graphics gfx, QuadBatch batch) {
         List<Item> unpacked = new ArrayList<Item>(_items.values());
+        // TODO(bruno): Experiment with different heuristics. Brute force calculate using multiple
+        // different heuristics and use the best one?
         Collections.sort(unpacked, new Comparator<Item>() {
-            // TODO(bruno): Experiment with different heuristics. Brute force calculate using
-            // multiple different heuristics and use the best one?
             public int compare (Item o1, Item o2) {
-                // Sort by perimeter (instead of area). It can be harder to fit long skinny textures
-                // after the large square ones
-                return (o2.width()+o2.height()) - (o1.width()+o1.height());
+                // Sort by perimeter (instead of area). It can be harder to fit long skinny
+                // textures after the large square ones
+                return (int)(o2.width+o2.height) - (int)(o1.width+o1.height);
             }
         });
 
@@ -75,18 +76,18 @@ public class TexturePacker
             }
         }
 
-        final Map<String,Image.Region> packed = new HashMap<String,Image.Region>();
+        final Map<String,Tile> packed = new HashMap<String,Tile>();
         for (Atlas atlas : atlases) {
             Node root = atlas.root;
-            final SurfaceImage atlasImage = graphics().createSurface(root.width, root.height);
-            root.visitItems(new Slot<Node>() { @Override public void onEmit (Node node) {
+            final TextureSurface atlasTex = new TextureSurface(gfx, batch, root.width, root.height);
+            atlasTex.begin();
+            root.visitItems(new Slot<Node>() { @Override public void onEmit (Node n) {
                 // Draw the item to the atlas
-                node.item.draw(atlasImage.surface(), node.x, node.y);
-
+                n.item.draw(atlasTex, n.x, n.y);
                 // Record its region
-                packed.put(node.item.id, atlasImage.subImage(
-                    node.x, node.y, node.width, node.height));
+                packed.put(n.item.id, atlasTex.texture.tile(n.x, n.y, n.width, n.height));
             }});
+            atlasTex.end();
         }
         return packed;
     }
@@ -97,9 +98,8 @@ public class TexturePacker
     }
 
     protected TexturePacker addItem (Item item) {
-        if (item.width()+PADDING > MAX_SIZE || item.height()+PADDING > MAX_SIZE) {
-            throw new RuntimeException("Item is too big to pack [id=" + item.id +
-                ", width=" + item.width() + ", height=" + item.height() + "]");
+        if (item.width+PADDING > MAX_SIZE || item.height+PADDING > MAX_SIZE) {
+            throw new RuntimeException("Item is too big to pack " + item);
         }
         _items.put(item.id, item);
         return this;
@@ -107,46 +107,44 @@ public class TexturePacker
 
     protected static abstract class Item {
         public final String id;
+        public final float width, height;
 
-        public Item (String id) {
+        public Item (String id, float width, float height) {
             this.id = id;
+            this.width = width;
+            this.height = height;
         }
 
-        public abstract int width ();
-        public abstract int height ();
-        public abstract void draw (Surface surface, int x, int y);
+        public abstract void draw (Surface surface, float x, float y);
+
+        @Override public String toString () {
+            return "[id=" + id + ", size=" + width + "x" + height + "]";
+        }
     }
 
-    protected static class ImageItem extends Item {
-        public final Image image;
+    protected static class TileItem extends Item {
+        public final Tile tile;
 
-        public ImageItem (String id, Image image) {
-            super(id);
-            this.image = image;
+        public TileItem (String id, Tile tile) {
+            super(id, tile.width(), tile.height());
+            this.tile = tile;
         }
 
-        @Override public int width () { return (int)image.width(); }
-        @Override public int height () { return (int)image.height(); }
-        @Override public void draw (Surface surface, int x, int y) {
-            surface.drawImage(image, x, y);
+        @Override public void draw (Surface surface, float x, float y) {
+            surface.draw(tile, x, y);
         }
     }
 
     protected static class RenderedItem extends Item {
-        public final int width, height;
         public final Renderer renderer;
 
-        public RenderedItem (String id, int width, int height, Renderer renderer) {
-            super(id);
-            this.width = width;
-            this.height = height;
+        public RenderedItem (String id, float width, float height, Renderer renderer) {
+            super(id, width, height);
             this.renderer = renderer;
         }
 
-        @Override public int width () { return width; }
-        @Override public int height () { return height; }
-        @Override public void draw (Surface surface, int x, int y) {
-            renderer.render(surface, new Rectangle(x, y, width, height));
+        @Override public void draw (Surface surface, float x, float y) {
+            renderer.render(surface, x, y, width, height);
         }
     }
 
@@ -158,7 +156,7 @@ public class TexturePacker
         }
 
         public boolean place (Item item) {
-            Node node = root.search(item.width() + PADDING, item.height() + PADDING);
+            Node node = root.search(item.width + PADDING, item.height + PADDING);
             if (node == null) return false;
             node.item = item;
             return true;
@@ -167,7 +165,7 @@ public class TexturePacker
 
     protected static class Node {
         /** The bounds of this node (and its children). */
-        public final int x, y, width, height;
+        public final float x, y, width, height;
 
         /** This node's two children, if any. */
         public Node left, right;
@@ -175,7 +173,7 @@ public class TexturePacker
         /** The texture that is placed here, if any. Implies that this is a leaf node. */
         public Item item;
 
-        public Node (int x, int y, int width, int height) {
+        public Node (float x, float y, float width, float height) {
             this.x = x;
             this.y = y;
             this.width = width;
@@ -183,7 +181,7 @@ public class TexturePacker
         }
 
         /** Find a free node in this tree big enough to fit an area, or null. */
-        public Node search (int w, int h) {
+        public Node search (float w, float h) {
             // There's already an item here, terminate
             if (item != null) return null;
 
@@ -200,7 +198,7 @@ public class TexturePacker
                 if (width == w && height == h) return this;
 
                 // Split into two children
-                int dw = width-w, dh = height-h;
+                float dw = width-w, dh = height-h;
                 if (dw > dh) {
                     left = new Node(x, y, w, height);
                     right = new Node(x + w, y, dw, height);

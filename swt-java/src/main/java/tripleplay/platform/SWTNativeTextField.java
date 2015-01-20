@@ -26,7 +26,8 @@ import tripleplay.ui.Style;
 public class SWTNativeTextField extends SWTNativeOverlay
     implements NativeTextField
 {
-    public SWTNativeTextField (Field.Native element) {
+    public SWTNativeTextField (SWTTPPlatform plat, Field.Native element) {
+        super(plat);
         _element = element;
         _textConnection = _element.field().text.connectNotify(new Slot<String>() {
             @Override public void onEmit (final String value) {
@@ -72,13 +73,8 @@ public class SWTNativeTextField extends SWTNativeOverlay
 
         // listen for focus changes and dispatch via the platform
         _textCtrl.addFocusListener(new FocusListener() {
-            @Override public void focusLost (FocusEvent e) {
-                SWTTPPlatform.instance().onFocusChange();
-            }
-
-            @Override public void focusGained (FocusEvent e) {
-                SWTTPPlatform.instance().onFocusChange();
-            }
+            @Override public void focusLost (FocusEvent e) { _plat.onFocusChange(); }
+            @Override public void focusGained (FocusEvent e) { _plat.onFocusChange(); }
         });
 
         refresh();

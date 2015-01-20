@@ -5,26 +5,22 @@
 
 package tripleplay.util;
 
-import playn.core.Events;
-import playn.core.Pointer;
+import playn.core.Event;
+import playn.scene.Pointer;
 
 /**
  * Detects double taps on a layer, using a threshold time between taps. Two taps that occur
  * within a time span shorter than the threshold are considered a double tap.
  */
 public class DoubleTapper extends Tapper
-    implements Pointer.Listener
 {
     /** Maximum time between taps for the 2nd to be considered a double. */
     public final static double DOUBLE_TIME = 500;
 
-    @Override public void onTap (Events.Position where) {
+    @Override public void onTap (Event.XY where) {
         super.onTap(where);
-        if (where.time() - _tapTime < DOUBLE_TIME) {
-            onDoubleTap(where);
-        } else {
-            _tapTime = where.time();
-        }
+        if (where.time - _tapTime < DOUBLE_TIME) onDoubleTap(where);
+        else _tapTime = where.time;
     }
 
     /**
@@ -38,9 +34,7 @@ public class DoubleTapper extends Tapper
      * Subclasses overriding this needn't call super.
      * @param where the pointer's end position (for the 2nd tap)
      */
-    public void onDoubleTap (Events.Position where) {
-        onDoubleTap();
-    }
+    public void onDoubleTap (Event.XY where) { onDoubleTap(); }
 
     /** Last tap time recorded. */
     protected double _tapTime;

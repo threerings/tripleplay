@@ -39,9 +39,9 @@ public class Tap extends GestureBase<Tap>
             break;
 
         case MOVE:
-            Point start = _startPoints.get(node.touch.id());
-            if (start == null) Log.log.warning("No start for a moved touch", "id", node.touch.id());
-            else if (start.distance(node.location()) > MOVE_THRESHOLD) setState(State.UNQUALIFIED);
+            Point start = _startPoints.get(node.touch.id);
+            if (start == null) Log.log.warning("No start for a moved touch", "id", node.touch.id);
+            else if (start.distance(node.location) > MOVE_THRESHOLD) setState(State.UNQUALIFIED);
             break;
 
         case CANCEL:
@@ -49,7 +49,7 @@ public class Tap extends GestureBase<Tap>
             break;
 
         case START:
-            _startPoints.put(node.touch.id(), node.location());
+            _startPoints.put(node.touch.id, node.location);
             int size = _startPoints.size();
             if (size > _touches) setState(State.UNQUALIFIED);
             else if (size == _touches && _greedy) setState(State.GREEDY);

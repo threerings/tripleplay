@@ -5,9 +5,8 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
-import playn.core.Layer;
-import playn.core.util.Callback;
+import playn.scene.Layer;
+import react.RFuture;
 
 /**
  * An interface for icons.
@@ -31,9 +30,7 @@ public interface Icon
     Layer render ();
 
     /**
-     * Adds a callback to be notified when this icon has loaded. If the icon is already loaded, the
-     * callback will be notified immediately; otherwise later on the main thread. The callback is
-     * discarded once the icon is loaded. This mimics the behavior of {@link Image}.
+     * A future which is completed when this icon has loaded.
      */
-    void addCallback (Callback<? super Icon> callback);
+    RFuture<Icon> state ();
 }

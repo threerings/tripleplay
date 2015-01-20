@@ -20,25 +20,26 @@ public class JavaNativeOverlay implements NativeOverlay
     /**
      * Creates a new java native overlay for the given component.
      */
-    public JavaNativeOverlay (JComponent component) {
+    public JavaNativeOverlay (JavaTPPlatform plat, JComponent component) {
+        _plat = plat;
         this.component = component;
     }
 
     @Override public void setBounds (IRectangle bounds) {
-        component.setBounds(
-            (int)bounds.x(), (int)bounds.y(), (int)bounds.width(), (int)bounds.height());
+        component.setBounds((int)bounds.x(), (int)bounds.y(),
+                            (int)bounds.width(), (int)bounds.height());
     }
 
     @Override public void add () {
         if (component.getParent() == null) {
-            JavaTPPlatform.instance().addOverlay(this);
+            _plat.addOverlay(this);
             didAdd();
         }
     }
 
     @Override public void remove () {
         if (component.getParent() != null) {
-            JavaTPPlatform.instance().removeOverlay(this);
+            _plat.removeOverlay(this);
             didRemove();
         }
     }
@@ -48,4 +49,6 @@ public class JavaNativeOverlay implements NativeOverlay
 
     /** Called if the view is removed from the root. */
     protected void didRemove () {}
+
+    protected final JavaTPPlatform _plat;
 }

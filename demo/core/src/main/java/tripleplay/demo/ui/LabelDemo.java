@@ -6,13 +6,13 @@
 package tripleplay.demo.ui;
 
 import playn.core.Font;
-import playn.core.PlayN;
 
 import tripleplay.ui.Background;
 import tripleplay.ui.Group;
 import tripleplay.ui.Icon;
 import tripleplay.ui.Icons;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
@@ -20,6 +20,7 @@ import tripleplay.ui.layout.AxisLayout;
 import tripleplay.util.Colors;
 
 import tripleplay.demo.DemoScreen;
+import tripleplay.demo.TripleDemo;
 
 /**
  * Various label tests.
@@ -33,14 +34,14 @@ public class LabelDemo extends DemoScreen
         return "UI: Labels";
     }
 
-    @Override protected Group createIface () {
-        Icon smiley = Icons.image(PlayN.assets().getImage("images/smiley.png"));
+    @Override protected Group createIface (Root root) {
+        Icon smiley = Icons.image(assets().getImage("images/smiley.png"));
         Styles greenBg = Styles.make(Style.BACKGROUND.is(Background.solid(0xFF99CC66).inset(5)));
         Styles smallUnderlined = Styles.make(
-            Style.FONT.is(PlayN.graphics().createFont("Times New Roman", Font.Style.PLAIN, 20)),
+            Style.FONT.is(new Font("Times New Roman", 20)),
             Style.HALIGN.center, Style.UNDERLINE.is(true));
         Styles bigLabel = Styles.make(
-            Style.FONT.is(PlayN.graphics().createFont("Times New Roman", Font.Style.PLAIN, 32)),
+            Style.FONT.is(new Font("Times New Roman", 32)),
             Style.HALIGN.center);
         return new Group(AxisLayout.vertical()).add(
             new Shim(15, 15),

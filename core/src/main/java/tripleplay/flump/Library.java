@@ -9,10 +9,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import playn.core.Disposable;
+import playn.core.Graphics;
 import playn.core.Image;
+import playn.core.QuadBatch;
+import playn.core.Tile;
 
 import tripleplay.util.TexturePacker;
 
@@ -31,12 +37,8 @@ public class Library
         // map all of our movies and textures by symbol name
         final Map<String,Symbol> symbols = new HashMap<String,Symbol>();
         this.symbols = Collections.unmodifiableMap(symbols);
-        for (Movie.Symbol movie : movies) {
-            symbols.put(movie.name(), movie);
-        }
-        for (Texture.Symbol texture : textures) {
-            symbols.put(texture.name(), texture);
-        }
+        for (Movie.Symbol movie : movies) symbols.put(movie.name(), movie);
+        for (Texture.Symbol texture : textures) symbols.put(texture.name(), texture);
 
         // go through and resolve references
         for (Movie.Symbol movie : movies) {
@@ -54,32 +56,42 @@ public class Library
         }
     }
 
-    /** Pack multiple libraries into a single group of atlases. The libraries will be modified so
-     * that their symbols point at the new atlases. */
-    public static void pack (Collection<Library> libs) {
+    /** Pack multiple libraries into a single group of atlases.
+      * The libraries will be modified so that their symbols point at the new atlases.
+      *
+      * @param batch the quad batch to use to render into new atlas textures. This will usually be
+      * your game's default batch unless you're doing something fancy.
+      */
+    public static void pack (Graphics gfx, QuadBatch batch, Collection<Library> libs) {
         List<Library> list = new ArrayList<Library>(libs);
 
-        // Add all texture symbols to the packer
+        // Add all texture symbols to the packer and note them for destruction
         TexturePacker packer = new TexturePacker();
+        Set<Disposable> originals = new HashSet<>();
         for (int ii = 0, ll = list.size(); ii < ll; ++ii) {
             Library lib = list.get(ii);
             for (Symbol symbol : lib.symbols.values()) {
                 if (symbol instanceof Texture.Symbol) {
-                    packer.add(ii+":"+symbol.name(), ((Texture.Symbol)symbol).region);
+                    Tile tile = ((Texture.Symbol)symbol).tile;
+                    packer.add(ii+":"+symbol.name(), tile);
+                    originals.add(tile.texture());
                 }
             }
         }
 
         // Pack and update all texture symbols to the new regions
-        Map<String,Image.Region> images = packer.pack();
+        Map<String,Tile> tiles = packer.pack(gfx, batch);
         for (int ii = 0, ll = list.size(); ii < ll; ++ii) {
             Library lib = list.get(ii);
             for (Symbol symbol : lib.symbols.values()) {
                 if (symbol instanceof Texture.Symbol) {
-                    ((Texture.Symbol)symbol).region = images.get(ii+":"+symbol.name());
+                    ((Texture.Symbol)symbol).tile = tiles.get(ii+":"+symbol.name());
                 }
             }
         }
+
+        // Finally dispose all of the original textures, they're no longer needed
+        for (Disposable tex : originals) tex.close();
     }
 
     /** Creates an instance of a symbol, or throws if the symbol name is not in this library. */

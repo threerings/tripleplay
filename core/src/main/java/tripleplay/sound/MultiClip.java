@@ -8,8 +8,6 @@ package tripleplay.sound;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.PlayN;
-
 /**
  * Provides a sound clip that can be played multiple times. Callers tell the multiclip to prepare a
  * copy which may result in loading a copy of the sound from a {@link SoundBoard} if no reserves
@@ -47,7 +45,7 @@ public class MultiClip
      * The copy must be {@link Copy#play}ed or {@link Copy#release}d by the caller.
      */
     public Copy reserve () {
-        double now = PlayN.currentTime();
+        double now = _board.plat.time();
         for (int ii = 0, ll = _copies.size(); ii < ll; ii++) {
             CopyImpl copy = _copies.get(ii);
             if (copy.releaseTime < now) {
@@ -83,14 +81,14 @@ public class MultiClip
         @Override public void play () {
             sound.play();
             if (_copies.size() < _reserveCopies) {
-                releaseTime = PlayN.currentTime() + _duration;
+                releaseTime = _board.plat.time() + _duration;
                 _copies.add(this);
             }
         }
 
         @Override public void release () {
             if (_copies.size() < _reserveCopies) {
-                releaseTime = PlayN.currentTime();
+                releaseTime = _board.plat.time();
                 _copies.add(this);
             }
         }

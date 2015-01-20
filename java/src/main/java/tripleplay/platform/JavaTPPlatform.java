@@ -22,58 +22,42 @@ import javax.swing.JFrame;
 
 import org.lwjgl.opengl.Display;
 
-import playn.core.PlayN;
-import playn.java.JavaImage;
-import playn.java.JavaPlatform;
 import pythagoras.f.Point;
 import react.Signal;
+import react.Slot;
 import react.Value;
+
+import playn.core.Platform;
+import playn.java.JavaImage;
+import playn.java.JavaPlatform;
 import tripleplay.ui.Field;
 
 import static tripleplay.platform.Log.log;
 
 /**
  * Implements Java-specific TriplePlay services.
- * TODO: reconcile the main thread use with AWT EDT - there are a bunch of places where we
- * need to synchronize
+ *
+ * <p>TODO: reconcile the main thread use with AWT EDT - there are a bunch of places where we need
+ * to synchronize.
  */
 public class JavaTPPlatform extends TPPlatform
 {
     /** Possible operating systems. */
     public enum OS { MAC, WINDOWS, LINUX, UNKNOWN }
 
-    /** Registers the Java TriplePlay platform. */
-    public static JavaTPPlatform register (JavaPlatform platform, JavaPlatform.Config config) {
-        JavaTPPlatform instance = new JavaTPPlatform(platform, config);
-        TPPlatform.register(instance);
-        return instance;
-    }
+    /** The PlayN platform with which this platform interoperates. */
+    public final JavaPlatform plat;
 
-    public static JavaTPPlatform instance () {
-        return (JavaTPPlatform)TPPlatform.instance();
-    }
-
-    public void addOverlay (JavaNativeOverlay overlay) {
-        _overlays.add(overlay);
-        _frame.getLayeredPane().add(overlay.component);
-    }
-
-    public void removeOverlay (JavaNativeOverlay overlay) {
-        if (_overlays.remove(overlay)) {
-            _frame.getLayeredPane().remove(overlay.component);
-        }
-    }
-
-    protected JavaTPPlatform (JavaPlatform platform, JavaPlatform.Config config) {
-        _platform = platform;
+    public JavaTPPlatform (JavaPlatform plat, JavaPlatform.Config config) {
+        this.plat = plat;
 
         _frame = new JFrame(config.appName);
         _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Canvas canvas = new Canvas();
         canvas.setName("GLCanvas");
-        int width = platform.graphics().ctx().scale.scaledCeil(config.width);
-        int height = platform.graphics().ctx().scale.scaledCeil(config.height);
+        int width = plat.graphics().scale.scaledCeil(config.width);
+        int height = plat.graphics().scale.scaledCeil(config.height);
         canvas.setPreferredSize(new Dimension(width, height));
         _frame.getContentPane().add(canvas);
 
@@ -123,13 +107,24 @@ public class JavaTPPlatform extends TPPlatform
         else System.err.println("Unmatching os name: " + osname);
     }
 
+    public void addOverlay (JavaNativeOverlay overlay) {
+        _overlays.add(overlay);
+        _frame.getLayeredPane().add(overlay.component);
+    }
+
+    public void removeOverlay (JavaNativeOverlay overlay) {
+        if (_overlays.remove(overlay)) {
+            _frame.getLayeredPane().remove(overlay.component);
+        }
+    }
+
     @Override public boolean hasNativeTextFields () {
         // mac doesn't currently support native text :(
         return _os == OS.WINDOWS || _os == OS.LINUX;
     }
 
     @Override public NativeTextField createNativeTextField (Field.Native field) {
-        return refresh(new JavaNativeTextField(field));
+        return refresh(new JavaNativeTextField(this, field));
     }
 
     @Override public NativeTextField refresh (NativeTextField previous) {
@@ -139,7 +134,7 @@ public class JavaTPPlatform extends TPPlatform
     }
 
     @Override public ImageOverlay createImageOverlay (playn.core.Image image) {
-        return new JavaImageOverlay(image);
+        return new JavaImageOverlay(this, image);
     }
 
     @Override public void clearFocus () {
@@ -178,39 +173,28 @@ public class JavaTPPlatform extends TPPlatform
         _frame.setIconImages(images);
     }
 
-    static <T> void updateOnMainThread (final Value<T> value, final T nvalue) {
-        PlayN.invokeLater(new Runnable() {
-            @Override
-            public void run () {
-                value.update(nvalue);
-            }
+    <T> void updateOnMainThread (final Value<T> value, final T nvalue) {
+        plat.invokeLater(new Slot<Platform>() {
+            @Override public void onEmit (Platform plat) { value.update(nvalue); }
         });
     }
 
-    static <T> void emitOnMainThread (final Signal<T> signal, final T emission) {
-        PlayN.invokeLater(new Runnable() {
-            @Override
-            public void run () {
-                signal.emit(emission);
-            }
+    <T> void emitOnMainThread (final Signal<T> signal, final T emission) {
+        plat.invokeLater(new Slot<Platform>() {
+            @Override public void onEmit (Platform plat) { signal.emit(emission); }
         });
     }
 
-    static JavaNativeOverlay findOverlayFor (Component comp) {
-        for (JavaNativeOverlay overlay : instance()._overlays) {
-            if (overlay.component.isAncestorOf(comp)) {
-                return overlay;
-            }
+    JavaNativeOverlay findOverlayFor (Component comp) {
+        for (JavaNativeOverlay overlay : _overlays) {
+            if (overlay.component.isAncestorOf(comp)) return overlay;
         }
         return null;
     }
 
-    static boolean hasOverlayFor (Component comp) {
+    boolean hasOverlayFor (Component comp) {
         return findOverlayFor(comp) != null;
     }
-
-    /** The Java platform with which this TPPlatform was registered. */
-    protected JavaPlatform _platform;
 
     protected JFrame _frame;
     protected OS _os = OS.UNKNOWN;

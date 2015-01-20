@@ -14,8 +14,8 @@ import react.RSet;
 import react.Slot;
 import react.Value;
 
+import playn.core.Log;
 import playn.core.Storage;
-import static playn.core.PlayN.log;
 
 /**
  * Makes using PlayN {@link Storage} more civilized. Provides getting and setting of typed values
@@ -24,7 +24,8 @@ import static playn.core.PlayN.log;
  */
 public class TypedStorage
 {
-    public TypedStorage (Storage storage) {
+    public TypedStorage (Log log, Storage storage) {
+        _log = log;
         _storage = storage;
     }
 
@@ -69,7 +70,7 @@ public class TypedStorage
             value = _storage.getItem(key);
             return (value == null) ? defval : Integer.parseInt(value);
         } catch (Exception e) {
-            log().warn("Failed to parse int prop [key=" + key + ", value=" + value + "]", e);
+            _log.warn("Failed to parse int prop", "key", key, "value", value, e);
             return defval;
         }
     }
@@ -92,7 +93,7 @@ public class TypedStorage
             value = _storage.getItem(key);
             return (value == null) ? defval : Long.parseLong(value);
         } catch (Exception e) {
-            log().warn("Failed to parse long prop [key=" + key + ", value=" + value + "]", e);
+            _log.warn("Failed to parse long prop", "key", key, "value", value, e);
             return defval;
         }
     }
@@ -115,7 +116,7 @@ public class TypedStorage
             value = _storage.getItem(key);
             return (value == null) ? defval : Double.parseDouble(value);
         } catch (Exception e) {
-            log().warn("Failed to parse double prop [key=" + key + ", value=" + value + "]", e);
+            _log.warn("Failed to parse double prop", "key", key, "value", value, e);
             return defval;
         }
     }
@@ -156,7 +157,7 @@ public class TypedStorage
             value = _storage.getItem(key);
             return (value == null) ? defval : Enum.valueOf(eclass, value);
         } catch (Exception e) {
-            log().warn("Failed to parse enum prop [key=" + key + ", value=" + value + "]", e);
+            _log.warn("Failed to parse enum prop", "key", key, "value", value, e);
             return defval;
         }
     }
@@ -308,7 +309,7 @@ public class TypedStorage
                 try {
                     rset.add(toFunc.apply(value));
                 } catch (Exception e) {
-                    log().warn("Invalid value (key=" + key + "): " + value, e);
+                    _log.warn("Invalid value", "key", key, "value", value, e);
                 }
             }
         }
@@ -331,5 +332,6 @@ public class TypedStorage
         return rset;
     }
 
+    protected final Log _log;
     protected final Storage _storage;
 }

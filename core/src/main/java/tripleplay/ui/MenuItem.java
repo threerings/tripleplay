@@ -5,12 +5,14 @@
 
 package tripleplay.ui;
 
-import playn.core.Connection;
-import playn.core.Pointer;
 import pythagoras.f.Dimension;
 
+import react.Closeable;
 import react.SignalView;
 import react.Value;
+
+import playn.scene.Pointer;
+
 import tripleplay.util.Layers;
 
 /**
@@ -100,8 +102,8 @@ public class MenuItem extends TextWidget<MenuItem> implements Togglable<MenuItem
         toToggle().click();
     }
 
-    protected void setRelay (Connection relay) {
-        _relay.disconnect();
+    protected void setRelay (Closeable relay) {
+        _relay.close();
         _relay = relay;
     }
 
@@ -114,10 +116,10 @@ public class MenuItem extends TextWidget<MenuItem> implements Togglable<MenuItem
 
     @Override protected Behavior<MenuItem> createBehavior () {
         return new Behavior.Toggle<MenuItem>(this) {
-            @Override public void onPointerStart (Pointer.Event event) {}
-            @Override public void onPointerDrag (Pointer.Event event) {}
-            @Override public void onPointerEnd (Pointer.Event event) {}
-            @Override protected void onClick (Pointer.Event event) { click(); }
+            @Override public void onStart (Pointer.Interaction iact) {}
+            @Override public void onDrag (Pointer.Interaction iact) {}
+            @Override public void onEnd (Pointer.Interaction iact) {}
+            @Override public void onClick (Pointer.Interaction iact) { click(); }
         };
     }
 
@@ -137,7 +139,7 @@ public class MenuItem extends TextWidget<MenuItem> implements Togglable<MenuItem
         return new SizableLayoutData(super.createLayoutData(hintX, hintY), _preferredSize);
     }
 
-    protected Connection _relay = Layers.NOT_LISTENING;
+    protected Closeable _relay = Closeable.Util.NOOP;
 
     /** Size override. */
     protected final Dimension _preferredSize = new Dimension(0, 0);

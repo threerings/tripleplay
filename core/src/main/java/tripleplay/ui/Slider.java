@@ -14,10 +14,8 @@ import react.SignalView;
 import react.UnitSlot;
 import react.Value;
 
-import playn.core.CanvasImage;
-import playn.core.Layer;
-import playn.core.Pointer;
-import static playn.core.PlayN.graphics;
+import playn.scene.Layer;
+import playn.scene.Pointer;
 
 /**
  * Displays a bar and a thumb that can be slid along the bar, representing a floating point value
@@ -115,7 +113,7 @@ public class Slider extends Widget<Slider>
     @Override protected void wasRemoved () {
         super.wasRemoved();
         if (_barInst != null) {
-            _barInst.destroy();
+            _barInst.close();
             _barInst = null;
         }
         // the thumb is just an image layer and will be destroyed when we are
@@ -130,11 +128,11 @@ public class Slider extends Widget<Slider>
             @Override public void onTrack (Point anchor, Point drag) {
                 setValueFromPointer(drag.x);
             }
-            @Override public boolean onRelease (Pointer.Event event) {
-                super.onRelease(event);
+            @Override public boolean onRelease (Pointer.Interaction iact) {
+                super.onRelease(iact);
                 return true; // always emit a click
             }
-            @Override public void onClick (Pointer.Event event) {
+            @Override public void onClick (Pointer.Interaction iact) {
                 _clicked.emit(Slider.this);
             }
         };
@@ -161,11 +159,7 @@ public class Slider extends Widget<Slider>
     }
 
     protected static Icon createDefaultThumbImage () {
-        float size = 24;
-        CanvasImage image = graphics().createImage(size, size);
-        image.canvas().setFillColor(0xFF000000);
-        image.canvas().fillCircle(size/2, size/2, size/2-1);
-        return Icons.image(image);
+        return Icons.solid(0xFF000000, 24);
     }
 
     protected class SliderLayoutData extends LayoutData {
@@ -188,7 +182,7 @@ public class Slider extends Widget<Slider>
             _thumbY = top + height/2;
 
             // configure our thumb layer
-            if (_thumb != null) _thumb.destroy();
+            if (_thumb != null) _thumb.close();
             layer.add(_thumb = thumbImage.render().setDepth(1));
             if (thumbOrigin == null) {
                 _thumb.setOrigin(thumbWidth/2, thumbHeight/2);
@@ -197,7 +191,7 @@ public class Slider extends Widget<Slider>
             }
 
             // configure our bar background instance
-            if (_barInst != null) _barInst.destroy();
+            if (_barInst != null) _barInst.close();
             if (width > 0 && height > 0) {
                 _barInst = barBG.instantiate(new Dimension(width-thumbWidth, barHeight));
                 _barInst.addTo(layer, _thumbLeft, top + (height - barHeight)/2, 1);

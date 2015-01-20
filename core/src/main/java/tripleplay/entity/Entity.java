@@ -5,19 +5,21 @@
 
 package tripleplay.entity;
 
+import playn.core.Disposable;
+
 import tripleplay.util.BitVec;
 
 /**
  * Tracks the state of a single entity. This includes its enabled state, as well as the components
  * which are attached to this entity.
  */
-public final class Entity
+public final class Entity implements Disposable
 {
     /** The world to which this entity belongs. */
     public final World world;
 
     /** This entity's unique id. This id will be valid for as long as the entity remains alive.
-     * Once {@link #destroy} is called, this id may be reused by a new entity. */
+     * Once {@link #close} is called, this id may be reused by a new entity. */
     public final int id;
 
     /** Creates an entity in the specified world, initializes it with the supplied set of
@@ -28,9 +30,9 @@ public final class Entity
         this.id = id;
     }
 
-    /** Returns whether this entity has been destroyed. */
-    public boolean isDestroyed () {
-        return (_flags & DESTROYED) != 0;
+    /** Returns whether this entity has been disposed. */
+    public boolean isDisposed () {
+        return (_flags & DISPOSED) != 0;
     }
 
     /** Returns whether this entity is currently enabled. */
@@ -44,7 +46,7 @@ public final class Entity
      * update).
      */
     public void setEnabled (boolean enabled) {
-        checkDestroyed("Cannot modify destroyed entity.");
+        checkDisposed("Cannot modify disposed entity.");
         boolean isEnabled = (_flags & ENABLED) != 0;
         if (isEnabled && !enabled) {
             _flags &= ~ENABLED;
@@ -66,7 +68,7 @@ public final class Entity
      * @return this entity for call chaining.
      */
     public Entity add (Component comp) {
-        checkDestroyed("Cannot add components to destroyed entity.");
+        checkDisposed("Cannot add components to disposed entity.");
         comp.add(this);
         queueChange();
         return this;
@@ -81,7 +83,7 @@ public final class Entity
      * @return this entity for call chaining.
      */
     public Entity add (Component c1, Component c2, Component... rest) {
-        checkDestroyed("Cannot add components to destroyed entity.");
+        checkDisposed("Cannot add components to disposed entity.");
         c1.add(this);
         c2.add(this);
         for (Component cn : rest) cn.add(this);
@@ -107,7 +109,7 @@ public final class Entity
      * @return this entity for call chaining.
      */
     public Entity add (Component[] comps) {
-        checkDestroyed("Cannot add components to destroyed entity.");
+        checkDisposed("Cannot add components to disposed entity.");
         for (Component comp : comps) comp.add(this);
         queueChange();
         return this;
@@ -117,16 +119,16 @@ public final class Entity
      * added or removed to appropriate systems on the next update.
      */
     public Entity remove (Component comp) {
-        checkDestroyed("Cannot remove components from destroyed entity.");
+        checkDisposed("Cannot remove components from disposed entity.");
         comp.remove(this);
         queueChange();
         return this;
     }
 
-    /** Destroys this entity, causing it to be removed from the world on the next update. */
-    public void destroy () {
-        if (!isDestroyed()) {
-            _flags |= DESTROYED;
+    /** Disposes this entity, causing it to be removed from the world on the next update. */
+    @Override public void close () {
+        if (!isDisposed()) {
+            _flags |= DISPOSED;
             world.toRemove.add(this);
         }
     }
@@ -137,7 +139,7 @@ public final class Entity
      * requires recalculation of which systems are interested in this entity.
      */
     public void didChange () {
-        checkDestroyed("Cannot didChange destroyed entity.");
+        checkDisposed("Cannot didChange disposed entity.");
         queueChange();
     }
 
@@ -152,8 +154,8 @@ public final class Entity
         world.toChange.add(this);
     }
 
-    protected final void checkDestroyed (String error) {
-        if ((_flags & DESTROYED) != 0) throw new IllegalStateException(error);
+    protected final void checkDisposed (String error) {
+        if ((_flags & DISPOSED) != 0) throw new IllegalStateException(error);
     }
 
     void noteAdded () { _flags |= ADDED; }
@@ -169,8 +171,8 @@ public final class Entity
     /** Flags pertaining to this entity's state. */
     protected int _flags;
 
-    protected static final int ENABLED   = 1 << 0;
-    protected static final int DESTROYED = 1 << 1;
-    protected static final int ADDED     = 1 << 2;
-    protected static final int CHANGING  = 1 << 3;
+    protected static final int ENABLED  = 1 << 0;
+    protected static final int DISPOSED = 1 << 1;
+    protected static final int ADDED    = 1 << 2;
+    protected static final int CHANGING = 1 << 3;
 }

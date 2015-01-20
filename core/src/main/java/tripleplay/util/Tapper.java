@@ -5,8 +5,8 @@
 
 package tripleplay.util;
 
-import playn.core.Events;
-import playn.core.Pointer;
+import playn.core.Event;
+import playn.scene.Pointer;
 import pythagoras.f.Point;
 
 /**
@@ -14,8 +14,7 @@ import pythagoras.f.Point;
  * pointer is dragged less than the threshold, a call to {@link #onTap(Events.Position)} is
  * generated.
  */
-public class Tapper
-    implements Pointer.Listener
+public class Tapper extends Pointer.Listener
 {
     /** Default threshold distance. */
     public static final float DEFAULT_TAP_DIST = 15;
@@ -38,27 +37,25 @@ public class Tapper
      * overriding needn't call super.
      * @param where the pointer's end position
      */
-    public void onTap (Events.Position where) {
-        onTap();
+    public void onTap (Event.XY where) { onTap(); }
+
+    @Override public void onStart (Pointer.Interaction iact) {
+        _tracking = new Tracking(iact.event);
     }
 
-    @Override public void onPointerStart (Pointer.Event event) {
-        _tracking = new Tracking(event);
-    }
-
-    @Override public void onPointerEnd (Pointer.Event event) {
+    @Override public void onEnd (Pointer.Interaction iact) {
         if (_tracking == null) return;
-        _tracking.drag(event);
-        if (_tracking.maxMovedSq < maxTapDistSq) onTap(event);
+        _tracking.drag(iact.event);
+        if (_tracking.maxMovedSq < maxTapDistSq) onTap(iact.event);
         _tracking = null;
     }
 
-    @Override public void onPointerDrag (Pointer.Event event) {
+    @Override public void onDrag (Pointer.Interaction iact) {
         if (_tracking == null) return;
-        _tracking.drag(event);
+        _tracking.drag(iact.event);
     }
 
-    @Override public void onPointerCancel (Pointer.Event event) {
+    @Override public void onCancel (Pointer.Interaction iact) {
         _tracking = null;
     }
 
@@ -68,16 +65,16 @@ public class Tapper
         public double startTime;
         public float maxMovedSq;
 
-        public Tracking (Events.Position where) {
+        public Tracking (Event.XY where) {
             start = new Point(where.x(), where.y());
-            startTime = where.time();
+            startTime = where.time;
         }
 
-        public void drag (Events.Position where) {
+        public void drag (Event.XY where) {
             maxMovedSq = Math.max(maxMovedSq, dist(where));
         }
 
-        public float dist (Events.Position where) {
+        public float dist (Event.XY where) {
             float x = where.x() - start.x, y = where.y() - start.y;
             return x * x + y * y;
         }

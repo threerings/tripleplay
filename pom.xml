@@ -4,12 +4,12 @@
   <parent>
     <groupId>com.googlecode.playn</groupId>
     <artifactId>playn-project</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
   </parent>
 
   <groupId>com.threerings</groupId>
   <artifactId>tripleplay-parent</artifactId>
-  <version>1.9-SNAPSHOT</version>
+  <version>2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Triple Play Parent</name>
@@ -54,7 +54,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <playn.version>1.9-SNAPSHOT</playn.version>
+    <playn.version>2.0-SNAPSHOT</playn.version>
   </properties>
 
   <modules>
@@ -102,12 +102,12 @@
           <name>Local maven repository</name>
           <url>${deploy-local.dir}</url>
         </repository>
-	<snapshotRepository>
-	  <uniqueVersion>false</uniqueVersion>
-	  <id>deploy-local-snapshots</id>
-	  <name>Local maven snapshot repository</name>
-	  <url>${deploy-local.dir}</url>
-	</snapshotRepository>
+ <snapshotRepository>
+   <uniqueVersion>false</uniqueVersion>
+   <id>deploy-local-snapshots</id>
+   <name>Local maven snapshot repository</name>
+   <url>${deploy-local.dir}</url>
+ </snapshotRepository>
       </distributionManagement>
     </profile>
   </profiles>

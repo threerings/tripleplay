@@ -13,18 +13,19 @@ import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 
-import playn.core.Color;
-import playn.core.Events;
-import playn.core.GroupLayer;
-import playn.core.ImmediateLayer;
-import playn.core.Layer;
-import playn.core.Mouse;
-import playn.core.PlayN;
-import playn.core.Pointer;
-import playn.core.Surface;
-import playn.core.Mouse.WheelEvent;
-
+import react.Connection;
 import react.Signal;
+import react.Slot;
+import react.UnitSlot;
+
+import playn.core.Clock;
+import playn.core.Color;
+import playn.core.Disposable;
+import playn.core.Surface;
+import playn.scene.GroupLayer;
+import playn.scene.Layer;
+import playn.scene.Mouse;
+import playn.scene.Pointer;
 
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.util.XYFlicker;
@@ -259,7 +260,7 @@ public class Scroller extends Composite<Scroller>
     /**
      * Handles the appearance and animation of scroll bars.
      */
-    public static abstract class Bars
+    public static abstract class Bars implements Disposable
     {
         /**
          * Updates the scroll bars to match the current view and content size. This will be
@@ -286,8 +287,8 @@ public class Scroller extends Composite<Scroller>
         /**
          * Destroys the resources created by the bars.
          */
-        public void destroy () {
-            layer().destroy();
+        @Override public void close () {
+            layer().close();
         }
 
         /**
@@ -312,16 +313,24 @@ public class Scroller extends Composite<Scroller>
      * space, and fade out after inactivity. Ideal for drag scrolling on a mobile device.
      */
     public static class TouchBars extends Bars
-        implements ImmediateLayer.Renderer 
     {
-        public TouchBars (Scroller scroller,
-                int color, float size, float topAlpha, float fadeSpeed) {
+        public TouchBars (Scroller scroller, int color, float size,
+                          float topAlpha, float fadeSpeed) {
             super(scroller);
             _color = color;
             _size = size;
             _topAlpha = topAlpha;
             _fadeSpeed = fadeSpeed;
-            _layer = PlayN.graphics().createImmediateLayer(this);
+            _layer = new Layer() {
+                @Override protected void paintImpl (Surface surface) {
+                    surface.saveTx();
+                    surface.setFillColor(_color);
+                    Range h = _scroller.hrange, v = _scroller.vrange;
+                    if (h.active()) drawBar(surface, h._pos, v._size - _size, h._extent, _size);
+                    if (v.active()) drawBar(surface, h._size - _size, v._pos, _size, v._extent);
+                    surface.restoreTx();
+                }
+            };
         }
 
         @Override public void update (float delta) {
@@ -336,17 +345,6 @@ public class Scroller extends Composite<Scroller>
 
         @Override public Layer layer () {
             return _layer;
-        }
-
-        @Override public void render (Surface surface) {
-            surface.save();
-            surface.setFillColor(_color);
-
-            Range h = _scroller.hrange, v = _scroller.vrange;
-            if (h.active()) drawBar(surface, h._pos, v._size - _size, h._extent, _size);
-            if (v.active()) drawBar(surface, h._size - _size, v._pos, _size, v._extent);
-
-            surface.restore();
         }
 
         protected void setBarAlpha (float alpha) {
@@ -388,11 +386,11 @@ public class Scroller extends Composite<Scroller>
         // means it hasn't been laid out yet and does not have its proper position; in that case
         // defer this process a tick to allow it to be laid out
         if (!scroller.isSet(Flag.VALID)) {
-            PlayN.invokeLater(new Runnable() {
-                @Override public void run () {
+            elem.root().iface.frame.connect(new UnitSlot() {
+                @Override public void onEmit () {
                     makeVisible(elem);
                 }
-            });
+            }).once();
             return true;
         }
 
@@ -419,7 +417,7 @@ public class Scroller extends Composite<Scroller>
         initChildren(_scroller = new Group(new ScrollLayout()) {
             @Override protected GroupLayer createLayer () {
                 // use 1, 1 so we don't crash. the real size is set on validation
-                return PlayN.graphics().createGroupLayer(1, 1);
+                return new GroupLayer(1, 1);
             }
             @Override protected void layout () {
                 super.layout();
@@ -448,17 +446,17 @@ public class Scroller extends Composite<Scroller>
         set(Flag.HIT_ABSORB, true);
 
         // handle mouse wheel
-        layer.addListener(new Mouse.LayerAdapter() {
-            @Override public void onMouseWheelScroll (WheelEvent event) {
+        layer.events().connect(new Mouse.Listener() {
+            @Override public void onWheel (Mouse.WheelEvent event, Mouse.Interaction iact) {
                 // scale so each wheel notch is 1/4 the screen dimension
-                float delta = event.velocity() * .25f;
+                float delta = event.velocity * .25f;
                 if (vrange.active()) scrollY(ypos() + (int)(delta * viewSize().height()));
                 else scrollX(xpos() + (int)(delta * viewSize().width()));
             }
         });
 
         // handle drag scrolling
-        layer.addListener(_flicker = new XYFlicker());
+        layer.events().connect(_flicker = new XYFlicker());
     }
 
     /**
@@ -600,16 +598,14 @@ public class Scroller extends Composite<Scroller>
 
     @Override protected void wasAdded () {
         super.wasAdded();
-        _updater = root().iface().addTask(new Interface.Task() {
-            @Override public void update (int dt) {
-                Scroller.this.update(dt);
-            }
+        _upconn = root().iface.frame.connect(new Slot<Clock>() {
+            public void onEmit (Clock clock) { update(clock.dt); }
         });
         invalidate();
     }
 
     @Override protected void wasRemoved () {
-        _updater.remove();
+        _upconn.disconnect();
         updateBars(null); // make sure bars get destroyed in case we don't get added again
         super.wasRemoved();
     }
@@ -655,7 +651,7 @@ public class Scroller extends Composite<Scroller>
     protected void updateBars (BarType barType) {
         if (_bars != null) {
             if (_barType == barType) return;
-            _bars.destroy();
+            _bars.close();
             _bars = null;
         }
         _barType = barType;
@@ -712,7 +708,7 @@ public class Scroller extends Composite<Scroller>
             _clippable.setViewArea(width, height);
 
             // clip the scroller layer too, can't hurt
-            ((GroupLayer.Clipped)_scroller.layer).setSize(width, height);
+            _scroller.layer.setSize(width, height);
 
             // reset the flicker (it retains its current position)
             _flicker.reset(hrange.max(), vrange.max());
@@ -737,7 +733,7 @@ public class Scroller extends Composite<Scroller>
     protected final XYFlicker _flicker;
     protected final Clippable _clippable;
     protected final Dimension _contentSize = new Dimension();
-    protected Interface.TaskHandle _updater;
+    protected Connection _upconn;
     protected Point _queuedScroll;
     protected List<Listener> _lners;
 

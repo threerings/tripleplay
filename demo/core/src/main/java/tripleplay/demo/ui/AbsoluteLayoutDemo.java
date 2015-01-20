@@ -5,19 +5,22 @@
 
 package tripleplay.demo.ui;
 
-import playn.core.ImmediateLayer;
-import playn.core.PlayN;
-import playn.core.Surface;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
+
 import react.UnitSlot;
 import react.Value;
+
+import playn.core.Surface;
+import playn.scene.Layer;
+
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Background;
 import tripleplay.ui.Composite;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Slider;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.AbsoluteLayout;
@@ -31,30 +34,28 @@ public class AbsoluteLayoutDemo extends DemoScreen
         return "AbsoluteLayout";
     }
 
-    @Override
-    protected String title () {
+    @Override protected String title () {
         return "UI: Absolute Layout";
     }
 
-    @Override
-    protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         final BoxPointWidget position = new BoxPointWidget("Position");
         final BoxPointWidget origin = new BoxPointWidget("Origin");
         final Slider width = new Slider(50, 10, 150);
         final Slider height = new Slider(50, 10, 150);
         Group sizeCtrl = new Group(AxisLayout.horizontal()).add(new Label("Size:"), width, height);
         final Group group = new Group(new AbsoluteLayout());
-        group.layer.add(PlayN.graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-            Point pt = new Point();
-            @Override public void render (Surface surface) {
+        group.layer.add(new Layer() {
+            private Point pt = new Point();
+            @Override protected void paintImpl (Surface surface) {
                 IDimension size = group.size();
                 position.point.get().resolve(size, pt);
-                surface.save();
+                surface.saveTx();
                 surface.setFillColor(Colors.BLACK);
                 surface.fillRect(pt.x - 2, pt.y - 2, 5, 5);
-                surface.restore();
+                surface.restoreTx();
             }
-        }).setDepth(1));
+        }.setDepth(1));
         group.addStyles(Style.BACKGROUND.is(Background.solid(Colors.WHITE)));
         final Group widget = new Group(AxisLayout.horizontal()).addStyles(
             Style.BACKGROUND.is(Background.solid(Colors.CYAN)));

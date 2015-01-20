@@ -71,7 +71,7 @@ public abstract class SizableWidget<T extends SizableWidget<T>> extends Widget<T
         }
 
         glyph = glyph == null ? new Glyph(layer) : glyph;
-        glyph.prepare(size);
+        glyph.prepare(root().iface.plat.graphics(), size);
         return glyph;
     }
 }

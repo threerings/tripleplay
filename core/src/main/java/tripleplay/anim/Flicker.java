@@ -8,13 +8,13 @@ package tripleplay.anim;
 import pythagoras.f.MathUtil;
 
 import react.Signal;
+import react.Slot;
 import react.Value;
 
-import playn.core.Pointer;
-import playn.core.util.Clock;
+import playn.core.Clock;
+import playn.scene.Pointer;
 
 import tripleplay.util.Interpolator;
-import tripleplay.util.Paintable;
 
 /**
  * Implements click, and scroll/flick gestures for a single variable (y position by default). When
@@ -31,8 +31,7 @@ import tripleplay.util.Paintable;
  * <p>Various flick parameters can be customized by overriding the appropriate method:
  * {@link #friction}, {@link #maxFlickVel}, etc.</p>
  */
-public class Flicker extends Pointer.Adapter
-    implements Paintable
+public class Flicker extends Pointer.Listener
 {
     /** This flicker's bounds. */
     public float min, max;
@@ -40,8 +39,11 @@ public class Flicker extends Pointer.Adapter
     /** The current position value. */
     public float position;
 
+    /** A signal emitted when this flicker's position has changed. */
+    public Signal<Flicker> changed = Signal.create();
+
     /** A signal that is emitted (with the pointer end event) on click. */
-    public Signal<Pointer.Event> clicked = Signal.create();
+    public Signal<Pointer.Interaction> clicked = Signal.create();
 
     /** Whether or not this flicker is enabled (responding to pointer events). Disabling a flicker
      * does not stop any existing physical behavior, it just prevents the user from introducing any
@@ -52,6 +54,11 @@ public class Flicker extends Pointer.Adapter
      * unpredictable state.</p> */
     public Value<Boolean> enabled = Value.create(true);
 
+    /** This must be connected to a paint signal. */
+    public Slot<Clock> onPaint = new Slot<Clock>() {
+        public void onEmit (Clock clock) { onPaint(clock); }
+    };
+
     /**
      * Creates a flicker with the specified initial, minimum and maximum values.
      */
@@ -61,26 +68,18 @@ public class Flicker extends Pointer.Adapter
         this.max = max;
     }
 
+    /** Connects this flicker to the {@code paint} signal. */
+    public Flicker connect (Signal<Clock> paint) {
+        paint.connect(onPaint);
+        return this;
+    }
+
     /** Returns the position of this flicker as an animation value. */
     public Animation.Value posValue () {
         return new Animation.Value() {
             public float initial () { return position; }
-            public void set (float value) { position = value; }
+            public void set (float value) { setPosition(value); }
         };
-    }
-
-    /** This must be called every frame with an alpha-adjusted clock. */
-    public void paint (Clock clock) {
-        float now = clock.time(), dt = now - _lastTime;
-
-        // update our position based on our velocity
-        if (_vel != 0) position = position + _vel * dt;
-
-        // let our state handle additional updates
-        _state.paint(dt);
-
-        // note our last paint time
-        _lastTime = now;
     }
 
     /** Stops any active movement of this flicker. The position is immediately clamped back into
@@ -101,34 +100,34 @@ public class Flicker extends Pointer.Adapter
         _state = STOPPED;
     }
 
-    @Override public void onPointerStart (Pointer.Event event) {
+    @Override public void onStart (Pointer.Interaction iact) {
         if (!enabled.get()) return;
 
         _vel = 0;
         _maxDelta = 0;
         _minFlickExceeded = false;
         _origPos = position;
-        _start = _prev = _cur = getPosition(event);
+        _start = _prev = _cur = getPosition(iact.event);
         _prevStamp = 0;
-        _curStamp = event.time();
+        _curStamp = iact.event.time;
         setState(DRAGGING);
     }
 
-    @Override public void onPointerDrag (Pointer.Event event) {
+    @Override public void onDrag (Pointer.Interaction iact) {
         // check whether we are processing this interaction
         if (_state != DRAGGING) return;
 
         _prev = _cur;
         _prevStamp = _curStamp;
-        _cur = getPosition(event);
-        _curStamp = event.time();
+        _cur = getPosition(iact.event);
+        _curStamp = iact.event.time;
 
         // update our position based on the drag delta
         float delta = _cur - _start;
-        position = _origPos + delta;
+        setPosition(_origPos + delta);
 
         // if we're not allowed to rebound, clamp the position to our bounds
-        if (!allowRebound()) position = MathUtil.clamp(position, min, max);
+        if (!allowRebound()) setPosition(MathUtil.clamp(position, min, max));
         // otherwise if we're exceeding min/max then only use a fraction of the delta
         else if (position < min) position += (min-position)*overFraction();
         else if (position > max) position -= (position-max)*overFraction();
@@ -136,18 +135,18 @@ public class Flicker extends Pointer.Adapter
         float absDelta = Math.abs(delta);
         if (!_minFlickExceeded && absDelta > minFlickDelta()) {
             _minFlickExceeded = true;
-            minFlickExceeded(event);
+            minFlickExceeded(iact);
         }
         _maxDelta = Math.max(absDelta, _maxDelta);
     }
 
-    @Override public void onPointerEnd (Pointer.Event event) {
+    @Override public void onEnd (Pointer.Interaction iact) {
         // check whether we are processing this interaction
         if (_state != DRAGGING) return;
 
         // check whether we should call onClick
         if (_maxDelta < maxClickDelta()) {
-            clicked.emit(event);
+            clicked.emit(iact);
             setState(STOPPED);
         }
         // if not, determine whether we should impart velocity to the tower
@@ -165,6 +164,21 @@ public class Flicker extends Pointer.Adapter
                 setState(SCROLLING);
             }
             else setState(STOPPED);
+        }
+    }
+
+    protected void onPaint (Clock clock) {
+        int dt = clock.dt;
+        // update our position based on our velocity
+        if (_vel != 0) setPosition(position + _vel * dt);
+        // let our state handle additional updates
+        _state.paint(dt);
+    }
+
+    protected final void setPosition (float position) {
+        if (position != this.position) {
+            this.position = position;
+            changed.emit(this);
         }
     }
 
@@ -223,9 +237,9 @@ public class Flicker extends Pointer.Adapter
 
     /**
      * A method called as soon as the minimum flick distance is exceeded.
-     * @param event the drag event being processed at the time we detected this state.
+     * @param iact the pointer interaction being processed at the time we detected this state.
      */
-    protected void minFlickExceeded (Pointer.Event event) {
+    protected void minFlickExceeded (Pointer.Interaction iact) {
         // nothing by default
     }
 
@@ -346,10 +360,10 @@ public class Flicker extends Pointer.Adapter
             _delta += dt;
             float target = (position <= min) ? min : max;
             if (_delta > _time) {
-                position = target;
+                setPosition(target);
                 setState(STOPPED);
             } else {
-                position = Interpolator.EASE_OUT.apply(_spos, target-_spos, _delta, _time);
+                setPosition(Interpolator.EASE_OUT.apply(_spos, target-_spos, _delta, _time));
             }
         }
 
@@ -360,7 +374,7 @@ public class Flicker extends Pointer.Adapter
 
     protected final State STOPPED = new State() {
         @Override public void becameActive () {
-            position = MathUtil.clamp(position, min, max);
+            setPosition(MathUtil.clamp(position, min, max));
             _vel = 0;
         }
 
@@ -368,7 +382,6 @@ public class Flicker extends Pointer.Adapter
     };
 
     protected State _state = STOPPED;
-    protected float _lastTime;
     protected float _vel, _accel;
     protected float _origPos, _start, _cur, _prev;
     protected double _curStamp, _prevStamp;

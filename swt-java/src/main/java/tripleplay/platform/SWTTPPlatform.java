@@ -16,10 +16,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-import playn.core.PlayN;
+import pythagoras.f.Point;
+import react.Slot;
+
+import playn.core.Platform;
 import playn.java.JavaPlatform;
 import playn.java.SWTPlatform;
-import pythagoras.f.Point;
+
 import tripleplay.ui.Field;
 
 import static tripleplay.platform.Log.log;
@@ -33,26 +36,7 @@ public class SWTTPPlatform extends TPPlatform
     /** Possible operating systems. */
     public enum OS { MAC, WINDOWS, LINUX, UNKNOWN }
 
-    /** Registers the Java TriplePlay platform. */
-    public static SWTTPPlatform register (SWTPlatform platform, JavaPlatform.Config config) {
-        SWTTPPlatform instance = new SWTTPPlatform(platform, config);
-        TPPlatform.register(instance);
-        return instance;
-    }
-
-    public static SWTTPPlatform instance () {
-        return (SWTTPPlatform)TPPlatform.instance();
-    }
-
-    public void addOverlay (SWTNativeOverlay overlay) {
-        _overlays.add(overlay);
-    }
-
-    public void removeOverlay (SWTNativeOverlay overlay) {
-        _overlays.remove(overlay);
-    }
-
-    protected SWTTPPlatform (SWTPlatform platform, JavaPlatform.Config config) {
+    public SWTTPPlatform (SWTPlatform platform, JavaPlatform.Config config) {
         _platform = platform;
         _overlay = _platform.composite();
         _convert = new SWTConvert(display());
@@ -87,12 +71,20 @@ public class SWTTPPlatform extends TPPlatform
         });
     }
 
+    public void addOverlay (SWTNativeOverlay overlay) {
+        _overlays.add(overlay);
+    }
+
+    public void removeOverlay (SWTNativeOverlay overlay) {
+        _overlays.remove(overlay);
+    }
+
     @Override public boolean hasNativeTextFields () {
         return true;
     }
 
     @Override public NativeTextField createNativeTextField (Field.Native field) {
-        return new SWTNativeTextField(field);
+        return new SWTNativeTextField(this, field);
     }
 
     @Override public NativeTextField refresh (NativeTextField previous) {
@@ -105,9 +97,7 @@ public class SWTTPPlatform extends TPPlatform
     }
 
     @Override public void refreshNativeBounds () {
-        if (_pendingRefresh == null) {
-            _pendingRefresh = new PendingRefresh();
-        }
+        if (_pendingRefresh == null) _pendingRefresh = new PendingRefresh();
         _pendingRefresh.request();
     }
 
@@ -141,7 +131,7 @@ public class SWTTPPlatform extends TPPlatform
      */
     public void onFocusChange () {
         // deal with this on the next frame, avoiding platform-specific issues
-        PlayN.invokeLater(new Runnable() {
+        _platform.invokeLater(new Runnable() {
             @Override public void run () {
                 Control focus = display().getFocusControl();
 
@@ -178,31 +168,24 @@ public class SWTTPPlatform extends TPPlatform
         _platform.shell().setImage(convert().image(icons[0]));
     }
 
-    protected class PendingRefresh
-    {
+    protected class PendingRefresh {
         public PendingRefresh () {
-            PlayN.invokeLater(_buddy);
+            _platform.invokeLater(_buddy);
         }
-
         protected void request () {
-            _req = System.currentTimeMillis();
+            _req = _platform.tick();
         }
-
-        protected Runnable _buddy = new Runnable () {
-            @Override public void run () {
-                long now = System.currentTimeMillis();
-                if (now - _req > 75) {
+        protected Slot<Platform> _buddy = new Slot<Platform> () {
+            @Override public void onEmit (Platform plat) {
+                long now = plat.tick();
+                if (now - _req < 75) _platform.invokeLater(this);
+                else {
                     _pendingRefresh = null;
-                    for (SWTNativeOverlay overlay : _overlays) {
-                        overlay.refreshBounds();
-                    }
-                } else {
-                    PlayN.invokeLater(this);
+                    for (SWTNativeOverlay overlay : _overlays) overlay.refreshBounds();
                 }
             }
         };
-
-        protected long _req;
+        protected int _req;
     }
 
     /** The SWT platform with which this TPPlatform was registered. */

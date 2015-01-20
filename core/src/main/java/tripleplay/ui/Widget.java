@@ -18,7 +18,7 @@ public abstract class Widget<T extends Widget<T>> extends Element<T>
             set(Flag.HIT_DESCEND, false);
             set(Flag.HIT_ABSORB, true);
             // wire up our behavior as a layer listener
-            layer.addListener(_behave);
+            layer.events().connect(_behave);
         }
     }
 

@@ -8,12 +8,11 @@ package tripleplay.util;
 import pythagoras.f.Rectangle;
 
 import playn.core.Canvas;
-import playn.core.CanvasImage;
-import playn.core.ImageLayer;
+import playn.core.Graphics;
+import playn.core.TextBlock;
 import playn.core.TextLayout;
 import playn.core.TextWrap;
-import playn.core.util.TextBlock;
-import static playn.core.PlayN.graphics;
+import playn.scene.ImageLayer;
 
 /**
  * Manages styled text. This comes in many flavors: a single line of plain (uniformly styled) text,
@@ -26,11 +25,11 @@ public abstract class StyledText
     public static abstract class Plain extends StyledText {
         /** The text being rendered. */
         public final String text;
-
         /** The stylings applied to this text. */
         public final TextStyle style;
 
-        protected Plain (String text, TextStyle style) {
+        protected Plain (Graphics gfx, String text, TextStyle style) {
+            super(gfx);
             assert text != null && style != null;
             this.text = text;
             this.style = style;
@@ -41,7 +40,8 @@ public abstract class StyledText
         public abstract Plain resize (float size);
 
         @Override public ImageLayer toLayer () {
-            ImageLayer layer = graphics().createImageLayer(toImage());
+            Canvas canvas = toCanvas();
+            ImageLayer layer = new ImageLayer(canvas.toTexture());
             layer.setTranslation(style.effect.offsetX(), style.effect.offsetY());
             return layer;
         }
@@ -60,25 +60,24 @@ public abstract class StyledText
 
     /** A single line of plain (uniformly styled) text. */
     public static class Span extends Plain {
-        public Span (String text, TextStyle style) {
-            super(text, style);
-            _layout = graphics().layoutText(text, style);
+        public Span (Graphics gfx, String text, TextStyle style) {
+            super(gfx, text, style);
+            _layout = gfx.layoutText(text, style);
         }
 
         @Override public float width () {
-            return style.effect.adjustWidth(_layout.width()) + 2*TextBlock.pad();
+            return style.effect.adjustWidth(_layout.size.width());
         }
         @Override public float height () {
-            return style.effect.adjustHeight(_layout.height()) + 2*TextBlock.pad();
+            return style.effect.adjustHeight(_layout.size.height());
         }
 
         @Override public void render (Canvas canvas, float x, float y) {
-            float pad = TextBlock.pad();
-            style.effect.render(canvas, _layout, style.textColor, style.underlined, x+pad, y+pad);
+            style.effect.render(canvas, _layout, style.textColor, style.underlined, x, y);
         }
 
         @Override public Span resize (float size) {
-            return new Span(text, style.withFont(style.font.derive(size)));
+            return new Span(_gfx, text, style.withFont(style.font.derive(size)));
         }
 
         @Override public boolean equals (Object other) {
@@ -100,12 +99,13 @@ public abstract class StyledText
         /** The alignment of wrapped text, unused if not wrapping. */
         public final TextBlock.Align align;
 
-        public Block (String text, TextStyle style, TextWrap wrap, TextBlock.Align align) {
-            super(text, style);
+        public Block (Graphics gfx, String text, TextStyle style, TextWrap wrap,
+                      TextBlock.Align align) {
+            super(gfx, text, style);
             assert wrap != null && align != null;
             this.wrap = wrap;
             this.align = align;
-            _layouts = graphics().layoutText(text, style, wrap);
+            _layouts = gfx.layoutText(text, style, wrap);
             _bounds = TextBlock.getBounds(_layouts, new Rectangle());
             _bounds.width = style.effect.adjustWidth(_bounds.width);
             _bounds.height = style.effect.adjustHeight(_bounds.height);
@@ -121,7 +121,7 @@ public abstract class StyledText
         @Override public void render (Canvas canvas, float x, float y) {
             float bx = _bounds.x, ly = y + _bounds.y;
             for (TextLayout layout : _layouts) {
-                float lx = x + bx + align.getX(style.effect.adjustWidth(layout.width()),
+                float lx = x + bx + align.getX(style.effect.adjustWidth(layout.size.width()),
                                                _bounds.width-_bounds.x);
                 style.effect.render(canvas, layout, style.textColor, style.underlined, lx, ly);
                 ly += layout.ascent() + layout.descent() + layout.leading();
@@ -129,7 +129,7 @@ public abstract class StyledText
         }
 
         @Override public Block resize (float size) {
-            return new Block(text, style.withFont(style.font.derive(size)), wrap, align);
+            return new Block(_gfx, text, style.withFont(style.font.derive(size)), wrap, align);
         }
 
         @Override public int hashCode () {
@@ -152,14 +152,14 @@ public abstract class StyledText
     }
 
     /** Creates a uniformly formatted single-line of text. */
-    public static Span span (String text, TextStyle style) {
-        return new Span(text, style);
+    public static Span span (Graphics gfx, String text, TextStyle style) {
+        return new Span(gfx, text, style);
     }
 
     /** Creates a uniformly formatted multiple-lines of text wrapped at {@code wrapWidth} and
      * left-aligned. */
-    public static Block block (String text, TextStyle style, float wrapWidth) {
-        return new Block(text, style, new TextWrap(wrapWidth), TextBlock.Align.LEFT);
+    public static Block block (Graphics gfx, String text, TextStyle style, float wrapWidth) {
+        return new Block(gfx, text, style, new TextWrap(wrapWidth), TextBlock.Align.LEFT);
     }
 
     /** The width of this styled text when rendered. */
@@ -171,14 +171,24 @@ public abstract class StyledText
     /** Renders this styled text into the supplied canvas at the specified offset. */
     public abstract void render (Canvas canvas, float x, float y);
 
-    /** Creates an image large enough to accommodate this styled text, and renders it therein. */
-    public CanvasImage toImage () {
-        CanvasImage image = graphics().createImage(width(), height());
-        render(image.canvas(), 0, 0);
-        return image;
+    /** Creates a canvas large enough to accommodate this styled text, and renders it therein. The
+      * canvas will include a one pixel border beyond the size of the styled text which is needed
+      * to accommodate antialiasing. */
+    public Canvas toCanvas () {
+        float pad = 1/_gfx.scale.factor;
+        Canvas canvas = _gfx.createCanvas(width()+2*pad, height()+2*pad);
+        render(canvas, pad, pad);
+        return canvas;
     }
 
     /** Creates an image large enough to accommodate this styled text, renders it therein and
-     * returns an image layer with its translation adjusted per the effect renderer. */
+      * returns an image layer with its translation adjusted per the effect renderer. */
     public abstract ImageLayer toLayer ();
+
+    protected StyledText (Graphics gfx) {
+        assert gfx != null;
+        _gfx = gfx;
+    }
+
+    protected final Graphics _gfx;
 }

@@ -13,8 +13,8 @@ import java.util.List;
 
 import pythagoras.f.Point;
 
+import playn.core.Platform;
 import playn.core.Json;
-import playn.core.PlayN;
 
 /**
  * Captures the data of a flump library. This allows us to convert between Json and other formats,
@@ -37,16 +37,13 @@ public class LibraryData
             file = json.getString("file");
         }
 
-        public Json.Object toJson ()
-        {
-            Json.Object json = PlayN.json().createObject();
-            Json.Array textureArr = PlayN.json().createArray();
-            for (TextureData texture : textures) {
-                textureArr.add(texture.toJson());
-            }
-            json.put("textures", textureArr);
-            json.put("file", file);
-            return json;
+        public Json.Object toJson (Json json) {
+            Json.Object jobj = json.createObject();
+            Json.Array textureArr = json.createArray();
+            for (TextureData texture : textures) textureArr.add(texture.toJson(json));
+            jobj.put("textures", textureArr);
+            jobj.put("file", file);
+            return jobj;
         }
 
         public AtlasData (DataInputStream istream) throws IOException {
@@ -79,18 +76,17 @@ public class LibraryData
             rect = new float[] { rectArr.get(0), rectArr.get(1), rectArr.get(2), rectArr.get(3) };
         }
 
-        public Json.Object toJson () {
-            Json.Object json = PlayN.json().createObject();
-            json.put("symbol", symbol);
-            json.put("origin", fromPoint(origin));
-            Json.Array rectArr = PlayN.json().createArray();
+        public Json.Object toJson (Json json) {
+            Json.Object jobj = json.createObject();
+            jobj.put("symbol", symbol);
+            jobj.put("origin", fromPoint(json, origin));
+            Json.Array rectArr = json.createArray();
             rectArr.add(rect[0]);
             rectArr.add(rect[1]);
             rectArr.add(rect[2]);
             rectArr.add(rect[3]);
-            json.put("rect", rectArr);
-
-            return json;
+            jobj.put("rect", rectArr);
+            return jobj;
         }
 
         public TextureData (DataInputStream istream) throws IOException {
@@ -126,17 +122,14 @@ public class LibraryData
             }
         }
 
-        public Json.Object toJson ()
+        public Json.Object toJson (Json json)
         {
-            Json.Object json = PlayN.json().createObject();
-            json.put("id", id);
-            Json.Array layerArr = PlayN.json().createArray();
-            for (LayerData layer : layers) {
-                layerArr.add(layer.toJson());
-            }
-            json.put("layers", layerArr);
-
-            return json;
+            Json.Object jobj = json.createObject();
+            jobj.put("id", id);
+            Json.Array layerArr = json.createArray();
+            for (LayerData layer : layers) layerArr.add(layer.toJson(json));
+            jobj.put("layers", layerArr);
+            return jobj;
         }
 
         public MovieData (DataInputStream istream) throws IOException {
@@ -171,17 +164,13 @@ public class LibraryData
             }
         }
 
-        public Json.Object toJson ()
-        {
-            Json.Object json = PlayN.json().createObject();
-            json.put("name", name);
-            Json.Array keyframeArr = PlayN.json().createArray();
-            for (KeyframeData frame : keyframes) {
-                keyframeArr.add(frame.toJson());
-            }
-            json.put("keyframes", keyframeArr);
-
-            return json;
+        public Json.Object toJson (Json json) {
+            Json.Object jobj = json.createObject();
+            jobj.put("name", name);
+            Json.Array keyframeArr = json.createArray();
+            for (KeyframeData frame : keyframes) keyframeArr.add(frame.toJson(json));
+            jobj.put("keyframes", keyframeArr);
+            return jobj;
         }
 
         public LayerData (DataInputStream istream) throws IOException {
@@ -231,22 +220,20 @@ public class LibraryData
             ref = json.getString("ref");
         }
 
-        public Json.Object toJson ()
-        {
-            Json.Object json = PlayN.json().createObject();
-            json.put("duration", duration);
-            json.put("label", label);
-            json.put("loc", fromPoint(loc));
-            json.put("scale", fromPoint(scale));
-            json.put("skew", fromPoint(skew));
-            json.put("pivot", fromPoint(pivot));
-            json.put("alpha", alpha);
-            json.put("visible", visible);
-            json.put("tweened", tweened);
-            json.put("ease", ease);
-            json.put("ref", ref);
-
-            return json;
+        public Json.Object toJson (Json json) {
+            Json.Object jobj = json.createObject();
+            jobj.put("duration", duration);
+            jobj.put("label", label);
+            jobj.put("loc", fromPoint(json, loc));
+            jobj.put("scale", fromPoint(json, scale));
+            jobj.put("skew", fromPoint(json, skew));
+            jobj.put("pivot", fromPoint(json, pivot));
+            jobj.put("alpha", alpha);
+            jobj.put("visible", visible);
+            jobj.put("tweened", tweened);
+            jobj.put("ease", ease);
+            jobj.put("ref", ref);
+            return jobj;
         }
 
         public KeyframeData (DataInputStream istream) throws IOException {
@@ -315,65 +302,46 @@ public class LibraryData
         frameRate = json.getNumber("frameRate");
     }
 
-    public Json.Object toJson ()
+    public Json.Object toJson (Json json)
     {
-        Json.Object json = PlayN.json().createObject();
-        Json.Array movieArr = PlayN.json().createArray();
-        for (MovieData movie : movies) {
-            movieArr.add(movie.toJson());
-        }
-        json.put("movies", movieArr);
-        Json.Array atlasArr = PlayN.json().createArray();
-        for (AtlasData atlas : atlases) {
-            atlasArr.add(atlas.toJson());
-        }
-        Json.Array textureGroupsArr = PlayN.json().createArray();
-        Json.Object textureGroupOne = PlayN.json().createObject();
+        Json.Object jobj = json.createObject();
+        Json.Array movieArr = json.createArray();
+        for (MovieData movie : movies) movieArr.add(movie.toJson(json));
+        jobj.put("movies", movieArr);
+        Json.Array atlasArr = json.createArray();
+        for (AtlasData atlas : atlases) atlasArr.add(atlas.toJson(json));
+        Json.Array textureGroupsArr = json.createArray();
+        Json.Object textureGroupOne = json.createObject();
         textureGroupOne.put("atlases", atlasArr);
         textureGroupsArr.add(textureGroupOne);
-        json.put("textureGroups", textureGroupsArr);
-        json.put("frameRate", frameRate);
-
-        return json;
+        jobj.put("textureGroups", textureGroupsArr);
+        jobj.put("frameRate", frameRate);
+        return jobj;
     }
 
-    public LibraryData (DataInputStream istream)
-        throws IOException
-    {
+    public LibraryData (DataInputStream istream) throws IOException {
         int numMovies = istream.readInt();
-        for (int ii = 0; ii < numMovies; ++ii) {
-            movies.add(new MovieData(istream));
-        }
+        for (int ii = 0; ii < numMovies; ++ii) movies.add(new MovieData(istream));
         int numAtlases = istream.readInt();
-        for (int ii = 0; ii < numAtlases; ++ii) {
-            atlases.add(new AtlasData(istream));
-        }
+        for (int ii = 0; ii < numAtlases; ++ii) atlases.add(new AtlasData(istream));
         frameRate = istream.readFloat();
     }
 
-    public void write (DataOutputStream ostream)
-        throws IOException
-    {
+    public void write (DataOutputStream ostream) throws IOException {
         ostream.writeInt(movies.size());
-        for (MovieData movie : movies) {
-            movie.write(ostream);
-        }
+        for (MovieData movie : movies) movie.write(ostream);
         ostream.writeInt(atlases.size());
-        for (AtlasData atlas : atlases) {
-            atlas.write(ostream);
-        }
+        for (AtlasData atlas : atlases) atlas.write(ostream);
         ostream.writeFloat(frameRate);
     }
 
-    protected static Point getPoint (Json.Object json, String field, float defX, float defY)
-    {
+    protected static Point getPoint (Json.Object json, String field, float defX, float defY) {
         Json.TypedArray<Float> array = json.getArray(field, Float.class);
         return (array != null) ? new Point(array.get(0), array.get(1)) : new Point(defX, defY);
     }
 
-    protected static Json.Array fromPoint (Point pt)
-    {
-        Json.Array arr = PlayN.json().createArray();
+    protected static Json.Array fromPoint (Json json, Point pt) {
+        Json.Array arr = json.createArray();
         arr.add(pt.x);
         arr.add(pt.y);
         return arr;

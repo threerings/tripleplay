@@ -5,14 +5,12 @@
 
 package tripleplay.flump;
 
-import playn.core.Layer;
-
-import tripleplay.util.Destroyable;
-import tripleplay.util.Paintable;
+import playn.core.Disposable;
+import playn.scene.Layer;
 
 /** A created instance of a Flump symbol. */
-public interface Instance extends Paintable, Destroyable
-{
+public interface Instance extends Disposable {
+
     /** The layer that displays this instance. */
     Layer layer ();
 

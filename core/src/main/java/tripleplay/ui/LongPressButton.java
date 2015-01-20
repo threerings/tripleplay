@@ -5,12 +5,13 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
-import playn.core.PlayN;
-import playn.core.Pointer;
+import react.Closeable;
 import react.Signal;
 import react.SignalView;
 import react.Slot;
+
+import playn.core.Clock;
+import playn.scene.Pointer;
 
 /**
  * A button that supports an action on a "long press". A long press is when the user holds the
@@ -38,18 +39,6 @@ public class LongPressButton extends Button
     /** Creates a button with the supplied icon. */
     public LongPressButton (Icon icon) {
         this(null, icon);
-    }
-
-    /** Creates a button with the supplied icon. */
-    @Deprecated
-    public LongPressButton (Image icon) {
-        this(null, Icons.image(icon));
-    }
-
-    /** Creates a button with the supplied text and icon. */
-    @Deprecated
-    public LongPressButton (String text, Image icon) {
-        this(text, Icons.image(icon));
     }
 
     /** Creates a button with the supplied text and icon. */
@@ -85,26 +74,26 @@ public class LongPressButton extends Button
                 _longPressInterval = resolveStyle(LONG_PRESS_INTERVAL);
             }
 
-            @Override protected void onPress (Pointer.Event event) {
-                super.onPress(event);
+            @Override public void onPress (Pointer.Interaction iact) {
+                super.onPress(iact);
                 if (isSelected()) startLongPressTimer();
             }
-            @Override protected void onHover (Pointer.Event event, boolean inBounds) {
-                super.onHover(event, inBounds);
+            @Override public void onHover (Pointer.Interaction iact, boolean inBounds) {
+                super.onHover(iact, inBounds);
                 if (!inBounds) cancelLongPressTimer();
                 else startLongPressTimer();
             }
-            @Override protected boolean onRelease (Pointer.Event event) {
-                boolean click = super.onRelease(event);
+            @Override public boolean onRelease (Pointer.Interaction iact) {
+                boolean click = super.onRelease(iact);
                 cancelLongPressTimer();
                 return click;
             }
 
             protected void startLongPressTimer () {
-                if (_longPressInterval > 0 && _timerReg == null) {
-                    _timerReg = root().iface().addTask(new Interface.Task() {
-                        @Override public void update (int delta) {
-                            _accum += delta;
+                if (_longPressInterval > 0 && _timerReg == Closeable.Util.NOOP) {
+                    _timerReg = root().iface.frame.connect(new Slot<Clock>() {
+                        @Override public void onEmit (Clock clock) {
+                            _accum += clock.dt;
                             if (_accum > _longPressInterval) fireLongPress();
                         }
                         protected int _accum;
@@ -112,20 +101,17 @@ public class LongPressButton extends Button
                 }
             }
             protected void cancelLongPressTimer () {
-                if (_timerReg != null) {
-                    _timerReg.remove();
-                    _timerReg = null;
-                }
+                _timerReg = Closeable.Util.close(_timerReg);
             }
             protected void fireLongPress () {
                 // cancel the current interaction which will disarm the button
-                PlayN.pointer().cancelLayerDrags();
+                onCancel(null);
                 cancelLongPressTimer();
                 longPress();
             }
 
             protected int _longPressInterval;
-            protected Interface.TaskHandle _timerReg;
+            protected Closeable _timerReg = Closeable.Util.NOOP;
         };
     }
 

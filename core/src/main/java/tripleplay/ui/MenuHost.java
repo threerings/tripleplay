@@ -11,20 +11,20 @@ import pythagoras.f.IRectangle;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 
-import playn.core.Connection;
-import playn.core.Events;
-import playn.core.GroupLayer;
-import playn.core.Layer;
-import playn.core.Pointer;
+import playn.core.Event;
+import playn.scene.GroupLayer;
+import playn.scene.Layer;
+import playn.scene.LayerUtil;
+import playn.scene.Pointer;
 
+import react.Closeable;
 import react.Slot;
+import react.UnitSlot;
 
+import static tripleplay.ui.Log.log;
 import tripleplay.platform.TPPlatform;
 import tripleplay.ui.util.BoxPoint;
 import tripleplay.util.Layers;
-
-import static playn.core.PlayN.*;
-import static tripleplay.ui.Log.log;
 
 /**
  * Provides a context for popping up a menu.
@@ -103,11 +103,11 @@ public class MenuHost
         }
 
         /** Creates a new event and initializes {@link #trigger} and {@link #menu}. */
-        public Pop (Element<?> trigger, Menu menu, Events.Position pointer) {
+        public Pop (Element<?> trigger, Menu menu, Event.XY pointer) {
             if (menu == null) throw new IllegalArgumentException();
             this.menu = menu;
             this.trigger = trigger;
-            this.pointer = pointer == null ? null : Events.Util.screenPos(pointer);
+            this.pointer = pointer == null ? null : new Point(pointer);
         }
 
         /**
@@ -143,8 +143,8 @@ public class MenuHost
          * by the host's screen area (see {@link MenuHost#getScreenArea()}).
          */
         public Pop inElement (Element<?> elem) {
-            Point tl = Layer.Util.layerToScreen(elem.layer, 0, 0);
-            Point br = Layer.Util.layerToScreen(
+            Point tl = LayerUtil.layerToScreen(elem.layer, 0, 0);
+            Point br = LayerUtil.layerToScreen(
                 elem.layer, elem.size().width(), elem.size().height());
             bounds = new Rectangle(tl.x(), tl.y(), br.x() - tl.x(), br.y() - tl.y());
             return this;
@@ -171,10 +171,10 @@ public class MenuHost
         protected Layer _relayTarget;
     }
 
-    public static Connection relayEvents (Layer from, final Menu to) {
-        return from.addListener(new Pointer.Adapter() {
-            @Override public void onPointerDrag (Pointer.Event e) { to.onPointerDrag(e); }
-            @Override public void onPointerEnd (Pointer.Event e) { to.onPointerEnd(e); }
+    public static Closeable relayEvents (Layer from, final Menu to) {
+        return from.events().connect(new Pointer.Listener() {
+            @Override public void onDrag (Pointer.Interaction pi) { to.onPointerDrag(pi.event); }
+            @Override public void onEnd (Pointer.Interaction pi) { to.onPointerEnd(pi.event); }
         });
     }
 
@@ -185,6 +185,7 @@ public class MenuHost
     public MenuHost (Interface iface, Elements<?> root) {
         this(iface, root.layer);
         _stylesheet = root.stylesheet();
+        _screenArea.setSize(iface.plat.graphics().viewSize);
     }
 
     /**
@@ -247,8 +248,8 @@ public class MenuHost
         final Activation activation = new Activation(pop);
 
         // cleanup
-        final Runnable cleanup = new Runnable() {
-            @Override public void run () {
+        final UnitSlot cleanup = new UnitSlot() {
+            @Override public void onEmit () {
                 // check parentage, it's possible the menu has been repopped already
                 if (pop.menu.parent() == menuRoot) {
                     // free the constraint to gc
@@ -266,7 +267,7 @@ public class MenuHost
                 activation.clear();
 
                 // always kill off the transient root
-                iface.destroyRoot(menuRoot);
+                iface.disposeRoot(menuRoot);
 
                 // if this was our active menu, clear it
                 if (_active != null && _active.pop == pop) _active = null;
@@ -277,7 +278,7 @@ public class MenuHost
         activation.deactivated = pop.menu.deactivated().connect(new Slot<Menu>() {
             @Override public void onEmit (Menu event) {
                 // due to animations, deactivation can happen during layout, so do it next frame
-                invokeLater(cleanup);
+                iface.frame.connect(cleanup).once();
             }
         });
 
@@ -292,7 +293,7 @@ public class MenuHost
         if (_active != null) _active.pop.menu.deactivate();
 
         // pass along the animator
-        pop.menu.init(iface.animator());
+        pop.menu.init(iface.anim);
 
         // activate
         _active = activation;
@@ -312,7 +313,7 @@ public class MenuHost
         public final Pop pop;
 
         public MenuRoot (Interface iface, Stylesheet sheet, Pop pop) {
-            super(iface, new RootLayout(), sheet);
+            super(iface, new RootLayout(iface.plat.input().hasTouch()), sheet);
             this.pop = pop;
             layer.setDepth(1);
             layer.setHitTester(null); // get hits from out of bounds
@@ -323,12 +324,16 @@ public class MenuHost
     /** Simple layout for positioning the menu within the transient {@code Root}. */
     protected static class RootLayout extends Layout
     {
+        public RootLayout (boolean hasTouch) {
+            _hasTouch = hasTouch;
+        }
+
         @Override public Dimension computeSize (Container<?> elems, float hintX, float hintY) {
             return new Dimension(preferredSize(elems.childAt(0), hintX, hintY));
         }
 
-        @Override public void layout (Container<?> elems, float left, float top, float width,
-                                      float height) {
+        @Override public void layout (Container<?> elems, float left, float top,
+                                      float width, float height) {
             if (elems.childCount() == 0) return;
 
             MenuRoot menuRoot = (MenuRoot)elems;
@@ -366,7 +371,7 @@ public class MenuHost
                     ibounds.grow(-fudge, -fudge);
 
                     // set up the fingerprint
-                    float fingerRadius = touch().hasTouch() ? 10 : 3;
+                    float fingerRadius = _hasTouch ? 10 : 3;
                     IPoint fingerPos = pop.pointer == null ? tpos : pop.pointer;
                     Rectangle fingerBox = new Rectangle(
                         fingerPos.x() - fingerRadius, fingerPos.y() - fingerRadius,
@@ -384,7 +389,7 @@ public class MenuHost
             Rectangle screenBounds = new Rectangle(bounds);
 
             // relocate to layer coordinates
-            bounds.setLocation(Layer.Util.screenToLayer(elems.layer, bounds.x, bounds.y));
+            bounds.setLocation(LayerUtil.screenToLayer(elems.layer, bounds.x, bounds.y));
 
             // set the menu bounds
             setBounds(elems.childAt(0), bounds.x, bounds.y, bounds.width, bounds.height);
@@ -397,6 +402,8 @@ public class MenuHost
                 TPPlatform.instance().hideNativeOverlays(screenBounds);
             }
         }
+
+        private final boolean _hasTouch;
     }
 
     /** Tries to place the inner bounds within the outer bounds, such that the inner bounds does
@@ -470,13 +477,13 @@ public class MenuHost
         public final Pop pop;
 
         /** Connects to the pointer events from the relay. */
-        public Connection pointerRelay = Layers.NOT_LISTENING;
+        public Closeable pointerRelay = Closeable.Util.NOOP;
 
         /** Connection to the trigger's hierarchy change. */
-        public react.Connection triggerRemoved;
+        public Closeable triggerRemoved;
 
         /** Connection to the menu's deactivation. */
-        public react.Connection deactivated;
+        public Closeable deactivated;
 
         /** Creates a new activation. */
         public Activation (Pop pop) {
@@ -489,10 +496,9 @@ public class MenuHost
 
         /** Clears out the connections. */
         public void clear () {
-            if (triggerRemoved != null) triggerRemoved.disconnect();
-            if (deactivated != null) deactivated.disconnect();
-            pointerRelay.disconnect();
-            pointerRelay = null;
+            if (triggerRemoved != null) triggerRemoved.close();
+            if (deactivated != null) deactivated.close();
+            pointerRelay = Closeable.Util.close(pointerRelay);
             triggerRemoved = null;
             deactivated = null;
         }
@@ -518,6 +524,5 @@ public class MenuHost
     protected Activation _active;
 
     /** When confining the menu to the graphics' bounds, use this. */
-    protected final Rectangle _screenArea = new Rectangle(
-        0, 0, graphics().width(), graphics().height());
+    protected final Rectangle _screenArea = new Rectangle();
 }

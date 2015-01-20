@@ -5,54 +5,31 @@
 
 package tripleplay.demo;
 
-import java.util.Arrays;
+import playn.core.Platform;
+import playn.scene.Pointer;
+import playn.scene.SceneGame;
 
-import playn.core.Game;
-import playn.core.PlayN;
-import playn.core.util.Clock;
 import tripleplay.game.ScreenStack;
 
-public class TripleDemo extends Game.Default
-{
+public class TripleDemo extends SceneGame {
+
     /** Args from the Java bootstrap class. */
     public static String[] mainArgs = {};
 
-    public static final int UPDATE_RATE = 25;
+    /** A static reference to our game. If we were starting from scratch, I'd pass the game
+      * instance to the screen constructor of all of our demo screens, but doing that now is too
+      * much pain in my rear. */
+    public static TripleDemo game;
 
-    public TripleDemo () {
-        super(UPDATE_RATE);
-    }
-
-    @Override public void init () {
-        _screens.push(new DemoMenuScreen(_screens));
-
-        // propagate events so that things like buttons inside a scroller work
-        if (!Arrays.asList(mainArgs).contains("--no-propagate")) {
-            PlayN.setPropagateEvents(true);
-        }
-    }
-
-    @Override public void update (int delta) {
-        _clock.update(delta);
-        _screens.update(delta);
-    }
-
-    @Override public void paint (float alpha) {
-        _clock.paint(alpha);
-        _screens.paint(_clock);
-    }
-
-    protected final Clock.Source _clock = new Clock.Source(UPDATE_RATE);
-
-    protected final ScreenStack _screens = new ScreenStack() {
-        @Override protected void handleError (RuntimeException error) {
-            PlayN.log().warn("Screen failure", error);
-        }
-        @Override protected Transition defaultPushTransition () {
-            return slide();
-        }
-        @Override protected Transition defaultPopTransition () {
-            return slide().right();
-        }
+    public final ScreenStack screens = new ScreenStack(this, rootLayer) {
+        @Override protected Transition defaultPushTransition () { return slide(); }
+        @Override protected Transition defaultPopTransition () { return slide().right(); }
     };
+
+    public TripleDemo (Platform plat) {
+        super(plat, 25); // update our "simulation" 40 times per second
+        game = this;     // jam ourselves into a global variable, woo!
+        new Pointer(plat, rootLayer, true);        // wire up event dispatch
+        screens.push(new DemoMenuScreen(screens)); // start off with our menu screen
+    }
 }

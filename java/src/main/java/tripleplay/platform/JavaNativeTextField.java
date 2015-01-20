@@ -26,8 +26,6 @@ import pythagoras.f.FloatMath;
 
 import playn.core.Font;
 import playn.core.Key;
-import playn.core.PlayN;
-import playn.java.JavaKeyboard;
 
 import react.Connection;
 import react.Slot;
@@ -52,13 +50,14 @@ public class JavaNativeTextField extends JavaNativeOverlay
         }
     }
 
-    public JavaNativeTextField (Field.Native element) {
-        this(element, null, resolveComponentType(element));
+    public JavaNativeTextField (JavaTPPlatform plat, Field.Native element) {
+        this(plat, element, null, resolveComponentType(element));
     }
 
-    public JavaNativeTextField (Field.Native element, JavaNativeTextField oldField,
-            Class<? extends JTextComponent> type) {
-        super(create(type));
+    public JavaNativeTextField (JavaTPPlatform plat, Field.Native element,
+                                JavaNativeTextField oldField,
+                                Class<? extends JTextComponent> type) {
+        super(plat, create(type));
         _element = element;
         _textComp = (JTextComponent)component;
 
@@ -81,43 +80,37 @@ public class JavaNativeTextField extends JavaNativeOverlay
                 update();
             }
             protected void update () {
-                if (!_textNotifyInProgress)
-                    updateOnMainThread(_element.field().text, _textComp.getText());
+                if (!_textNotifyInProgress) _plat.updateOnMainThread(
+                    _element.field().text, _textComp.getText());
             }
         });
         if (isField()) {
             asField().addActionListener(new ActionListener() {
                 public void actionPerformed (ActionEvent event) {
-                    emitOnMainThread(_element.finishedEditing(), true);
+                    _plat.emitOnMainThread(_element.finishedEditing(), true);
                 }
             });
         }
         _textComp.addFocusListener(new FocusListener() {
             @Override public void focusGained (FocusEvent e) {
-                updateOnMainThread(instance()._focus, _element.field());
+                _plat.updateOnMainThread(instance()._focus, _element.field());
             }
             @Override public void focusLost (FocusEvent e) {
-                JavaTPPlatform.emitOnMainThread(_element.finishedEditing(), false);
+                _plat.emitOnMainThread(_element.finishedEditing(), false);
                 Component opposite = e.getOppositeComponent();
-                if (opposite == null || !hasOverlayFor(opposite))
-                    updateOnMainThread(instance()._focus, null);
+                if (opposite == null || !_plat.hasOverlayFor(opposite))
+                    _plat.updateOnMainThread(instance()._focus, null);
             }
         });
         _textComp.addKeyListener(new KeyListener() {
-            void post (Key key, boolean pressed, char typed) {
-                // no need to hop threads here, the JavaKeyboard does that
-                ((JavaKeyboard)PlayN.keyboard()).post(key, pressed, typed);
-            }
             @Override public void keyTyped (KeyEvent e) {
-                post(null, false, e.getKeyChar());
+                _plat.plat.input().postKey(e.getWhen(), null, false, e.getKeyChar());
             }
-
             @Override public void keyReleased (KeyEvent e) {
-                post(translateKeyCode(e.getKeyCode()), false, '\u0000');
+                _plat.plat.input().postKey(e.getWhen(), toKey(e.getKeyCode()), false, '\u0000');
             }
-
             @Override public void keyPressed (KeyEvent e) {
-                post(translateKeyCode(e.getKeyCode()), true, '\u0000');
+                _plat.plat.input().postKey(e.getWhen(), toKey(e.getKeyCode()), true, '\u0000');
             }
         });
 
@@ -145,8 +138,8 @@ public class JavaNativeTextField extends JavaNativeOverlay
     /** Re-applies the current Field styles to the text component. */
     public void validateStyles () {
         Font font = _element.resolveStyle(Style.FONT);
-        _textComp.setFont(new java.awt.Font(font.name(), awtFontStyle(font.style()),
-            FloatMath.round(font.size())));
+        _textComp.setFont(new java.awt.Font(font.name, awtFontStyle(font.style),
+                                            FloatMath.round(font.size)));
         Color col = new Color(_element.resolveStyle(Style.COLOR));
         _textComp.setForeground(col);
         _textComp.setCaretColor(col);
@@ -175,7 +168,8 @@ public class JavaNativeTextField extends JavaNativeOverlay
 
     public JavaNativeTextField refresh () {
         Class<? extends JTextComponent> type = resolveComponentType(_element);
-        return type == component.getClass() ? this : new JavaNativeTextField(_element, this, type);
+        return type == component.getClass() ? this :
+            new JavaNativeTextField(_plat, _element, this, type);
     }
 
     @Override public void focus () {
@@ -211,7 +205,7 @@ public class JavaNativeTextField extends JavaNativeOverlay
 
     /** Translates an AWT key code into a playn key, if possible. May return {@link Key#UNKNOWN} if
      * there is no translation. */
-    protected static Key translateKeyCode (int code) {
+    protected static Key toKey (int code) {
         switch (code) {
             case KeyEvent.VK_ENTER: return Key.ENTER;
             case KeyEvent.VK_BACK_SPACE: return Key.BACKSPACE;

@@ -5,6 +5,8 @@
 
 package tripleplay.ui;
 
+import playn.core.Graphics;
+
 /**
  * Provides a simple style sheet that is useful for development and testing.
  */
@@ -13,18 +15,18 @@ public class SimpleStyles
     /**
      * Creates and returns a simple default stylesheet.
      */
-    public static Stylesheet newSheet () {
-        return newSheetBuilder().create();
+    public static Stylesheet newSheet (Graphics gfx) {
+        return newSheetBuilder(gfx).create();
     }
 
     /**
      * Creates and returns a stylesheet builder configured with some useful default styles. The
      * caller can augment the sheet with additional styles and call {@code create}.
      */
-    public static Stylesheet.Builder newSheetBuilder () {
+    public static Stylesheet.Builder newSheetBuilder (Graphics gfx) {
         int bgColor = 0xFFCCCCCC, ulColor = 0xFFEEEEEE, brColor = 0xFFAAAAAA;
-        Background butBg = Background.roundRect(bgColor, 5, ulColor, 2).inset(5, 6, 2, 6);
-        Background butSelBg = Background.roundRect(bgColor, 5, brColor, 2).inset(6, 5, 1, 7);
+        Background butBg = Background.roundRect(gfx, bgColor, 5, ulColor, 2).inset(5, 6, 2, 6);
+        Background butSelBg = Background.roundRect(gfx, bgColor, 5, brColor, 2).inset(6, 5, 1, 7);
         return Stylesheet.builder().
             add(Button.class,
                 Style.BACKGROUND.is(butBg)).
@@ -35,9 +37,11 @@ public class SimpleStyles
             add(ToggleButton.class, Style.Mode.SELECTED,
                 Style.BACKGROUND.is(butSelBg)).
             add(CheckBox.class,
-                Style.BACKGROUND.is(Background.roundRect(bgColor, 5, ulColor, 2).inset(3, 2, 0, 3))).
+                Style.BACKGROUND.is(Background.roundRect(gfx, bgColor, 5, ulColor, 2).
+                                    inset(3, 2, 0, 3))).
             add(CheckBox.class, Style.Mode.SELECTED,
-                Style.BACKGROUND.is(Background.roundRect(bgColor, 5, brColor, 2).inset(3, 2, 0, 3))).
+                Style.BACKGROUND.is(Background.roundRect(gfx, bgColor, 5, brColor, 2).
+                                    inset(3, 2, 0, 3))).
             // flip ul and br to make Field appear recessed
             add(Field.class,
                 Style.BACKGROUND.is(Background.beveled(0xFFFFFFFF, brColor, ulColor).inset(5)),
