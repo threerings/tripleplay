@@ -9,18 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pythagoras.f.Dimension;
-
 import pythagoras.f.IDimension;
 import react.UnitSlot;
 import react.Value;
 
-import playn.core.Canvas;
-import playn.core.Font;
-import playn.core.Platform;
-import playn.core.TextFormat;
-import playn.core.TextLayout;
+import playn.core.*;
 import playn.scene.CanvasLayer;
+import playn.scene.LayerUtil;
 import playn.scene.SceneGame;
+
+import react.Slot;
 
 /**
  * Maintains a (usually debugging) HUD with textual information displayed in one or two columns.
@@ -39,7 +37,7 @@ import playn.scene.SceneGame;
 public class Hud
 {
     /** A stock HUD that provides a bunch of standard PlayN performance info and handles
-     * once-per-second updating. */
+      * once-per-second updating. */
     public static class Stock extends Hud {
         public Stock (SceneGame game) {
             super(game);
@@ -61,14 +59,18 @@ public class Hud
             add("Tris drawn:", _rTris);
             add("Shader flushes:", _shaderFlushes);
 
-            game.paint.connect(new UnitSlot() { public void onEmit () {
-                long now = System.currentTimeMillis();
-                if (now > _nextUpdate) {
-                    willUpdate();
-                    update();
-                    _nextUpdate = now + 1000;
+            // receive paint updates while our layer is connected
+            LayerUtil.bind(layer, game.paint, new Slot<Clock>() {
+                public void onEmit (Clock clock) {
+                    int now = clock.tick;
+                    if (now > _nextUpdate) {
+                        willUpdate();
+                        update();
+                        _nextUpdate = now + 1000;
+                    }
                 }
-            }});
+                protected int _nextUpdate;
+            });
         }
 
         /** Called when the HUD is about to update its display. Values added to the HUD should be
@@ -91,8 +93,6 @@ public class Hud
             // _quadShader.update("Quad: " + graphics().ctx().quadShaderInfo());
             // _trisShader.update("Tris: " + graphics().ctx().trisShaderInfo());
         }
-
-        protected long _nextUpdate;
 
         protected final Value<Integer> _frames = Value.create(0);
         protected final Value<Integer> _shaderCreates = Value.create(0);
