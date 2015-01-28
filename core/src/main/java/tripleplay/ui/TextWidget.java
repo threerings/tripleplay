@@ -78,7 +78,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new TextLayoutData(root().iface.plat.graphics(), hintX, hintY);
+        return new TextLayoutData(hintX, hintY);
     }
 
     protected class TextLayoutData extends LayoutData {
@@ -91,12 +91,11 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
         public final boolean autoShrink = resolveStyle(Style.AUTO_SHRINK);
 
-        public final Graphics gfx;
+        public final Graphics gfx = root().iface.plat.graphics();
         public StyledText.Plain text; // mostly final, only changed by autoShrink
         public final Icon icon;
 
-        public TextLayoutData (Graphics gfx, float hintX, float hintY) {
-            this.gfx = gfx;
+        public TextLayoutData (float hintX, float hintY) {
             String curtext = text();
             boolean haveText = (curtext != null && curtext.length() > 0);
 

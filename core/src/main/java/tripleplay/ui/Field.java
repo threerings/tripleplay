@@ -262,7 +262,7 @@ public class Field extends TextWidget<Field>
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new FieldLayoutData(root().iface.plat.graphics(), hintX, hintY);
+        return new FieldLayoutData(hintX, hintY);
     }
 
     protected void startEdit () {
@@ -312,8 +312,8 @@ public class Field extends TextWidget<Field>
     }
 
     protected class FieldLayoutData extends TextLayoutData {
-        public FieldLayoutData (Graphics gfx, float hintX, float hintY) {
-            super(gfx, hintX, hintY);
+        public FieldLayoutData (float hintX, float hintY) {
+            super(hintX, hintY);
         }
 
         @Override public void layout (float left, float top, float width, float height) {
