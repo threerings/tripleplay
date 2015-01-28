@@ -139,14 +139,14 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
     /**
      * A screen that integrates with {@code ScreenSpace}. The screen lifecycle is:
-     * {@code init [wake gainedFocus lostFocus sleep]+ destroy}.
+     * {@code init [wake gainedFocus lostFocus sleep]+ dispose}.
      *
      * <p>When the screen has the potential to become visible (due to the user scrolling part of
      * the screen into view) it will have been wakened. If the user selects the screen, it will be
      * animated into position and then {@code gainedFocus} will be called. If the user scrolls a
      * new screen into view, {@code lostFocus} will be called, the screen will be animated away. If
      * the screen is no longer "at risk" of being shown, {@code sleep} will be called. When the
-     * screen is finally removed from the screen space, {@code destroy} will be called.
+     * screen is finally removed from the screen space, {@code dispose} will be called.
      */
     public static abstract class Screen {
 
@@ -196,7 +196,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         }
 
         /** Called when this screen is no longer at risk of being seen by the user. This should
-          * destroy the UI and minimize the screen's memory footprint as much as possible. */
+          * dispose the UI and minimize the screen's memory footprint as much as possible. */
         public void sleep () {
             _flags &= ~AWAKE;
         }
@@ -204,7 +204,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         /** Called when this screen is removed from the screen space. This will always be preceded
           * by a call to {@link #sleep}, but if there are any resources that the screen retains
           * until it is completely released, this is the place to remove them. */
-        public void destroy () {
+        public void dispose () {
             assert !awake();
         }
 
@@ -274,7 +274,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
                 _root = null;
             }
             // a screen is completely cleared and recreated between sleep/wake calls, so clear the
-            // animator after destroying the root so that unprocessed anims don't hold onto memory
+            // animator after disposeing the root so that unprocessed anims don't hold onto memory
             iface.anim.clear();
         }
 
@@ -283,7 +283,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         protected abstract Root createRoot ();
 
         /** Contains the main UI for this screen.
-          * Created in {@link #wake}, destroyed in {@link #sleep}. */
+          * Created in {@link #wake}, disposeed in {@link #sleep}. */
         protected Root _root;
     }
 
@@ -344,7 +344,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             else {
                 ActiveScreen oscr = _screens.remove(0);
                 takeFocus(oscr);
-                oscr.destroy();
+                oscr.dispose();
                 _current = null;
                 _onPointer = Closeable.Util.close(_onPointer);
             }
@@ -362,14 +362,14 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     }
 
     /** Removes all screens from the space until {@code screen} is reached. No transitions will be
-      * used, all screens will simply be removed and destroyed until we reach {@code screen}, and
+      * used, all screens will simply be removed and disposeed until we reach {@code screen}, and
       * that screen will be woken and positioned properly. */
     public void popTo (Screen screen) {
         if (current() == screen) return; // NOOP!
         ActiveScreen top = _screens.get(0);
         while (top.screen != screen) {
             takeFocus(top);
-            top.destroy();
+            top.dispose();
             top = _screens.get(0);
         }
         checkSleep(); // wake up the top screen
@@ -430,13 +430,13 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         transition(oscr, nscr, dir, startPct).onComplete.connect(new UnitSlot() {
             public void onEmit () {
                 giveFocus(nscr);
-                oscr.destroy();
+                oscr.dispose();
             }
         });
     }
 
     protected void popAt (int index) {
-        _screens.remove(index).destroy();
+        _screens.remove(index).dispose();
     }
 
     protected void giveFocus (ActiveScreen as) {
@@ -487,9 +487,9 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             }
         }
 
-        public void destroy () {
+        public void dispose () {
             check(false); // make sure screen is hidden/remove
-            screen.destroy();
+            screen.dispose();
         }
     }
 
