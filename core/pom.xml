@@ -15,14 +15,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.googlecode.playn</groupId>
+      <groupId>io.playn</groupId>
       <artifactId>playn-scene</artifactId>
       <version>${playn.version}</version>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
-      <groupId>com.googlecode.playn</groupId>
+      <groupId>io.playn</groupId>
       <artifactId>playn-java</artifactId>
       <version>${playn.version}</version>
       <scope>test</scope>

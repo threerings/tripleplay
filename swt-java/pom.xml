@@ -21,7 +21,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.googlecode.playn</groupId>
+      <groupId>io.playn</groupId>
       <artifactId>playn-swt-java</artifactId>
       <version>${playn.version}</version>
     </dependency>
