@@ -8,7 +8,7 @@ package tripleplay.ui.bgs;
 import pythagoras.f.IDimension;
 
 import playn.core.Surface;
-import playn.core.Texture;
+import playn.core.Tile;
 import playn.core.Tint;
 import playn.scene.Layer;
 
@@ -24,9 +24,9 @@ public class Scale9Background extends Background
     /** Creates a new background using the given texture. The texture is assumed to be divided into
      * aa 3x3 grid of 9 equal pieces.
      */
-    public Scale9Background (Texture tex) {
-        _tex = tex;
-        _s9 = new Scale9(tex.displayWidth, tex.displayHeight);
+    public Scale9Background (Tile tile) {
+        _tile = tile;
+        _s9 = new Scale9(tile.width(), tile.height());
     }
 
     /** Returns the scale 9 instance for mutation. Be sure to finish mutation prior to binding. */
@@ -92,7 +92,7 @@ public class Scale9Background extends Background
             protected void drawPart (Surface surf, int x, int y) {
                 float dw = dest.xaxis.size(x), dh = dest.yaxis.size(y);
                 if (dw == 0 || dh == 0) return;
-                surf.draw(_tex, dest.xaxis.coord(x), dest.yaxis.coord(y), dw, dh,
+                surf.draw(_tile, dest.xaxis.coord(x), dest.yaxis.coord(y), dw, dh,
                           _s9.xaxis.coord(x), _s9.yaxis.coord(y),
                           _s9.xaxis.size(x),  _s9.yaxis.size(y));
             }
@@ -115,7 +115,7 @@ public class Scale9Background extends Background
         return this;
     }
 
-    protected Texture _tex;
+    protected Tile _tile;
     protected Scale9 _s9;
     protected float _destScale = 1;
     protected int _tint = Tint.NOOP_TINT;
