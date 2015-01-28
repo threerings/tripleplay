@@ -10,7 +10,10 @@ import pythagoras.f.IRectangle;
 import pythagoras.f.Points;
 import pythagoras.f.Rectangle;
 
-import playn.core.Texture;
+import react.Slot;
+
+import playn.core.Tile;
+import playn.core.TileSource;
 import playn.scene.ImageLayer;
 
 /**
@@ -23,8 +26,8 @@ public class SimpleFrames implements Frames
      * single row, thus the height of the image defines the height of the frame.
      * @param width the width of each frame.
      */
-    public SimpleFrames (Texture source, float width) {
-        this(source, width, source.displayHeight);
+    public SimpleFrames (Tile source, float width) {
+        this(source, width, source.height());
     }
 
     /**
@@ -33,20 +36,22 @@ public class SimpleFrames implements Frames
      * @param width the width of each frame.
      * @param height the width of each frame.
      */
-    public SimpleFrames (Texture source, float width, float height) {
-        this(source, width, height,
-             (int)(source.displayHeight/height) * (int)(source.displayWidth/width));
+    public SimpleFrames (Tile source, float width, float height) {
+        this(source, width, height, (int)(source.height()/height) * (int)(source.height()/width));
     }
 
     /**
-     * Creates an instance with the supplied source texture. The image is assumed to contain {@code
+     * Creates an instance with the supplied tile source. The tile is assumed to contain {@code
      * count} frames, each {@code width x height} in size, in row major order (any missing frames
      * are on the right side of the bottom row).
      * @param width the width of each frame.
      * @param height the width of each frame.
      */
-    public SimpleFrames (Texture source, float width, float height, int count) {
-        _source = source;
+    public SimpleFrames (TileSource source, float width, float height, int count) {
+        if (source.isLoaded()) _tile = source.tile();
+        else source.tileAsync().onSuccess(new Slot<Tile>() {
+            public void onEmit (Tile tile) { _tile = tile; }
+        });
         _width = width;
         _height = height;
         _count = count;
@@ -59,14 +64,14 @@ public class SimpleFrames implements Frames
     @Override public IPoint offset (int index) { return Points.ZERO; } // we have no offsets
 
     @Override public void apply (int index, ImageLayer layer) {
-        layer.setTile(_source);
+        layer.setTile(_tile);
         layer.setTranslation(0, 0);
         Rectangle r = layer.region;
         if (r == null) r = (layer.region = new Rectangle());
         bounds(index, r);
     }
 
-    protected int cols () { return (int)(_source.displayWidth / _width); }
+    protected int cols () { return (int)(_tile.width() / _width); }
 
     protected Rectangle bounds (int index, Rectangle r) {
         int cols = cols(), row = (index % cols), col = (index / cols);
@@ -77,7 +82,7 @@ public class SimpleFrames implements Frames
         return r;
     }
 
-    protected final Texture _source;
+    protected Tile _tile;
     protected final float _width, _height;
     protected final int _count;
 }

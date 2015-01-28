@@ -8,8 +8,11 @@ package tripleplay.util;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 
+import react.Slot;
+
 import playn.core.Json;
-import playn.core.Texture;
+import playn.core.Tile;
+import playn.core.TileSource;
 import playn.scene.ImageLayer;
 
 /**
@@ -27,16 +30,19 @@ public class PackedFrames implements Frames
         }
     }
 
-    public PackedFrames (Texture tex, Json.Object meta) {
-        this(tex, meta.getNumber("width"), meta.getNumber("height"), parseFrames(meta));
+    public PackedFrames (TileSource source, Json.Object meta) {
+        this(source, meta.getNumber("width"), meta.getNumber("height"), parseFrames(meta));
     }
 
-    public PackedFrames (Texture tex, float[][] meta) {
-        this(tex, meta[0][0], meta[0][1], parseFrames(meta));
+    public PackedFrames (TileSource source, float[][] meta) {
+        this(source, meta[0][0], meta[0][1], parseFrames(meta));
     }
 
-    public PackedFrames (Texture tex, float width, float height, Frame[] frames) {
-        _source = tex;
+    public PackedFrames (TileSource source, float width, float height, Frame[] frames) {
+        if (source.isLoaded()) _tile = source.tile();
+        else source.tileAsync().onSuccess(new Slot<Tile>() {
+            public void onEmit (Tile tile) { _tile = tile; }
+        });
         _width = width;
         _height = height;
         _frames = frames;
@@ -50,7 +56,7 @@ public class PackedFrames implements Frames
 
     @Override public void apply (int index, ImageLayer layer) {
         Frame f = _frames[index];
-        layer.setTile(_source);
+        layer.setTile(_tile);
         layer.region = f.bounds;
         layer.setTranslation(f.offset.x, f.offset.y);
     }
@@ -87,7 +93,7 @@ public class PackedFrames implements Frames
         return frames;
     }
 
-    protected final Texture _source;
+    protected Tile _tile;
     protected final float _width, _height;
     protected final Frame[] _frames;
 }
