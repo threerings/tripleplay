@@ -64,11 +64,13 @@ public class SimpleFrames implements Frames
     @Override public IPoint offset (int index) { return Points.ZERO; } // we have no offsets
 
     @Override public void apply (int index, ImageLayer layer) {
-        layer.setTile(_tile);
-        layer.setTranslation(0, 0);
-        Rectangle r = layer.region;
-        if (r == null) r = (layer.region = new Rectangle());
-        bounds(index, r);
+        if (_tile != null) {
+            layer.setTile(_tile);
+            layer.setTranslation(0, 0);
+            Rectangle r = layer.region;
+            if (r == null) r = (layer.region = new Rectangle());
+            bounds(index, r);
+        }
     }
 
     protected int cols () { return (int)(_tile.width() / _width); }
