@@ -8,7 +8,6 @@ package tripleplay.particle;
 import java.util.ArrayList;
 import java.util.List;
 
-import react.Closeable;
 import react.Signal;
 import react.Slot;
 import react.UnitSlot;
@@ -102,6 +101,5 @@ public class Emitter
     }
 
     protected final ParticleBuffer _buffer;
-    protected Closeable _pcon = Closeable.Util.NOOP;
     protected float _time;
 }
