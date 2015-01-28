@@ -11,10 +11,10 @@ import pythagoras.f.MathUtil;
 
 import playn.core.Disposable;
 import playn.core.Graphics;
-import playn.core.Image;
 import playn.core.Surface;
 import playn.core.Texture;
 import playn.core.Tile;
+import playn.core.TileSource;
 import playn.scene.GroupLayer;
 import playn.scene.ImageLayer;
 import playn.scene.Layer;
@@ -125,22 +125,11 @@ public abstract class Background
         return new RoundRectBackground(gfx, bgColor, cornerRadius, borderColor, borderWidth);
     }
 
-    /** Creates a background with the specified texture tile. */
-    public static Background texture (final Tile tile) {
+    /** Creates a background with the specified source. */
+    public static Background image (final TileSource source) {
         return new Background() {
             @Override protected Instance instantiate (IDimension size) {
-                ImageLayer layer = new ImageLayer(tile);
-                layer.setSize(size.width(), size.height());
-                return new LayerInstance(size, layer);
-            }
-        };
-    }
-
-    /** Creates a background with the specified image. */
-    public static Background image (final Image image) {
-        return new Background() {
-            @Override protected Instance instantiate (IDimension size) {
-                ImageLayer layer = new ImageLayer(image);
+                ImageLayer layer = new ImageLayer(source);
                 layer.setSize(size.width(), size.height());
                 return new LayerInstance(size, layer);
             }
