@@ -14,6 +14,7 @@ import playn.core.Graphics;
 import playn.core.Image;
 import playn.core.Surface;
 import playn.core.Texture;
+import playn.core.Tile;
 import playn.scene.GroupLayer;
 import playn.scene.ImageLayer;
 import playn.scene.Layer;
@@ -124,11 +125,11 @@ public abstract class Background
         return new RoundRectBackground(gfx, bgColor, cornerRadius, borderColor, borderWidth);
     }
 
-    /** Creates a background with the specified texture. */
-    public static Background texture (final Texture tex) {
+    /** Creates a background with the specified texture tile. */
+    public static Background texture (final Tile tile) {
         return new Background() {
             @Override protected Instance instantiate (IDimension size) {
-                ImageLayer layer = new ImageLayer(tex);
+                ImageLayer layer = new ImageLayer(tile);
                 layer.setSize(size.width(), size.height());
                 return new LayerInstance(size, layer);
             }
@@ -146,27 +147,27 @@ public abstract class Background
         };
     }
 
-    /** Creates a centered background with the specified texture. */
-    public static Background centered (final Texture tex) {
+    /** Creates a centered background with the specified texture tile. */
+    public static Background centered (final Tile tile) {
         return new Background() {
             @Override protected Instance instantiate (IDimension size) {
-                final float x = MathUtil.ifloor((size.width()-tex.displayWidth)/2);
-                final float y = MathUtil.ifloor((size.height()-tex.displayHeight)/2);
+                final float x = MathUtil.ifloor((size.width()-tile.width())/2);
+                final float y = MathUtil.ifloor((size.height()-tile.height())/2);
                 return new LayerInstance(size, new Layer() {
                     protected void paintImpl (Surface surf) {
-                        surf.draw(tex, x, y);
+                        surf.draw(tile, x, y);
                     }
                 });
             }
         };
     }
 
-    /** Creates a cropped centered background with the specified texture. */
-    public static Background cropped (final Texture tex) {
+    /** Creates a cropped centered background with the specified texture tile. */
+    public static Background cropped (final Tile tile) {
         return new Background() {
             @Override protected Instance instantiate (IDimension size) {
                 final float swidth = size.width(),   sheight = size.height();
-                final float iwidth = tex.displayWidth, iheight = tex.displayHeight;
+                final float iwidth = tile.width(), iheight = tile.height();
                 final float cwidth = Math.min(swidth, iwidth), cheight = Math.min(sheight, iheight);
                 final float sx = (swidth > iwidth) ? 0 : (iwidth - swidth)/2;
                 final float sy = (sheight > iheight) ? 0 : (iheight - sheight)/2;
@@ -178,7 +179,7 @@ public abstract class Background
                             float dx = 0;
                             while (dx < swidth) {
                                 float dwidth = Math.min(cwidth, swidth-dx);
-                                surf.draw(tex, dx, dy, dwidth, dheight, sx, sy, dwidth, dheight);
+                                surf.draw(tile, dx, dy, dwidth, dheight, sx, sy, dwidth, dheight);
                                 dx += cwidth;
                             }
                             dy += cheight;
@@ -210,9 +211,10 @@ public abstract class Background
         };
     }
 
-    /** Creates a scale9 background with the specified texture. See {@link Scale9Background}. */
-    public static Scale9Background scale9 (Texture tex) {
-        return new Scale9Background(tex);
+    /** Creates a scale9 background with the specified texture tile.
+      * See {@link Scale9Background}. */
+    public static Scale9Background scale9 (Tile tile) {
+        return new Scale9Background(tile);
     }
 
     /** Creates a composite background with the specified backgrounds.
