@@ -673,7 +673,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     protected final List<ActiveScreen> _screens = new ArrayList<ActiveScreen>();
     protected ActiveScreen _current, _untrans;
     protected Driver _driver;
-    protected Closeable _onPointer;
+    protected Closeable _onPointer = Closeable.Util.NOOP;
 
     protected static Dir reverse (Dir dir) {
         switch (dir) {
