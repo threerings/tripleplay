@@ -395,7 +395,10 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         final ActiveScreen ntop = new ActiveScreen(screen, dir);
         _screens.add(0, ntop);
         ntop.check(true); // wake up the to-be-added screen
-        if (otop == null) giveFocus(ntop);
+        if (otop == null) {
+            ntop.screen.setActive(true);
+            giveFocus(ntop);
+        }
         else transition(otop, ntop, ntop.dir, 0).onComplete.connect(new UnitSlot() {
             public void onEmit () {
                 giveFocus(ntop);
