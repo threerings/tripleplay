@@ -24,7 +24,22 @@ import tripleplay.util.TextStyle;
 public abstract class Style<V>
 {
     /** Defines element modes which can be used to modify an element's styles. */
-    public static enum Mode { DEFAULT, DISABLED, SELECTED, DISABLED_SELECTED }
+    public static enum Mode {
+        DEFAULT(true, false),
+        DISABLED(false, false),
+        SELECTED(true, true),
+        DISABLED_SELECTED(false, true);
+
+        /** Whether the element is enabled in this mode. */
+        public final boolean enabled;
+        /** Whether the element is selected in this mode. */
+        public final boolean selected;
+
+        Mode (boolean enabled, boolean selected) {
+            this.enabled = enabled;
+            this.selected = selected;
+        }
+    }
 
     /** Used to configure {@link Styles} instances. See {@link Styles#add}. */
     public static class Binding<V> {
