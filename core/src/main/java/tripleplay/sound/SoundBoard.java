@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Set;
 
 import pythagoras.f.MathUtil;
+import react.Signal;
 import react.Slot;
 import react.Value;
 
+import playn.core.Clock;
 import playn.core.Platform;
 import playn.core.Sound;
 
@@ -41,8 +43,13 @@ public class SoundBoard {
     /** Controls whether this sound board is muted. When muted, no sounds will play. */
     public Value<Boolean> muted = Value.create(false);
 
-    public SoundBoard (Platform plat) {
+    /** Creates a sound board which will play sounds via {@code plat} and connect to {@code paint}
+      * to receive per-frame updates. */
+    public SoundBoard (Platform plat, Signal<Clock> paint) {
         this.plat = plat;
+        paint.connect(new Slot<Clock>() {
+            public void onEmit (Clock clock) { update(clock.dt); }
+        });
         volume.connect(new Slot<Float>() {
             @Override public void onEmit (Float volume) {
                 for (LoopImpl active : _active) active.updateVolume(volume);
@@ -51,19 +58,6 @@ public class SoundBoard {
             @Override public void onEmit (Boolean muted) {
                 for (LoopImpl active : _active) active.fadeForMute(muted);
             }});
-    }
-
-    /**
-     * This must be called from your {@link playn.core.Game.Default#update} method.
-     */
-    public void update (int delta) {
-        // update any active faders
-        for (int ii = 0, ll = _faders.size(); ii < ll; ii++) {
-            if (_faders.get(ii).update(delta)) {
-                _faders.remove(ii--);
-                ll--;
-            }
-        }
     }
 
     /**
@@ -92,6 +86,16 @@ public class SoundBoard {
 
     protected boolean shouldPlay () {
         return !muted.get() && volume.get() > 0;
+    }
+
+    protected void update (int delta) {
+        // update any active faders
+        for (int ii = 0, ll = _faders.size(); ii < ll; ii++) {
+            if (_faders.get(ii).update(delta)) {
+                _faders.remove(ii--);
+                ll--;
+            }
+        }
     }
 
     protected abstract class ClipImpl extends LazySound implements Clip {
