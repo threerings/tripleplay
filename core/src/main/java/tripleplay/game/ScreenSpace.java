@@ -312,6 +312,11 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         return _screens.get(index).screen;
     }
 
+    /** Returns the currently focused screen. */
+    public Screen focus () {
+        return (_current == null) ? null : _current.screen;
+    }
+
     /** Returns true if we're transitioning between two screens at this instant. This may either be
       * an animation driven transition, or a manual transition in progress due to a user drag. */
     public boolean isTransiting () {
