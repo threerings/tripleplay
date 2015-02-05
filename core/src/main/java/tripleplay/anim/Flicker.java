@@ -240,7 +240,7 @@ public class Flicker extends Pointer.Listener
      * @param iact the pointer interaction being processed at the time we detected this state.
      */
     protected void minFlickExceeded (Pointer.Interaction iact) {
-        // nothing by default
+        iact.capture(); // capture the interaction by default
     }
 
     /**
