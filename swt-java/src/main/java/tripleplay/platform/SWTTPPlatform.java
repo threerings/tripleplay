@@ -175,9 +175,9 @@ public class SWTTPPlatform extends TPPlatform
         protected void request () {
             _req = _platform.tick();
         }
-        protected Slot<Platform> _buddy = new Slot<Platform> () {
-            @Override public void onEmit (Platform plat) {
-                long now = plat.tick();
+        protected Runnable _buddy = new Runnable() {
+            @Override public void run () {
+                long now = _platform.tick();
                 if (now - _req < 75) _platform.invokeLater(this);
                 else {
                     _pendingRefresh = null;

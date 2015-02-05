@@ -174,14 +174,14 @@ public class JavaTPPlatform extends TPPlatform
     }
 
     <T> void updateOnMainThread (final Value<T> value, final T nvalue) {
-        plat.invokeLater(new Slot<Platform>() {
-            @Override public void onEmit (Platform plat) { value.update(nvalue); }
+        plat.invokeLater(new Runnable() {
+            @Override public void run () { value.update(nvalue); }
         });
     }
 
     <T> void emitOnMainThread (final Signal<T> signal, final T emission) {
-        plat.invokeLater(new Slot<Platform>() {
-            @Override public void onEmit (Platform plat) { signal.emit(emission); }
+        plat.invokeLater(new Runnable() {
+            @Override public void run () { signal.emit(emission); }
         });
     }
 
