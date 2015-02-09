@@ -303,25 +303,18 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     }
 
     /** Returns the number of screens in the space. */
-    public int screenCount () {
-        return _screens.size();
-    }
-
+    public int screenCount () { return _screens.size(); }
     /** Returns the screen at {@code index}. */
-    public Screen screen (int index) {
-        return _screens.get(index).screen;
-    }
-
+    public Screen screen (int index) { return _screens.get(index).screen; }
     /** Returns the currently focused screen. */
-    public Screen focus () {
-        return (_current == null) ? null : _current.screen;
-    }
-
+    public Screen focus () { return (_current == null) ? null : _current.screen; }
     /** Returns true if we're transitioning between two screens at this instant. This may either be
       * an animation driven transition, or a manual transition in progress due to a user drag. */
-    public boolean isTransiting () {
-        return _driver != null || _untrans != null;
-    }
+    public boolean isTransiting () { return _target != null; }
+    /** Returns the degree of completeness ({@code [0,1]}) of any in-progress transition, or 0. */
+    public float transPct () { return _transPct; }
+    /** Returns the target screen in the current transition, or null. */
+    public Screen target () { return _target == null ? null : _target.screen; }
 
     /** Adds {@code screen} to this space, positioned {@code dir}-wise from the current screen. For
       * example, using {@code RIGHT} will add the screen to the right of the current screen and
@@ -418,7 +411,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
     protected Driver transition (ActiveScreen oscr, ActiveScreen nscr, Dir dir, float startPct) {
         takeFocus(oscr);
-        return _driver = new Driver(oscr, nscr, dir, startPct);
+        return new Driver(oscr, nscr, dir, startPct);
     }
 
     protected void checkSleep () {
@@ -518,7 +511,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         @Override public void onStart (Pointer.Interaction iact) {
             // if it's not OK to initiate an untransition gesture, or we're already in the middle
             // of animating an automatic transition, ignore this gesture
-            if (!_cur.screen.canUntrans(_udir) || _driver != null) return;
+            if (!_cur.screen.canUntrans(_udir) || _target != null) return;
             _sx = iact.event.x; _sy = iact.event.y;
             start = iact.event.time;
         }
@@ -542,13 +535,14 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
                 // the first time we start untransing, do _udir.init() & setViz
                 untransing = true;
-                _untrans = _prev;
-                _untrans.screen.setActive(true);
+                _target = _prev;
+                _target.screen.setActive(true);
                 _udir.init(_cur.screen, _prev.screen);
                 iact.capture();
             }
 
             _udir.update(_cur.screen, _prev.screen, frac);
+            _transPct = frac;
         }
 
         @Override public void onEnd (Pointer.Interaction iact) {
@@ -568,7 +562,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
                 popTrans(frac);
             } else {
                 // ...otherwise animate the current screen back into position
-                _driver = new Driver(_prev, _cur, _cur.dir, 1-frac);
+                new Driver(_prev, _cur, _cur.dir, 1-frac);
             }
             clear();
         }
@@ -578,6 +572,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
             // snap our screens back to their original positions
             _udir.update(_cur.screen, _prev.screen, 0);
+            _transPct = 0;
             _prev.screen.setActive(false);
             _udir.finish(_cur.screen, _prev.screen);
             clear();
@@ -586,7 +581,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         protected void clear () {
             untransing = false;
             start = 0;
-            _untrans = null;
+            _target = null;
         }
 
         protected float updateFracs (float cx, float cy) {
@@ -641,9 +636,11 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             // may already be active as well but setActive is idempotent so it's OK)
             incoming.screen.setActive(true);
             assert outgoing.screen.isActive();
+            _target = incoming;
 
             dir.init(outgoing.screen, incoming.screen);
             dir.update(outgoing.screen, incoming.screen, startPct);
+            _transPct = startPct;
 
             // connect to the paint signal to drive our animation
             onPaint = _game.paint.connect(new Slot<Clock>() {
@@ -664,14 +661,16 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             // untranslation gesture that ended on the "opposite" side
             else ipct = 1-interp.apply(pct);
             dir.update(outgoing.screen, incoming.screen, ipct);
+            _transPct = ipct;
             if (pct == 1) complete();
         }
 
         public void complete () {
-            _driver = null;
             onPaint.close();
             outgoing.screen.setActive(false);
             dir.finish(outgoing.screen, incoming.screen);
+            _transPct = 1;
+            _target = null;
             onComplete.emit();
         }
     }
@@ -679,8 +678,8 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     protected final Game _game;
     protected final GroupLayer _rootLayer;
     protected final List<ActiveScreen> _screens = new ArrayList<ActiveScreen>();
-    protected ActiveScreen _current, _untrans;
-    protected Driver _driver;
+    protected float _transPct;
+    protected ActiveScreen _current, _target;
     protected Closeable _onPointer = Closeable.Util.NOOP;
 
     protected static Dir reverse (Dir dir) {
