@@ -56,8 +56,8 @@ public class JavaTPPlatform extends TPPlatform
 
         Canvas canvas = new Canvas();
         canvas.setName("GLCanvas");
-        int width = plat.graphics().scale.scaledCeil(config.width);
-        int height = plat.graphics().scale.scaledCeil(config.height);
+        int width = plat.graphics().scale().scaledCeil(config.width);
+        int height = plat.graphics().scale().scaledCeil(config.height);
         canvas.setPreferredSize(new Dimension(width, height));
         _frame.getContentPane().add(canvas);
 
