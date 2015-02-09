@@ -175,7 +175,7 @@ public abstract class StyledText
       * canvas will include a one pixel border beyond the size of the styled text which is needed
       * to accommodate antialiasing. */
     public Canvas toCanvas () {
-        float pad = 1/_gfx.scale.factor;
+        float pad = 1/_gfx.scale().factor;
         Canvas canvas = _gfx.createCanvas(width()+2*pad, height()+2*pad);
         render(canvas, pad, pad);
         return canvas;
