@@ -9,12 +9,135 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import pythagoras.f.Dimension;
+import pythagoras.f.FloatMath;
+import pythagoras.f.Point;
+import react.Closeable;
+import react.Slot;
+
+import playn.core.Clock;
+import playn.core.Graphics;
+import playn.scene.GroupLayer;
+import playn.scene.LayerUtil;
+
+import tripleplay.shaders.RotateYBatch;
+import tripleplay.util.Interpolator;
 
 /**
  * A container that holds zero or one widget. The box delegates everything to its current contents
  * (its preferred size is its content's preferred size, it sizes its contents to its size).
  */
 public class Box extends Container.Mutable<Box> {
+
+    /** A {@code Box} which draws its children clipped to their preferred size. */
+    public static class Clipped extends Box {
+        /** Creates an empty clipped box. */
+        public Clipped () { this(null); }
+
+        /** Creates a clipped box with the specified starting contents. */
+        public Clipped (Element<?> contents) { set(contents); }
+
+        @Override protected GroupLayer createLayer () { return new GroupLayer(1, 1); }
+        @Override protected void wasValidated () {
+            layer.setSize(size().width(), size().height());
+        }
+    }
+
+    /** Manages transitions for {@link #transition}. */
+    public static abstract class Trans extends Slot<Clock> {
+
+        /** Configures the interpolator to use for the transition. */
+        public Trans interp (Interpolator interp) {
+            _interp = interp;
+            return this;
+        }
+
+        protected Trans (int duration) {
+            _duration = duration;
+        }
+
+        void start (Box box, Element<?> ncontents) {
+            if (_box != null) throw new IllegalStateException("Cannot reuse transitions.");
+            _box = box;
+            _ocontents = box.contents();
+
+            _ncontents = ncontents;
+            _box.didAdd(_ncontents);
+            _ncontents.setLocation(_ocontents.x(), _ocontents.y());
+            _ncontents.setSize(_ocontents.size().width(), _ocontents.size().height());
+            _ncontents.validate();
+
+            _conn = box.root().iface.frame.connect(this);
+            init();
+            update(0);
+        }
+
+        @Override public void onEmit (Clock clock) {
+            _elapsed += clock.dt;
+            float pct = Math.min(_elapsed/_duration, 1);
+            // TODO: interp!
+            update(_interp.apply(pct));
+            if (pct == 1) {
+                _box.set(_ncontents); // TODO: avoid didAdd
+                _conn.close();
+                cleanup();
+            }
+        }
+
+        protected void init () {}
+        protected abstract void update (float pct);
+        protected void cleanup () {}
+
+        protected Element<?> _ocontents, _ncontents;
+
+        private final float _duration; // ms
+        private float _elapsed;
+        private Box _box;
+        private Interpolator _interp = Interpolator.LINEAR;
+        private Closeable _conn;
+    }
+
+    /** A transition that fades from the old contents to the new. */
+    public static class Fade extends Trans {
+        public Fade (int duration) { super(duration); }
+
+        @Override protected void update (float pct) {
+            _ocontents.layer.setAlpha(1-pct);
+            _ncontents.layer.setAlpha(pct);
+        }
+        @Override protected void cleanup () {
+            _ocontents.layer.setAlpha(1);
+        }
+    }
+
+    public static class Flip extends Trans {
+        public Flip (int duration) { super(duration); }
+
+        @Override protected void init () {
+            // TODO: compute the location of the center of the box in screen coordinates, place
+            // the eye there in [0, 1] coords
+            Graphics gfx = _ocontents.root().iface.plat.graphics();
+            Point eye = LayerUtil.layerToScreen(
+                _ocontents.layer, _ocontents.size().width()/2, _ocontents.size().height()/2);
+            eye.x /= gfx.viewSize.width();
+            eye.y /= gfx.viewSize.height();
+            _obatch = new RotateYBatch(gfx.gl, eye.x, eye.y, 1);
+            _nbatch = new RotateYBatch(gfx.gl, eye.x, eye.y, 1);
+            _ocontents.layer.setBatch(_obatch);
+            _ncontents.layer.setBatch(_nbatch);
+        }
+        @Override protected void update (float pct) {
+            _obatch.angle = FloatMath.PI * pct;
+            _nbatch.angle = -FloatMath.PI * (1-pct);
+            _ocontents.layer.setVisible(pct < 0.5f);
+            _ncontents.layer.setVisible(pct >= 0.5f);
+        }
+        @Override protected void cleanup () {
+            _ocontents.layer.setBatch(null);
+            _ncontents.layer.setBatch(null);
+        }
+
+        protected RotateYBatch _obatch, _nbatch;
+    }
 
     /** Creates an empty box. */
     public Box () {
@@ -35,6 +158,13 @@ public class Box extends Container.Mutable<Box> {
      * To destroy the old contents and set the new, use {@code destroyContents().set(contents)}.*/
     public Box set (Element<?> contents) {
         if (contents != _contents) set(contents, false);
+        return this;
+    }
+
+    /** Performs an animated transition from the box's current contents to {@code contents}.
+      * @param trans describes and manages the transition (duration, style, etc.). */
+    public Box transition (Element<?> contents, Trans trans) {
+        trans.start(this, contents);
         return this;
     }
 
