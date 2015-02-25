@@ -13,6 +13,7 @@ import pythagoras.f.FloatMath;
 import pythagoras.f.Point;
 import react.Closeable;
 import react.Slot;
+import react.Value;
 
 import playn.core.Clock;
 import playn.core.Graphics;
@@ -45,6 +46,9 @@ public class Box extends Container.Mutable<Box> {
     /** Manages transitions for {@link #transition}. */
     public static abstract class Trans extends Slot<Clock> {
 
+        /** Indicates whether this transition is in process. */
+        public Value<Boolean> active = Value.create(false);
+
         /** Configures the interpolator to use for the transition. */
         public Trans interp (Interpolator interp) {
             _interp = interp;
@@ -56,10 +60,11 @@ public class Box extends Container.Mutable<Box> {
         }
 
         void start (Box box, Element<?> ncontents) {
-            if (_box != null) throw new IllegalStateException("Cannot reuse transitions.");
+            if (active.get()) throw new IllegalStateException(
+                "Cannot reuse transition until it has completed.");
+
             _box = box;
             _ocontents = box.contents();
-
             _ncontents = ncontents;
             _box.didAdd(_ncontents);
             _ncontents.setLocation(_ocontents.x(), _ocontents.y());
@@ -67,8 +72,10 @@ public class Box extends Container.Mutable<Box> {
             _ncontents.validate();
 
             _conn = box.root().iface.frame.connect(this);
+            _elapsed = 0;
             init();
             update(0);
+            active.update(true);
         }
 
         @Override public void onEmit (Clock clock) {
@@ -79,7 +86,11 @@ public class Box extends Container.Mutable<Box> {
             if (pct == 1) {
                 _box.set(_ncontents); // TODO: avoid didAdd
                 _conn.close();
+                _box = null;
                 cleanup();
+                _ocontents = null;
+                _ncontents = null;
+                active.update(false);
             }
         }
 
