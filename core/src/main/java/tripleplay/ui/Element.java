@@ -447,21 +447,7 @@ public abstract class Element<T extends Element<T>>
      * direction to the specified height.
      */
     protected IDimension preferredSize (float hintX, float hintY) {
-        if (_preferredSize == null) {
-            if (_constraint != null) {
-                hintX = _constraint.adjustHintX(hintX);
-                hintY = _constraint.adjustHintY(hintY);
-            }
-            Dimension psize = computeSize(hintX, hintY);
-            if (_constraint != null) _constraint.adjustPreferredSize(psize, hintX, hintY);
-            // round our preferred size up to the nearest whole number; if we allow it to remain
-            // fractional, we can run into annoying layout problems where floating point rounding
-            // error causes a tiny fraction of a pixel to be shaved off of the preferred size of a
-            // text widget, causing it to wrap its text differently and hosing the layout
-            psize.width = MathUtil.iceil(psize.width);
-            psize.height = MathUtil.iceil(psize.height);
-            _preferredSize = psize;
-        }
+        if (_preferredSize == null) _preferredSize = computeSize(hintX, hintY);
         return _preferredSize;
     }
 
@@ -502,10 +488,30 @@ public abstract class Element<T extends Element<T>>
      * direction to the specified height.
      */
     protected Dimension computeSize (float hintX, float hintY) {
+        // allow any layout constraint to adjust the layout hints
+        if (_constraint != null) {
+            hintX = _constraint.adjustHintX(hintX);
+            hintY = _constraint.adjustHintY(hintY);
+        }
+
+        // create our layout data and ask it for our preferred size (accounting for our background
+        // insets in the process)
         LayoutData ldata = _ldata = createLayoutData(hintX, hintY);
         Insets insets = ldata.bg.insets;
         Dimension size = ldata.computeSize(hintX - insets.width(), hintY - insets.height());
-        return insets.addTo(size);
+        insets.addTo(size);
+
+        // allow any layout constraint to adjust the computed preferred size
+        if (_constraint != null) _constraint.adjustPreferredSize(size, hintX, hintY);
+
+        // round our preferred size up to the nearest whole number; if we allow it to remain
+        // fractional, we can run into annoying layout problems where floating point rounding error
+        // causes a tiny fraction of a pixel to be shaved off of the preferred size of a text
+        // widget, causing it to wrap its text differently and hosing the layout
+        size.width = MathUtil.iceil(size.width);
+        size.height = MathUtil.iceil(size.height);
+
+        return size;
     }
 
     /**
