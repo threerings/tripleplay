@@ -72,14 +72,19 @@ public class Box extends Container.Mutable<Box> {
             _ncontents.validate();
 
             _conn = box.root().iface.frame.connect(this);
-            _elapsed = 0;
+            _elapsed = -1;
             init();
             update(0);
             active.update(true);
         }
 
         @Override public void onEmit (Clock clock) {
-            _elapsed += clock.dt;
+            // a minor hack which causes us to skip the frame on which we validated the new
+            // contents and generally did potentially expensive things; that keeps us from jumping
+            // into the transition with a big first time step
+            if (_elapsed == -1) _elapsed = 0;
+            else _elapsed += clock.dt;
+
             float pct = Math.min(_elapsed/_duration, 1);
             // TODO: interp!
             update(_interp.apply(pct));
