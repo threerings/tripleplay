@@ -18,7 +18,7 @@ tripleplay.ui.Background
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Background.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Background.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,14 +31,14 @@ tripleplay.ui.Background
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.ui.Button.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Behavior.Track.State.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Background.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
 <a href="#methods">METHODS</a>&nbsp;|&nbsp;
-<a href="#fields">FIELDS</a>
+FIELDS
   </FONT></TD>
 </TR>
 </TABLE>
@@ -50,28 +50,6 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Background.html" target="_top"><tt
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Background.height_removed()"></A>
-  <nobr><code>float</code>&nbsp;height()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Returns this background's adjustment to an element's height.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Background.width_removed()"></A>
-  <nobr><code>float</code>&nbsp;width()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Returns this background's adjustment to an element's width.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -79,72 +57,32 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Background.html" target="_top"><tt
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Background.croppedImage_added(playn.core.Image)"></A>
-  <nobr><code>Background</code>&nbsp;<A HREF="../tripleplay/ui/Background.html#croppedImage(playn.core.Image)" target="_top"><tt>croppedImage</tt></A>(<code>Image</code>)</nobr>
+  <A NAME="tripleplay.ui.Background.tiledImage_added(playn.core.Image)"></A>
+  <nobr><code>Background</code>&nbsp;<A HREF="../tripleplay/ui/Background.html#tiledImage(playn.core.Image)" target="_top"><tt>tiledImage</tt></A>(<code>Image</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Creates a cropped centered image background with the specified image.</TD>
+  <TD VALIGN="TOP">Creates a tiled image background with the specified image.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Background.insets_added(tripleplay.ui.util.Insets)"></A>
-  <nobr><code>Background</code>&nbsp;<A HREF="../tripleplay/ui/Background.html#insets(tripleplay.ui.util.Insets)" target="_top"><tt>insets</tt></A>(<code>Insets</code>)</nobr>
+  <A NAME="tripleplay.ui.Background.scale9_changed(playn.core.Image)"></A>
+  <nobr><code>Scale9Background</code>&nbsp;<A HREF="../tripleplay/ui/Background.html#scale9(playn.core.Image)" target="_top"><tt>scale9</tt></A>(<code>Image</code>)  </nobr>
   </TD>
-  <TD VALIGN="TOP">Configures insets on this background.</TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>Background</code> to <code>Scale9Background</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Creates a scale9 background with the specified image.</TD>
 </TR>
 </TABLE>
 &nbsp;
 <a NAME="fields"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Background.bottom"></A>
-  <code>float</code>&nbsp;bottom
-  </TD>
-  <TD VALIGN="TOP">The insets of this background.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Background.left"></A>
-  <code>float</code>&nbsp;left
-  </TD>
-  <TD VALIGN="TOP">The insets of this background.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Background.right"></A>
-  <code>float</code>&nbsp;right
-  </TD>
-  <TD VALIGN="TOP">The insets of this background.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Background.top"></A>
-  <code>float</code>&nbsp;top
-  </TD>
-  <TD VALIGN="TOP">The insets of this background.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Added"></a>
-<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Background.insets"></A>
-  <nobr><code>Insets</code>&nbsp;<A HREF="../tripleplay/ui/Background.html#insets" target="_top"><tt>insets</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The insets of this background, added to get the overall Element size.</TD>
-</TR>
-</TABLE>
-&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -152,7 +90,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Background.html" target="_top"><tt
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Background.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Background.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -165,7 +103,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Background.html" target="_top"><tt
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.ui.Button.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Behavior.Track.State.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Background.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

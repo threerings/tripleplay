@@ -18,7 +18,7 @@ tripleplay.ui.Scroller
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Scroller.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Scroller.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,13 +31,13 @@ tripleplay.ui.Scroller
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.ui.Root.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Selector.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Scroller.Clippable.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Scroller.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
-<a href="#methods">METHODS</a>&nbsp;|&nbsp;
+METHODS&nbsp;|&nbsp;
 <a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
@@ -47,89 +47,9 @@ CONSTRUCTORS&nbsp;|&nbsp;
 <H2>
 Class tripleplay.ui.<A HREF="../tripleplay/ui/Scroller.html" target="_top"><tt>Scroller</tt></A>
 </H2>
-<p><font size="+1">The superclass changed from <code>tripleplay.ui.Elements<tripleplay.ui.Scroller></code> to <code>tripleplay.ui.Composite<tripleplay.ui.Scroller></code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.add_removed(int, tripleplay.ui.Element<?>)"></A>
-  <nobr><code>Scroller</code>&nbsp;add(<code>int,</nobr> Element&lt;?&gt;<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.add_removed(tripleplay.ui.Element[])"></A>
-  <nobr><code>Scroller</code>&nbsp;add(<code>Element[]</code>)</nobr>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-</TABLE>
-&nbsp;
 <a NAME="fields"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.BAR_COLOR"></A>
-  <code>Style&lt;Integer&gt;</code>&nbsp;BAR_COLOR
-  </TD>
-  <TD VALIGN="TOP">The color of scroll bars.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.BAR_FADE_SPEED"></A>
-  <code>float</code>&nbsp;BAR_FADE_SPEED
-  </TD>
-  <TD VALIGN="TOP">The alpha per ms lost by the scroll bars when not moving.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.BAR_RENDERER"></A>
-  <code>Style&lt;BarRenderer&gt;</code>&nbsp;BAR_RENDERER
-  </TD>
-  <TD VALIGN="TOP">The renderer for scroll bars, by default a simple {@code Surface.fillRect}.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.BAR_SIZE"></A>
-  <code>Style&lt;Float&gt;</code>&nbsp;BAR_SIZE
-  </TD>
-  <TD VALIGN="TOP">The size of scroll bars.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.BAR_TOP_ALPHA"></A>
-  <code>float</code>&nbsp;BAR_TOP_ALPHA
-  </TD>
-  <TD VALIGN="TOP">The alpha set on the scroll bars whenever they are first shown.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.hbar"></A>
-  <code>Bar</code>&nbsp;hbar
-  </TD>
-  <TD VALIGN="TOP">Scroll bars.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.vbar"></A>
-  <code>Bar</code>&nbsp;vbar
-  </TD>
-  <TD VALIGN="TOP">Scroll bars.</TD>
-</TR>
-</TABLE>
-&nbsp;
 <p>
 <a NAME="Added"></a>
 <TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
@@ -138,24 +58,10 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Scroller.html" target="_top"><tt>S
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.BAR_TYPE"></A>
-  <nobr><code>Style&lt;BarType&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Scroller.html#BAR_TYPE" target="_top"><tt>BAR_TYPE</tt></A></nobr>
+  <A NAME="tripleplay.ui.Scroller.ELEMENT_BUFFER"></A>
+  <nobr><code>Style&lt;IDimension&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Scroller.html#ELEMENT_BUFFER" target="_top"><tt>ELEMENT_BUFFER</tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">The type of bars to use.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.hrange"></A>
-  <nobr><code>Range</code>&nbsp;<A HREF="../tripleplay/ui/Scroller.html#hrange" target="_top"><tt>hrange</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Scroll ranges.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Scroller.vrange"></A>
-  <nobr><code>Range</code>&nbsp;<A HREF="../tripleplay/ui/Scroller.html#vrange" target="_top"><tt>vrange</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Scroll ranges.</TD>
+  <TD VALIGN="TOP">The buffer around a child element when updating visibility (<A HREF="../.html#updateVisibility()"><TT>.updateVisibility()</TT></A>.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -166,7 +72,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Scroller.html" target="_top"><tt>S
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Scroller.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Scroller.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -179,7 +85,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Scroller.html" target="_top"><tt>S
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.ui.Root.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Selector.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Scroller.Clippable.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Scroller.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

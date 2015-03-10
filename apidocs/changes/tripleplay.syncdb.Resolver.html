@@ -18,7 +18,7 @@ tripleplay.syncdb.Resolver
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/syncdb/Resolver.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/syncdb/Resolver.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.syncdb.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.syncdb.Resolver
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.syncdb.Protocol.Server.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.syncdb.SetResolver.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.syncdb.Resolver.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
-METHODS&nbsp;|&nbsp;
-<a href="#fields">FIELDS</a>
+<a href="#methods">METHODS</a>&nbsp;|&nbsp;
+FIELDS
   </FONT></TD>
 </TR>
 </TABLE>
@@ -49,72 +49,25 @@ Interface tripleplay.syncdb.<A HREF="../tripleplay/syncdb/Resolver.html" target=
 </H2>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
-<a NAME="fields"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.syncdb.Resolver.LONGMAX"></A>
-  <code>Resolver&lt;Long&gt;</code>&nbsp;LONGMAX
-  </TD>
-  <TD VALIGN="TOP">Uses the largest of the client and server longs.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Added"></a>
-<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.syncdb.Resolver.FLOATMIN"></A>
-  <nobr><code>Resolver&lt;Number&gt;</code>&nbsp;<A HREF="../tripleplay/syncdb/Resolver.html#FLOATMIN" target="_top"><tt>FLOATMIN</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Uses the smallest of the client and server floating point numbers.</TD>
-</TR>
-</TABLE>
-&nbsp;
 <p>
 <a NAME="Changed"></a>
-<TABLE summary="Changed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Fields</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.syncdb.Resolver.FLOATMAX"></A>
-  <nobr><code>Resolver&lt;Number&gt;</code>&nbsp;<A HREF="../tripleplay/syncdb/Resolver.html#FLOATMAX" target="_top"><tt>FLOATMAX</tt></A></nobr>  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>Resolver&lt;Float&gt;</code> to <code>Resolver&lt;Number&gt;</code>.<br>
+  <A NAME="tripleplay.syncdb.Resolver.resolve_changed(V extends T, V extends T)"></A>
+  <nobr><code>V extends T</code>&nbsp;<A HREF="../tripleplay/syncdb/Resolver.html#resolve(V extends T, V extends T)" target="_top"><tt>resolve</tt></A>(<code>V,</nobr> extends<nobr>,</nobr> T<nobr>,</nobr> V<nobr>,</nobr> extends<nobr>,</nobr> T<nobr><nobr></code>)  </nobr>
   </TD>
-  <TD VALIGN="TOP">Uses the largest of the client and server floating point numbers.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.syncdb.Resolver.INTMAX"></A>
-  <nobr><code>Resolver&lt;Number&gt;</code>&nbsp;<A HREF="../tripleplay/syncdb/Resolver.html#INTMAX" target="_top"><tt>INTMAX</tt></A></nobr>  </TD>
   <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>Resolver&lt;Integer&gt;</code> to <code>Resolver&lt;Number&gt;</code>.<br>
+Changed from non-abstract to abstract.
   </TD>
-  <TD VALIGN="TOP">Uses the largest of the client and server integral numbers.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.syncdb.Resolver.INTMIN"></A>
-  <nobr><code>Resolver&lt;Number&gt;</code>&nbsp;<A HREF="../tripleplay/syncdb/Resolver.html#INTMIN" target="_top"><tt>INTMIN</tt></A></nobr>  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>Resolver&lt;Integer&gt;</code> to <code>Resolver&lt;Number&gt;</code>.<br>
-  </TD>
-  <TD VALIGN="TOP">Uses the smallest of the client and server integral numbers.</TD>
+  <TD VALIGN="TOP">Resolves a conflict between a client and server value.</TD>
 </TR>
 </TABLE>
 &nbsp;
+<a NAME="fields"></a>
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -122,7 +75,7 @@ Change in type from <code>Resolver&lt;Integer&gt;</code> to <code>Resolver&lt;Nu
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/syncdb/Resolver.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/syncdb/Resolver.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.syncdb.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -134,8 +87,8 @@ Change in type from <code>Resolver&lt;Integer&gt;</code> to <code>Resolver&lt;Nu
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.syncdb.Protocol.Server.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.syncdb.SetResolver.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.syncdb.Resolver.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

@@ -18,7 +18,7 @@ tripleplay.ui.Clickable
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Clickable.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Clickable.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,8 +30,8 @@ tripleplay.ui.Clickable
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.CheckBox.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Constraints.TextConstraint.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Button.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Field.Transformer.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Clickable.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -50,17 +50,30 @@ Interface tripleplay.ui.<A HREF="../tripleplay/ui/Clickable.html" target="_top">
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Clickable.click_added()"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Clickable.html#click()" target="_top"><tt>click</tt></A>()</nobr>
+  <A NAME="tripleplay.ui.Clickable.click_changed()"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Clickable.html#click()" target="_top"><tt>click</tt></A>()  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Changed from non-abstract to abstract.
   </TD>
   <TD VALIGN="TOP">Programmatically triggers a click of this element.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Clickable.clicked_changed()"></A>
+  <nobr><code>SignalView&lt;T&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Clickable.html#clicked()" target="_top"><tt>clicked</tt></A>()  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Changed from non-abstract to abstract.
+  </TD>
+  <TD VALIGN="TOP">A signal that is emitted when this element is clicked.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -72,7 +85,7 @@ Interface tripleplay.ui.<A HREF="../tripleplay/ui/Clickable.html" target="_top">
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Clickable.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Clickable.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -84,8 +97,8 @@ Interface tripleplay.ui.<A HREF="../tripleplay/ui/Clickable.html" target="_top">
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.CheckBox.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Constraints.TextConstraint.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Button.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Field.Transformer.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Clickable.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

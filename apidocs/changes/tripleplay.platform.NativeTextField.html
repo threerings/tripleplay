@@ -18,7 +18,7 @@ tripleplay.platform.NativeTextField
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/NativeTextField.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/NativeTextField.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.platform.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,8 +30,8 @@ tripleplay.platform.NativeTextField
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.platform.TPPlatform.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.platform.NativeOverlay.html"><B>PREV CLASS</B></A>
+&nbsp;<B>NEXT CLASS</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.platform.NativeTextField.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -47,133 +47,42 @@ FIELDS
 <H2>
 Interface tripleplay.platform.<A HREF="../tripleplay/platform/NativeTextField.html" target="_top"><tt>NativeTextField</tt></A>
 </H2>
-<p><font size="+1">Added interface <code>tripleplay.platform.NativeOverlay</code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.add_removed()"></A>
-  <nobr><code>void</code>&nbsp;add()</nobr>
+  <A NAME="tripleplay.platform.NativeTextField.focus_changed()"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#focus()" target="_top"><tt>focus</tt></A>()  </nobr>
   </TD>
-  <TD VALIGN="TOP">Adds the field to the view.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.finishedEditing_removed()"></A>
-  <nobr><code>Signal&lt;Boolean&gt;</code>&nbsp;finishedEditing()</nobr>
+  <TD VALIGN="TOP" WIDTH="30%">
+Changed from non-abstract to abstract.
   </TD>
-  <TD VALIGN="TOP">A signal that is dispatched when the native text field has lost focus.</TD>
+  <TD VALIGN="TOP">Request focus for the native text field</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.hasFocus_removed()"></A>
-  <nobr><code>boolean</code>&nbsp;hasFocus()</nobr>
+  <A NAME="tripleplay.platform.NativeTextField.insert_changed(java.lang.String)"></A>
+  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#insert(java.lang.String)" target="_top"><tt>insert</tt></A>(<code>String</code>)  </nobr>
   </TD>
-  <TD VALIGN="TOP">Returns true if this native text field currently has focus.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.refreshMode_removed(tripleplay.platform.NativeTextField.Mode)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;refreshMode(<code>Mode</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Updates or creates a new native text field with the given mode.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.remove_removed()"></A>
-  <nobr><code>void</code>&nbsp;remove()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Removes the field from the view.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setAutocapitalization_removed(boolean)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;setAutocapitalization(<code>boolean</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Configures the autocapitalization behavior of the field on a virtual keyboard.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setAutocorrection_removed(boolean)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;setAutocorrection(<code>boolean</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Configures the autocorrection behavior of the field on a virtual keyboard.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setBounds_removed(pythagoras.f.IRectangle)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;setBounds(<code>IRectangle</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Configures the bounds of the native text field (in top-level screen coordinates).</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setFont_removed(playn.core.Font)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;setFont(<code>Font</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Configures the font used by the field to render text.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setReturnKeyLabel_removed(java.lang.String)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;setReturnKeyLabel(<code>String</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Configures the label of the return key on virtual keyboards.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setTextType_removed(playn.core.Keyboard.TextType)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;setTextType(<code>TextType</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Configures the type of text expected to be entered in this field.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setTransformer_removed(tripleplay.platform.NativeTextField.Transformer)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;setTransformer(<code>Transformer</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Sets the transformer for use with this native field.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setValidator_removed(tripleplay.platform.NativeTextField.Validator)"></A>
-  <nobr><code>NativeTextField</code>&nbsp;setValidator(<code>Validator</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Sets the validator for use with this native field.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.text_removed()"></A>
-  <nobr><code>Value&lt;String&gt;</code>&nbsp;text()</nobr>
-  </TD>
-  <TD VALIGN="TOP">The current value of the text field.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.insert_added(java.lang.String)"></A>
-  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#insert(java.lang.String)" target="_top"><tt>insert</tt></A>(<code>String</code>)</nobr>
+  <TD VALIGN="TOP" WIDTH="30%">
+Changed from non-abstract to abstract.
   </TD>
   <TD VALIGN="TOP">Inserts the given text at the current caret position, or if there is a selected region,
  replaces the region with the given text.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.platform.NativeTextField.setEnabled_added(boolean)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#setEnabled(boolean)" target="_top"><tt>setEnabled</tt></A>(<code>boolean</code>)</nobr>
+  <A NAME="tripleplay.platform.NativeTextField.setEnabled_changed(boolean)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/platform/NativeTextField.html#setEnabled(boolean)" target="_top"><tt>setEnabled</tt></A>(<code>boolean</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Changed from non-abstract to abstract.
   </TD>
   <TD VALIGN="TOP">Sets the enabled state of the field.</TD>
 </TR>
@@ -187,7 +96,7 @@ Interface tripleplay.platform.<A HREF="../tripleplay/platform/NativeTextField.ht
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/NativeTextField.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/platform/NativeTextField.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.platform.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -199,8 +108,8 @@ Interface tripleplay.platform.<A HREF="../tripleplay/platform/NativeTextField.ht
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.platform.TPPlatform.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.platform.NativeOverlay.html"><B>PREV CLASS</B></A>
+&nbsp;<B>NEXT CLASS</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.platform.NativeTextField.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

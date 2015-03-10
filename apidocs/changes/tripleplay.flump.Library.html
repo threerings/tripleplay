@@ -18,7 +18,7 @@ tripleplay.flump.Library
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Library.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Library.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,7 +30,7 @@ tripleplay.flump.Library
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.flump.LayerData.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.JsonLoader.html"><B>PREV CLASS</B></A>
 &nbsp;<A HREF="tripleplay.flump.Movie.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
@@ -49,15 +49,18 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Library.html" target="_top">
 </H2>
 <a NAME="constructors"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Constructors" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Changed"></a>
+<TABLE summary="Changed Constructors" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Constructors</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Constructors</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Library.ctor_added(float, java.util.List<tripleplay.flump.Movie.Symbol>, java.util.List<tripleplay.flump.Texture.Symbol>)"></A>
-  <nobr><A HREF="../tripleplay/flump/Library.html#Library(float, java.util.List<tripleplay.flump.Movie.Symbol>, java.util.List<tripleplay.flump.Texture.Symbol>)" target="_top"><tt>Library</tt></A>(<code>float,</nobr> List&lt;Symbol&gt;<nobr>,</nobr> List&lt;Symbol&gt;<nobr><nobr></code>)</nobr>
+  <A NAME="tripleplay.flump.Library.ctor_changed(float, java.lang.Iterable<tripleplay.flump.Movie.Symbol>, java.lang.Iterable<tripleplay.flump.Texture.Symbol>)"></A>
+  <nobr><A HREF="../tripleplay/flump/Library.html#Library(float, java.lang.Iterable<tripleplay.flump.Movie.Symbol>, java.lang.Iterable<tripleplay.flump.Texture.Symbol>)" target="_top"><tt>Library</tt></A>(<code>float,</nobr> Iterable&lt;Symbol&gt;<nobr>,</nobr> Iterable&lt;Symbol&gt;<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in type from (<code>float, List&lt;Symbol&gt;, List&lt;Symbol&gt;</code>) to (<code>float, Iterable&lt;Symbol&gt;, Iterable&lt;Symbol&gt;</code>).<br>
   </TD>
   <TD>&nbsp;</TD>
 </TR>
@@ -65,35 +68,17 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Library.html" target="_top">
 &nbsp;
 <a NAME="methods"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Library.pack_added(java.util.Collection<tripleplay.flump.Library>)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Library.html#pack(java.util.Collection<tripleplay.flump.Library>)" target="_top"><tt>pack</tt></A>(<code>Collection&lt;Library&gt;</code>)</nobr>
+  <A NAME="tripleplay.flump.Library.fromAssets_removed(java.lang.String, playn.core.util.Callback<tripleplay.flump.Library>)"></A>
+  <nobr><code>void</code>&nbsp;fromAssets(<code>String,</nobr> Callback&lt;Library&gt;<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Pack multiple libraries into a single group of atlases.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Changed"></a>
-<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Library.fromAssets_changed(java.lang.String, playn.core.util.Callback<tripleplay.flump.Library>)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Library.html#fromAssets(java.lang.String, playn.core.util.Callback<tripleplay.flump.Library>)" target="_top"><tt>fromAssets</tt></A>(<code>String,</nobr> Callback&lt;Library&gt;<nobr><nobr></code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-<b>Now deprecated</b>.<br>
-  </TD>
-  <TD VALIGN="TOP">Use {@link JsonLoader#loadLibrary}.</TD>
+  <TD VALIGN="TOP">@deprecated Use <A HREF="../JsonLoader.html#loadLibrary"><TT>JsonLoader.loadLibrary</TT></A>.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -105,7 +90,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Library.html" target="_top">
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Library.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Library.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -117,7 +102,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Library.html" target="_top">
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.flump.LayerData.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.JsonLoader.html"><B>PREV CLASS</B></A>
 &nbsp;<A HREF="tripleplay.flump.Movie.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;

@@ -18,7 +18,7 @@ tripleplay.ui.Style
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Style.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Style.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.ui.Style
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Slider.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Style.TextEffectStyle.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Scroller.TouchBars.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Style.Pos.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Style.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
 <a href="#methods">METHODS</a>&nbsp;|&nbsp;
-<a href="#fields">FIELDS</a>
+FIELDS
   </FONT></TD>
 </TR>
 </TABLE>
@@ -50,76 +50,28 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Style.html" target="_top"><tt>Styl
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Style.createTextStyle_added(tripleplay.ui.Element<?>)"></A>
-  <nobr><code>TextStyle</code>&nbsp;<A HREF="../tripleplay/ui/Style.html#createTextStyle(tripleplay.ui.Element<?>)" target="_top"><tt>createTextStyle</tt></A>(<code>Element&lt;?&gt;</code>)</nobr>
+  <A NAME="tripleplay.ui.Style.createEffectRenderer_removed(tripleplay.ui.Element<?>)"></A>
+  <nobr><code>EffectRenderer</code>&nbsp;createEffectRenderer(<code>Element&lt;?&gt;</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Creates a text style instance based on the supplied element's stylings.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Changed"></a>
-<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
+  <TD VALIGN="TOP">Creates an effect renderer based on the supplied element's stylings.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Style.createTextFormat_changed(tripleplay.ui.Element<?>)"></A>
-  <nobr><code>TextFormat</code>&nbsp;<A HREF="../tripleplay/ui/Style.html#createTextFormat(tripleplay.ui.Element<?>)" target="_top"><tt>createTextFormat</tt></A>(<code>Element&lt;?&gt;</code>)  </nobr>
+  <A NAME="tripleplay.ui.Style.createTextFormat_removed(tripleplay.ui.Element<?>)"></A>
+  <nobr><code>TextFormat</code>&nbsp;createTextFormat(<code>Element&lt;?&gt;</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-<b>Now deprecated</b>.<br>
-  </TD>
-  <TD VALIGN="TOP">Use {@link #createTextStyle}.</TD>
+  <TD VALIGN="TOP">@deprecated Use <A HREF="../.html#createTextStyle"><TT>.createTextStyle</TT></A>.</TD>
 </TR>
 </TABLE>
 &nbsp;
 <a NAME="fields"></a>
-<p>
-<a NAME="Added"></a>
-<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Style.AUTO_SHRINK"></A>
-  <nobr><code>Flag</code>&nbsp;<A HREF="../tripleplay/ui/Style.html#AUTO_SHRINK" target="_top"><tt>AUTO_SHRINK</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Whether or not to automatically shrink a text widget's font size until it fits into the
- horizontal space it has been allotted.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Style.GRADIENT_COLOR"></A>
-  <nobr><code>Style&lt;Integer&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Style.html#GRADIENT_COLOR" target="_top"><tt>GRADIENT_COLOR</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The color of the gradient.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Style.GRADIENT_TYPE"></A>
-  <nobr><code>GradientTypeStyle</code>&nbsp;<A HREF="../tripleplay/ui/Style.html#GRADIENT_TYPE" target="_top"><tt>GRADIENT_TYPE</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The type of gradient.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Style.ICON_EFFECT"></A>
-  <nobr><code>Style&lt;IconEffect&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Style.html#ICON_EFFECT" target="_top"><tt>ICON_EFFECT</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The effect to apply to the icon.</TD>
-</TR>
-</TABLE>
-&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -127,7 +79,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Style.html" target="_top"><tt>Styl
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Style.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Style.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -139,8 +91,8 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Style.html" target="_top"><tt>Styl
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Slider.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Style.TextEffectStyle.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Scroller.TouchBars.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Style.Pos.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Style.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

@@ -18,7 +18,7 @@ tripleplay.util.Interpolator
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Interpolator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Interpolator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.util.Interpolator
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.util.Glyph.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.util.Layers.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Instances.Op.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.JsonUtil.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.util.Interpolator.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
 <a href="#methods">METHODS</a>&nbsp;|&nbsp;
-<a href="#fields">FIELDS</a>
+FIELDS
   </FONT></TD>
 </TR>
 </TABLE>
@@ -50,6 +50,21 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Interpolator.html" target="_to
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Interpolator.apply_removed(float, float, float, float)"></A>
+  <nobr><code>float</code>&nbsp;apply(<code>float,</nobr> float<nobr>,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Interpolates between two values.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -57,51 +72,37 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Interpolator.html" target="_to
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Interpolator.applyClamp_added(float, float, float, float)"></A>
-  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/util/Interpolator.html#applyClamp(float, float, float, float)" target="_top"><tt>applyClamp</tt></A>(<code>float,</nobr> float<nobr>,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
+  <A NAME="tripleplay.util.Interpolator.apply_added(float, float)"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/util/Interpolator.html#apply(float, float)" target="_top"><tt>apply</tt></A>(<code>float,</nobr> float<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Interpolates between two values, as in <A HREF="../.html#apply"><TT>.apply</TT></A> except that {@code dt} is clamped to
- [0..t] to avoid interpolation weirdness if {@code dt} is ever negative or exceeds {@code t}.</TD>
+  <TD VALIGN="TOP">Interpolates between zero and one according to this interpolator's function.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Interpolator.apply_added(float, float, float, float)"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/util/Interpolator.html#apply(float, float, float, float)" target="_top"><tt>apply</tt></A>(<code>float,</nobr> float<nobr>,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Interpolates between two values.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Interpolator.apply_added(float)"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/util/Interpolator.html#apply(float)" target="_top"><tt>apply</tt></A>(<code>float</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Interpolates between zero and one according to this interpolator's function.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Interpolator.applyClamp_added(float, float)"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/util/Interpolator.html#applyClamp(float, float)" target="_top"><tt>applyClamp</tt></A>(<code>float,</nobr> float<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Interpolates between two values, as in <A HREF="../.html#apply(float,float)"><TT>.apply(float,float)</TT></A> except that {@code dt} is
+ clamped to [0..t] to avoid interpolation weirdness if {@code dt} is ever negative or exceeds
+ {@code t}.</TD>
 </TR>
 </TABLE>
 &nbsp;
 <a NAME="fields"></a>
-<p>
-<a NAME="Added"></a>
-<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Interpolator.BOUNCE_OUT"></A>
-  <nobr><code>Interpolator</code>&nbsp;<A HREF="../tripleplay/util/Interpolator.html#BOUNCE_OUT" target="_top"><tt>BOUNCE_OUT</tt></A></nobr>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Interpolator.EASE_IN_BACK"></A>
-  <nobr><code>Interpolator</code>&nbsp;<A HREF="../tripleplay/util/Interpolator.html#EASE_IN_BACK" target="_top"><tt>EASE_IN_BACK</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">An interpolator that undershoots the starting value, then speeds up into the final value</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Interpolator.EASE_OUT_BACK"></A>
-  <nobr><code>Interpolator</code>&nbsp;<A HREF="../tripleplay/util/Interpolator.html#EASE_OUT_BACK" target="_top"><tt>EASE_OUT_BACK</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">An interpolator that eases into the final value and overshoots it before settling on it.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Interpolator.EASE_OUT_ELASTIC"></A>
-  <nobr><code>Interpolator</code>&nbsp;<A HREF="../tripleplay/util/Interpolator.html#EASE_OUT_ELASTIC" target="_top"><tt>EASE_OUT_ELASTIC</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">An interpolator that eases past the final value then back towards it elastically.</TD>
-</TR>
-</TABLE>
-&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -109,7 +110,7 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Interpolator.html" target="_to
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Interpolator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Interpolator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -121,8 +122,8 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Interpolator.html" target="_to
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.util.Glyph.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.util.Layers.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Instances.Op.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.JsonUtil.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.util.Interpolator.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

@@ -18,7 +18,7 @@ tripleplay.util.Glyph
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Glyph.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Glyph.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,8 +30,8 @@ tripleplay.util.Glyph
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.util.EffectRenderer.VectorOutline.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.util.Interpolator.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Frames.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Input.Registration.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.util.Glyph.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -50,45 +50,24 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Glyph.html" target="_top"><tt>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Glyph.renderText_added(tripleplay.util.StyledText.Plain)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/util/Glyph.html#renderText(tripleplay.util.StyledText.Plain)" target="_top"><tt>renderText</tt></A>(<code>Plain</code>)</nobr>
+  <A NAME="tripleplay.util.Glyph.renderText_removed(tripleplay.util.TextConfig, java.lang.String)"></A>
+  <nobr><code>void</code>&nbsp;renderText(<code>TextConfig,</nobr> String<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Prepares the canvas and renders the supplied text at 0, 0 using the given config.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Changed"></a>
-<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
+  <TD VALIGN="TOP">@deprecated Use <A HREF="../.html#renderText(StyledText)"><TT>.renderText(StyledText)</TT></A>.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Glyph.renderText_changed(tripleplay.util.TextConfig, java.lang.String)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/util/Glyph.html#renderText(tripleplay.util.TextConfig, java.lang.String)" target="_top"><tt>renderText</tt></A>(<code>TextConfig,</nobr> String<nobr><nobr></code>)  </nobr>
+  <A NAME="tripleplay.util.Glyph.renderText_removed(tripleplay.util.TextConfig, playn.core.TextLayout)"></A>
+  <nobr><code>void</code>&nbsp;renderText(<code>TextConfig,</nobr> TextLayout<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-<b>Now deprecated</b>.<br>
-  </TD>
-  <TD VALIGN="TOP">Use {@link #renderText(StyledText)}.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Glyph.renderText_changed(tripleplay.util.TextConfig, playn.core.TextLayout)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/util/Glyph.html#renderText(tripleplay.util.TextConfig, playn.core.TextLayout)" target="_top"><tt>renderText</tt></A>(<code>TextConfig,</nobr> TextLayout<nobr><nobr></code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-<b>Now deprecated</b>.<br>
-  </TD>
-  <TD VALIGN="TOP">Use {@link #renderText(StyledText)}.</TD>
+  <TD VALIGN="TOP">@deprecated Use <A HREF="../.html#renderText(StyledText)"><TT>.renderText(StyledText)</TT></A>.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -100,7 +79,7 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Glyph.html" target="_top"><tt>
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Glyph.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.8</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Glyph.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -112,8 +91,8 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Glyph.html" target="_top"><tt>
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.util.EffectRenderer.VectorOutline.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.util.Interpolator.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Frames.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Input.Registration.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.util.Glyph.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
