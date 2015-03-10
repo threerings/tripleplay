@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.googlecode.playn</groupId>
     <artifactId>playn-project</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.9</version>
   </parent>
 
   <groupId>com.threerings</groupId>
@@ -54,7 +54,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <playn.version>1.9-SNAPSHOT</playn.version>
+    <playn.version>1.9</playn.version>
   </properties>
 
   <modules>
@@ -94,6 +94,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>deploy-local</id>
       <distributionManagement>
@@ -102,12 +103,12 @@
           <name>Local maven repository</name>
           <url>${deploy-local.dir}</url>
         </repository>
-	<snapshotRepository>
-	  <uniqueVersion>false</uniqueVersion>
-	  <id>deploy-local-snapshots</id>
-	  <name>Local maven snapshot repository</name>
-	  <url>${deploy-local.dir}</url>
-	</snapshotRepository>
+        <snapshotRepository>
+          <uniqueVersion>false</uniqueVersion>
+          <id>deploy-local-snapshots</id>
+          <name>Local maven snapshot repository</name>
+          <url>${deploy-local.dir}</url>
+        </snapshotRepository>
       </distributionManagement>
     </profile>
   </profiles>
