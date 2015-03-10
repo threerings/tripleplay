@@ -120,7 +120,7 @@ public class Root extends Elements<Root>
     /**
      * Applies the root size to all descendants. The size normally comes from a call to
      * {@link #pack()} or a related method. Validation is performed automatically by
-     * {@link Interface#paint(float)} if the root is created via {@link Interface}.
+     * {@link Interface#paint} if the root is created via {@link Interface}.
      */
     @Override public void validate () {
         super.validate();

@@ -132,7 +132,7 @@ public class Transform
 
     /**
      * Returns an initializer that adjusts the particle's position randomly from its current
-     * location by up to noise units in both x & y.
+     * location by up to {@code noise} units in both x and y.
      */
     public static Initializer randomOffset (final Randoms rando, final float noise) {
         return new Initializer() {

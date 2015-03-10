@@ -65,6 +65,7 @@
         <configuration>
           <quiet>true</quiet>
           <show>public</show>
+          <additionalparam>-Xdoclint:all -Xdoclint:-missing</additionalparam>
           <links>
             <link>http://docs.playn.googlecode.com/git/javadoc</link>
           </links>

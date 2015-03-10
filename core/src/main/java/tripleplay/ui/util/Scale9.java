@@ -11,10 +11,15 @@ package tripleplay.ui.util;
  * designated area. The corners are drawn without scaling, the top and bottom center pieces are
  * scaled horizontally, the left and right center pieces are scaled vertically, and the center
  * piece is scaled both horizontally and vertically.
+ *
  * <p>By default, the cells are assumed to be of equal size (hence scale-9 image dimensions are
  * normally a multiple of 3). By using {@link #xaxis} and {@link #yaxis}, this partitioning can be
- * controlled directly.</p><p>Here's a diagram showing the stretching and axes, H = horizontally
- * stretched, V = vertically stretched, U = unstretched.<pre>
+ * controlled directly.
+ *
+ * <p>Here's a diagram showing the stretching and axes, H = horizontally stretched, V = vertically
+ * stretched, U = unstretched.
+ *
+ * <pre>{@code
  *                         xaxis
  *
  *                0          1          2
@@ -31,15 +36,17 @@ package tripleplay.ui.util;
  *        2  |    U     |    H     |    U     |
  *           |          |          |          |
  *           ---------------------------------
- * </pre></p>
+ * }</pre>
+ *
  * <p><em>Example 1</em>: the horizontal middle of an image is a single pixel. This code will do
  * that and automatically grow the left and right columns:<pre>
  *     Scale9 s9 = ...;
- *     s9.xaxis.resize(1, 1);</pre></p>
+ *     s9.xaxis.resize(1, 1);</pre>
+ *
  * <p><em>Example 2</em>: there are no top and bottom rows. This code will stretch all of the image
  * vertically, but keep the left and right third of the image fixed horizontally:<pre>
  *     Scale9 s9 = ...;
- *     s9.yaxis.resize(0, 0).resize(2, 0);</pre></p>
+ *     s9.yaxis.resize(0, 0).resize(2, 0);</pre>
  */
 public class Scale9
 {

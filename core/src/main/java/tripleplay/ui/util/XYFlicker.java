@@ -29,7 +29,7 @@ import react.Signal;
  *        flicker.update(delta);
  *        layer.setTranslation(flicker.position().x(), flicker.position().y());
  *    }
- * }</pre></p>
+ * }</pre>
  *
  * TODO: figure out how to implement with two Flickers. could require some changes therein since
  * you probably don't want them to have differing states, plus 2x clicked signals is wasteful

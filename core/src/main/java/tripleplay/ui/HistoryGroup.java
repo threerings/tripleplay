@@ -23,23 +23,22 @@ import static tripleplay.ui.Log.log;
 
 /**
  * A scrolling vertical display, optimized for showing potentially very long lists such as
- * a chat log. Supports:<ul>
+ * a chat log. Supports: <ul>
  * <li>addition of new elements on the end</li>
  * <li>pruning old elements from the beginning</li>
  * <li>progressive rendering of newly visible items in the list</li>
  * <li>automatically keeping the last item visible</li>
  * <li>purging of old rendered elements that are no longer visible
  * </ul>
- * Items are stored in a backing array. Each entry in the array may or may not have a
- * corresponding Element visible (presuming that the rendering and storage of elements is
- * expensive). When the user scrolls, entries are rendered on demand using
- * {@link HistoryGroup#render(Entry)}. Entries that are not visible use an estimated size
- * for layout purposes. This of course may produce some artifacts during scrolling, which is
- * the penalty of not computing the exact size.
+ *
+ * Items are stored in a backing array. Each entry in the array may or may not have a corresponding
+ * Element visible (presuming that the rendering and storage of elements is expensive). When the
+ * user scrolls, entries are rendered on demand using {@link #render}. Entries that are not visible
+ * use an estimated size for layout purposes. This of course may produce some artifacts during
+ * scrolling, which is the penalty of not computing the exact size.
  *
  * <p>NOTE: The elements in the UI (type {@code W}) must not be mutated after rendering and must
- * have a constant size given a particular item and width. See {@link HistoryGroup#render(Entry)}.
- * </p>
+ * have a constant size given a particular item and width. See {@link #render}.
  *
  * @param <T> The type of item backing this history
  * @param <W> The type of element or widget stored in this history

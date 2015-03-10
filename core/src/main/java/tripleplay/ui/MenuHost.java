@@ -85,7 +85,7 @@ public class MenuHost
      */
     public static class Pop
     {
-        /** The element that triggered the popup. {@link #position} is relative to this. */
+        /** The element that triggered the popup. */
         public final Element<?> trigger;
 
         /** The menu to show. */

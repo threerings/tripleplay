@@ -37,7 +37,7 @@ public class ConvertFlumpLibsMojo extends AbstractMojo
     @Parameter
     public File outputRoot;
 
-    /** The path within {@link #sourceRoot} to look for json files. */
+    /** The path within {@link #resourceRoot} to look for json files. */
     @Parameter(defaultValue="assets/flump", property="flump.path")
     public String path;
 

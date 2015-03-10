@@ -28,15 +28,15 @@ import tripleplay.util.Layers;
  * the menu (in its own {@code Root}), manage animations, track user input, and handle
  * cancellation.
  *
- * <p>Note that a menu can contain arbitrary {@code Element}s, but only those that are
- * {@code MenuItem}s are eligible for triggering. Changes to the children of previously added
- * {@link Elements} instances are tracked using {@link Elements#childAdded()} and {@link Elements#
- * childRemoved()}.</p>
+ * <p>Note that a menu can contain arbitrary {@code Element}s, but only those that are {@code
+ * MenuItem}s are eligible for triggering. Changes to the children of previously added {@link
+ * Elements} instances are tracked using {@link Elements#childAdded} and {@link
+ * Elements#childRemoved}.
  *
  * <p>Note about {@link Container} types other than {@code Elements}: it is assumed that the
- * children of such containers will NOT change after addition to the menu. Such changes will
- * result in undefined behavior, potentially including memory leaks. {@link Scroller}, for example,
- * is safe to use since it has exactly one child element that doesn't change.</p>
+ * children of such containers will NOT change after addition to the menu. Such changes will result
+ * in undefined behavior, potentially including memory leaks. {@link Scroller}, for example, is
+ * safe to use since it has exactly one child element that doesn't change.
  *
  * TODO: support escape key to cancel; probably in MenuHost
  * TODO: support/implement full screen menus - this is probably what most phone apps will want

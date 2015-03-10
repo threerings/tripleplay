@@ -22,9 +22,9 @@ import tripleplay.ui.Style;
  * position in the layout and stretching.
  *
  * <p>This is how the layout looks. Note north/south and east/west behavior is not quite symmetric
- * because east and west fit between the bottom of the north and top of the south:</p>
+ * because east and west fit between the bottom of the north and top of the south:
  *
- * <p><pre>
+ * <pre>
  *     |-----------------------------|
  *     |            north            |
  *     |-----------------------------|
@@ -37,7 +37,7 @@ import tripleplay.ui.Style;
  *     |-----------------------------|
  *     |            south            |
  *     |-----------------------------|
- * </pre></p>
+ * </pre>
  *
  * When an element is not stretched, it obeys the {@link tripleplay.ui.Style.HAlign} and {@link
  * tripleplay.ui.Style.VAlign} bindings.

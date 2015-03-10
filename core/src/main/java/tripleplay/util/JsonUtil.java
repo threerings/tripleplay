@@ -44,7 +44,7 @@ public class JsonUtil
 
     /**
      * @return the boolean value at the given key.
-     * @throws a RuntimeException if the key doesn't exist.
+     * @throws RuntimeException if the key doesn't exist.
      */
     public static boolean requireBoolean (Json.Object json, String key)
     {
@@ -63,7 +63,7 @@ public class JsonUtil
 
     /**
      * @return the double value at the given key.
-     * @throws a RuntimeException if the key doesn't exist.
+     * @throws RuntimeException if the key doesn't exist.
      */
     public static double requireNumber (Json.Object json, String key)
     {
@@ -82,7 +82,7 @@ public class JsonUtil
 
     /**
      * @return the float value at the given key.
-     * @throws a RuntimeException if the key doesn't exist.
+     * @throws RuntimeException if the key doesn't exist.
      */
     public static float requireFloat (Json.Object json, String key)
     {
@@ -100,7 +100,7 @@ public class JsonUtil
 
     /**
      * @return the int value at the given key.
-     * @throws a RuntimeException if the key doesn't exist.
+     * @throws RuntimeException if the key doesn't exist.
      */
     public static int requireInt (Json.Object json, String key)
     {
@@ -119,7 +119,7 @@ public class JsonUtil
 
     /**
      * @return the String value at the given key.
-     * @throws a RuntimeException if the key doesn't exist.
+     * @throws RuntimeException if the key doesn't exist.
      */
     public static String requireString (Json.Object json, String key)
     {
@@ -138,7 +138,7 @@ public class JsonUtil
 
     /**
      * @return the Json.Object at the given key.
-     * @throws a RuntimeException if the key doesn't exist.
+     * @throws RuntimeException if the key doesn't exist.
      */
     public static Json.Object requireObject (Json.Object json, String key)
     {
@@ -157,7 +157,7 @@ public class JsonUtil
 
     /**
      * @return the Json.Array at the given key.
-     * @throws a RuntimeException if the key doesn't exist.
+     * @throws RuntimeException if the key doesn't exist.
      */
     public static Json.Array requireArray (Json.Object json, String key)
     {
@@ -166,7 +166,7 @@ public class JsonUtil
     }
 
     /**
-     * @returns a String representation of the given Json
+     * @return a String representation of the given Json
      */
     public static String toString (Json.Object json, boolean verbose)
     {

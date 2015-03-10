@@ -211,7 +211,7 @@ public abstract class Style<V>
         }
     };
 
-    /** A Boolean style, with convenient members for on & off bindings. */
+    /** A Boolean style, with convenient members for on and off bindings. */
     public static class Flag extends Style<Boolean> {
         public final Binding<Boolean> off = is(false);
         public final Binding<Boolean> on = is(true);

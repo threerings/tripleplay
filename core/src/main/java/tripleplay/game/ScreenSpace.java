@@ -307,9 +307,9 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     }
 
     /** Adds {@code screen} to this space, replacing the current top-level screen. The screen is
-      * animated in the same manner as {@link #addScreen} using the same direction in which the
-      * current screen was added. This ensures that the user returns to the previous screen in the
-      * same way that they would via the to-be-replaced screen. */
+      * animated in the same manner as {@link #add} using the same direction in which the current
+      * screen was added. This ensures that the user returns to the previous screen in the same way
+      * that they would via the to-be-replaced screen. */
     public void replace (Screen screen) {
         if (_screens.isEmpty()) throw new IllegalStateException("No current screen to replace()");
         add(screen, _screens.get(0).dir, true);

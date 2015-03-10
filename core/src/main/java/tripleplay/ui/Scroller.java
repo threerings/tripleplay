@@ -52,11 +52,11 @@ import tripleplay.util.Layers;
  *     ---------------------------        ---------------------------
  * }</pre>
  *
- * <p>Scroll bars are configurable via the {@link #BAR_TYPE} style.</p>
+ * <p>Scroll bars are configurable via the {@link #BAR_TYPE} style.
  *
  * <p>NOTE: {@code Scroller} is a composite container, so callers can't add to or remove from it.
  * To "add" elements, callers should set {@link #content} to a {@code Group} and add things to it
- * instead.</p>
+ * instead.
  *
  * <p>NOTE: scrolling is done by pointer events; there are two ways to provide interactive
  * (clickable) content.
@@ -68,7 +68,7 @@ import tripleplay.util.Layers;
  * element to be deselected, corresponding to popular mobile OS conventions.</li>
  * <li>The second way is to use the {@link #contentClicked} signal. This is more light weight but
  * only emits after the pointer is released less than a minimum distance away from its starting
- * position.</li></ul></p>
+ * position.</li></ul>
  *
  * TODO: some way to handle keyboard events (complicated by lack of a focus element)
  * TODO: more fine-grained setPropagateEvents (add a flag to playn Layer?)
@@ -408,10 +408,10 @@ public class Scroller extends Composite<Scroller>
     public final Range hrange = createRange(), vrange = createRange();
 
     /**
-     * Creates a new scroller containing the given content and with {@link Behavior#BOTH}.
-     * <p>If the content is an instance of {@link Clippable}, then translation will occur via
-     * that interface. Otherwise, the content's layer translation will be set directly.
-     * Graphics level clipping is always performed.</p>
+     * Creates a new scroller containing the given content and with {@link Scroller.Behavior#BOTH}.
+     * <p>If the content is an instance of {@link Clippable}, then translation will occur via that
+     * interface. Otherwise, the content's layer translation will be set directly. Graphics level
+     * clipping is always performed.</p>
      */
     public Scroller (Element<?> content) {
         setLayout(AxisLayout.horizontal().stretchByDefault().offStretch().gap(0));

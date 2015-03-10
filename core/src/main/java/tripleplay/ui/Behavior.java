@@ -168,7 +168,7 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
                 toPoint(event, press = new Point());
                 drag = new Point(press);
             }
-            /** Updates the state to the current event value and called {@link Track#onTrack()}. */
+            /** Updates the state to the current event value and called {@link Track#onTrack}. */
             public void update (Pointer.Event event) {
                 boolean cancel = false;
                 toPoint(event, drag);
