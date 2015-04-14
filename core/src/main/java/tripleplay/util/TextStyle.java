@@ -13,6 +13,10 @@ import playn.core.TextFormat;
  */
 public class TextStyle extends TextFormat
 {
+    /** A default text style from which custom styles can be derived. */
+    public static TextStyle DEFAULT = new TextStyle(
+        null, true, 0xFF000000, EffectRenderer.NONE, false);
+
     /**
      * Creates a text style with the specified configuration using default anti-aliasing, no effect
      * and no underline.
@@ -39,13 +43,6 @@ public class TextStyle extends TextFormat
     public final boolean underlined;
 
     /**
-     * Creates a text style with default configuration.
-     */
-    public TextStyle () {
-        this(null, true, 0xFF000000, EffectRenderer.NONE, false);
-    }
-
-    /**
      * Creates a text style with the specified configuration.
      */
     public TextStyle (Font font, boolean antialias, int textColor, EffectRenderer effect,
@@ -57,13 +54,11 @@ public class TextStyle extends TextFormat
         this.underlined = underlined;
     }
 
-    @Override
-    public TextStyle withFont (Font font) {
+    @Override public TextStyle withFont (Font font) {
         return new TextStyle(font, antialias, textColor, effect, underlined);
     }
 
-    @Override
-    public TextStyle withAntialias (boolean antialias) {
+    @Override public TextStyle withAntialias (boolean antialias) {
         return new TextStyle(font, antialias, textColor, effect, underlined);
     }
 

@@ -5,9 +5,7 @@
 
 package tripleplay.gesture;
 
-import playn.core.PlayN;
-import playn.core.Touch.Event;
-
+import playn.scene.Touch;
 import pythagoras.f.Point;
 
 /**
@@ -22,31 +20,23 @@ public class GestureNode
 {
     public enum Type { START, END, MOVE, PAUSE, CANCEL }
 
-    /**
-     * A timestamp for this node.
-     */
+    /** A timestamp for this node. */
     public final double timestamp;
-
-    /**
-     * The state change that caused the registration of this node.
-     */
+    /** The state change that caused the registration of this node. */
     public final Type type;
+    /** The touch event for this node. */
+    public final Touch.Event touch;
+    /** The local location of the touch event in this node. */
+    public final Point location;
 
-    /**
-     * The touch event for this node.
-     */
-    public final Event touch;
-
-    public GestureNode (Type type, Event touch) {
-        this.timestamp = PlayN.currentTime();
-        this.type = type;
-        this.touch = touch;
+    public GestureNode (double timestamp, Type type, Touch.Interaction iact) {
+        this(timestamp, type, iact.event, new Point(iact.local));
     }
 
-    /**
-     * Convenience method to get a Point for the local location of the touch event in this node.
-     */
-    public Point location () {
-        return new Point(touch.localX(), touch.localY());
+    public GestureNode (double timestamp, Type type, Touch.Event touch, Point location) {
+        this.timestamp = timestamp;
+        this.type = type;
+        this.touch = touch;
+        this.location = location;
     }
 }

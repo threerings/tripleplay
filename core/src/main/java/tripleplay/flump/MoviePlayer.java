@@ -7,29 +7,27 @@ package tripleplay.flump;
 
 import react.Value;
 
-import playn.core.GroupLayer;
-import playn.core.Layer;
-import playn.core.util.Clock;
-import static playn.core.PlayN.*;
+import playn.core.Clock;
+import playn.core.Disposable;
+import playn.core.Game;
+import playn.scene.GroupLayer;
+import playn.scene.Layer;
 
 import tripleplay.anim.Animation;
-import tripleplay.util.Destroyable;
-import tripleplay.util.Paintable;
 
 /**
  * A convenient controller to play though multiple different movies. Designed for characters and
  * objects that have a separate Flump symbol for each of their animations, and need to switch
  * between them.
  */
-public class MoviePlayer
-    implements Destroyable, Paintable
+public class MoviePlayer implements Disposable
 {
     /** The currently playing movie, if any. */
     public final Value<Movie> movie = Value.create(null);
     public Movie movie () { return movie.get(); }
 
     public MoviePlayer (Library lib) {
-        this(lib, graphics().createGroupLayer());
+        this(lib, new GroupLayer());
     }
 
     public MoviePlayer (Library lib, GroupLayer root) {
@@ -102,10 +100,11 @@ public class MoviePlayer
         return new PlayAnimation(name);
     }
 
+    /** Drives this movie player with the supplied clock. */
     public void paint (Clock clock) {
         // If this update would end the oneshot movie, replace it with the looping movie
-        if (_oneshotMovie != null && _oneshotMovie.position() + clock.dt()*_oneshotMovie.speed() >
-                _oneshotMovie.symbol().duration) {
+        Movie one = _oneshotMovie;
+        if (one != null && one.position() + clock.dt*one.speed() > one.symbol().duration) {
             _oneshotMovie = null;
             setCurrent(_loopingMovie);
         }
@@ -127,10 +126,8 @@ public class MoviePlayer
         return current;
     }
 
-    @Override public void destroy () {
-        if (movie() != null) {
-            movie().layer().destroy();
-        }
+    @Override public void close () {
+        if (movie() != null) movie().layer().close();
         _loopingMovie = null;
         _oneshotMovie = null;
         movie.update(null);

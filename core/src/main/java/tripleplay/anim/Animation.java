@@ -11,8 +11,8 @@ import java.util.Map;
 
 import pythagoras.f.XY;
 
-import playn.core.ImageLayer;
-import playn.core.Layer;
+import playn.scene.ImageLayer;
+import playn.scene.Layer;
 
 import tripleplay.util.Interpolator;
 

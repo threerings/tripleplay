@@ -10,12 +10,13 @@ import java.io.DataInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.Image;
-import playn.core.PlayN;
-import playn.core.util.Callback;
-
+import react.RFuture;
+import react.RPromise;
+import react.Slot;
 import react.Value;
 
+import playn.core.Image;
+import playn.core.Platform;
 
 /** Loads our flump library from a binary representation. */
 public class BinaryFlumpLoader
@@ -23,29 +24,30 @@ public class BinaryFlumpLoader
     /**
      * Loads a binary encoded library synchronously via PlayN assets.
      */
-    public static Library loadLibrarySync (String baseDir) throws Exception {
-        byte[] bytes = PlayN.assets().getBytesSync(baseDir + "/library.bin");
+    public static Library loadLibrarySync (Platform plat, String baseDir) throws Exception {
+        byte[] bytes = plat.assets().getBytesSync(baseDir + "/library.bin");
         LibraryData data = new LibraryData(new DataInputStream(new ByteArrayInputStream(bytes)));
-        return decodeLibrarySync(data, baseDir);
+        return decodeLibrarySync(plat, data, baseDir);
     }
 
     /**
      * Loads a binary encoded library via PlayN assets.
      * @param baseDir The base directory, containing library.bin and texture atlases.
      */
-    public static void loadLibrary (final String baseDir, final Callback<Library> callback) {
-        assert callback != null;
-        PlayN.assets().getBytes(baseDir + "/library.bin", new Callback.Chain<byte[]>(callback) {
-            public void onSuccess (byte[] bytes) {
+    public static RFuture<Library> loadLibrary (final Platform plat, final String baseDir) {
+        final RPromise<Library> result = RPromise.create();
+        plat.assets().getBytes(baseDir + "/library.bin").onSuccess(new Slot<byte[]>() {
+            public void onEmit (byte[] bytes) {
                 try {
-                    LibraryData libData =
-                        new LibraryData(new DataInputStream(new ByteArrayInputStream(bytes)));
-                    decodeLibraryAsync(libData, baseDir, callback);
+                    LibraryData libData = new LibraryData(
+                        new DataInputStream(new ByteArrayInputStream(bytes)));
+                    decodeLibraryAsync(plat, libData, baseDir, result);
                 } catch (Exception err) {
-                    callback.onFailure(err);
+                    result.fail(err);
                 }
             }
         });
+        return result;
     }
 
     /** Helper interface to load an image from a path. */
@@ -56,29 +58,32 @@ public class BinaryFlumpLoader
     /**
      * Decodes and returns a library synchronously.
      */
-    protected static Library decodeLibrarySync (LibraryData libData, String baseDir)
-    {
-        final Library[] libs = new Library[]{null};
-        decodeLibrary(libData, baseDir, new Callback<Library>() {
-            public void onSuccess (Library result) {libs[0] = result;}
-            public void onFailure(Throwable cause) {}
-        }, new ImageLoader() {
+    protected static Library decodeLibrarySync (final Platform plat, LibraryData libData,
+                                                String baseDir) {
+        RPromise<Library> result = RPromise.create();
+        decodeLibrary(libData, baseDir, result, new ImageLoader() {
             @Override public Image load (String path) {
-                return PlayN.assets().getImageSync(path);
+                return plat.assets().getImageSync(path);
             }
         });
-        return libs[0];
+
+        // this blows, but I don't want to add RPromise.get()
+        final Library[] out = new Library[1];
+        result.onSuccess(new Slot<Library>() {
+            public void onEmit (Library library) { out[0] = library; }
+        });
+        assert out[0] != null;
+        return out[0];
     }
 
     /**
      * Decodes and returns a library asynchronously.
      */
-    protected static void decodeLibraryAsync (LibraryData libData, String baseDir,
-                                              Callback<Library> callback)
-    {
-        decodeLibrary(libData, baseDir, callback, new ImageLoader() {
+    protected static void decodeLibraryAsync (final Platform plat, LibraryData libData,
+                                              String baseDir, RPromise<Library> result) {
+        decodeLibrary(libData, baseDir, result, new ImageLoader() {
             @Override public Image load (String path) {
-                return PlayN.assets().getImage(path);
+                return plat.assets().getImage(path);
             }
         });
     }
@@ -87,8 +92,7 @@ public class BinaryFlumpLoader
      * Generic library decoding method.
      */
     protected static void decodeLibrary (LibraryData libData, String baseDir,
-                                         final Callback<Library> callback,
-                                         final ImageLoader imageLoader)
+                                         final RPromise<Library> result, ImageLoader imageLoader)
     {
         final float frameRate = libData.frameRate;
         final ArrayList<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
@@ -98,26 +102,27 @@ public class BinaryFlumpLoader
 
         final ArrayList<Texture.Symbol> textures = new ArrayList<Texture.Symbol>();
 
-        List<LibraryData.AtlasData> atlases = libData.atlases;
-
-        final Value<Integer> remainingAtlases = Value.create(atlases.size());
-        remainingAtlases.connectNotify(new Value.Listener<Integer>() {
-            @Override public void onChange (Integer remaining, Integer unused) {
-                if (remaining == 0) callback.onSuccess(new Library(frameRate, movies, textures));
-            }
-        });
-
-        for (final LibraryData.AtlasData atlasData : atlases) {
+        // trigger the loading of all of the atlas images
+        List<RFuture<Image>> atlasImages = new ArrayList<RFuture<Image>>();
+        for (final LibraryData.AtlasData atlasData : libData.atlases) {
             Image atlas = imageLoader.load(baseDir + "/" + atlasData.file);
-            atlas.addCallback(new Callback.Chain<Image>(callback) {
-                public void onSuccess (Image atlas) {
+            atlasImages.add(atlas.state);
+            atlas.state.onSuccess(new Slot<Image>() {
+                public void onEmit (Image image) {
                     for (LibraryData.TextureData textureData : atlasData.textures) {
-                        textures.add(decodeTexture(textureData, atlas));
+                        textures.add(decodeTexture(textureData, image.texture()));
                     }
-                    remainingAtlases.update(remainingAtlases.get() - 1);
                 }
             });
         }
+
+        // aggregate the futures for all the images into a single future which will succeed if they
+        // all succeed, or fail if any of them fail, then wire that up to our library result
+        RFuture.sequence(atlasImages).onSuccess(new Slot<List<Image>>() {
+            public void onEmit (List<Image> atlases) {
+                result.succeed(new Library(frameRate, movies, textures));
+            }
+        }).onFailure(result.failer());
     }
 
     protected static Movie.Symbol decodeMovie (float frameRate, LibraryData.MovieData movieData) {
@@ -151,11 +156,9 @@ public class BinaryFlumpLoader
                                 kfData.ref);
     }
 
-    protected static Texture.Symbol decodeTexture (LibraryData.TextureData textureData,
-            Image atlas) {
-        float[] rect = textureData.rect;
-        return new Texture.Symbol(
-            textureData.symbol, textureData.origin,
-            atlas.subImage(rect[0], rect[1], rect[2], rect[3]));
+    protected static Texture.Symbol decodeTexture (LibraryData.TextureData tdata,
+                                                   playn.core.Texture atlas) {
+        float[] r = tdata.rect;
+        return new Texture.Symbol(tdata.symbol, tdata.origin, atlas.tile(r[0], r[1], r[2], r[3]));
     }
 }

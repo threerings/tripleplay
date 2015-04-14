@@ -11,6 +11,9 @@ import java.util.List;
 import pythagoras.f.Dimension;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
+import react.Closeable;
+import react.UnitSlot;
+
 import tripleplay.ui.Composite;
 import tripleplay.ui.Container;
 import tripleplay.ui.Element;
@@ -22,8 +25,10 @@ import tripleplay.ui.layout.AxisLayout;
 import static tripleplay.ui.Log.log;
 
 /**
- * A scrolling vertical display, optimized for showing potentially very long lists such as
- * a chat log. Supports: <ul>
+ * A scrolling vertical display, optimized for showing potentially very long lists such as a chat
+ * log. Supports:
+ *
+ * <ul>
  * <li>addition of new elements on the end</li>
  * <li>pruning old elements from the beginning</li>
  * <li>progressive rendering of newly visible items in the list</li>
@@ -44,7 +49,6 @@ import static tripleplay.ui.Log.log;
  * @param <W> The type of element or widget stored in this history
  */
 public abstract class HistoryGroup<T, W extends Element<?>> extends Composite<HistoryGroup<T, W>>
-    implements Interface.Task
 {
     /** A label that exposes the width hint and preferred size. */
     public static class RenderableLabel extends Label
@@ -126,7 +130,7 @@ public abstract class HistoryGroup<T, W extends Element<?>> extends Composite<Hi
         _entriesGroup.invalidate();
     }
 
-    @Override public void update (int delta) {
+    protected void update () {
         if (!_added) {
             log.warning("Whassup, scheduled while removed?");
             cancel();
@@ -263,16 +267,15 @@ public abstract class HistoryGroup<T, W extends Element<?>> extends Composite<Hi
     }
 
     protected void schedule () {
-        if (_task == null && _added) {
-            _task = root().iface().addTask(this);
+        if (_conn == Closeable.Util.NOOP && _added) {
+            _conn = root().iface.frame.connect(new UnitSlot() {
+                public void onEmit () { update(); }
+            });
         }
     }
 
     protected void cancel () {
-        if (_task != null) {
-            _task.remove();
-            _task = null;
-        }
+        _conn = Closeable.Util.close(_conn);
     }
 
     /** Find the index of the entry at the given y position. */
@@ -471,8 +474,8 @@ public abstract class HistoryGroup<T, W extends Element<?>> extends Composite<Hi
     /** The rendered items contained in the scrollable area. */
     protected EntriesGroup _entriesGroup;
 
-    /** The current task registration, or null if we're not updating. */
-    protected Interface.TaskHandle _task;
+    /** A frame tick registration, or NOOP if we're not updating. */
+    protected Closeable _conn = Closeable.Util.NOOP;
 
     /** The list of history entries. */
     protected List<Entry> _entries = new ArrayList<Entry>();

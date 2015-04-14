@@ -17,9 +17,8 @@ import react.Slot;
 import react.UnitSlot;
 import react.ValueView;
 
-import playn.core.GroupLayer;
-import playn.core.Layer;
-import playn.core.PlayN;
+import playn.scene.GroupLayer;
+import playn.scene.Layer;
 
 import tripleplay.ui.util.Insets;
 import tripleplay.util.Ref;
@@ -327,9 +326,9 @@ public abstract class Element<T extends Element<T>>
     /**
      * Called when this element (or its parent element) was removed from the interface hierarchy.
      * Also, if the element was removed directly from its parent, then the layer is orphaned prior
-     * to this call. Furthermore, if the element is being destroyed (see {@link
-     * Container.Mutable#destroy} and other methods), the destruction of the layer will occur
-     * <b>after</b> this method returns and the {@link #willDestroy()} method returns true. This
+     * to this call. Furthermore, if the element is being disposed (see
+     * {@link Container.Mutable#dispose} and other methods), the disposal of the layer will occur
+     * <b>after</b> this method returns and the {@link #willDispose()} method returns true. This
      * allows subclasses to manage resources as needed. <p><b>NOTE</b>: the base class method must
      * <b>always</b> be called for correct operation.</p>
      */
@@ -448,21 +447,7 @@ public abstract class Element<T extends Element<T>>
      * direction to the specified height.
      */
     protected IDimension preferredSize (float hintX, float hintY) {
-        if (_preferredSize == null) {
-            if (_constraint != null) {
-                hintX = _constraint.adjustHintX(hintX);
-                hintY = _constraint.adjustHintY(hintY);
-            }
-            Dimension psize = computeSize(hintX, hintY);
-            if (_constraint != null) _constraint.adjustPreferredSize(psize, hintX, hintY);
-            // round our preferred size up to the nearest whole number; if we allow it to remain
-            // fractional, we can run into annoying layout problems where floating point rounding
-            // error causes a tiny fraction of a pixel to be shaved off of the preferred size of a
-            // text widget, causing it to wrap its text differently and hosing the layout
-            psize.width = MathUtil.iceil(psize.width);
-            psize.height = MathUtil.iceil(psize.height);
-            _preferredSize = psize;
-        }
+        if (_preferredSize == null) _preferredSize = computeSize(hintX, hintY);
         return _preferredSize;
     }
 
@@ -503,10 +488,30 @@ public abstract class Element<T extends Element<T>>
      * direction to the specified height.
      */
     protected Dimension computeSize (float hintX, float hintY) {
+        // allow any layout constraint to adjust the layout hints
+        if (_constraint != null) {
+            hintX = _constraint.adjustHintX(hintX);
+            hintY = _constraint.adjustHintY(hintY);
+        }
+
+        // create our layout data and ask it for our preferred size (accounting for our background
+        // insets in the process)
         LayoutData ldata = _ldata = createLayoutData(hintX, hintY);
         Insets insets = ldata.bg.insets;
         Dimension size = ldata.computeSize(hintX - insets.width(), hintY - insets.height());
-        return insets.addTo(size);
+        insets.addTo(size);
+
+        // allow any layout constraint to adjust the computed preferred size
+        if (_constraint != null) _constraint.adjustPreferredSize(size, hintX, hintY);
+
+        // round our preferred size up to the nearest whole number; if we allow it to remain
+        // fractional, we can run into annoying layout problems where floating point rounding error
+        // causes a tiny fraction of a pixel to be shaved off of the preferred size of a text
+        // widget, causing it to wrap its text differently and hosing the layout
+        size.width = MathUtil.iceil(size.width);
+        size.height = MathUtil.iceil(size.height);
+
+        return size;
     }
 
     /**
@@ -519,7 +524,7 @@ public abstract class Element<T extends Element<T>>
         float width = _size.width, height = _size.height;
         LayoutData ldata = (_ldata != null) ? _ldata : createLayoutData(width, height);
 
-        // if we have a non-matching background, destroy it (note that if we don't want a bg, any
+        // if we have a non-matching background, dispose it (note that if we don't want a bg, any
         // existing bg will necessarily be invalid)
         Background.Instance bginst = _bginst.get();
         boolean bgok = (bginst != null && bginst.owner() == ldata.bg &&
@@ -561,18 +566,18 @@ public abstract class Element<T extends Element<T>>
      * Creates the layer to be used by this element. Subclasses may override to use a clipped one.
      */
     protected GroupLayer createLayer () {
-        return PlayN.graphics().createGroupLayer();
+        return new GroupLayer();
     }
 
     /**
-     * Tests if this element is about to be destroyed. Elements are destroyed via a call to one of
-     * the "destroy" methods such as {@link Container.Mutable#destroy(Element)}. This allows
+     * Tests if this element is about to be disposed. Elements are disposed via a call to one of
+     * the "dispose" methods such as {@link Container.Mutable#dispose(Element)}. This allows
      * subclasses to manage resources appropriately during their implementation of {@link
      * #wasRemoved}, for example clearing a child cache. <p>NOTE: at the expense of slight semantic
-     * dissonance, the flag is not cleared after destruction</p>
+     * dissonance, the flag is not cleared after disposal.</p>
      */
-    protected boolean willDestroy () {
-        return isSet(Flag.WILL_DESTROY);
+    protected boolean willDispose () {
+        return isSet(Flag.WILL_DISPOSE);
     }
 
     /**
@@ -777,7 +782,7 @@ public abstract class Element<T extends Element<T>>
     protected final Ref<Background.Instance> _bginst = Ref.<Background.Instance>create(null);
 
     protected static enum Flag {
-        VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3), WILL_DESTROY(1 << 4),
+        VALID(1 << 0), ENABLED(1 << 1), VISIBLE(1 << 2), SELECTED(1 << 3), WILL_DISPOSE(1 << 4),
         HIT_DESCEND(1 << 5), HIT_ABSORB(1 << 6), IS_REMOVING(1 << 7), IS_ADDING(1 << 8);
 
         public final int mask;

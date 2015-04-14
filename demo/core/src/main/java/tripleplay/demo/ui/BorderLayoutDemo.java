@@ -17,6 +17,7 @@ import tripleplay.ui.Element;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
 import tripleplay.ui.Layout;
+import tripleplay.ui.Root;
 import tripleplay.ui.Shim;
 import tripleplay.ui.SizableGroup;
 import tripleplay.ui.Style;
@@ -40,7 +41,7 @@ public class BorderLayoutDemo extends DemoScreen
         return "UI: BorderLayout";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         Group buttons = new Group(
             AxisLayout.horizontal(),
             Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF).inset(5))));

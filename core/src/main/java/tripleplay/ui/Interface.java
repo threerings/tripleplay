@@ -8,132 +8,52 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.Game.Default;
-import playn.core.GroupLayer;
-import playn.core.util.Clock;
+import playn.core.Clock;
+import playn.core.Platform;
+import playn.scene.GroupLayer;
+
+import react.Closeable;
+import react.Signal;
+import react.Slot;
 
 import tripleplay.anim.Animator;
-import tripleplay.ui.Element.Flag;
-import tripleplay.util.Paintable;
 
 /**
  * The main class that integrates the Triple Play UI with a PlayN game. This class is mainly
  * necessary to automatically validate hierarchies of {@code Element}s during each paint.
  * Create an interface instance, create {@link Root} groups via the interface and add the
  * {@link Root#layer}s into your scene graph wherever you desire.
- *
- * <p> Call {@link #update} and {@link #paint} from {@link Default#update} and
- * {@link Default#paint} to drive your interface. </p>
  */
-public class Interface
-    implements Paintable
+public class Interface implements Closeable
 {
-    /**
-     * A time based task that requires an update per frame. See {@link Interface#addTask}.
-     */
-    public interface Task {
-        /** Performs the update for this task.
-         * @param delta time that has passed (in ms), normally passed down from
-         * {@link Default#update}. */
-        void update (int delta);
+    /** The platform in which this interface is operating. */
+    public final Platform plat;
+
+    /** A signal emitted just before we render a frame. */
+    public final Signal<Clock> frame;
+
+    /** An animator that can be used to animate things in this interface. */
+    public final Animator anim = new Animator();
+
+    /** Creates an interface for {@code plat}. The interface will be connected to {@code frame} to
+      * drive any per-frame animations and activity. Either provide a frame signal whose lifetime
+      * is the same as the interface (for example {@code Screen.paint}), or call {@link #close}
+      * when this interface should be disconnected from the frame signal. */
+    public Interface (Platform plat, Signal<Clock> frame) {
+        this.plat = plat;
+        this.frame = frame;
+        _onFrame = Closeable.Util.join(
+            frame.connect(new Slot<Clock>() { public void onEmit (Clock clock) { paint(clock); }}),
+            frame.connect(anim.onPaint));
     }
 
-    /**
-     * An object that can be used to remove a previously added task.
-     */
-    public interface TaskHandle {
-        /** Removes the task associated with this handle. */
-        void remove ();
+    @Override public void close () {
+        _onFrame.close();
     }
 
-    /**
-     * Posts a runnable that will be executed after the next time the interface is validated.
-     * Processing deferred actions is not tremendously efficient, so don't call this every frame.
-     */
-    public void deferAction (Runnable action) {
-        _actions.add(action);
-    }
-
-    /**
-     * Adds a task that will henceforth be updated once per game update. If a task is added during
-     * the task update iteration, it will be updated for the first time on the following game
-     * update.
-     * @return a handle that will remove the task when invoked the first time. Subsequent
-     * invocations will do nothing.
-     */
-    public TaskHandle addTask (final Task task) {
-        _tasks.add(task);
-        return new TaskHandle() {
-            Task target = task;
-            public void remove () {
-                if (target == null) return;
-                int idx = _tasks.indexOf(target);
-                if (idx == -1) return;
-                _tasks.remove(idx);
-                // adjust iteration members
-                if (_currentTask >= idx) _currentTask--;
-                _currentTaskCount--;
-                // clear state so we don't try and remove again
-                target = null;
-            }
-        };
-    }
-
-    /**
-     * Updates the elements in this interface. Normally called from {@link Default#update}.
-     */
-    public void update (int delta) {
-        // use members for task iteration to support concurrent modification
-        for (_currentTask = 0, _currentTaskCount = _tasks.size();
-             _currentTask < _currentTaskCount; _currentTask++) {
-            Task task = _tasks.get(_currentTask);
-            try {
-                task.update(delta);
-            } catch (Exception e) {
-                Log.log.warning("Interface task failed: " + task, e);
-            }
-        }
-        _currentTask = -1;
-    }
-
-    /**
-     * "Paints" the elements in this interface. Normally called from {@link Default#paint}.
-     */
-    public void paint (Clock clock) {
-        // update the animator
-        _animator.paint(clock);
-
-        // ensure that our roots are validated
-        for (int ii = 0, ll = _roots.size(); ii < ll; ii++) {
-            _roots.get(ii).validate();
-        }
-
-        // run any deferred actions
-        if (!_actions.isEmpty()) {
-            List<Runnable> actions = new ArrayList<Runnable>(_actions);
-            _actions.clear();
-            for (Runnable action : actions) {
-                try {
-                    action.run();
-                } catch (Exception e) {
-                    Log.log.warning("Interface action failed: " + action, e);
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns an iterable over the current roots. Don't delete from this iterable!
-     */
+    /** Returns an iterable over the current roots. Don't delete from this iterable! */
     public Iterable<Root> roots () {
         return _roots;
-    }
-
-    /**
-     * Returns an animator that can be used within the scope of this interface.
-     */
-    public Animator animator () {
-        return _animator;
     }
 
     /**
@@ -167,7 +87,7 @@ public class Interface
      * Removes the supplied root element from this interface, iff it's currently added. If the
      * root's layer has a parent, the layer will be removed from the parent as well. This leaves
      * the Root's layer in existence, so it may be used again. If you're done with the Root and all
-     * of the elements inside of it, call {@link #destroyRoot} to free its resources.
+     * of the elements inside of it, call {@link #disposeRoot} to free its resources.
      *
      * @return true if the root was removed, false if it was not currently added.
      */
@@ -179,31 +99,33 @@ public class Interface
     }
 
     /**
-     * Removes the supplied root element from this interface and destroys its layer, iff it's
-     * currently added. Destroying the layer destroys the layers of all elements contained in the
+     * Removes the supplied root element from this interface and disposes its layer, iff it's
+     * currently added. Disposing the layer disposes the layers of all elements contained in the
      * root as well. Use this method if you're done with the Root. If you'd like to reuse it, call
      * {@link #removeRoot} instead.
      *
-     * @return true if the root was removed and destroyed, false if it was not currently added.
+     * @return true if the root was removed and disposed, false if it was not currently added.
      */
-    public boolean destroyRoot (Root root) {
+    public boolean disposeRoot (Root root) {
         if (!_roots.remove(root)) return false;
-        root.set(Flag.WILL_DESTROY, true);
+        root.set(Element.Flag.WILL_DISPOSE, true);
         root.wasRemoved();
-        root.layer.destroy();
+        root.layer.close();
         return true;
     }
 
     /**
-     * Removes and destroys all roots in this interface.
+     * Removes and disposes all roots in this interface.
      */
-    public void destroyRoots () {
-        while (!_roots.isEmpty()) destroyRoot(_roots.get(0));
+    public void disposeRoots () {
+        while (!_roots.isEmpty()) disposeRoot(_roots.get(0));
     }
 
+    protected void paint (Clock clock) {
+        // ensure that our roots are validated
+        for (int ii = 0, ll = _roots.size(); ii < ll; ii++) _roots.get(ii).validate();
+    }
+
+    protected final Closeable _onFrame;
     protected final List<Root> _roots = new ArrayList<Root>();
-    protected final List<Runnable> _actions = new ArrayList<Runnable>();
-    protected final Animator _animator = new Animator();
-    protected final List<Task> _tasks = new ArrayList<Task>();
-    protected int _currentTask, _currentTaskCount;
 }

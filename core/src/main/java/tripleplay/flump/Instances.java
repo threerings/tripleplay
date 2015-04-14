@@ -5,7 +5,8 @@
 
 package tripleplay.util;
 
-import playn.core.ImageLayer;
+import playn.scene.ImageLayer;
+
 import tripleplay.flump.Instance;
 import tripleplay.flump.Movie;
 import tripleplay.flump.Texture;
@@ -13,21 +14,21 @@ import tripleplay.flump.Texture;
 /**
  * Provides utility functions for dealing with Instances
  */
-public class Instances
-{
-    public interface Op
-    {
+public class Instances {
+
+    public interface Op {
         boolean onVisit (String parentLayer, Instance instance, int depth);
     }
 
     /**
-     * Dump the display hierarchy to a String, each component on a newline, children indented
-     * two spaces:
-     *
+     * Dump the display hierarchy to a String, each component on a newline, children indented two
+     * spaces:
+     * <pre>{@code
      *   forearmRight: container_forearmRight
      *     TOP_tight: forearmRight_tight_TOP
      *       CB: Texture (59.0 x 138.0)
      *       SB: Texture (19.0 x 19.0)
+     * }</pre>
      */
     public static String dumpHierarchy (Instance root)
     {
@@ -40,9 +41,7 @@ public class Instances
                 } else if (instance instanceof Texture) {
                     ImageLayer tLayer = ((Texture) instance).layer();
                     instanceDesc = "Texture (" + tLayer.width() + " x " + tLayer.height() + ")";
-                    if (tLayer.destroyed()) {
-                        instanceDesc += " (DESTROYED)";
-                    }
+                    if (tLayer.disposed()) instanceDesc += " (DISPOSED)";
                 } else if (instance != null) {
                     instanceDesc = instance.toString();
                 } else {

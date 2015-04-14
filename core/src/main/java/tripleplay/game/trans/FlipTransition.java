@@ -7,10 +7,10 @@ package tripleplay.game.trans;
 
 import pythagoras.f.FloatMath;
 
-import static playn.core.PlayN.graphics;
+import playn.core.Platform;
 
-import tripleplay.game.Screen;
-import tripleplay.shaders.RotateYShader;
+import tripleplay.game.ScreenStack.Screen;
+import tripleplay.shaders.RotateYBatch;
 import tripleplay.util.Interpolator;
 
 /**
@@ -22,13 +22,13 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
     /** Reverses this transition, making it flip the other direction. */
     public FlipTransition unflip () { _unflip = true; return this; }
 
-    @Override public void init (Screen oscreen, Screen nscreen) {
-        super.init(oscreen, nscreen);
+    @Override public void init (Platform plat, Screen oscreen, Screen nscreen) {
+        super.init(plat, oscreen, nscreen);
         nscreen.layer.setDepth(-1);
-        _oshader = new RotateYShader(graphics().ctx(), 0.5f, 0.5f, 1);
-        oscreen.layer.setShader(_oshader);
-        _nshader = new RotateYShader(graphics().ctx(), 0.5f, 0.5f, 1);
-        nscreen.layer.setShader(_nshader);
+        _obatch = new RotateYBatch(plat.graphics().gl, 0.5f, 0.5f, 1);
+        oscreen.layer.setBatch(_obatch);
+        _nbatch = new RotateYBatch(plat.graphics().gl, 0.5f, 0.5f, 1);
+        nscreen.layer.setBatch(_nbatch);
     }
 
     @Override public boolean update (Screen oscreen, Screen nscreen, float elapsed) {
@@ -39,17 +39,17 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
             _flipped = true;
         }
         if (_unflip) pct = -pct;
-        _oshader.angle = FloatMath.PI * pct;
-        _nshader.angle = FloatMath.PI * (pct - 1);
+        _obatch.angle = FloatMath.PI * pct;
+        _nbatch.angle = FloatMath.PI * (pct - 1);
         return elapsed >= _duration;
     }
 
     @Override public void complete (Screen oscreen, Screen nscreen) {
         super.complete(oscreen, nscreen);
         oscreen.layer.setDepth(0);
-        oscreen.layer.setShader(null);
+        oscreen.layer.setBatch(null);
         nscreen.layer.setDepth(0);
-        nscreen.layer.setShader(null);
+        nscreen.layer.setBatch(null);
     }
 
     @Override protected Interpolator defaultInterpolator () {
@@ -57,5 +57,5 @@ public class FlipTransition extends InterpedTransition<FlipTransition>
     }
 
     protected boolean _flipped, _unflip;
-    protected RotateYShader _oshader, _nshader;
+    protected RotateYBatch _obatch, _nbatch;
 }

@@ -5,21 +5,23 @@
 
 package tripleplay.demo.ui;
 
-import playn.core.ImmediateLayer;
-import playn.core.Layer;
-import playn.core.PlayN;
-import playn.core.Pointer;
-import playn.core.Pointer.Event;
-import playn.core.Surface;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
+
 import react.Slot;
 import react.UnitSlot;
+
+import playn.core.Surface;
+import playn.scene.Layer;
+import playn.scene.LayerUtil;
+import playn.scene.Pointer;
+
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Scroller;
 import tripleplay.ui.Scroller.Behavior;
 import tripleplay.ui.Shim;
@@ -39,7 +41,7 @@ public class ScrollerDemo extends DemoScreen
         return "UI: Scroller";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         final Slider width = new Slider(100, 100, 5000);
         final Slider height = new Slider(100, 100, 5000);
         final Slider xpos = new Slider(0, 0, 1);
@@ -83,8 +85,8 @@ public class ScrollerDemo extends DemoScreen
         });
 
         scroll.contentClicked().connect(new Slot<Pointer.Event>() {
-            @Override public void onEmit (Event e) {
-                Point pt = Layer.Util.screenToLayer(content.layer, e.x(), e.y());
+            @Override public void onEmit (Pointer.Event e) {
+                Point pt = LayerUtil.screenToLayer(content.layer, e.x(), e.y());
                 click.text.update(pt.x + ", " + pt.y);
             }
         });
@@ -118,33 +120,31 @@ public class ScrollerDemo extends DemoScreen
                 add(scroll.setConstraint(AxisLayout.stretched())));
     }
 
-    protected static class Content extends SizableWidget<Content>
-        implements ImmediateLayer.Renderer
-    {
+    protected static class Content extends SizableWidget<Content> {
         public final float tick = 100;
 
         public Content () {
-            layer.add(PlayN.graphics().createImmediateLayer(this));
-        }
+            layer.add(new Layer() {
+                @Override protected void paintImpl (Surface surf) {
+                    surf.setFillColor(0xFFFFFFFF);
+                    surf.fillRect(0, 0, _size.width, _size.height);
 
-        @Override public void render (Surface surf) {
-            surf.setFillColor(0xFFFFFFFF);
-            surf.fillRect(0, 0, _size.width, _size.height);
+                    float left = 1, top = 1, right = _size.width, bot = _size.height;
+                    surf.setFillColor(0xFF7f7F7F);
+                    for (float x = 0; x < _size.width; x += tick) {
+                        surf.drawLine(x, top, x, bot, 1);
+                    }
+                    for (float y = 0; y < _size.height; y += tick) {
+                        surf.drawLine(left, y, right, y, 1);
+                    }
 
-            float left = 1, top = 1, right = _size.width, bot = _size.height;
-            surf.setFillColor(0xFF7f7F7F);
-            for (float x = 0; x < _size.width; x += tick) {
-                surf.drawLine(x, top, x, bot, 1);
-            }
-            for (float y = 0; y < _size.height; y += tick) {
-                surf.drawLine(left, y, right, y, 1);
-            }
-
-            surf.setFillColor(0xFFFF7F7F);
-            surf.drawLine(left - 1, top, right, top, 2);
-            surf.drawLine(right - 1, top - 1, right - 1, bot, 2);
-            surf.drawLine(left, top - 1, left, bot, 2);
-            surf.drawLine(left - 1, bot - 1, right, bot - 1, 2);
+                    surf.setFillColor(0xFFFF7F7F);
+                    surf.drawLine(left - 1, top, right, top, 2);
+                    surf.drawLine(right - 1, top - 1, right - 1, bot, 2);
+                    surf.drawLine(left, top - 1, left, bot, 2);
+                    surf.drawLine(left - 1, bot - 1, right, bot - 1, 2);
+                }
+            });
         }
 
         @Override protected Class<?> getStyleClass () {

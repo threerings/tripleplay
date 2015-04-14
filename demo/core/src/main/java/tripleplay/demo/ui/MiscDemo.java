@@ -5,20 +5,21 @@
 
 package tripleplay.demo.ui;
 
-import playn.core.Image;
-import playn.core.PlayN;
-
 import pythagoras.f.MathUtil;
+import pythagoras.f.Rectangle;
 
 import react.Function;
 import react.IntValue;
 import react.UnitSlot;
+
+import playn.core.Image;
 
 import tripleplay.ui.*;
 import tripleplay.ui.layout.*;
 import tripleplay.util.Colors;
 
 import tripleplay.demo.DemoScreen;
+import tripleplay.demo.TripleDemo;
 
 /**
  * Displays various UI stuff.
@@ -31,16 +32,17 @@ public class MiscDemo extends DemoScreen
     @Override protected String title () {
         return "UI: General";
     }
-    @Override protected Group createIface () {
-        Icon smiley = Icons.image(PlayN.assets().getImage("images/smiley.png"));
-        final Image squares = PlayN.assets().getImage("images/squares.png");
-        final CapturedRoot capRoot = iface.addRoot(
-            new CapturedRoot(iface, AxisLayout.horizontal(), stylesheet()));
+    @Override protected Group createIface (Root root) {
+        Icon smiley = Icons.image(assets().getImage("images/smiley.png"));
+        final Image squares = assets().getImage("images/squares.png");
+        final CapturedRoot capRoot = iface.addRoot(new CapturedRoot(
+            iface, AxisLayout.horizontal(), stylesheet(), TripleDemo.game.defaultBatch));
 
         CheckBox toggle, toggle2;
         Label label2;
         Field editable, disabled;
         Button setField;
+        final Box box;
 
         Group iface = new Group(AxisLayout.horizontal().stretchByDefault()).add(
             // left column
@@ -72,6 +74,29 @@ public class MiscDemo extends DemoScreen
                                                                        Style.HALIGN.center)),
                 new Shim(5, 10),
 
+                // box transitions
+                new Label("Box transitions"),
+                box = new Box(new Label("I'm in a box").addStyles(GREENBG)).addStyles(REDBG).
+                    // we fix the size of the box because it would otherwise be unconstrained in
+                    // this layout; if the box is allowed to change size, the UI will be
+                    // revalidated at the end of the transition and it will snap to the size of the
+                    // new contents, which is jarring
+                    setConstraint(Constraints.fixedSize(200, 40)),
+                new Group(AxisLayout.horizontal().gap(5)).add(
+                    new Button("Fade").onClick(new UnitSlot() {
+                        public void onEmit () {
+                            Label nlabel = new Label("I'm faded!").addStyles(GREENBG);
+                            box.transition(nlabel, new Box.Fade(500));
+                        }
+                    }),
+                    new Button("Flip").onClick(new UnitSlot() {
+                        public void onEmit () {
+                            Label nlabel = new Label("I'm flipped!").addStyles(GREENBG);
+                            box.transition(nlabel, new Box.Flip(500));
+                        }
+                    })),
+                new Shim(5, 10),
+
                 // a captured root's widget
                 new Label("Root capture"),
                 new Group(AxisLayout.vertical()).addStyles(
@@ -96,7 +121,7 @@ public class MiscDemo extends DemoScreen
                     add(new Label("Captured Root!"), new Button("Captured Button"))).pack();
 
         // add a style animation to the captured root (clicking on cap roots NYI)
-        this.iface.animator().repeat(_root.layer).delay(1000).then().action(new Runnable() {
+        this.iface.anim.repeat(root.layer).delay(1000).then().action(new Runnable() {
             int cycle;
             @Override public void run () {
                 capRoot.addStyles(Style.BACKGROUND.is(cycle++ % 2 == 0 ?
@@ -115,7 +140,7 @@ public class MiscDemo extends DemoScreen
         final Field source = editable, target = disabled;
         setField.clicked().connect(new UnitSlot() {
             @Override public void onEmit () {
-                PlayN.log().info("Setting text to " + source.text.get());
+                log().info("Setting text to " + source.text.get());
                 target.text.update(source.text.get());
             }
         });
@@ -135,7 +160,7 @@ public class MiscDemo extends DemoScreen
                 super(title);
             }
             public void throb () {
-                root().iface().animator().
+                root().iface.anim.
                     tweenScale(layer).to(1.2f).in(300.0f).easeIn().then().
                     tweenScale(layer).to(1.0f).in(300.0f).easeOut();
             }
@@ -182,9 +207,9 @@ public class MiscDemo extends DemoScreen
             );
     }
 
-    protected Image tile (Image image, int index) {
+    protected Image.Region tile (Image image, int index) {
         final float iwidth = 16, iheight = 16;
-        return image.subImage(index*iwidth, 0, iwidth, iheight);
+        return image.region(index*iwidth, 0, iwidth, iheight);
     }
     protected Icon tileIcon (Image image, int index) {
         return Icons.image(tile(image, index));

@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import playn.core.Image;
 import react.Value;
 
 /**
@@ -32,18 +31,6 @@ public class Label extends TextWidget<Label>
     /** Creates a label with the supplied icon. */
     public Label (Icon icon) {
         this(null, icon);
-    }
-
-    /** Creates a label with the supplied icon. */
-    @Deprecated
-    public Label (Image icon) {
-        this(null, Icons.image(icon));
-    }
-
-    /** Creates a label with the supplied text and icon. */
-    @Deprecated
-    public Label (String text, Image icon) {
-        this(text, Icons.image(icon));
     }
 
     /** Creates a label with the supplied text and icon. */

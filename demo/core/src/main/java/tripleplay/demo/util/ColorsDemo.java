@@ -6,18 +6,17 @@
 package tripleplay.demo.util;
 
 import playn.core.Canvas;
-import playn.core.CanvasImage;
+
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
 import tripleplay.ui.Icon;
 import tripleplay.ui.Icons;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
 import tripleplay.util.Colors;
-
-import static playn.core.PlayN.graphics;
 
 public class ColorsDemo extends DemoScreen
 {
@@ -29,7 +28,7 @@ public class ColorsDemo extends DemoScreen
         return "Util: Colors";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         return new Group(AxisLayout.vertical(), Style.HALIGN.center).add(
             new Group(new TableLayout(TableLayout.COL.fixed().alignRight(),
                                       TableLayout.COL.fixed().alignLeft()).gaps(1, 5)).add(
@@ -54,8 +53,7 @@ public class ColorsDemo extends DemoScreen
 
     protected Icon createSampler (int baseColor) {
         int size = 16;
-        CanvasImage cimg = graphics().createImage(size * 17, size);
-        Canvas canvas = cimg.canvas();
+        Canvas canvas = graphics().createCanvas(size * 17, size);
         int lighter = baseColor;
         for (int ii = 0; ii <= 8; ++ii) {
             canvas.setFillColor(lighter);
@@ -71,6 +69,6 @@ public class ColorsDemo extends DemoScreen
 
         canvas.setStrokeColor(Colors.BLACK);
         canvas.strokeRect(size * 8, 0, size - 1, size - 1);
-        return Icons.image(cimg);
+        return Icons.image(canvas.toTexture());
     }
 }

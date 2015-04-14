@@ -7,12 +7,12 @@ package tripleplay.ui;
 
 import pythagoras.f.Dimension;
 
-import playn.core.Image;
-import playn.core.ImageLayer;
-import static playn.core.PlayN.graphics;
-
 import react.SignalView;
 import react.Slot;
+import react.UnitSlot;
+
+import playn.core.TileSource;
+import playn.scene.ImageLayer;
 
 /**
  * A button that uses images for its different states.
@@ -20,28 +20,32 @@ import react.Slot;
 public class ImageButton extends Widget<ImageButton> implements Clickable<ImageButton> {
 
     /** Creates a button with the supplied image for use in up and down states. */
-    public ImageButton (Image up) {
+    public ImageButton (TileSource up) {
         this(up, up);
     }
 
     /** Creates a button with the supplied up and down images. */
-    public ImageButton (Image up, Image down) {
+    public ImageButton (TileSource up, TileSource down) {
         layer.add(_ilayer);
-        _up = up;
-        _down = down;
+        setUp(up);
+        setDown(down);
     }
 
     /** Configures the image used in our up state. */
-    public ImageButton setUp (Image up) {
+    public ImageButton setUp (TileSource up) {
         _up = up;
-        invalidate();
+        _up.tileAsync().onSuccess(new UnitSlot() {
+            public void onEmit () { invalidate(); }
+        });
         return this;
     }
 
     /** Configures the image used in our down state. */
-    public ImageButton setDown (Image down) {
+    public ImageButton setDown (TileSource down) {
         _down = down;
-        invalidate();
+        _down.tileAsync().onSuccess(new UnitSlot() {
+            public void onEmit () { invalidate(); }
+        });
         return this;
     }
 
@@ -81,15 +85,17 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
 
     protected class ImageButtonLayoutData extends LayoutData {
         @Override public Dimension computeSize (float hintX, float hintY) {
-            return new Dimension(_up.width(), _up.height());
+            return _up.isLoaded() ?
+                new Dimension(_up.tile().width(), _up.tile().height()) :
+                new Dimension();
         }
 
         @Override public void layout (float left, float top, float width, float height) {
-            _ilayer.setImage(isSelected() ? _down : _up);
+            _ilayer.setTile(isSelected() ? _down.tile() : _up.tile());
             _ilayer.setTranslation(left, top);
         }
     }
 
-    protected final ImageLayer _ilayer = graphics().createImageLayer();
-    protected Image _up, _down;
+    protected final ImageLayer _ilayer = new ImageLayer();
+    protected TileSource _up, _down;
 }

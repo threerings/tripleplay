@@ -15,23 +15,18 @@ import react.Signal;
 
 import pythagoras.f.FloatMath;
 
-import playn.core.GroupLayer;
-import playn.core.Layer;
-import playn.core.util.Clock;
-import static playn.core.PlayN.*;
+import playn.core.Clock;
+import playn.scene.GroupLayer;
+import playn.scene.Layer;
 
-public class Movie
-    implements Instance
+public class Movie implements Instance
 {
-    public static class Symbol
-        implements tripleplay.flump.Symbol
-    {
+    public static class Symbol implements tripleplay.flump.Symbol {
+
         /** The number of frames in this movie. */
         public final int frames;
-
         /** The layers in this movie. */
         public final List<LayerData> layers;
-
         /** The duration of this movie, in milliseconds. */
         public final float duration;
 
@@ -40,22 +35,15 @@ public class Movie
             this.layers = Collections.unmodifiableList(layers);
 
             int frames = 0;
-            for (LayerData layer : layers) {
-                frames = Math.max(layer.frames(), frames);
-            }
+            for (LayerData layer : layers) frames = Math.max(layer.frames(), frames);
             this.frames = frames;
 
             _framesPerMs = frameRate/1000;
             this.duration = frames/_framesPerMs;
         }
 
-        @Override public String name () {
-            return _name;
-        }
-
-        @Override public Movie createInstance () {
-            return new Movie(this);
-        }
+        @Override public String name () { return _name; }
+        @Override public Movie createInstance () { return new Movie(this); }
 
         protected String _name;
         protected float _framesPerMs;
@@ -74,15 +62,12 @@ public class Movie
         setFrame(1, 0);
     }
 
-    @Override public GroupLayer layer () {
-        return _root;
-    }
+    @Override public GroupLayer layer () { return _root; }
 
-    @Override public void paint (Clock clock) {
-        paint(clock.dt());
+    public void paint (Clock clock) {
+        paint(clock.dt);
     }
-
-    @Override public void paint (float dt) {
+    public void paint (float dt) {
         dt *= _speed;
 
         _position += dt;
@@ -99,14 +84,12 @@ public class Movie
         setFrame(nextFrame, dt);
     }
 
-    @Override public void destroy () {
-        _root.destroy();
+    @Override public void close () {
+        _root.close();
     }
 
     /** The playback position, in milliseconds. */
-    public float position () {
-        return _position;
-    }
+    public float position () { return _position; }
 
     /** Changes the playback position. */
     public void setPosition (float position) {
@@ -114,14 +97,10 @@ public class Movie
         paint(position - _position);
     }
 
-    public Symbol symbol () {
-        return _symbol;
-    }
+    public Symbol symbol () { return _symbol; }
 
     /** The playback speed multiplier, defaults to 1. Larger values will play faster. */
-    public float speed () {
-        return _speed;
-    }
+    public float speed () { return _speed; }
 
     /** Changes the playback speed multiplier. */
     public void setSpeed (float speed) {
@@ -195,9 +174,9 @@ public class Movie
 
     // Controls a single Flash layer
     protected class LayerAnimator {
+
         public final LayerData data;
         public final Layer content;
-
         public int keyframeIdx = 0;
         public boolean changedKeyframe = false;
 
@@ -213,7 +192,7 @@ public class Movie
                     }
                     _instances[ii] = sym.createInstance();
                 }
-                content = graphics().createGroupLayer();
+                content = new GroupLayer();
                 setCurrent(_instances[0]);
 
             } else if (data._lastSymbol != null) {
@@ -221,7 +200,7 @@ public class Movie
                 content = _current.layer();
 
             } else {
-                content = graphics().createGroupLayer();
+                content = new GroupLayer();
             }
         }
 
@@ -343,7 +322,7 @@ public class Movie
     }
 
     protected Symbol _symbol;
-    protected GroupLayer _root = graphics().createGroupLayer();
+    protected GroupLayer _root = new GroupLayer();
     protected LayerAnimator[] _animators;
 
     protected float _frame = 0;

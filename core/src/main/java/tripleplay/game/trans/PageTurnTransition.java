@@ -5,14 +5,14 @@
 
 package tripleplay.game.trans;
 
-import playn.core.ImmediateLayer;
-import playn.core.Surface;
-import static playn.core.PlayN.graphics;
-
 import pythagoras.f.FloatMath;
 
-import tripleplay.game.Screen;
-import tripleplay.shaders.RotateYShader;
+import playn.core.Platform;
+import playn.core.Surface;
+import playn.scene.Layer;
+
+import tripleplay.game.ScreenStack.Screen;
+import tripleplay.shaders.RotateYBatch;
 import tripleplay.util.Interpolator;
 
 /**
@@ -31,20 +31,18 @@ public class PageTurnTransition extends InterpedTransition<PageTurnTransition>
         return this;
     }
 
-    @Override public void init (Screen oscreen, Screen nscreen) {
-        super.init(oscreen, nscreen);
+    @Override public void init (Platform plat, Screen oscreen, Screen nscreen) {
+        super.init(plat, oscreen, nscreen);
         nscreen.layer.setDepth(_close ? 1 : -1);
         _toflip = _close ? nscreen : oscreen;
-        _shader = new RotateYShader(graphics().ctx(), 0f, 0.5f, 1.5f);
-        _toflip.layer.setShader(_shader);
-        final float fwidth = _toflip.width(), fheight = _toflip.height();
-        _shadow = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-            public void render (Surface surf) {
-                surf.setAlpha(_alpha);
-                surf.setFillColor(0xFF000000);
-                surf.fillRect(0, 0, fwidth/4, fheight);
+        _batch = new RotateYBatch(plat.graphics().gl, 0f, 0.5f, 1.5f);
+        _toflip.layer.setBatch(_batch);
+        final float fwidth = _toflip.size().width(), fheight = _toflip.size().height();
+        _shadow = new Layer() {
+            @Override protected void paintImpl (Surface surf) {
+                surf.setAlpha(_alpha).setFillColor(0xFF000000).fillRect(0, 0, fwidth/4, fheight);
             }
-        });
+        };
         _toflip.layer.addAt(_shadow, fwidth, 0);
         updateAngle(0); // start things out appropriately
     }
@@ -56,9 +54,9 @@ public class PageTurnTransition extends InterpedTransition<PageTurnTransition>
 
     @Override public void complete (Screen oscreen, Screen nscreen) {
         super.complete(oscreen, nscreen);
-        _shadow.destroy();
+        _shadow.close();
         nscreen.layer.setDepth(0);
-        _toflip.layer.setShader(null);
+        _toflip.layer.setBatch(null);
     }
 
     @Override protected float defaultDuration () {
@@ -73,13 +71,13 @@ public class PageTurnTransition extends InterpedTransition<PageTurnTransition>
         float pct = _interp.applyClamp(0, 0.5f, elapsed, _duration);
         if (_close) pct = 0.5f - pct;
         _alpha = pct;
-        _shader.angle = FloatMath.PI * pct;
+        _batch.angle = FloatMath.PI * pct;
     }
 
     protected float _alpha;
     protected boolean _close;
 
     protected Screen _toflip;
-    protected ImmediateLayer _shadow;
-    protected RotateYShader _shader;
+    protected Layer _shadow;
+    protected RotateYBatch _batch;
 }

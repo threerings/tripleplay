@@ -5,12 +5,13 @@
 
 package tripleplay.demo.flump;
 
-import playn.core.util.Callback;
-import playn.core.util.Clock;
-import static playn.core.PlayN.*;
+import playn.core.Clock;
+
+import react.Slot;
 
 import tripleplay.flump.*;
 import tripleplay.ui.Group;
+import tripleplay.ui.Root;
 import tripleplay.ui.layout.AbsoluteLayout;
 
 import tripleplay.demo.DemoScreen;
@@ -25,27 +26,18 @@ public class FlumpDemo extends DemoScreen
         return "Flump animation";
     }
 
-    @Override protected Group createIface () {
-        final Group root = new Group(new AbsoluteLayout());
-
-        JsonLoader.loadLibrary("flump", new Callback<Library>() {
-            public void onSuccess (Library lib) {
-                _movie = lib.createMovie("walk");
-                _movie.layer().setTranslation(graphics().width()/2, 300);
-                root.layer.add(_movie.layer());
+    @Override protected Group createIface (Root root) {
+        final Group main = new Group(new AbsoluteLayout());
+        JsonLoader.loadLibrary(game().plat, "flump").onSuccess(new Slot<Library>() {
+            public void onEmit (Library lib) {
+                final Movie movie = lib.createMovie("walk");
+                movie.layer().setTranslation(size().width()/2, 300);
+                main.layer.add(movie.layer());
+                closeOnHide(paint.connect(new Slot<Clock>() {
+                    public void onEmit (Clock clock) { movie.paint(clock); }
+                }));
             }
-            public void onFailure (Throwable cause) { throw new IllegalStateException(cause); }
         });
-
-        return root;
+        return main;
     }
-
-    @Override public void paint (Clock clock) {
-        super.paint(clock);
-        if (_movie != null) {
-            _movie.paint(clock);
-        }
-    }
-
-    protected Movie _movie;
 }

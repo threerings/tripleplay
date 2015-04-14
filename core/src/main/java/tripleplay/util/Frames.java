@@ -6,9 +6,9 @@
 package tripleplay.util;
 
 import pythagoras.f.IPoint;
+import pythagoras.f.IRectangle;
 
-import playn.core.Image;
-import playn.core.ImageLayer;
+import playn.scene.ImageLayer;
 
 /**
  * Models the frames of a flipbook animation. The image frames may be trimmed, in which case the
@@ -25,13 +25,13 @@ public interface Frames
     /** Returns the number of frames available. */
     int count ();
 
-    /** Returns the image for the specified frame. */
-    Image frame (int index);
+    /** Returns the bounds for the specified frame. */
+    IRectangle bounds (int index);
 
     /** Returns the offset (into the logical bounds) of the specified frame. */
     IPoint offset (int index);
 
     /** Configures the supplied image layer with the specified frame. The layer's image will be
-     * updated and the layer's translation will be adjusted to the requested frame's offset */
+      * updated and the layer's translation will be adjusted to the requested frame's offset */
     void apply (int index, ImageLayer layer);
 }

@@ -160,7 +160,7 @@ public class TableLayoutDemo extends DemoScreen
         return "UI: TableLayout";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         return new TableEditor();
     }
 }

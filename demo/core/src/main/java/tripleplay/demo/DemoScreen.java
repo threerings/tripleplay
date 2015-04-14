@@ -5,10 +5,9 @@
 
 package tripleplay.demo;
 
-import playn.core.Font;
-import static playn.core.PlayN.graphics;
+import playn.core.*;
 
-import tripleplay.game.UIAnimScreen;
+import tripleplay.game.ScreenStack;
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Group;
@@ -22,31 +21,34 @@ import tripleplay.ui.layout.AxisLayout;
 /**
  * The base class for all demo screens.
  */
-public abstract class DemoScreen extends UIAnimScreen
+public abstract class DemoScreen extends ScreenStack.UIScreen
 {
-    public static final Font TITLE_FONT = graphics().createFont("Helvetica", Font.Style.PLAIN, 24);
+    public static final Font TITLE_FONT = new Font("Helvetica", 24);
 
     public Button back;
 
-    @Override public void wasAdded () {
-        super.wasAdded();
-        _root = iface.createRoot(AxisLayout.vertical().gap(0).offStretch(), stylesheet(), layer);
-        _root.addStyles(Style.BACKGROUND.is(background()), Style.VALIGN.top);
-        _root.setSize(width(), height());
-        Background bg = Background.solid(0xFFCC99FF).inset(0, 0, 5, 0);
-        _root.add(new Group(AxisLayout.horizontal(), Style.HALIGN.left, Style.BACKGROUND.is(bg)).add(
-                      this.back = new Button("Back"),
-                      new Label(title()).addStyles(Style.FONT.is(TITLE_FONT), Style.HALIGN.center).
-                      setConstraint(AxisLayout.stretched())));
-        if (subtitle() != null) _root.add(new Label(subtitle()));
-        Group iface = createIface();
-        if (iface != null) _root.add(iface.setConstraint(AxisLayout.stretched()));
-    }
+    @Override public Game game () { return TripleDemo.game; }
 
     @Override public void wasRemoved () {
         super.wasRemoved();
-        iface.destroyRoots();
-        while (layer.size() > 0) layer.get(0).destroy();
+        iface.disposeRoots();
+        layer.disposeAll();
+    }
+
+    @Override protected Root createRoot () {
+        Root root = iface.createRoot(
+            AxisLayout.vertical().gap(0).offStretch(), stylesheet(), layer);
+        root.addStyles(Style.BACKGROUND.is(background()), Style.VALIGN.top);
+        root.setSize(size());
+        Background bg = Background.solid(0xFFCC99FF).inset(0, 0, 5, 0);
+        root.add(new Group(AxisLayout.horizontal(), Style.HALIGN.left, Style.BACKGROUND.is(bg)).add(
+            this.back = new Button("Back"),
+            new Label(title()).addStyles(Style.FONT.is(TITLE_FONT), Style.HALIGN.center).
+                setConstraint(AxisLayout.stretched())));
+        if (subtitle() != null) root.add(new Label(subtitle()));
+        Group iface = createIface(root);
+        if (iface != null) root.add(iface.setConstraint(AxisLayout.stretched()));
+        return root;
     }
 
     /** The label to use on the button that displays this demo. */
@@ -58,18 +60,26 @@ public abstract class DemoScreen extends UIAnimScreen
     /** Returns an explanatory subtitle for this demo, or null. */
     protected String subtitle () { return null; }
 
-    /** Override this method and return a group that contains your main UI, or null. */
-    protected abstract Group createIface ();
+    /** Override this method and return a group that contains your main UI, or null. Note: {@code
+      * root} is provided for reference, the group returned by this call will automatically be
+      * added to the root group. */
+    protected abstract Group createIface (Root root);
 
     /** Returns the stylesheet to use for this screen. */
     protected Stylesheet stylesheet () {
-        return SimpleStyles.newSheet();
+        return SimpleStyles.newSheet(game().plat.graphics());
     }
 
     /** Returns the background to use for this screen. */
     protected Background background () {
         return Background.bordered(0xFFCCCCCC, 0xFFCC99FF, 5).inset(5);
     }
+
+    protected Assets assets () { return game().plat.assets(); }
+    protected Graphics graphics () { return game().plat.graphics(); }
+    protected Input input () { return game().plat.input(); }
+    protected Json json () { return game().plat.json(); }
+    protected Log log () { return game().plat.log(); }
 
     protected Root _root;
 }

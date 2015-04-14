@@ -9,8 +9,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import playn.core.*;
-import playn.core.util.Clock;
-import static playn.core.PlayN.*;
+import playn.scene.*;
 
 import pythagoras.f.FloatMath;
 import pythagoras.f.MathUtil;
@@ -19,8 +18,10 @@ import pythagoras.f.Vector;
 
 import react.Signal;
 import react.Slot;
+import react.UnitSlot;
 
 import tripleplay.ui.Group;
+import tripleplay.ui.Root;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.util.Randoms;
 import tripleplay.util.StyledText;
@@ -69,9 +70,10 @@ public class AsteroidsDemo extends DemoScreen
 
         // handles updating entity position based on entity velocity
         public final System mover = new System(this, 0) {
-            @Override protected void update (int delta, Entities entities) {
+            @Override protected void update (Clock clock, Entities entities) {
                 Point p = _pos;
                 Vector v = _vel;
+                int delta = clock.dt;
                 for (int ii = 0, ll = entities.size(); ii < ll; ii++) {
                     int eid = entities.get(ii);
                     pos.get(eid, p); // get our current pos
@@ -101,7 +103,7 @@ public class AsteroidsDemo extends DemoScreen
         // updates sprites to interpolated position of entities on each paint() call
         public final System spriter = new System(this, 0) {
             @Override protected void paint (Clock clock, Entities entities) {
-                float alpha = clock.alpha();
+                float alpha = clock.alpha;
                 Point op = _oldPos, p = _pos;
                 for (int ii = 0, ll = entities.size(); ii < ll; ii++) {
                     int eid = entities.get(ii);
@@ -134,7 +136,7 @@ public class AsteroidsDemo extends DemoScreen
         // spins things
         public final System spinner = new System(this, 0) {
             @Override protected void paint (Clock clock, Entities entities) {
-                float dt = clock.dt();
+                float dt = clock.dt;
                 for (int ii = 0, ll = entities.size(); ii < ll; ii++) {
                     int eid = entities.get(ii);
                     float angvel = spin.get(eid);
@@ -151,11 +153,11 @@ public class AsteroidsDemo extends DemoScreen
 
         // expires things with limited lifespan (like bullets)
         public final System expirer = new System(this, 0) {
-            @Override protected void update (int delta, Entities entities) {
+            @Override protected void update (Clock clock, Entities entities) {
                 int now = AsteroidsWorld.this.now;
                 for (int ii = 0, ll = entities.size(); ii < ll; ii++) {
                     int eid = entities.get(ii);
-                    if (expires.get(eid) <= now) world.entity(eid).destroy();
+                    if (expires.get(eid) <= now) world.entity(eid).close();
                 }
             }
 
@@ -166,18 +168,18 @@ public class AsteroidsDemo extends DemoScreen
 
         // checks for collisions (modeling everything as a sphere)
         public final System collider = new System(this, 1) {
-            @Override protected void update (int delta, Entities entities) {
+            @Override protected void update (Clock clock, Entities entities) {
                 // simple O(n^2) collision check; no need for anything fancy here
                 for (int ii = 0, ll = entities.size(); ii < ll; ii++) {
                     int eid1 = entities.get(ii);
                     Entity e1 = world.entity(eid1);
-                    if (e1.isDestroyed()) continue;
+                    if (e1.isDisposed()) continue;
                     pos.get(eid1, _p1);
                     float r1 = radius.get(eid1);
                     for (int jj = ii+1; jj < ll; jj++) {
                         int eid2 = entities.get(jj);
                         Entity e2 = world.entity(eid2);
-                        if (e2.isDestroyed()) continue;
+                        if (e2.isDisposed()) continue;
                         pos.get(eid2, _p2);
                         float r2 = radius.get(eid2), dr = r2+r1;
                         float dist2 = _p1.distanceSq(_p2);
@@ -203,10 +205,10 @@ public class AsteroidsDemo extends DemoScreen
                 case BULLET_ASTEROID:
                     if (type.get(e1.id) == ASTEROID) {
                         sunder(e1);
-                        e2.destroy();
+                        e2.close();
                     } else {
                         sunder(e2);
-                        e1.destroy();
+                        e1.close();
                     }
                     break;
                 // TODO: asteroid asteroid?
@@ -222,7 +224,7 @@ public class AsteroidsDemo extends DemoScreen
 
         // handles progression to next wave
         public final System waver = new System(this, 0) {
-            @Override protected void update (int delta, Entities entities) {
+            @Override protected void update (Clock clock, Entities entities) {
                 // if the only entity left is the player's ship; move to the next wave
                 if (entities.size() == 1 && type.get(entities.get(0)) == SHIP) {
                     startWave(++_wave);
@@ -276,7 +278,7 @@ public class AsteroidsDemo extends DemoScreen
                 vel.set(sid, vx-bvx/100, vy-bvy/100); // decrease ship's velocity a smidgen
             }
 
-            @Override protected void update (int delta, Entities entities) {
+            @Override protected void update (Clock clock, Entities entities) {
                 Vector v = _vel;
                 for (int ii = 0, ll = entities.size(); ii < ll; ii++) {
                     int eid = entities.get(ii);
@@ -311,20 +313,17 @@ public class AsteroidsDemo extends DemoScreen
             this.swidth = swidth;
             this.sheight = sheight;
 
-            keyboard().setListener(new Keyboard.Adapter() {
-                @Override public void onKeyDown (Keyboard.Event event) {
-                    keyDown.emit(event.key());
+            closeOnHide(input().keyboardEvents.connect(new Keyboard.KeySlot() {
+                @Override public void onEmit (Keyboard.KeyEvent event) {
+                    (event.down ? keyDown : keyUp).emit(event.key);
                 }
-                @Override public void onKeyUp (Keyboard.Event event) {
-                    keyUp.emit(event.key());
-                }
-            });
+            }));
         }
 
         public void setMessage (String text) {
-            if (_msg != null) _msg.destroy();
+            if (_msg != null) _msg.close();
             if (text != null) {
-                _msg = StyledText.span(text, MSG_STYLE).toLayer();
+                _msg = StyledText.span(graphics(), text, MSG_STYLE).toLayer();
                 _msg.setDepth(1);
                 stage.addAt(_msg, (swidth-_msg.width())/2, (sheight-_msg.height())/2);
             }
@@ -341,7 +340,7 @@ public class AsteroidsDemo extends DemoScreen
             // if this is wave 0, destroy any existing entities and add our ship
             if (wave == 0) {
                 Iterator<Entity> iter = entities();
-                while (iter.hasNext()) iter.next().destroy();
+                while (iter.hasNext()) iter.next().close();
                 createShip(swidth/2, sheight/2);
                 setMessage(null);
             }
@@ -363,12 +362,12 @@ public class AsteroidsDemo extends DemoScreen
                 createBullet(x, y, vx, vy, ang, now + 300/*ms*/);
             }
             // and destroy the target
-            target.destroy();
+            target.close();
         }
 
-        @Override public void update (int delta) {
-            now += delta;
-            super.update(delta);
+        @Override public void update (Clock clock) {
+            now += clock.dt;
+            super.update(clock);
         }
 
         protected String typeName (int id) {
@@ -388,11 +387,11 @@ public class AsteroidsDemo extends DemoScreen
             Entity ship = create(true);
             ship.add(type, sprite, opos, pos, vel, spin, radius);
 
-            CanvasImage bitmap = graphics().createImage(30, 20);
-            Path path = bitmap.canvas().createPath();
+            Canvas canvas = graphics().createCanvas(30, 20);
+            Path path = canvas.createPath();
             path.moveTo(0, 0).lineTo(30, 10).lineTo(0, 20).close();
-            bitmap.canvas().setFillColor(0xFFCC99FF).fillPath(path);
-            ImageLayer layer = graphics().createImageLayer(bitmap);
+            canvas.setFillColor(0xFFCC99FF).fillPath(path);
+            ImageLayer layer = new ImageLayer(canvas.toTexture());
             layer.setOrigin(15, 10);
             layer.setRotation(-MathUtil.HALF_PI);
 
@@ -421,7 +420,7 @@ public class AsteroidsDemo extends DemoScreen
             float side = sz.size;
             int iidx = rando.getInt(8);
             float ah = asteroids.height();
-            ImageLayer layer = graphics().createImageLayer(asteroids.subImage(iidx*ah, 0, ah, ah));
+            ImageLayer layer = new ImageLayer(asteroids.region(iidx*ah, 0, ah, ah));
             layer.setOrigin(ah/2, ah/2);
             layer.setScale(side/ah);
             layer.setRotation(rando.getFloat(MathUtil.TAU));
@@ -442,9 +441,9 @@ public class AsteroidsDemo extends DemoScreen
             Entity bullet = create(true);
             bullet.add(type, sprite, opos, pos, vel, radius, expires);
 
-            CanvasImage bitmap = graphics().createImage(5, 2);
-            bitmap.canvas().setFillColor(0xFFFFFFFF).fillRect(0, 0, 5, 2);
-            ImageLayer layer = graphics().createImageLayer(bitmap);
+            Canvas canvas = graphics().createCanvas(5, 2);
+            canvas.setFillColor(0xFFFFFFFF).fillRect(0, 0, 5, 2);
+            ImageLayer layer = new ImageLayer(canvas.toTexture());
             layer.setOrigin(2.5f, 1);
             layer.setRotation(angle);
 
@@ -474,27 +473,11 @@ public class AsteroidsDemo extends DemoScreen
             // roughly right angles to the original
             createAsteroid(smaller, x, y, -vy, vx);
             createAsteroid(smaller, x, y, vy, -vx);
-            ast.destroy(); // and destroy ourself
+            ast.close(); // and destroy ourself
         }
 
         protected int _wave = -1;
         protected ImageLayer _msg;
-    }
-
-    @Override public void wasRemoved () {
-        super.wasRemoved();
-        _world = null;
-        keyboard().setListener(null);
-    }
-
-    @Override public void update (int delta) {
-        super.update(delta);
-        if (_world != null) _world.update(delta);
-    }
-
-    @Override public void paint (Clock clock) {
-        super.paint(clock);
-        if (_world != null) _world.paint(clock);
     }
 
     @Override protected String name () {
@@ -505,21 +488,21 @@ public class AsteroidsDemo extends DemoScreen
         return "Asteroids Demo";
     }
 
-    @Override protected Group createIface () {
-        return new Group(AxisLayout.vertical()) {
-            @Override protected void layout () {
-                super.layout();
-                if (_world == null) {
-                    _world = new AsteroidsWorld(layer, size().width(), size().height());
-                    _world.attract();
-                }
+    @Override protected Group createIface (Root root) {
+        // create a new world once our root is validated so that we know our size
+        root.validated.connect(new UnitSlot() {
+            public void onEmit () {
+                AsteroidsWorld world = new AsteroidsWorld(layer, size().width(), size().height());
+                closeOnHide(world.connect(update, paint));
+                world.attract();
             }
-        };
+        }).once();;
+        return new Group(AxisLayout.vertical());
     }
 
     protected AsteroidsWorld _world;
     protected Group _group;
 
-    protected static final TextStyle MSG_STYLE = new TextStyle().withTextColor(0xFFFFFFFF).
-        withFont(graphics().createFont("Helvetica", Font.Style.PLAIN, 24));
+    protected static final TextStyle MSG_STYLE = TextStyle.DEFAULT.
+        withTextColor(0xFFFFFFFF).withFont(new Font("Helvetica", 24));
 }

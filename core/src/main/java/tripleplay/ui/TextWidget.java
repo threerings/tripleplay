@@ -9,9 +9,10 @@ import pythagoras.f.Dimension;
 import pythagoras.f.FloatMath;
 import pythagoras.f.MathUtil;
 
-import playn.core.Layer;
+import playn.core.Canvas;
+import playn.core.Graphics;
 import playn.core.TextWrap;
-import playn.core.util.Callback;
+import playn.scene.Layer;
 
 import react.Slot;
 import react.UnitSlot;
@@ -52,15 +53,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     clearLayoutData();
                     invalidate();
                 } else {
-                    icon.addCallback(new Callback<Icon>() {
-                        public void onSuccess (Icon resource) {
-                            // clear out the rendered icon in case we got laid out before the
-                            // async load finished
+                    icon.state().onSuccess(new Slot<Icon>() {
+                        public void onEmit (Icon resource) {
+                            // clear out the rendered icon in case we got laid out before the async
+                            // load finished
                             _renderedIcon = null;
                             clearLayoutData();
                             invalidate();
                         }
-                        public void onFailure (Throwable err) {} // noop!
                     });
                 }
             }
@@ -69,9 +69,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        _tglyph.destroy();
+        _tglyph.close();
         if (_ilayer != null) {
-            _ilayer.destroy();
+            _ilayer.close();
             _ilayer = null;
         }
         _renderedIcon = null;
@@ -91,6 +91,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
         public final boolean autoShrink = resolveStyle(Style.AUTO_SHRINK);
 
+        public final Graphics gfx = root().iface.plat.graphics();
         public StyledText.Plain text; // mostly final, only changed by autoShrink
         public final Icon icon;
 
@@ -113,10 +114,10 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 TextStyle style = Style.createTextStyle(TextWidget.this);
                 // TODO: should we do something with a y-hint?
                 if (hints.width > 0 && wrap) {
-                    text = new StyledText.Block(curtext, style, new TextWrap(hints.width),
+                    text = new StyledText.Block(gfx, curtext, style, new TextWrap(hints.width),
                                                 Style.toAlignment(resolveStyle(Style.HALIGN)));
                 } else {
-                    text = new StyledText.Span(curtext, style);
+                    text = new StyledText.Span(gfx, curtext, style);
                 }
             }
         }
@@ -130,8 +131,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 // successively smaller fonts until it fits
                 float twidth = textWidth(), availWidth = hintX - usedWidth;
                 if (twidth > availWidth) {
-                    while (twidth > availWidth && text.style.font.size() > MIN_FONT_SIZE) {
-                        text = text.resize(text.style.font.size()-1);
+                    while (twidth > availWidth && text.style.font.size > MIN_FONT_SIZE) {
+                        text = text.resize(text.style.font.size-1);
                         twidth = FloatMath.ceil(textWidth());
                     }
                 }
@@ -186,18 +187,18 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                     // This is the same icon, just reposition its layer
                     _ilayer.setTranslation(ix,  iy);
                 } else {
-                    // Otherwise, destroy and recreate
-                    if (_ilayer != null) _ilayer.destroy();
+                    // Otherwise, dispose and recreate
+                    if (_ilayer != null) _ilayer.close();
                     layer.addAt(_ilayer = icon.render(), ix, iy);
                 }
 
             } else if (icon == null && _ilayer != null) {
-                _ilayer.destroy();
+                _ilayer.close();
                 _ilayer = null;
             }
             _renderedIcon = icon;
 
-            if (text == null) _tglyph.destroy();
+            if (text == null) _tglyph.close();
             else {
                 updateTextGlyph(tx, ty, width-usedWidth, height-usedHeight);
                 // if we're cuddling, adjust icon position based on the now known tex position
@@ -256,8 +257,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             // if autoShrink is enabled, and our text is too wide, re-lay it out with successively
             // smaller fonts until it fits
             if (autoShrink && twidth > availWidth) {
-                while (twidth > availWidth && text.style.font.size() > MIN_FONT_SIZE) {
-                    text = text.resize(text.style.font.size()-1);
+                while (twidth > availWidth && text.style.font.size > MIN_FONT_SIZE) {
+                    text = text.resize(text.style.font.size-1);
                     twidth = FloatMath.ceil(textWidth());
                 }
                 theight = FloatMath.ceil(textHeight());
@@ -276,8 +277,10 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             // only re-render our text if something actually changed
             if (!text.equals(_renderedText) || tgwidth != _tglyph.preparedWidth() ||
                 tgheight != _tglyph.preparedHeight()) {
-                _tglyph.prepare(tgwidth, tgheight);
-                text.render(_tglyph.canvas(), Math.min(ox, 0), Math.min(oy, 0));
+                _tglyph.prepare(root().iface.plat.graphics(), tgwidth, tgheight);
+                Canvas canvas = _tglyph.begin();
+                text.render(canvas, Math.min(ox, 0), Math.min(oy, 0));
+                _tglyph.end();
                 _renderedText = text;
             }
 

@@ -9,14 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import playn.core.util.Clock;
-import static playn.core.PlayN.graphics;
-
 import tripleplay.particle.Emitter;
-import tripleplay.particle.Particles;
+import tripleplay.particle.ParticleBatch;
 import tripleplay.ui.Background;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Style;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.util.Randoms;
@@ -27,41 +25,29 @@ public abstract class ParticleDemo extends DemoScreen
 {
     @Override public void showTransitionCompleted () {
         super.showTransitionCompleted();
-        if (graphics().ctx() != null) {
-            createParticles(_parts, _rando);
-        }
+        ParticleBatch batch = new ParticleBatch(graphics().gl);
+        closeOnHide(batch);
+        createParticles(batch, _rando);
     }
 
     @Override public void hideTransitionStarted () {
         super.hideTransitionStarted();
-        for (Emitter emitter : _emitters) emitter.destroy();
+        for (Emitter emitter : _emitters) emitter.layer.close();
         _emitters.clear();
     }
 
-    @Override public void paint (Clock clock) {
-        super.paint(clock);
-        _parts.paint(clock);
+    @Override protected Group createIface (Root root) {
+        return new Group(AxisLayout.vertical(), Style.BACKGROUND.is(Background.solid(0xFF000000)));
     }
 
-    @Override protected Group createIface () {
-        Group group = new Group(AxisLayout.vertical(),
-                                Style.BACKGROUND.is(Background.solid(0xFF000000)));
-        if (graphics().ctx() == null) {
-            group.add(new Label("Particles are only supported with GL/WebGL.").
-                      addStyles(Style.COLOR.is(0xFFFFFFFF)));
-        }
-        return group;
-    }
+    protected abstract void createParticles (ParticleBatch batch, Randoms rando);
 
-    protected abstract void createParticles (Particles parts, Randoms rando);
-
-    protected void note (Emitter emitter) {
-        emitter.layer.setDepth(1);
+    protected void add (Emitter emitter) {
+        layer.add(emitter.layer.setDepth(1));
         _emitters.add(emitter);
     }
 
     protected final Randoms _rando = Randoms.with(new Random());
-    protected final Particles _parts = new Particles();
 
     protected int _testIdx;
     protected List<Emitter> _emitters = new ArrayList<Emitter>();

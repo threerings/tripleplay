@@ -169,14 +169,14 @@ public class ParticleBuffer
     }
 
     /** Renders the particles to the supplied shader. */
-    public void render (ParticleShader shader, float width, float height) {
+    public void render (ParticleBatch batch, float width, float height) {
         float ql = -width/2, qt = -height/2, qr = width/2, qb = height/2;
         int pp = 0, ppos = 0, rendered = 0;
         for (int aa = 0; aa < alive.length; aa++) {
             int live = alive[aa], mask = 1;
             for (int end = pp+32; pp < end; pp++, ppos += NUM_FIELDS, mask <<= 1) {
                 if ((live & mask) == 0) continue;
-                shader.core.addQuad(ql, qt, qr, qb, data, ppos);
+                batch.addParticle(ql, qt, qr, qb, data, ppos);
                 rendered++;
             }
         }

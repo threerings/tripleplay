@@ -5,7 +5,7 @@
 
 package tripleplay.entity;
 
-import playn.core.util.Clock;
+import playn.core.Clock;
 
 /**
  * Handles a single concern in an entity-based game. That might be processing collisions, or
@@ -69,7 +69,7 @@ public abstract class System
      * Processes this system's active entities. This is where each entity's simulation state would
      * be updated. This is not called if the system is disabled.
      */
-    protected void update (int delta, Entities entities) {
+    protected void update (Clock clock, Entities entities) {
     }
 
     /**
@@ -107,9 +107,9 @@ public abstract class System
         if (entity.systems.isSet(_id)) removeEntity(entity);
     }
 
-    void update (int delta) {
+    void update (Clock clock) {
         if (!_enabled) return;
-        update(delta, _active);
+        update(clock, _active);
     }
 
     void paint (Clock clock) {

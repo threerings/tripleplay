@@ -8,25 +8,25 @@ package tripleplay.particle;
 import java.util.ArrayList;
 import java.util.List;
 
-import react.Connection;
 import react.Signal;
+import react.Slot;
 import react.UnitSlot;
 
+import playn.core.Clock;
 import playn.core.Image;
-import playn.core.ImmediateLayer;
+import playn.core.QuadBatch;
 import playn.core.Surface;
-import static playn.core.PlayN.graphics;
-
-import tripleplay.util.Destroyable;
+import playn.core.Tile;
+import playn.scene.Layer;
+import playn.scene.LayerUtil;
 
 /**
  * Emits and updates particles according to a particle system configuration.
  */
 public class Emitter
-    implements Destroyable
 {
     /** The layer to which this emitter is attached. */
-    public final ImmediateLayer layer;
+    public final Layer layer;
 
     /** The generator that adds new particles to this emitter. */
     public Generator generator;
@@ -44,43 +44,52 @@ public class Emitter
     public final Signal<Emitter> onEmpty = Signal.create();
 
     /**
+     * Creates an emitter that uses {@code batch} to render its particles. When this emitter's
+     * layer is added to the scene graph, it will connect itself to {@code paint} to drive the
+     * particle animations, and when its layer is removed, it will disconnect from {@code paint}.
+     *
+     * @param batch the particle batch to use when rendering our particles.
+     * @param paint the paint signal which will drive this emitter.
+     * @param maxParticles the maximum number of active particles.
+     * @param tile the texture to use when rendering particles.
+     */
+    public Emitter (final ParticleBatch batch, final Signal<Clock> paint, final int maxParticles,
+                    final Tile tile) {
+        this.layer = new Layer() {
+            @Override protected void paintImpl (Surface surface) {
+                QuadBatch obatch = surface.pushBatch(batch);
+                _buffer.render(batch.prepare(tile, maxParticles), tile.width(), tile.height());
+                surface.popBatch(obatch);
+            }
+        };
+        _buffer = new ParticleBuffer(maxParticles);
+
+        LayerUtil.bind(layer, paint, new Slot<Clock>() {
+            public void onEmit (Clock clock) { paint(clock); }
+        });
+    }
+
+    /**
      * Adds the specified number of particles. One usually does not call this manually, but rather
      * configures {@link #generator} with a generator that adds particles as desired.
      */
     public void addParticles (int count) {
         if (_buffer.isFull()) return;
         for (int ii = 0, ll = initters.size(); ii < ll; ii++) initters.get(ii).willInit(count);
-        _buffer.add(count, _parts.now(), initters);
+        _buffer.add(count, _time, initters);
     }
 
     /**
-     * Unregisters this emitter from the particles manager.
-     */
-    @Override public void destroy () {
-        layer.destroy();
-        _conn.disconnect();
-    }
-
-    /**
-     * Configures this emitter to self-destruct when it runs out of particles.
+     * Configures this emitter to destroy its layer when it runs out of particles.
      */
     public void destroyOnEmpty () {
-        onEmpty.connect(new UnitSlot() { @Override public void onEmit () { destroy(); }});
+        onEmpty.connect(new UnitSlot() { @Override public void onEmit () { layer.close(); }});
     }
 
-    Emitter (Particles parts, final int maxParticles, final Image image) {
-        this.layer = graphics().createImmediateLayer(new ImmediateLayer.Renderer() {
-            @Override public void render (Surface surface) {
-                int tex = image.ensureTexture();
-                _buffer.render(_parts._shader.prepare(tex, maxParticles),
-                               image.width(), image.height());
-            }
-        });
-        _parts = parts;
-        _buffer = new ParticleBuffer(maxParticles);
-    }
+    protected void paint (Clock clock) {
+        float dt = clock.dt/1000f, now = _time + dt;
+        _time = now;
 
-    void update (float now, float dt) {
         // TODO: update and cache our layer's local transform?
         if (generator != null && generator.generate(this, now, dt)) {
             generator = null;
@@ -91,9 +100,6 @@ public class Emitter
         }
     }
 
-    protected final Particles _parts;
     protected final ParticleBuffer _buffer;
-
-    /** Our connection to our {@link Particles} (filled in by same). */
-    protected Connection _conn;
+    protected float _time;
 }

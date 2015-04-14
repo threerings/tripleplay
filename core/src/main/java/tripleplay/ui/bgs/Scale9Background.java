@@ -7,11 +7,10 @@ package tripleplay.ui.bgs;
 
 import pythagoras.f.IDimension;
 
-import playn.core.Image;
-import playn.core.ImmediateLayer;
-import playn.core.PlayN;
 import playn.core.Surface;
+import playn.core.Tile;
 import playn.core.Tint;
+import playn.scene.Layer;
 
 import tripleplay.ui.Background;
 import tripleplay.ui.util.Scale9;
@@ -22,20 +21,12 @@ import tripleplay.ui.util.Scale9;
  */
 public class Scale9Background extends Background
 {
-    /** Creates a new background using the given image. The image is assumed to be divided into
-     * a 3x3 grid of 9 equal pieces.
-     *
-     * <p>NOTE: the image must be preloaded since we need to determine the stretching factor.
-     * If this cannot be arranged using the application resource strategy, callers may consider
-     * setting the background style from the images callback.</p>
+    /** Creates a new background using the given texture. The texture is assumed to be divided into
+     * aa 3x3 grid of 9 equal pieces.
      */
-    public Scale9Background (Image image) {
-        if (!image.isReady()) {
-            // complain about this, we don't support asynch images
-            PlayN.log().warn("Scale9 image not preloaded: " + image);
-        }
-        _image = image;
-        _s9 = new Scale9(image.width(), image.height());
+    public Scale9Background (Tile tile) {
+        _tile = tile;
+        _s9 = new Scale9(tile.width(), tile.height());
     }
 
     /** Returns the scale 9 instance for mutation. Be sure to finish mutation prior to binding. */
@@ -81,12 +72,13 @@ public class Scale9Background extends Background
 
     @Override
     protected Instance instantiate (final IDimension size) {
-        return new LayerInstance(size, new ImmediateLayer.Renderer() {
+        return new LayerInstance(size, new Layer() {
             // The destination scale 9.
             Scale9 dest = new Scale9(size.width() / _destScale, size.height() / _destScale, _s9);
-            public void render (Surface surf) {
-                surf.save();
+            @Override protected void paintImpl (Surface surf) {
+                surf.saveTx();
                 surf.scale(_destScale, _destScale);
+                Float alpha = Scale9Background.this.alpha;
                 if (alpha != null) surf.setAlpha(alpha);
                 if (_tint != Tint.NOOP_TINT) surf.setTint(_tint);
                 // issue the 9 draw calls
@@ -94,15 +86,15 @@ public class Scale9Background extends Background
                     drawPart(surf, xx, yy);
                 }
                 if (alpha != null) surf.setAlpha(1); // alpha is not part of save/restore
-                surf.restore();
+                surf.restoreTx();
             }
 
             protected void drawPart (Surface surf, int x, int y) {
                 float dw = dest.xaxis.size(x), dh = dest.yaxis.size(y);
                 if (dw == 0 || dh == 0) return;
-                surf.drawImage(
-                    _image, dest.xaxis.coord(x), dest.yaxis.coord(y), dw, dh,
-                    _s9.xaxis.coord(x), _s9.yaxis.coord(y), _s9.xaxis.size(x), _s9.yaxis.size(y));
+                surf.draw(_tile, dest.xaxis.coord(x), dest.yaxis.coord(y), dw, dh,
+                          _s9.xaxis.coord(x), _s9.yaxis.coord(y),
+                          _s9.xaxis.size(x),  _s9.yaxis.size(y));
             }
         });
     }
@@ -123,7 +115,7 @@ public class Scale9Background extends Background
         return this;
     }
 
-    protected Image _image;
+    protected Tile _tile;
     protected Scale9 _s9;
     protected float _destScale = 1;
     protected int _tint = Tint.NOOP_TINT;

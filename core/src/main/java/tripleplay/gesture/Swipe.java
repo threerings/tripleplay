@@ -82,7 +82,7 @@ public class Swipe extends GestureBase<Swipe>
     @Override protected void updateState (GestureNode node) {
         switch (node.type) {
         case START:
-            _startNodes.put(node.touch.id(), node);
+            _startNodes.put(node.touch.id, node);
             break;
 
         case MOVE:
@@ -111,23 +111,23 @@ public class Swipe extends GestureBase<Swipe>
 
     // TODO: any gesture that cares about swiping in a cardinal direction could make use of this
     protected void evaluateMove (GestureNode node) {
-        GestureNode start = _startNodes.get(node.touch.id());
+        GestureNode start = _startNodes.get(node.touch.id);
         if (start == null) {
             Log.log.warning("No start point for a path check, invalid state",
-                "touchId", node.touch.id());
+                "touchId", node.touch.id);
             return;
         }
 
-        GestureNode lastNode = _lastNodes.get(node.touch.id());
-        Point current = node.location();
-        _lastNodes.put(node.touch.id(), node);
+        GestureNode lastNode = _lastNodes.get(node.touch.id);
+        Point current = node.location;
+        _lastNodes.put(node.touch.id, node);
         // we haven't moved far enough yet, no further evaluation needed.
-        Point startLoc = start.location();
+        Point startLoc = start.location;
         if (current.distance(startLoc) < _onAxisThreshold) return;
 
         float offAxisDistance; // distance from our start position in the perpendicular axis
         float lastAxisDistance = axisDistance(
-            lastNode == null ? null : lastNode.location(), current);
+            lastNode == null ? null : lastNode.location, current);
         if (_direction == Direction.UP || _direction == Direction.DOWN)
             offAxisDistance = Math.abs(current.x() - startLoc.x());
         else
@@ -143,9 +143,8 @@ public class Swipe extends GestureBase<Swipe>
             boolean allMovedEnough = true;
             for (Map.Entry<Integer, GestureNode> touchStart : _startNodes.entrySet()) {
                 GestureNode touchLast = _lastNodes.get(touchStart.getKey());
-                if (axisDistance(touchStart.getValue().location(),
-                    touchLast == null ? null : touchLast.location()) <=
-                    _onAxisThreshold) {
+                Point lastLoc = touchLast == null ? null : touchLast.location;
+                if (axisDistance(touchStart.getValue().location, lastLoc) <= _onAxisThreshold) {
                     allMovedEnough = false;
                     break;
                 }

@@ -19,17 +19,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.googlecode.playn</groupId>
+      <groupId>io.playn</groupId>
       <artifactId>playn-android</artifactId>
       <version>${playn.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.googlecode.playn</groupId>
-      <artifactId>playn-android-nativelib</artifactId>
-      <version>1.0</version>
-      <scope>runtime</scope>
-      <type>so</type>
     </dependency>
 
     <dependency>

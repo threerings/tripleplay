@@ -8,21 +8,38 @@ package tripleplay.anim;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.util.Clock;
+import react.Slot;
+import react.Signal;
 
-import tripleplay.util.Paintable;
+import playn.core.Clock;
 
 /**
  * Handles creation and management of animations. Animations may involve the tweening of a
  * geometric property of a layer (x, y, rotation, scale, alpha), or simple delays, or performing
  * actions. Animations can also be sequenced to orchestrate complex correlated actions.
  *
- * <p> The user of this class must call {@link #paint} with an up-to-date {@link Clock} on every
- * {@link playn.core.Game.Default#paint} call to drive the animations. </p>
+ * <p> {@link #onPaint} should be connected to a {@code paint} signal to drive the animations.
  */
 public class Animator extends AnimBuilder
-    implements Paintable
 {
+    /**
+     * Performs per-frame animation processing. This should be connected to a {@code paint} signal.
+     */
+    public final Slot<Clock> onPaint = new Slot<Clock>() {
+        public void onEmit (Clock clock) { onPaint(clock); }
+    };
+
+    /** Creates an animator which is not connected to a frame signal. You must manually connect
+      * {@link #onPaint} to a frame signal to drive this animator. */
+    public Animator () {}
+
+    /** Creates an animator which is permanently connected to {@code paint}. This is useful when
+      * you are connecting to a paint signal whose lifetime is the same as this animator because
+      * there's no way to ever disconnect the animator from the signal. */
+    public Animator (Signal<Clock> paint) {
+        paint.connect(onPaint);
+    }
+
     /**
      * Causes this animator to delay the start of any subsequently registered animations until all
      * currently registered animations are complete.
@@ -45,13 +62,29 @@ public class Animator extends AnimBuilder
     }
 
     /**
-     * Performs per-frame animation processing. This should be called from your game's
-     * {@code paint} method using an up-to-date clock.
-     *
-     * @param clock a clock containing the current alpha-adjusted time.
+     * Clears out any pending animations. <em>NOTE</em> all animations simply disappear. Any queued
+     * animations that invoked actions will not execute, nor will the cleanup actions of any
+     * animations that involve cleanup. This should only be invoked if you know the layers involved
+     * in animations will be destroyed separately.
      */
-    public void paint (Clock clock) {
-        float time = clock.time();
+    public void clear () {
+        _anims.clear();
+        _nanims.clear();
+        _barriers.clear();
+        _accum = _nanims;
+    }
+
+    /**
+     * Registers an animation with this animator. It will be started on the next frame and continue
+     * until cancelled or it reports that it has completed.
+     */
+    @Override public <T extends Animation> T add (T anim) {
+        _accum.add(anim);
+        return anim;
+    }
+
+    protected void onPaint (Clock clock) {
+        float time = clock.tick;
 
         // if we have any animations queued up to be added, add those now
         if (!_nanims.isEmpty()) {
@@ -81,28 +114,6 @@ public class Animator extends AnimBuilder
                 _accum = _nanims;
             }
         }
-    }
-
-    /**
-     * Clears out any pending animations. <em>NOTE</em> all animations simply disappear. Any queued
-     * animations that invoked actions will not execute, nor will the cleanup actions of any
-     * animations that involve cleanup. This should only be invoked if you know the layers involved
-     * in animations will be destroyed separately.
-     */
-    public void clear () {
-        _anims.clear();
-        _nanims.clear();
-        _barriers.clear();
-        _accum = _nanims;
-    }
-
-    /**
-     * Registers an animation with this animator. It will be started on the next frame and continue
-     * until cancelled or it reports that it has completed.
-     */
-    @Override public <T extends Animation> T add (T anim) {
-        _accum.add(anim);
-        return anim;
     }
 
     /** Implementation details, avert your eyes. */

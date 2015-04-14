@@ -7,17 +7,18 @@ package tripleplay.demo.ui;
 
 import java.util.Random;
 
-import playn.core.Color;
-import playn.core.Keyboard.TextType;
-import playn.core.PlayN;
-import playn.core.util.Callback;
 import react.Slot;
 import react.UnitSlot;
+
+import playn.core.Color;
+import playn.core.Keyboard;
+
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Style;
 import tripleplay.ui.Tabs;
 import tripleplay.ui.layout.AxisLayout;
@@ -33,7 +34,7 @@ public class TabsDemo extends DemoScreen
         return "UI: Tabs";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         final int [] lastTab = {0};
         final Tabs tabs = new Tabs().addStyles(Style.BACKGROUND.is(
             Background.bordered(Colors.WHITE, Colors.BLACK, 1).inset(1)));
@@ -116,18 +117,15 @@ public class TabsDemo extends DemoScreen
                 Tabs.Tab tab = tabs.tabAt(_rnd.nextInt(tabs.tabCount()));
                 init = "" + number(tab);
             }
-            PlayN.keyboard().getText(TextType.NUMBER, "Enter tab number", init,
-                new Callback<String>() {
-                    @Override public void onSuccess (String result) {
+            input().getText(Keyboard.TextType.NUMBER, "Enter tab number", init).
+                onSuccess(new Slot<String>() {
+                    @Override public void onEmit (String result) {
                         for (int ii = 0; ii < tabs.tabCount(); ii++) {
                             if (result.equals("" + number(tabs.tabAt(ii)))) {
                                 handle(tabs.tabAt(ii));
                                 break;
                             }
                         }
-                    }
-
-                    @Override public void onFailure (Throwable cause) {
                     }
                 });
         }

@@ -8,15 +8,19 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import playn.core.Events;
-import playn.core.Layer;
-import playn.core.Mouse;
-import playn.core.Pointer;
-import playn.core.Pointer.Event;
 import pythagoras.f.Point;
+
+import react.Closeable;
 import react.Signal;
 import react.SignalView;
 import react.Slot;
+
+import playn.core.Event;
+import playn.scene.Layer;
+import playn.scene.LayerUtil;
+import playn.scene.Mouse;
+import playn.scene.Pointer;
+
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.ui.MenuItem.ShowText;
@@ -92,9 +96,9 @@ public class Menu extends Elements<Menu>
         });
 
         // deactivate the menu on any pointer events (children will still get theirs)
-        layer.addListener(new Pointer.Adapter() {
-            @Override public void onPointerStart (Pointer.Event event) {
-                if (event.hit() == layer) deactivate();
+        layer.events().connect(new Pointer.Listener() {
+            @Override public void onStart (Pointer.Interaction iact) {
+                if (iact.hitLayer == layer) deactivate();
             }
         });
 
@@ -264,9 +268,9 @@ public class Menu extends Elements<Menu>
      * instance of MenuItem. */
     protected void connectItem (MenuItem item) {
         _items.add(item);
-        item.setRelay(Layers.join(
-            item.layer.addListener((Pointer.Listener)_itemListener),
-            item.layer.addListener((Mouse.LayerListener)_itemListener)));
+        item.setRelay(Closeable.Util.join(
+            item.layer.events().connect(_itemListener.pointer),
+            item.layer.events().connect(_itemListener.mouse)));
     }
 
     /** Disconnects the menu item. This gets called when any descendant is removed that is an
@@ -274,7 +278,7 @@ public class Menu extends Elements<Menu>
     protected void disconnectItem (MenuItem item) {
         int itemIdx = _items.indexOf(item);
         _items.remove(itemIdx);
-        item.setRelay(Layers.NOT_LISTENING);
+        item.setRelay(Closeable.Util.NOOP);
         didDisconnectItem(item, itemIdx);
     }
 
@@ -315,9 +319,9 @@ public class Menu extends Elements<Menu>
     }
 
     /** Gets the item underneath the given event. */
-    protected MenuItem getHover (Events.Position e) {
+    protected MenuItem getHover (Event.XY e) {
         // manual hit detection
-        Layer hit = layer.hitTest(Layer.Util.screenToLayer(layer, e.x(), e.y()));
+        Layer hit = layer.hitTest(LayerUtil.screenToLayer(layer, e.x(), e.y()));
 
         for (MenuItem item : _items) {
             if (item.isVisible() && item.layer == hit) {
@@ -347,31 +351,24 @@ public class Menu extends Elements<Menu>
         protected abstract void visitItem (MenuItem item);
     }
 
-    protected class ItemListener extends Mouse.LayerAdapter
-        implements Pointer.Listener
+    protected class ItemListener
     {
-        @Override public void onPointerStart (Event event) {
-            Menu.this.onPointerDrag(event);
-        }
-
-        @Override public void onPointerDrag (Event event) {
-            Menu.this.onPointerDrag(event);
-        }
-
-        @Override public void onPointerEnd (Event event) {
-            Menu.this.onPointerEnd(event);
-        }
-
-        @Override public void onPointerCancel (Event event) {
-        }
-
-        @Override public void onMouseOver (Mouse.MotionEvent event) {
-            if (_active) _selector.selected.update(getHover(event));
-        }
-
-        @Override public void onMouseOut (Mouse.MotionEvent event) {
-            if (_active) _selector.selected.update(null);
-        }
+        public Mouse.Listener mouse = new Mouse.Listener() {
+            @Override public void onHover (Mouse.HoverEvent event, Mouse.Interaction iact) {
+                if (_active) _selector.selected.update(event.inside ? getHover(event) : null);
+            }
+        };
+        public Pointer.Listener pointer = new Pointer.Listener() {
+            @Override public void onStart (Pointer.Interaction iact) {
+                Menu.this.onPointerDrag(iact.event);
+            }
+            @Override public void onDrag (Pointer.Interaction iact) {
+                Menu.this.onPointerDrag(iact.event);
+            }
+            @Override public void onEnd (Pointer.Interaction iact) {
+                Menu.this.onPointerEnd(iact.event);
+            }
+        };
     }
 
     protected final Slot<Element<?>> _descendantAdded = new DescendingSlot() {

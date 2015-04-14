@@ -19,23 +19,27 @@ public abstract class SWTNativeOverlay implements NativeOverlay
     /** SWT widget that is overlaid on the canvas. */
     public Control ctrl;
 
+    public SWTNativeOverlay (SWTTPPlatform plat) {
+        _plat = plat;
+    }
+
     @Override public void setBounds (IRectangle bounds) {
-        this.bounds.setBounds(bounds);
+        _bounds.setBounds(bounds);
         if (ctrl != null) updateBounds();
     }
 
     @Override public void add () {
         if (ctrl != null) return;
-        ctrl = createControl(SWTTPPlatform.instance().overlayParent());
+        ctrl = createControl(_plat.overlayParent());
         updateBounds();
         ctrl.moveAbove(null);
         didCreate();
-        SWTTPPlatform.instance().addOverlay(this);
+        _plat.addOverlay(this);
     }
 
     @Override public void remove () {
         if (ctrl == null) return;
-        SWTTPPlatform.instance().removeOverlay(this);
+        _plat.removeOverlay(this);
         willDispose();
         ctrl.dispose();
         ctrl = null;
@@ -49,8 +53,8 @@ public abstract class SWTNativeOverlay implements NativeOverlay
     abstract protected void refreshBounds ();
 
     protected void updateBounds () {
-        ctrl.setBounds(
-            (int)bounds.x(), (int)bounds.y(), (int)bounds.width(), (int)bounds.height());
+        ctrl.setBounds((int)_bounds.x(), (int)_bounds.y(),
+                       (int)_bounds.width(), (int)_bounds.height());
     }
 
     /** Caleld after the SWT {@code Control} has been created. */
@@ -60,8 +64,9 @@ public abstract class SWTNativeOverlay implements NativeOverlay
     protected void willDispose () {}
 
     protected SWTConvert convert () {
-        return SWTTPPlatform.instance().convert();
+        return _plat.convert();
     }
 
-    protected final Rectangle bounds = new Rectangle();
+    protected final SWTTPPlatform _plat;
+    protected final Rectangle _bounds = new Rectangle();
 }

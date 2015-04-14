@@ -8,8 +8,7 @@ package tripleplay.ui;
 import react.Slot;
 import react.Value;
 
-import playn.core.Image;
-import playn.core.Pointer;
+import playn.scene.Pointer;
 
 /**
  * Displays a checkbox which can be toggled. The checkbox must be configured with either a
@@ -32,11 +31,6 @@ public class CheckBox extends TextWidget<CheckBox>
 
     public CheckBox (Icon checkIcon) {
         this((char)0, checkIcon);
-    }
-
-    @Deprecated
-    public CheckBox (Image checkIcon) {
-        this((char)0, Icons.image(checkIcon));
     }
 
     /**
@@ -73,7 +67,7 @@ public class CheckBox extends TextWidget<CheckBox>
 
     @Override protected Behavior<CheckBox> createBehavior () {
         return new Behavior.Select<CheckBox>(this) {
-            @Override protected void onClick (Pointer.Event event) {
+            @Override public void onClick (Pointer.Interaction iact) {
                 soundAction();
                 _owner.select(!checked.get());
             }

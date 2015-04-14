@@ -6,7 +6,7 @@
 package tripleplay.util;
 
 import playn.core.Json;
-import playn.core.PlayN;
+import playn.core.Platform;
 
 /**
  * Facilities for parsing JSON data
@@ -168,9 +168,9 @@ public class JsonUtil
     /**
      * @return a String representation of the given Json
      */
-    public static String toString (Json.Object json, boolean verbose)
+    public static String toString (Platform plat, Json.Object json, boolean verbose)
     {
-        Json.Writer writer = PlayN.json().newWriter().useVerboseFormat(verbose);
+        Json.Writer writer = plat.json().newWriter().useVerboseFormat(verbose);
         writer.object();
         json.write(writer);
         writer.end();

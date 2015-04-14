@@ -7,7 +7,7 @@ package tripleplay.ui.bgs;
 
 import pythagoras.f.IDimension;
 
-import playn.core.GroupLayer;
+import playn.scene.GroupLayer;
 
 import tripleplay.ui.Background;
 
@@ -19,7 +19,7 @@ public class BlankBackground extends Background
     @Override protected Instance instantiate (IDimension size) {
         return new Instance(size) {
             @Override public void addTo (GroupLayer parent, float x, float y, float depthAdjust) {}
-            @Override public void destroy () {}
+            @Override public void close () {}
         };
     }
 }

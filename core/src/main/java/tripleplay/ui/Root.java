@@ -5,102 +5,83 @@
 
 package tripleplay.ui;
 
+import playn.core.Disposable;
 import pythagoras.f.IDimension;
 import react.Signal;
 import react.SignalView;
-import tripleplay.util.Destroyable;
 
 /**
  * The root of a display hierarchy. An application can have one or more roots, but they should not
  * overlap and will behave as if oblivious to one another's existence.
  */
 public class Root extends Elements<Root>
-    implements Destroyable
+    implements Disposable
 {
-    /**
-     * Creates a new root with the provided layout and stylesheet.
-     */
+    /** The interface of which this root is a part. */
+    public final Interface iface;
+
+    /** A signal emitted when this root is validated. */
+    public final SignalView<Root> validated = Signal.create();
+
+    /** Creates a new root with the provided layout and stylesheet. a*/
     public Root (Interface iface, Layout layout, Stylesheet sheet) {
         super(layout);
-        _iface = iface;
+        this.iface = iface;
         setStylesheet(sheet);
 
         set(Flag.HIT_ABSORB, true);
     }
 
-    /**
-     * Returns the interface to which this root belongs.
-     */
-    public Interface iface () {
-        return _iface;
-    }
-
-    /**
-     * A signal emitted when this root is validated.
-     */
-    public SignalView<Root> validated () {
-        return _validated;
-    }
-
-    @Override public boolean isShowing () {
-        return isVisible();
-    }
-
-    /**
-     * Sizes this root element to its preferred size.
-     */
+    /** Sizes this root element to its preferred size. */
     public Root pack () {
         return pack(0, 0);
     }
 
-    /**
-     * Sizes this element to its preferred size, computed using the supplied hints.
-     */
+    /** Sizes this element to its preferred size, computed using the supplied hints. */
     public Root pack (float widthHint, float heightHint) {
         IDimension psize = preferredSize(widthHint, heightHint);
         setSize(psize.width(), psize.height());
         return this;
     }
 
-    /**
-     * Sizes this root element to the specified width and its preferred height.
-     */
+    /** Sizes this root element to the specified width and its preferred height. */
     public Root packToWidth (float width) {
         IDimension psize = preferredSize(width, 0);
         setSize(width, psize.height());
         return this;
     }
 
-    /**
-     * Sizes this root element to the specified height and its preferred width.
-     */
+    /** Sizes this root element to the specified height and its preferred width. */
     public Root packToHeight (float height) {
         IDimension psize = preferredSize(0, height);
         setSize(psize.width(), height);
         return this;
     }
 
-    /**
-     * Sets the size of this root element.
-     */
+    /** Sets the size of this root element. */
     @Override public Root setSize (float width, float height) {
         _size.setSize(width, height);
         invalidate();
         return this;
     }
 
-    /**
-     * Sets the size of this root element and its translation from its parent.
-     */
+    /** Sets the size of this root element. */
+    public Root setSize (IDimension size) { return setSize(size.width(), size.height()); }
+
+    /** Sets the size of this root element and its translation from its parent. */
     public Root setBounds (float x, float y, float width, float height) {
         setSize(width, height);
         setLocation(x, y);
         return this;
     }
 
-    /** See {@link Interface#destroyRoot}. */
-    @Override public void destroy () {
-        _iface.destroyRoot(this);
+    @Override public boolean isShowing () {
+        return isVisible();
+    }
+
+    /** See {@link Interface#disposeRoot}. */
+    @Override public void close () {
+        iface.disposeRoot(this);
     }
 
     /**
@@ -153,7 +134,7 @@ public class Root extends Elements<Root>
      */
     public MenuHost getMenuHost () {
         if (_menuHost == null) {
-            _menuHost = new MenuHost(_iface, this);
+            _menuHost = new MenuHost(iface, this);
         }
         return _menuHost;
     }
@@ -168,11 +149,9 @@ public class Root extends Elements<Root>
 
     @Override protected void wasValidated () {
         super.wasValidated();
-        _validated.emit(this);
+        ((Signal<Root>)validated).emit(this);
     }
 
-    protected final Interface _iface;
-    protected Signal<Root> _validated = Signal.create();
     protected Element<?> _active;
     protected MenuHost _menuHost;
 }

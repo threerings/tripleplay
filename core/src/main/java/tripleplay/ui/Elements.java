@@ -108,7 +108,7 @@ public abstract class Elements<T extends Elements<T>> extends Container.Mutable<
             didRemove(child, true);
             invalidate();
         } else {
-            child.layer.destroy();
+            child.layer.close();
         }
     }
 

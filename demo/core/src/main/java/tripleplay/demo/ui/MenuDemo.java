@@ -5,20 +5,22 @@
 
 package tripleplay.demo.ui;
 
-import playn.core.CanvasImage;
-import playn.core.Image;
-import playn.core.PlayN;
-import playn.core.Pointer;
 import pythagoras.f.FloatMath;
+import pythagoras.f.Rectangle;
 
 import react.Slot;
 import react.UnitSlot;
 import react.Value;
 
+import playn.core.Canvas;
+import playn.core.Image;
+import playn.scene.Pointer;
+
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.*;
+import tripleplay.ui.Root;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
 import tripleplay.ui.util.BoxPoint;
@@ -34,8 +36,8 @@ public class MenuDemo extends DemoScreen
         return "UI: Menu";
     }
 
-    @Override protected Group createIface () {
-        final MenuHost menuHost = new MenuHost(iface, _root);
+    @Override protected Group createIface (Root root) {
+        final MenuHost menuHost = new MenuHost(iface, root);
         BoxPoint popRight = new BoxPoint(1, 0, 2, 0);
         BoxPoint popUnder = new BoxPoint(0, 1, 0, 2);
         Button direction = new Button("Select a direction \u25BC").
@@ -141,9 +143,7 @@ public class MenuDemo extends DemoScreen
 
             @Override protected void wasRemoved () {
                 super.wasRemoved();
-                if (menu != null) {
-                    menu.layer.destroy();
-                }
+                if (menu != null) menu.layer.close();
             }
         };
 
@@ -231,10 +231,11 @@ public class MenuDemo extends DemoScreen
                     add(Style.BACKGROUND.is(Background.blank().inset(2)));
                 Group colorTable = new Group(new TableLayout(4));
                 for (int ii = 0; ii < 256; ii++) {
-                    CanvasImage colorImg = PlayN.graphics().createImage(16, 16);
-                    colorImg.canvas().setFillColor(0xFF000000 | (ii << 16));
-                    colorImg.canvas().fillRect(0, 0, 16, 16);
-                    colorTable.add(new MenuItem("", Icons.image(colorImg)).addStyles(itemStyles));
+                    Canvas colorImg = graphics().createCanvas(16, 16);
+                    colorImg.setFillColor(0xFF000000 | (ii << 16));
+                    colorImg.fillRect(0, 0, 16, 16);
+                    colorTable.add(new MenuItem("", Icons.image(colorImg.toTexture())).
+                                   addStyles(itemStyles));
                 }
                 menu.add(colorTable, slider);
                 return menu;
@@ -289,7 +290,7 @@ public class MenuDemo extends DemoScreen
 
     protected Icon tile (int index) {
         final float iwidth = 16, iheight = 16;
-        return Icons.image(_squares.subImage(index*iwidth, 0, iwidth, iheight));
+        return Icons.image(_squares.region(index*iwidth, 0, iwidth, iheight));
     }
 
     protected Menu createMenu (String title, String... items) {
@@ -314,8 +315,8 @@ public class MenuDemo extends DemoScreen
 
         @Override protected Behavior<Label> createBehavior () {
             return new Behavior.Select<Label>(this) {
-                @Override public void onPointerStart (Pointer.Event ev) {
-                    MenuHost.Pop pop = makePop(ev);
+                @Override public void onStart (Pointer.Interaction iact) {
+                    MenuHost.Pop pop = makePop(iact.event);
                     pop.menu.itemTriggered().connect(updater(text, icon));
                     menuHost.popup(pop);
                 }
@@ -327,5 +328,5 @@ public class MenuDemo extends DemoScreen
         }
     }
 
-    protected Image _squares = PlayN.assets().getImage("images/squares.png");
+    protected Image _squares = assets().getImage("images/squares.png");
 }

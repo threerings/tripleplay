@@ -14,6 +14,7 @@ import tripleplay.ui.Field;
 import tripleplay.ui.Group;
 import tripleplay.ui.HistoryGroup;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.SizableGroup;
 import tripleplay.ui.Slider;
 import tripleplay.ui.Style;
@@ -34,8 +35,7 @@ public class HistoryGroupDemo extends DemoScreen
         return "UI: History Group";
     }
 
-    @Override
-    protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         final Field prefix = new Field("Love Potion Number ");
         Button add10 = new Button("+10");
         Button add100 = new Button("+100");

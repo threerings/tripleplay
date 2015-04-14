@@ -5,7 +5,7 @@
 
 package tripleplay.util;
 
-import playn.core.Layer;
+import playn.core.Disposable;
 
 /**
  * Maintains a reference to a resource. Handles destroying the resource before releasing the
@@ -14,22 +14,10 @@ import playn.core.Layer;
 public abstract class Ref<T>
 {
     /** Creates a reference to a {@link Destroyable} target. */
-    public static <T extends Destroyable> Ref<T> create (T target) {
+    public static <T extends Disposable> Ref<T> create (T target) {
         Ref<T> ref = new Ref<T>() {
             @Override protected void onClear (T target) {
-                target.destroy();
-            }
-        };
-        ref.set(target);
-        return ref;
-    }
-
-    /** Creates a reference to a PlayN {@link Layer}. The layer will be destroyed when the
-     * reference is cleared. */
-    public static <T extends Layer> Ref<T> create (T target) {
-        Ref<T> ref = new Ref<T>() {
-            @Override protected void onClear (T target) {
-                target.destroy();
+                target.close();
             }
         };
         ref.set(target);

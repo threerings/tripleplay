@@ -5,8 +5,8 @@
 
 package tripleplay.ui;
 
-import playn.core.Layer;
-import playn.core.util.Callback;
+import playn.scene.Layer;
+import react.RFuture;
 
 /**
  * Used to apply effects to an Icon.
@@ -38,30 +38,13 @@ public abstract class IconEffect
     /** Does the needful. */
     public abstract Icon apply (Icon icon);
 
-    /**
-     * Wrap an Icon for fiddling.
-     */
+    /** Wrap an Icon for fiddling. */
     protected static class Proxy implements Icon {
-        protected Proxy (Icon icon) {
-            _icon = icon;
-        }
-
-        @Override public float width () {
-            return _icon.width();
-        }
-
-        @Override public float height () {
-            return _icon.height();
-        }
-
-        @Override public Layer render () {
-            return _icon.render();
-        }
-
-        @Override public void addCallback (Callback<? super Icon> callback) {
-            _icon.addCallback(callback);
-        }
-
+        protected Proxy (Icon icon) { _icon = icon; }
+        @Override public float width () { return _icon.width(); }
+        @Override public float height () { return _icon.height(); }
+        @Override public Layer render () { return _icon.render(); }
+        @Override public RFuture<Icon> state () { return _icon.state(); }
         protected final Icon _icon;
     }
 }

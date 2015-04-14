@@ -7,17 +7,17 @@ package tripleplay.demo.anim;
 
 import pythagoras.f.Point;
 
-import playn.core.CanvasImage;
-import playn.core.Font;
-import playn.core.GroupLayer;
-import playn.core.ImageLayer;
-import playn.core.Layer;
-import playn.core.util.Clock;
-import static playn.core.PlayN.*;
+import react.Slot;
+
+import playn.core.*;
+import playn.scene.GroupLayer;
+import playn.scene.ImageLayer;
+import playn.scene.Layer;
 
 import tripleplay.anim.Flicker;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Group;
+import tripleplay.ui.Root;
 import tripleplay.util.StyledText;
 import tripleplay.util.TextStyle;
 
@@ -33,44 +33,40 @@ public class FlickerDemo extends DemoScreen
         return "Flicker Demo";
     }
 
-    @Override protected Group createIface () {
-        final int width = 400;
-        _group.setHitTester(new Layer.HitTester() {
-            public Layer hitTest (Layer layer, Point p) {
-                return (p.x < width) ? layer : null;
-            }
-        });
-        _group.addListener(_flicker);
-        layer.addAt(_group, (width()-width)/2, 0);
+    @Override protected Group createIface (Root root) {
+        final float width = 410, height = 400;
+        GroupLayer clip = new GroupLayer(410, 400);
+        layer.addAt(clip, (size().width()-width)/2, (size().height()-height)/2);
 
+        final GroupLayer scroll = new GroupLayer();
+        clip.add(scroll);
         // add a bunch of image layers to our root layer
         float y = 0;
         for (int ii = 0; ii < IMG_COUNT; ii++) {
-            CanvasImage image = graphics().createImage(width, IMG_HEIGHT);
+            Canvas image = graphics().createCanvas(width, IMG_HEIGHT);
             StringBuffer text = new StringBuffer();
-            for (int tt = 0; tt < 25; tt++) text.append(ii+1);
-            StyledText.span(text.toString(), TEXT).render(image.canvas(), 0, 0);
-            ImageLayer layer = graphics().createImageLayer(image);
-            _group.addAt(layer, 0, y);
+            if (ii == 0) text.append("Tap & fling");
+            else if (ii == IMG_COUNT-1) text.append("Good job!");
+            else for (int tt = 0; tt < 25; tt++) text.append(ii);
+            StyledText.span(graphics(), text.toString(), TEXT).render(image, 0, 0);
+            ImageLayer layer = new ImageLayer(image.toTexture());
+            scroll.addAt(layer, 0, y);
             y += layer.scaledHeight();
         }
+
+        Flicker flicker = new Flicker(0, height-IMG_HEIGHT*IMG_COUNT, 0) {
+            @Override protected float friction () { return 0.001f; }
+        };
+        clip.events().connect(flicker);
+        flicker.changed.connect(new Slot<Flicker>() {
+            public void onEmit (Flicker flicker) { scroll.setTy(flicker.position); }
+        });
+        closeOnHide(paint.connect(flicker.onPaint));
 
         return null;
     }
 
-    @Override public void paint (Clock clock) {
-        super.paint(clock);
-        _flicker.paint(clock);
-        _group.setTy(_flicker.position);
-    }
-
-    protected GroupLayer _group = graphics().createGroupLayer();
-    protected Flicker _flicker = new Flicker(0, height()-IMG_HEIGHT*IMG_COUNT, 0) {
-        @Override protected float friction () { return 0.001f; }
-    };
-
     protected static final float IMG_HEIGHT = 100;
     protected static final int IMG_COUNT = 20;
-    protected static final TextStyle TEXT = new TextStyle().
-        withFont(graphics().createFont("Helvetiva", Font.Style.PLAIN, 72));
+    protected static final TextStyle TEXT = TextStyle.DEFAULT.withFont(new Font("Helvetiva", 72));
 }

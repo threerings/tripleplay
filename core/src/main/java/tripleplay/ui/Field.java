@@ -5,12 +5,11 @@
 
 package tripleplay.ui;
 
+import playn.core.Graphics;
 import playn.core.Keyboard;
-import playn.core.Keyboard.TextType;
-import playn.core.Layer;
-import playn.core.PlayN;
-import playn.core.Pointer;
-import playn.core.util.Callback;
+import playn.scene.Layer;
+import playn.scene.LayerUtil;
+import playn.scene.Pointer;
 
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
@@ -118,7 +117,8 @@ public class Field extends TextWidget<Field>
     public static final Style.Flag SECURE_TEXT_ENTRY = Style.newFlag(false, false);
 
     /** Sets the Keyboard.TextType in use by this Field. */
-    public static final Style<TextType> TEXT_TYPE = Style.newStyle(false, TextType.DEFAULT);
+    public static final Style<Keyboard.TextType> TEXT_TYPE = Style.newStyle(
+        false, Keyboard.TextType.DEFAULT);
 
     /** Sets the validator to use when censoring keypresses into native text fields.
      * @see MaxLength */
@@ -255,7 +255,7 @@ public class Field extends TextWidget<Field>
 
     @Override protected Behavior<Field> createBehavior () {
         return new Behavior.Select<Field>(this) {
-            @Override public void onClick (Pointer.Event event) {
+            @Override public void onClick (Pointer.Interaction iact) {
                 if (!_fullTimeNative) startEdit();
             }
         };
@@ -272,20 +272,20 @@ public class Field extends TextWidget<Field>
 
         } else {
             // TODO: multi-line keyboard.getText
-            PlayN.keyboard().getText(_textType, _popupLabel, text.get(), new Callback<String>() {
-                @Override public void onSuccess (String result) {
-                    // null result is a canceled entry dialog
-                    if (result != null) text.update(result);
-                    _finishedEditing.emit(result != null);
-                }
-                @Override public void onFailure (Throwable cause) { /* noop */ }
-            });
+            root().iface.plat.input().getText(_textType, _popupLabel, text.get()).
+                onSuccess(new Slot<String>() {
+                    @Override public void onEmit (String result) {
+                        // null result is a canceled entry dialog
+                        if (result != null) text.update(result);
+                        _finishedEditing.emit(result != null);
+                    }
+                });
         }
     }
 
     protected Rectangle getNativeFieldBounds () {
         Insets insets = resolveStyle(Style.BACKGROUND).insets;
-        Point screenCoords = Layer.Util.layerToScreen(layer, insets.left(), insets.top());
+        Point screenCoords = LayerUtil.layerToScreen(layer, insets.left(), insets.top());
         return new Rectangle(screenCoords.x, screenCoords.y,
                              _size.width - insets.width(), _size.height - insets.height());
     }
@@ -331,7 +331,7 @@ public class Field extends TextWidget<Field>
     protected NativeTextField _nativeField;
     protected Validator _validator;
     protected Transformer _transformer;
-    protected TextType _textType;
+    protected Keyboard.TextType _textType;
     protected boolean _fullTimeNative;
     protected final Signal<Boolean> _finishedEditing;
 

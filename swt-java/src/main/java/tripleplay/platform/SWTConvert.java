@@ -97,31 +97,21 @@ public class SWTConvert
         return null;
     }
 
-    public Font font (playn.core.Font font)
-    {
+    public Font font (playn.core.Font font) {
         int style;
-        switch (font.style()) {
-        default:
-            style = SWT.NORMAL;
-            break;
-        case BOLD:
-            style = SWT.BOLD;
-            break;
-        case ITALIC:
-            style = SWT.ITALIC;
-            break;
-        case BOLD_ITALIC:
-            style = SWT.BOLD | SWT.ITALIC;
-            break;
+        switch (font.style) {
+        case        BOLD: style = SWT.BOLD; break;
+        case      ITALIC: style = SWT.ITALIC; break;
+        case BOLD_ITALIC: style = SWT.BOLD | SWT.ITALIC; break;
+        default:          style = SWT.NORMAL; break;
         }
 
-        int height = (int)Math.round(font.size() * 72.0 / _display.getDPI().y);
-        Font swt = new Font(_display, font.name(), height, style);
+        int height = (int)Math.round(font.size * 72.0 / _display.getDPI().y);
+        Font swt = new Font(_display, font.name, height, style);
         return swt;
     }
 
-    public Color color (int color)
-    {
+    public Color color (int color) {
         class Pl extends playn.core.Color {}
         return new Color(_display, Pl.red(color), Pl.green(color), Pl.blue(color));
     }

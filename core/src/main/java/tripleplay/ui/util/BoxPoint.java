@@ -5,9 +5,11 @@
 
 package tripleplay.ui.util;
 
-import playn.core.Layer;
+import playn.scene.Layer;
+import playn.scene.LayerUtil;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
+
 import tripleplay.ui.Element;
 import tripleplay.ui.Style.HAlign;
 import tripleplay.ui.Style.VAlign;
@@ -118,7 +120,7 @@ public class BoxPoint
 
     /** Finds the screen coordinates of the point, using the given element as the box. */
     public Point resolve (Element<?> elem, Point dest) {
-        Layer.Util.layerToScreen(elem.layer, dest.set(0, 0), dest);
+        LayerUtil.layerToScreen(elem.layer, dest.set(0, 0), dest);
         return resolve(dest.x, dest.y, elem.size().width(), elem.size().height(), dest);
     }
 

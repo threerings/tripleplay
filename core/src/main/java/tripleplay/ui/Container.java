@@ -80,8 +80,8 @@ public abstract class Container<T extends Container<T>> extends Element<T>
         }
     }
 
-    protected void didRemove (Element<?> child, boolean destroy) {
-        if (destroy) child.set(Flag.WILL_DESTROY, true);
+    protected void didRemove (Element<?> child, boolean dispose) {
+        if (dispose) child.set(Flag.WILL_DISPOSE, true);
         layer.remove(child.layer);
         boolean needsRemove = child.willRemove(); // early removal of a scheduled n-child
         child.wasUnparented();
@@ -89,7 +89,7 @@ public abstract class Container<T extends Container<T>> extends Element<T>
             child.set(Flag.IS_REMOVING, true);
             child.wasRemoved();
         }
-        if (destroy) child.layer.destroy();
+        if (dispose) child.layer.close();
     }
 
     @Override protected void wasAdded () {
@@ -103,10 +103,10 @@ public abstract class Container<T extends Container<T>> extends Element<T>
 
     @Override protected void wasRemoved () {
         super.wasRemoved();
-        boolean willDestroy = isSet(Flag.WILL_DESTROY);
+        boolean willDispose = isSet(Flag.WILL_DISPOSE);
         for (int ii = 0, count = childCount(); ii < count; ii++) {
             Element<?> child = childAt(ii);
-            if (willDestroy) child.set(Flag.WILL_DESTROY, true);
+            if (willDispose) child.set(Flag.WILL_DISPOSE, true);
             child.set(Flag.IS_REMOVING, true);
             child.wasRemoved();
         }

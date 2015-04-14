@@ -7,9 +7,10 @@ package tripleplay.ui;
 
 import playn.core.Canvas;
 import playn.core.Font;
-import playn.core.PlayN;
 import playn.core.Sound;
-import playn.core.util.TextBlock;
+import playn.core.TextBlock;
+
+import tripleplay.util.EffectRenderer.Gradient;
 import tripleplay.util.EffectRenderer;
 import tripleplay.util.TextStyle;
 
@@ -23,7 +24,22 @@ import tripleplay.util.TextStyle;
 public abstract class Style<V>
 {
     /** Defines element modes which can be used to modify an element's styles. */
-    public static enum Mode { DEFAULT, DISABLED, SELECTED, DISABLED_SELECTED }
+    public static enum Mode {
+        DEFAULT(true, false),
+        DISABLED(false, false),
+        SELECTED(true, true),
+        DISABLED_SELECTED(false, true);
+
+        /** Whether the element is enabled in this mode. */
+        public final boolean enabled;
+        /** Whether the element is selected in this mode. */
+        public final boolean selected;
+
+        Mode (boolean enabled, boolean selected) {
+            this.enabled = enabled;
+            this.selected = selected;
+        }
+    }
 
     /** Used to configure {@link Styles} instances. See {@link Styles#add}. */
     public static class Binding<V> {
@@ -121,8 +137,8 @@ public abstract class Style<V>
         /** Draws a gradient from the font color to the gradient color. */
         GRADIENT {
             public EffectRenderer createEffectRenderer (Element<?> elem) {
-                return new EffectRenderer.Gradient(Styles.resolveStyle(elem, Style.GRADIENT_COLOR),
-                                                   Styles.resolveStyle(elem, Style.GRADIENT_TYPE));
+                return new Gradient(Styles.resolveStyle(elem, Style.GRADIENT_COLOR),
+                                    Styles.resolveStyle(elem, Style.GRADIENT_TYPE));
             }
         },
         /** No text effect. */
@@ -131,16 +147,6 @@ public abstract class Style<V>
                 return EffectRenderer.NONE;
             }
         };
-    }
-
-    /** Defines different types of gradient fills. */
-    public static enum GradientType {
-        /** Gradient color on the bottom (default). */
-        BOTTOM,
-        /** Gradient color on top. */
-        TOP,
-        /** Gradient color in the center. */
-        CENTER
     }
 
     /** Used to provide concise HAlign style declarations. */
@@ -189,11 +195,11 @@ public abstract class Style<V>
         TextEffectStyle() { super(true); }
     }
 
-    public static class GradientTypeStyle extends Style<GradientType> {
-        public final Binding<GradientType> bottom = is(GradientType.BOTTOM);
-        public final Binding<GradientType> top = is(GradientType.TOP);
-        public final Binding<GradientType> center = is(GradientType.CENTER);
-        @Override public GradientType getDefault (Element<?> elem) { return GradientType.BOTTOM; }
+    public static class GradientTypeStyle extends Style<Gradient.Type> {
+        public final Binding<Gradient.Type> bottom = is(Gradient.Type.BOTTOM);
+        public final Binding<Gradient.Type> top    = is(Gradient.Type.TOP);
+        public final Binding<Gradient.Type> center = is(Gradient.Type.CENTER);
+        @Override public Gradient.Type getDefault (Element<?> elem) { return Gradient.Type.BOTTOM; }
         GradientTypeStyle() { super(true); }
     }
 
@@ -254,8 +260,7 @@ public abstract class Style<V>
     public static final VAlignStyle VALIGN = new VAlignStyle();
 
     /** The font used to render text. Inherited. */
-    public static final Style<Font> FONT = newStyle(
-        true, PlayN.graphics().createFont("Helvetica", Font.Style.PLAIN, 16));
+    public static final Style<Font> FONT = newStyle(true, new Font("Helvetica", 16));
 
     /** Whether or not to allow text to wrap. When text cannot wrap and does not fit into the
      * allowed space, it is truncated. Not inherited. */

@@ -23,7 +23,7 @@ public interface Clip extends Playable
         @Override public void stop () {}
         @Override public void release () {}
         @Override public void preload () {}
-        @Override public Sound asSound () { return new Sound.Silence(); }
+        @Override public Sound asSound () { return new Sound(); }
     }
 
     /** Fades this clip in over the specified duration. */

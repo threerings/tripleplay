@@ -15,8 +15,8 @@ import playn.java.JavaImage;
 public class JavaImageOverlay extends JavaNativeOverlay
     implements ImageOverlay
 {
-    public JavaImageOverlay (Image image) {
-        super(new ImageComponent((JavaImage)image));
+    public JavaImageOverlay (JavaTPPlatform plat, Image image) {
+        super(plat, new ImageComponent((JavaImage)image));
     }
 
     public Image image () {

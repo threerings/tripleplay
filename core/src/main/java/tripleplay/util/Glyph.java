@@ -5,19 +5,20 @@
 
 package tripleplay.util;
 
-import playn.core.Canvas;
-import playn.core.CanvasImage;
-import playn.core.GroupLayer;
-import playn.core.ImageLayer;
-import playn.core.PlayN;
 import pythagoras.f.IDimension;
+
+import playn.core.Canvas;
+import playn.core.Disposable;
+import playn.core.Graphics;
+import playn.scene.CanvasLayer;
+import playn.scene.GroupLayer;
+import playn.scene.ImageLayer;
 
 /**
  * Handles the maintenance of a canvas image and layer for displaying a chunk of pre-rendered
  * graphics.
  */
-public class Glyph
-    implements Destroyable
+public class Glyph implements Disposable
 {
     public Glyph (GroupLayer parent) {
         _parent = parent;
@@ -30,28 +31,23 @@ public class Glyph
     }
 
     /** Ensures that the canvas image is at least the specified dimensions and cleared to all
-     * transparent pixels. Also creates and adds the image layer to the parent layer if
-     * needed. */
-    public void prepare (IDimension dim) {
-        prepare(dim.width(), dim.height());
+      * transparent pixels. Also creates and adds the image layer to the parent layer if needed. */
+    public void prepare (Graphics gfx, IDimension dim) {
+        prepare(gfx, dim.width(), dim.height());
     }
 
     /** Ensures that the canvas image is at least the specified dimensions and cleared to all
-     * transparent pixels. Also creates and adds the image layer to the parent layer if
-     * needed. */
-    public void prepare (float width, float height) {
-        // recreate our canvas if we need more room than we have (TODO: should we ever shrink it?)
-        ImageLayer layer = _layer.get();
-        if (_image == null || _image.width() < width || _image.height() < height) {
-            _image = PlayN.graphics().createImage(width, height);
-            if (layer != null) layer.setImage(_image);
-        } else {
-            _image.canvas().clear();
-        }
+      * transparent pixels. Also creates and adds the image layer to the parent layer if needed. */
+    public void prepare (Graphics gfx, float width, float height) {
+        CanvasLayer layer = _layer;
         if (layer == null) {
-            layer = _layer.set(PlayN.graphics().createImageLayer(_image));
+            layer = new CanvasLayer(gfx, width, height);
             if (_depth != null) layer.setDepth(_depth);
             _parent.add(layer);
+            _layer = layer;
+        } else if (layer.width() < width || layer.height() < height) {
+            // TODO: should we ever shrink it?
+            layer.resize(width, height);
         }
         _preparedWidth = width;
         _preparedHeight = height;
@@ -59,18 +55,26 @@ public class Glyph
 
     /** Returns the layer that contains our glyph image. Valid after {@link #prepare}. */
     public ImageLayer layer () {
-        return _layer.get();
+        return _layer;
     }
 
-    /** Returns the canvas into which drawing may be done. Valid after {@link #prepare}. */
-    public Canvas canvas () {
-        return _image.canvas();
+    /** Starts a drawing session into this glyph's canvas. Call {@link #end} when drawing is done.
+      * Valid after {@link #prepare}. */
+    public Canvas begin () {
+        return _layer.begin().clear();
     }
 
-    /** Destroys the layer and image, removing them from the containing widget. */
-    @Override public void destroy () {
-        _layer.clear();
-        _image = null;
+    /** Completes a drawing sesion into this glyph's canvas and uploads the image data to GPU */
+    public void end () {
+        _layer.end();
+    }
+
+    /** Disposes the layer and image, removing them from the containing widget. */
+    @Override public void close () {
+        if (_layer != null) {
+            _layer.close();
+            _layer = null;
+        }
         _preparedWidth = 0;
         _preparedHeight = 0;
     }
@@ -94,15 +98,16 @@ public class Glyph
     /**
      * Prepares the canvas and renders the supplied text at 0, 0 using the given config.
      */
-    public void renderText (StyledText.Plain text) {
-        prepare(text.width(), text.height());
-        text.render(canvas(), 0, 0);
-        _layer.get().setTranslation(text.style.effect.offsetX(), text.style.effect.offsetY());
+    public void renderText (Graphics gfx, StyledText.Plain text) {
+        prepare(gfx, text.width(), text.height());
+        Canvas canvas = begin();
+        text.render(canvas, 0, 0);
+        end();
+        _layer.setTranslation(text.style.effect.offsetX(), text.style.effect.offsetY());
     }
 
     protected final GroupLayer _parent;
     protected final Float _depth;
-    protected CanvasImage _image;
-    protected Ref<ImageLayer> _layer = Ref.<ImageLayer>create(null);
+    protected CanvasLayer _layer;
     protected float _preparedWidth, _preparedHeight;
 }

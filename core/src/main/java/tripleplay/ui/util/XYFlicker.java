@@ -5,11 +5,12 @@
 
 package tripleplay.ui.util;
 
-import playn.core.Pointer;
 import pythagoras.f.IPoint;
 import pythagoras.f.MathUtil;
 import pythagoras.f.Point;
 import react.Signal;
+
+import playn.scene.Pointer;
 
 /**
  * Translates pointer input on a layer into an x, y offset. With a sufficiently large drag delta,
@@ -34,7 +35,7 @@ import react.Signal;
  * TODO: figure out how to implement with two Flickers. could require some changes therein since
  * you probably don't want them to have differing states, plus 2x clicked signals is wasteful
  */
-public class XYFlicker implements Pointer.Listener
+public class XYFlicker extends Pointer.Listener
 {
     /** Signal dispatched when a pointer usage did not end up being a flick. */
     public Signal<Pointer.Event> clicked = Signal.create();
@@ -46,22 +47,22 @@ public class XYFlicker implements Pointer.Listener
         return _position;
     }
 
-    @Override public void onPointerStart (Pointer.Event event) {
+    @Override public void onStart (Pointer.Interaction iact) {
         _vel.set(0, 0);
         _maxDeltaSq = 0;
         _origPos.set(_position);
-        getPosition(event, _start);
+        getPosition(iact.event, _start);
         _prev.set(_start);
         _cur.set(_start);
         _prevStamp = 0;
-        _curStamp = event.time();
+        _curStamp = iact.event.time;
     }
 
-    @Override public void onPointerDrag (Pointer.Event event) {
+    @Override public void onDrag (Pointer.Interaction iact) {
         _prev.set(_cur);
         _prevStamp = _curStamp;
-        getPosition(event, _cur);
-        _curStamp = event.time();
+        getPosition(iact.event, _cur);
+        _curStamp = iact.event.time;
         float dx = _cur.x - _start.x, dy = _cur.y - _start.y;
         setPosition(_origPos.x + dx, _origPos.y + dy);
         _maxDeltaSq = Math.max(dx * dx + dy * dy, _maxDeltaSq);
@@ -69,15 +70,13 @@ public class XYFlicker implements Pointer.Listener
         // for the purposes of capturing the event stream, dx and dy are capped by their ranges
         dx = _position.x - _origPos.x;
         dy = _position.y - _origPos.y;
-        if (dx * dx + dy * dy >= maxClickDeltaSq()) {
-            event.capture();
-        }
+        if (dx * dx + dy * dy >= maxClickDeltaSq()) iact.capture();
     }
 
-    @Override public void onPointerEnd (Pointer.Event event) {
+    @Override public void onEnd (Pointer.Interaction iact) {
         // just dispatch a click if the pointer didn't move very far
         if (_maxDeltaSq < maxClickDeltaSq()) {
-            clicked.emit(event);
+            clicked.emit(iact.event);
             return;
         }
         // if not, maybe impart some velocity
@@ -98,7 +97,7 @@ public class XYFlicker implements Pointer.Listener
         }
     }
 
-    @Override public void onPointerCancel (Pointer.Event event) {
+    @Override public void onCancel (Pointer.Interaction iact) {
         _vel.set(0, 0);
         _accel.set(0, 0);
     }

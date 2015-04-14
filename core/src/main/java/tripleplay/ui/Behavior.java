@@ -5,20 +5,23 @@
 
 package tripleplay.ui;
 
-import playn.core.Pointer;
-import playn.core.Pointer.Event;
-import playn.core.Sound;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
 
+import react.Closeable;
 import react.Signal;
 import react.Slot;
 import react.Value;
 
+import playn.core.Clock;
+import playn.core.Sound;
+import playn.scene.Pointer;
+
 /**
  * Controls the behavior of a widget (how it responds to pointer events).
  */
-public abstract class Behavior<T extends Element<T>> implements Pointer.Listener {
+public abstract class Behavior<T extends Element<T>> extends Pointer.Listener {
+
     /** Implements button-like behavior: selects the element when the pointer is in bounds, and
      * deselects on release. This is a pretty common case and inherited by {@link Click}. */
     public static class Select<T extends Element<T>> extends Behavior<T> {
@@ -26,24 +29,24 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
             super(owner);
         }
 
-        @Override protected void onPress (Pointer.Event event) {
+        @Override public void onPress (Pointer.Interaction iact) {
             updateSelected(true);
         }
 
-        @Override protected void onHover (Pointer.Event event, boolean inBounds) {
+        @Override public void onHover (Pointer.Interaction iact, boolean inBounds) {
             updateSelected(inBounds);
         }
 
-        @Override protected boolean onRelease (Pointer.Event event) {
+        @Override public boolean onRelease (Pointer.Interaction iact) {
             // it's a click if we ended in bounds
             return updateSelected(false);
         }
 
-        @Override protected void onCancel (Pointer.Event event) {
+        @Override public void onCancel (Pointer.Interaction iact) {
             updateSelected(false);
         }
 
-        @Override protected void onClick (Pointer.Event event) {
+        @Override public void onClick (Pointer.Interaction iact) {
             // nothing by default, subclasses wire this up as needed
         }
     }
@@ -52,11 +55,11 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
      * {@code onX} method. */
     public static class Ignore<T extends Element<T>> extends Behavior<T> {
         public Ignore (T owner) { super(owner); }
-        @Override protected void onPress (Pointer.Event event) {}
-        @Override protected void onHover (Pointer.Event event, boolean inBounds) {}
-        @Override protected boolean onRelease (Pointer.Event event) { return false; }
-        @Override protected void onCancel (Pointer.Event event) {}
-        @Override protected void onClick (Pointer.Event event) {}
+        @Override public void onPress (Pointer.Interaction iact) {}
+        @Override public void onHover (Pointer.Interaction iact, boolean inBounds) {}
+        @Override public boolean onRelease (Pointer.Interaction iact) { return false; }
+        @Override public void onCancel (Pointer.Interaction iact) {}
+        @Override public void onClick (Pointer.Interaction iact) {}
     }
 
     /** Implements clicking behavior. */
@@ -84,13 +87,13 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
             _debounceDelay = resolveStyle(DEBOUNCE_DELAY);
         }
 
-        @Override protected void onPress (Pointer.Event event) {
+        @Override public void onPress (Pointer.Interaction iact) {
             // ignore press events if we're still in our debounce interval
-            if (event.time() - _lastClickStamp > _debounceDelay) super.onPress(event);
+            if (iact.event.time - _lastClickStamp > _debounceDelay) super.onPress(iact);
         }
 
-        @Override protected void onClick (Pointer.Event event) {
-            _lastClickStamp = event.time();
+        @Override public void onClick (Pointer.Interaction iact) {
+            _lastClickStamp = iact.event.time;
             click();
         }
 
@@ -117,20 +120,20 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
             clicked.emit(_owner); // emit a click event
         }
 
-        @Override protected void onPress (Pointer.Event event) {
+        @Override public void onPress (Pointer.Interaction iact) {
             _anchorState = _owner.isSelected();
             selected.update(!_anchorState);
         }
-        @Override protected void onHover (Pointer.Event event, boolean inBounds) {
+        @Override public void onHover (Pointer.Interaction iact, boolean inBounds) {
             selected.update(inBounds ? !_anchorState : _anchorState);
         }
-        @Override protected boolean onRelease (Pointer.Event event) {
+        @Override public boolean onRelease (Pointer.Interaction iact) {
             return _anchorState != _owner.isSelected();
         }
-        @Override protected void onCancel (Pointer.Event event) {
+        @Override public void onCancel (Pointer.Interaction iact) {
             selected.update(_anchorState);
         }
-        @Override protected void onClick (Pointer.Event event) {
+        @Override public void onClick (Pointer.Interaction iact) {
             click();
         }
 
@@ -163,15 +166,16 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
             public float maxDistanceSq;
 
             /** Creates a new tracking state with the given starting press event. */
-            public State (Pointer.Event event) {
-                pressTime = event.time();
-                toPoint(event, press = new Point());
+            public State (Pointer.Interaction iact) {
+                pressTime = iact.event.time;
+                toPoint(iact, press = new Point());
                 drag = new Point(press);
             }
-            /** Updates the state to the current event value and called {@link Track#onTrack}. */
-            public void update (Pointer.Event event) {
+
+            /** Updates the state to the current event value and called {@link Track#onTrack()}. */
+            public void update (Pointer.Interaction iact) {
                 boolean cancel = false;
-                toPoint(event, drag);
+                toPoint(iact, drag);
                 if (_hoverLimit != null) {
                     float lim = _hoverLimit;
                     IDimension size = _owner.size();
@@ -199,7 +203,7 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
          * Creates the state instance for the given press. Subclasses may return an instance
          * of a derived {@code State} if more information is needed during tracking.
          */
-        protected State createState (Pointer.Event press) {
+        protected State createState (Pointer.Interaction press) {
             return new State(press);
         }
 
@@ -207,24 +211,24 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
          * Converts an event to coordinates consumed by {@link #onTrack(Point, Point)}. By
          * default, simply uses the local x, y.
          */
-        protected void toPoint (Pointer.Event event, Point dest) {
-            dest.set(event.localX(), event.localY());
+        protected void toPoint (Pointer.Interaction iact, Point dest) {
+            dest.set(iact.local.x, iact.local.y);
         }
 
-        @Override protected void onPress (Event event) {
-            _state = createState(event);
+        @Override public void onPress (Pointer.Interaction iact) {
+            _state = createState(iact);
         }
 
-        @Override protected void onHover (Event event, boolean inBounds) {
-            if (_state != null) _state.update(event);
+        @Override public void onHover (Pointer.Interaction iact, boolean inBounds) {
+            if (_state != null) _state.update(iact);
         }
 
-        @Override protected boolean onRelease (Event event) {
+        @Override public boolean onRelease (Pointer.Interaction iact) {
             _state = null;
             return false;
         }
 
-        @Override protected void onCancel (Event event) {
+        @Override public void onCancel (Pointer.Interaction iact) {
             // track to the press position to cancel
             if (_state != null) onTrack(_state.press, _state.press);
             _state = null;
@@ -240,40 +244,41 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
     }
 
     /** A click behavior that captures the pointer and optionally issues clicks based on some time
-     * based function. */
+      * based function. */
     public static abstract class Capturing<T extends Element<T>> extends Click<T>
-        implements Interface.Task
     {
         protected Capturing (T owner) {
             super(owner);
         }
 
-        @Override protected void onPress (Event event) {
-            super.onPress(event);
-            event.capture();
-            _task = _owner.root().iface().addTask(this);
+        @Override public void onPress (Pointer.Interaction iact) {
+            super.onPress(iact);
+            iact.capture();
+            _conn = _owner.root().iface.frame.connect(new Slot<Clock>() {
+                public void onEmit (Clock clock) { update(clock); }
+            });
         }
 
-        @Override protected void onCancel (Event event) {
-            super.onCancel(event);
-            cancelTask();
-        }
-
-        @Override protected boolean onRelease (Event event) {
-            super.onRelease(event);
-            cancelTask();
+        @Override public boolean onRelease (Pointer.Interaction iact) {
+            super.onRelease(iact);
+            cancel();
             return false;
         }
 
-        /** Cancels the time-based task. This is called automatically by the pointer release
-         * and cancel events. */
-        protected void cancelTask () {
-            if (_task == null) return;
-            _task.remove();
-            _task = null;
+        @Override public void onCancel (Pointer.Interaction iact) {
+            super.onCancel(iact);
+            cancel();
         }
 
-        protected Interface.TaskHandle _task;
+        /** Called on every frame while this behavior is active. */
+        protected abstract void update (Clock clock);
+
+        /** Cancels this time-based behavior. Called automatically on release and cancel events. */
+        protected void cancel () {
+            _conn = Closeable.Util.close(_conn);
+        }
+
+        protected Closeable _conn = Closeable.Util.NOOP;
     }
 
     /** Captures the pointer and dispatches one click on press, a second after an initial delay
@@ -291,14 +296,14 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
             super(owner);
         }
 
-        @Override protected void onPress (Event event) {
-            super.onPress(event);
+        @Override public void onPress (Pointer.Interaction iact) {
+            super.onPress(iact);
             _timeInBounds = 0;
             click();
         }
 
-        @Override protected void onHover (Event event, boolean inBounds) {
-            super.onHover(event, inBounds);
+        @Override public void onHover (Pointer.Interaction iact, boolean inBounds) {
+            super.onHover(iact, inBounds);
             if (!inBounds) _timeInBounds = -1;
             else if (_timeInBounds < 0) {
                 _timeInBounds = 0;
@@ -306,10 +311,10 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
             }
         }
 
-        @Override public void update (int delta) {
+        @Override protected void update (Clock clock) {
             if (_timeInBounds < 0) return;
             int was = _timeInBounds;
-            _timeInBounds += delta;
+            _timeInBounds += clock.dt;
             int limit = was < _initDelay ? _initDelay :
                 _initDelay + _repDelay * ((was - _initDelay) / _repDelay + 1);
             if (was < limit && _timeInBounds >= limit) click();
@@ -328,20 +333,16 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
         _owner = owner;
     }
 
-    @Override public void onPointerStart (Pointer.Event event) {
-        if (_owner.isEnabled()) onPress(event);
+    @Override public void onStart (Pointer.Interaction iact) {
+        if (_owner.isEnabled()) onPress(iact);
     }
 
-    @Override public void onPointerDrag (Pointer.Event event) {
-        if (_owner.isEnabled()) onHover(event, _owner.contains(event.localX(), event.localY()));
+    @Override public void onDrag (Pointer.Interaction iact) {
+        if (_owner.isEnabled()) onHover(iact, _owner.contains(iact.local.x, iact.local.y));
     }
 
-    @Override public void onPointerEnd (Pointer.Event event) {
-        if (onRelease(event)) onClick(event);
-    }
-
-    @Override public void onPointerCancel (Pointer.Event event) {
-        onCancel(event);
+    @Override public void onEnd (Pointer.Interaction iact) {
+        if (onRelease(iact)) onClick(iact);
     }
 
     /** Called when our owner is laid out. If the behavior needs to resolve configuration via
@@ -355,6 +356,22 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
         if (_actionSound != null) _actionSound.play();
     }
 
+    /** Called when the pointer is pressed down on our element. */
+    public abstract void onPress (Pointer.Interaction iact);
+
+    /** Called as the user drags the pointer around after pressing. Derived classes map this onto
+     * the widget state, such as updating selectedness. */
+    public abstract void onHover (Pointer.Interaction iact, boolean inBounds);
+
+    /** Called when the pointer is released after having been pressed on this widget. This should
+     * return true if the gesture is considered a click, in which case {@link #onClick} will
+     * be called automatically. */
+    public abstract boolean onRelease (Pointer.Interaction iact);
+
+    /** Called when the pointer is released and the subclass decides that it is a click, i.e.
+     * returns true from {@link #onRelease(Pointer.Event)}. */
+    public abstract void onClick (Pointer.Interaction iact);
+
     /** Resolves the value for the supplied style via our owner. */
     protected <V> V resolveStyle (Style<V> style) {
         return Styles.resolveStyle(_owner, style);
@@ -364,26 +381,6 @@ public abstract class Behavior<T extends Element<T>> implements Pointer.Listener
     protected Root root () {
         return _owner.root();
     }
-
-    /** Called when the pointer is pressed down on our element. */
-    protected abstract void onPress (Pointer.Event event);
-
-    /** Called as the user drags the pointer around after pressing. Derived classes map this onto
-     * the widget state, such as updating selectedness. */
-    protected abstract void onHover (Pointer.Event event, boolean inBounds);
-
-    /** Called when the pointer is released after having been pressed on this widget. This should
-     * return true if the gesture is considered a click, in which case {@link #onClick} will
-     * be called automatically. */
-    protected abstract boolean onRelease (Pointer.Event event);
-
-    /** Called when the interaction is canceled after having been pressed on this widget. This
-     * should not result in a call to {@link #onClick}. */
-    protected abstract void onCancel (Pointer.Event event);
-
-    /** Called when the pointer is released and the subclass decides that it is a click, i.e.
-     * returns true from {@link #onRelease(Pointer.Event)}. */
-    protected abstract void onClick (Pointer.Event event);
 
     /** Updates the selected state of our owner, invalidating if selectedness changes.
      * @return true if the owner was selected on entry. */

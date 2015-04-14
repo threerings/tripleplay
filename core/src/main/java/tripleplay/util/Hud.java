@@ -8,33 +8,28 @@ package tripleplay.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import pythagoras.f.Dimension;
+import pythagoras.f.IDimension;
+import react.UnitSlot;
 import react.Value;
 
-import playn.core.Canvas;
-import playn.core.CanvasImage;
-import playn.core.Font;
-import playn.core.ImageLayer;
-import playn.core.TextFormat;
-import playn.core.TextLayout;
-import playn.core.gl.GLContext;
-import static playn.core.PlayN.graphics;
+import playn.core.*;
+import playn.scene.CanvasLayer;
+import playn.scene.LayerUtil;
+import playn.scene.SceneGame;
+
+import react.Slot;
 
 /**
- * Maintains a (usually debugging) HUD with textual information displayed in one or two columns. The
- * text is all rendered to a single {@link CanvasImage} (and updated only when values change) to
- * put as little strain on the renderer as possible. Example usage:
+ * Maintains a (usually debugging) HUD with textual information displayed in one or two columns.
+ * The text is all rendered to a single {@link Canvas} (and updated only when values change) to put
+ * as little strain on the renderer as possible. Example usage:
  * <pre>{@code
- * class MyGame extends Game.Default {
- *   private Hud.Stock hud = new Hud.Stock();
+ * class MyGame extends SceneGame {
+ *   private Hud.Stock hud = new Hud.Stock(this);
  *   public void init () {
  *     hud.layer.setDepth(Short.MAX_VALUE);
- *     graphics().rootLayer().add(hud.layer);
- *   }
- *   public void update (int delta) {
- *     hud.update(delta);
- *   }
- *   public void paint (float alpha) {
- *     hud.paint();
+ *     rootLayer.add(hud.layer);
  *   }
  * }
  * }</pre>
@@ -42,73 +37,62 @@ import static playn.core.PlayN.graphics;
 public class Hud
 {
     /** A stock HUD that provides a bunch of standard PlayN performance info and handles
-     * once-per-second updating. */
+      * once-per-second updating. */
     public static class Stock extends Hud {
-        public Stock () {
-            _haveGL = (graphics().ctx() != null);
-            if (_haveGL) {
-                add("Shader info:", true);
-                add(_quadShader);
-                add(_trisShader);
-            }
+        public Stock (SceneGame game) {
+            super(game);
+            add("Shader info:", true);
+            add(_quadShader);
+            add(_trisShader);
+
             add("Per second:", true);
             add("Frames:", _frames);
-            if (_haveGL) {
-                add("Shader creates:", _shaderCreates);
-                add("FB creates:", _fbCreates);
-                add("Tex creates:", _texCreates);
-                add("Per frame:", true);
-                add("Shader binds:", _shaderBinds);
-                add("FB binds:", _fbBinds);
-                add("Tex binds:", _texBinds);
-                add("Quads drawn:", _rQuads);
-                add("Tris drawn:", _rTris);
-                add("Shader flushes:", _shaderFlushes);
-            }
-        }
+            add("Shader creates:", _shaderCreates);
+            add("FB creates:", _fbCreates);
+            add("Tex creates:", _texCreates);
 
-        /** Call this from your {@code Game.update} method (or similar). */
-        public void update (int delta) {
-            long now = System.currentTimeMillis();
-            if (now > _nextSec) {
-                willUpdate();
-                update();
-                _nextSec = now + 1000;
-            }
-        }
+            add("Per frame:", true);
+            add("Shader binds:", _shaderBinds);
+            add("FB binds:", _fbBinds);
+            add("Tex binds:", _texBinds);
+            add("Quads drawn:", _rQuads);
+            add("Tris drawn:", _rTris);
+            add("Shader flushes:", _shaderFlushes);
 
-        /** Call this from your {@code Game.paint} method (or similar). */
-        public void paint () {
-            _paints += 1;
+            // receive paint updates while our layer is connected
+            LayerUtil.bind(layer, game.paint, new Slot<Clock>() {
+                public void onEmit (Clock clock) {
+                    int now = clock.tick;
+                    if (now > _nextUpdate) {
+                        willUpdate();
+                        update();
+                        _nextUpdate = now + 1000;
+                    }
+                }
+                protected int _nextUpdate;
+            });
         }
 
         /** Called when the HUD is about to update its display. Values added to the HUD should be
-         * updated by this call if they've not been already. Must call {@code super.willUpdate()}. */
+          * updated by this call if they've not been already.
+          * Must call {@code super.willUpdate()}. */
         protected void willUpdate () {
-            if (_haveGL) {
-                GLContext.Stats stats = graphics().ctx().stats();
-                int frames = Math.max(stats.frames, 1);
-                _frames.update(frames);
-                _shaderCreates.update(stats.shaderCreates);
-                _fbCreates.update(stats.frameBufferCreates);
-                _texCreates.update(stats.texCreates);
-                _shaderBinds.update(stats.shaderBinds/frames);
-                _fbBinds.update(stats.frameBufferBinds/frames);
-                _texBinds.update(stats.texBinds/frames);
-                _rQuads.update(stats.quadsRendered/frames);
-                _rTris.update(stats.trisRendered/frames);
-                _shaderFlushes.update(stats.shaderFlushes/frames);
-                stats.reset();
-                _quadShader.update("Quad: " + graphics().ctx().quadShaderInfo());
-                _trisShader.update("Tris: " + graphics().ctx().trisShaderInfo());
-            } else {
-                _frames.update(_paints);
-                _paints = 0;
-            }
+            // GLContext.Stats stats = graphics().ctx().stats();
+            // int frames = Math.max(stats.frames, 1);
+            // _frames.update(frames);
+            // _shaderCreates.update(stats.shaderCreates);
+            // _fbCreates.update(stats.frameBufferCreates);
+            // _texCreates.update(stats.texCreates);
+            // _shaderBinds.update(stats.shaderBinds/frames);
+            // _fbBinds.update(stats.frameBufferBinds/frames);
+            // _texBinds.update(stats.texBinds/frames);
+            // _rQuads.update(stats.quadsRendered/frames);
+            // _rTris.update(stats.trisRendered/frames);
+            // _shaderFlushes.update(stats.shaderFlushes/frames);
+            // stats.reset();
+            // _quadShader.update("Quad: " + graphics().ctx().quadShaderInfo());
+            // _trisShader.update("Tris: " + graphics().ctx().trisShaderInfo());
         }
-
-        protected final boolean _haveGL;
-        protected long _nextSec;
 
         protected final Value<Integer> _frames = Value.create(0);
         protected final Value<Integer> _shaderCreates = Value.create(0);
@@ -125,11 +109,12 @@ public class Hud
         protected final Value<String> _trisShader = Value.create("");
     }
 
-    /** The image layer that contains this HUD. Add to the scene graph where desired. */
-    public final ImageLayer layer;
+    /** The layer that contains this HUD. Add to the scene graph where desired. */
+    public final CanvasLayer layer;
 
-    public Hud () {
-        layer = graphics().createImageLayer(_image);
+    public Hud (SceneGame game) {
+        _game = game;
+        layer = new CanvasLayer(game.plat.graphics(), 1, 1);
     }
 
     /** Configures the font used to display the HUD. Must be called before adding rows. */
@@ -149,17 +134,16 @@ public class Hud
 
     /** Adds a static label that spans the width of the HUD. */
     public void add (String label, final boolean header) {
-        final TextLayout layout = graphics().layoutText(label, _fmt);
+        final TextLayout layout = _game.plat.graphics().layoutText(label, _fmt);
         _rows.add(new Row() {
             public void update () {} // noop
             public float labelWidth () { return 0; }
-            public float width () { return layout.width(); }
-            public float height() { return layout.height(); }
+            public IDimension size () { return layout.size; }
             public void render (Canvas canvas, float x, float y, float valueX) {
-                if (header) canvas.drawLine(0, y-1, canvas.width(), y-1);
+                if (header) canvas.drawLine(0, y-1, canvas.width, y-1);
                 canvas.fillText(layout, x, y);
-                float by = y + layout.height();
-                if (header) canvas.drawLine(0, by, canvas.width(), by);
+                float by = y + layout.size.height();
+                if (header) canvas.drawLine(0, by, canvas.width, by);
             }
         });
     }
@@ -168,11 +152,10 @@ public class Hud
     public void add (final Value<?> label) {
         _rows.add(new Row() {
             public void update () {
-                _layout = graphics().layoutText(String.valueOf(label.get()), _fmt);
+                _layout = _game.plat.graphics().layoutText(String.valueOf(label.get()), _fmt);
             }
             public float labelWidth () { return 0; }
-            public float width () { return _layout.width(); }
-            public float height() { return _layout.height(); }
+            public IDimension size () { return _layout.size; }
             public void render (Canvas canvas, float x, float y, float valueX) {
                 canvas.fillText(_layout, x, y);
             }
@@ -182,19 +165,21 @@ public class Hud
 
     /** Adds a static label and changing value, which will be rendered in two columns. */
     public void add (String label, final Value<?> value) {
-        final TextLayout llayout = graphics().layoutText(label, _fmt);
+        final TextLayout llayout = _game.plat.graphics().layoutText(label, _fmt);
         _rows.add(new Row() {
             public void update () {
-                _vlayout = graphics().layoutText(String.valueOf(value.get()), _fmt);
+                _vlayout = _game.plat.graphics().layoutText(String.valueOf(value.get()), _fmt);
+                _size.setSize(llayout.size.width() + GAP + _vlayout.size.width(),
+                              Math.max(llayout.size.height(), _vlayout.size.height()));
             }
-            public float labelWidth () { return llayout.width(); }
-            public float width () { return llayout.width() + GAP + _vlayout.width(); }
-            public float height() { return Math.max(llayout.height(), _vlayout.height()); }
+            public float labelWidth () { return llayout.size.width(); }
+            public IDimension size () { return _size; }
             public void render (Canvas canvas, float x, float y, float valueX) {
                 canvas.fillText(llayout, x, y);
                 canvas.fillText(_vlayout, valueX, y);
             }
             protected TextLayout _vlayout;
+            protected Dimension _size = new Dimension();
         });
     }
 
@@ -205,44 +190,40 @@ public class Hud
         float width = 0, height = 0, labelWidth = 0;
         for (Row row : _rows) {
             row.update();
-            width = Math.max(row.width(), width);
+            width = Math.max(row.size().width(), width);
             labelWidth = Math.max(row.labelWidth(), labelWidth);
-            height += row.height();
+            height += row.size().height();
         }
         // add in borders
         width += 5*GAP;
         height += GAP*_rows.size()+GAP;
         // create a new image if necessary
-        if (_image.width() < width || _image.height() < height) {
-            layer.setImage(_image = graphics().createImage(width, height));
-        }
+        if (layer.width() < width || layer.height() < height) layer.resize(width, height);
         // clear our image and render our rows
-        Canvas canvas = _image.canvas();
+        Canvas canvas = layer.begin();
         canvas.clear();
         canvas.setFillColor(_bgColor).fillRect(0, 0, width, height);
         canvas.setStrokeColor(_textColor).setFillColor(_textColor);
         float x = GAP, y = GAP, valueX = labelWidth+2*GAP;
         for (Row row : _rows) {
             row.render(canvas, x, y, valueX);
-            y += row.height()+GAP;
+            y += row.size().height()+GAP;
         }
+        layer.end();
     }
 
     protected interface Row {
         void update ();
         float labelWidth ();
-        float width ();
-        float height ();
+        IDimension size ();
         void render (Canvas canvas, float x, float y, float valueX);
     }
 
+    protected final SceneGame _game;
     protected final List<Row> _rows = new ArrayList<Row>();
-    protected int _paints;
 
-    protected TextFormat _fmt = new TextFormat().withFont(
-        graphics().createFont("Helvetica", Font.Style.PLAIN, 12));
+    protected TextFormat _fmt = new TextFormat(new Font("Helvetica", 12));
     protected int _textColor = 0xFF000000, _bgColor = 0xFFFFFFFF;
-    protected CanvasImage _image = graphics().createImage(1, 1);
 
     protected static final float GAP = 5;
 }

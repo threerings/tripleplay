@@ -276,7 +276,7 @@ public class Tabs extends Composite<Tabs>
         _tabs.remove(tab.index());
         buttons.destroy(tab.button);
         if (tab._content != null) contentArea.destroy(tab._content);
-        tab._generator.destroy();
+        tab._generator.close();
         tab._index = -1;
         resetIndices();
         return;
@@ -313,15 +313,15 @@ public class Tabs extends Composite<Tabs>
     }
 
     @Override protected void wasRemoved () {
-        if (willDestroy()) {
+        if (willDispose()) {
             // let go of suppliers
             for (Tab tab : _tabs) {
-                tab._generator.destroy();
+                tab._generator.close();
             }
             // let go of removed tabs
             for (Tab tab : _tabs) {
                 if (tab._content != null && tab._content.parent() == null) {
-                    tab._content.layer.destroy();
+                    tab._content.layer.close();
                     tab._content = null;
                 }
             }

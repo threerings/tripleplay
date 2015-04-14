@@ -7,8 +7,9 @@ package tripleplay.demo;
 
 import react.UnitSlot;
 
+import playn.core.Game;
+
 import tripleplay.game.ScreenStack;
-import tripleplay.game.UIScreen;
 import tripleplay.ui.*;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
@@ -24,7 +25,7 @@ import tripleplay.demo.util.*;
 /**
  * Displays a top-level menu of our various demo screens.
  */
-public class DemoMenuScreen extends UIScreen
+public class DemoMenuScreen extends ScreenStack.UIScreen
 {
     public DemoMenuScreen (ScreenStack stack) {
         _stack = stack;
@@ -52,28 +53,29 @@ public class DemoMenuScreen extends UIScreen
             new AsteroidsDemo(), null, null,
             // tripleplay.particle
             new FountainDemo(), new FireworksDemo(), null,
-            // tripleplay.flump
+            // // tripleplay.flump
             new FlumpDemo(), null, null,
             // tripleplay.util
             new ColorsDemo(), new InterpDemo(), null,
         };
     }
 
-    @Override public void wasShown () {
-        super.wasShown();
-        _root = iface.createRoot(AxisLayout.vertical().gap(15), SimpleStyles.newSheet(), layer);
-        _root.addStyles(Style.BACKGROUND.is(Background.bordered(0xFFCCCCCC, 0xFF99CCFF, 5).
-                                            inset(5, 10)));
-        _root.setSize(width(), height());
+    @Override public Game game () { return TripleDemo.game; }
 
-        _root.add(new Label("Triple Play Demos").addStyles(Style.FONT.is(DemoScreen.TITLE_FONT)));
+    @Override protected Root createRoot () {
+        Root root = iface.createRoot(AxisLayout.vertical().gap(15),
+                                     SimpleStyles.newSheet(game().plat.graphics()), layer);
+        root.addStyles(Style.BACKGROUND.is(
+            Background.bordered(0xFFCCCCCC, 0xFF99CCFF, 5).inset(5, 10)));
+        root.setSize(size());
+        root.add(new Label("Triple Play Demos").addStyles(Style.FONT.is(DemoScreen.TITLE_FONT)));
 
         Group grid = new Group(new TableLayout(
-                                   TableLayout.COL.alignRight(),
-                                   TableLayout.COL.stretch(),
-                                   TableLayout.COL.stretch(),
-                                   TableLayout.COL.stretch()).gaps(10, 10));
-        _root.add(grid);
+            TableLayout.COL.alignRight(),
+            TableLayout.COL.stretch(),
+            TableLayout.COL.stretch(),
+            TableLayout.COL.stretch()).gaps(10, 10));
+        root.add(grid);
 
         int shown = 0, toShow = (TripleDemo.mainArgs.length == 0) ? -1 :
             Integer.parseInt(TripleDemo.mainArgs[0]);
@@ -94,11 +96,7 @@ public class DemoMenuScreen extends UIScreen
                 if (shown++ == toShow) _stack.push(screen, ScreenStack.NOOP);
             }
         }
-    }
-
-    @Override public void wasHidden () {
-        super.wasHidden();
-        iface.destroyRoot(_root);
+        return root;
     }
 
     protected Button screen (String title, final ScreenFactory factory) {
@@ -117,7 +115,5 @@ public class DemoMenuScreen extends UIScreen
 
     protected final String[] _rlabels;
     protected final DemoScreen[] _screens;
-
     protected final ScreenStack _stack;
-    protected Root _root;
 }

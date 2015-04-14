@@ -5,12 +5,13 @@
 
 package tripleplay.util;
 
-import playn.core.PlayN;
+import playn.core.Platform;
+import react.Slot;
 
 /**
  * Handles execution of actions after a specified delay.
  */
-public class Timer
+public class Timer extends Slot<Platform>
 {
     /** A handle on registered actions that can be used to cancel them. */
     public static interface Handle {
@@ -18,50 +19,49 @@ public class Timer
         void cancel ();
     }
 
-    /** Creates a timer instance that can be used to schedule actions.
-     * Don't forget to call {@link #update} on it, every frame. */
+    /** Creates a timer instance that can be used to schedule actions. Connect this timer to the
+      * frame signal to make it operable. */
     public Timer () {
         this(System.currentTimeMillis());
     }
 
     /** Executes the supplied action after the specified number of milliseconds have elapsed.
-     * @return a handle that can be used to cancel the execution of the action. */
+      * @return a handle that can be used to cancel the execution of the action. */
     public Handle after (int millis, Runnable action) {
         return add(millis, 0, action);
     }
 
     /** Executes the supplied action starting {@code millis} from now and every {@code millis}
-     * thereafter.
-     * @return a handle that can be used to cancel the execution of the action. */
+      * thereafter.
+      * @return a handle that can be used to cancel the execution of the action. */
     public Handle every (int millis, Runnable action) {
         return atThenEvery(millis, millis, action);
     }
 
     /** Executes the supplied action starting {@code initialMillis} from now and every {@code
-     * repeatMillis} there after.
-     * @return a handle that can be used to cancel the execution of the action. */
+      * repeatMillis} there after.
+      * @return a handle that can be used to cancel the execution of the action. */
     public Handle atThenEvery (int initialMillis, int repeatMillis, Runnable action) {
         return add(initialMillis, repeatMillis, action);
     }
 
-    /** This should be called from {@code Game.update}, or similar. */
-    public void update () {
-        update(System.currentTimeMillis());
+    @Override public void onEmit (Platform plat) {
+        update(plat, System.currentTimeMillis());
     }
 
-    // this and update(long) exist so that we can unit test this class
+    // this and update exist so that we can unit test this class
     protected Timer (long now) {
         _currentTime = now;
     }
 
-    protected void update (long now) {
+    protected void update (Platform plat, long now) {
         _currentTime = now;
 
         Action root = _root;
         while (root.next != null && root.next.nextExpire <= now) {
             Action act = root.next;
             if (!act.cancelled()) {
-                execute(act.action);
+                execute(plat, act.action);
                 if (act.repeatMillis == 0) {
                     act.cancel();
                 } else if (!act.cancelled()) {
@@ -72,11 +72,11 @@ public class Timer
         }
     }
 
-    protected void execute (Runnable runnable) {
+    protected void execute (Platform plat, Runnable runnable) {
         try {
             runnable.run();
         } catch (Exception e) {
-            PlayN.log().warn("Action failed", e);
+            plat.log().warn("Action failed", e);
         }
     }
 

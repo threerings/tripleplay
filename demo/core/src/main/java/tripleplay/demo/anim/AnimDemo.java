@@ -7,28 +7,24 @@ package tripleplay.demo.anim;
 
 import pythagoras.f.FloatMath;
 
-import playn.core.CanvasImage;
+import playn.core.Canvas;
 import playn.core.Font;
-import playn.core.ImageLayer;
-import playn.core.Pointer;
-import playn.core.util.Clock;
-import static playn.core.PlayN.*;
+import playn.core.Texture;
+import playn.scene.ImageLayer;
+import playn.scene.Pointer;
 
 import tripleplay.anim.AnimGroup;
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.demo.DemoScreen;
+import tripleplay.demo.TripleDemo;
 import tripleplay.ui.Group;
+import tripleplay.ui.Root;
 import tripleplay.util.StyledText;
 import tripleplay.util.TextStyle;
 
 public class AnimDemo extends DemoScreen
 {
-    @Override public void paint (Clock clock) {
-        super.paint(clock);
-        _banim.paint(clock);
-    }
-
     @Override protected String name () {
         return "Anims";
     }
@@ -36,24 +32,25 @@ public class AnimDemo extends DemoScreen
         return "Various Animations";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         // demo a repeating animation
-        CanvasImage image = graphics().createImage(100, 100);
-        image.canvas().setFillColor(0xFFFFCC99).fillCircle(50, 50, 50);
-        ImageLayer circle = graphics().createImageLayer(image);
+        Canvas canvas = graphics().createCanvas(100, 100);
+        canvas.setFillColor(0xFFFFCC99).fillCircle(50, 50, 50);
+        ImageLayer circle = new ImageLayer(canvas.toTexture());
 
-        float width = graphics().width();
-        anim.addAt(layer, circle, 50, 100).then().
+        float width = size().width();
+        iface.anim.addAt(layer, circle, 50, 100).then().
             repeat(circle).tweenX(circle).to(width-150).in(1000).easeInOut().then().
             tweenX(circle).to(50).in(1000).easeInOut();
 
         // demo the shake animation
-        final ImageLayer click = StyledText.span("Click to Shake", STYLE).toLayer();
-        click.addListener(new Pointer.Adapter() {
-            @Override public void onPointerStart (Pointer.Event event) {
+        final ImageLayer click = StyledText.span(graphics(), "Click to Shake", STYLE).toLayer();
+        click.events().connect(new Pointer.Listener() {
+            @Override public void onStart (Pointer.Interaction iact) {
                 if (_shaker != null) _shaker.complete();
-                else _shaker = anim.shake(click).bounds(-3, 3, -3, 0).cycleTime(25, 25).in(1000).
-                         then().action(_clear).handle();
+                else _shaker = iface.anim.
+                    shake(click).bounds(-3, 3, -3, 0).cycleTime(25, 25).in(1000).then().
+                    action(_clear).handle();
             }
             protected final Runnable _clear = new Runnable() {
                 public void run () { _shaker = null; }};
@@ -62,24 +59,25 @@ public class AnimDemo extends DemoScreen
         layer.addAt(click, (width-click.width())/2, 275);
 
         // demo animation groups
-        CanvasImage ball = graphics().createImage(40, 40);
-        ball.canvas().setFillColor(0xFF99CCFF).fillCircle(20, 20, 20);
+        Canvas ball = graphics().createCanvas(40, 40);
+        ball.setFillColor(0xFF99CCFF).fillCircle(20, 20, 20);
+        Texture balltex = ball.toTexture();
         ImageLayer[] balls = new ImageLayer[6];
         for (int ii = 0; ii < balls.length; ii++) {
-            layer.addAt(balls[ii] = graphics().createImageLayer(ball), 170+ii*50, 350);
+            layer.addAt(balls[ii] = new ImageLayer(balltex), 170+ii*50, 350);
         }
-        anim.repeat(layer).add(dropBalls(balls, 0, 1)).then().
+        iface.anim.repeat(layer).add(dropBalls(balls, 0, 1)).then().
             add(dropBalls(balls, 1, 2)).then().
             add(dropBalls(balls, 3, 3));
 
         // test barrier delay
-        CanvasImage sqimg = graphics().createImage(50, 50);
-        sqimg.canvas().setFillColor(0xFF99CCFF).fillRect(0, 0, 50, 50);
-        final ImageLayer square = graphics().createImageLayer(sqimg);
+        Canvas sqimg = graphics().createCanvas(50, 50);
+        sqimg.setFillColor(0xFF99CCFF).fillRect(0, 0, 50, 50);
+        final ImageLayer square = new ImageLayer(sqimg.toTexture());
         square.setOrigin(25, 25);
         layer.addAt(square, 50, 300);
-        square.addListener(new Pointer.Adapter() {
-            @Override public void onPointerStart (Pointer.Event event) {
+        square.events().connect(new Pointer.Listener() {
+            @Override public void onStart (Pointer.Interaction iact) {
                 square.setInteractive(false);
                 _banim.tweenXY(square).to(50, 350);
                 _banim.delay(250).then().tweenRotation(square).to(FloatMath.PI).in(500);
@@ -108,8 +106,7 @@ public class AnimDemo extends DemoScreen
     }
 
     // a separate animator used for testing barriers
-    protected Animator _banim = new Animator();
+    protected Animator _banim = new Animator(paint);
 
-    protected static final TextStyle STYLE = new TextStyle().
-        withFont(graphics().createFont("Helvetica", Font.Style.PLAIN, 48));
+    protected static final TextStyle STYLE = TextStyle.DEFAULT.withFont(new Font("Helvetica", 48));
 }

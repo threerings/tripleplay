@@ -8,16 +8,24 @@ package tripleplay.ui;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import playn.java.JavaPlatform;
+import react.Signal;
+
+import playn.core.Clock;
+import playn.core.Platform;
+import playn.core.StubPlatform;
+// import playn.java.JavaPlatform;
 import tripleplay.ui.layout.AxisLayout;
 
 public class ElementTest
 {
-    static {
-        JavaPlatform.Config config = new JavaPlatform.Config();
-        config.headless = true;
-        JavaPlatform.register(config);
-    }
+    // static {
+    //     JavaPlatform.Config config = new JavaPlatform.Config();
+    //     config.headless = true;
+    //     JavaPlatform.register(config);
+    // }
+
+    public static Platform stub = new StubPlatform();
+    public final Signal<Clock> frame = Signal.create();
 
     static class TestGroup extends Group
     {
@@ -46,7 +54,7 @@ public class ElementTest
         }
     }
 
-    Interface iface = new Interface();
+    Interface iface = new Interface(stub, frame);
 
     Root newRoot () {
         return iface.createRoot(AxisLayout.vertical(), Stylesheet.builder().create());

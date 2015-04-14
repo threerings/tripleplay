@@ -10,9 +10,9 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import playn.core.Image;
-import playn.core.PlayN;
 import playn.java.JavaPlatform;
 import playn.java.SWTPlatform;
+
 import tripleplay.platform.JavaTPPlatform;
 import tripleplay.platform.SWTTPPlatform;
 
@@ -39,29 +39,33 @@ public class TripleDemoJava
         }
 
         TripleDemo.mainArgs = mainArgs.toArray(new String[0]);
+        JavaPlatform plat;
         switch (tk) {
         case SWT: {
             config.appName += " (SWT)";
-            SWTPlatform platform = SWTPlatform.register(config);
-            SWTTPPlatform.register(platform, config);
-            SWTTPPlatform.instance().setIcon(loadIcon());
+            SWTPlatform splat = new SWTPlatform(config);
+            SWTTPPlatform tpplat = new SWTTPPlatform(splat, config);
+            tpplat.setIcon(loadIcon(splat));
+            plat = splat;
             break;
         }
         case AWT: {
-            JavaPlatform platform = JavaPlatform.register(config);
-            JavaTPPlatform.register(platform, config);
-            JavaTPPlatform.instance().setIcon(loadIcon());
+            JavaPlatform jplat = new JavaPlatform(config);
+            JavaTPPlatform tpplat = new JavaTPPlatform(jplat, config);
+            tpplat.setIcon(loadIcon(jplat));
+            plat = jplat;
             break;
         }
         default:
             // no native integration
-            JavaPlatform.register(config);
+            plat = new JavaPlatform(config);
             break;
         }
-        PlayN.run(new TripleDemo());
+        new TripleDemo(plat);
+        plat.start();
     }
 
-    protected static Image loadIcon () {
-        return PlayN.assets().getImageSync("icon.png");
+    protected static Image loadIcon (JavaPlatform plat) {
+        return plat.assets().getImageSync("icon.png");
     }
 }

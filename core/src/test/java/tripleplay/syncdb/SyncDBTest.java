@@ -8,13 +8,13 @@ package tripleplay.syncdb;
 import java.util.HashMap;
 import java.util.Map;
 
+import react.RFuture;
 import react.RMap;
 import react.RSet;
 import react.Value;
 
 import playn.core.Platform;
 import playn.core.StubPlatform;
-import playn.core.util.Callback;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -22,8 +22,8 @@ import com.google.common.collect.Sets;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-public class SyncDBTest
-{
+public class SyncDBTest {
+
     public static class TestDB extends SyncDB {
         public final Value<Boolean> trueBool = value(
             "trueBool", false, Codec.BOOLEAN, Resolver.TRUE);
@@ -262,20 +262,21 @@ public class SyncDBTest
     }
 
     protected static class TestServer implements Protocol.Server {
-        @Override public void sendSync (int version, Map<String,String> delta,
-                                        Callback<Protocol.Response> onResponse) {
+        @Override public RFuture<Protocol.Response> sendSync (int version,
+                                                              Map<String,String> delta) {
             if (version > _version) {
-                throw new IllegalStateException("So impossible! " + version + " > " + _version);
+                return RFuture.failure(new IllegalStateException(
+                    "So impossible! " + version + " > " + _version));
             } else if (version < _version) {
-                onResponse.onSuccess(needSync(version));
+                return RFuture.success(needSync(version));
             } else if (delta.size() == 0) {
-                onResponse.onSuccess(new Protocol.Response(_version));
+                return RFuture.success(new Protocol.Response(_version));
             } else {
                 _version += 1;
                 for (Map.Entry<String,String> entry : delta.entrySet()) {
                     _data.put(entry.getKey(), new Datum(_version, entry.getValue()));
                 }
-                onResponse.onSuccess(new Protocol.Response(_version));
+                return RFuture.success(new Protocol.Response(_version));
             }
         }
 

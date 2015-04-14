@@ -6,59 +6,55 @@
 package tripleplay.flump;
 
 import java.util.ArrayList;
-
-import playn.core.Assets;
-import playn.core.Image;
-import playn.core.Json;
-import playn.core.util.Callback;
-
-import static playn.core.PlayN.assets;
-import static playn.core.PlayN.json;
+import java.util.List;
 
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 
+import react.Function;
+import react.RFuture;
+import react.RPromise;
+import react.Slot;
+import react.Try;
 import react.Value;
 
-public class JsonLoader
-{
-    /**
-     * Loads a JSON encoded library synchronously via PlayN assets.
-     */
-    public static Library loadLibrarySync (String baseDir) throws Exception {
-        return loadLibrarySync(baseDir, assets());
-    }
+import playn.core.Assets;
+import playn.core.Image;
+import playn.core.Json;
+import playn.core.Platform;
+
+public class JsonLoader {
 
     /**
-     * Loads a JSON encoded library synchronously via PlayN assets.
-     */
-    public static Library loadLibrarySync (String baseDir, Assets assets) throws Exception {
-        String text = assets.getTextSync(baseDir + "/library.json");
-        return decodeLibrarySync(json().parse(text), assets, baseDir);
-    }
-
-    /**
-     * Loads a JSON encoded library via PlayN assets.
+     * Loads a JSON encoded library synchronously.
      * @param baseDir The base directory, containing library.json and texture atlases.
      */
-    public static void loadLibrary (String baseDir, Callback<Library> callback) {
-        loadLibrary(assets(), baseDir, callback);
+    public static Library loadLibrarySync (final Platform plat, String baseDir) throws Exception {
+        final ImageLoader syncLoader = new ImageLoader() {
+            @Override public Image load (String path) { return plat.assets().getImageSync(path); }
+        };
+        String text = plat.assets().getTextSync(baseDir + "/library.json");
+        Try<Library> result = decodeLibrary(plat.json().parse(text), baseDir, syncLoader).result();
+        if (result.isSuccess()) return result.get();
+        Throwable error = result.getFailure();
+        if (error instanceof Exception) throw (Exception)error;
+        else throw new RuntimeException(error);
     }
 
     /**
-     * Loads a JSON encoded library via the specified PlayN assets.
+     * Loads a JSON encoded library.
+     * @param baseDir The base directory, containing library.json and texture atlases.
      */
-    public static void loadLibrary (final Assets assets, final String baseDir,
-                                    final Callback<Library> callback) {
-        assets.getText(baseDir + "/library.json", new Callback.Chain<String>(callback) {
-            public void onSuccess (String text) {
-                try {
-                    decodeLibraryAsync(json().parse(text), assets, baseDir, callback);
-                } catch (Exception err) {
-                    callback.onFailure(err);
+    public static RFuture<Library> loadLibrary (final Platform plat, final String baseDir) {
+        final ImageLoader asyncLoader = new ImageLoader() {
+            @Override public Image load (String path) { return plat.assets().getImage(path); }
+        };
+        return plat.assets().getText(baseDir + "/library.json").
+            flatMap(new Function<String,RFuture<Library>>() {
+                public RFuture<Library> apply (String text) {
+                    return decodeLibrary(plat.json().parse(text), baseDir, asyncLoader);
                 }
-            }
-        });
+            });
     }
 
     /** Helper interface to load an image from a path. */
@@ -67,43 +63,10 @@ public class JsonLoader
     }
 
     /**
-     * Decodes and returns a library synchronously.
-     */
-    protected static Library decodeLibrarySync (Json.Object json, final Assets assets,
-                                                String baseDir)
-    {
-        final Library[] libs = new Library[]{null};
-        decodeLibrary(json, baseDir, new Callback<Library>() {
-            public void onSuccess (Library result) {libs[0] = result;}
-            public void onFailure(Throwable cause) {}
-        }, new ImageLoader() {
-            @Override public Image load (String path) {
-                return assets.getImageSync(path);
-            }
-        });
-        return libs[0];
-    }
-
-    /**
-     * Decodes and returns a library asynchronously.
-     */
-    protected static void decodeLibraryAsync (Json.Object json, final Assets assets, String baseDir,
-                                              Callback<Library> callback)
-    {
-        decodeLibrary(json, baseDir, callback, new ImageLoader() {
-            @Override public Image load (String path) {
-                return assets.getImage(path);
-            }
-        });
-    }
-
-    /**
      * Generic library decoding method.
      */
-    protected static void decodeLibrary (Json.Object json, String baseDir,
-                                         final Callback<Library> callback,
-                                         final ImageLoader loader)
-    {
+    protected static RFuture<Library> decodeLibrary (Json.Object json, String baseDir,
+                                                     ImageLoader loader) {
         final float frameRate = json.getNumber("frameRate");
         final ArrayList<Movie.Symbol> movies = new ArrayList<Movie.Symbol>();
         for (Json.Object movieJson : json.getArray("movies", Json.Object.class)) {
@@ -117,24 +80,27 @@ public class JsonLoader
         Json.TypedArray<Json.Object> atlases =
             textureGroups.get(0).getArray("atlases", Json.Object.class);
 
-        final Value<Integer> remainingAtlases = Value.create(atlases.length());
-        remainingAtlases.connectNotify(new Value.Listener<Integer>() {
-            @Override public void onChange (Integer remaining, Integer unused) {
-                if (remaining == 0) callback.onSuccess(new Library(frameRate, movies, textures));
-            }
-        });
-
+        // trigger the loading of all of the atlas images
+        List<RFuture<Image>> atlasImages = new ArrayList<RFuture<Image>>();
         for (final Json.Object atlasJson : atlases) {
             Image atlas = loader.load(baseDir + "/" + atlasJson.getString("file"));
-            atlas.addCallback(new Callback.Chain<Image>(callback) {
-                public void onSuccess (Image atlas) {
+            atlasImages.add(atlas.state);
+            atlas.state.onSuccess(new Slot<Image>() {
+                public void onEmit (Image image) {
                     for (Json.Object tjson : atlasJson.getArray("textures", Json.Object.class)) {
-                        textures.add(decodeTexture(tjson, atlas));
+                        textures.add(decodeTexture(tjson, image.texture()));
                     }
-                    remainingAtlases.update(remainingAtlases.get() - 1);
                 }
             });
         }
+
+        // aggregate the futures for all the images into a single future which will succeed if they
+        // all succeed, or fail if any of them fail, then wire that up to our library result
+        return RFuture.sequence(atlasImages).map(new Function<List<Image>,Library>() {
+            public Library apply (List<Image> atlases) {
+                return new Library(frameRate, movies, textures);
+            }
+        });
     }
 
     protected static Movie.Symbol decodeMovie (float frameRate, Json.Object json) {
@@ -167,11 +133,11 @@ public class JsonLoader
                                 json.getString("ref"));
     }
 
-    protected static Texture.Symbol decodeTexture (Json.Object json, Image atlas) {
+    protected static Texture.Symbol decodeTexture (Json.Object json, playn.core.Texture atlas) {
         Json.TypedArray<Float> rect = json.getArray("rect", Float.class);
         return new Texture.Symbol(
             json.getString("symbol"), getPoint(json, "origin", 0, 0),
-            atlas.subImage(rect.get(0), rect.get(1), rect.get(2), rect.get(3)));
+            atlas.tile(rect.get(0), rect.get(1), rect.get(2), rect.get(3)));
     }
 
     protected static IPoint getPoint (Json.Object json, String field, float defX, float defY) {

@@ -8,10 +8,7 @@ package tripleplay.util;
 import pythagoras.f.IRectangle;
 
 import playn.core.Canvas;
-import playn.core.PlayN;
 import playn.core.TextLayout;
-
-import tripleplay.ui.Style;
 
 /**
  * Handles the rendering of text with a particular effect (shadow, outline, etc.).
@@ -25,7 +22,7 @@ public abstract class EffectRenderer
             canvas.save();
             canvas.setFillColor(textColor);
             if (underlined) {
-                IRectangle bounds = layout.bounds();
+                IRectangle bounds = layout.bounds;
                 float sx = x + bounds.x(), sy = y + bounds.y() + bounds.height() + 1;
                 canvas.fillRect(sx, sy, bounds.width(), 1);
             }
@@ -56,7 +53,7 @@ public abstract class EffectRenderer
             boolean underlined, float x, float y) {
             canvas.save();
             if (underlined) {
-                IRectangle bounds = text.bounds();
+                IRectangle bounds = text.bounds;
                 float sx = x + bounds.x() + 1, sy = y + bounds.y() + bounds.height() + 2;
                 canvas.setFillColor(outlineColor).fillRect(sx-1, sy-1, bounds.width()+3, 3);
                 canvas.setFillColor(textColor).fillRect(sx, sy, bounds.width(), 1);
@@ -117,7 +114,7 @@ public abstract class EffectRenderer
             canvas.setFillColor(textColor);
             canvas.fillText(text, x+outlineWidth, y+outlineWidth);
             if (underlined) {
-                IRectangle bounds = text.bounds();
+                IRectangle bounds = text.bounds;
                 float sx = x + bounds.x() + outlineWidth;
                 float sy = y + bounds.y() + bounds.height() + outlineWidth + 1;
                 canvas.fillRect(sx, sy, bounds.width(), 1);
@@ -157,7 +154,7 @@ public abstract class EffectRenderer
             float sx = (shadowX < 0) ? 0 : shadowX, sy = (shadowY < 0) ? 0 : shadowY;
             canvas.save();
             if (underlined) {
-                IRectangle bounds = text.bounds();
+                IRectangle bounds = text.bounds;
                 canvas.setFillColor(shadowColor).fillRect(
                     sx+bounds.x()+x, sy+bounds.y()+bounds.height()+1, bounds.width()+1, 1);
                 canvas.setFillColor(textColor).fillRect(
@@ -183,10 +180,20 @@ public abstract class EffectRenderer
     }
 
     public static class Gradient extends EffectRenderer {
-        public final int gradientColor;
-        public final Style.GradientType gradientType;
+        /** Defines different types of gradient fills. */
+        public static enum Type {
+            /** Gradient color on the bottom (default). */
+            BOTTOM,
+            /** Gradient color on top. */
+            TOP,
+            /** Gradient color in the center. */
+            CENTER
+        }
 
-        public Gradient (int gradientColor, Style.GradientType gradientType) {
+        public final int gradientColor;
+        public final Type gradientType;
+
+        public Gradient (int gradientColor, Type gradientType) {
             this.gradientColor = gradientColor;
             this.gradientType = gradientType;
         }
@@ -217,12 +224,12 @@ public abstract class EffectRenderer
 
             canvas.save();
 
-            canvas.setFillGradient(
-                PlayN.graphics().createLinearGradient(0, 0, 0, text.height(), colors, positions));
+            canvas.setFillGradient(canvas.createGradient(new playn.core.Gradient.Linear(
+                0, 0, 0, text.size.height(), colors, positions)));
             canvas.fillText(text, x, y);
 
             if (underlined) {
-                IRectangle bounds = text.bounds();
+                IRectangle bounds = text.bounds;
                 float sx = x + bounds.x(), sy = y + bounds.y() + bounds.height() + 1;
                 canvas.fillRect(sx, sy, bounds.width(), 1);
             }

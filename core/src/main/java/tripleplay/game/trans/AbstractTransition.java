@@ -5,7 +5,9 @@
 
 package tripleplay.game.trans;
 
-import tripleplay.game.Screen;
+import playn.core.Platform;
+
+import tripleplay.game.ScreenStack.Screen;
 import tripleplay.game.ScreenStack;
 
 /**
@@ -13,7 +15,7 @@ import tripleplay.game.ScreenStack;
  * to the right type.
  */
 public abstract class AbstractTransition<T extends AbstractTransition<T>>
-    implements ScreenStack.Transition
+        extends ScreenStack.Transition
 {
     /** Configures the duration of the transition. */
     public T duration (float duration) {
@@ -35,7 +37,7 @@ public abstract class AbstractTransition<T extends AbstractTransition<T>>
         return asT();
     }
 
-    @Override public void init (Screen oscreen, Screen nscreen) {
+    @Override public void init (Platform plat, Screen oscreen, Screen nscreen) {
         if (_onStart != null) {
             _onStart.run();
         }

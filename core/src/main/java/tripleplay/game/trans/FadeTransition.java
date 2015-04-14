@@ -5,7 +5,9 @@
 
 package tripleplay.game.trans;
 
-import tripleplay.game.Screen;
+import playn.core.Platform;
+
+import tripleplay.game.ScreenStack.Screen;
 import tripleplay.game.ScreenStack;
 
 /**
@@ -13,10 +15,8 @@ import tripleplay.game.ScreenStack;
  */
 public class FadeTransition extends InterpedTransition<SlideTransition>
 {
-    public FadeTransition (ScreenStack stack) {
-    }
-
-    @Override public void init (Screen oscreen, Screen nscreen) {
+    @Override public void init (Platform plat, Screen oscreen, Screen nscreen) {
+        super.init(plat, oscreen, nscreen);
         nscreen.layer.setAlpha(0);
     }
 

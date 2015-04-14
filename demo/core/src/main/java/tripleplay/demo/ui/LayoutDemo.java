@@ -5,19 +5,20 @@
 
 package tripleplay.demo.ui;
 
+import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Group;
 import tripleplay.ui.Label;
+import tripleplay.ui.Root;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Style;
 import tripleplay.ui.Styles;
 import tripleplay.ui.layout.AbsoluteLayout;
 import tripleplay.ui.layout.AxisLayout;
 import tripleplay.ui.layout.TableLayout;
-import static tripleplay.ui.layout.TableLayout.COL;
 
-import tripleplay.demo.DemoScreen;
+import static tripleplay.ui.layout.TableLayout.COL;
 
 /**
  * Displays some layouts and their configuration options.
@@ -31,7 +32,7 @@ public class LayoutDemo extends DemoScreen
         return "UI: Various Layouts";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         TableLayout main = new TableLayout(COL.stretch(), COL).gaps(15, 15);
         TableLayout alignDemo = new TableLayout(
             COL.alignLeft(), COL.alignRight(), COL.stretch()).gaps(5, 5);

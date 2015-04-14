@@ -5,9 +5,14 @@
 
 package tripleplay.demo.game;
 
-import playn.core.util.Clock;
+import playn.core.Clock;
+import playn.core.Game;
+
+import react.Slot;
 import react.UnitSlot;
+
 import tripleplay.demo.DemoScreen;
+import tripleplay.demo.TripleDemo;
 import tripleplay.game.ScreenSpace;
 import tripleplay.ui.*;
 import tripleplay.ui.layout.AxisLayout;
@@ -21,12 +26,19 @@ public class ScreenSpaceDemo extends DemoScreen {
         return "ScreenSpace and Transitions";
     }
 
-    @Override protected Group createIface () {
+    @Override protected Group createIface (Root root) {
         // things are a bit hacky here because we're bridging between the ScreenStack world (which
         // is used for the demo) and the ScreenSpace world; normally a game would use *only*
         // ScreenStack or ScreenSpace, but for this demo we want to show both; so we put no UI in
         // our ScreenStack screen, and let the root ScreenSpace screen do the driving
-        _space = new ScreenSpace();
+        _space = new ScreenSpace(TripleDemo.game, TripleDemo.game.rootLayer);
+        closeOnHide(paint.connect(new Slot<Clock>() { public void onEmit (Clock clock) {
+            // bind the pos of our stack screen to the position of our top space screen
+            if (_top != null) {
+                layer.setTx(_top.layer.tx());
+                layer.setTy(_top.layer.ty());
+            }
+        }}));
         return new Group(AxisLayout.vertical());
     }
 
@@ -44,20 +56,6 @@ public class ScreenSpaceDemo extends DemoScreen {
         _space = null;
     }
 
-    @Override public void update (int delta) {
-        super.update(delta);
-        _space.update(delta);
-    }
-    @Override public void paint (Clock clock) {
-        super.paint(clock);
-        _space.paint(clock);
-        // bind the pos of our screen-stack screen to the position of our top screen-space screen
-        if (_top != null) {
-            layer.setTx(_top.layer.tx());
-            layer.setTy(_top.layer.ty());
-        }
-    }
-
     protected UnitSlot addScreen (final ScreenSpace.Dir dir) {
         return new UnitSlot() {
             public void onEmit () {
@@ -69,11 +67,13 @@ public class ScreenSpaceDemo extends DemoScreen {
 
     protected ScreenSpace.Screen createScreen (final int id) {
         return new ScreenSpace.UIScreen() {
+            @Override public Game game () { return TripleDemo.game; }
             @Override public String toString () {
                 return "Screen-" + id;
             }
             @Override protected Root createRoot () {
-                Root root = new Root(iface, AxisLayout.vertical(), SimpleStyles.newSheet());
+                Root root = new Root(iface, AxisLayout.vertical(),
+                                     SimpleStyles.newSheet(graphics()));
                 int blue = (id * 0x16);
                 root.addStyles(Style.BACKGROUND.is(Background.solid(0xFF333300+blue)));
                 root.add(new Label(toString()));
@@ -90,7 +90,7 @@ public class ScreenSpaceDemo extends DemoScreen {
                         }
                     }
                 }));
-                root.setSize(width(), height());
+                root.setSize(size());
                 return root;
             }
         };

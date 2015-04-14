@@ -8,7 +8,7 @@ package tripleplay.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import playn.core.PlayN;
+import playn.core.Platform;
 
 /**
  * Provides logging services that are routed to the appropriate logging destination on the client
@@ -89,25 +89,29 @@ public class Logger
      * A logging back-end that writes to PlayN.
      */
     public static class PlayNImpl implements Impl {
+        private final Platform plat;
+        public PlayNImpl (Platform plat) {
+            this.plat = plat;
+        }
         public void log (Level level, String ident, String message, Throwable t) {
             String msg = ident + ": " + message;
             switch (level) {
             case DEBUG:
-                if (t != null) PlayN.log().debug(msg, t);
-                else PlayN.log().debug(msg);
+                if (t != null) plat.log().debug(msg, t);
+                else plat.log().debug(msg);
                 break;
             default:
             case INFO:
-                if (t != null) PlayN.log().info(msg, t);
-                else PlayN.log().info(msg);
+                if (t != null) plat.log().info(msg, t);
+                else plat.log().info(msg);
                 break;
             case WARNING:
-                if (t != null) PlayN.log().warn(msg, t);
-                else PlayN.log().warn(msg);
+                if (t != null) plat.log().warn(msg, t);
+                else plat.log().warn(msg);
                 break;
             case ERROR:
-                if (t != null) PlayN.log().error(msg, t);
-                else PlayN.log().error(msg);
+                if (t != null) plat.log().error(msg, t);
+                else plat.log().error(msg);
                 break;
             }
         }

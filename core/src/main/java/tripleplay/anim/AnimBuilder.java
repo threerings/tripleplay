@@ -9,14 +9,13 @@ import pythagoras.f.XY;
 import react.Signal;
 import react.Value;
 
-import playn.core.GroupLayer;
-import playn.core.ImageLayer;
-import playn.core.Layer;
+import playn.core.Disposable;
 import playn.core.Sound;
-import static playn.core.PlayN.graphics;
+import playn.scene.GroupLayer;
+import playn.scene.Layer;
+import playn.scene.ImageLayer;
 
 import tripleplay.sound.Playable;
-import tripleplay.util.Destroyable;
 import tripleplay.util.Layers;
 
 /**
@@ -150,13 +149,13 @@ public abstract class AnimBuilder
 
     /**
      * Starts a flipbook animation in a new image layer which is created and added to {@code box}.
-     * When the flipbook animation is complete, the newly created image layer will not be destroyed
-     * automatically. This allows the animation to be repeated, if desired. The caller must destroy
-     * eventually the image layer, or more likely, destroy {@code box} which will cause the created
-     * image layer to be destroyed.
+     * When the flipbook animation is complete, the newly created image layer will not be disposed
+     * automatically. This allows the animation to be repeated, if desired. The caller must dispose
+     * eventually the image layer, or more likely, dispose {@code box} which will cause the created
+     * image layer to be disposed.
      */
     public Animation.Flip flipbook (GroupLayer box, Flipbook book) {
-        ImageLayer image = graphics().createImageLayer();
+        ImageLayer image = new ImageLayer();
         box.add(image);
         return flipbook(image, book);
     }
@@ -164,18 +163,18 @@ public abstract class AnimBuilder
     /**
      * Starts a flipbook animation that displays the supplied {@code book} at the specified
      * position in the supplied parent. The intermediate layers created to display the flipbook
-     * animation will be destroyed on completion.
+     * animation will be disposed on completion.
      */
     public Animation flipbookAt (GroupLayer parent, float x, float y, Flipbook book) {
-        GroupLayer box = graphics().createGroupLayer();
+        GroupLayer box = new GroupLayer();
         box.setTranslation(x, y);
-        return add(parent, box).then().flipbook(box, book).then().destroy(box);
+        return add(parent, box).then().flipbook(box, book).then().dispose(box);
     }
 
     /**
      * Starts a flipbook animation that displays the supplied {@code book} at the specified
      * position in the supplied parent. The intermediate layers created to display the flipbook
-     * animation will be destroyed on completion.
+     * animation will be disposed on completion.
      */
     public Animation flipbookAt (GroupLayer parent, XY pos, Flipbook book) {
         return flipbookAt(parent, pos.x(), pos.y(), book);
@@ -256,21 +255,11 @@ public abstract class AnimBuilder
     }
 
     /**
-     * Destroys the specified layer. This is generally done as the end of a chain of animations,
-     * which culminate in the removal (destruction) of the target layer.
+     * Disposes the specified disposable.
      */
-    public Animation.Action destroy (final Layer layer) {
+    public Animation.Action dispose (final Disposable dable) {
         return action(new Runnable() { public void run () {
-            if (!layer.destroyed()) layer.destroy();
-        }});
-    }
-
-    /**
-     * Destroys the specified destroyable.
-     */
-    public Animation.Action destroy (final Destroyable dable) {
-        return action(new Runnable() { public void run () {
-            dable.destroy();
+            dable.close();
         }});
     }
 
