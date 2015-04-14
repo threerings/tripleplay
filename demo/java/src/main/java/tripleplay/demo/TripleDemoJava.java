@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 
 import playn.core.Image;
 import playn.java.JavaPlatform;
+import playn.java.LWJGLPlatform;
 import playn.java.SWTPlatform;
 
 import tripleplay.platform.JavaTPPlatform;
@@ -21,7 +22,7 @@ public class TripleDemoJava
     enum Toolkit { NONE, AWT, SWT }
 
     public static void main (String[] args) {
-        JavaPlatform.Config config = new JavaPlatform.Config();
+        LWJGLPlatform.Config config = new LWJGLPlatform.Config();
         config.appName = "Tripleplay Demo";
 
         Toolkit tk = Toolkit.NONE;
@@ -34,7 +35,7 @@ public class TripleDemoJava
                 config.height = Integer.parseInt(wh[1]);
             } else if (args[ii].equals("--swt")) tk = Toolkit.SWT;
             else if (args[ii].equals("--awt")) tk = Toolkit.AWT;
-            else if (args[ii].equals("--retina")) config.scaleFactor = 2;
+            // else if (args[ii].equals("--retina")) config.scaleFactor = 2;
             else mainArgs.add(args[ii]);
         }
 
@@ -50,7 +51,7 @@ public class TripleDemoJava
             break;
         }
         case AWT: {
-            JavaPlatform jplat = new JavaPlatform(config);
+            LWJGLPlatform jplat = new LWJGLPlatform(config);
             JavaTPPlatform tpplat = new JavaTPPlatform(jplat, config);
             tpplat.setIcon(loadIcon(jplat));
             plat = jplat;
@@ -58,7 +59,7 @@ public class TripleDemoJava
         }
         default:
             // no native integration
-            plat = new JavaPlatform(config);
+            plat = new LWJGLPlatform(config);
             break;
         }
         new TripleDemo(plat);

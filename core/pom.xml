@@ -23,7 +23,7 @@
 
     <dependency>
       <groupId>io.playn</groupId>
-      <artifactId>playn-java</artifactId>
+      <artifactId>playn-java-lwjgl</artifactId>
       <version>${playn.version}</version>
       <scope>test</scope>
     </dependency>

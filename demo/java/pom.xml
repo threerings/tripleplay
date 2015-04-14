@@ -29,20 +29,14 @@
     </dependency>
 
     <dependency>
-      <groupId>io.playn</groupId>
-      <artifactId>playn-java</artifactId>
-      <version>${playn.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.threerings</groupId>
-      <artifactId>tripleplay-java</artifactId>
+      <artifactId>tripleplay-java-lwjgl</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.threerings</groupId>
-      <artifactId>tripleplay-swt-java</artifactId>
+      <artifactId>tripleplay-java-swt</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
