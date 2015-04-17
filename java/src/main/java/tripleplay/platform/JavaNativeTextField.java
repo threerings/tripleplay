@@ -22,6 +22,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
+import playn.core.Modifiers;
 import pythagoras.f.FloatMath;
 
 import playn.core.Font;
@@ -104,20 +105,20 @@ public class JavaNativeTextField extends JavaNativeOverlay
             }
         });
         _textComp.addKeyListener(new KeyListener() {
-            void post (Key key, boolean pressed, char typed) {
+            void post (Key key, boolean pressed, char typed, Modifiers modifiers) {
                 // no need to hop threads here, the JavaKeyboard does that
-                ((JavaKeyboard)PlayN.keyboard()).post(key, pressed, typed);
+                ((JavaKeyboard)PlayN.keyboard()).post(key, pressed, typed, modifiers);
             }
             @Override public void keyTyped (KeyEvent e) {
-                post(null, false, e.getKeyChar());
+                post(null, false, e.getKeyChar(), extractModifiers(e));
             }
 
             @Override public void keyReleased (KeyEvent e) {
-                post(translateKeyCode(e.getKeyCode()), false, '\u0000');
+                post(translateKeyCode(e.getKeyCode()), false, '\u0000', extractModifiers(e));
             }
 
             @Override public void keyPressed (KeyEvent e) {
-                post(translateKeyCode(e.getKeyCode()), true, '\u0000');
+                post(translateKeyCode(e.getKeyCode()), true, '\u0000', extractModifiers(e));
             }
         });
 
@@ -207,6 +208,25 @@ public class JavaNativeTextField extends JavaNativeOverlay
 
         // Unknown style, use plain.
         return java.awt.Font.PLAIN;
+    }
+
+    public Modifiers extractModifiers(KeyEvent event) {
+        Modifiers modifiers = new Modifiers();
+
+        int modMask = event.getModifiers();
+        if(((modMask & KeyEvent.ALT_MASK) != 0)) {
+            modifiers.add(Key.ALT);
+        }
+        if(((modMask & KeyEvent.CTRL_MASK) != 0)) {
+            modifiers.add(Key.CONTROL);
+        }
+        if(((modMask & KeyEvent.SHIFT_MASK) != 0)) {
+            modifiers.add(Key.SHIFT);
+        }
+        if(((modMask & KeyEvent.META_MASK) != 0)) {
+            modifiers.add(Key.META);
+        }
+        return modifiers;
     }
 
     /** Translates an AWT key code into a playn key, if possible. May return {@link Key#UNKNOWN} if
