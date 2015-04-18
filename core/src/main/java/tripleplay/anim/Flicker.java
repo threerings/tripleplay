@@ -25,8 +25,8 @@ import tripleplay.util.Interpolator;
  *
  * <p>To use: create a flicker, configure it as a pointer listener on a layer that represents your
  * touchable area, then use {@link Flicker#position} to position your flickable layer (or to offset
- * your hand-drawn flickable elements) on every frame tick. You must also call {@link
- * Flicker#paint} on every frame tick (to process changes due to acceleration and velocity).</p>
+ * your hand-drawn flickable elements) on every frame tick. You must also connect {@link
+ * Flicker#onPaint} to a paint signal (to process changes due to acceleration and velocity).</p>
  *
  * <p>Various flick parameters can be customized by overriding the appropriate method:
  * {@link #friction}, {@link #maxFlickVel}, etc.</p>

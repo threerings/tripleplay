@@ -172,7 +172,7 @@ public abstract class Behavior<T extends Element<T>> extends Pointer.Listener {
                 drag = new Point(press);
             }
 
-            /** Updates the state to the current event value and called {@link Track#onTrack()}. */
+            /** Updates the state to the current event value and called {@link Track#onTrack}. */
             public void update (Pointer.Interaction iact) {
                 boolean cancel = false;
                 toPoint(iact, drag);
@@ -208,8 +208,8 @@ public abstract class Behavior<T extends Element<T>> extends Pointer.Listener {
         }
 
         /**
-         * Converts an event to coordinates consumed by {@link #onTrack(Point, Point)}. By
-         * default, simply uses the local x, y.
+         * Converts an event to coordinates consumed by {@link #onTrack}. By default, simply uses
+         * the local x, y.
          */
         protected void toPoint (Pointer.Interaction iact, Point dest) {
             dest.set(iact.local.x, iact.local.y);
@@ -369,7 +369,7 @@ public abstract class Behavior<T extends Element<T>> extends Pointer.Listener {
     public abstract boolean onRelease (Pointer.Interaction iact);
 
     /** Called when the pointer is released and the subclass decides that it is a click, i.e.
-     * returns true from {@link #onRelease(Pointer.Event)}. */
+     * returns true from {@link #onRelease}. */
     public abstract void onClick (Pointer.Interaction iact);
 
     /** Resolves the value for the supplied style via our owner. */

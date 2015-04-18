@@ -25,7 +25,7 @@ public class DoubleTapper extends Tapper
 
     /**
      * Called when a double tap occurs. This is a simpler version of {@link
-     * #onDoubleTap(Events.Position)}, for subclasses that don't require the event position.
+     * #onDoubleTap(Event.XY)}, for subclasses that don't require the event position.
      */
     public void onDoubleTap () {}
 

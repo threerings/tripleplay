@@ -23,6 +23,7 @@ import playn.core.Color;
 import playn.core.Disposable;
 import playn.core.Surface;
 import playn.scene.GroupLayer;
+import playn.scene.Interaction;
 import playn.scene.Layer;
 import playn.scene.Mouse;
 import playn.scene.Pointer;
@@ -61,13 +62,15 @@ import tripleplay.util.Layers;
  *
  * <p>NOTE: scrolling is done by pointer events; there are two ways to provide interactive
  * (clickable) content.
- * <ul><li>The first way is to call {@link PlayN#setPropagateEvents(boolean)} with {@code true}.
- * This has global implications but allows any descendants within the content to be clicked
- * normally. Also, with this approach, after the pointer has been dragged more than a minimum
- * distance, the {@code Scroller} calls {@link Events.Input#capture()}, which will cancel all other
- * pointer interactions, including clickable descendants. For buttons or toggles, this causes the
- * element to be deselected, corresponding to popular mobile OS conventions.</li>
- * <li>The second way is to use the {@link #contentClicked} signal. This is more light weight but
+ *
+ * <ul><li>The first way is to pass {@code bubble=true} to {@link Pointer.Dispatcher}'s
+ * constructor. This allows any descendants within the content to be clicked normally. With this
+ * approach, after the pointer has been dragged more than a minimum distance, the {@code Scroller}
+ * calls {@link Interaction#capture}, which will cancel all other pointer interactions, including
+ * clickable descendants. For buttons or toggles, this causes the element to be deselected,
+ * corresponding to popular mobile OS conventions.</li>
+ *
+ * <li>The second way is to use the {@link #contentClicked} signal. This is more lightweight but
  * only emits after the pointer is released less than a minimum distance away from its starting
  * position.</li></ul>
  *
@@ -605,7 +608,7 @@ public class Scroller extends Composite<Scroller>
     }
 
     @Override protected void wasRemoved () {
-        _upconn.disconnect();
+        _upconn.close();
         updateBars(null); // make sure bars get destroyed in case we don't get added again
         super.wasRemoved();
     }

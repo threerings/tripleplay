@@ -143,7 +143,7 @@ public class ScreenStack {
          * @param oscreen the outgoing screen.
          * @param nscreen the incoming screen.
          * @param elapsed the elapsed time since the transition started (in millis if that's what
-         * your game is sending to {@link ScreenStack#update}).
+         * your game is sending to {@link Screen#update}).
          * @return false if the transition is not yet complete, true when it is complete.
          */
         public abstract boolean update (Screen oscreen, Screen nscreen, float elapsed);

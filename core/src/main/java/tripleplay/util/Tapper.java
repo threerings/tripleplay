@@ -11,8 +11,7 @@ import pythagoras.f.Point;
 
 /**
  * Detects taps on a layer. This is a simple implementation using a threshold distance. If the
- * pointer is dragged less than the threshold, a call to {@link #onTap(Events.Position)} is
- * generated.
+ * pointer is dragged less than the threshold, a call to {@link #onTap(Event.XY)} is generated.
  */
 public class Tapper extends Pointer.Listener
 {
@@ -27,7 +26,7 @@ public class Tapper extends Pointer.Listener
     public float maxTapDistSq = DEFAULT_TAP_DIST_SQ;
 
     /**
-     * Called when a tap occurs. This is a simpler version of {@link #onTap(Events.Position)}, for
+     * Called when a tap occurs. This is a simpler version of {@link #onTap(Event.XY)}, for
      * subclasses that don't require the event position.
      */
     public void onTap () {}

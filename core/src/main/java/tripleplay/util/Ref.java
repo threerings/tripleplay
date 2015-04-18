@@ -13,7 +13,7 @@ import playn.core.Disposable;
  */
 public abstract class Ref<T>
 {
-    /** Creates a reference to a {@link Destroyable} target. */
+    /** Creates a reference to a {@link Disposable} target. */
     public static <T extends Disposable> Ref<T> create (T target) {
         Ref<T> ref = new Ref<T>() {
             @Override protected void onClear (T target) {

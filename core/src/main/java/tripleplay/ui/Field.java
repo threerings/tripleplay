@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import playn.core.Graphics;
+import playn.core.Input;
 import playn.core.Keyboard;
 import playn.scene.Layer;
 import playn.scene.LayerUtil;
@@ -24,7 +25,7 @@ import tripleplay.platform.TPPlatform;
 import tripleplay.ui.util.Insets;
 
 /**
- * Displays text which can be edited via the {@link Keyboard#getText} popup.
+ * Displays text which can be edited via the {@link Input#getText} popup.
  */
 public class Field extends TextWidget<Field>
 {

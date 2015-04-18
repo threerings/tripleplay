@@ -38,8 +38,8 @@ import tripleplay.ui.util.Supplier;
  * }</pre>
  *
  * <p>The tab content associated with a button is supplied on demand via a {@link Supplier}
- * instance. The contract of {@code Supplier} is obeyed in that {@link Supplier#destroy()} is
- * called whenever the associated tab goes out of scope.
+ * instance. The contract of {@code Supplier} is obeyed in that {@link Supplier#close} is called
+ * whenever the associated tab goes out of scope.
  *
  * <p>NOTE: The inheritance from Composite means that child elements may not be added or removed
  * directly. It you need, for example, a title bar, just use a Group with the title bar and tabs.
