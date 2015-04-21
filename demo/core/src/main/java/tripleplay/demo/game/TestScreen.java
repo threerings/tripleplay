@@ -24,6 +24,14 @@ public abstract class TestScreen extends ScreenStack.UIScreen
         _depth = depth;
     }
 
+    @Override public void wasAdded () {
+        super.wasAdded();
+        Root root = iface.createRoot(createLayout(), stylesheet(), layer);
+        root.addStyles(Style.BACKGROUND.is(background()));
+        root.setSize(size());
+        createIface(root);
+    }
+
     @Override public void wasShown () {
         super.wasShown();
         game().plat.log().info(this + ".wasShown()");
@@ -37,8 +45,8 @@ public abstract class TestScreen extends ScreenStack.UIScreen
     @Override public void wasRemoved () {
         super.wasRemoved();
         game().plat.log().info(this + ".wasRemoved()");
+        iface.disposeRoots();
         layer.close();
-        iface.disposeRoot(_root);
     }
 
     @Override public void showTransitionCompleted () {
@@ -49,14 +57,6 @@ public abstract class TestScreen extends ScreenStack.UIScreen
     @Override public void hideTransitionStarted () {
         super.hideTransitionStarted();
         game().plat.log().info(this + ".hideTransitionStarted()");
-    }
-
-    @Override protected Root createRoot () {
-        Root root = iface.createRoot(createLayout(), stylesheet());
-        root.addStyles(Style.BACKGROUND.is(background()));
-        root.setSize(size());
-        createIface(root);
-        return root;
     }
 
     /** Returns the stylesheet to use for this screen. */
@@ -79,5 +79,4 @@ public abstract class TestScreen extends ScreenStack.UIScreen
     protected abstract void createIface (Root root);
 
     protected final int _depth;
-    protected Root _root;
 }

@@ -62,7 +62,8 @@ public class DemoMenuScreen extends ScreenStack.UIScreen
 
     @Override public Game game () { return TripleDemo.game; }
 
-    @Override protected Root createRoot () {
+    @Override public void wasAdded () {
+        super.wasAdded();
         Root root = iface.createRoot(AxisLayout.vertical().gap(15),
                                      SimpleStyles.newSheet(game().plat.graphics()), layer);
         root.addStyles(Style.BACKGROUND.is(
@@ -96,7 +97,11 @@ public class DemoMenuScreen extends ScreenStack.UIScreen
                 if (shown++ == toShow) _stack.push(screen, ScreenStack.NOOP);
             }
         }
-        return root;
+    }
+
+    @Override public void wasRemoved () {
+        super.wasRemoved();
+        iface.disposeRoots();
     }
 
     protected Button screen (String title, final ScreenFactory factory) {

@@ -29,13 +29,8 @@ public abstract class DemoScreen extends ScreenStack.UIScreen
 
     @Override public Game game () { return TripleDemo.game; }
 
-    @Override public void wasRemoved () {
-        super.wasRemoved();
-        iface.disposeRoots();
-        layer.disposeAll();
-    }
-
-    @Override protected Root createRoot () {
+    @Override public void wasAdded () {
+        super.wasAdded();
         Root root = iface.createRoot(
             AxisLayout.vertical().gap(0).offStretch(), stylesheet(), layer);
         root.addStyles(Style.BACKGROUND.is(background()), Style.VALIGN.top);
@@ -48,7 +43,12 @@ public abstract class DemoScreen extends ScreenStack.UIScreen
         if (subtitle() != null) root.add(new Label(subtitle()));
         Group iface = createIface(root);
         if (iface != null) root.add(iface.setConstraint(AxisLayout.stretched()));
-        return root;
+    }
+
+    @Override public void wasRemoved () {
+        super.wasRemoved();
+        iface.disposeRoots();
+        layer.disposeAll();
     }
 
     /** The label to use on the button that displays this demo. */
@@ -80,6 +80,4 @@ public abstract class DemoScreen extends ScreenStack.UIScreen
     protected Input input () { return game().plat.input(); }
     protected Json json () { return game().plat.json(); }
     protected Log log () { return game().plat.log(); }
-
-    protected Root _root;
 }

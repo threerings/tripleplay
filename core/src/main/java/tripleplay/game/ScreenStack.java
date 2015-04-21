@@ -97,36 +97,17 @@ public class ScreenStack {
         protected Closeable.Set _closeOnHide = new Closeable.Set();
     }
 
-    /** A {@link Screen} that takes care of basic UI setup for you. */
+    /** A {@link Screen} with an {@link Interface} for doing UI stuff. */
     public static abstract class UIScreen extends Screen {
 
         /** Manages the main UI elements for this screen. */
         public final Interface iface = new Interface(game().plat, paint);
 
-        @Override public void wasShown () {
-            super.wasShown();
-            _root = iface.addRoot(createRoot());
-            layer.add(_root.layer);
-        }
-
         @Override public void wasHidden () {
             super.wasHidden();
-            if (_root != null) {
-                iface.disposeRoot(_root);
-                _root = null;
-            }
-            // a screen is completely cleared and recreated between sleep/wake calls, so clear the
-            // animator after destroying the root so that unprocessed anims don't hold onto memory
+            // clear the animator on hide so that unprocessed anims don't hold onto memory
             iface.anim.clear();
         }
-
-        /** Creates the main UI root for this screen. This should also configure the size of the
-          * root prior to returning it. */
-        protected abstract Root createRoot ();
-
-        /** Contains the main UI for this screen.
-          * Created in {@link #wake}, destroyed in {@link #sleep}. */
-        protected Root _root;
     }
 
     /** Implements a particular screen transition. */
