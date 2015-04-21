@@ -330,7 +330,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
       * removed. */
     public void pop (Screen screen) {
         if (_current.screen == screen) {
-            if (!_screens.isEmpty()) popTrans(0);
+            if (_screens.size() > 1) popTrans(0);
             else {
                 ActiveScreen oscr = _screens.remove(0);
                 takeFocus(oscr);
