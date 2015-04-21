@@ -500,7 +500,7 @@ public abstract class SyncDB
     protected void queueFlushMods () {
         if (_flushQueued) return;
         _flushQueued = true;
-        _platform.invokeLater(new Runnable() { public void run () {
+        _platform.exec().invokeLater(new Runnable() { public void run () {
             flushMods();
             _flushQueued = false;
         }});

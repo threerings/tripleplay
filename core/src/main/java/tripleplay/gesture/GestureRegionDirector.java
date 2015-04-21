@@ -15,7 +15,7 @@ import pythagoras.f.Point;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
 
-import react.Connection;
+import react.Closeable;
 
 import playn.core.Platform;
 import playn.scene.Layer.HitTester;
@@ -57,12 +57,12 @@ public class GestureRegionDirector extends Touch.Listener
                 return _bounds.contains(p.x, p.y) ? layer : null;
             }
         });
-        _connection = layer.events().connect(this);
+        _conn = layer.events().connect(this);
         return this;
     }
 
     public void remove () {
-        if (_connection != null) _connection.disconnect();
+        _conn = Closeable.Util.close(_conn);
     }
 
     public Collection<GestureDirector> getRegions () {
@@ -199,7 +199,7 @@ public class GestureRegionDirector extends Touch.Listener
     protected final Platform _plat;
     protected final Timer _timer;
     protected IRectangle _bounds;
-    protected Connection _connection;
+    protected Closeable _conn = Closeable.Util.NOOP;
     protected Map<Integer, TrackedTouch> _activeTouches = new HashMap<Integer, TrackedTouch>();
     protected Set<Integer> _ignoredTouches = new HashSet<Integer>();
     protected Map<Rectangle, GestureDirector> _regions = new HashMap<Rectangle, GestureDirector>();
