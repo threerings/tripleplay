@@ -71,9 +71,9 @@ public class ScreenSpaceDemo extends DemoScreen {
             @Override public String toString () {
                 return "Screen-" + id;
             }
-            @Override protected Root createRoot () {
-                Root root = new Root(iface, AxisLayout.vertical(),
-                                     SimpleStyles.newSheet(graphics()));
+            @Override protected void createUI () {
+                Root root = iface.createRoot(AxisLayout.vertical(),
+                                             SimpleStyles.newSheet(graphics()), layer);
                 int blue = (id * 0x16);
                 root.addStyles(Style.BACKGROUND.is(Background.solid(0xFF333300+blue)));
                 root.add(new Label(toString()));
@@ -91,7 +91,6 @@ public class ScreenSpaceDemo extends DemoScreen {
                     }
                 }));
                 root.setSize(size());
-                return root;
             }
         };
     }

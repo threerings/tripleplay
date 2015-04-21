@@ -263,28 +263,20 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
         @Override public void wake () {
             super.wake();
-            _root = iface.addRoot(createRoot());
-            layer.add(_root.layer);
+            createUI();
         }
 
         @Override public void sleep () {
             super.sleep();
-            if (_root != null) {
-                iface.disposeRoot(_root);
-                _root = null;
-            }
+            iface.disposeRoots();
             // a screen is completely cleared and recreated between sleep/wake calls, so clear the
             // animator after disposeing the root so that unprocessed anims don't hold onto memory
             iface.anim.clear();
         }
 
-        /** Creates the main UI root for this screen. This should also configure the size of the
-          * root prior to returning it. */
-        protected abstract Root createRoot ();
-
-        /** Contains the main UI for this screen.
-          * Created in {@link #wake}, disposeed in {@link #sleep}. */
-        protected Root _root;
+        /** Creates the main UI for this screen. Create one or more {@link Root} instances using
+          * {@link #iface} and they will be disposed in {@link #sleep}. */
+        protected abstract void createUI ();
     }
 
     /** Creates a screen space which will manage screens for {@code game}. */
