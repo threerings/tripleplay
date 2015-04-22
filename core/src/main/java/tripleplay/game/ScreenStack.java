@@ -101,7 +101,11 @@ public class ScreenStack {
     public static abstract class UIScreen extends Screen {
 
         /** Manages the main UI elements for this screen. */
-        public final Interface iface = new Interface(game().plat, paint);
+        public final Interface iface;
+
+        public UIScreen (Platform plat) {
+            iface = new Interface(plat, paint);
+        }
 
         @Override public void wasHidden () {
             super.wasHidden();
