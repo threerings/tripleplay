@@ -48,8 +48,12 @@ public class Icons
     /** Creates an icon using the supplied texture tile {@code source}. */
     public static Icon image (final TileSource source) {
         return new Icon() {
-            @Override public float width () { return source.tile().width(); }
-            @Override public float height () { return source.tile().height();}
+            @Override public float width () {
+                return source.isLoaded() ? source.tile().width() : 0;
+            }
+            @Override public float height () {
+                return source.isLoaded() ? source.tile().height() : 0;
+            }
             @Override public Layer render () { return new ImageLayer(source); }
             @Override public RFuture<Icon> state () {
                 return source.tileAsync().map(Functions.constant((Icon)this));

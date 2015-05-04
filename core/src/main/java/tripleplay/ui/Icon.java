@@ -14,18 +14,18 @@ import react.RFuture;
 public interface Icon
 {
     /**
-     * Returns the width of this icon.
+     * Returns the width of this icon. If the icon is not yet loaded, this should return zero.
      */
     float width ();
 
     /**
-     * Returns the height of this icon.
+     * Returns the height of this icon. If the icon is not yet loaded, this should return zero.
      */
     float height ();
 
     /**
-     * Creates a new layer for displaying this icon. The caller is takes ownership of the new
-     * layer and is responsible for its destruction.
+     * Creates a new layer for displaying this icon. The caller is takes ownership of the new layer
+     * and is responsible for its destruction.
      */
     Layer render ();
 
