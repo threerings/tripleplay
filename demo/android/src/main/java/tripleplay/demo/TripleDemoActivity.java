@@ -5,12 +5,18 @@
 
 package tripleplay.demo;
 
+import android.util.DisplayMetrics;
+
 import playn.android.GameActivity;
-import playn.core.PlayN;
 
 public class TripleDemoActivity extends GameActivity
 {
     @Override public void main () {
-        PlayN.run(new TripleDemo());
+        new TripleDemo(platform());
+    }
+
+    protected float scaleFactor () {
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        return Math.min(2, dm.density);
     }
 }

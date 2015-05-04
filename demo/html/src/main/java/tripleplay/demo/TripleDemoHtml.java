@@ -5,15 +5,19 @@
 
 package tripleplay.demo;
 
-import playn.core.PlayN;
-import playn.html.HtmlGame;
+import com.google.gwt.core.client.EntryPoint;
+
 import playn.html.HtmlPlatform;
 
-public class TripleDemoHtml extends HtmlGame
-{
-    @Override public void start () {
-        HtmlPlatform platform = HtmlPlatform.register();
-        platform.assets().setPathPrefix("tripledemo/");
-        PlayN.run(new TripleDemo());
+public class TripleDemoHtml implements EntryPoint {
+
+    @Override public void onModuleLoad () {
+        HtmlPlatform.Config config = new HtmlPlatform.Config();
+        HtmlPlatform plat = new HtmlPlatform(config);
+        plat.setTitle("TriplePlay Demo");
+        plat.assets().setPathPrefix("tripledemo/");
+        // plat.disableRightClickContextMenu();
+        new TripleDemo(plat);
+        plat.start();
     }
 }
