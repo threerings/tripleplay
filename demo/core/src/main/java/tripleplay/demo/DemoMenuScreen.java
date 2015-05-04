@@ -28,6 +28,8 @@ import tripleplay.demo.util.*;
 public class DemoMenuScreen extends ScreenStack.UIScreen
 {
     public DemoMenuScreen (ScreenStack stack) {
+        super(TripleDemo.game.plat);
+
         _stack = stack;
         _rlabels = new String[] {
             "tripleplay.ui", "", "", "", "",

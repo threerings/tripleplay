@@ -15,12 +15,15 @@ import tripleplay.ui.layout.AxisLayout;
 
 import tripleplay.game.ScreenStack;
 
+import tripleplay.demo.TripleDemo;
+
 /**
  * A screen that contains UI elements.
  */
 public abstract class TestScreen extends ScreenStack.UIScreen
 {
     public TestScreen (int depth) {
+        super(TripleDemo.game.plat);
         _depth = depth;
     }
 
