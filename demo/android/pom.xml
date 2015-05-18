@@ -9,7 +9,7 @@
 
   <artifactId>tripleplay-demo-android</artifactId>
   <packaging>apk</packaging>
-  <name>TripleDemo Android</name>
+  <name>TP Demo Android</name>
 
   <dependencies>
     <dependency>

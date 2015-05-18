@@ -10,7 +10,7 @@
   <artifactId>tripleplay</artifactId>
   <packaging>jar</packaging>
 
-  <name>Triple Play Core</name>
+  <name>TP Core</name>
   <description>Utilities for use in PlayN-based games.</description>
 
   <dependencies>

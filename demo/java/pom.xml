@@ -9,7 +9,7 @@
 
   <artifactId>tripleplay-demo-java</artifactId>
   <packaging>jar</packaging>
-  <name>TripleDemo Java</name>
+  <name>TP Demo Java</name>
 
   <properties>
     <mainClass>tripleplay.demo.TripleDemoJava</mainClass>

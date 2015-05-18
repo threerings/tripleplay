@@ -12,7 +12,7 @@
   <version>2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Triple Play Parent</name>
+  <name>TP Parent</name>
   <description>Utilities for use in PlayN-based games.</description>
   <url>http://github.com/threerings/tripleplay/</url>
   <issueManagement>
@@ -65,6 +65,7 @@
     <module>java-lwjgl</module>
     <module>java-swt</module>
     <module>tools</module>
+    <module>plugins</module>
     <module>demo</module>
   </modules>
 

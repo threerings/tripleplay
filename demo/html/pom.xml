@@ -9,7 +9,7 @@
 
   <artifactId>tripleplay-demo-html</artifactId>
   <packaging>war</packaging>
-  <name>TripleDemo HTML</name>
+  <name>TP Demo HTML</name>
 
   <properties>
     <gwt.module>tripleplay.TripleDemo</gwt.module>

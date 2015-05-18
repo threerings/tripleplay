@@ -10,7 +10,7 @@
   <artifactId>tripleplay-demo</artifactId>
   <packaging>pom</packaging>
 
-  <name>TripleDemo Parent</name>
+  <name>TP Demo Parent</name>
   <description>A demo of the various Triple Play features.</description>
 
   <properties>

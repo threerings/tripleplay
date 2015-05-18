@@ -7,11 +7,15 @@
     <version>2.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tripleplay-maven-plugin</artifactId>
-  <packaging>maven-plugin</packaging>
+  <artifactId>tripleplay-tools</artifactId>
+  <packaging>jar</packaging>
 
-  <name>Triple Play Tools</name>
+  <name>TP Tools</name>
   <description>Build-time tools for use with Triple Play.</description>
+
+  <properties>
+    <scala.version>2.11.6</scala.version>
+  </properties>
 
   <dependencies>
     <dependency>
@@ -21,42 +25,33 @@
       <scope>compile</scope>
     </dependency>
 
-    <!-- Maven wiring dependencies -->
     <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-plugin-api</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.plugin-tools</groupId>
-      <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.1</version>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-          <extractors>
-            <extractor>java-annotations</extractor>
-          </extractors>
-        </configuration>
+        <groupId>org.scala-tools</groupId>
+        <artifactId>maven-scala-plugin</artifactId>
+        <version>2.15.2</version>
         <executions>
           <execution>
-            <id>mojo-descriptor</id>
-            <goals>
-              <goal>descriptor</goal>
-            </goals>
+            <id>compile</id>
+            <goals><goal>compile</goal></goals>
+            <phase>compile</phase>
+          </execution>
+          <execution>
+            <id>test-compile</id>
+            <goals><goal>testCompile</goal></goals>
+            <phase>test-compile</phase>
+          </execution>
+          <execution>
+            <phase>process-resources</phase>
+            <goals><goal>compile</goal></goals>
           </execution>
         </executions>
       </plugin>

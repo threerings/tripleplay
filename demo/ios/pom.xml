@@ -9,7 +9,7 @@
 
   <artifactId>tripleplay-demo-ios</artifactId>
   <packaging>dll</packaging>
-  <name>TripleDemo iOS</name>
+  <name>TP Demo iOS</name>
 
   <dependencies>
     <dependency>

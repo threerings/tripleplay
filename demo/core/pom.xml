@@ -9,7 +9,7 @@
 
   <artifactId>tripleplay-demo-core</artifactId>
   <packaging>jar</packaging>
-  <name>TripleDemo Core</name>
+  <name>TP Demo Core</name>
 
   <dependencies>
     <dependency>

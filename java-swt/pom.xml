@@ -10,7 +10,7 @@
   <artifactId>tripleplay-java-swt</artifactId>
   <packaging>jar</packaging>
 
-  <name>Triple Play Java SWT</name>
+  <name>TP Java SWT</name>
   <description>Java-specific code for TriplePlay, using PlayN SWT backend.</description>
 
   <dependencies>

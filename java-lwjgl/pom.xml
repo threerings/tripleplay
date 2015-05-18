@@ -10,7 +10,7 @@
   <artifactId>tripleplay-java-lwjgl</artifactId>
   <packaging>jar</packaging>
 
-  <name>Triple Play Java LWJGL</name>
+  <name>TP Java LWJGL</name>
   <description>Java-specific code for TriplePlay, using PlayN LWJGL backend.</description>
 
   <dependencies>
