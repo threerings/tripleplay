@@ -66,7 +66,7 @@ public class ScreenSpaceDemo extends DemoScreen {
     }
 
     protected ScreenSpace.Screen createScreen (final int id) {
-        return new ScreenSpace.UIScreen() {
+        return new ScreenSpace.UIScreen(TripleDemo.game.plat) {
             @Override public Game game () { return TripleDemo.game; }
             @Override public String toString () {
                 return "Screen-" + id;

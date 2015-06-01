@@ -17,9 +17,10 @@ import react.UnitSignal;
 import react.UnitSlot;
 
 import playn.core.Clock;
+import playn.core.Game;
+import playn.core.Platform;
 import playn.scene.GroupLayer;
 import playn.scene.Pointer;
-import playn.core.Game;
 
 import tripleplay.ui.Interface;
 import tripleplay.ui.Root;
@@ -259,7 +260,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     public static abstract class UIScreen extends Screen {
 
         /** Manages the main UI elements for this screen. */
-        public final Interface iface = new Interface(game().plat, paint);
+        public final Interface iface;
 
         @Override public void wake () {
             super.wake();
@@ -272,6 +273,10 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             // a screen is completely cleared and recreated between sleep/wake calls, so clear the
             // animator after disposeing the root so that unprocessed anims don't hold onto memory
             iface.anim.clear();
+        }
+
+        protected UIScreen (Platform plat) {
+            iface = new Interface(plat, paint);
         }
 
         /** Creates the main UI for this screen. Create one or more {@link Root} instances using
