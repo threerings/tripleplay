@@ -165,6 +165,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
         public Screen () {
             layer.setName(Screen.this + " layer");
+            layer.absorbHits();
         }
 
         /** Called when this screen is first added to the screen space. */
