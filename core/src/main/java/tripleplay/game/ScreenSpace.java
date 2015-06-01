@@ -456,8 +456,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             ActiveScreen previous = (_screens.size() <= 1) ? null : _screens.get(1);
             _onPointer.close();
             if (previous == null || !as.dir.canUntrans()) _onPointer = Closeable.Util.NOOP;
-            else _onPointer = _current.screen.layer.events().connect(
-                new UntransListener(as, previous));
+            else _onPointer = as.screen.layer.events().connect(new UntransListener(as, previous));
 
         } catch (Exception e) {
             _game.plat.log().warn("Screen choked in gainedFocus() [screen=" + as.screen + "]", e);
@@ -497,6 +496,10 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         public void dispose () {
             check(false); // make sure screen is hidden/remove
             screen.dispose();
+        }
+
+        @Override public String toString () {
+            return screen + " @ " + dir;
         }
     }
 
