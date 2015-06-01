@@ -47,7 +47,7 @@ public abstract class Element<T extends Element<T>>
                 return hit;
             }
             @Override public String toString () {
-                return "HitTester for " + Element.this;
+                return "<" + size() + ">";
             }
         });
 
@@ -566,7 +566,9 @@ public abstract class Element<T extends Element<T>>
      * Creates the layer to be used by this element. Subclasses may override to use a clipped one.
      */
     protected GroupLayer createLayer () {
-        return new GroupLayer();
+        return new GroupLayer() {
+            @Override public String name () { return Element.this + " layer"; }
+        };
     }
 
     /**

@@ -163,6 +163,10 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         /** Returns the game in which this screen is operating. */
         public abstract Game game ();
 
+        public Screen () {
+            layer.setName(Screen.this + " layer");
+        }
+
         /** Called when this screen is first added to the screen space. */
         public void init () {
             // nada by default
@@ -229,6 +233,11 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
          */
         public void closeOnSleep (AutoCloseable ac) {
             _closeOnSleep.add(ac);
+        }
+
+        @Override public String toString () {
+            String name = getClass().getName();
+            return name.substring(name.lastIndexOf(".")+1).intern();
         }
 
         void setTransiting (boolean transiting) {
