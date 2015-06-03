@@ -205,6 +205,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
           * dispose the UI and minimize the screen's memory footprint as much as possible. */
         public void sleep () {
             _flags &= ~AWAKE;
+            _closeOnSleep.close();
         }
 
         /** Called when this screen is removed from the screen space. This will always be preceded
