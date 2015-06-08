@@ -37,6 +37,18 @@ public abstract class AbstractTextButton<T extends AbstractTextButton<T>> extend
         return asT();
     }
 
+    /** Updates the text displayed by this button. */
+    public T setText (String text) {
+        this.text.update(text);
+        return asT();
+    }
+
+    /** Updates the icon displayed by this button. */
+    public T setIcon (Icon icon) {
+        this.icon.update(icon);
+        return asT();
+    }
+
     protected AbstractTextButton (String text, Icon icon) {
         this.text.update(text);
         this.text.connect(textDidChange());

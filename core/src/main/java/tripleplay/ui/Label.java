@@ -42,6 +42,18 @@ public class Label extends TextWidget<Label>
         this.icon.update(icon);
     }
 
+    /** Updates the text displayed by this label. */
+    public Label setText (String text) {
+        this.text.update(text);
+        return this;
+    }
+
+    /** Updates the icon displayed by this label. */
+    public Label setIcon (Icon icon) {
+        this.icon.update(icon);
+        return this;
+    }
+
     @Override public String toString () {
         return "Label(" + text.get() + ")";
     }
