@@ -99,9 +99,16 @@ public class Glyph implements Disposable
      * Prepares the canvas and renders the supplied text at 0, 0 using the given config.
      */
     public void renderText (Graphics gfx, StyledText.Plain text) {
+        renderText(gfx, text, 0, 0);
+    }
+
+    /**
+     * Prepares the canvas and renders the supplied text at {@code x, y} using the given config.
+     */
+    public void renderText (Graphics gfx, StyledText.Plain text, int x, int y) {
         prepare(gfx, text.width(), text.height());
         Canvas canvas = begin();
-        text.render(canvas, 0, 0);
+        text.render(canvas, x, y);
         end();
         _layer.setTranslation(text.style.effect.offsetX(), text.style.effect.offsetY());
     }
