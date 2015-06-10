@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import react.Closeable;
 import react.ValueView;
 import react.Value;
 
@@ -23,18 +24,24 @@ public abstract class AbstractTextButton<T extends AbstractTextButton<T>> extend
      * Binds the text of this button to the supplied reactive value. The current text will be
      * adjusted to match the state of {@code text}.
      */
-    public T bindText (ValueView<String> text) {
-        text.connectNotify(this.text.slot());
-        return asT();
+    public T bindText (final ValueView<String> textV) {
+        return addBinding(new Binding(_bindings) {
+            public Closeable connect () {
+                return textV.connectNotify(text.slot());
+            }
+        });
     }
 
     /**
      * Binds the icon of this button to the supplied reactive value. The current icon will be
      * adjusted to match the state of {@code icon}.
      */
-    public T bindIcon (ValueView<Icon> icon) {
-        icon.connectNotify(this.icon.slot());
-        return asT();
+    public T bindIcon (final ValueView<Icon> iconV) {
+        return addBinding(new Binding(_bindings) {
+            public Closeable connect () {
+                return iconV.connectNotify(icon.slot());
+            }
+        });
     }
 
     /** Updates the text displayed by this button. */

@@ -5,7 +5,9 @@
 
 package tripleplay.ui;
 
+import react.Closeable;
 import react.Value;
+import react.ValueView;
 
 /**
  * A widget that displays one or more lines of text and/or an icon image.
@@ -40,6 +42,30 @@ public class Label extends TextWidget<Label>
         // update after connect so we trigger iconDidChange, in case our icon is a not-ready-image
         this.icon.connect(iconDidChange());
         this.icon.update(icon);
+    }
+
+    /**
+     * Binds the text of this label to the supplied reactive value. The current text will be
+     * adjusted to match the state of {@code text}.
+     */
+    public Label bindText (final ValueView<String> textV) {
+        return addBinding(new Binding(_bindings) {
+            public Closeable connect () {
+                return textV.connectNotify(text.slot());
+            }
+        });
+    }
+
+    /**
+     * Binds the icon of this label to the supplied reactive value. The current icon will be
+     * adjusted to match the state of {@code icon}.
+     */
+    public Label bindIcon (final ValueView<Icon> iconV) {
+        return addBinding(new Binding(_bindings) {
+            public Closeable connect () {
+                return iconV.connectNotify(icon.slot());
+            }
+        });
     }
 
     /** Updates the text displayed by this label. */

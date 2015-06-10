@@ -11,6 +11,7 @@ import pythagoras.f.MathUtil;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
 
+import react.Closeable;
 import react.Signal;
 import react.SignalView;
 import react.Slot;
@@ -199,12 +200,15 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Binds the enabledness of this element to the supplied value view. The current enabledness will
-     * be adjusted to match the state of {@code isEnabled}.
+     * Binds the enabledness of this element to the supplied value view. The current enabledness
+     * will be adjusted to match the state of {@code isEnabled}.
      */
-    public T bindEnabled (ValueView<Boolean> isEnabled) {
-        isEnabled.connectNotify(enabledSlot());
-        return asT();
+    public T bindEnabled (final ValueView<Boolean> isEnabledV) {
+        return addBinding(new Binding(_bindings) {
+            public Closeable connect () {
+                return isEnabledV.connectNotify(enabledSlot());
+            }
+        });
     }
 
     /**
@@ -243,9 +247,12 @@ public abstract class Element<T extends Element<T>>
      * Binds the visibility of this element to the supplied value view. The current visibility will
      * be adjusted to match the state of {@code isVisible}.
      */
-    public T bindVisible (ValueView<Boolean> isVisible) {
-        isVisible.connectNotify(visibleSlot());
-        return asT();
+    public T bindVisible (final ValueView<Boolean> isVisibleV) {
+        return addBinding(new Binding(_bindings) {
+            public Closeable connect () {
+                return isVisibleV.connectNotify(visibleSlot());
+            }
+        });
     }
 
     /**
@@ -321,6 +328,7 @@ public abstract class Element<T extends Element<T>>
         if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.TRUE);
         invalidate();
         set(Flag.IS_ADDING, false);
+        for (Binding b = _bindings; b != Binding.NONE; b = b.next) b.bind();
     }
 
     /**
@@ -336,6 +344,7 @@ public abstract class Element<T extends Element<T>>
         _bginst.clear();
         if (_hierarchyChanged != null) _hierarchyChanged.emit(Boolean.FALSE);
         set(Flag.IS_REMOVING, false);
+        for (Binding b = _bindings; b != Binding.NONE; b = b.next) b.close();
     }
 
     /**
@@ -596,6 +605,12 @@ public abstract class Element<T extends Element<T>>
         return isSet(Flag.IS_ADDING) || (_parent != null && _parent.willAdd());
     }
 
+    protected T addBinding (Binding binding) {
+        _bindings = binding;
+        if (isVisible()) binding.bind();
+        return asT();
+    }
+
     protected abstract class BaseLayoutData {
         /**
          * Rebuilds this element's visualization. Called when this element's size has changed. In
@@ -772,6 +787,34 @@ public abstract class Element<T extends Element<T>>
         protected Take widthFn = Take.PREFERRED_IF_SET, heightFn = Take.PREFERRED_IF_SET;
     }
 
+    /** Used to track bindings to reactive values, which are established when this element is added
+      * to the UI hierarchy and closed when the element is removed. This allows us to provide
+      * bindFoo() methods which neither leak connections to reactive values whose lifetimes may
+      * exceed that of the element that is displaying them, nor burdens the caller with thinking
+      * about and managing this. */
+    protected static abstract class Binding {
+        public static final Binding NONE = new Binding(null) {
+            public Closeable connect () { return Closeable.Util.NOOP; }
+        };
+
+        public final Binding next;
+        public Binding (Binding next) {
+            this.next = next;
+        }
+
+        public abstract Closeable connect ();
+
+        public void bind () {
+            assert _conn == Closeable.Util.NOOP;
+            _conn = connect();
+        }
+        public void close () {
+            _conn = Closeable.Util.close(_conn);
+        }
+
+        protected Closeable _conn = Closeable.Util.NOOP;
+    }
+
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;
     protected Container<?> _parent;
     protected Dimension _preferredSize;
@@ -779,6 +822,7 @@ public abstract class Element<T extends Element<T>>
     protected Styles _styles = Styles.none();
     protected Layout.Constraint _constraint;
     protected Signal<Boolean> _hierarchyChanged;
+    protected Binding _bindings = Binding.NONE;
 
     protected LayoutData _ldata;
     protected final Ref<Background.Instance> _bginst = Ref.<Background.Instance>create(null);
