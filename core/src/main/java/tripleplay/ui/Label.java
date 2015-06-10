@@ -53,6 +53,9 @@ public class Label extends TextWidget<Label>
             public Closeable connect () {
                 return textV.connectNotify(text.slot());
             }
+            @Override public String toString () {
+                return Label.this + ".bindText";
+            }
         });
     }
 
@@ -64,6 +67,9 @@ public class Label extends TextWidget<Label>
         return addBinding(new Binding(_bindings) {
             public Closeable connect () {
                 return iconV.connectNotify(icon.slot());
+            }
+            @Override public String toString () {
+                return Label.this + ".bindIcon";
             }
         });
     }

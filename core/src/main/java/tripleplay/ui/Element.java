@@ -205,8 +205,11 @@ public abstract class Element<T extends Element<T>>
      */
     public T bindEnabled (final ValueView<Boolean> isEnabledV) {
         return addBinding(new Binding(_bindings) {
-            public Closeable connect () {
+            @Override public Closeable connect () {
                 return isEnabledV.connectNotify(enabledSlot());
+            }
+            @Override public String toString () {
+                return Element.this + ".bindEnabled";
             }
         });
     }
@@ -251,6 +254,9 @@ public abstract class Element<T extends Element<T>>
         return addBinding(new Binding(_bindings) {
             public Closeable connect () {
                 return isVisibleV.connectNotify(visibleSlot());
+            }
+            @Override public String toString () {
+                return Element.this + ".bindVisible";
             }
         });
     }
@@ -805,7 +811,7 @@ public abstract class Element<T extends Element<T>>
         public abstract Closeable connect ();
 
         public void bind () {
-            assert _conn == Closeable.Util.NOOP;
+            assert _conn == Closeable.Util.NOOP : "Already bound: " + this;
             _conn = connect();
         }
         public void close () {

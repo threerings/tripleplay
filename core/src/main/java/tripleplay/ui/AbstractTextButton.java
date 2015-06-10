@@ -29,6 +29,9 @@ public abstract class AbstractTextButton<T extends AbstractTextButton<T>> extend
             public Closeable connect () {
                 return textV.connectNotify(text.slot());
             }
+            @Override public String toString () {
+                return AbstractTextButton.this + ".bindText";
+            }
         });
     }
 
@@ -40,6 +43,9 @@ public abstract class AbstractTextButton<T extends AbstractTextButton<T>> extend
         return addBinding(new Binding(_bindings) {
             public Closeable connect () {
                 return iconV.connectNotify(icon.slot());
+            }
+            @Override public String toString () {
+                return AbstractTextButton.this + ".bindIcon";
             }
         });
     }
