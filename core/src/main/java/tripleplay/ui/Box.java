@@ -243,23 +243,6 @@ public class Box extends Container.Mutable<Box> {
         return Box.class;
     }
 
-    @Override protected void wasAdded () {
-        super.wasAdded();
-        if (_contents != null) {
-            _contents.set(Flag.IS_ADDING, true);
-            _contents.wasAdded();
-        }
-    }
-
-    @Override protected void wasRemoved () {
-        super.wasRemoved();
-        if (_contents != null) {
-            if (isSet(Flag.WILL_DISPOSE)) _contents.set(Flag.WILL_DISPOSE, true);
-            _contents.set(Flag.IS_REMOVING, true);
-            _contents.wasRemoved();
-        }
-    }
-
     protected Box set (Element<?> contents, boolean destroy) {
         if (_contents != null) {
             didRemove(_contents, destroy);
