@@ -607,7 +607,7 @@ public abstract class Element<T extends Element<T>>
 
     protected T addBinding (Binding binding) {
         _bindings = binding;
-        if (isVisible()) binding.bind();
+        if (isAdded()) binding.bind();
         return asT();
     }
 
