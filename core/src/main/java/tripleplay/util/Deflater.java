@@ -72,6 +72,11 @@ public class Deflater extends Conflater
         return _buf.toString();
     }
 
+    public Deflater reset () {
+        _buf.setLength(0);
+        return this;
+    }
+
     protected void addVarInt (int value, boolean cont) {
         if (value >= BASE) addVarInt(value / BASE, true);
         _buf.append((cont ? VARCONT : VARABS).charAt(value % BASE));
