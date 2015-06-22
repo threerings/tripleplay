@@ -5,6 +5,9 @@
 
 package tripleplay.util;
 
+/**
+ * Code shared by {@link Inflater} and {@code Deflater}.
+ */
 abstract class Conflater {
 
     protected static String toHexString (int value, int ncount) {
@@ -31,7 +34,7 @@ abstract class Conflater {
 
     protected static final String HEX_CHARS = "0123456789ABCDEF";
 
-    // used for variable length int encoding
+    // used for variable length int encoding (by Inflater/Deflater)
     protected static final String VARABS =
         "\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO"; // ! intentionally omitted
     protected static final String VARCONT =
