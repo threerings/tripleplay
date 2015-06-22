@@ -6,8 +6,8 @@
 package tripleplay.ui;
 
 /**
-* A grouping element that contains other elements and lays them out according to a layout policy.
-*/
+ * A grouping element that contains other elements and lays them out according to a layout policy.
+ */
 public class Group extends Elements<Group>
 {
     /**
