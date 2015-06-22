@@ -25,6 +25,12 @@ public class ConflaterTest
         for (int ii = Integer.MAX_VALUE; ii >= 0; ii -= 65536) {
             d.addInt(ii).addVarInt(ii);
         }
+        for (long ii = Long.MIN_VALUE+LONG_STRIDE; ii <= 0; ii += LONG_STRIDE) {
+            d.addVarLong(ii);
+        }
+        for (long ii = Long.MAX_VALUE; ii >= 0; ii -= LONG_STRIDE) {
+            d.addVarLong(ii);
+        }
         d.addBool(false);
 
         Inflater i = new Inflater(d.encoded());
@@ -43,6 +49,14 @@ public class ConflaterTest
             assertEquals(ii, i.popInt());
             assertEquals(ii, i.popVarInt());
         }
+        for (long ii = Long.MIN_VALUE+LONG_STRIDE; ii <= 0; ii += LONG_STRIDE) {
+            assertEquals(ii, i.popVarLong());
+        }
+        for (long ii = Long.MAX_VALUE; ii >= 0; ii -= LONG_STRIDE) {
+            assertEquals(ii, i.popVarLong());
+        }
         assertEquals(false, i.popBool());
     }
+
+    private static final long LONG_STRIDE = Long.MAX_VALUE >> 16;
 }

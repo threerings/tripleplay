@@ -51,6 +51,19 @@ public class Inflater extends Conflater
         return neg ? (-1*value) : value;
     }
 
+    public long popVarLong () {
+        long value = 0;
+        char c;
+        boolean neg = _data.charAt(_pos) == NEG_MARKER;
+        if (neg) _pos++;
+        do {
+            value *= BASE;
+            c = _data.charAt(_pos++);
+            value += (c >= CONT0) ? (c - CONT0) : (c - ABS0);
+        } while (c >= CONT0);
+        return neg ? (-1*value) : value;
+    }
+
     public String popFLString (int length) {
         return _data.substring(pos(length), _pos);
     }

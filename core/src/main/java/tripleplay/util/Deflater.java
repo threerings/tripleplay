@@ -53,6 +53,16 @@ public class Deflater extends Conflater
         return this;
     }
 
+    public Deflater addVarLong (long value) {
+        assert value > Long.MIN_VALUE : "Can't use varlong for Long.MIN_VALUE";
+        if (value < 0) {
+            _buf.append(NEG_MARKER);
+            value *= -1;
+        }
+        addVarLong(value, false);
+        return this;
+    }
+
     public Deflater addFLString (String value) {
         _buf.append(value);
         return this;
@@ -80,6 +90,11 @@ public class Deflater extends Conflater
     protected void addVarInt (int value, boolean cont) {
         if (value >= BASE) addVarInt(value / BASE, true);
         _buf.append((cont ? VARCONT : VARABS).charAt(value % BASE));
+    }
+
+    protected void addVarLong (long value, boolean cont) {
+        if (value >= BASE) addVarLong(value / BASE, true);
+        _buf.append((cont ? VARCONT : VARABS).charAt((int)(value % BASE)));
     }
 
     protected final void check (int value, int min, int max, String type) {
