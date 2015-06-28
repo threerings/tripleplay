@@ -210,7 +210,7 @@ public class TableLayout extends Layout
             if ((col += colspan) == columns) {
                 col = 0;
                 x = startX;
-                y += (rowHeight + _rowgap);
+                if (rowHeight > 0) y += (rowHeight + _rowgap);
                 row++;
             }
         }
