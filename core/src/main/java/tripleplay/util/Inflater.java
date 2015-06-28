@@ -11,6 +11,7 @@ package tripleplay.util;
 public class Inflater extends Conflater
 {
     public Inflater (String data) {
+        if (data == null) throw new NullPointerException();
         _data = data;
     }
 
