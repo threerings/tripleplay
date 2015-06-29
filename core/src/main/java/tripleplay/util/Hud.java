@@ -10,7 +10,6 @@ import java.util.List;
 
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
-import react.UnitSlot;
 import react.Value;
 
 import playn.core.*;

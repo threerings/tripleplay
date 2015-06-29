@@ -13,8 +13,6 @@ import react.Value;
 
 import playn.scene.Pointer;
 
-import tripleplay.util.Layers;
-
 /**
  * An item in a menu. This overrides clicking with a two phase click behavior: clicking an
  * unselected menu item selects it; clicking a selected menu item triggers it.

@@ -16,7 +16,6 @@ import java.util.Set;
 
 import playn.core.Disposable;
 import playn.core.Graphics;
-import playn.core.Image;
 import playn.core.QuadBatch;
 import playn.core.Tile;
 

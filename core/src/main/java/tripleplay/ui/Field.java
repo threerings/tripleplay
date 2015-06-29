@@ -5,10 +5,8 @@
 
 package tripleplay.ui;
 
-import playn.core.Graphics;
 import playn.core.Input;
 import playn.core.Keyboard;
-import playn.scene.Layer;
 import playn.scene.LayerUtil;
 import playn.scene.Pointer;
 

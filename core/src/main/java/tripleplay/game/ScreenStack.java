@@ -21,8 +21,6 @@ import playn.core.Platform;
 import playn.scene.GroupLayer;
 
 import tripleplay.ui.Interface;
-import tripleplay.ui.Root;
-
 import tripleplay.game.trans.FlipTransition;
 import tripleplay.game.trans.PageTurnTransition;
 import tripleplay.game.trans.SlideTransition;

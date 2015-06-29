@@ -8,7 +8,6 @@ package tripleplay.game.trans;
 import playn.core.Platform;
 
 import tripleplay.game.ScreenStack.Screen;
-import tripleplay.game.ScreenStack;
 
 /**
  * Fades the new screen in front of the old one.

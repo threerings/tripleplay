@@ -13,12 +13,8 @@ import pythagoras.f.Point;
 
 import react.Function;
 import react.RFuture;
-import react.RPromise;
 import react.Slot;
 import react.Try;
-import react.Value;
-
-import playn.core.Assets;
 import playn.core.Image;
 import playn.core.Json;
 import playn.core.Platform;

@@ -6,7 +6,6 @@
 package tripleplay.util;
 
 import playn.core.Event;
-import playn.scene.Pointer;
 
 /**
  * Detects double taps on a layer, using a threshold time between taps. Two taps that occur

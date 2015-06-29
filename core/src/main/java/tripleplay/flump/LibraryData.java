@@ -13,7 +13,6 @@ import java.util.List;
 
 import pythagoras.f.Point;
 
-import playn.core.Platform;
 import playn.core.Json;
 
 /**

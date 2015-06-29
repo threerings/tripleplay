@@ -5,7 +5,6 @@
 
 package tripleplay.ui.util;
 
-import playn.scene.Layer;
 import playn.scene.LayerUtil;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;

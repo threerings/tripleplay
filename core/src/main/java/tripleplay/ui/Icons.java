@@ -5,15 +5,10 @@
 
 package tripleplay.ui;
 
-import pythagoras.f.Rectangle;
-
 import react.Functions;
 import react.RFuture;
 
-import playn.core.Graphics;
-import playn.core.Image;
 import playn.core.Surface;
-import playn.core.Tile;
 import playn.core.TileSource;
 import playn.scene.GroupLayer;
 import playn.scene.ImageLayer;

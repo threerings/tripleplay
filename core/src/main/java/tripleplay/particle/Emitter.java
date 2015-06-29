@@ -13,7 +13,6 @@ import react.Slot;
 import react.UnitSlot;
 
 import playn.core.Clock;
-import playn.core.Image;
 import playn.core.QuadBatch;
 import playn.core.Surface;
 import playn.core.Tile;

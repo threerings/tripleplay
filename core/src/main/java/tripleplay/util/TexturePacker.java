@@ -13,12 +13,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import pythagoras.f.Rectangle;
-
 import playn.core.Graphics;
 import playn.core.QuadBatch;
 import playn.core.Surface;
-import playn.core.Texture;
 import playn.core.TextureSurface;
 import playn.core.Tile;
 

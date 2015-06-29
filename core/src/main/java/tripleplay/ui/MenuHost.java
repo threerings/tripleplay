@@ -24,7 +24,6 @@ import react.UnitSlot;
 import static tripleplay.ui.Log.log;
 import tripleplay.platform.TPPlatform;
 import tripleplay.ui.util.BoxPoint;
-import tripleplay.util.Layers;
 
 /**
  * Provides a context for popping up a menu.

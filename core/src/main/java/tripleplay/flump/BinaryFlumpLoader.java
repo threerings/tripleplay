@@ -13,8 +13,6 @@ import java.util.List;
 import react.RFuture;
 import react.RPromise;
 import react.Slot;
-import react.Value;
-
 import playn.core.Image;
 import playn.core.Platform;
 

@@ -9,7 +9,6 @@ import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -24,10 +23,8 @@ import org.lwjgl.opengl.Display;
 
 import pythagoras.f.Point;
 import react.Signal;
-import react.Slot;
 import react.Value;
 
-import playn.core.Platform;
 import playn.java.JavaImage;
 import playn.java.JavaPlatform;
 import tripleplay.ui.Field;

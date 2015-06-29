@@ -13,14 +13,11 @@ import react.Slot;
 import react.Value;
 import react.ValueView;
 
-import playn.core.Canvas;
 import playn.core.QuadBatch;
 import playn.core.Texture;
 import playn.core.TextureSurface;
 import playn.scene.Layer;
 import playn.scene.ImageLayer;
-
-import tripleplay.util.Layers;
 
 /**
  * A root that renders everything into a single texture. Takes care of hooking into the layout

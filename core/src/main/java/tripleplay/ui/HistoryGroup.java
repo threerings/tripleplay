@@ -18,7 +18,6 @@ import tripleplay.ui.Composite;
 import tripleplay.ui.Container;
 import tripleplay.ui.Element;
 import tripleplay.ui.Group;
-import tripleplay.ui.Interface;
 import tripleplay.ui.Layout;
 import tripleplay.ui.Scroller;
 import tripleplay.ui.layout.AxisLayout;

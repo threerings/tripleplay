@@ -24,7 +24,6 @@ import playn.scene.Pointer;
 import tripleplay.anim.Animation;
 import tripleplay.anim.Animator;
 import tripleplay.ui.MenuItem.ShowText;
-import tripleplay.util.Layers;
 
 /**
  * Holds a collection of {@link MenuItem}s, dispatching a {@link Menu#itemTriggered} signal

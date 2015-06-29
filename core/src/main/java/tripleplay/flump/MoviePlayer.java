@@ -9,7 +9,6 @@ import react.Value;
 
 import playn.core.Clock;
 import playn.core.Disposable;
-import playn.core.Game;
 import playn.scene.GroupLayer;
 import playn.scene.Layer;
 

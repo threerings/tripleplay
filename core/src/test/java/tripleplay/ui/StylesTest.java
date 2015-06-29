@@ -5,8 +5,6 @@
 
 package tripleplay.ui;
 
-import playn.java.JavaPlatform;
-
 import org.junit.*;
 import static org.junit.Assert.*;
 

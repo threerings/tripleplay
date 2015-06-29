@@ -5,15 +5,9 @@
 
 package tripleplay.util;
 
-import pythagoras.f.AffineTransform;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 import pythagoras.f.Rectangle;
-import pythagoras.f.Transform;
-
-import react.Connection;
-
-import playn.core.Canvas;
 import playn.core.Surface;
 import playn.scene.GroupLayer;
 import playn.scene.Layer;
