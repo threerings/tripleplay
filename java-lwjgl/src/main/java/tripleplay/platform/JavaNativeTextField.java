@@ -26,6 +26,7 @@ import pythagoras.f.FloatMath;
 
 import playn.core.Font;
 import playn.core.Key;
+import playn.core.Event;
 
 import react.Connection;
 import react.Slot;
@@ -63,7 +64,7 @@ public class JavaNativeTextField extends JavaNativeOverlay
 
         if (oldField != null) {
             // reach in and disconnect the old field
-            oldField._textConnection.disconnect();
+            oldField._textConnection.close();
             // copy bounds of old field
             component.setBounds(oldField.component.getBounds());
         }
@@ -104,13 +105,13 @@ public class JavaNativeTextField extends JavaNativeOverlay
         });
         _textComp.addKeyListener(new KeyListener() {
             @Override public void keyTyped (KeyEvent e) {
-                _plat.plat.input().postKey(e.getWhen(), null, false, e.getKeyChar());
+                _plat.plat.input().postKey(e.getWhen(), null, false, e.getKeyChar(), mods(e));
             }
             @Override public void keyReleased (KeyEvent e) {
-                _plat.plat.input().postKey(e.getWhen(), toKey(e.getKeyCode()), false, '\u0000');
+                _plat.plat.input().postKey(e.getWhen(), toKey(e.getKeyCode()), false, '\u0000', mods(e));
             }
             @Override public void keyPressed (KeyEvent e) {
-                _plat.plat.input().postKey(e.getWhen(), toKey(e.getKeyCode()), true, '\u0000');
+                _plat.plat.input().postKey(e.getWhen(), toKey(e.getKeyCode()), true, '\u0000', mods(e));
             }
         });
 
@@ -201,6 +202,14 @@ public class JavaNativeTextField extends JavaNativeOverlay
 
         // Unknown style, use plain.
         return java.awt.Font.PLAIN;
+    }
+
+    protected static int mods (KeyEvent event) {
+        int modMask = event.getModifiers();
+        return Event.Input.modifierFlags((modMask & KeyEvent.ALT_MASK) != 0,
+                                         (modMask & KeyEvent.CTRL_MASK) != 0,
+                                         (modMask & KeyEvent.META_MASK) != 0,
+                                         (modMask & KeyEvent.SHIFT_MASK) != 0);
     }
 
     /** Translates an AWT key code into a playn key, if possible. May return {@link Key#UNKNOWN} if
