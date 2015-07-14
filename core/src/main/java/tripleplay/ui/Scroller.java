@@ -591,6 +591,11 @@ public class Scroller extends Composite<Scroller>
         return new Range();
     }
 
+    /** Extends the usual layout with scroll bar setup. */
+    protected class BarsLayoutData extends LayoutData {
+        public final BarType barType = resolveStyle(BAR_TYPE);
+    }
+
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {
         return new BarsLayoutData();
     }
@@ -661,19 +666,13 @@ public class Scroller extends Composite<Scroller>
         if (_barType != null) _bars = _barType.createBars(this);
     }
 
-    /** Extends the usual layout with scroll bar setup. */
-    protected class BarsLayoutData extends CompositeLayoutData
-    {
-        public final BarType barType = resolveStyle(BAR_TYPE);
-
-        @Override
-        public void layout (float left, float top, final float width, final float height) {
-            // set the bars and element buffer first so the ScrollLayout can use them
-            _elementBuffer = resolveStyle(ELEMENT_BUFFER);
-            updateBars(barType);
-            super.layout(left, top, width, height);
-            if (_bars != null) layer.add(_bars.layer().setDepth(1).setTranslation(left,  top));
-        }
+    @Override protected void layout (LayoutData ldata, float left, float top,
+                                     float width, float height) {
+        // set the bars and element buffer first so the ScrollLayout can use them
+        _elementBuffer = resolveStyle(ELEMENT_BUFFER);
+        updateBars(((BarsLayoutData)ldata).barType);
+        super.layout(ldata, left, top, width, height);
+        if (_bars != null) layer.add(_bars.layer().setDepth(1).setTranslation(left,  top));
     }
 
     /** Lays out the internal scroller group that contains the content. Performs all the jiggery

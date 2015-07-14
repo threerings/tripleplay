@@ -243,6 +243,23 @@ public class Box extends Container.Mutable<Box> {
         return Box.class;
     }
 
+    @Override protected Dimension computeSize (LayoutData ldata, float hintX, float hintY) {
+        return (_contents == null) ? new Dimension() : _contents.computeSize(hintX, hintY);
+    }
+
+    @Override protected void layout (LayoutData ldata, float left, float top,
+                                     float width, float height) {
+        if (_contents != null) {
+            _contents.setSize(width, height);
+            _contents.setLocation(left, top);
+            _contents.validate();
+        }
+    }
+
+    @Override protected Layout getLayout () {
+        throw new UnsupportedOperationException(); // not used
+    }
+
     protected Box set (Element<?> contents, boolean destroy) {
         if (_contents != null) {
             didRemove(_contents, destroy);
@@ -253,24 +270,6 @@ public class Box extends Container.Mutable<Box> {
         }
         invalidate();
         return this;
-    }
-
-    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new BoxLayoutData();
-    }
-
-    protected class BoxLayoutData extends LayoutData {
-        @Override public Dimension computeSize (float hintX, float hintY) {
-            return (_contents == null) ? new Dimension() : _contents.computeSize(hintX, hintY);
-        }
-
-        @Override public void layout (float left, float top, float width, float height) {
-            if (_contents != null) {
-                _contents.setSize(width, height);
-                _contents.setLocation(left, top);
-                _contents.validate();
-            }
-        }
     }
 
     protected Element<?> _contents;

@@ -79,21 +79,16 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
         return new Behavior.Click<ImageButton>(this);
     }
 
-    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new ImageButtonLayoutData();
+    @Override protected Dimension computeSize (LayoutData ldata, float hintX, float hintY) {
+        return _up.isLoaded() ?
+            new Dimension(_up.tile().width(), _up.tile().height()) :
+            new Dimension();
     }
 
-    protected class ImageButtonLayoutData extends LayoutData {
-        @Override public Dimension computeSize (float hintX, float hintY) {
-            return _up.isLoaded() ?
-                new Dimension(_up.tile().width(), _up.tile().height()) :
-                new Dimension();
-        }
-
-        @Override public void layout (float left, float top, float width, float height) {
-            _ilayer.setTile(isSelected() ? _down.tile() : _up.tile());
-            _ilayer.setTranslation(left, top);
-        }
+    @Override protected void layout (LayoutData ldata, float left, float top,
+                                     float width, float height) {
+        _ilayer.setTile(isSelected() ? _down.tile() : _up.tile());
+        _ilayer.setTranslation(left, top);
     }
 
     protected final ImageLayer _ilayer = new ImageLayer();

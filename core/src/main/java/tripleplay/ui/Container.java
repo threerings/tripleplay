@@ -113,17 +113,17 @@ public abstract class Container<T extends Container<T>> extends Element<T>
         // if we're added again, we'll be re-laid-out
     }
 
-    protected abstract class ContainerLayoutData extends LayoutData {
-        @Override public Dimension computeSize (float hintX, float hintY) {
-            return getLayout().computeSize(Container.this, hintX, hintY);
-        }
-
-        @Override public void layout (float left, float top, float width, float height) {
-            // layout our children
-            getLayout().layout(Container.this, left, top, width, height);
-            // layout is only called as part of revalidation, so now we validate our children
-            for (int ii = 0, nn = childCount(); ii < nn; ii++) childAt(ii).validate();
-        }
-        protected abstract Layout getLayout();
+    @Override protected Dimension computeSize (LayoutData ldata, float hintX, float hintY) {
+        return getLayout().computeSize(this, hintX, hintY);
     }
+
+    @Override protected void layout (LayoutData ldata, float left, float top,
+                                     float width, float height) {
+        // layout our children
+        getLayout().layout(this, left, top, width, height);
+        // layout is only called as part of revalidation, so now we validate our children
+        for (int ii = 0, nn = childCount(); ii < nn; ii++) childAt(ii).validate();
+    }
+
+    protected abstract Layout getLayout ();
 }

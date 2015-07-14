@@ -40,7 +40,7 @@ public abstract class SizableWidget<T extends SizableWidget<T>> extends Widget<T
     }
 
     /** Creates the layout to which the widget's {@link Element.SizableLayoutData} will delegate. */
-    protected BaseLayoutData createBaseLayoutData (float hintX, float hintY) {
+    protected LayoutData createBaseLayoutData (float hintX, float hintY) {
         return null;
     }
 

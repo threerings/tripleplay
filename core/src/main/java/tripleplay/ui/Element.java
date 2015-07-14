@@ -513,7 +513,7 @@ public abstract class Element<T extends Element<T>>
         // insets in the process)
         LayoutData ldata = _ldata = createLayoutData(hintX, hintY);
         Insets insets = ldata.bg.insets;
-        Dimension size = ldata.computeSize(hintX - insets.width(), hintY - insets.height());
+        Dimension size = computeSize(ldata, hintX - insets.width(), hintY - insets.height());
         insets.addTo(size);
 
         // allow any layout constraint to adjust the computed preferred size
@@ -530,8 +530,19 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Handles common element layout (background), then calls {@link LayoutData#layout} to do the
-     * actual layout.
+     * Computes this element's preferred size, delegating to {@link LayoutData#computeSize} by
+     * default. This is called by {@link #computeSize(float,float)} after adjusting the hints based
+     * on our layout constraints and insets. The returned dimension will be post facto adjusted to
+     * include room for the element's insets (if any) and rounded up to the nearest whole pixel
+     * value.
+     */
+    protected Dimension computeSize (LayoutData ldata, float hintX, float hintY) {
+        return ldata.computeSize(hintX, hintY);
+    }
+
+    /**
+     * Handles common element layout (background), then calls
+     * {@link #layout(LayoutData,float,float,float,float)} to do the actual layout.
      */
     protected void layout () {
         if (!isVisible()) return;
@@ -553,11 +564,18 @@ public abstract class Element<T extends Element<T>>
 
         // do our actual layout
         Insets insets = ldata.bg.insets;
-        ldata.layout(insets.left(), insets.top(),
-                     width - insets.width(), height - insets.height());
+        layout(ldata, insets.left(), insets.top(),
+               width - insets.width(), height - insets.height());
 
         // finally clear our cached layout data
         clearLayoutData();
+    }
+
+    /**
+     * Delegates layout to {@link LayoutData#layout} by default.
+     */
+    protected void layout (LayoutData ldata, float left, float top, float width, float height) {
+        ldata.layout(left, top, width, height);
     }
 
     /**
@@ -567,7 +585,9 @@ public abstract class Element<T extends Element<T>>
      * not</em> yet have the background insets subtracted from them, because the creation of the
      * LayoutData is what resolves the background in the first place.
      */
-    protected abstract LayoutData createLayoutData (float hintX, float hintY);
+    protected LayoutData createLayoutData (float hintX, float hintY) {
+        return new LayoutData();
+    }
 
     /**
      * Clears out cached layout data. This can be called by methods that change the configuration
@@ -617,7 +637,19 @@ public abstract class Element<T extends Element<T>>
         return asT();
     }
 
-    protected abstract class BaseLayoutData {
+    /** Resolves style and other information needed to layout this element. */
+    protected class LayoutData {
+        /** This element's background style. */
+        public final Background bg = resolveStyle(Style.BACKGROUND);
+
+        /**
+         * Computes this element's preferred size, given the supplied hints. The background insets
+         * will be automatically added to the returned size.
+         */
+        public Dimension computeSize (float hintX, float hintY) {
+            return new Dimension(0, 0);
+        }
+
         /**
          * Rebuilds this element's visualization. Called when this element's size has changed. In
          * the case of groups, this will relayout its children, in the case of widgets, this will
@@ -626,16 +658,6 @@ public abstract class Element<T extends Element<T>>
         public void layout (float left, float top, float width, float height) {
             // noop!
         }
-    }
-
-    protected abstract class LayoutData extends BaseLayoutData {
-        public final Background bg = resolveStyle(Style.BACKGROUND);
-
-        /**
-         * Computes this element's preferred size, given the supplied hints. The background insets
-         * will be automatically added to the returned size.
-         */
-        public abstract Dimension computeSize (float hintX, float hintY);
     }
 
     /** Ways in which a preferred and an original dimension can be "taken" to produce a result.
@@ -680,7 +702,7 @@ public abstract class Element<T extends Element<T>>
          * which indicates the {@code sizeDelegate}'s result should be used for that axis. Passing
          * {@code null} is equivalent to passing a 0x0 dimension
          */
-        public SizableLayoutData (BaseLayoutData layoutDelegate, LayoutData sizeDelegate,
+        public SizableLayoutData (LayoutData layoutDelegate, LayoutData sizeDelegate,
                                   IDimension prefSize) {
             this.layoutDelegate = layoutDelegate;
             this.sizeDelegate = sizeDelegate;
@@ -695,7 +717,7 @@ public abstract class Element<T extends Element<T>>
         /**
          * Creates a new layout that will defer to the given delegate for layout and size. This is
          * equivalent to {@code SizableLayoutData(delegate, delegate, prefSize)}.
-         * @see #SizableLayoutData(BaseLayoutData, LayoutData, IDimension)
+         * @see #SizableLayoutData(LayoutData, LayoutData, IDimension)
          */
         public SizableLayoutData (LayoutData delegate, IDimension prefSize) {
             this.layoutDelegate = delegate;
@@ -787,7 +809,7 @@ public abstract class Element<T extends Element<T>>
             return pref == 0 ? base : pref;
         }
 
-        protected final BaseLayoutData layoutDelegate;
+        protected final LayoutData layoutDelegate;
         protected final LayoutData sizeDelegate;
         protected float prefWidth, prefHeight;
         protected Take widthFn = Take.PREFERRED_IF_SET, heightFn = Take.PREFERRED_IF_SET;

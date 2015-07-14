@@ -134,13 +134,7 @@ public abstract class Elements<T extends Elements<T>> extends Container.Mutable<
         _childRemoved.emit(child);
     }
 
-    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        return new ElementsLayoutData();
-    }
-
-    protected class ElementsLayoutData extends ContainerLayoutData {
-        @Override public Layout getLayout() { return _layout; }
-    }
+    @Override protected Layout getLayout () { return _layout; }
 
     protected final Layout _layout;
     protected final List<Element<?>> _children = new ArrayList<Element<?>>();

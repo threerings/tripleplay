@@ -61,23 +61,19 @@ public abstract class GlyphWidget<T extends GlyphWidget<T>> extends SizableWidge
      */
     protected abstract void paint (Canvas canvas);
 
-    @Override protected BaseLayoutData createBaseLayoutData (float hintX, float hintY) {
-        return new GlyphLayoutData();
-    }
+    @Override protected void layout (LayoutData ldata, float left, float top,
+                                     float width, float height) {
+        super.layout(ldata, left, top, width, height);
 
-    protected class GlyphLayoutData extends BaseLayoutData {
-        @Override public void layout (float left, float top, float width, float height) {
-            super.layout(left, top, width, height);
-            // prepare the glyph
-            if (width == 0 && height == 0) {
-                _glyph.close();
-                return;
-            }
-
-            _glyph.prepare(root().iface.plat.graphics(), width, height);
-            _glyph.layer().setTranslation(left, top);
-            render();
+        // prepare the glyph
+        if (width == 0 && height == 0) {
+            _glyph.close();
+            return;
         }
+
+        _glyph.prepare(root().iface.plat.graphics(), width, height);
+        _glyph.layer().setTranslation(left, top);
+        render();
     }
 
     protected final Glyph _glyph = new Glyph(layer);
