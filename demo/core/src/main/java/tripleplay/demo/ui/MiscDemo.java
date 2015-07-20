@@ -190,7 +190,7 @@ public class MiscDemo extends DemoScreen
                 new ImageButton(tile(squares, 0), tile(squares, 1)).onClick(new UnitSlot() {
                     @Override public void onEmit () { clickCount.increment(1); }
                 }),
-                new ValueLabel(clickCount)),
+                new Label(clickCount)),
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 new Button("Fill Box").onClick(new UnitSlot() {
                     @Override public void onEmit () {

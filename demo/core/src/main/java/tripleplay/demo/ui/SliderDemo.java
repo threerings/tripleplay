@@ -19,7 +19,6 @@ import tripleplay.ui.Root;
 import tripleplay.ui.Shim;
 import tripleplay.ui.Slider;
 import tripleplay.ui.Style;
-import tripleplay.ui.ValueLabel;
 import tripleplay.ui.layout.AxisLayout;
 
 import tripleplay.demo.DemoScreen;
@@ -56,7 +55,7 @@ public class SliderDemo extends DemoScreen
     }
 
     protected Group sliderAndLabel (Slider slider, String minText) {
-        ValueLabel label = new ValueLabel(slider.value.map(FORMATTER)).
+        Label label = new Label(slider.value.map(FORMATTER)).
             setStyles(Style.HALIGN.right, Style.FONT.is(FIXED)).
             setConstraint(Constraints.minSize(graphics(), minText));
         return new Group(AxisLayout.horizontal()).add(slider, label);

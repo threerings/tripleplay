@@ -34,7 +34,7 @@ public class TableLayoutDemo extends DemoScreen
 
     static Group slider (String label, Slider slider) {
         return new Group(AxisLayout.horizontal()).add(new Label(label),
-            new SizableGroup(AxisLayout.horizontal(), 30, 0).add(new ValueLabel(slider.value)),
+            new SizableGroup(AxisLayout.horizontal(), 30, 0).add(new Label(slider.value)),
             slider);
     }
 
