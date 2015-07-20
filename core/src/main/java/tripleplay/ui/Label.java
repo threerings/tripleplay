@@ -6,6 +6,7 @@
 package tripleplay.ui;
 
 import react.Closeable;
+import react.Functions;
 import react.Value;
 import react.ValueView;
 
@@ -44,14 +45,20 @@ public class Label extends TextWidget<Label>
         this.icon.update(icon);
     }
 
+    /** Creates a label and calls {@link #bindText) with {@code text}. */
+    public Label (ValueView<?> text) {
+        this(null, null);
+        bindText(text);
+    }
+
     /**
      * Binds the text of this label to the supplied reactive value. The current text will be
      * adjusted to match the state of {@code text}.
      */
-    public Label bindText (final ValueView<String> textV) {
+    public Label bindText (final ValueView<?> textV) {
         return addBinding(new Binding(_bindings) {
             public Closeable connect () {
-                return textV.connectNotify(text.slot());
+                return textV.map(Functions.TO_STRING).connectNotify(text.slot());
             }
             @Override public String toString () {
                 return Label.this + ".bindText";

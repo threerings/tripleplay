@@ -9,11 +9,9 @@ import react.Closeable;
 import react.ValueView;
 
 /**
- * A label that displays a {@link ValueView}. If you already have the contents of the label in a
- * reactive value, you can use this to simply display it rather than using a stock {@link Label}
- * which requires manually connecting your value to the label's value. This label does not support
- * icons. If you want an icon and changing text, you'll have to manually wire up a {@link Label}.
+ * @deprecated Use {@link Label(ValueView)}.
  */
+@Deprecated
 public class ValueLabel extends TextWidget<ValueLabel>
 {
     /** The source for the text of this label. */
