@@ -362,6 +362,16 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     /** Returns the target screen in the current transition, or null. */
     public Screen target () { return _target == null ? null : _target.screen; }
 
+    /** Adds {@code screen} to this space but does not activate or wake it. This is intended for
+      * prepopulation of a screenstack at app start. This method <em>must not</em> be called once
+      * the stack is in normal operation. A series of calls to {@code initAdd} must be followed by
+      * one call to {@link #add} with the screen that is actually to be displayed at app start. */
+    public void initAdd (Screen screen, Dir dir) {
+        assert _screens.isEmpty() || !_screens.get(0).screen.isActive();
+        screen.init();
+        _screens.add(0, new ActiveScreen(screen, dir));
+    }
+
     /** Adds {@code screen} to this space, positioned {@code dir}-wise from the current screen. For
       * example, using {@code RIGHT} will add the screen to the right of the current screen and
       * will slide the view to the right to reveal the new screen. The user would then manually
@@ -439,7 +449,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         final ActiveScreen ntop = new ActiveScreen(screen, dir);
         _screens.add(0, ntop);
         ntop.check(true); // wake up the to-be-added screen
-        if (otop == null) {
+        if (otop == null || !otop.screen.isActive()) {
             ntop.screen.setActive(true);
             giveFocus(ntop);
         }
