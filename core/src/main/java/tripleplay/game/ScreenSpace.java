@@ -35,78 +35,10 @@ import tripleplay.util.Interpolator;
 public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 {
     /** The directions in which a new screen can be added. */
-    public static enum Dir {
-        UP {
-            public int vertComp () { return -1; }
-            public void update (Screen oscreen, Screen nscreen, float pct) {
-                float oheight = oscreen.size().height();
-                float ostart = 0, nstart = oheight, range = -oheight;
-                float offset = pct * range;
-                oscreen.layer.setTy(ostart + offset);
-                nscreen.layer.setTy(nstart + offset);
-            }
-        },
-        DOWN {
-            public int vertComp () { return 1; }
-            public void update (Screen oscreen, Screen nscreen, float pct) {
-                float nheight = nscreen.size().height();
-                float ostart = 0, nstart = -nheight, range = nheight;
-                float offset = pct * range;
-                oscreen.layer.setTy(ostart + offset);
-                nscreen.layer.setTy(nstart + offset);
-            }
-        },
-        LEFT {
-            public int horizComp () { return -1; }
-            public void update (Screen oscreen, Screen nscreen, float pct) {
-                float owidth = oscreen.size().width();
-                float ostart = 0, nstart = owidth, range = -owidth;
-                float offset = pct * range;
-                oscreen.layer.setTx(ostart + offset);
-                nscreen.layer.setTx(nstart + offset);
-            }
-        },
-        RIGHT {
-            public int horizComp () { return 1; }
-            public void update (Screen oscreen, Screen nscreen, float pct) {
-                float nwidth = nscreen.size().width();
-                float ostart = 0, nstart = -nwidth, range = nwidth;
-                float offset = pct * range;
-                oscreen.layer.setTx(ostart + offset);
-                nscreen.layer.setTx(nstart + offset);
-            }
-        },
-        IN {
-            public void update (Screen oscreen, Screen nscreen, float pct) {
-                oscreen.layer.setAlpha(1-pct);
-                nscreen.layer.setAlpha(pct);
-                // TODO: scaling
-            }
-            public void finish (Screen oscreen, Screen nscreen) {
-                super.finish(oscreen, nscreen);
-                oscreen.layer.setAlpha(1);
-            }
-        },
-        OUT {
-            public void update (Screen oscreen, Screen nscreen, float pct) {
-                oscreen.layer.setAlpha(1-pct);
-                nscreen.layer.setAlpha(pct);
-                // TODO: scaling
-            }
-            public void finish (Screen oscreen, Screen nscreen) {
-                super.finish(oscreen, nscreen);
-                oscreen.layer.setAlpha(1);
-            }
-        },
-        FLIP {
-            public void update (Screen oscreen, Screen nscreen, float pct) {
-                // TODO
-            }
-        };
+    public static abstract class Dir implements Cloneable {
 
         /** Returns the horizontal motion of this direction: 1, 0 or -1. */
         public int horizComp () { return 0; }
-
         /** Returns the vertical motion of this direction: 1, 0 or -1. */
         public int vertComp () { return 0; }
 
@@ -114,6 +46,9 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         public boolean canUntrans () {
             return horizComp() != 0 || vertComp() != 0;
         }
+
+        /** Returns the opposite of this direction. */
+        public abstract Dir reverse ();
 
         /** Prepares {@code oscreen} and {@code nscreen} to be transitioned. {@code oscreen} is the
           * currently visible screen and {@code nscreen} is the screen transitioning into view. */
@@ -135,6 +70,103 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         public void finish (Screen oscreen, Screen nscreen) {
             oscreen.setTransiting(false);
             nscreen.setTransiting(false);
+        }
+
+        /** Returns the duration of this transition (in millis). */
+        public float transitionTime () { return _transTime; }
+
+        /** Returns a new instance with the transition time configured to {@code millis} ms. */
+        public Dir in (float millis) {
+            try {
+                Dir timed = (Dir)clone();
+                timed._transTime = millis;
+                return timed;
+            } catch (CloneNotSupportedException cnse) {
+                return this;
+            }
+        }
+
+        private float _transTime = 500; // ms
+    }
+
+    public static final Dir UP = new Dir() {
+        public int vertComp () { return -1; }
+        public Dir reverse () { return DOWN; }
+        public void update (Screen oscreen, Screen nscreen, float pct) {
+            float oheight = oscreen.size().height();
+            float ostart = 0, nstart = oheight, range = -oheight;
+            float offset = pct * range;
+            oscreen.layer.setTy(ostart + offset);
+            nscreen.layer.setTy(nstart + offset);
+        }
+    };
+
+    public static final Dir DOWN = new Dir() {
+        public int vertComp () { return 1; }
+        public Dir reverse () { return UP; }
+        public void update (Screen oscreen, Screen nscreen, float pct) {
+            float nheight = nscreen.size().height();
+            float ostart = 0, nstart = -nheight, range = nheight;
+            float offset = pct * range;
+            oscreen.layer.setTy(ostart + offset);
+            nscreen.layer.setTy(nstart + offset);
+        }
+    };
+
+    public static final Dir LEFT = new Dir() {
+        public int horizComp () { return -1; }
+        public Dir reverse () { return RIGHT; }
+        public void update (Screen oscreen, Screen nscreen, float pct) {
+            float owidth = oscreen.size().width();
+            float ostart = 0, nstart = owidth, range = -owidth;
+            float offset = pct * range;
+            oscreen.layer.setTx(ostart + offset);
+            nscreen.layer.setTx(nstart + offset);
+        }
+    };
+
+    public static final Dir RIGHT = new Dir() {
+        public int horizComp () { return 1; }
+        public Dir reverse () { return LEFT; }
+        public void update (Screen oscreen, Screen nscreen, float pct) {
+            float nwidth = nscreen.size().width();
+            float ostart = 0, nstart = -nwidth, range = nwidth;
+            float offset = pct * range;
+            oscreen.layer.setTx(ostart + offset);
+            nscreen.layer.setTx(nstart + offset);
+        }
+    };
+
+    public static final Dir IN = new Dir() {
+        public Dir reverse () { return OUT; }
+        public void update (Screen oscreen, Screen nscreen, float pct) {
+            oscreen.layer.setAlpha(1-pct);
+            nscreen.layer.setAlpha(pct);
+            // TODO: scaling
+        }
+        public void finish (Screen oscreen, Screen nscreen) {
+            super.finish(oscreen, nscreen);
+            oscreen.layer.setAlpha(1);
+        }
+    };
+
+    public static final Dir OUT = new Dir() {
+        public Dir reverse () { return IN; }
+        public void update (Screen oscreen, Screen nscreen, float pct) {
+            oscreen.layer.setAlpha(1-pct);
+            nscreen.layer.setAlpha(pct);
+            // TODO: scaling
+        }
+        public void finish (Screen oscreen, Screen nscreen) {
+            super.finish(oscreen, nscreen);
+            oscreen.layer.setAlpha(1);
+        }
+    };
+
+    public static final Dir FLIP = new Dir() {
+        public Dir reverse () { return FLIP; }
+        public void update (Screen oscreen, Screen nscreen, float pct) {
+            // TODO
         }
     };
 
@@ -413,10 +445,6 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         });
     }
 
-    protected float transitionTime (Dir dir) {
-        return 500f;
-    }
-
     protected Driver transition (ActiveScreen oscr, ActiveScreen nscr, Dir dir, float startPct) {
         takeFocus(oscr);
         return new Driver(oscr, nscr, dir, startPct);
@@ -433,7 +461,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
     protected void popTrans (float startPct) {
         final ActiveScreen oscr = _screens.remove(0);
-        Dir dir = reverse(oscr.dir);
+        Dir dir = oscr.dir.reverse();
         final ActiveScreen nscr = _screens.get(0);
         nscr.check(true); // wake screen, if necessary
         transition(oscr, nscr, dir, startPct).onComplete.connect(new UnitSlot() {
@@ -515,7 +543,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         private final Dir _udir;
         private final ActiveScreen _cur, _prev;
         public UntransListener  (ActiveScreen cur, ActiveScreen prev) {
-            _udir = reverse(cur.dir); // untrans dir is opposite of trans dir
+            _udir = cur.dir.reverse(); // untrans dir is opposite of trans dir
             _cur = cur; _prev = prev;
         }
 
@@ -638,7 +666,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             this.outgoing = outgoing;
             this.incoming = incoming;
             this.dir = dir;
-            this.duration = transitionTime(dir);
+            this.duration = dir.transitionTime();
             this.startPct = startPct;
             // TODO: allow Dir to provide own interpolator?
             this.interp = (startPct == 0) ? Interpolator.EASE_INOUT : Interpolator.EASE_OUT;
@@ -692,17 +720,4 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     protected float _transPct;
     protected ActiveScreen _current, _target;
     protected Closeable _onPointer = Closeable.Util.NOOP;
-
-    protected static Dir reverse (Dir dir) {
-        switch (dir) {
-        case UP: return Dir.DOWN;
-        case DOWN: return Dir.UP;
-        case LEFT: return Dir.RIGHT;
-        case RIGHT: return Dir.LEFT;
-        case IN: return Dir.OUT;
-        case OUT: return Dir.IN;
-        case FLIP: return Dir.FLIP;
-        default: throw new AssertionError("Sky is falling: " + dir);
-        }
-    }
 }

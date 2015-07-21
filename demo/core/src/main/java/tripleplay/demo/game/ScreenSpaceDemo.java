@@ -43,7 +43,7 @@ public class ScreenSpaceDemo extends DemoScreen {
     }
 
     @Override public void showTransitionCompleted () {
-        _space.add(_top = createScreen(0), ScreenSpace.Dir.FLIP);
+        _space.add(_top = createScreen(0), ScreenSpace.FLIP);
     }
 
     @Override public void hideTransitionStarted () {
@@ -77,9 +77,13 @@ public class ScreenSpaceDemo extends DemoScreen {
                 int blue = (id * 0x16);
                 root.addStyles(Style.BACKGROUND.is(Background.solid(0xFF333300+blue)));
                 root.add(new Label(toString()));
-                for (ScreenSpace.Dir dir : ScreenSpace.Dir.values()) {
-                    root.add(new Button(dir.name()).onClick(addScreen(dir)));
-                }
+                root.add(new Button("Up").onClick(addScreen(ScreenSpace.UP)));
+                root.add(new Button("Down").onClick(addScreen(ScreenSpace.DOWN)));
+                root.add(new Button("Left").onClick(addScreen(ScreenSpace.LEFT)));
+                root.add(new Button("Right").onClick(addScreen(ScreenSpace.RIGHT)));
+                root.add(new Button("In").onClick(addScreen(ScreenSpace.IN)));
+                root.add(new Button("Out").onClick(addScreen(ScreenSpace.OUT)));
+                root.add(new Button("Flip").onClick(addScreen(ScreenSpace.FLIP)));
                 final ScreenSpace.Screen self = this;
                 root.add(new Shim(30, 30), new Button("Pop").onClick(new UnitSlot() {
                     public void onEmit () {
