@@ -47,10 +47,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             return horizComp() != 0 || vertComp() != 0;
         }
         /** Returns the direction to use when untransing from this dir. */
-        public Dir untransDir () {
-            Dir opp = opposite();
-            return (_transTime == DEFAULT_TRANS_TIME) ? opp : opp.in(_transTime);
-        }
+        public abstract Dir untransDir ();
 
         /** Prepares {@code oscreen} and {@code nscreen} to be transitioned. {@code oscreen} is the
           * currently visible screen and {@code nscreen} is the screen transitioning into view. */
@@ -75,28 +72,12 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         }
 
         /** Returns the duration of this transition (in millis). */
-        public float transitionTime () { return _transTime; }
-
-        /** Returns a new instance with the transition time configured to {@code millis} ms. */
-        public Dir in (float millis) {
-            try {
-                Dir timed = (Dir)clone();
-                timed._transTime = millis;
-                return timed;
-            } catch (CloneNotSupportedException cnse) {
-                return this;
-            }
-        }
-
-        /** Returns the opposite of this direction. */
-        protected abstract Dir opposite ();
-
-        private float _transTime = DEFAULT_TRANS_TIME;
-        private static final float DEFAULT_TRANS_TIME = 500; // ms
+        public float transitionTime () { return 500; }
     }
 
     public static final Dir UP = new Dir() {
         public int vertComp () { return -1; }
+        public Dir untransDir () { return DOWN; }
         public void update (Screen oscreen, Screen nscreen, float pct) {
             float oheight = oscreen.size().height();
             float ostart = 0, nstart = oheight, range = -oheight;
@@ -104,11 +85,11 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             oscreen.layer.setTy(ostart + offset);
             nscreen.layer.setTy(nstart + offset);
         }
-        protected Dir opposite () { return DOWN; }
     };
 
     public static final Dir DOWN = new Dir() {
         public int vertComp () { return 1; }
+        public Dir untransDir () { return UP; }
         public void update (Screen oscreen, Screen nscreen, float pct) {
             float nheight = nscreen.size().height();
             float ostart = 0, nstart = -nheight, range = nheight;
@@ -116,11 +97,11 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             oscreen.layer.setTy(ostart + offset);
             nscreen.layer.setTy(nstart + offset);
         }
-        protected Dir opposite () { return UP; }
     };
 
     public static final Dir LEFT = new Dir() {
         public int horizComp () { return -1; }
+        public Dir untransDir () { return RIGHT; }
         public void update (Screen oscreen, Screen nscreen, float pct) {
             float owidth = oscreen.size().width();
             float ostart = 0, nstart = owidth, range = -owidth;
@@ -128,10 +109,10 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             oscreen.layer.setTx(ostart + offset);
             nscreen.layer.setTx(nstart + offset);
         }
-        protected Dir opposite () { return RIGHT; }
     };
 
     public static final Dir RIGHT = new Dir() {
+        public Dir untransDir () { return LEFT; }
         public int horizComp () { return 1; }
         public void update (Screen oscreen, Screen nscreen, float pct) {
             float nwidth = nscreen.size().width();
@@ -140,10 +121,10 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             oscreen.layer.setTx(ostart + offset);
             nscreen.layer.setTx(nstart + offset);
         }
-        protected Dir opposite () { return LEFT; }
     };
 
     public static final Dir IN = new Dir() {
+        public Dir untransDir () { return OUT; }
         public void update (Screen oscreen, Screen nscreen, float pct) {
             oscreen.layer.setAlpha(1-pct);
             nscreen.layer.setAlpha(pct);
@@ -153,10 +134,10 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             super.finish(oscreen, nscreen);
             oscreen.layer.setAlpha(1);
         }
-        protected Dir opposite () { return OUT; }
     };
 
     public static final Dir OUT = new Dir() {
+        public Dir untransDir () { return IN; }
         public void update (Screen oscreen, Screen nscreen, float pct) {
             oscreen.layer.setAlpha(1-pct);
             nscreen.layer.setAlpha(pct);
@@ -166,14 +147,13 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             super.finish(oscreen, nscreen);
             oscreen.layer.setAlpha(1);
         }
-        protected Dir opposite () { return IN; }
     };
 
     public static final Dir FLIP = new Dir() {
+        public Dir untransDir () { return FLIP; }
         public void update (Screen oscreen, Screen nscreen, float pct) {
             // TODO
         }
-        protected Dir opposite () { return FLIP; }
     };
 
     /**
