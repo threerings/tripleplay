@@ -396,18 +396,20 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     }
 
     /** Removes all screens from the space until {@code screen} is reached. No transitions will be
-      * used, all screens will simply be removed and disposeed until we reach {@code screen}, and
+      * used, all screens will simply be removed and disposed until we reach {@code screen}, and
       * that screen will be woken and positioned properly. */
     public void popTo (Screen screen) {
         if (current() == screen) return; // NOOP!
         ActiveScreen top = _screens.get(0);
         while (top.screen != screen) {
+            _screens.remove(0);
             takeFocus(top);
             top.dispose();
             top = _screens.get(0);
         }
         checkSleep(); // wake up the top screen
         top.screen.layer.setTranslation(0, 0); // ensure that it's positioned properly
+        top.screen.setActive(true); // mark the screen as active
         giveFocus(top);
     }
 
