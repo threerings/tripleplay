@@ -39,11 +39,11 @@ public abstract class StyledText
          * to {@code size}. This is useful for auto-shrinking text to fit into fixed space. */
         public abstract Plain resize (float size);
 
-        @Override public ImageLayer toLayer () {
+        @Override public ImageLayer toLayer (ImageLayer target) {
             Canvas canvas = toCanvas();
-            ImageLayer layer = new ImageLayer(canvas.toTexture());
-            layer.setTranslation(style.effect.offsetX(), style.effect.offsetY());
-            return layer;
+            target.setTile(canvas.toTexture());
+            target.setTranslation(style.effect.offsetX(), style.effect.offsetY());
+            return target;
         }
 
         @Override public int hashCode () {
@@ -183,7 +183,11 @@ public abstract class StyledText
 
     /** Creates an image large enough to accommodate this styled text, renders it therein and
       * returns an image layer with its translation adjusted per the effect renderer. */
-    public abstract ImageLayer toLayer ();
+    public ImageLayer toLayer () { return toLayer(new ImageLayer()); }
+
+    /** Creates an image large enough to accommodate this styled text, renders it therein and
+      * applies it to {@code layer}, adjusting its translation per the effect renderer. */
+    public abstract ImageLayer toLayer (ImageLayer target);
 
     protected StyledText (Graphics gfx) {
         assert gfx != null;
