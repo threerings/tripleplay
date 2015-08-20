@@ -62,7 +62,7 @@ public class LongPressButton extends Button
 
     /** A convenience method for registering a long press handler. Assumes you don't need the
      * result of {@link SignalView#connect}, because it throws it away. */
-    public LongPressButton onLongPress (Slot<? super Button> onLongPress) {
+    public LongPressButton onLongPress (SignalView.Listener<? super Button> onLongPress) {
         longPressed().connect(onLongPress);
         return this;
     }

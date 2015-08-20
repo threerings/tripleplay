@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import react.SignalView;
-import react.Slot;
 
 /**
  * A button that displays text, or an icon, or both.
@@ -35,7 +34,7 @@ public class Button extends AbstractTextButton<Button> implements Clickable<Butt
 
     /** A convenience method for registering a click handler. Assumes you don't need the result of
      * {@link SignalView#connect}, because it throws it away. */
-    public Button onClick (Slot<? super Button> onClick) {
+    public Button onClick (SignalView.Listener<? super Button> onClick) {
         clicked().connect(onClick);
         return this;
     }

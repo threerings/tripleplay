@@ -58,7 +58,7 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
 
     /** A convenience method for registering a click handler. Assumes you don't need the result of
      * {@link SignalView#connect}, because it throws it away. */
-    public ImageButton onClick (Slot<? super ImageButton> onClick) {
+    public ImageButton onClick (SignalView.Listener<? super ImageButton> onClick) {
         clicked().connect(onClick);
         return this;
     }
