@@ -66,7 +66,7 @@ public class BorderLayoutDemo extends DemoScreen
             }
         }));
 
-        _root = new Group(AxisLayout.vertical().offStretch()).setConstraint(AxisLayout.stretched());
+        _root = new Group(AxisLayout.vertical().offStretch());
         _root.add(buttons);
         setPanel(false, 0);
         return _root;
