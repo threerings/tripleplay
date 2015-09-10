@@ -99,6 +99,8 @@ public class Layers
      */
     public static Layer solid (final int color, final float width, final float height) {
         return new Layer() {
+            @Override public float width () { return width; }
+            @Override public float height () { return height; }
             @Override protected void paintImpl (Surface surf) {
                 surf.setFillColor(color).fillRect(0, 0, width, height);
             }
