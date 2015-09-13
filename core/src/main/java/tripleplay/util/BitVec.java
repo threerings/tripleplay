@@ -5,6 +5,8 @@
 
 package tripleplay.util;
 
+import java.util.Arrays;
+
 /**
  * A bit vector. We'd use Java's {@code BitSet}, but GWT doesn't support it. Note that we also use
  * {@code int} instead of {@code long} to be GWT/JavaScript-friendly. TODO: maybe use super-source
@@ -37,6 +39,14 @@ public final class BitVec
             _words = words;
         }
         _words[word] |= (1 << (value % 32));
+    }
+
+    /** Copies the contents of {@code other} to this bit vector. */
+    public void set (BitVec other) {
+        int owlength = other._words.length;
+        if (_words.length < owlength) _words = new int[owlength];
+        System.arraycopy(other._words, 0, _words, 0, owlength);
+        Arrays.fill(_words, owlength, _words.length, 0);
     }
 
     /** Clears the {@code value}th bit. */
