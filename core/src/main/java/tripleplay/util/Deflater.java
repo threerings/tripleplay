@@ -63,6 +63,21 @@ public class Deflater extends Conflater
         return this;
     }
 
+    public Deflater addBitVec (BitVec value) {
+        // find the index of the highest non-zero word
+        int[] words = value._words;
+        int wc = 0;
+        for (int ii = words.length-1; ii >= 0; ii--) {
+            if (words[ii] == 0) continue;
+            wc = ii+1;
+            break;
+        }
+        // now write out the number of words and their contents
+        addVarInt(wc);
+        for (int ii = 0; ii < wc; ii++) addInt(words[ii]);
+        return this;
+    }
+
     public Deflater addFLString (String value) {
         _buf.append(value);
         return this;

@@ -65,6 +65,13 @@ public class Inflater extends Conflater
         return neg ? (-1*value) : value;
     }
 
+    public BitVec popBitVec () {
+        int words = popVarInt();
+        BitVec vec = new BitVec(words);
+        for (int ii = 0; ii < words; ii++) vec._words[ii] = popInt();
+        return vec;
+    }
+
     public String popFLString (int length) {
         return _data.substring(pos(length), _pos);
     }
