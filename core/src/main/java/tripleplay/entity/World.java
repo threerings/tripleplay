@@ -15,6 +15,7 @@ import react.Slot;
 import playn.core.Clock;
 
 import tripleplay.util.Bag;
+import tripleplay.util.BitVec;
 
 /**
  * A collection of entities and systems. A world is completely self-contained, so it would be
@@ -58,19 +59,31 @@ public class World
     public Entity create (boolean enabled) {
         Entity e;
         if (_ids.isEmpty()) {
-            int id = _nextEntityId++;
-            if (_entities.length <= id) {
-                Entity[] entities = new Entity[_entities.length*2];
-                java.lang.System.arraycopy(_entities, 0, entities, 0, _entities.length);
-                _entities = entities;
-            }
-            _entities[id] = (e = new Entity(this, id));
+            e = create(genEntityId());
         } else {
             e = _entities[_ids.removeLast()];
             e.reset();
         }
         if (enabled) e.setEnabled(true);
         return e;
+    }
+
+    /** Creates an entity with the specified id. NOTE: this is not how you normally create
+      * entities, this is only used in situations like restoring a collection of entities from
+      * persistent state.
+      */
+
+    /** Creates an entity with the specified id and component bitvec. This is only used when
+      * restoring entities from persistent storage. Use {@link #create} to create new entities.
+      */
+    public Entity restore (int id, BitVec components) {
+        Entity ent = create(id);
+        // init the components directly to avoid extra checking done by Entity.add(Component)
+        ent.comps.set(components);
+        for (int ii = 0, ll = _comps.size(); ii < ll; ii++) {
+            if (components.isSet(ii)) _comps.get(ii).add(ent);
+        }
+        return ent;
     }
 
     /** Returns the entity with the specified id. Note: this method is optimized for speed, which
@@ -190,6 +203,24 @@ public class World
     final Bag<Entity> toAdd = Bag.create();
     final Bag<Entity> toChange = Bag.create();
     final Bag<Entity> toRemove = Bag.create();
+
+    protected int genEntityId () {
+        return _nextEntityId++;
+    }
+
+    protected Entity create (int id) {
+        if (_entities.length <= id) {
+            Entity[] entities = new Entity[_entities.length*2];
+            java.lang.System.arraycopy(_entities, 0, entities, 0, _entities.length);
+            _entities = entities;
+        }
+        assert _entities[id] == null : "Entity already exists with id " + id;
+        return _entities[id] = new Entity(this, id);
+    }
+
+    protected BitVec components (Entity ent) {
+        return ent.comps;
+    }
 
     protected final ArrayList<System> _systems = new ArrayList<System>();
     protected final ArrayList<Component> _comps = new ArrayList<Component>();
