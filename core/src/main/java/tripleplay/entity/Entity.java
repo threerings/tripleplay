@@ -37,7 +37,7 @@ public final class Entity implements Disposable
 
     /** Returns whether this entity is currently enabled. */
     public boolean isEnabled () {
-        return (_flags & ENABLED) != 0;
+        return (_flags & (ENABLED|DISPOSED)) == ENABLED;
     }
 
     /** Enables or disables this entity. When an entity is disabled, it is removed from all systems

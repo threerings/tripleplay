@@ -121,6 +121,12 @@ public class World
     /** Updates all of the {@link System}s in this world. The systems will likely in turn update
       * the components of registered {@link Entity}s. */
     public void update (Clock clock) {
+        // init any to-be-initted systems (before we add to-be-added entities)
+        for (int ii = _toInit.size()-1; ii >= 0; ii--) {
+            System sys = _toInit.removeLast();
+            for (Entity ent : _entities) if (ent != null && ent.isEnabled()) sys.entityAdded(ent);
+        }
+
         // process any pending entity additions
         for (int ii = toAdd.size()-1; ii >= 0; ii--) {
             Entity entity = toAdd.removeLast();
@@ -188,6 +194,7 @@ public class World
             }
         }
         _systems.add(idx, system);
+        _toInit.add(system); // tell it about existing entities on the next update
         return _systems.size()-1;
     }
 
@@ -221,6 +228,9 @@ public class World
     protected BitVec components (Entity ent) {
         return ent.comps;
     }
+
+    // Systems that need to be initted on the next update
+    protected final Bag<System> _toInit = Bag.create();
 
     protected final ArrayList<System> _systems = new ArrayList<System>();
     protected final ArrayList<Component> _comps = new ArrayList<Component>();
