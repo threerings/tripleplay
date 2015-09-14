@@ -34,6 +34,16 @@ public abstract class System
         _enabled = enabled;
     }
 
+    /** Returns the number of active entities in this system. */
+    public final int entityCount () {
+        return _active.size();
+    }
+
+    /** Returns the id of the {@code ii}th active entity in this system. */
+    public final int entityId (int ii) {
+        return _active.get(ii);
+    }
+
     /** Creates a new system and registers it with {@code world}.
      * @param priorty this system's priority with respect to other systems. Systems with higher
      * priority will be notified of entity addition/removal and will be processed before systems
