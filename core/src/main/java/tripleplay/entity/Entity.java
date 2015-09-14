@@ -143,6 +143,10 @@ public final class Entity implements Disposable
         queueChange();
     }
 
+    @Override public String toString () {
+        return id + " [" + Integer.toHexString(_flags) + "]";
+    }
+
     protected final void queueChange () {
         // if we're not yet added, we can stop now because we'll be processed when added; if we're
         // not currently enabled, we can stop now and we'll be processed when re-enabled

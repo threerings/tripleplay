@@ -264,6 +264,10 @@ public abstract class Component
     /** The world in which this component exists. */
     public final World world;
 
+    @Override public String toString () {
+        return getClass().getSimpleName() + "#" + id;
+    }
+
     protected Component (World world) {
         this.world = world;
         id = world.register(this);
