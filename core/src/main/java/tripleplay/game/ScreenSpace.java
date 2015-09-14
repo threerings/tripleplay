@@ -170,7 +170,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     public static abstract class Screen {
 
         /** Contains the scene graph root for this screen. */
-        public final GroupLayer layer = new GroupLayer();
+        public final GroupLayer layer = createGroupLayer();
 
         /** A signal emitted on every simulation update, while this screen is showing. */
         public final Signal<Clock> update = Signal.create();
@@ -183,12 +183,11 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
         public Screen () {
             layer.setName(Screen.this + " layer");
-            layer.absorbHits();
         }
 
         /** Called when this screen is first added to the screen space. */
         public void init () {
-            // nada by default
+            layer.setSize(size());
         }
 
         /** Returns the size of this screen, for use by transitions.
@@ -274,6 +273,13 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             layer.setVisible(active);
         }
         boolean isActive () { return _scons != Closeable.Util.NOOP; }
+
+        /** Creates the group layer used by this screen. Subclasses may wish to override and use a
+          * clipped group layer instead. Note that the size of the group layer will be set to the
+          * screen size in {@link #init}. */
+        protected GroupLayer createGroupLayer () {
+            return new GroupLayer();
+        }
 
         /** Flag: whether this screen is currently awake. */
         protected static final int AWAKE = 1 << 0;
