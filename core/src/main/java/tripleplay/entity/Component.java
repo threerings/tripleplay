@@ -248,6 +248,24 @@ public abstract class Component
             _blocks[entityId / BLOCK][entityId % BLOCK] |= mask;
         }
 
+        /** Returns whether {@code flag} is set in this mask.
+          * @param flag an integer with the appropriate flag bit set. */
+        public boolean isSet (int entityId, int flag) {
+            return (get(entityId) & flag) != 0;
+        }
+
+        /** Sets {@code flag} in the mask for {@code entityId}.
+          * @param flag an integer with the appropriate flag bit set. */
+        public void setFlag (int entityId, int flag) {
+            setOr(entityId, flag);
+        }
+
+        /** Clears {@code flag} from the mask for {@code entityId}.
+          * @param flag an integer with the appropriate flag bit set. */
+        public void clearFlag (int entityId, int flag) {
+            setAnd(entityId, ~flag);
+        }
+
         @Override protected void init (int entityId) {
             int blockIdx = entityId / BLOCK;
             if (blockIdx >= _blocks.length) {
