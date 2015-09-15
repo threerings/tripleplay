@@ -126,12 +126,15 @@ public final class Entity implements Disposable
     }
 
     /** Disposes this entity, causing it to be removed from the world on the next update. */
-    @Override public void close () {
+    public void dispose () {
         if (!isDisposed()) {
             _flags |= DISPOSED;
             world.toRemove.add(this);
         }
     }
+
+    /** An alias for {@link #dispose}. Needed to implement {@link Disposable}. */
+    @Override public void close () { dispose(); }
 
     /** Indicates that this entity has changed, and causes it to be reconsidered for inclusion or
      * exclusion from systems on the next update. This need not be called when adding or removing
