@@ -147,7 +147,8 @@ public final class Entity implements Closeable
     }
 
     @Override public String toString () {
-        return id + " [" + Integer.toHexString(_flags) + "]";
+        return "[id=" + id + ", sys=" + systems + ", comps=" + comps +
+            ", flags=" + Integer.toBinaryString(_flags) + "]";
     }
 
     protected final void queueChange () {
