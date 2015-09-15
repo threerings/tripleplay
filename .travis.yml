@@ -5,6 +5,10 @@ sudo: false
 jdk:
   - openjdk7
 
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+
 env:
   global:
     - secure: "azTOm427TYgWCE/zGqQpSu1PU1w6CGF7noqKsxGkLMlj6tl4TDYVsywvywflFWnmOuhDykAIXiamBv/xh5RCef0P0ekfE4e9HKJ0+3NsTuqw/ecqeNv7ztT8H7KiM3cN+eRxl9jX4GiLBNoHIDc8v9913odbyXzRtwE/EViy8vI="
