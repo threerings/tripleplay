@@ -5,11 +5,12 @@
 
 package tripleplay.flump;
 
-import playn.core.Disposable;
+import react.Closeable;
+
 import playn.scene.Layer;
 
 /** A created instance of a Flump symbol. */
-public interface Instance extends Disposable {
+public interface Instance extends Closeable {
 
     /** The layer that displays this instance. */
     Layer layer ();

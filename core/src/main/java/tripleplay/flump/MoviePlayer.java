@@ -5,10 +5,10 @@
 
 package tripleplay.flump;
 
+import react.Closeable;
 import react.Value;
 
 import playn.core.Clock;
-import playn.core.Disposable;
 import playn.scene.GroupLayer;
 import playn.scene.Layer;
 
@@ -19,7 +19,7 @@ import tripleplay.anim.Animation;
  * objects that have a separate Flump symbol for each of their animations, and need to switch
  * between them.
  */
-public class MoviePlayer implements Disposable
+public class MoviePlayer implements Closeable
 {
     /** The currently playing movie, if any. */
     public final Value<Movie> movie = Value.create(null);

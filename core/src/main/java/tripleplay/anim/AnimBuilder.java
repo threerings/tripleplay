@@ -6,10 +6,10 @@
 package tripleplay.anim;
 
 import pythagoras.f.XY;
+import react.Closeable;
 import react.Signal;
 import react.Value;
 
-import playn.core.Disposable;
 import playn.core.Sound;
 import playn.scene.GroupLayer;
 import playn.scene.Layer;
@@ -257,7 +257,7 @@ public abstract class AnimBuilder
     /**
      * Disposes the specified disposable.
      */
-    public Animation.Action dispose (final Disposable dable) {
+    public Animation.Action dispose (final Closeable dable) {
         return action(new Runnable() { public void run () {
             dable.close();
         }});

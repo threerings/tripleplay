@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import playn.core.Disposable;
+import react.Closeable;
+
 import playn.core.Graphics;
 import playn.core.QuadBatch;
 import playn.core.Tile;
@@ -66,7 +67,7 @@ public class Library
 
         // Add all texture symbols to the packer and note them for destruction
         TexturePacker packer = new TexturePacker();
-        Set<Disposable> originals = new HashSet<>();
+        Set<Closeable> originals = new HashSet<>();
         for (int ii = 0, ll = list.size(); ii < ll; ++ii) {
             Library lib = list.get(ii);
             for (Symbol symbol : lib.symbols.values()) {
@@ -90,7 +91,7 @@ public class Library
         }
 
         // Finally dispose all of the original textures, they're no longer needed
-        for (Disposable tex : originals) tex.close();
+        for (Closeable tex : originals) tex.close();
     }
 
     /** Creates an instance of a symbol, or throws if the symbol name is not in this library. */

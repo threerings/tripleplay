@@ -5,7 +5,7 @@
 
 package tripleplay.entity;
 
-import playn.core.Disposable;
+import react.Closeable;
 
 import tripleplay.util.BitVec;
 
@@ -13,7 +13,7 @@ import tripleplay.util.BitVec;
  * Tracks the state of a single entity. This includes its enabled state, as well as the components
  * which are attached to this entity.
  */
-public final class Entity implements Disposable
+public final class Entity implements Closeable
 {
     /** The world to which this entity belongs. */
     public final World world;
@@ -133,7 +133,7 @@ public final class Entity implements Disposable
         }
     }
 
-    /** An alias for {@link #dispose}. Needed to implement {@link Disposable}. */
+    /** An alias for {@link #dispose}. Needed to implement {@link Closeable}. */
     @Override public void close () { dispose(); }
 
     /** Indicates that this entity has changed, and causes it to be reconsidered for inclusion or

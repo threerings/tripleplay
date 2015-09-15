@@ -7,8 +7,9 @@ package tripleplay.util;
 
 import pythagoras.f.IDimension;
 
+import react.Closeable;
+
 import playn.core.Canvas;
-import playn.core.Disposable;
 import playn.core.Graphics;
 import playn.scene.CanvasLayer;
 import playn.scene.GroupLayer;
@@ -18,7 +19,7 @@ import playn.scene.ImageLayer;
  * Handles the maintenance of a canvas image and layer for displaying a chunk of pre-rendered
  * graphics.
  */
-public class Glyph implements Disposable
+public class Glyph implements Closeable
 {
     public Glyph (GroupLayer parent) {
         _parent = parent;

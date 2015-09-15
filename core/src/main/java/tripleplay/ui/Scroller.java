@@ -13,6 +13,7 @@ import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 
+import react.Closeable;
 import react.Connection;
 import react.Signal;
 import react.Slot;
@@ -20,7 +21,6 @@ import react.UnitSlot;
 
 import playn.core.Clock;
 import playn.core.Color;
-import playn.core.Disposable;
 import playn.core.Surface;
 import playn.scene.GroupLayer;
 import playn.scene.Interaction;
@@ -263,7 +263,7 @@ public class Scroller extends Composite<Scroller>
     /**
      * Handles the appearance and animation of scroll bars.
      */
-    public static abstract class Bars implements Disposable
+    public static abstract class Bars implements Closeable
     {
         /**
          * Updates the scroll bars to match the current view and content size. This will be

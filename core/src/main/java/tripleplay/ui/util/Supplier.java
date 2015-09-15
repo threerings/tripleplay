@@ -5,7 +5,7 @@
 
 package tripleplay.ui.util;
 
-import playn.core.Disposable;
+import react.Closeable;
 
 import tripleplay.ui.Element;
 
@@ -14,8 +14,7 @@ import tripleplay.ui.Element;
  * provide a fixed instance or to construct a new element for the caller to cache. Particular
  * attention is paid to ownership and orderly resource disposal.
  */
-public abstract class Supplier
-    implements Disposable
+public abstract class Supplier implements Closeable
 {
     /**
      * Creates a supplier that will return a previously created element the first time and null
@@ -39,7 +38,7 @@ public abstract class Supplier
 
     /**
      * Creates a supplier that wraps another supplier and on dispose also disposes the created
-     * element, if it implements {@link Disposable}.
+     * element, if it implements {@link Closeable}.
      */
     public static Supplier withDispose (final Supplier other) {
         return new Supplier() {
@@ -49,8 +48,8 @@ public abstract class Supplier
             }
             @Override public void close () {
                 other.close();
-                if (created instanceof Disposable) {
-                    ((Disposable)created).close();
+                if (created instanceof Closeable) {
+                    ((Closeable)created).close();
                 }
             }
         };

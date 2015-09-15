@@ -5,7 +5,7 @@
 
 package tripleplay.util;
 
-import playn.core.Disposable;
+import react.Closeable;
 
 /**
  * Maintains a reference to a resource. Handles destroying the resource before releasing the
@@ -13,8 +13,8 @@ import playn.core.Disposable;
  */
 public abstract class Ref<T>
 {
-    /** Creates a reference to a {@link Disposable} target. */
-    public static <T extends Disposable> Ref<T> create (T target) {
+    /** Creates a reference to a {@link Closeable} target. */
+    public static <T extends Closeable> Ref<T> create (T target) {
         Ref<T> ref = new Ref<T>() {
             @Override protected void onClear (T target) {
                 target.close();

@@ -9,7 +9,8 @@ import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.MathUtil;
 
-import playn.core.Disposable;
+import react.Closeable;
+
 import playn.core.Graphics;
 import playn.core.Surface;
 import playn.core.Texture;
@@ -33,7 +34,7 @@ public abstract class Background
 {
     /** An instantiation of a particular background template. Backgrounds are configured as a style
      * property; elements instantiate them at specific dimensions when they are actually used.*/
-    public abstract class Instance implements Disposable {
+    public abstract class Instance implements Closeable {
 
         /** The size at which this instance was prepared. */
         public final IDimension size;

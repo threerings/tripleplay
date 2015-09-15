@@ -5,8 +5,8 @@
 
 package tripleplay.ui;
 
-import playn.core.Disposable;
 import pythagoras.f.IDimension;
+import react.Closeable;
 import react.Signal;
 import react.SignalView;
 
@@ -14,8 +14,7 @@ import react.SignalView;
  * The root of a display hierarchy. An application can have one or more roots, but they should not
  * overlap and will behave as if oblivious to one another's existence.
  */
-public class Root extends Elements<Root>
-    implements Disposable
+public class Root extends Elements<Root> implements Closeable
 {
     /** The interface of which this root is a part. */
     public final Interface iface;
