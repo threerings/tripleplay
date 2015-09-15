@@ -62,5 +62,15 @@ public final class BitVec
         for (int ii = 0; ii < _words.length; ii++) _words[ii] = 0;
     }
 
+    @Override public String toString () {
+        StringBuilder buf = new StringBuilder("[");
+        for (int ii = 0; ii < _words.length*32; ii++) {
+            if (!isSet(ii)) continue;
+            if (buf.length() > 1) buf.append(", ");
+            buf.append(ii);
+        }
+        return buf.append("]").toString();
+    }
+
     protected int[] _words;
 }
