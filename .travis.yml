@@ -1,5 +1,6 @@
 language: java
 after_success: etc/travis-deploy.sh
+sudo: false
 
 jdk:
   - openjdk7
