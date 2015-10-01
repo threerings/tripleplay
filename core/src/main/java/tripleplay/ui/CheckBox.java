@@ -5,6 +5,8 @@
 
 package tripleplay.ui;
 
+import react.Functions;
+import react.SignalView;
 import react.Slot;
 import react.Value;
 
@@ -14,11 +16,8 @@ import playn.scene.Pointer;
  * Displays a checkbox which can be toggled. The checkbox must be configured with either a
  * font-based checkmark, or a checkmark icon, which will be shown when it is checked.
  */
-public class CheckBox extends TextWidget<CheckBox>
+public class CheckBox extends TextWidget<CheckBox> implements Togglable<CheckBox>
 {
-    /** The checked status of this widget. */
-    public final Value<Boolean> checked = Value.create(false);
-
     /** Creates a checkbox using the default check glyph: U+2713. */
     public CheckBox () {
         this('\u2713');
@@ -40,15 +39,31 @@ public class CheckBox extends TextWidget<CheckBox>
      * #checked} which could be updated programmatically).
      */
     public void select (boolean selected) {
-        checked.update(selected);
+        selected().update(selected);
+    }
+
+    @Override public Value<Boolean> selected () {
+        return ((Behavior.Toggle<CheckBox>)_behave).selected;
+    }
+
+    @Override public SignalView<CheckBox> clicked () {
+        return ((Behavior.Toggle<CheckBox>)_behave).clicked;
+    }
+
+    @Override public void click () {
+        ((Behavior.Toggle<CheckBox>)_behave).click();
+    }
+
+    @Override public String toString () {
+        return "CheckBox(" + text() + ")";
     }
 
     protected CheckBox (char checkChar, Icon checkIcon) {
         _checkStr = String.valueOf(checkChar);
         _checkIcon = checkIcon;
-        checked.connect(new Slot<Boolean> () {
+        selected().connect(new Slot<Boolean> () {
             @Override public void onEmit (Boolean checked) {
-                updateCheckViz();
+                updateCheckViz(checked);
             }
         });
     }
@@ -66,21 +81,15 @@ public class CheckBox extends TextWidget<CheckBox>
     }
 
     @Override protected Behavior<CheckBox> createBehavior () {
-        return new Behavior.Select<CheckBox>(this) {
-            @Override public void onClick (Pointer.Interaction iact) {
-                soundAction();
-                _owner.select(!checked.get());
-            }
-        };
+        return new Behavior.Toggle<CheckBox>(asT());
     }
 
     @Override protected void layout () {
         super.layout();
-        updateCheckViz();
+        updateCheckViz(selected().get());
     }
 
-    protected void updateCheckViz () {
-        boolean isChecked = checked.get();
+    protected void updateCheckViz (boolean isChecked) {
         if (_tglyph.layer() != null) _tglyph.layer().setVisible(isChecked);
         if (_ilayer != null) _ilayer.setVisible(isChecked);
     }

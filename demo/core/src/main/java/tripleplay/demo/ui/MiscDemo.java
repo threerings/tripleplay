@@ -129,9 +129,9 @@ public class MiscDemo extends DemoScreen
             }
         });
 
-        toggle.checked.update(true);
-        toggle.checked.connect(label2.visibleSlot());
-        toggle2.checked.map(new Function<Boolean,Icon>() {
+        toggle.selected().update(true);
+        toggle.selected().connect(label2.visibleSlot());
+        toggle2.selected().map(new Function<Boolean,Icon>() {
             public Icon apply (Boolean checked) {
                 return checked ? tileIcon(squares, 0) : null;
             }
