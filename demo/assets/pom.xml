@@ -10,4 +10,40 @@
   <artifactId>tripleplay-demo-assets</artifactId>
   <packaging>jar</packaging>
   <name>TP Demo Assets</name>
+
+  <dependencies>
+    <!-- we need this to run exec-maven-plugin below but don't want to export it as a
+         transitive dependency to the other modules so we mark it optional -->
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay-tools</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>tripleplay.tools.FramePacker</mainClass>
+          <arguments>
+            <argument>${basedir}/src/main/unpacked/assets/images/orb_burst_202x204.png</argument>
+            <argument>${project.build.outputDirectory}/assets/images</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

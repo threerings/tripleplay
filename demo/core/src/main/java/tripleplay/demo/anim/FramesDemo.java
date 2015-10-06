@@ -52,8 +52,8 @@ public class FramesDemo extends DemoScreen
             tweenX(box).to(0).in(2000).easeInOut();
 
         // test our packed frames
-        final Image packed = assets().getImage("images/packed.png");
-        assets().getText("images/packed.json").onSuccess(new Slot<String>() {
+        final Image packed = assets().getImage("images/orb_burst.png");
+        assets().getText("images/orb_burst.json").onSuccess(new Slot<String>() {
             public void onEmit (String json) {
                 GroupLayer box = new GroupLayer();
                 layer.addAt(box, 100, 200);
@@ -72,6 +72,7 @@ public class FramesDemo extends DemoScreen
         return null;
     }
 
+    // copied from assets/target/classes/assets/images/orb_burst.java
     protected static final float[][] PACKED = {
         { 202.0f, 204.0f },
         {  41.0f,  50.0f }, { 320.0f, 162.0f, 117.0f, 117.0f },
