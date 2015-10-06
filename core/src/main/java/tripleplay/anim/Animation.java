@@ -279,6 +279,12 @@ public abstract class Animation
         }
 
         @Override
+        protected void init (float time) {
+            super.init(time);
+            _complete = false;
+        }
+
+        @Override
         protected float apply (float time) {
             makeComplete();
             return _start - time;
@@ -286,13 +292,14 @@ public abstract class Animation
 
         @Override
         protected void makeComplete () {
-            if (_action != null) {
+            if (!_complete) {
                 _action.run();
-                _action = null;
+                _complete = true;
             }
         }
 
-        protected Runnable _action;
+        protected final Runnable _action;
+        protected boolean _complete;
     }
 
     /** Repeats its underlying animation over and over again (until removed). */
