@@ -35,8 +35,8 @@ public class CheckBox extends TextWidget<CheckBox> implements Togglable<CheckBox
     /**
      * Updates the selected state of this checkbox. This method is called when the user taps and
      * releases the checkbox. One can override this method if they want to react to only
-     * user-interaction-initiated changes to the checkbox's state (versus listening to {@link
-     * #checked} which could be updated programmatically).
+     * user-interaction-initiated changes to the checkbox's state (versus listening to
+     * {@link #selected} which can be updated programmatically).
      */
     public void select (boolean selected) {
         selected().update(selected);

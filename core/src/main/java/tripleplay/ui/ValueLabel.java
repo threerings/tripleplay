@@ -9,7 +9,7 @@ import react.Closeable;
 import react.ValueView;
 
 /**
- * @deprecated Use {@link Label(ValueView)}.
+ * @deprecated Use {@link Label#Label(ValueView)}.
  */
 @Deprecated
 public class ValueLabel extends TextWidget<ValueLabel>

@@ -545,7 +545,7 @@ public abstract class Element<T extends Element<T>>
 
     /**
      * Handles common element layout (background), then calls
-     * {@link #layout(LayoutData,float,float,float,float)} to do the actual layout.
+     * {@link #layout(Element.LayoutData,float,float,float,float)} to do the actual layout.
      */
     protected void layout () {
         if (!isVisible()) return;

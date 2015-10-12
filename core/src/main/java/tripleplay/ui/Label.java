@@ -45,7 +45,7 @@ public class Label extends TextWidget<Label>
         this.icon.update(icon);
     }
 
-    /** Creates a label and calls {@link #bindText) with {@code text}. */
+    /** Creates a label and calls {@link #bindText} with {@code text}. */
     public Label (ValueView<?> text) {
         this(null, null);
         bindText(text);
