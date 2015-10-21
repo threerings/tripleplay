@@ -124,7 +124,13 @@ public class World
         // init any to-be-initted systems (before we add to-be-added entities)
         for (int ii = _toInit.size()-1; ii >= 0; ii--) {
             System sys = _toInit.removeLast();
-            for (Entity ent : _entities) if (ent != null && ent.isEnabled()) sys.entityAdded(ent);
+            for (Entity ent : _entities) {
+                // skip non-existent or disabled entities
+                if (ent == null || !ent.isEnabled()) continue;
+                // if the entity is already added tell the new system about it, otherwise it is in
+                // the toAdd list and we'll tell all systems about it in the next block
+                if (ent.isAdded()) sys.entityAdded(ent);
+            }
         }
 
         // process any pending entity additions

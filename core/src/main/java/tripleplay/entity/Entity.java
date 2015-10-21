@@ -166,6 +166,7 @@ public final class Entity implements Closeable
         if ((_flags & DISPOSED) != 0) throw new IllegalStateException(error);
     }
 
+    boolean isAdded () { return (_flags & ADDED) != 0; }
     void noteAdded () { _flags |= ADDED; }
     void clearChanging () { _flags &= ~CHANGING; }
     void reset () { _flags = 0; }
