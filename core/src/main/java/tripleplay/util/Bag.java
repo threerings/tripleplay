@@ -7,6 +7,8 @@ package tripleplay.util;
 
 import java.util.Iterator;
 
+import react.Function;
+
 /**
  * An unordered collection of elements which may contain duplicates. Elements must not be null. The
  * elements will be reordered during normal operation of the bag. This is optimized for fast
@@ -58,15 +60,25 @@ public class Bag<E> implements Iterable<E>
     }
 
     /** Returns the element at {@code index}. */
-    public E get (int index) {
+    public final E get (int index) {
         @SuppressWarnings("unchecked") E elem = (E)_elems[index];
         return elem;
     }
 
     /** Returns whether this bag contains {@code elem}. Equality is by reference. */
     public boolean contains (E elem) {
+        Object[] elems = _elems;
         for (int ii = 0, ll = _size; ii < ll; ii++) {
-            if (elem == _elems[ii]) return true;
+            if (elem == elems[ii]) return true;
+        }
+        return false;
+    }
+
+    /** Returns whether this bag contains at least one element matching {@code pred}. */
+    public boolean contains (Function<E,Boolean> pred) {
+        Object[] elems = _elems;
+        for (int ii = 0, ll = _size; ii < ll; ii++) {
+            if (pred.apply(get(ii))) return true;
         }
         return false;
     }
@@ -93,15 +105,33 @@ public class Bag<E> implements Iterable<E>
      * @return true if {@code elem} was found and removed, false if not.
      */
     public boolean remove (E elem) {
+        Object[] elems = _elems;
         for (int ii = 0, ll = _size; ii < ll; ii++) {
-            Object ee = _elems[ii];
+            Object ee = elems[ii];
             if (ee == elem) {
-                _elems[ii] = _elems[--_size];
-                _elems[_size] = null;
+                elems[ii] = elems[--_size];
+                elems[_size] = null;
                 return true;
             }
         }
         return false;
+    }
+
+    /** Removes all elements that match {@code pred}.
+      * @return true if at least one element was found and removed, false otherwise.
+      */
+    public boolean removeWhere (Function<E,Boolean> pred) {
+        Object[] elems = _elems;
+        int removed = 0;
+        for (int ii = 0, ll = _size; ii < ll; ii++) {
+            if (pred.apply(get(ii))) {
+                // back ii up so that we recheck the element we're swapping into place here
+                elems[ii--] = elems[--_size];
+                elems[_size] = null;
+                removed += 1;
+            }
+        }
+        return removed > 0;
     }
 
     /** Removes and returns the last element of the bag.
@@ -114,7 +144,8 @@ public class Bag<E> implements Iterable<E>
 
     /** Removes all elements from this bag. */
     public void removeAll () {
-        for (int ii = 0; ii < _size; ii++) _elems[ii] = null;
+        Object[] elems = _elems;
+        for (int ii = 0; ii < _size; ii++) elems[ii] = null;
         _size = 0;
     }
 
