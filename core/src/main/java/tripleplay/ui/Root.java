@@ -74,6 +74,11 @@ public class Root extends Elements<Root> implements Closeable
         return this;
     }
 
+    /** Configures the location of this root, relative to its parent layer. */
+    @Override public void setLocation (float x, float y) {
+        super.setLocation(x, y);
+    }
+
     @Override public boolean isShowing () {
         return isVisible();
     }
