@@ -9,7 +9,26 @@ import playn.core.Platform;
 import react.Slot;
 
 /**
- * Handles execution of actions after a specified delay.
+ * Handles execution of actions after a specified delay. Create a {@code Timer} and connect it to
+ * the {@link Platform#frame} signal:
+ *
+ * <pre>{@code
+ * public class MyGame extends SceneGame {
+ *   public final Timer timer = new Timer();
+ *   public MyGame (Platform plat) {
+ *     plat.frame.connect(timer);
+ *   }
+ * }
+ * }</pre>
+ *
+ * Then you can register actions to be performed at times in the future like so:
+ *
+ * <pre>{@code
+ *   // wherever
+ *   game.timer.after(500, () -> {
+ *      // this is run after 500ms
+ *   });
+ * }</pre>
  */
 public class Timer extends Slot<Platform>
 {
