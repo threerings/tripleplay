@@ -178,11 +178,9 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         /** A signal emitted on every frame, while this screen is showing. */
         public final Signal<Clock> paint = Signal.create();
 
-        /** Returns the game in which this screen is operating. */
-        public abstract Game game ();
-
-        public Screen () {
+        public Screen (Game game) {
             layer.setName(Screen.this + " layer");
+            _game = game;
         }
 
         /** Called when this screen is first added to the screen space. */
@@ -192,7 +190,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
         /** Returns the size of this screen, for use by transitions.
           * Defaults to the size of the entire view. */
-        public IDimension size () { return game().plat.graphics().viewSize; }
+        public IDimension size () { return _game.plat.graphics().viewSize; }
 
         /** Returns true when this screen is awake. */
         public boolean awake () { return (_flags & AWAKE) != 0; }
@@ -267,8 +265,8 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         void setActive (boolean active) {
             _scons.close();
             if (active) _scons = Closeable.Util.join(
-                game().update.connect(update.slot()),
-                game().paint.connect(paint.slot()));
+                _game.update.connect(update.slot()),
+                _game.paint.connect(paint.slot()));
             else _scons = Closeable.Util.NOOP;
             layer.setVisible(active);
         }
@@ -289,6 +287,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         protected int _flags;
         protected Closeable _scons = Closeable.Util.NOOP;
         protected final Closeable.Set _closeOnSleep = new Closeable.Set();
+        protected final Game _game;
     }
 
     /** A {@link Screen} that takes care of basic UI setup for you. */
@@ -310,8 +309,9 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             iface.anim.clear();
         }
 
-        protected UIScreen (Platform plat) {
-            iface = new Interface(plat, paint);
+        protected UIScreen (Game game) {
+            super(game);
+            iface = new Interface(game.plat, paint);
         }
 
         /** Creates the main UI for this screen. Create one or more {@link Root} instances using
