@@ -424,6 +424,11 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         return (_current == null) ? null : _current.screen;
     }
 
+    /** Returns the lowest screen in the stack. */
+    public Screen bottom () {
+        return _screens.get(_screens.size()-1).screen;
+    }
+
     protected int indexOf (Screen screen) {
         for (int ii = 0, ll = _screens.size(); ii < ll; ii++) {
             if (_screens.get(ii).screen == screen) return ii;
