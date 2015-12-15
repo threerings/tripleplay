@@ -330,8 +330,6 @@ public class AsteroidsDemo extends DemoScreen
         }
 
         public void attract () {
-            for (int ii = 0; ii < 5; ii++) createAsteroid(
-                Size.LARGE, rando.getFloat(swidth), rando.getFloat(sheight));
             setMessage("Press 's' to start.");
             _wave = -1;
         }
