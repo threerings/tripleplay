@@ -5,8 +5,7 @@
 
 package tripleplay.flump;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +22,8 @@ public class BinaryFlumpLoader
      * Loads a binary encoded library synchronously via PlayN assets.
      */
     public static Library loadLibrarySync (Platform plat, String baseDir) throws Exception {
-        byte[] bytes = plat.assets().getBytesSync(baseDir + "/library.bin");
-        LibraryData data = new LibraryData(new DataInputStream(new ByteArrayInputStream(bytes)));
+        ByteBuffer buf = plat.assets().getBytesSync(baseDir + "/library.bin");
+        LibraryData data = new LibraryData(buf);
         return decodeLibrarySync(plat, data, baseDir);
     }
 
@@ -34,11 +33,10 @@ public class BinaryFlumpLoader
      */
     public static RFuture<Library> loadLibrary (final Platform plat, final String baseDir) {
         final RPromise<Library> result = RPromise.create();
-        plat.assets().getBytes(baseDir + "/library.bin").onSuccess(new Slot<byte[]>() {
-            public void onEmit (byte[] bytes) {
+        plat.assets().getBytes(baseDir + "/library.bin").onSuccess(new Slot<ByteBuffer>() {
+            public void onEmit (ByteBuffer buf) {
                 try {
-                    LibraryData libData = new LibraryData(
-                        new DataInputStream(new ByteArrayInputStream(bytes)));
+                    LibraryData libData = new LibraryData(buf);
                     decodeLibraryAsync(plat, libData, baseDir, result);
                 } catch (Exception err) {
                     result.fail(err);

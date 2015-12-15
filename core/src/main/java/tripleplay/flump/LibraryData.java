@@ -5,9 +5,11 @@
 
 package tripleplay.flump;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -318,6 +320,10 @@ public class LibraryData
         return jobj;
     }
 
+    public LibraryData (ByteBuffer data) throws IOException {
+        this(new DataInputStream(new ByteArrayInputStream(toBytes(data))));
+    }
+
     public LibraryData (DataInputStream istream) throws IOException {
         int numMovies = istream.readInt();
         for (int ii = 0; ii < numMovies; ++ii) movies.add(new MovieData(istream));
@@ -344,5 +350,12 @@ public class LibraryData
         arr.add(pt.x);
         arr.add(pt.y);
         return arr;
+    }
+
+    protected static byte[] toBytes (ByteBuffer buf) {
+        if (buf.hasArray()) return buf.array();
+        byte[] bytes = new byte[buf.remaining()];
+        buf.get(bytes);
+        return bytes;
     }
 }
