@@ -330,17 +330,16 @@ public class AsteroidsDemo extends DemoScreen
         }
 
         public void attract () {
+            setMessage("Press 's' to start.");
             for (int ii = 0; ii < 5; ii++) createAsteroid(
                 Size.LARGE, rando.getFloat(swidth), rando.getFloat(sheight));
-            setMessage("Press 's' to start.");
             _wave = -1;
         }
 
         public void startWave (int wave) {
             // if this is wave 0, destroy any existing entities and add our ship
             if (wave == 0) {
-                Iterator<Entity> iter = entities();
-                while (iter.hasNext()) iter.next().close();
+                for (Entity e : this) e.close();
                 createShip(swidth/2, sheight/2);
                 setMessage(null);
             }
@@ -488,19 +487,18 @@ public class AsteroidsDemo extends DemoScreen
         return "Asteroids Demo";
     }
 
+    @Override public void showTransitionCompleted () {
+        super.showTransitionCompleted();
+        AsteroidsWorld world = new AsteroidsWorld(layer, size().width(), size().height());
+        closeOnHide(world.connect(update, paint));
+        world.attract();
+    }
+
     @Override protected Group createIface (Root root) {
-        // create a new world once our root is validated so that we know our size
-        root.validated.connect(new UnitSlot() {
-            public void onEmit () {
-                AsteroidsWorld world = new AsteroidsWorld(layer, size().width(), size().height());
-                closeOnHide(world.connect(update, paint));
-                world.attract();
-            }
-        }).once();;
+        root.layer.setDepth(-1); // render below our game
         return new Group(AxisLayout.vertical());
     }
 
-    protected AsteroidsWorld _world;
     protected Group _group;
 
     protected static final TextStyle MSG_STYLE = TextStyle.DEFAULT.
