@@ -21,7 +21,7 @@ import tripleplay.util.BitVec;
  * A collection of entities and systems. A world is completely self-contained, so it would be
  * possible to have multiple separate worlds running simultaneously, though this would be uncommon.
  */
-public class World
+public class World implements Iterable<Entity>
 {
     /** A signal emitted when an entity is added to this world. */
     public final Signal<Entity> entityAdded = Signal.create();
@@ -186,6 +186,11 @@ public class World
     /** Paints all of the {@link System}s in this world. */
     public void paint (Clock clock) {
         for (int ii = 0, ll = _systems.size(); ii < ll; ii++) _systems.get(ii).paint(clock);
+    }
+
+    // from interface Iterable<Entity>
+    public Iterator<Entity> iterator () {
+        return entities();
     }
 
     /** Registers {@code system} with this world.
