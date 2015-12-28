@@ -64,7 +64,7 @@
   <modules>
     <module>core</module>
     <!-- <module>ios</module> -->
-    <module>java-lwjgl</module>
+    <module>java-lwjgl2</module>
     <module>java-swt</module>
     <module>tools</module>
     <module>plugins</module>

@@ -7,11 +7,11 @@
     <version>2.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tripleplay-java-lwjgl</artifactId>
+  <artifactId>tripleplay-java-lwjgl2</artifactId>
   <packaging>jar</packaging>
 
   <name>TP Java LWJGL</name>
-  <description>Java-specific code for TriplePlay, using PlayN LWJGL backend.</description>
+  <description>Java-specific code for TriplePlay, using PlayN LWJGL2 backend.</description>
 
   <dependencies>
     <dependency>
@@ -22,7 +22,7 @@
 
     <dependency>
       <groupId>io.playn</groupId>
-      <artifactId>playn-java-lwjgl</artifactId>
+      <artifactId>playn-java-lwjgl2</artifactId>
       <version>${playn.version}</version>
     </dependency>
   </dependencies>
