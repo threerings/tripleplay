@@ -130,14 +130,15 @@ public class JsonLoader {
     }
 
     protected static Texture.Symbol decodeTexture (Json.Object json, playn.core.Texture atlas) {
-        Json.TypedArray<Float> rect = json.getArray("rect", Float.class);
+        Json.Array rect = json.getArray("rect");
         return new Texture.Symbol(
             json.getString("symbol"), getPoint(json, "origin", 0, 0),
-            atlas.tile(rect.get(0), rect.get(1), rect.get(2), rect.get(3)));
+            atlas.tile(rect.getNumber(0), rect.getNumber(1), rect.getNumber(2), rect.getNumber(3)));
     }
 
     protected static IPoint getPoint (Json.Object json, String field, float defX, float defY) {
-        Json.TypedArray<Float> array = json.getArray(field, Float.class);
-        return (array != null) ? new Point(array.get(0), array.get(1)) : new Point(defX, defY);
+        Json.Array array = json.getArray(field);
+        return (array != null) ? new Point(array.getNumber(0), array.getNumber(1)) :
+            new Point(defX, defY);
     }
 }
