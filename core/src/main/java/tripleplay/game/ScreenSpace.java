@@ -248,7 +248,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
          * Adds {@code ac} to a list of closeables which will be closed when this screen goes to
          * sleep.
          */
-        public void closeOnSleep (AutoCloseable ac) {
+        public void closeOnSleep (Closeable ac) {
             _closeOnSleep.add(ac);
         }
 
