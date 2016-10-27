@@ -20,6 +20,21 @@ Invoke `mvn install` to build and install the library to your local Maven reposi
 Invoke `sbt publish-local` to build and install the library to your local Ivy repository (i.e.
 `~/.ivy2/local`).
 
+- To deploy artifacts to bintray
+```
+cd playn
+mvn versions:set
+mvn deploy -Prelease -DskipTests
+#to continue deployment in case it failed in the middle (for example for playn-webgl)
+mvn deploy -Prelease -DskipTests -rf io.playn:playn-webgl
+```
+
+- To release
+```
+cd playn
+mvn release:prepare release:perform -DskipTests=true -Prelease -Darguments="-DskipTests=true -Prelease"
+```
+
 Artifacts
 ---------
 
