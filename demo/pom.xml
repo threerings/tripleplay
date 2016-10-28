@@ -36,6 +36,14 @@
       <modules><module>ios</module></modules>
     </profile>
     <profile>
+      <id>bugdev</id>
+      <modules><module>ios-bugvm</module></modules>
+    </profile>
+     <profile>
+      <id>bugsim</id>
+      <modules><module>ios-bugvm</module></modules>
+    </profile>
+    <profile>
       <id>html</id>
       <modules><module>html</module></modules>
     </profile>
