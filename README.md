@@ -28,6 +28,7 @@ Invoke `sbt publish-local` to build and install the library to your local Ivy re
 	git commit -am "Release version"
 	git tag tripleplay-2.0.1
 	git push --tags
+	mvn clean -Pall
 	mvn install -Pall -DskipTests -DskipExec
 	mvn deploy -Prelease -Pall -DskipTests -DskipExec
 	mvn versions:set -Pall -DnewVersion=2.0.2-SNAPSHOT
