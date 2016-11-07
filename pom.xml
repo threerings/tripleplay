@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.playn</groupId>
     <artifactId>playn-project</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0.1</version>
   </parent>
 
   <groupId>com.threerings</groupId>
@@ -27,6 +27,14 @@
       <releases><enabled>false</enabled></releases>
       <snapshots><enabled>true</enabled></snapshots>
     </repository>
+	<repository>
+		<!-- Till the playn is available in jcenter repo at: https://jcenter.bintray.com/ the artifacts are released here. -->
+		<id>bintray-raisercostin-maven</id>
+		<name>bintray</name>
+		<url>http://dl.bintray.com/raisercostin/maven</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>false</enabled></snapshots>
+	</repository>
   </repositories>
 
   <licenses>
@@ -44,12 +52,18 @@
       <email>mdb@samskivert.com</email>
     </developer>
   </developers>
-
   <scm>
-    <connection>scm:git:git://github.com/threerings/tripleplay.git</connection>
-    <developerConnection>scm:git:git@github.com:threerings/tripleplay.git</developerConnection>
-    <url>http://github.com/threerings/tripleplay/</url>
+    <connection>scm:git:${github.url}.git</connection>
+    <developerConnection>scm:git:${github.url}.git</developerConnection>
+    <url>${github.url}</url>
+    <tag>${project.artifactId}-${project.version}</tag>
   </scm>
+  <distributionManagement>
+    <repository>
+      <id>bintray</id>
+      <url>https://api.bintray.com/maven/${bintray.user}/${bintray.repo}/${bintray.package}/;publish=1</url>
+    </repository>
+  </distributionManagement>
 
   <prerequisites>
     <maven>3.3.0</maven>
@@ -58,7 +72,15 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <playn.version>2.0-SNAPSHOT</playn.version>
+    <playn.version>2.0.1</playn.version>
+    <createChecksum>false</createChecksum>
+    <!--<github.user>threerings</github.user>-->
+    <github.user>raisercostin</github.user>
+    <github.repo>tripleplay</github.repo>
+    <github.url>https://github.com/${github.user}/${github.repo}</github.url>
+    <bintray.user>raisercostin</bintray.user>
+    <bintray.repo>maven</bintray.repo>
+    <bintray.package>${github.repo}</bintray.package>
   </properties>
 
   <modules>
@@ -72,6 +94,7 @@
 
   <build>
     <plugins>
+      <!--
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -84,6 +107,7 @@
           <stagingProfileId>aa555c46fc37d0</stagingProfileId>
         </configuration>
       </plugin>
+      -->
     </plugins>
   </build>
 
@@ -144,6 +168,46 @@
           <url>${deploy-local.dir}</url>
         </snapshotRepository>
       </distributionManagement>
+    </profile>
+    <profile>
+        <id>release</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.3</version>
+					<configuration>
+					  <quiet>true</quiet>
+					  <show>public</show>
+					  <additionalparam>-Xdoclint:all -Xdoclint:-missing</additionalparam>
+					  <links>
+						<link>http://docs.playn.googlecode.com/git/javadoc</link>
+					  </links>
+					</configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
     </profile>
   </profiles>
 </project>

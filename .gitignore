@@ -3,9 +3,11 @@
 *.iml
 .settings/
 target
+pom.xml.versionsBackup
 demo/android/bin
 demo/android/gen
 demo/android/obj
 demo/ios/bin
 demo/ios/obj
 demo/ios/demo.userprefs
+

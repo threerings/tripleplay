@@ -44,25 +44,12 @@
         <executions>
           <execution>
             <id>attach-sources</id>
-            <phase>generate-resources</phase>
+            <!--<phase>generate-resources</phase>-->
             <goals>
               <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
-        <configuration>
-          <quiet>true</quiet>
-          <show>public</show>
-          <additionalparam>-Xdoclint:all -Xdoclint:-missing</additionalparam>
-          <links>
-            <link>http://docs.playn.googlecode.com/git/javadoc</link>
-          </links>
-        </configuration>
       </plugin>
     </plugins>
   </build>
