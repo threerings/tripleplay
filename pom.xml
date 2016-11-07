@@ -27,6 +27,14 @@
       <releases><enabled>false</enabled></releases>
       <snapshots><enabled>true</enabled></snapshots>
     </repository>
+	<repository>
+		<!-- Till the playn is available in jcenter repo at: https://jcenter.bintray.com/ the artifacts are released here. -->
+		<id>bintray-raisercostin-maven</id>
+		<name>bintray</name>
+		<url>http://dl.bintray.com/raisercostin/maven</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>false</enabled></snapshots>
+	</repository>
   </repositories>
 
   <licenses>
