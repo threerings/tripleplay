@@ -20,6 +20,28 @@ Invoke `mvn install` to build and install the library to your local Maven reposi
 Invoke `sbt publish-local` to build and install the library to your local Ivy repository (i.e.
 `~/.ivy2/local`).
 
+- To deploy artifacts to bintray
+	```
+	cd tripleplay
+	mvn clean -Pall
+	mvn versions:set -Pall -DnewVersion=2.0.1
+	git commit -am "Release version"
+	git tag tripleplay-2.0.1
+	git push --tags
+	mvn clean -Pall
+	mvn install -Pall -DskipTests -DskipExec
+	mvn deploy -Prelease -Pall -DskipTests -DskipExec
+	mvn versions:set -Pall -DnewVersion=2.0.2-SNAPSHOT
+	git commit -am "Next snapshot version"
+	git push
+	```
+
+- To release
+	```
+	cd playn
+	mvn release:prepare release:perform -DskipTests=true -Prelease -Darguments="-DskipTests=true -Prelease"
+	```
+
 Artifacts
 ---------
 
