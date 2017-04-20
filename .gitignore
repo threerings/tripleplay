@@ -9,3 +9,4 @@ demo/android/obj
 demo/ios/bin
 demo/ios/obj
 demo/ios/demo.userprefs
+.DS_Store

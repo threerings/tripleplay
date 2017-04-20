@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.threerings</groupId>
+    <artifactId>tripleplay-demo</artifactId>
+    <version>2.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>tripleplay-demo-ios-bugvm</artifactId>
+  <packaging>jar</packaging>
+  
+  <dependencies>
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay-demo-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.playn</groupId>
+      <artifactId>playn-bugvm</artifactId>
+      <version>${playn.version}</version>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>bugsim</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.bugvm</groupId>
+            <artifactId>bugvm-maven</artifactId>
+            <version>${bugvm.version}</version>
+            <configuration>
+              <deviceName>iPhone-6</deviceName>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>test</phase>
+                <goals>
+                  <goal>iphone-sim</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>bugdev</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.bugvm</groupId>
+            <artifactId>bugvm-maven</artifactId>
+            <version>${bugvm.version}</version>
+            <executions>
+              <execution>
+                <phase>install</phase>
+                <goals>
+                  <goal>ios-device</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
