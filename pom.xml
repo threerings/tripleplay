@@ -22,7 +22,7 @@
   <distributionManagement>
     <repository>
       <id>bintray-repo-maven</id>
-      <url>https://api.bintray.com/maven/playn/playn/playn/;publish=1</url>
+      <url>https://api.bintray.com/maven/playn/playn/tripleplay/;publish=1</url>
     </repository>
   </distributionManagement>
 
