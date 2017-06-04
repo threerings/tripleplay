@@ -18,7 +18,7 @@ tripleplay.anim.AnimBuilder
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/AnimBuilder.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/AnimBuilder.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,7 +31,7 @@ tripleplay.anim.AnimBuilder
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.anim.Animation.Handle.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Animation.Flip.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.anim.AnimBuilder.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
@@ -50,6 +50,72 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/AnimBuilder.html" target="_top
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.addAt_removed(playn.core.GroupLayer, playn.core.Layer, float, float)"></A>
+  <nobr><code>Action</code>&nbsp;addAt(<code>GroupLayer,</nobr> Layer<nobr>,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Adds the supplied child to the supplied parent at the specified translation.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.addAt_removed(playn.core.GroupLayer, playn.core.Layer, pythagoras.f.XY)"></A>
+  <nobr><code>Action</code>&nbsp;addAt(<code>GroupLayer,</nobr> Layer<nobr>,</nobr> XY<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Adds the supplied child to the supplied parent at the specified translation.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.destroy_removed(playn.core.Layer)"></A>
+  <nobr><code>Action</code>&nbsp;destroy(<code>Layer</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Destroys the specified layer.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.destroy_removed(tripleplay.util.Destroyable)"></A>
+  <nobr><code>Action</code>&nbsp;destroy(<code>Destroyable</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Destroys the specified destroyable.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.flipbook_removed(playn.core.GroupLayer, tripleplay.anim.Flipbook)"></A>
+  <nobr><code>Flip</code>&nbsp;flipbook(<code>GroupLayer,</nobr> Flipbook<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Starts a flipbook animation in a new image layer which is created and added to {@code box}.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.flipbook_removed(playn.core.ImageLayer, tripleplay.anim.Flipbook)"></A>
+  <nobr><code>Flip</code>&nbsp;flipbook(<code>ImageLayer,</nobr> Flipbook<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Starts a flipbook animation that displays in {@code layer}.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.flipbookAt_removed(playn.core.GroupLayer, float, float, tripleplay.anim.Flipbook)"></A>
+  <nobr><code>Animation</code>&nbsp;flipbookAt(<code>GroupLayer,</nobr> float<nobr>,</nobr> float<nobr>,</nobr> Flipbook<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Starts a flipbook animation that displays the supplied {@code book} at the specified
+ position in the supplied parent.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.flipbookAt_removed(playn.core.GroupLayer, pythagoras.f.XY, tripleplay.anim.Flipbook)"></A>
+  <nobr><code>Animation</code>&nbsp;flipbookAt(<code>GroupLayer,</nobr> XY<nobr>,</nobr> Flipbook<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Starts a flipbook animation that displays the supplied {@code book} at the specified
+ position in the supplied parent.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -57,10 +123,233 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/AnimBuilder.html" target="_top
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.AnimBuilder.tween_added(tripleplay.anim.Animation.XYValue)"></A>
-  <nobr><code>Two</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tween(tripleplay.anim.Animation.XYValue)" target="_top"><tt>tween</tt></A>(<code>XYValue</code>)</nobr>
+  <A NAME="tripleplay.anim.AnimBuilder.addAt_added(playn.scene.GroupLayer, playn.scene.Layer, float, float)"></A>
+  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#addAt(playn.scene.GroupLayer, playn.scene.Layer, float, float)" target="_top"><tt>addAt</tt></A>(<code>GroupLayer,</nobr> Layer<nobr>,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Starts a tween using the supplied custom X/Y value.</TD>
+  <TD VALIGN="TOP">Adds the supplied child to the supplied parent at the specified translation.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.addAt_added(playn.scene.GroupLayer, playn.scene.Layer, pythagoras.f.XY)"></A>
+  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#addAt(playn.scene.GroupLayer, playn.scene.Layer, pythagoras.f.XY)" target="_top"><tt>addAt</tt></A>(<code>GroupLayer,</nobr> Layer<nobr>,</nobr> XY<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Adds the supplied child to the supplied parent at the specified translation.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.dispose_added(react.Closeable)"></A>
+  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#dispose(react.Closeable)" target="_top"><tt>dispose</tt></A>(<code>Closeable</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Disposes the specified disposable.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.flipbook_added(playn.scene.GroupLayer, tripleplay.anim.Flipbook)"></A>
+  <nobr><code>Flip</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#flipbook(playn.scene.GroupLayer, tripleplay.anim.Flipbook)" target="_top"><tt>flipbook</tt></A>(<code>GroupLayer,</nobr> Flipbook<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Starts a flipbook animation in a new image layer which is created and added to {@code box}.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.flipbook_added(playn.scene.ImageLayer, tripleplay.anim.Flipbook)"></A>
+  <nobr><code>Flip</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#flipbook(playn.scene.ImageLayer, tripleplay.anim.Flipbook)" target="_top"><tt>flipbook</tt></A>(<code>ImageLayer,</nobr> Flipbook<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Starts a flipbook animation that displays in {@code layer}.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.flipbookAt_added(playn.scene.GroupLayer, float, float, tripleplay.anim.Flipbook)"></A>
+  <nobr><code>Animation</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#flipbookAt(playn.scene.GroupLayer, float, float, tripleplay.anim.Flipbook)" target="_top"><tt>flipbookAt</tt></A>(<code>GroupLayer,</nobr> float<nobr>,</nobr> float<nobr>,</nobr> Flipbook<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Starts a flipbook animation that displays the supplied {@code book} at the specified
+ position in the supplied parent.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.flipbookAt_added(playn.scene.GroupLayer, pythagoras.f.XY, tripleplay.anim.Flipbook)"></A>
+  <nobr><code>Animation</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#flipbookAt(playn.scene.GroupLayer, pythagoras.f.XY, tripleplay.anim.Flipbook)" target="_top"><tt>flipbookAt</tt></A>(<code>GroupLayer,</nobr> XY<nobr>,</nobr> Flipbook<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Starts a flipbook animation that displays the supplied {@code book} at the specified
+ position in the supplied parent.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.reparent_changed(playn.scene.GroupLayer, playn.scene.Layer)"></A>
+  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#reparent(playn.scene.GroupLayer, playn.scene.Layer)" target="_top"><tt>reparent</tt></A>(<code>GroupLayer,</nobr> Layer<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from (<code>playn.core.GroupLayer, playn.core.Layer</code>) to (<code>playn.scene.GroupLayer, playn.scene.Layer</code>).<br>
+  </TD>
+  <TD VALIGN="TOP">Reparents the supplied child to the supplied new parent.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.repeat_changed(playn.scene.Layer)"></A>
+  <nobr><code>AnimBuilder</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#repeat(playn.scene.Layer)" target="_top"><tt>repeat</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Returns a builder which can be used to construct an animation that will be repeated until
+ the supplied layer has been removed from its parent.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.setDepth_changed(playn.scene.Layer, float)"></A>
+  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#setDepth(playn.scene.Layer, float)" target="_top"><tt>setDepth</tt></A>(<code>Layer,</nobr> float<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from (<code>playn.core.Layer, float</code>) to (<code>playn.scene.Layer, float</code>).<br>
+  </TD>
+  <TD VALIGN="TOP">Sets the specified layer's depth to the specified value.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.setVisible_changed(playn.scene.Layer, boolean)"></A>
+  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#setVisible(playn.scene.Layer, boolean)" target="_top"><tt>setVisible</tt></A>(<code>Layer,</nobr> boolean<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from (<code>playn.core.Layer, boolean</code>) to (<code>playn.scene.Layer, boolean</code>).<br>
+  </TD>
+  <TD VALIGN="TOP">Sets the specified layer to visible or not.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.shake_changed(playn.scene.Layer)"></A>
+  <nobr><code>Shake</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#shake(playn.scene.Layer)" target="_top"><tt>shake</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Creates a shake animation on the specified layer.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenAlpha_changed(playn.scene.Layer)"></A>
+  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenAlpha(playn.scene.Layer)" target="_top"><tt>tweenAlpha</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's transparency.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenOrigin_changed(playn.scene.Layer)"></A>
+  <nobr><code>Two</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenOrigin(playn.scene.Layer)" target="_top"><tt>tweenOrigin</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's origin.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenRotation_changed(playn.scene.Layer)"></A>
+  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenRotation(playn.scene.Layer)" target="_top"><tt>tweenRotation</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's rotation.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenScale_changed(playn.scene.Layer)"></A>
+  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenScale(playn.scene.Layer)" target="_top"><tt>tweenScale</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's x/y-scale.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenScaleX_changed(playn.scene.Layer)"></A>
+  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenScaleX(playn.scene.Layer)" target="_top"><tt>tweenScaleX</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's x-scale.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenScaleXY_changed(playn.scene.Layer)"></A>
+  <nobr><code>Two</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenScaleXY(playn.scene.Layer)" target="_top"><tt>tweenScaleXY</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's x/y-scale.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenScaleY_changed(playn.scene.Layer)"></A>
+  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenScaleY(playn.scene.Layer)" target="_top"><tt>tweenScaleY</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's y-scale.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenTranslation_changed(playn.scene.Layer)"></A>
+  <nobr><code>Two</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenTranslation(playn.scene.Layer)" target="_top"><tt>tweenTranslation</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's x/y-translation.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenX_changed(playn.scene.Layer)"></A>
+  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenX(playn.scene.Layer)" target="_top"><tt>tweenX</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's x-translation.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenXY_changed(playn.scene.Layer)"></A>
+  <nobr><code>Two</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenXY(playn.scene.Layer)" target="_top"><tt>tweenXY</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's x/y-translation.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.tweenY_changed(playn.scene.Layer)"></A>
+  <nobr><code>One</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#tweenY(playn.scene.Layer)" target="_top"><tt>tweenY</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Starts a tween on the supplied layer's y-translation.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.AnimBuilder.add_changed(playn.scene.GroupLayer, playn.scene.Layer)"></A>
+  <nobr><code>Action</code>&nbsp;<A HREF="../tripleplay/anim/AnimBuilder.html#add(playn.scene.GroupLayer, playn.scene.Layer)" target="_top"><tt>add</tt></A>(<code>GroupLayer,</nobr> Layer<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from (<code>playn.core.GroupLayer, playn.core.Layer</code>) to (<code>playn.scene.GroupLayer, playn.scene.Layer</code>).<br>
+  </TD>
+  <TD VALIGN="TOP">Adds the supplied child to the supplied parent.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -72,7 +361,7 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/AnimBuilder.html" target="_top
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/AnimBuilder.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/AnimBuilder.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -85,7 +374,7 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/AnimBuilder.html" target="_top
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<A HREF="tripleplay.anim.Animation.Handle.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Animation.Flip.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.anim.AnimBuilder.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

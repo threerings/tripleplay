@@ -18,7 +18,7 @@ tripleplay.ui.Button
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Button.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Button.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.ui.Button
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Behavior.Track.State.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Clickable.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Box.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.CapturedRoot.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Button.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
-<a href="#constructors">CONSTRUCTORS</a>&nbsp;|&nbsp;
-METHODS&nbsp;|&nbsp;
-<a href="#fields">FIELDS</a>
+CONSTRUCTORS&nbsp;|&nbsp;
+<a href="#methods">METHODS</a>&nbsp;|&nbsp;
+FIELDS
   </FONT></TD>
 </TR>
 </TABLE>
@@ -48,45 +48,26 @@ METHODS&nbsp;|&nbsp;
 Class tripleplay.ui.<A HREF="../tripleplay/ui/Button.html" target="_top"><tt>Button</tt></A>
 </H2>
 <a NAME="constructors"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Constructors" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Constructors</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Button.ctor_removed(java.lang.String, playn.core.Image)"></A>
-  <nobr>Button(<code>String,</nobr> Image<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Creates a button with the supplied text and icon.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Button.ctor_removed(playn.core.Image)"></A>
-  <nobr>Button(<code>Image</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Creates a button with the supplied icon.</TD>
-</TR>
-</TABLE>
-&nbsp;
 <a NAME="methods"></a>
-<a NAME="fields"></a>
 <p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Fields</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Button.DEBOUNCE_DELAY"></A>
-  <code>Style&lt;Integer&gt;</code>&nbsp;DEBOUNCE_DELAY
+  <A NAME="tripleplay.ui.Button.onClick_changed(react.SignalView.Listener<? super tripleplay.ui.Button>)"></A>
+  <nobr><code>Button</code>&nbsp;<A HREF="../tripleplay/ui/Button.html#onClick(react.SignalView.Listener<? super tripleplay.ui.Button>)" target="_top"><tt>onClick</tt></A>(<code>Listener&lt;Button&gt;</code>)  </nobr>
   </TD>
-  <TD VALIGN="TOP">@deprecated Use <A HREF="../Behavior/Click.html#DEBOUNCE_DELAY"><TT>Behavior.Click.DEBOUNCE_DELAY</TT></A>.</TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>Slot&lt;Button&gt;</code> to <code>Listener&lt;Button&gt;</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">A convenience method for registering a click handler.</TD>
 </TR>
 </TABLE>
 &nbsp;
+<a NAME="fields"></a>
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -94,7 +75,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Button.html" target="_top"><tt>But
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Button.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Button.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -106,8 +87,8 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Button.html" target="_top"><tt>But
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.Behavior.Track.State.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Clickable.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Box.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.CapturedRoot.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Button.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

@@ -18,7 +18,7 @@ tripleplay.util.TextStyle
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/TextStyle.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/TextStyle.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.util.TextStyle
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.util.StyledText.Span.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.util.TexturePacker.Renderer.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Tapper.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.TexturePacker.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.util.TextStyle.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
-CONSTRUCTORS&nbsp;|&nbsp;
-<a href="#methods">METHODS</a>&nbsp;|&nbsp;
-FIELDS
+<a href="#constructors">CONSTRUCTORS</a>&nbsp;|&nbsp;
+METHODS&nbsp;|&nbsp;
+<a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
 </TABLE>
@@ -48,39 +48,38 @@ FIELDS
 Class tripleplay.util.<A HREF="../tripleplay/util/TextStyle.html" target="_top"><tt>TextStyle</tt></A>
 </H2>
 <a NAME="constructors"></a>
-<a NAME="methods"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Removed"></a>
+<TABLE summary="Removed Constructors" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Constructors</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.TextStyle.normal_added(playn.core.Font, int)"></A>
-  <nobr><code>TextStyle</code>&nbsp;<A HREF="../tripleplay/util/TextStyle.html#normal(playn.core.Font, int)" target="_top"><tt>normal</tt></A>(<code>Font,</nobr> int<nobr><nobr></code>)</nobr>
+  <A NAME="tripleplay.util.TextStyle.ctor_removed()"></A>
+  <nobr>TextStyle()</nobr>
   </TD>
-  <TD VALIGN="TOP">Creates a text style with the specified configuration using default anti-aliasing, no effect
- and no underline.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.TextStyle.normal_added(playn.core.Font, int, tripleplay.util.EffectRenderer)"></A>
-  <nobr><code>TextStyle</code>&nbsp;<A HREF="../tripleplay/util/TextStyle.html#normal(playn.core.Font, int, tripleplay.util.EffectRenderer)" target="_top"><tt>normal</tt></A>(<code>Font,</nobr> int<nobr>,</nobr> EffectRenderer<nobr><nobr></code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Creates a text style with the specified configuration using default anti-aliasing (true)
- and no underline.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.TextStyle.withEffect_added(tripleplay.util.EffectRenderer)"></A>
-  <nobr><code>TextStyle</code>&nbsp;<A HREF="../tripleplay/util/TextStyle.html#withEffect(tripleplay.util.EffectRenderer)" target="_top"><tt>withEffect</tt></A>(<code>EffectRenderer</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Returns a copy of this text style with the effect configured as {@code effect}.</TD>
+  <TD VALIGN="TOP">Creates a text style with default configuration.</TD>
 </TR>
 </TABLE>
 &nbsp;
+<a NAME="methods"></a>
 <a NAME="fields"></a>
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.TextStyle.DEFAULT"></A>
+  <nobr><code>TextStyle</code>&nbsp;<A HREF="../tripleplay/util/TextStyle.html#DEFAULT" target="_top"><tt>DEFAULT</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">A default text style from which custom styles can be derived.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -88,7 +87,7 @@ Class tripleplay.util.<A HREF="../tripleplay/util/TextStyle.html" target="_top">
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/TextStyle.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/TextStyle.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -100,8 +99,8 @@ Class tripleplay.util.<A HREF="../tripleplay/util/TextStyle.html" target="_top">
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.util.StyledText.Span.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.util.TexturePacker.Renderer.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Tapper.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.TexturePacker.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.util.TextStyle.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

@@ -18,7 +18,7 @@ tripleplay.ui.Root
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Root.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Root.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.ui.Root
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.MenuHost.TriggerPoint.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Scroller.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.MenuHost.Pop.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Scroller.Bars.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Root.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
 <a href="#methods">METHODS</a>&nbsp;|&nbsp;
-FIELDS
+<a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
 </TABLE>
@@ -47,8 +47,38 @@ FIELDS
 <H2>
 Class tripleplay.ui.<A HREF="../tripleplay/ui/Root.html" target="_top"><tt>Root</tt></A>
 </H2>
+<p><font size="+1">Removed interface <code>tripleplay.util.Destroyable</code>.<br> Added interface <code>react.Closeable</code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
+<p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Root.destroy_removed()"></A>
+  <nobr><code>void</code>&nbsp;destroy()</nobr>
+  </TD>
+  <TD VALIGN="TOP">See <A HREF="../Interface.html#destroyRoot"><TT>Interface.destroyRoot</TT></A>.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Root.iface_removed()"></A>
+  <nobr><code>Interface</code>&nbsp;iface()</nobr>
+  </TD>
+  <TD VALIGN="TOP">Returns the interface to which this root belongs.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Root.validated_removed()"></A>
+  <nobr><code>SignalView&lt;Root&gt;</code>&nbsp;validated()</nobr>
+  </TD>
+  <TD VALIGN="TOP">A signal emitted when this root is validated.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
@@ -57,14 +87,50 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Root.html" target="_top"><tt>Root<
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.Root.validated_added()"></A>
-  <nobr><code>SignalView&lt;Root&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Root.html#validated()" target="_top"><tt>validated</tt></A>()</nobr>
+  <A NAME="tripleplay.ui.Root.close_added()"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Root.html#close()" target="_top"><tt>close</tt></A>()</nobr>
+  </TD>
+  <TD VALIGN="TOP">See <A HREF="../Interface.html#disposeRoot"><TT>Interface.disposeRoot</TT></A>.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Root.setLocation_added(float, float)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/Root.html#setLocation(float, float)" target="_top"><tt>setLocation</tt></A>(<code>float,</nobr> float<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Configures the location of this root, relative to its parent layer.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Root.setSize_added(pythagoras.f.IDimension)"></A>
+  <nobr><code>Root</code>&nbsp;<A HREF="../tripleplay/ui/Root.html#setSize(pythagoras.f.IDimension)" target="_top"><tt>setSize</tt></A>(<code>IDimension</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Sets the size of this root element.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<a NAME="fields"></a>
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Root.iface"></A>
+  <nobr><code>Interface</code>&nbsp;<A HREF="../tripleplay/ui/Root.html#iface" target="_top"><tt>iface</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">The interface of which this root is a part.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.ui.Root.validated"></A>
+  <nobr><code>SignalView&lt;Root&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Root.html#validated" target="_top"><tt>validated</tt></A></nobr>
   </TD>
   <TD VALIGN="TOP">A signal emitted when this root is validated.</TD>
 </TR>
 </TABLE>
 &nbsp;
-<a NAME="fields"></a>
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -72,7 +138,7 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Root.html" target="_top"><tt>Root<
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Root.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Root.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -84,8 +150,8 @@ Class tripleplay.ui.<A HREF="../tripleplay/ui/Root.html" target="_top"><tt>Root<
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.MenuHost.TriggerPoint.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.ui.Scroller.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.MenuHost.Pop.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.ui.Scroller.Bars.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.Root.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

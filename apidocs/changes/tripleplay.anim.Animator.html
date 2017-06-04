@@ -18,7 +18,7 @@ tripleplay.anim.Animator
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.anim.Animator
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.anim.Animation.XYValue.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Animation.Shake.html"><B>PREV CLASS</B></A>
 &nbsp;<A HREF="tripleplay.anim.Flicker.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.anim.Animator.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
-CONSTRUCTORS&nbsp;|&nbsp;
+<a href="#constructors">CONSTRUCTORS</a>&nbsp;|&nbsp;
 <a href="#methods">METHODS</a>&nbsp;|&nbsp;
-FIELDS
+<a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
 </TABLE>
@@ -47,7 +47,23 @@ FIELDS
 <H2>
 Class tripleplay.anim.<A HREF="../tripleplay/anim/Animator.html" target="_top"><tt>Animator</tt></A>
 </H2>
+<p><font size="+1">Removed interface <code>tripleplay.util.Paintable</code>.<br></font>
 <a NAME="constructors"></a>
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Constructors" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Constructors</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.Animator.ctor_added(react.Signal<playn.core.Clock>)"></A>
+  <nobr><A HREF="../tripleplay/anim/Animator.html#Animator(react.Signal<playn.core.Clock>)" target="_top"><tt>Animator</tt></A>(<code>Signal&lt;Clock&gt;</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Creates an animator which is permanently connected to {@code paint}.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <a NAME="methods"></a>
 <p>
 <a NAME="Removed"></a>
@@ -57,14 +73,29 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/Animator.html" target="_top"><
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.anim.Animator.create_removed()"></A>
-  <nobr><code>Animator</code>&nbsp;create()</nobr>
+  <A NAME="tripleplay.anim.Animator.paint_removed(playn.core.util.Clock)"></A>
+  <nobr><code>void</code>&nbsp;paint(<code>Clock</code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">@deprecated Just construct Animator directly now.</TD>
+  <TD VALIGN="TOP">Performs per-frame animation processing.</TD>
 </TR>
 </TABLE>
 &nbsp;
 <a NAME="fields"></a>
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.anim.Animator.onPaint"></A>
+  <nobr><code>Slot&lt;Clock&gt;</code>&nbsp;<A HREF="../tripleplay/anim/Animator.html#onPaint" target="_top"><tt>onPaint</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">Performs per-frame animation processing.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -72,7 +103,7 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/Animator.html" target="_top"><
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/anim/Animator.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.anim.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -84,7 +115,7 @@ Class tripleplay.anim.<A HREF="../tripleplay/anim/Animator.html" target="_top"><
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.anim.Animation.XYValue.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.anim.Animation.Shake.html"><B>PREV CLASS</B></A>
 &nbsp;<A HREF="tripleplay.anim.Flicker.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;

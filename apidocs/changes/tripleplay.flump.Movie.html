@@ -18,7 +18,7 @@ tripleplay.flump.Movie
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.flump.Movie
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.flump.Library.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.flump.Symbol.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.LibraryData.TextureData.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.MoviePlayer.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.flump.Movie.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
-METHODS&nbsp;|&nbsp;
-<a href="#fields">FIELDS</a>
+<a href="#methods">METHODS</a>&nbsp;|&nbsp;
+FIELDS
   </FONT></TD>
 </TR>
 </TABLE>
@@ -49,22 +49,85 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
 </H2>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
-<a NAME="fields"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Movie.labelPassed"></A>
-  <nobr><code>Signal&lt;String&gt;</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#labelPassed" target="_top"><tt>labelPassed</tt></A></nobr>
+  <A NAME="tripleplay.flump.Movie.destroy_removed()"></A>
+  <nobr><code>void</code>&nbsp;destroy()</nobr>
   </TD>
   <TD>&nbsp;</TD>
 </TR>
 </TABLE>
 &nbsp;
+<p>
+<a NAME="Added"></a>
+<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.Movie.close_added()"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#close()" target="_top"><tt>close</tt></A>()</nobr>
+  </TD>
+  <TD>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.Movie.getNamedLayer_changed(java.lang.String)"></A>
+  <nobr><code>Layer</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#getNamedLayer(java.lang.String)" target="_top"><tt>getNamedLayer</tt></A>(<code>String</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Retrieves a named layer.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.Movie.layer_changed()"></A>
+  <nobr><code>GroupLayer</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#layer()" target="_top"><tt>layer</tt></A>()  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>playn.core.GroupLayer</code> to <code>playn.scene.GroupLayer</code>.<br>
+  </TD>
+  <TD>&nbsp;</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.Movie.namedLayers_changed()"></A>
+  <nobr><code>Map&lt;String, Layer&gt;</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#namedLayers()" target="_top"><tt>namedLayers</tt></A>()  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from (<code>java.util.Map<java.lang.String, playn.core.Layer></code>) to (<code>java.util.Map<java.lang.String, playn.scene.Layer></code>).<br>
+  </TD>
+  <TD VALIGN="TOP">Retrieves all named layers.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.Movie.paint_changed(playn.core.Clock)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Movie.html#paint(playn.core.Clock)" target="_top"><tt>paint</tt></A>(<code>Clock</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.util.Clock</code> to <code>playn.core.Clock</code>.<br>
+  </TD>
+  <TD>&nbsp;</TD>
+</TR>
+</TABLE>
+&nbsp;
+<a NAME="fields"></a>
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -72,7 +135,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Movie.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -84,8 +147,8 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/Movie.html" target="_top"><t
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.flump.Library.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.flump.Symbol.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.LibraryData.TextureData.html"><B>PREV CLASS</B></A>
+&nbsp;<A HREF="tripleplay.flump.MoviePlayer.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.flump.Movie.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

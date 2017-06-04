@@ -18,7 +18,7 @@ tripleplay.util.Layers
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Layers.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Layers.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -31,14 +31,14 @@ tripleplay.util.Layers
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.util.JsonUtil.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.util.Logger.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Logger.PlayNImpl.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.util.Layers.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
 <a href="#methods">METHODS</a>&nbsp;|&nbsp;
-FIELDS
+<a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
 </TABLE>
@@ -50,6 +50,57 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Layers.html" target="_top"><tt
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.capture_removed(playn.core.Layer, float, float)"></A>
+  <nobr><code>CanvasImage</code>&nbsp;capture(<code>Layer,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Renders the given layer to a canvas image of the given width and height and returns the
+ image.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.capture_removed(playn.core.Layer, playn.core.Canvas)"></A>
+  <nobr><code>void</code>&nbsp;capture(<code>Layer,</nobr> Canvas<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Renders the given layer to the given canvas.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.capture_removed(playn.core.Layer, playn.core.Canvas, float)"></A>
+  <nobr><code>void</code>&nbsp;capture(<code>Layer,</nobr> Canvas<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Renders the given layer to the given canvas.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.join_removed(playn.core.Connection[])"></A>
+  <nobr><code>Connection</code>&nbsp;join(<code>Connection[]</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Creates a connection that will disconnect multiple other connections.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.transform_removed(pythagoras.f.IPoint, playn.core.Layer, playn.core.Layer)"></A>
+  <nobr><code>Point</code>&nbsp;transform(<code>IPoint,</nobr> Layer<nobr>,</nobr> Layer<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Transforms a point from one Layer's coordinate system to another's.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.transform_removed(pythagoras.f.IPoint, playn.core.Layer, playn.core.Layer, pythagoras.f.Point)"></A>
+  <nobr><code>Point</code>&nbsp;transform(<code>IPoint,</nobr> Layer<nobr>,</nobr> Layer<nobr>,</nobr> Point<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Transforms a point from one Layer's coordinate system to another's.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -57,14 +108,135 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Layers.html" target="_top"><tt
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.util.Layers.capture_added(playn.core.Layer, playn.core.Canvas, float)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#capture(playn.core.Layer, playn.core.Canvas, float)" target="_top"><tt>capture</tt></A>(<code>Layer,</nobr> Canvas<nobr>,</nobr> float<nobr><nobr></code>)</nobr>
+  <A NAME="tripleplay.util.Layers.transform_added(pythagoras.f.IPoint, playn.scene.Layer, playn.scene.Layer)"></A>
+  <nobr><code>Point</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#transform(pythagoras.f.IPoint, playn.scene.Layer, playn.scene.Layer)" target="_top"><tt>transform</tt></A>(<code>IPoint,</nobr> Layer<nobr>,</nobr> Layer<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Renders the given layer to the given canvas.</TD>
+  <TD VALIGN="TOP">Transforms a point from one Layer's coordinate system to another's.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.transform_added(pythagoras.f.IPoint, playn.scene.Layer, playn.scene.Layer, pythagoras.f.Point)"></A>
+  <nobr><code>Point</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#transform(pythagoras.f.IPoint, playn.scene.Layer, playn.scene.Layer, pythagoras.f.Point)" target="_top"><tt>transform</tt></A>(<code>IPoint,</nobr> Layer<nobr>,</nobr> Layer<nobr>,</nobr> Point<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Transforms a point from one Layer's coordinate system to another's.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.addChild_changed(playn.scene.GroupLayer, T extends playn.scene.Layer)"></A>
+  <nobr><code>Layer</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#addChild(playn.scene.GroupLayer, T extends playn.scene.Layer)" target="_top"><tt>addChild</tt></A>(<code>GroupLayer,</nobr> Layer<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from (<code>T extends playn.core.Layer</code>) to (<code>T extends playn.scene.Layer</code>).<br>
+ Change in signature from (<code>playn.core.GroupLayer, T extends playn.core.Layer</code>) to (<code>playn.scene.GroupLayer, T extends playn.scene.Layer</code>).<br>
+  </TD>
+  <TD VALIGN="TOP">Adds a child layer to a group and returns the child.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.addNewGroup_changed(playn.scene.GroupLayer)"></A>
+  <nobr><code>GroupLayer</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#addNewGroup(playn.scene.GroupLayer)" target="_top"><tt>addNewGroup</tt></A>(<code>GroupLayer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>playn.core.GroupLayer</code> to <code>playn.scene.GroupLayer</code>.<br>
+ Change in signature from <code>playn.core.GroupLayer</code> to <code>playn.scene.GroupLayer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Adds a child group to a parent group and returns the child.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.contains_changed(playn.scene.GroupLayer, playn.scene.Layer)"></A>
+  <nobr><code>boolean</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#contains(playn.scene.GroupLayer, playn.scene.Layer)" target="_top"><tt>contains</tt></A>(<code>GroupLayer,</nobr> Layer<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from (<code>playn.core.GroupLayer, playn.core.Layer</code>) to (<code>playn.scene.GroupLayer, playn.scene.Layer</code>).<br>
+  </TD>
+  <TD VALIGN="TOP">Whether a GroupLayer hierarchy contains another layer somewhere in its depths.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.group_changed(playn.scene.Layer[])"></A>
+  <nobr><code>GroupLayer</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#group(playn.scene.Layer[])" target="_top"><tt>group</tt></A>(<code>Layer[]</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>playn.core.GroupLayer</code> to <code>playn.scene.GroupLayer</code>.<br>
+ Change in signature from <code>playn.core.Layer[]</code> to <code>playn.scene.Layer[]</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Creates a new group with the given children.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.reparent_changed(playn.scene.Layer, playn.scene.GroupLayer)"></A>
+  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#reparent(playn.scene.Layer, playn.scene.GroupLayer)" target="_top"><tt>reparent</tt></A>(<code>Layer,</nobr> GroupLayer<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from (<code>playn.core.Layer, playn.core.GroupLayer</code>) to (<code>playn.scene.Layer, playn.scene.GroupLayer</code>).<br>
+  </TD>
+  <TD VALIGN="TOP">Removes {@code layer} from its current parent and adds it to {@code target}, modifying its
+ transform in the process so that it stays in the same position on the screen.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.solid_changed(int, float, float)"></A>
+  <nobr><code>Layer</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#solid(int, float, float)" target="_top"><tt>solid</tt></A>(<code>int,</nobr> float<nobr>,</nobr> float<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Creates a layer that renders a simple rectangle of the given color, width and height.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.totalBounds_changed(playn.scene.Layer)"></A>
+  <nobr><code>Rectangle</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#totalBounds(playn.scene.Layer)" target="_top"><tt>totalBounds</tt></A>(<code>Layer</code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Computes the total bounds of the layer hierarchy rooted at {@code root}.</TD>
 </TR>
 </TABLE>
 &nbsp;
 <a NAME="fields"></a>
+<p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Fields</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.NOT_LISTENING"></A>
+  <code>Connection</code>&nbsp;NOT_LISTENING
+  </TD>
+  <TD VALIGN="TOP">No-op connection, for improving nullity assumptions.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
+<a NAME="Changed"></a>
+<TABLE summary="Changed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Fields</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.util.Layers.NO_PROPAGATE"></A>
+  <nobr><code>Listener</code>&nbsp;<A HREF="../tripleplay/util/Layers.html#NO_PROPAGATE" target="_top"><tt>NO_PROPAGATE</tt></A></nobr>  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in type from <code>playn.core.Pointer.Listener</code> to <code>playn.scene.Pointer.Listener</code>.<br>
+  </TD>
+  <TD VALIGN="TOP">Prevents parent handling for pointer events.</TD>
+</TR>
+</TABLE>
+&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -72,7 +244,7 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Layers.html" target="_top"><tt
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Layers.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/util/Layers.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -85,7 +257,7 @@ Class tripleplay.util.<A HREF="../tripleplay/util/Layers.html" target="_top"><tt
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="tripleplay.util.JsonUtil.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.util.Logger.html"><B>NEXT CLASS</B></A>
+&nbsp;<A HREF="tripleplay.util.Logger.PlayNImpl.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.util.Layers.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

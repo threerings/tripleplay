@@ -18,7 +18,7 @@ tripleplay.flump.Instance
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Instance.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Instance.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -47,6 +47,7 @@ FIELDS
 <H2>
 Interface tripleplay.flump.<A HREF="../tripleplay/flump/Instance.html" target="_top"><tt>Instance</tt></A>
 </H2>
+<p><font size="+1">Removed interfaces <code>tripleplay.util.Destroyable, tripleplay.util.Paintable</code>.<br> Added interface <code>react.Closeable</code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
@@ -61,19 +62,9 @@ Interface tripleplay.flump.<A HREF="../tripleplay/flump/Instance.html" target="_
   <nobr><code>Layer</code>&nbsp;<A HREF="../tripleplay/flump/Instance.html#layer()" target="_top"><tt>layer</tt></A>()  </nobr>
   </TD>
   <TD VALIGN="TOP" WIDTH="30%">
-Changed from non-abstract to abstract.
+Change in return type from <code>playn.core.Layer</code> to <code>playn.scene.Layer</code>.<br>
   </TD>
   <TD VALIGN="TOP">The layer that displays this instance.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.Instance.paint_changed(float)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/flump/Instance.html#paint(float)" target="_top"><tt>paint</tt></A>(<code>float</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Changed from non-abstract to abstract.
-  </TD>
-  <TD VALIGN="TOP">Notifies this instance that time has passed, for animation.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -85,7 +76,7 @@ Changed from non-abstract to abstract.
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Instance.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/Instance.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>

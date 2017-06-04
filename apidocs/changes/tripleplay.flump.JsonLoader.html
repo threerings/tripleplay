@@ -18,7 +18,7 @@ tripleplay.flump.JsonLoader
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/JsonLoader.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/JsonLoader.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -50,6 +50,42 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/JsonLoader.html" target="_to
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.JsonLoader.loadLibrary_removed(java.lang.String, playn.core.util.Callback<tripleplay.flump.Library>)"></A>
+  <nobr><code>void</code>&nbsp;loadLibrary(<code>String,</nobr> Callback&lt;Library&gt;<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Loads a JSON encoded library via PlayN assets.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.JsonLoader.loadLibrary_removed(playn.core.Assets, java.lang.String, playn.core.util.Callback<tripleplay.flump.Library>)"></A>
+  <nobr><code>void</code>&nbsp;loadLibrary(<code>Assets,</nobr> String<nobr>,</nobr> Callback&lt;Library&gt;<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Loads a JSON encoded library via the specified PlayN assets.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.JsonLoader.loadLibrarySync_removed(java.lang.String)"></A>
+  <nobr><code>Library</code>&nbsp;loadLibrarySync(<code>String</code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Loads a JSON encoded library synchronously via PlayN assets.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.JsonLoader.loadLibrarySync_removed(java.lang.String, playn.core.Assets)"></A>
+  <nobr><code>Library</code>&nbsp;loadLibrarySync(<code>String,</nobr> Assets<nobr><nobr></code>)</nobr>
+  </TD>
+  <TD VALIGN="TOP">Loads a JSON encoded library synchronously via PlayN assets.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -57,17 +93,17 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/JsonLoader.html" target="_to
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.JsonLoader.loadLibrarySync_added(java.lang.String)"></A>
-  <nobr><code>Library</code>&nbsp;<A HREF="../tripleplay/flump/JsonLoader.html#loadLibrarySync(java.lang.String)" target="_top"><tt>loadLibrarySync</tt></A>(<code>String</code>)</nobr>
+  <A NAME="tripleplay.flump.JsonLoader.loadLibrary_added(playn.core.Platform, java.lang.String)"></A>
+  <nobr><code>RFuture&lt;Library&gt;</code>&nbsp;<A HREF="../tripleplay/flump/JsonLoader.html#loadLibrary(playn.core.Platform, java.lang.String)" target="_top"><tt>loadLibrary</tt></A>(<code>Platform,</nobr> String<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Loads a JSON encoded library synchronously via PlayN assets.</TD>
+  <TD VALIGN="TOP">Loads a JSON encoded library.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.JsonLoader.loadLibrarySync_added(java.lang.String, playn.core.Assets)"></A>
-  <nobr><code>Library</code>&nbsp;<A HREF="../tripleplay/flump/JsonLoader.html#loadLibrarySync(java.lang.String, playn.core.Assets)" target="_top"><tt>loadLibrarySync</tt></A>(<code>String,</nobr> Assets<nobr><nobr></code>)</nobr>
+  <A NAME="tripleplay.flump.JsonLoader.loadLibrarySync_added(playn.core.Platform, java.lang.String)"></A>
+  <nobr><code>Library</code>&nbsp;<A HREF="../tripleplay/flump/JsonLoader.html#loadLibrarySync(playn.core.Platform, java.lang.String)" target="_top"><tt>loadLibrarySync</tt></A>(<code>Platform,</nobr> String<nobr><nobr></code>)</nobr>
   </TD>
-  <TD VALIGN="TOP">Loads a JSON encoded library synchronously via PlayN assets.</TD>
+  <TD VALIGN="TOP">Loads a JSON encoded library synchronously.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -79,7 +115,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/JsonLoader.html" target="_to
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/JsonLoader.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/JsonLoader.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>

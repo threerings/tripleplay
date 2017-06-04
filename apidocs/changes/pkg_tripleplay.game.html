@@ -18,7 +18,7 @@ tripleplay.game
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/game/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/game/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Package</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1"> &nbsp;<FONT CLASS="NavBarFont1">Class</FONT>&nbsp;</TD>
@@ -31,12 +31,12 @@ tripleplay.game
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="pkg_tripleplay.flump.html"><B>PREV PACKAGE</B></A>
-&nbsp;<A HREF="pkg_tripleplay.gesture.html"><B>NEXT PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.game.trans.html"><B>NEXT PACKAGE</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="pkg_tripleplay.game.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
-REMOVED&nbsp;|&nbsp;
+<a href="#Removed">REMOVED</a>&nbsp;|&nbsp;
 <a href="#Added">ADDED</a>&nbsp;|&nbsp;
 <a href="#Changed">CHANGED</a>
   </FONT></TD>
@@ -48,6 +48,42 @@ REMOVED&nbsp;|&nbsp;
 Package <A HREF="../tripleplay/game/package-summary.html" target="_top"><tt>tripleplay.game</tt></A>
 </H2>
 <p>
+<a NAME="Removed"></a>
+<TABLE summary="Removed Classes" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Classes</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="AnimScreen"></A>
+  AnimScreen
+  </TD>
+  <TD VALIGN="TOP">An abstract screen that will contain animations.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="Screen"></A>
+  Screen
+  </TD>
+  <TD VALIGN="TOP">Contains the UI for a single game screen.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="UIAnimScreen"></A>
+  UIAnimScreen
+  </TD>
+  <TD VALIGN="TOP">An abstract screen that contains UI and animations.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="UIScreen"></A>
+  UIScreen
+  </TD>
+  <TD VALIGN="TOP">An abstract screen that will contain a user interface.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
 <a NAME="Added"></a>
 <TABLE summary="Added Classes" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
@@ -55,39 +91,60 @@ Package <A HREF="../tripleplay/game/package-summary.html" target="_top"><tt>trip
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="ScreenStack.Screen"></A>
+  <nobr><A HREF="../tripleplay/game/ScreenStack.Screen.html" target="_top"><tt>ScreenStack.Screen</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">Displays and manages the lifecycle for a single game screen.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="ScreenStack.UIScreen"></A>
+  <nobr><A HREF="../tripleplay/game/ScreenStack.UIScreen.html" target="_top"><tt>ScreenStack.UIScreen</tt></A></nobr>
+  </TD>
+  <TD VALIGN="TOP">A <A HREF="../tripleplay/game/ScreenStack/UIScreen/Screen.html"><TT>Screen</TT></A> with an <A HREF="../tripleplay/game/ScreenStack/UIScreen/Interface.html"><TT>Interface</TT></A> for doing UI stuff.</TD>
+</TR>
+</TABLE>
+&nbsp;
+<p>
+<a NAME="Changed"></a>
+<TABLE summary="Changed Classes and Interfaces" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Changed Classes and Interfaces</B></FONT></TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
   <A NAME="ScreenSpace"></A>
-  <nobr><A HREF="../tripleplay/game/ScreenSpace.html" target="_top"><tt>ScreenSpace</tt></A></nobr>
+  <nobr><A HREF="tripleplay.game.ScreenSpace.html">ScreenSpace</A></nobr>
   </TD>
   <TD VALIGN="TOP">Maintains a 2D layout of <A HREF="../tripleplay/game/ScreenSpace/Screen.html"><TT>Screen</TT></A>s.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
   <A NAME="ScreenSpace.Dir"></A>
-  <nobr><A HREF="../tripleplay/game/ScreenSpace.Dir.html" target="_top"><tt>ScreenSpace.Dir</tt></A></nobr>
+  <nobr><A HREF="tripleplay.game.ScreenSpace.Dir.html">ScreenSpace.Dir</A></nobr>
   </TD>
   <TD VALIGN="TOP">The directions in which a new screen can be added.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
   <A NAME="ScreenSpace.Screen"></A>
-  <nobr><A HREF="../tripleplay/game/ScreenSpace.Screen.html" target="_top"><tt>ScreenSpace.Screen</tt></A></nobr>
+  <nobr><A HREF="tripleplay.game.ScreenSpace.Screen.html">ScreenSpace.Screen</A></nobr>
   </TD>
   <TD VALIGN="TOP">A screen that integrates with {@code ScreenSpace}.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
   <A NAME="ScreenSpace.UIScreen"></A>
-  <nobr><A HREF="../tripleplay/game/ScreenSpace.UIScreen.html" target="_top"><tt>ScreenSpace.UIScreen</tt></A></nobr>
+  <nobr><A HREF="tripleplay.game.ScreenSpace.UIScreen.html">ScreenSpace.UIScreen</A></nobr>
   </TD>
   <TD VALIGN="TOP">A <A HREF="../tripleplay/game/ScreenSpace/UIScreen/Screen.html"><TT>Screen</TT></A> that takes care of basic UI setup for you.</TD>
 </TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Changed"></a>
-<TABLE summary="Changed Interfaces" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Changed Interfaces</B></FONT></TD>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="ScreenStack"></A>
+  <nobr><A HREF="tripleplay.game.ScreenStack.html">ScreenStack</A></nobr>
+  </TD>
+  <TD VALIGN="TOP">Manages a stack of screens.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
@@ -99,7 +156,7 @@ Package <A HREF="../tripleplay/game/package-summary.html" target="_top"><tt>trip
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
   <A NAME="ScreenStack.Transition"></A>
-  <nobr><A HREF="tripleplay.game.ScreenStack.Transition.html"><I>ScreenStack.Transition</I></A></nobr>
+  <nobr><A HREF="tripleplay.game.ScreenStack.Transition.html">ScreenStack.Transition</A></nobr>
   </TD>
   <TD VALIGN="TOP">Implements a particular screen transition.</TD>
 </TR>
@@ -112,7 +169,7 @@ Package <A HREF="../tripleplay/game/package-summary.html" target="_top"><tt>trip
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/game/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/game/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Package</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1"> &nbsp;<FONT CLASS="NavBarFont1">Class</FONT>&nbsp;</TD>
@@ -125,7 +182,7 @@ Package <A HREF="../tripleplay/game/package-summary.html" target="_top"><tt>trip
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="pkg_tripleplay.flump.html"><B>PREV PACKAGE</B></A>
-&nbsp;<A HREF="pkg_tripleplay.gesture.html"><B>NEXT PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.game.trans.html"><B>NEXT PACKAGE</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="pkg_tripleplay.game.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

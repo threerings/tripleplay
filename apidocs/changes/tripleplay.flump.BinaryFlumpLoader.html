@@ -18,7 +18,7 @@ tripleplay.flump.BinaryFlumpLoader
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/BinaryFlumpLoader.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/BinaryFlumpLoader.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -50,15 +50,29 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/BinaryFlumpLoader.html" targ
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
 <p>
-<a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<a NAME="Changed"></a>
+<TABLE summary="Changed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Methods</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.flump.BinaryFlumpLoader.loadLibrarySync_added(java.lang.String)"></A>
-  <nobr><code>Library</code>&nbsp;<A HREF="../tripleplay/flump/BinaryFlumpLoader.html#loadLibrarySync(java.lang.String)" target="_top"><tt>loadLibrarySync</tt></A>(<code>String</code>)</nobr>
+  <A NAME="tripleplay.flump.BinaryFlumpLoader.loadLibrary_changed(playn.core.Platform, java.lang.String)"></A>
+  <nobr><code>RFuture&lt;Library&gt;</code>&nbsp;<A HREF="../tripleplay/flump/BinaryFlumpLoader.html#loadLibrary(playn.core.Platform, java.lang.String)" target="_top"><tt>loadLibrary</tt></A>(<code>Platform,</nobr> String<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in return type from <code>void</code> to <code>RFuture&lt;Library&gt;</code>.<br>
+ Change in signature from (<code>String, Callback&lt;Library&gt;</code>) to (<code>Platform, String</code>).<br>
+  </TD>
+  <TD VALIGN="TOP">Loads a binary encoded library via PlayN assets.</TD>
+</TR>
+<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
+  <TD VALIGN="TOP" WIDTH="25%">
+  <A NAME="tripleplay.flump.BinaryFlumpLoader.loadLibrarySync_changed(playn.core.Platform, java.lang.String)"></A>
+  <nobr><code>Library</code>&nbsp;<A HREF="../tripleplay/flump/BinaryFlumpLoader.html#loadLibrarySync(playn.core.Platform, java.lang.String)" target="_top"><tt>loadLibrarySync</tt></A>(<code>Platform,</nobr> String<nobr><nobr></code>)  </nobr>
+  </TD>
+  <TD VALIGN="TOP" WIDTH="30%">
+Change in signature from <code>String</code> to (<code>Platform, String</code>).<br>
   </TD>
   <TD VALIGN="TOP">Loads a binary encoded library synchronously via PlayN assets.</TD>
 </TR>
@@ -72,7 +86,7 @@ Class tripleplay.flump.<A HREF="../tripleplay/flump/BinaryFlumpLoader.html" targ
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/BinaryFlumpLoader.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 1.9</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/flump/BinaryFlumpLoader.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.flump.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
