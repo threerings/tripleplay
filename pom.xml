@@ -28,6 +28,11 @@
 
   <repositories>
     <repository>
+      <!-- reference jcenter repository so we don't have to wait for Maven Central sync -->
+      <id>jcenter</id>
+      <url>https://jcenter.bintray.com/</url>
+    </repository>
+    <repository>
       <!-- when we depend on a snapshot PlayN, get that from SonaType's OSS repository -->
       <id>sonatype-snapshots</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
