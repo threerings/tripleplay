@@ -52,13 +52,7 @@
             <phase>test</phase>
             <configuration>
               <target>
-                <!-- these shenanigans are needed to pass -XstartOnFirstThread on Mac OS
-                     but not on other OSes where they would cause the JVM to fail, yay -->
-                <condition property="jvmarg" value="-XstartOnFirstThread" else="-Dfoo=bar">
-                  <os family="mac" />
-                </condition>
                 <java fork="true" classname="${mainClass}" classpathref="maven.test.classpath">
-                  <jvmarg value="${jvmarg}" />
                   <arg value="${testIndex}" />
                 </java>
               </target>
