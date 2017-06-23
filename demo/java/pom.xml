@@ -30,7 +30,7 @@
 
     <dependency>
       <groupId>com.threerings</groupId>
-      <artifactId>tripleplay-java-lwjgl</artifactId>
+      <artifactId>tripleplay-java-lwjgl2</artifactId>
       <version>${project.version}</version>
     </dependency>
 
