@@ -7,13 +7,12 @@
     <version>2.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tripleplay-demo-java</artifactId>
+  <artifactId>tripleplay-demo-java-lwjgl2</artifactId>
   <packaging>jar</packaging>
-  <name>TP Demo Java</name>
+  <name>TP Demo Java (LWJGL2)</name>
 
   <properties>
     <mainClass>tripleplay.demo.TripleDemoJava</mainClass>
-    <testIndex>-1</testIndex>
   </properties>
 
   <dependencies>
@@ -29,8 +28,8 @@
     </dependency>
 
     <dependency>
-      <groupId>io.playn</groupId>
-      <artifactId>playn-java-lwjgl</artifactId>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay-java-lwjgl2</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -46,14 +45,7 @@
             <phase>test</phase>
             <configuration>
               <target>
-                <!-- these shenanigans are needed to pass -XstartOnFirstThread on Mac OS
-                     but not on other OSes where they would cause the JVM to fail, yay -->
-                <condition property="jvmarg" value="-XstartOnFirstThread" else="-Dfoo=bar">
-                  <os family="mac" />
-                </condition>
                 <java fork="true" classname="${mainClass}" classpathref="maven.test.classpath">
-                  <jvmarg value="${jvmarg}" />
-                  <arg value="${testIndex}" />
                 </java>
               </target>
             </configuration>

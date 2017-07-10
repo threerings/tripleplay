@@ -11,13 +11,17 @@ import com.google.common.collect.Lists;
 
 import playn.core.Image;
 import playn.java.JavaPlatform;
-import playn.java.LWJGLPlatform;
+import playn.java.SWTPlatform;
+
+import tripleplay.platform.SWTTPPlatform;
 
 public class TripleDemoJava
 {
+    enum Toolkit { NONE, AWT, SWT }
+
     public static void main (String[] args) {
-        LWJGLPlatform.Config config = new LWJGLPlatform.Config();
-        config.appName = "Tripleplay Demo";
+        JavaPlatform.Config config = new JavaPlatform.Config();
+        config.appName = "Tripleplay Demo (SWT)";
 
         List<String> mainArgs = Lists.newArrayList();
         String size = "--size=";
@@ -32,8 +36,14 @@ public class TripleDemoJava
         }
 
         TripleDemo.mainArgs = mainArgs.toArray(new String[0]);
-        JavaPlatform plat = new LWJGLPlatform(config);
+        SWTPlatform plat = new SWTPlatform(config);
+        SWTTPPlatform tpplat = new SWTTPPlatform(plat, config);
+        tpplat.setIcon(loadIcon(plat));
         new TripleDemo(plat);
         plat.start();
+    }
+
+    protected static Image loadIcon (JavaPlatform plat) {
+        return plat.assets().getImageSync("icon.png");
     }
 }

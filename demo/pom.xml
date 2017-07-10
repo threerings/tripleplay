@@ -28,6 +28,14 @@
       <modules><module>java</module></modules>
     </profile>
     <profile>
+      <id>java-lwjgl2</id>
+      <modules><module>java-lwjgl2</module></modules>
+    </profile>
+    <profile>
+      <id>java-swt</id>
+      <modules><module>java-swt</module></modules>
+    </profile>
+    <profile>
       <id>android</id>
       <modules><module>android</module></modules>
     </profile>
@@ -38,10 +46,6 @@
     <profile>
       <id>html</id>
       <modules><module>html</module></modules>
-    </profile>
-    <profile>
-      <id>flash</id>
-      <modules><module>flash</module></modules>
     </profile>
   </profiles>
 

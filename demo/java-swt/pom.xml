@@ -7,13 +7,12 @@
     <version>2.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tripleplay-demo-java</artifactId>
+  <artifactId>tripleplay-demo-java-swt</artifactId>
   <packaging>jar</packaging>
-  <name>TP Demo Java</name>
+  <name>TP Demo Java (SWT)</name>
 
   <properties>
     <mainClass>tripleplay.demo.TripleDemoJava</mainClass>
-    <testIndex>-1</testIndex>
   </properties>
 
   <dependencies>
@@ -29,8 +28,8 @@
     </dependency>
 
     <dependency>
-      <groupId>io.playn</groupId>
-      <artifactId>playn-java-lwjgl</artifactId>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay-java-swt</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -53,7 +52,6 @@
                 </condition>
                 <java fork="true" classname="${mainClass}" classpathref="maven.test.classpath">
                   <jvmarg value="${jvmarg}" />
-                  <arg value="${testIndex}" />
                 </java>
               </target>
             </configuration>

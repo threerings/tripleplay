@@ -13,11 +13,13 @@ import playn.core.Image;
 import playn.java.JavaPlatform;
 import playn.java.LWJGLPlatform;
 
+import tripleplay.platform.JavaTPPlatform;
+
 public class TripleDemoJava
 {
     public static void main (String[] args) {
         LWJGLPlatform.Config config = new LWJGLPlatform.Config();
-        config.appName = "Tripleplay Demo";
+        config.appName = "Tripleplay Demo (LWJGL2)";
 
         List<String> mainArgs = Lists.newArrayList();
         String size = "--size=";
@@ -32,8 +34,14 @@ public class TripleDemoJava
         }
 
         TripleDemo.mainArgs = mainArgs.toArray(new String[0]);
-        JavaPlatform plat = new LWJGLPlatform(config);
+        LWJGLPlatform plat = new LWJGLPlatform(config);
+        JavaTPPlatform tpplat = new JavaTPPlatform(plat, config);
+        tpplat.setIcon(loadIcon(plat));
         new TripleDemo(plat);
         plat.start();
+    }
+
+    protected static Image loadIcon (JavaPlatform plat) {
+        return plat.assets().getImageSync("icon.png");
     }
 }
