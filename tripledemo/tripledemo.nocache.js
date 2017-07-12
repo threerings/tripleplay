@@ -1,44 +1,216 @@
 function tripledemo(){
-  var $wnd_0 = window, $doc_0 = document, $stats = $wnd_0.__gwtStatsEvent?function(a){
-    return $wnd_0.__gwtStatsEvent(a);
-  }
-  :null, $sessionId_0 = $wnd_0.__gwtStatsSessionId?$wnd_0.__gwtStatsSessionId:null, scriptsDone, loadDone, bodyDone, base = '', metaProps = {}, values = [], providers = [], answers = [], softPermutationId = 0, onLoadErrorFunc, propertyErrorFunc;
-  $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'begin'});
-  if (!$wnd_0.__gwt_stylesLoaded) {
-    $wnd_0.__gwt_stylesLoaded = {};
-  }
-  if (!$wnd_0.__gwt_scriptsLoaded) {
-    $wnd_0.__gwt_scriptsLoaded = {};
-  }
+  var $wnd_0 = window;
+  var $doc_0 = document;
+  sendStats('bootstrap', 'begin');
   function isHostedMode(){
-    var result = false;
-    try {
-      var query = $wnd_0.location.search;
-      return (query.indexOf('gwt.codesvr=') != -1 || (query.indexOf('gwt.hosted=') != -1 || $wnd_0.external && $wnd_0.external.gwtOnLoad)) && query.indexOf('gwt.hybrid') == -1;
-    }
-     catch (e) {
-    }
-    isHostedMode = function(){
-      return result;
-    }
-    ;
-    return result;
+    var query = $wnd_0.location.search;
+    return query.indexOf('gwt.codesvr.tripledemo=') != -1 || query.indexOf('gwt.codesvr=') != -1;
   }
 
-  function maybeStartModule(){
-    if (scriptsDone && loadDone) {
-      var iframe = $doc_0.getElementById('tripledemo');
-      var frameWnd = iframe.contentWindow;
-      if (isHostedMode()) {
-        frameWnd.__gwt_getProperty = function(name_0){
-          return computePropValue(name_0);
+  function sendStats(evtGroupString, typeString){
+    if ($wnd_0.__gwtStatsEvent) {
+      $wnd_0.__gwtStatsEvent({moduleName:'tripledemo', sessionId:$wnd_0.__gwtStatsSessionId, subSystem:'startup', evtGroup:evtGroupString, millis:(new Date).getTime(), type:typeString});
+    }
+  }
+
+  tripledemo.__sendStats = sendStats;
+  tripledemo.__moduleName = 'tripledemo';
+  tripledemo.__errFn = null;
+  tripledemo.__moduleBase = 'DUMMY';
+  tripledemo.__softPermutationId = 0;
+  tripledemo.__computePropValue = null;
+  tripledemo.__getPropMap = null;
+  tripledemo.__installRunAsyncCode = function(){
+  }
+  ;
+  tripledemo.__gwtStartLoadingFragment = function(){
+    return null;
+  }
+  ;
+  tripledemo.__gwt_isKnownPropertyValue = function(){
+    return false;
+  }
+  ;
+  tripledemo.__gwt_getMetaProperty = function(){
+    return null;
+  }
+  ;
+  var __propertyErrorFunction = null;
+  var activeModules = $wnd_0.__gwt_activeModules = $wnd_0.__gwt_activeModules || {};
+  activeModules['tripledemo'] = {moduleName:'tripledemo'};
+  tripledemo.__moduleStartupDone = function(permProps){
+    var oldBindings = activeModules['tripledemo'].bindings;
+    activeModules['tripledemo'].bindings = function(){
+      var props = oldBindings?oldBindings():{};
+      var embeddedProps = permProps[tripledemo.__softPermutationId];
+      for (var i = 0; i < embeddedProps.length; i++) {
+        var pair = embeddedProps[i];
+        props[pair[0]] = pair[1];
+      }
+      return props;
+    }
+    ;
+  }
+  ;
+  var frameDoc;
+  function getInstallLocationDoc(){
+    setupInstallLocation();
+    return frameDoc;
+  }
+
+  function setupInstallLocation(){
+    if (frameDoc) {
+      return;
+    }
+    var scriptFrame = $doc_0.createElement('iframe');
+    scriptFrame.src = 'javascript:""';
+    scriptFrame.id = 'tripledemo';
+    scriptFrame.style.cssText = 'position:absolute; width:0; height:0; border:none; left: -1000px;' + ' top: -1000px;';
+    scriptFrame.tabIndex = -1;
+    $doc_0.body.appendChild(scriptFrame);
+    frameDoc = scriptFrame.contentDocument;
+    if (!frameDoc) {
+      frameDoc = scriptFrame.contentWindow.document;
+    }
+    frameDoc.open();
+    var doctype = document.compatMode == 'CSS1Compat'?'<!doctype html>':'';
+    frameDoc.write(doctype + '<html><head><\/head><body><\/body><\/html>');
+    frameDoc.close();
+  }
+
+  function installScript(filename){
+    function setupWaitForBodyLoad(callback){
+      function isBodyLoaded(){
+        if (typeof $doc_0.readyState == 'undefined') {
+          return typeof $doc_0.body != 'undefined' && $doc_0.body != null;
+        }
+        return /loaded|complete/.test($doc_0.readyState);
+      }
+
+      var bodyDone = isBodyLoaded();
+      if (bodyDone) {
+        callback();
+        return;
+      }
+      function checkBodyDone(){
+        if (!bodyDone) {
+          if (!isBodyLoaded()) {
+            return;
+          }
+          bodyDone = true;
+          callback();
+          if ($doc_0.removeEventListener) {
+            $doc_0.removeEventListener('readystatechange', checkBodyDone, false);
+          }
+          if (onBodyDoneTimerId) {
+            clearInterval(onBodyDoneTimerId);
+          }
+        }
+      }
+
+      if ($doc_0.addEventListener) {
+        $doc_0.addEventListener('readystatechange', checkBodyDone, false);
+      }
+      var onBodyDoneTimerId = setInterval(function(){
+        checkBodyDone();
+      }
+      , 10);
+    }
+
+    function installCode(code_0){
+      var doc = getInstallLocationDoc();
+      var docbody = doc.body;
+      var script = doc.createElement('script');
+      script.language = 'javascript';
+      script.src = code_0;
+      if (tripledemo.__errFn) {
+        script.onerror = function(){
+          tripledemo.__errFn('tripledemo', new Error('Failed to load ' + code_0));
         }
         ;
       }
-      tripledemo = null;
-      frameWnd.gwtOnLoad(onLoadErrorFunc, 'tripledemo', base, softPermutationId);
-      $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'moduleStartup', millis:(new Date).getTime(), type:'end'});
+      docbody.appendChild(script);
+      sendStats('moduleStartup', 'scriptTagAdded');
     }
+
+    sendStats('moduleStartup', 'moduleRequested');
+    setupWaitForBodyLoad(function(){
+      installCode(filename);
+    }
+    );
+  }
+
+  tripledemo.__startLoadingFragment = function(fragmentFile){
+    return computeUrlForResource(fragmentFile);
+  }
+  ;
+  tripledemo.__installRunAsyncCode = function(code_0){
+    var doc = getInstallLocationDoc();
+    var docbody = doc.body;
+    var script = doc.createElement('script');
+    script.language = 'javascript';
+    script.text = code_0;
+    docbody.appendChild(script);
+  }
+  ;
+  function processMetas(){
+    var metaProps = {};
+    var propertyErrorFunc;
+    var onLoadErrorFunc;
+    var metas = $doc_0.getElementsByTagName('meta');
+    for (var i = 0, n = metas.length; i < n; ++i) {
+      var meta = metas[i], name_1 = meta.getAttribute('name'), content_0;
+      if (name_1) {
+        name_1 = name_1.replace('tripledemo::', '');
+        if (name_1.indexOf('::') >= 0) {
+          continue;
+        }
+        if (name_1 == 'gwt:property') {
+          content_0 = meta.getAttribute('content');
+          if (content_0) {
+            var value_1, eq = content_0.indexOf('=');
+            if (eq >= 0) {
+              name_1 = content_0.substring(0, eq);
+              value_1 = content_0.substring(eq + 1);
+            }
+             else {
+              name_1 = content_0;
+              value_1 = '';
+            }
+            metaProps[name_1] = value_1;
+          }
+        }
+         else if (name_1 == 'gwt:onPropertyErrorFn') {
+          content_0 = meta.getAttribute('content');
+          if (content_0) {
+            try {
+              propertyErrorFunc = eval(content_0);
+            }
+             catch (e) {
+              alert('Bad handler "' + content_0 + '" for "gwt:onPropertyErrorFn"');
+            }
+          }
+        }
+         else if (name_1 == 'gwt:onLoadErrorFn') {
+          content_0 = meta.getAttribute('content');
+          if (content_0) {
+            try {
+              onLoadErrorFunc = eval(content_0);
+            }
+             catch (e) {
+              alert('Bad handler "' + content_0 + '" for "gwt:onLoadErrorFn"');
+            }
+          }
+        }
+      }
+    }
+    __gwt_getMetaProperty = function(name_0){
+      var value_0 = metaProps[name_0];
+      return value_0 == null?null:value_0;
+    }
+    ;
+    __propertyErrorFunction = propertyErrorFunc;
+    tripledemo.__errFn = onLoadErrorFunc;
   }
 
   function computeScriptBase(){
@@ -84,27 +256,6 @@ function tripledemo(){
       return '';
     }
 
-    function tryMarkerScript(){
-      var thisScript;
-      if (typeof isBodyLoaded == 'undefined' || !isBodyLoaded()) {
-        var markerId = '__gwt_marker_tripledemo';
-        var markerScript;
-        $doc_0.write('<script id="' + markerId + '"><\/script>');
-        markerScript = $doc_0.getElementById(markerId);
-        thisScript = markerScript && markerScript.previousSibling;
-        while (thisScript && thisScript.tagName != 'SCRIPT') {
-          thisScript = thisScript.previousSibling;
-        }
-        if (markerScript) {
-          markerScript.parentNode.removeChild(markerScript);
-        }
-        if (thisScript && thisScript.src) {
-          return getDirectoryOfFile(thisScript.src);
-        }
-      }
-      return '';
-    }
-
     function tryBaseTag(){
       var baseElements = $doc_0.getElementsByTagName('base');
       if (baseElements.length > 0) {
@@ -123,175 +274,131 @@ function tripledemo(){
       tempBase = tryNocacheJsTag();
     }
     if (tempBase == '') {
-      tempBase = tryMarkerScript();
-    }
-    if (tempBase == '') {
       tempBase = tryBaseTag();
     }
     if (tempBase == '' && isLocationOk()) {
       tempBase = getDirectoryOfFile($doc_0.location.href);
     }
     tempBase = ensureAbsoluteUrl(tempBase);
-    base = tempBase;
     return tempBase;
   }
 
-  function processMetas(){
-    var metas = document.getElementsByTagName('meta');
-    for (var i = 0, n = metas.length; i < n; ++i) {
-      var meta = metas[i], name_0 = meta.getAttribute('name'), content_0;
-      if (name_0) {
-        name_0 = name_0.replace('tripledemo::', '');
-        if (name_0.indexOf('::') >= 0) {
-          continue;
-        }
-        if (name_0 == 'gwt:property') {
-          content_0 = meta.getAttribute('content');
-          if (content_0) {
-            var value_0, eq = content_0.indexOf('=');
-            if (eq >= 0) {
-              name_0 = content_0.substring(0, eq);
-              value_0 = content_0.substring(eq + 1);
-            }
-             else {
-              name_0 = content_0;
-              value_0 = '';
-            }
-            metaProps[name_0] = value_0;
-          }
-        }
-         else if (name_0 == 'gwt:onPropertyErrorFn') {
-          content_0 = meta.getAttribute('content');
-          if (content_0) {
-            try {
-              propertyErrorFunc = eval(content_0);
-            }
-             catch (e) {
-              alert('Bad handler "' + content_0 + '" for "gwt:onPropertyErrorFn"');
-            }
-          }
-        }
-         else if (name_0 == 'gwt:onLoadErrorFn') {
-          content_0 = meta.getAttribute('content');
-          if (content_0) {
-            try {
-              onLoadErrorFunc = eval(content_0);
-            }
-             catch (e) {
-              alert('Bad handler "' + content_0 + '" for "gwt:onLoadErrorFn"');
-            }
-          }
+  function computeUrlForResource(resource){
+    if (resource.match(/^\//)) {
+      return resource;
+    }
+    if (resource.match(/^[a-zA-Z]+:\/\//)) {
+      return resource;
+    }
+    return tripledemo.__moduleBase + resource;
+  }
+
+  function getCompiledCodeFilename(){
+    var answers = [];
+    var softPermutationId = 0;
+    var values = [];
+    var providers = [];
+    function computePropValue(propName){
+      var value_0 = providers[propName](), allowedValuesMap = values[propName];
+      if (value_0 in allowedValuesMap) {
+        return value_0;
+      }
+      var allowedValuesList = [];
+      for (var k in allowedValuesMap) {
+        allowedValuesList[allowedValuesMap[k]] = k;
+      }
+      if (__propertyErrorFunction) {
+        __propertyErrorFunction(propName, allowedValuesList, value_0);
+      }
+      throw null;
+    }
+
+    __gwt_isKnownPropertyValue = function(propName, propValue){
+      return propValue in values[propName];
+    }
+    ;
+    tripledemo.__getPropMap = function(){
+      var result = {};
+      for (var key in values) {
+        if (values.hasOwnProperty(key)) {
+          result[key] = computePropValue(key);
         }
       }
+      return result;
     }
-  }
-
-  function __gwt_getMetaProperty(name_0){
-    var value_0 = metaProps[name_0];
-    return value_0 == null?null:value_0;
-  }
-
-  function computePropValue(propName){
-    var value_0 = providers[propName](), allowedValuesMap = values[propName];
-    if (value_0 in allowedValuesMap) {
-      return value_0;
+    ;
+    tripledemo.__computePropValue = computePropValue;
+    $wnd_0.__gwt_activeModules['tripledemo'].bindings = tripledemo.__getPropMap;
+    sendStats('bootstrap', 'selectingPermutation');
+    if (isHostedMode()) {
+      return computeUrlForResource('tripledemo.devmode.js');
     }
-    var allowedValuesList = [];
-    for (var k in allowedValuesMap) {
-      allowedValuesList[allowedValuesMap[k]] = k;
-    }
-    if (propertyErrorFunc) {
-      propertyErrorFunc(propName, allowedValuesList, value_0);
-    }
-    throw null;
-  }
-
-  var frameInjected;
-  function maybeInjectFrame(){
-    if (!frameInjected) {
-      frameInjected = true;
-      var iframe = $doc_0.createElement('iframe');
-      iframe.src = "javascript:''";
-      iframe.id = 'tripledemo';
-      iframe.style.cssText = 'position:absolute;width:0;height:0;border:none';
-      iframe.tabIndex = -1;
-      $doc_0.body.appendChild(iframe);
-      $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'moduleStartup', millis:(new Date).getTime(), type:'moduleRequested'});
-      iframe.contentWindow.location.replace(base + initialHtml);
-    }
-  }
-
-  tripledemo.onScriptLoad = function(){
-    if (frameInjected) {
-      loadDone = true;
-      maybeStartModule();
-    }
-  }
-  ;
-  tripledemo.onInjectionDone = function(){
-    scriptsDone = true;
-    $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'loadExternalRefs', millis:(new Date).getTime(), type:'end'});
-    maybeStartModule();
-  }
-  ;
-  processMetas();
-  computeScriptBase();
-  var strongName;
-  var initialHtml;
-  if (isHostedMode()) {
-    if ($wnd_0.external && ($wnd_0.external.initModule && $wnd_0.external.initModule('tripledemo'))) {
-      $wnd_0.location.reload();
-      return;
-    }
-    initialHtml = 'hosted.html?tripledemo';
-    strongName = '';
-  }
-  $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'selectingPermutation'});
-  if (!isHostedMode()) {
+    var strongName;
     try {
-      strongName = '5F85E06DAA4DCE9B2E61D914E4A52180';
+      strongName = '74F48F9456C3E582DB9172BA3E195D46';
       var idx = strongName.indexOf(':');
       if (idx != -1) {
-        softPermutationId = Number(strongName.substring(idx + 1));
+        softPermutationId = parseInt(strongName.substring(idx + 1), 10);
         strongName = strongName.substring(0, idx);
       }
-      initialHtml = strongName + '.cache.html';
     }
      catch (e) {
-      return;
     }
-  }
-  var onBodyDoneTimerId;
-  function onBodyDone(){
-    if (!bodyDone) {
-      bodyDone = true;
-      maybeStartModule();
-      if ($doc_0.removeEventListener) {
-        $doc_0.removeEventListener('DOMContentLoaded', onBodyDone, false);
-      }
-      if (onBodyDoneTimerId) {
-        clearInterval(onBodyDoneTimerId);
-      }
-    }
+    tripledemo.__softPermutationId = softPermutationId;
+    return computeUrlForResource(strongName + '.cache.js');
   }
 
-  if ($doc_0.addEventListener) {
-    $doc_0.addEventListener('DOMContentLoaded', function(){
-      maybeInjectFrame();
-      onBodyDone();
+  function loadExternalStylesheets(){
+    if (!$wnd_0.__gwt_stylesLoaded) {
+      $wnd_0.__gwt_stylesLoaded = {};
     }
-    , false);
+    sendStats('loadExternalRefs', 'begin');
+    sendStats('loadExternalRefs', 'end');
   }
-  var onBodyDoneTimerId = setInterval(function(){
-    if (/loaded|complete/.test($doc_0.readyState)) {
-      maybeInjectFrame();
-      onBodyDone();
+
+  processMetas();
+  tripledemo.__moduleBase = computeScriptBase();
+  activeModules['tripledemo'].moduleBase = tripledemo.__moduleBase;
+  var filename_0 = getCompiledCodeFilename();
+  if ($wnd_0) {
+    var devModePermitted = !!($wnd_0.location.protocol == 'http:' || $wnd_0.location.protocol == 'file:');
+    $wnd_0.__gwt_activeModules['tripledemo'].canRedirect = devModePermitted;
+    function supportsSessionStorage(){
+      var key = '_gwt_dummy_';
+      try {
+        $wnd_0.sessionStorage.setItem(key, key);
+        $wnd_0.sessionStorage.removeItem(key);
+        return true;
+      }
+       catch (e) {
+        return false;
+      }
+    }
+
+    if (devModePermitted && supportsSessionStorage()) {
+      var devModeKey = '__gwtDevModeHook:tripledemo';
+      var devModeUrl = $wnd_0.sessionStorage[devModeKey];
+      if (!/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/.*$/.test(devModeUrl)) {
+        if (devModeUrl && (window.console && console.log)) {
+          console.log('Ignoring non-whitelisted Dev Mode URL: ' + devModeUrl);
+        }
+        devModeUrl = '';
+      }
+      if (devModeUrl && !$wnd_0[devModeKey]) {
+        $wnd_0[devModeKey] = true;
+        $wnd_0[devModeKey + ':moduleBase'] = computeScriptBase();
+        var devModeScript = $doc_0.createElement('script');
+        devModeScript.src = devModeUrl;
+        var head = $doc_0.getElementsByTagName('head')[0];
+        head.insertBefore(devModeScript, head.firstElementChild || head.children[0]);
+        return false;
+      }
     }
   }
-  , 50);
-  $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'bootstrap', millis:(new Date).getTime(), type:'end'});
-  $stats && $stats({moduleName:'tripledemo', sessionId:$sessionId_0, subSystem:'startup', evtGroup:'loadExternalRefs', millis:(new Date).getTime(), type:'begin'});
-  $doc_0.write('<script defer="defer">tripledemo.onInjectionDone(\'tripledemo\')<\/script>');
+  loadExternalStylesheets();
+  sendStats('bootstrap', 'end');
+  installScript(filename_0);
+  return true;
 }
 
-tripledemo();
+tripledemo.succeeded = tripledemo();
