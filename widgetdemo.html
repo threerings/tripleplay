@@ -3,26 +3,35 @@
   <head>
     <title>TriplePlay Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      #page {
+        max-width: 800px;
+        margin: 10px auto;
+      }
+      #playn-root {
+        width: 800px;
+        height: 600px;
+      }
+    </style>
   </head>
 
   <body>
-    <h3>TriplePlay</h3>
-
-    <p> <a href="https://github.com/threerings/tripleplay">TriplePlay</a>
-    contains a variety of useful packages for adding user interfaces,
-    animations and other bits to a PlayN game. This demo shows off some of
-    those packages. </p>
-
-    <h3>TriplePlay Demo</h3>
-
-    <p> This is a live demo, click away on it and feel the interactivity! </p>
-
     <script src="tripledemo/tripledemo.nocache.js"></script>
+    <div id="page">
+      <h3>TriplePlay</h3>
+      <p> <a href="https://github.com/threerings/tripleplay">TriplePlay</a>
+      contains a variety of useful packages for adding user interfaces,
+      animations and other bits to a PlayN game. This demo shows off some of
+      those packages. </p>
 
-    <h3>Source code</h3>
+      <h3>TriplePlay Demo</h3>
+      <p> This is a live demo, click away on it and feel the interactivity! </p>
 
-    You can <a href="https://github.com/threerings/tripleplay/blob/master/demo/core/src/main/java/tripleplay/demo">view
-    the source code</a> to each of the individual screens of the demo on
-    Github</a>.
+      <div id="playn-root"></div>
+
+      <h3>Source code</h3>
+      <p> You can <a href="https://github.com/threerings/tripleplay/blob/master/demo/core/src/main/java/tripleplay/demo">view
+      the source code</a> to each of the individual screens of the demo on Github</a>.</p>
+    </div>
   </body>
 </html>
