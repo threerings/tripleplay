@@ -133,7 +133,7 @@ public class Flicker extends Pointer.Listener
         else if (position > max) position -= (position-max)*overFraction();
 
         float absDelta = Math.abs(delta);
-        if (!_minFlickExceeded && absDelta > minFlickDelta()) {
+        if (!_minFlickExceeded && absDelta > maxClickDelta()) {
             _minFlickExceeded = true;
             minFlickExceeded(iact);
         }
@@ -151,14 +151,14 @@ public class Flicker extends Pointer.Listener
         }
         // if not, determine whether we should impart velocity to the tower
         else {
-            float dragTime = (float)(_curStamp - _prevStamp);
-            float delta = _cur - _prev;
-            float signum = Math.signum(delta);
-            float dragVel = Math.abs(delta) / dragTime;
+            float dragTime = (float)(iact.event.time - _prevStamp);
             // if we're outside our bounds, go immediately into easeback mode
             if (position < min || position > max) setState(EASEBACK);
             // otherwise potentially initiate a flick
-            else if (dragVel > flickVelThresh() && _minFlickExceeded) {
+            else if (dragTime > 0) {
+                float delta = _cur - _prev;
+                float signum = Math.signum(delta);
+                float dragVel = Math.abs(delta) / dragTime;
                 _vel = signum * Math.min(maxFlickVel(), dragVel * flickXfer());
                 _accel = -signum * friction();
                 setState(SCROLLING);
@@ -197,14 +197,6 @@ public class Flicker extends Pointer.Listener
     }
 
     /**
-     * Returns the minimum (positive) velocity (in pixels per millisecond) at time of touch release
-     * required to initiate a flick (i.e. transfer the flick velocity to the entity).
-     */
-    protected float flickVelThresh () {
-        return 0.5f;
-    }
-
-    /**
      * Returns the fraction of flick velocity that is transfered to the entity (a value between 0
      * and 1).
      */
@@ -226,13 +218,6 @@ public class Flicker extends Pointer.Listener
      */
     protected float maxClickDelta () {
         return 5;
-    }
-
-    /**
-     * Returns the minimum distance (in pixels) the pointer must have moved to register as a flick.
-     */
-    protected float minFlickDelta () {
-        return 10;
     }
 
     /**
