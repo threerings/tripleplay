@@ -37,15 +37,8 @@ import playn.scene.Pointer;
  */
 public class XYFlicker extends Pointer.Listener
 {
-    /** The minimum distance (in pixels) the pointer must have moved to register as a flick. */
-    public float minFlickDelta = 10;
-
     /** The deceleration (in pixels per ms per ms) applied to non-zero velocity. */
     public float friction = 0.0015f;
-
-    /** The minimum (positive) speed (in pixels per millisecond) at time of touch release
-      * required to initiate a flick (i.e. transfer the flick velocity to the entity). */
-    public float flickSpeedThresh = 0.5f;
 
     /** The fraction of flick speed transfered to the entity (a value between 0 and 1). */
     public float flickXfer = 0.95f;
@@ -56,7 +49,7 @@ public class XYFlicker extends Pointer.Listener
 
     /** The maximum distance (in pixels) the pointer is allowed to travel while pressed and
       * still register as a click. */
-    public float maxClickDelta = 15;
+    public float maxClickDelta = 10;
 
     /** Signal dispatched when a pointer usage did not end up being a flick. */
     public Signal<Pointer.Event> clicked = Signal.create();
@@ -101,11 +94,11 @@ public class XYFlicker extends Pointer.Listener
             return;
         }
         // if not, maybe impart some velocity
-        float dragTime = (float)(_curStamp - _prevStamp);
-        Point delta = new Point(_cur.x - _prev.x, _cur.y - _prev.y);
-        Point dragVel = delta.mult(1 / dragTime);
-        float dragSpeed = dragVel.distance(0, 0);
-        if (dragSpeed > flickSpeedThresh && delta.distance(0, 0) > minFlickDelta) {
+        float dragTime = (float)(iact.event.time - _prevStamp);
+        if (dragTime > 0) {
+            Point delta = new Point(_cur.x - _prev.x, _cur.y - _prev.y);
+            Point dragVel = delta.mult(1 / dragTime);
+            float dragSpeed = dragVel.distance(0, 0);
             if (dragSpeed > maxFlickSpeed) {
                 dragVel.multLocal(maxFlickSpeed / dragSpeed);
                 dragSpeed = maxFlickSpeed;
