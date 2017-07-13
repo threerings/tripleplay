@@ -37,6 +37,27 @@ import playn.scene.Pointer;
  */
 public class XYFlicker extends Pointer.Listener
 {
+    /** The minimum distance (in pixels) the pointer must have moved to register as a flick. */
+    public float minFlickDelta = 10;
+
+    /** The deceleration (in pixels per ms per ms) applied to non-zero velocity. */
+    public float friction = 0.0015f;
+
+    /** The minimum (positive) speed (in pixels per millisecond) at time of touch release
+      * required to initiate a flick (i.e. transfer the flick velocity to the entity). */
+    public float flickSpeedThresh = 0.5f;
+
+    /** The fraction of flick speed transfered to the entity (a value between 0 and 1). */
+    public float flickXfer = 0.95f;
+
+    /** The maximum flick speed that will be transfered to the entity; limits the actual flick
+      * speed at time of release. This value is not adjusted by {@link #flickXfer}. */
+    public float maxFlickSpeed = 1.4f; // pixels/ms
+
+    /** The maximum distance (in pixels) the pointer is allowed to travel while pressed and
+      * still register as a click. */
+    public float maxClickDelta = 15;
+
     /** Signal dispatched when a pointer usage did not end up being a flick. */
     public Signal<Pointer.Event> clicked = Signal.create();
 
@@ -84,16 +105,16 @@ public class XYFlicker extends Pointer.Listener
         Point delta = new Point(_cur.x - _prev.x, _cur.y - _prev.y);
         Point dragVel = delta.mult(1 / dragTime);
         float dragSpeed = dragVel.distance(0, 0);
-        if (dragSpeed > flickSpeedThresh() && delta.distance(0, 0) > minFlickDelta()) {
-            if (dragSpeed > maxFlickSpeed()) {
-                dragVel.multLocal(maxFlickSpeed() / dragSpeed);
-                dragSpeed = maxFlickSpeed();
+        if (dragSpeed > flickSpeedThresh && delta.distance(0, 0) > minFlickDelta) {
+            if (dragSpeed > maxFlickSpeed) {
+                dragVel.multLocal(maxFlickSpeed / dragSpeed);
+                dragSpeed = maxFlickSpeed;
             }
             _vel.set(dragVel);
-            _vel.multLocal(flickXfer());
+            _vel.multLocal(flickXfer);
             float sx = Math.signum(_vel.x), sy = Math.signum(_vel.y);
-            _accel.x = -sx * friction();
-            _accel.y = -sy * friction();
+            _accel.x = -sx * friction;
+            _accel.y = -sy * friction;
         }
     }
 
@@ -148,39 +169,8 @@ public class XYFlicker extends Pointer.Listener
         _position.set(MathUtil.clamp(x, _min.x, _max.x), MathUtil.clamp(y, _min.y, _max.y));
     }
 
-    /** Returns the minimum distance (in pixels) the pointer must have moved to register as a
-     * flick. */
-    protected float minFlickDelta () {
-        return 10;
-    }
-
-    /** Returns the deceleration (in pixels per ms per ms) applied to non-zero velocity. */
-    protected float friction () {
-        return 0.0015f;
-    }
-
-    /** Returns the minimum (positive) speed (in pixels per millisecond) at time of touch release
-     * required to initiate a flick (i.e. transfer the flick velocity to the entity). */
-    protected float flickSpeedThresh () {
-        return 0.5f;
-    }
-
-    /** Returns the fraction of flick speed that is transfered to the entity (a value between 0
-     * and 1). */
-    protected float flickXfer () {
-        return 0.95f;
-    }
-
-    /** Returns the maximum flick speed that will be transfered to the entity; limits the actual
-     * flick speed at time of release. This value is not adjusted by {@link #flickXfer}. */
-    protected float maxFlickSpeed () {
-        return 1.4f; // pixels/ms
-    }
-
-    /** Returns the square of the maximum distance (in pixels) the pointer is allowed to travel
-     * while pressed and still register as a click. */
     protected float maxClickDeltaSq () {
-        return 225;
+        return maxClickDelta * maxClickDelta;
     }
 
     protected static float applyAccelertion (float v, float a, float dt) {

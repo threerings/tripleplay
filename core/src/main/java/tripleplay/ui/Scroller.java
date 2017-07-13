@@ -408,6 +408,9 @@ public class Scroller extends Composite<Scroller>
     /** Scroll ranges. */
     public final Range hrange = createRange(), vrange = createRange();
 
+    /** Handles the flicking physics. */
+    public final XYFlicker flicker = new XYFlicker();
+
     /**
      * Creates a new scroller containing the given content and with {@link Scroller.Behavior#BOTH}.
      * <p>If the content is an instance of {@link Clippable}, then translation will occur via that
@@ -459,7 +462,7 @@ public class Scroller extends Composite<Scroller>
         });
 
         // handle drag scrolling
-        layer.events().connect(_flicker = new XYFlicker());
+        layer.events().connect(flicker);
     }
 
     /**
@@ -524,7 +527,7 @@ public class Scroller extends Composite<Scroller>
     public void scroll (float x, float y) {
         x = Math.max(0, Math.min(x, hrange._max));
         y = Math.max(0, Math.min(y, vrange._max));
-        _flicker.positionChanged(x, y);
+        flicker.positionChanged(x, y);
     }
 
     /**
@@ -556,12 +559,12 @@ public class Scroller extends Composite<Scroller>
      * only when the drag was not far enough to cause appreciable scrolling.
      */
     public Signal<Pointer.Event> contentClicked () {
-        return _flicker.clicked;
+        return flicker.clicked;
     }
 
     /** Prepares the scroller for the next frame, at t = t + delta. */
     protected void update (float delta) {
-        _flicker.update(delta);
+        flicker.update(delta);
         update(false);
         if (_bars != null) _bars.update(delta);
     }
@@ -569,7 +572,7 @@ public class Scroller extends Composite<Scroller>
     /** Updates the position of the content to match the flicker. If force is set, then the
      * relevant values will be updated even if there was no change. */
     protected void update (boolean force) {
-        IPoint pos = _flicker.position();
+        IPoint pos = flicker.position();
         boolean dx = hrange.set(pos.x()), dy = vrange.set(pos.y());
         if (dx || dy || force) {
             _clippable.setPosition(-pos.x(), -pos.y());
@@ -713,7 +716,7 @@ public class Scroller extends Composite<Scroller>
             _scroller.layer.setSize(width, height);
 
             // reset the flicker (it retains its current position)
-            _flicker.reset(hrange.max(), vrange.max());
+            flicker.reset(hrange.max(), vrange.max());
 
             // scroll the content
             if (_queuedScroll != null) {
@@ -732,7 +735,6 @@ public class Scroller extends Composite<Scroller>
     }
 
     protected final Group _scroller;
-    protected final XYFlicker _flicker;
     protected final Clippable _clippable;
     protected final Dimension _contentSize = new Dimension();
     protected Connection _upconn;
