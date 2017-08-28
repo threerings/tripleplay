@@ -9,16 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import pythagoras.f.IDimension;
+import react.*;
 
-import react.Closeable;
-import react.Signal;
-import react.Slot;
-import react.UnitSignal;
-import react.UnitSlot;
-
-import playn.core.Clock;
-import playn.core.Game;
-import playn.core.Platform;
+import playn.core.*;
 import playn.scene.GroupLayer;
 import playn.scene.Pointer;
 
@@ -192,6 +185,10 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
           * Defaults to the size of the entire view. */
         public IDimension size () { return _game.plat.graphics().viewSize; }
 
+        /** The size of this screen as a reactive value.
+          * Listeners are notified when the screen size changes. */
+        public ValueView<IDimension> sizeValue() { return _sizeValue; }
+
         /** Returns true when this screen is awake. */
         public boolean awake () { return (_flags & AWAKE) != 0; }
         /** Returns true when this screen is in-transition. */
@@ -201,6 +198,12 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
           * Should create main UI and prepare it for display. */
         public void wake () {
             _flags |= AWAKE;
+            closeOnSleep(_game.plat.graphics().deviceOrient.connectNotify(
+                new Slot<Graphics.Orientation>() {
+                    public void onEmit (Graphics.Orientation orient) {
+                        _sizeValue.updateForce(size());
+                    }
+                }));
         }
 
         /** Called when this screen has become the active screen. */
@@ -287,6 +290,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         protected int _flags;
         protected Closeable _scons = Closeable.Util.NOOP;
         protected final Closeable.Set _closeOnSleep = new Closeable.Set();
+        protected final Value<IDimension> _sizeValue = Value.create(size());
         protected final Game _game;
     }
 

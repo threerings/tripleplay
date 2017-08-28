@@ -70,7 +70,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <playn.version>2.0</playn.version>
+    <playn.version>2.1-SNAPSHOT</playn.version>
   </properties>
 
   <modules>

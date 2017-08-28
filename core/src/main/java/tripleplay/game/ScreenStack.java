@@ -10,14 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import pythagoras.f.IDimension;
+import react.*;
 
-import react.Closeable;
-import react.Signal;
-import react.Slot;
-
-import playn.core.Clock;
-import playn.core.Game;
-import playn.core.Platform;
+import playn.core.*;
 import playn.scene.GroupLayer;
 
 import tripleplay.ui.Interface;
@@ -59,6 +54,10 @@ public class ScreenStack {
           * Defaults to the size of the entire view. */
         public IDimension size () { return game().plat.graphics().viewSize; }
 
+        /** The size of this screen as a reactive value.
+          * Listeners are notified when the screen size changes. */
+        public ValueView<IDimension> sizeValue() { return _sizeValue; }
+
         /** Called when a screen is added to the screen stack for the first time. */
         public void wasAdded () {}
 
@@ -66,6 +65,12 @@ public class ScreenStack {
         public void wasShown () {
             closeOnHide(game().update.connect(update.slot()));
             closeOnHide(game().paint.connect(paint.slot()));
+            closeOnHide(game().plat.graphics().deviceOrient.connectNotify(
+                new Slot<Graphics.Orientation>() {
+                    public void onEmit (Graphics.Orientation orient) {
+                        _sizeValue.updateForce(size());
+                    }
+                }));
         }
 
         /** Called when a screen is no longer the top screen (having either been pushed down by
@@ -93,6 +98,7 @@ public class ScreenStack {
         }
 
         protected Closeable.Set _closeOnHide = new Closeable.Set();
+        protected final Value<IDimension> _sizeValue = Value.create(size());
     }
 
     /** A {@link Screen} with an {@link Interface} for doing UI stuff. */
