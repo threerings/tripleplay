@@ -5,9 +5,9 @@
 
 package tripleplay.demo;
 
-import react.UnitSlot;
-
 import playn.core.Game;
+import pythagoras.f.IDimension;
+import react.*;
 
 import tripleplay.game.ScreenStack;
 import tripleplay.ui.*;
@@ -66,11 +66,15 @@ public class DemoMenuScreen extends ScreenStack.UIScreen
 
     @Override public void wasAdded () {
         super.wasAdded();
-        Root root = iface.createRoot(AxisLayout.vertical().gap(15),
-                                     SimpleStyles.newSheet(game().plat.graphics()), layer);
+        final Root root = iface.createRoot(AxisLayout.vertical().gap(15),
+                                           SimpleStyles.newSheet(game().plat.graphics()), layer);
         root.addStyles(Style.BACKGROUND.is(
             Background.bordered(0xFFCCCCCC, 0xFF99CCFF, 5).inset(5, 10)));
-        root.setSize(size());
+        sizeValue().connectNotify(new Slot<IDimension>() {
+            public void onEmit (IDimension size) {
+                root.setSize(size);
+            }
+        });
         root.add(new Label("Triple Play Demos").addStyles(Style.FONT.is(DemoScreen.TITLE_FONT)));
 
         Group grid = new Group(new TableLayout(

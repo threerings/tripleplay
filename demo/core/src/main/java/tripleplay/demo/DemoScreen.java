@@ -6,6 +6,8 @@
 package tripleplay.demo;
 
 import playn.core.*;
+import pythagoras.f.IDimension;
+import react.*;
 
 import tripleplay.game.ScreenStack;
 import tripleplay.ui.Background;
@@ -35,10 +37,14 @@ public abstract class DemoScreen extends ScreenStack.UIScreen
 
     @Override public void wasAdded () {
         super.wasAdded();
-        Root root = iface.createRoot(
+        final Root root = iface.createRoot(
             AxisLayout.vertical().gap(0).offStretch(), stylesheet(), layer);
         root.addStyles(Style.BACKGROUND.is(background()), Style.VALIGN.top);
-        root.setSize(size());
+        sizeValue().connectNotify(new Slot<IDimension>() {
+            public void onEmit (IDimension size) {
+                root.setSize(size);
+            }
+        });
         Background bg = Background.solid(0xFFCC99FF).inset(0, 0, 5, 0);
         root.add(new Group(AxisLayout.horizontal(), Style.HALIGN.left, Style.BACKGROUND.is(bg)).add(
             this.back = new Button("Back"),
