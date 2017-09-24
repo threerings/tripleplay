@@ -40,9 +40,7 @@ public class TripleDemo extends SceneGame {
         plat.input().keyboardEvents.collect(Keyboard.isKey(Key.D)).connect(event -> {
             Layer.DEBUG_RECTS = event.down;
             if (event.down && event.isShiftDown()) {
-              PrintWriter out = new PrintWriter(System.out);
-              rootLayer.debugPrint(out);
-              out.flush();
+              rootLayer.debugPrint(plat.log());
             }
         });
     }
