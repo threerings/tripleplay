@@ -18,7 +18,7 @@ tripleplay.ui.util.XYFlicker
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/util/XYFlicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/util/XYFlicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.1</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.ui.util.XYFlicker
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.util.Supplier.html"><B>PREV CLASS</B></A>
+&nbsp;<B>PREV CLASS</B>&nbsp;
 &nbsp;<B>NEXT CLASS</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.ui.util.XYFlicker.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
-<a href="#methods">METHODS</a>&nbsp;|&nbsp;
-FIELDS
+METHODS&nbsp;|&nbsp;
+<a href="#fields">FIELDS</a>
   </FONT></TD>
 </TR>
 </TABLE>
@@ -47,82 +47,47 @@ FIELDS
 <H2>
 Class tripleplay.ui.util.<A HREF="../tripleplay/ui/util/XYFlicker.html" target="_top"><tt>XYFlicker</tt></A>
 </H2>
-<p><font size="+1">The superclass changed from <code>java.lang.Object</code> to <code>playn.scene.Pointer.Listener</code>.<br> Removed interface <code>playn.core.Pointer.Listener</code>.<br></font>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.onPointerCancel_removed(playn.core.Pointer.Event)"></A>
-  <nobr><code>void</code>&nbsp;onPointerCancel(<code>Event</code>)</nobr>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.onPointerDrag_removed(playn.core.Pointer.Event)"></A>
-  <nobr><code>void</code>&nbsp;onPointerDrag(<code>Event</code>)</nobr>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.onPointerEnd_removed(playn.core.Pointer.Event)"></A>
-  <nobr><code>void</code>&nbsp;onPointerEnd(<code>Event</code>)</nobr>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.onPointerStart_removed(playn.core.Pointer.Event)"></A>
-  <nobr><code>void</code>&nbsp;onPointerStart(<code>Event</code>)</nobr>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-</TABLE>
-&nbsp;
+<a NAME="fields"></a>
 <p>
 <a NAME="Added"></a>
-<TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Methods</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.onCancel_added(playn.scene.Pointer.Interaction)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#onCancel(playn.scene.Pointer.Interaction)" target="_top"><tt>onCancel</tt></A>(<code>Interaction</code>)</nobr>
+  <A NAME="tripleplay.ui.util.XYFlicker.flickXfer"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#flickXfer" target="_top"><tt>flickXfer</tt></A></nobr>
   </TD>
-  <TD>&nbsp;</TD>
+  <TD VALIGN="TOP">The fraction of flick speed transfered to the entity (a value between 0 and 1).</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.onDrag_added(playn.scene.Pointer.Interaction)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#onDrag(playn.scene.Pointer.Interaction)" target="_top"><tt>onDrag</tt></A>(<code>Interaction</code>)</nobr>
+  <A NAME="tripleplay.ui.util.XYFlicker.friction"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#friction" target="_top"><tt>friction</tt></A></nobr>
   </TD>
-  <TD>&nbsp;</TD>
+  <TD VALIGN="TOP">The deceleration (in pixels per ms per ms) applied to non-zero velocity.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.onEnd_added(playn.scene.Pointer.Interaction)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#onEnd(playn.scene.Pointer.Interaction)" target="_top"><tt>onEnd</tt></A>(<code>Interaction</code>)</nobr>
+  <A NAME="tripleplay.ui.util.XYFlicker.maxClickDelta"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#maxClickDelta" target="_top"><tt>maxClickDelta</tt></A></nobr>
   </TD>
-  <TD>&nbsp;</TD>
+  <TD VALIGN="TOP">The maximum distance (in pixels) the pointer is allowed to travel while pressed and
+ still register as a click.</TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.onStart_added(playn.scene.Pointer.Interaction)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#onStart(playn.scene.Pointer.Interaction)" target="_top"><tt>onStart</tt></A>(<code>Interaction</code>)</nobr>
+  <A NAME="tripleplay.ui.util.XYFlicker.maxFlickSpeed"></A>
+  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#maxFlickSpeed" target="_top"><tt>maxFlickSpeed</tt></A></nobr>
   </TD>
-  <TD>&nbsp;</TD>
+  <TD VALIGN="TOP">The maximum flick speed that will be transfered to the entity; limits the actual flick
+ speed at time of release.</TD>
 </TR>
 </TABLE>
 &nbsp;
-<a NAME="fields"></a>
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -130,7 +95,7 @@ Class tripleplay.ui.util.<A HREF="../tripleplay/ui/util/XYFlicker.html" target="
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/util/XYFlicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/util/XYFlicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.1</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -142,7 +107,7 @@ Class tripleplay.ui.util.<A HREF="../tripleplay/ui/util/XYFlicker.html" target="
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.ui.util.Supplier.html"><B>PREV CLASS</B></A>
+&nbsp;<B>PREV CLASS</B>&nbsp;
 &nbsp;<B>NEXT CLASS</B>&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;

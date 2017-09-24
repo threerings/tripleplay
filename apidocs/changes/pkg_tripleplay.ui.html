@@ -18,7 +18,7 @@ tripleplay.ui
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.1</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Package</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1"> &nbsp;<FONT CLASS="NavBarFont1">Class</FONT>&nbsp;</TD>
@@ -30,14 +30,14 @@ tripleplay.ui
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="pkg_tripleplay.syncdb.html"><B>PREV PACKAGE</B></A>
-&nbsp;<A HREF="pkg_tripleplay.ui.bgs.html"><B>NEXT PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.game.html"><B>PREV PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.ui.util.html"><B>NEXT PACKAGE</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="pkg_tripleplay.ui.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
-<a href="#Removed">REMOVED</a>&nbsp;|&nbsp;
-<a href="#Added">ADDED</a>&nbsp;|&nbsp;
+REMOVED&nbsp;|&nbsp;
+ADDED&nbsp;|&nbsp;
 <a href="#Changed">CHANGED</a>
   </FONT></TD>
 </TR>
@@ -48,362 +48,17 @@ tripleplay.ui
 Package <A HREF="../tripleplay/ui/package-summary.html" target="_top"><tt>tripleplay.ui</tt></A>
 </H2>
 <p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Classes and Interfaces" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Classes and Interfaces</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Icons.ImageIcon"></A>
-  Icons.ImageIcon
-  </TD>
-  <TD VALIGN="TOP">Base class for image icons just handling the image and the callback.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Icons.Loader"></A>
-  Icons.Loader
-  </TD>
-  <TD VALIGN="TOP">An icon that supports asynchronous images.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Icons.Offset"></A>
-  Icons.Offset
-  </TD>
-  <TD VALIGN="TOP">Nests another icon with an offset.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Icons.Preloaded"></A>
-  Icons.Preloaded
-  </TD>
-  <TD VALIGN="TOP">A simple icon that uses an {@code Image} to get its dimensions and a simple image layer when
- rendered.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Icons.Scaled"></A>
-  Icons.Scaled
-  </TD>
-  <TD VALIGN="TOP">Aggregates and scales another icon.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Interface.Task"></A>
-  <I>Interface.Task</I>
-  </TD>
-  <TD VALIGN="TOP">A time based task that requires an update per frame.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Interface.TaskHandle"></A>
-  <I>Interface.TaskHandle</I>
-  </TD>
-  <TD VALIGN="TOP">An object that can be used to remove a previously added task.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Style.GradientType"></A>
-  Style.GradientType
-  </TD>
-  <TD VALIGN="TOP">Defines different types of gradient fills.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Added"></a>
-<TABLE summary="Added Classes" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Classes</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Box.Clipped"></A>
-  <nobr><A HREF="../tripleplay/ui/Box.Clipped.html" target="_top"><tt>Box.Clipped</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A {@code Box} which draws its children clipped to their preferred size.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Box.Fade"></A>
-  <nobr><A HREF="../tripleplay/ui/Box.Fade.html" target="_top"><tt>Box.Fade</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A transition that fades from the old contents to the new.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Box.Flip"></A>
-  <nobr><A HREF="../tripleplay/ui/Box.Flip.html" target="_top"><tt>Box.Flip</tt></A></nobr>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Box.Trans"></A>
-  <nobr><A HREF="../tripleplay/ui/Box.Trans.html" target="_top"><tt>Box.Trans</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Manages transitions for <A HREF="../tripleplay/ui/Box/Trans/.html#transition"><TT>.transition</TT></A>.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
 <a NAME="Changed"></a>
-<TABLE summary="Changed Classes and Interfaces" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TABLE summary="Changed Classes" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
 <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Changed Classes and Interfaces</B></FONT></TD>
+  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Changed Classes</B></FONT></TD>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="AbstractTextButton"></A>
-  <nobr><A HREF="tripleplay.ui.AbstractTextButton.html">AbstractTextButton</A></nobr>
+  <A NAME="Scroller"></A>
+  <nobr><A HREF="tripleplay.ui.Scroller.html">Scroller</A></nobr>
   </TD>
-  <TD VALIGN="TOP">An abstract base class for buttons with text labels.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Background"></A>
-  <nobr><A HREF="tripleplay.ui.Background.html">Background</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A background is responsible for rendering a border and a fill.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Background.Instance"></A>
-  <nobr><A HREF="tripleplay.ui.Background.Instance.html">Background.Instance</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">An instantiation of a particular background template.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Behavior"></A>
-  <nobr><A HREF="tripleplay.ui.Behavior.html">Behavior</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Controls the behavior of a widget (how it responds to pointer events).</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Behavior.Capturing"></A>
-  <nobr><A HREF="tripleplay.ui.Behavior.Capturing.html">Behavior.Capturing</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A click behavior that captures the pointer and optionally issues clicks based on some time
- based function.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Behavior.Click"></A>
-  <nobr><A HREF="tripleplay.ui.Behavior.Click.html">Behavior.Click</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Implements clicking behavior.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Behavior.Ignore"></A>
-  <nobr><A HREF="tripleplay.ui.Behavior.Ignore.html">Behavior.Ignore</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A behavior that ignores everything.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Behavior.RapidFire"></A>
-  <nobr><A HREF="tripleplay.ui.Behavior.RapidFire.html">Behavior.RapidFire</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Captures the pointer and dispatches one click on press, a second after an initial delay
- and at regular intervals after that.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Behavior.Select"></A>
-  <nobr><A HREF="tripleplay.ui.Behavior.Select.html">Behavior.Select</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Implements button-like behavior: selects the element when the pointer is in bounds, and
- deselects on release.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Behavior.Toggle"></A>
-  <nobr><A HREF="tripleplay.ui.Behavior.Toggle.html">Behavior.Toggle</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Implements toggling behavior.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Behavior.Track"></A>
-  <nobr><A HREF="tripleplay.ui.Behavior.Track.html">Behavior.Track</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Tracks the pressed position as an anchor and delegates to subclasses to update state based
- on anchor and drag position.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Behavior.Track.State"></A>
-  <nobr><A HREF="tripleplay.ui.Behavior.Track.State.html">Behavior.Track.State</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Holds the necessary data for the currently active press.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Box"></A>
-  <nobr><A HREF="tripleplay.ui.Box.html">Box</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A container that holds zero or one widget.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Button"></A>
-  <nobr><A HREF="tripleplay.ui.Button.html">Button</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A button that displays text, or an icon, or both.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="CapturedRoot"></A>
-  <nobr><A HREF="tripleplay.ui.CapturedRoot.html">CapturedRoot</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A root that renders everything into a single texture.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="CheckBox"></A>
-  <nobr><A HREF="tripleplay.ui.CheckBox.html">CheckBox</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Displays a checkbox which can be toggled.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Constraints"></A>
-  <nobr><A HREF="tripleplay.ui.Constraints.html">Constraints</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Provides various user interface constraints.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Element"></A>
-  <nobr><A HREF="tripleplay.ui.Element.html">Element</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The root of the interface element hierarchy.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="HistoryGroup"></A>
-  <nobr><A HREF="tripleplay.ui.HistoryGroup.html">HistoryGroup</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A scrolling vertical display, optimized for showing potentially very long lists such as a chat
- log.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Icon"></A>
-  <nobr><A HREF="tripleplay.ui.Icon.html"><I>Icon</I></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">An interface for icons.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Icons"></A>
-  <nobr><A HREF="tripleplay.ui.Icons.html">Icons</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Contains icon related utility classes and methods, mostly basic icon factories.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Icons.Aggregated"></A>
-  <nobr><A HREF="tripleplay.ui.Icons.Aggregated.html">Icons.Aggregated</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Defers to another icon.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="ImageButton"></A>
-  <nobr><A HREF="tripleplay.ui.ImageButton.html">ImageButton</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A button that uses images for its different states.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Interface"></A>
-  <nobr><A HREF="tripleplay.ui.Interface.html">Interface</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The main class that integrates the Triple Play UI with a PlayN game.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Label"></A>
-  <nobr><A HREF="tripleplay.ui.Label.html">Label</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A widget that displays one or more lines of text and/or an icon image.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="LongPressButton"></A>
-  <nobr><A HREF="tripleplay.ui.LongPressButton.html">LongPressButton</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A button that supports an action on a "long press".</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="MenuHost"></A>
-  <nobr><A HREF="tripleplay.ui.MenuHost.html">MenuHost</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Provides a context for popping up a menu.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="MenuHost.Pop"></A>
-  <nobr><A HREF="tripleplay.ui.MenuHost.Pop.html">MenuHost.Pop</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">An event type for triggering a menu popup.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Root"></A>
-  <nobr><A HREF="tripleplay.ui.Root.html">Root</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The root of a display hierarchy.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Scroller.Bars"></A>
-  <nobr><A HREF="tripleplay.ui.Scroller.Bars.html">Scroller.Bars</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Handles the appearance and animation of scroll bars.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Scroller.TouchBars"></A>
-  <nobr><A HREF="tripleplay.ui.Scroller.TouchBars.html">Scroller.TouchBars</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Plain rectangle scroll bars that overlay the content area, consume no additional screen
- space, and fade out after inactivity.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="SimpleStyles"></A>
-  <nobr><A HREF="tripleplay.ui.SimpleStyles.html">SimpleStyles</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Provides a simple style sheet that is useful for development and testing.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Style.GradientTypeStyle"></A>
-  <nobr><A HREF="tripleplay.ui.Style.GradientTypeStyle.html">Style.GradientTypeStyle</A></nobr>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="Style.Mode"></A>
-  <nobr><A HREF="tripleplay.ui.Style.Mode.html">Style.Mode</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">Defines element modes which can be used to modify an element's styles.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="ValueLabel"></A>
-  <nobr><A HREF="tripleplay.ui.ValueLabel.html">ValueLabel</A></nobr>
-  </TD>
-  <TD VALIGN="TOP">@deprecated Use <A HREF="../tripleplay/ui/ValueLabel/Label.html#Label(ValueView)"><TT>Label.Label(ValueView)</TT></A>.</TD>
+  <TD VALIGN="TOP">A composite element that manages horizontal and vertical scrolling of a single content element.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -414,7 +69,7 @@ Package <A HREF="../tripleplay/ui/package-summary.html" target="_top"><tt>triple
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/package-summary.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.1</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Package</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1"> &nbsp;<FONT CLASS="NavBarFont1">Class</FONT>&nbsp;</TD>
@@ -426,8 +81,8 @@ Package <A HREF="../tripleplay/ui/package-summary.html" target="_top"><tt>triple
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="pkg_tripleplay.syncdb.html"><B>PREV PACKAGE</B></A>
-&nbsp;<A HREF="pkg_tripleplay.ui.bgs.html"><B>NEXT PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.game.html"><B>PREV PACKAGE</B></A>
+&nbsp;<A HREF="pkg_tripleplay.ui.util.html"><B>NEXT PACKAGE</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="pkg_tripleplay.ui.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>

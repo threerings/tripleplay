@@ -18,7 +18,7 @@ tripleplay.game.ScreenSpace.Screen
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/game/ScreenSpace.Screen.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/game/ScreenSpace.Screen.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.1</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.game.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -30,15 +30,15 @@ tripleplay.game.ScreenSpace.Screen
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.game.ScreenSpace.Dir.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.game.ScreenSpace.UIScreen.html"><B>NEXT CLASS</B></A>
+&nbsp;<B>PREV CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.game.ScreenStack.Screen.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.game.ScreenSpace.Screen.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
-<a href="#constructors">CONSTRUCTORS</a>&nbsp;|&nbsp;
+CONSTRUCTORS&nbsp;|&nbsp;
 <a href="#methods">METHODS</a>&nbsp;|&nbsp;
-<a href="#fields">FIELDS</a>
+FIELDS
   </FONT></TD>
 </TR>
 </TABLE>
@@ -47,70 +47,8 @@ tripleplay.game.ScreenSpace.Screen
 <H2>
 Class tripleplay.game.<A HREF="../tripleplay/game/ScreenSpace.Screen.html" target="_top"><tt>ScreenSpace.Screen</tt></A>
 </H2>
-<p><font size="+1">Changed from non-abstract to abstract.</font>
 <a NAME="constructors"></a>
-<p>
-<a NAME="Changed"></a>
-<TABLE summary="Changed Constructors" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Constructors</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.ctor_changed(playn.core.Game)"></A>
-  <nobr><A HREF="../tripleplay/game/ScreenSpace.Screen.html#ScreenSpace.Screen(playn.core.Game)" target="_top"><tt>ScreenSpace.Screen</tt></A>(<code>Game</code>)  </nobr>
-  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>void</code> to <code>Game</code>.<br>
-  </TD>
-  <TD>&nbsp;</TD>
-</TR>
-</TABLE>
-&nbsp;
 <a NAME="methods"></a>
-<p>
-<a NAME="Removed"></a>
-<TABLE summary="Removed Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Removed Methods</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.destroy_removed()"></A>
-  <nobr><code>void</code>&nbsp;destroy()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Called when this screen is removed from the screen space.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.height_removed()"></A>
-  <nobr><code>float</code>&nbsp;height()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Returns the height of this screen, for use by transitions.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.paint_removed(playn.core.util.Clock)"></A>
-  <nobr><code>void</code>&nbsp;paint(<code>Clock</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">Called once per game paint to allow this screen to participate in the game loop.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.update_removed(int)"></A>
-  <nobr><code>void</code>&nbsp;update(<code>int</code>)</nobr>
-  </TD>
-  <TD VALIGN="TOP">called once per game update to allow this screen to participate in the game loop.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.width_removed()"></A>
-  <nobr><code>float</code>&nbsp;width()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Returns the width of this screen, for use by transitions.</TD>
-</TR>
-</TABLE>
-&nbsp;
 <p>
 <a NAME="Added"></a>
 <TABLE summary="Added Methods" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
@@ -119,75 +57,14 @@ Change in type from <code>void</code> to <code>Game</code>.<br>
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.closeOnSleep_added(java.lang.AutoCloseable)"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/game/ScreenSpace.Screen.html#closeOnSleep(java.lang.AutoCloseable)" target="_top"><tt>closeOnSleep</tt></A>(<code>AutoCloseable</code>)</nobr>
+  <A NAME="tripleplay.game.ScreenSpace.Screen.sizeValue_added()"></A>
+  <nobr><code>ValueView&lt;IDimension&gt;</code>&nbsp;<A HREF="../tripleplay/game/ScreenSpace.Screen.html#sizeValue()" target="_top"><tt>sizeValue</tt></A>()</nobr>
   </TD>
-  <TD VALIGN="TOP">Adds {@code ac} to a list of closeables which will be closed when this screen goes to
- sleep.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.dispose_added()"></A>
-  <nobr><code>void</code>&nbsp;<A HREF="../tripleplay/game/ScreenSpace.Screen.html#dispose()" target="_top"><tt>dispose</tt></A>()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Called when this screen is removed from the screen space.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.size_added()"></A>
-  <nobr><code>IDimension</code>&nbsp;<A HREF="../tripleplay/game/ScreenSpace.Screen.html#size()" target="_top"><tt>size</tt></A>()</nobr>
-  </TD>
-  <TD VALIGN="TOP">Returns the size of this screen, for use by transitions.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.toString_added()"></A>
-  <nobr><code>String</code>&nbsp;<A HREF="../tripleplay/game/ScreenSpace.Screen.html#toString()" target="_top"><tt>toString</tt></A>()</nobr>
-  </TD>
-  <TD>&nbsp;</TD>
+  <TD VALIGN="TOP">The size of this screen as a reactive value.</TD>
 </TR>
 </TABLE>
 &nbsp;
 <a NAME="fields"></a>
-<p>
-<a NAME="Added"></a>
-<TABLE summary="Added Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=2><FONT SIZE="+1"><B>Added Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.paint"></A>
-  <nobr><code>Signal&lt;Clock&gt;</code>&nbsp;<A HREF="../tripleplay/game/ScreenSpace.Screen.html#paint" target="_top"><tt>paint</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A signal emitted on every frame, while this screen is showing.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.update"></A>
-  <nobr><code>Signal&lt;Clock&gt;</code>&nbsp;<A HREF="../tripleplay/game/ScreenSpace.Screen.html#update" target="_top"><tt>update</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">A signal emitted on every simulation update, while this screen is showing.</TD>
-</TR>
-</TABLE>
-&nbsp;
-<p>
-<a NAME="Changed"></a>
-<TABLE summary="Changed Fields" BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-  <TD VALIGN="TOP" COLSPAN=3><FONT SIZE="+1"><B>Changed Fields</B></FONT></TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.game.ScreenSpace.Screen.layer"></A>
-  <nobr><code>GroupLayer</code>&nbsp;<A HREF="../tripleplay/game/ScreenSpace.Screen.html#layer" target="_top"><tt>layer</tt></A></nobr>  </TD>
-  <TD VALIGN="TOP" WIDTH="30%">
-Change in type from <code>playn.core.GroupLayer</code> to <code>playn.scene.GroupLayer</code>.<br>
-  </TD>
-  <TD VALIGN="TOP">Contains the scene graph root for this screen.</TD>
-</TR>
-</TABLE>
-&nbsp;
 <HR>
 <!-- Start of nav bar -->
 <TABLE summary="Navigation bar" BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
@@ -195,7 +72,7 @@ Change in type from <code>playn.core.GroupLayer</code> to <code>playn.scene.Grou
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/game/ScreenSpace.Screen.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/game/ScreenSpace.Screen.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.1</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.game.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
@@ -207,8 +84,8 @@ Change in type from <code>playn.core.GroupLayer</code> to <code>playn.scene.Grou
 </TR>
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
-&nbsp;<A HREF="tripleplay.game.ScreenSpace.Dir.html"><B>PREV CLASS</B></A>
-&nbsp;<A HREF="tripleplay.game.ScreenSpace.UIScreen.html"><B>NEXT CLASS</B></A>
+&nbsp;<B>PREV CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.game.ScreenStack.Screen.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
   &nbsp;<A HREF="tripleplay.game.ScreenSpace.Screen.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
