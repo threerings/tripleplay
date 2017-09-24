@@ -87,7 +87,7 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
 
     @Override protected void layout (LayoutData ldata, float left, float top,
                                      float width, float height) {
-        _ilayer.setTile(isSelected() ? _down.tile() : _up.tile());
+        _ilayer.setSource(isSelected() ? _down : _up);
         _ilayer.setTranslation(left, top);
     }
 
