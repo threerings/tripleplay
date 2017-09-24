@@ -5,7 +5,11 @@
 
 package tripleplay.demo;
 
-import playn.core.Platform;
+import java.io.PrintWriter;
+
+import playn.core.*;
+import playn.scene.GroupLayer;
+import playn.scene.Layer;
 import playn.scene.Pointer;
 import playn.scene.SceneGame;
 
@@ -31,5 +35,15 @@ public class TripleDemo extends SceneGame {
         game = this;     // jam ourselves into a global variable, woo!
         new Pointer(plat, rootLayer, true);        // wire up event dispatch
         screens.push(new DemoMenuScreen(screens)); // start off with our menu screen
+
+        // show debug rectangles when D key is pressed; dump scene graph on shift-D
+        plat.input().keyboardEvents.collect(Keyboard.isKey(Key.D)).connect(event -> {
+            Layer.DEBUG_RECTS = event.down;
+            if (event.down && event.isShiftDown()) {
+              PrintWriter out = new PrintWriter(System.out);
+              rootLayer.debugPrint(out);
+              out.flush();
+            }
+        });
     }
 }

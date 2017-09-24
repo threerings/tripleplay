@@ -15,6 +15,7 @@
 
   <properties>
     <guava.version>16.0.1</guava.version>
+    <source.level>1.8</source.level>
   </properties>
 
   <modules>
