@@ -70,7 +70,6 @@ public class ScreensDemo extends DemoScreen
 
     protected ScreenStack.Screen createScreen (final int depth) {
         return new TestScreen(depth) {
-            @Override public Game game () { return TripleDemo.game; }
             @Override public String toString () { return "Screen" + depth; }
             @Override protected void createIface (Root root) {
                 addUI(this, root, depth);

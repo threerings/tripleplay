@@ -28,7 +28,7 @@ import tripleplay.demo.util.*;
 public class DemoMenuScreen extends ScreenStack.UIScreen
 {
     public DemoMenuScreen (ScreenStack stack) {
-        super(TripleDemo.game.plat);
+        super(TripleDemo.game);
 
         _stack = stack;
         _rlabels = new String[] {
@@ -61,8 +61,6 @@ public class DemoMenuScreen extends ScreenStack.UIScreen
             new ColorsDemo(), new InterpDemo(), null,
         };
     }
-
-    @Override public Game game () { return TripleDemo.game; }
 
     @Override public void wasAdded () {
         super.wasAdded();

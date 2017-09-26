@@ -30,10 +30,8 @@ public abstract class DemoScreen extends ScreenStack.UIScreen
     public Button back;
 
     public DemoScreen () {
-        super(TripleDemo.game.plat);
+        super(TripleDemo.game);
     }
-
-    @Override public Game game () { return TripleDemo.game; }
 
     @Override public void wasAdded () {
         super.wasAdded();

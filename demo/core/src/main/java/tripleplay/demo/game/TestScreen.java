@@ -23,7 +23,7 @@ import tripleplay.demo.TripleDemo;
 public abstract class TestScreen extends ScreenStack.UIScreen
 {
     public TestScreen (int depth) {
-        super(TripleDemo.game.plat);
+        super(TripleDemo.game);
         _depth = depth;
     }
 

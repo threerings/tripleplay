@@ -48,7 +48,9 @@ public class ScreenStack {
         // takes the form: added -> shown -> { hidden -> shown -> ... } -> hidden -> removed
 
         /** Returns a reference to the game in which this screen is operating. */
-        public abstract Game game ();
+        public Game game () {
+            return _game;
+        }
 
         /** Returns the size of this screen. This is used for transitions.
           * Defaults to the size of the entire view. */
@@ -97,8 +99,14 @@ public class ScreenStack {
             _closeOnHide.add(ac);
         }
 
-        protected Closeable.Set _closeOnHide = new Closeable.Set();
-        protected final Value<IDimension> _sizeValue = Value.create(size());
+        protected Screen (Game game) {
+            _game = game;
+            _sizeValue = Value.create(size());
+        }
+
+        protected final Game _game;
+        protected final Closeable.Set _closeOnHide = new Closeable.Set();
+        protected final Value<IDimension> _sizeValue;
     }
 
     /** A {@link Screen} with an {@link Interface} for doing UI stuff. */
@@ -107,8 +115,9 @@ public class ScreenStack {
         /** Manages the main UI elements for this screen. */
         public final Interface iface;
 
-        public UIScreen (Platform plat) {
-            iface = new Interface(plat, paint);
+        public UIScreen (Game game) {
+            super(game);
+            iface = new Interface(game.plat, paint);
         }
 
         @Override public void wasHidden () {
