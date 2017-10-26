@@ -5,6 +5,7 @@
 
 package tripleplay.demo.ui;
 
+import pythagoras.f.IDimension;
 import pythagoras.f.MathUtil;
 import pythagoras.f.Rectangle;
 
@@ -13,6 +14,9 @@ import react.IntValue;
 import react.UnitSlot;
 
 import playn.core.Image;
+import playn.core.Surface;
+import playn.scene.Layer;
+import playn.scene.Pointer;
 
 import tripleplay.ui.*;
 import tripleplay.ui.layout.*;
@@ -114,7 +118,15 @@ public class MiscDemo extends DemoScreen
                 new Label("Text editing"),
                 editable = new Field("Editable text").setConstraint(Constraints.fixedWidth(150)),
                 setField = new Button("Set -> "),
-                disabled = new Field("Disabled text").setEnabled(false)));
+                disabled = new Field("Disabled text").setEnabled(false),
+                new Shim(5, 10),
+
+                new Label("Dialog"),
+                new Button("Show dialog").onClick(new UnitSlot() { public void onEmit () {
+                    showDialog();
+                }})
+            )
+        );
 
         capRoot.add(new Group(AxisLayout.vertical()).
                     addStyles(Style.BACKGROUND.is(Background.blank().inset(10))).
@@ -205,6 +217,31 @@ public class MiscDemo extends DemoScreen
                     }
                 }))
             );
+    }
+
+    protected void showDialog () {
+        // create a layer to absorb all clicks that don't hit our dialog
+        Layer shadow = new ModalShadow(size());
+        layer.add(shadow);
+
+        // create a root to display our dialog
+        Root root = iface.createRoot(AxisLayout.vertical().gap(10), stylesheet(), layer);
+        root.addStyles(
+            Style.BACKGROUND.is(Background.bordered(0xFFCCCCCC, 0xFFCC99FF, 5).inset(10)),
+            Style.VALIGN.top);
+        root.add(
+            new Label("Hi! I'm a modal dialog!").addStyles(
+                Style.FONT.is(DemoScreen.TITLE_FONT)),
+            new Label("This here is some very exciting dialog text.\n" +
+                      "Who doesn't love to read text in a modal dialog?").
+                addStyles(Style.TEXT_WRAP.is(true)),
+            new Button("OK!").onClick(new UnitSlot() { public void onEmit () {
+                shadow.close();
+                iface.disposeRoot(root);
+            }}));
+        root.packToWidth(4*size().width()/5);
+        root.setLocation((size().width()-root.size().width())/2,
+                         (size().height()-root.size().height())/2);
     }
 
     protected Image.Region tile (Image image, int index) {
