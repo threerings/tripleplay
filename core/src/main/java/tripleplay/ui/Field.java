@@ -165,7 +165,7 @@ public class Field extends TextWidget<Field>
         }
 
         this.text.update(initialText);
-        this.text.connect(textDidChange());
+        this.text.connect(this::textDidChange);
     }
 
     /** Returns a signal that is dispatched when text editing is complete. */

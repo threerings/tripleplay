@@ -9,7 +9,6 @@ import pythagoras.f.FloatMath;
 import pythagoras.f.Rectangle;
 
 import react.Slot;
-import react.UnitSlot;
 import react.Value;
 
 import playn.core.Canvas;
@@ -181,13 +180,11 @@ public class MenuDemo extends DemoScreen
                 final Button prev = new Button("<< Previous").onClick(menu.incrementPage(-1));
                 final Button next = new Button("Next >>").onClick(menu.incrementPage(1));
                 menu.add(prev, next);
-                UnitSlot updateEnabling = new UnitSlot() {
-                    @Override public void onEmit () {
-                        prev.setEnabled(menu.page().get() > 0);
-                        next.setEnabled(menu.page().get() < menu.numPages().get() - 1);
-                    }
-                };
 
+                Slot<Object> updateEnabling = v -> {
+                    prev.setEnabled(menu.page().get() > 0);
+                    next.setEnabled(menu.page().get() < menu.numPages().get() - 1);
+                };
                 menu.page().connect(updateEnabling);
                 menu.numPages().connect(updateEnabling);
 
@@ -200,7 +197,7 @@ public class MenuDemo extends DemoScreen
                     menu.add(new MenuItem(hex));
                 }
                 if (sel != -1) menu.setPage(sel / menu.itemsPerPage);
-                updateEnabling.onEmit();
+                updateEnabling.onEmit(null);
                 return menu;
             }
         };

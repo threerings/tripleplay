@@ -7,8 +7,8 @@ package tripleplay.util;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
-import react.Function;
 import react.IntValue;
 import react.RSet;
 import react.Slot;

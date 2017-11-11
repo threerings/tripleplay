@@ -19,7 +19,6 @@ import playn.scene.Pointer;
 
 import react.Closeable;
 import react.Slot;
-import react.UnitSlot;
 
 import static tripleplay.ui.Log.log;
 import tripleplay.platform.TPPlatform;
@@ -246,39 +245,27 @@ public class MenuHost
         // set up the activation
         final Activation activation = new Activation(pop);
 
-        // cleanup
-        final UnitSlot cleanup = new UnitSlot() {
-            @Override public void onEmit () {
+        // connect to deactivation signal and do our cleanup
+        activation.deactivated = pop.menu.deactivated().connect(event -> {
+            // due to animations, deactivation can happen during layout, so do it next frame
+            iface.frame.connect(c -> {
                 // check parentage, it's possible the menu has been repopped already
                 if (pop.menu.parent() == menuRoot) {
                     // free the constraint to gc
                     pop.menu.setConstraint(null);
-
                     // remove or destroy it, depending on the caller's preference
                     if (pop._retain) menuRoot.remove(pop.menu);
                     else menuRoot.destroy(pop.menu);
-
                     // remove the hidden area we added
                     TPPlatform.instance().hideNativeOverlays(null);
                 }
-
                 // clear all connections
                 activation.clear();
-
                 // always kill off the transient root
                 iface.disposeRoot(menuRoot);
-
                 // if this was our active menu, clear it
                 if (_active != null && _active.pop == pop) _active = null;
-            }
-        };
-
-        // connect to deactivation signal and do our cleanup
-        activation.deactivated = pop.menu.deactivated().connect(new Slot<Menu>() {
-            @Override public void onEmit (Menu event) {
-                // due to animations, deactivation can happen during layout, so do it next frame
-                iface.frame.connect(cleanup).once();
-            }
+            }).once();
         });
 
         // close the menu any time the trigger is removed from the hierarchy
@@ -476,7 +463,7 @@ public class MenuHost
         public final Pop pop;
 
         /** Connects to the pointer events from the relay. */
-        public Closeable pointerRelay = Closeable.Util.NOOP;
+        public Closeable pointerRelay = Closeable.NOOP;
 
         /** Connection to the trigger's hierarchy change. */
         public Closeable triggerRemoved;
@@ -497,7 +484,7 @@ public class MenuHost
         public void clear () {
             if (triggerRemoved != null) triggerRemoved.close();
             if (deactivated != null) deactivated.close();
-            pointerRelay = Closeable.Util.close(pointerRelay);
+            pointerRelay = Closeable.close(pointerRelay);
             triggerRemoved = null;
             deactivated = null;
         }

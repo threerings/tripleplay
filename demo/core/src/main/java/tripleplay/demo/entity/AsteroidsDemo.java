@@ -18,7 +18,6 @@ import pythagoras.f.Vector;
 
 import react.Signal;
 import react.Slot;
-import react.UnitSlot;
 
 import tripleplay.ui.Group;
 import tripleplay.ui.Root;
@@ -313,10 +312,8 @@ public class AsteroidsDemo extends DemoScreen
             this.swidth = swidth;
             this.sheight = sheight;
 
-            closeOnHide(input().keyboardEvents.connect(new Keyboard.KeySlot() {
-                @Override public void onEmit (Keyboard.KeyEvent event) {
-                    (event.down ? keyDown : keyUp).emit(event.key);
-                }
+            closeOnHide(input().keyboardEvents.collect(Keyboard.isKeyEvent).connect(event -> {
+                (event.down ? keyDown : keyUp).emit(event.key);
             }));
         }
 

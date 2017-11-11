@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import react.Functions;
 import react.SignalView;
 import react.Slot;
 import react.Value;

@@ -118,7 +118,7 @@ public class BinaryFlumpLoader
             public void onEmit (List<Image> atlases) {
                 result.succeed(new Library(frameRate, movies, textures));
             }
-        }).onFailure(result.failer());
+        }).onFailure(result::fail);
     }
 
     protected static Movie.Symbol decodeMovie (float frameRate, LibraryData.MovieData movieData) {

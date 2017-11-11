@@ -24,10 +24,10 @@ public abstract class AbstractTextButton<T extends AbstractTextButton<T>> extend
      * Binds the text of this button to the supplied reactive value. The current text will be
      * adjusted to match the state of {@code text}.
      */
-    public T bindText (final ValueView<String> textV) {
+    public T bindText (ValueView<String> textV) {
         return addBinding(new Binding(_bindings) {
             public Closeable connect () {
-                return textV.connectNotify(text.slot());
+                return textV.connectNotify(text::update);
             }
             @Override public String toString () {
                 return AbstractTextButton.this + ".bindText";
@@ -39,10 +39,10 @@ public abstract class AbstractTextButton<T extends AbstractTextButton<T>> extend
      * Binds the icon of this button to the supplied reactive value. The current icon will be
      * adjusted to match the state of {@code icon}.
      */
-    public T bindIcon (final ValueView<Icon> iconV) {
+    public T bindIcon (ValueView<Icon> iconV) {
         return addBinding(new Binding(_bindings) {
             public Closeable connect () {
-                return iconV.connectNotify(icon.slot());
+                return iconV.connectNotify(icon::update);
             }
             @Override public String toString () {
                 return AbstractTextButton.this + ".bindIcon";
@@ -64,9 +64,9 @@ public abstract class AbstractTextButton<T extends AbstractTextButton<T>> extend
 
     protected AbstractTextButton (String text, Icon icon) {
         this.text.update(text);
-        this.text.connect(textDidChange());
+        this.text.connect(this::textDidChange);
         // update after connect so we trigger iconDidChange, in case our icon is a not-ready-image
-        this.icon.connect(iconDidChange());
+        this.icon.connect(this::iconDidChange);
         this.icon.update(icon);
     }
 

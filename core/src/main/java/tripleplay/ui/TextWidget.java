@@ -15,7 +15,6 @@ import playn.core.TextWrap;
 import playn.scene.Layer;
 
 import react.Slot;
-import react.UnitSlot;
 
 import tripleplay.util.Glyph;
 import tripleplay.util.StyledText;
@@ -37,34 +36,30 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     protected abstract Icon icon ();
 
     /**
-     * Returns a slot that subclasses should wire up to their text {@code Value}.
+     * A method that subclasses should wire up to their text {@code Value}.
      */
-    protected UnitSlot textDidChange () {
-        return invalidateSlot(true);
+    protected void textDidChange (Object text) {
+        invalidateAndClear();
     }
 
     /**
-     * Returns a slot that subclasses should wire up to their icon {@code Value}.
+     * A method that subclasses should wire up to their icon {@code Value}.
      */
-    protected Slot<Icon> iconDidChange () {
-        return new Slot<Icon>() {
-            @Override public void onEmit (Icon icon) {
-                if (icon == null) {
+    protected void iconDidChange (Icon icon) {
+        if (icon == null) {
+            clearLayoutData();
+            invalidate();
+        } else {
+            icon.state().onSuccess(new Slot<Icon>() {
+                public void onEmit (Icon resource) {
+                    // clear out the rendered icon in case we got laid out before the async
+                    // load finished
+                    _renderedIcon = null;
                     clearLayoutData();
                     invalidate();
-                } else {
-                    icon.state().onSuccess(new Slot<Icon>() {
-                        public void onEmit (Icon resource) {
-                            // clear out the rendered icon in case we got laid out before the async
-                            // load finished
-                            _renderedIcon = null;
-                            clearLayoutData();
-                            invalidate();
-                        }
-                    });
                 }
-            }
-        };
+            });
+        }
     }
 
     @Override protected void wasRemoved () {

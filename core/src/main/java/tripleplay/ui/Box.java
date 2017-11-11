@@ -44,7 +44,7 @@ public class Box extends Container.Mutable<Box> {
     }
 
     /** Manages transitions for {@link #transition}. */
-    public static abstract class Trans extends Slot<Clock> {
+    public static abstract class Trans implements Slot<Clock> {
 
         /** Indicates whether this transition is in process. */
         public Value<Boolean> active = Value.create(false);

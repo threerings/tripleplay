@@ -267,7 +267,7 @@ public class Menu extends Elements<Menu>
      * instance of MenuItem. */
     protected void connectItem (MenuItem item) {
         _items.add(item);
-        item.setRelay(Closeable.Util.join(
+        item.setRelay(Closeable.join(
             item.layer.events().connect(_itemListener.pointer),
             item.layer.events().connect(_itemListener.mouse)));
     }
@@ -277,7 +277,7 @@ public class Menu extends Elements<Menu>
     protected void disconnectItem (MenuItem item) {
         int itemIdx = _items.indexOf(item);
         _items.remove(itemIdx);
-        item.setRelay(Closeable.Util.NOOP);
+        item.setRelay(Closeable.NOOP);
         didDisconnectItem(item, itemIdx);
     }
 
@@ -336,7 +336,7 @@ public class Menu extends Elements<Menu>
         _animator = animator;
     }
 
-    protected abstract class DescendingSlot extends Slot<Element<?>>
+    protected abstract class DescendingSlot implements Slot<Element<?>>
     {
         @Override public void onEmit (Element<?> elem) {
             if (elem instanceof Container) {

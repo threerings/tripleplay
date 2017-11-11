@@ -65,14 +65,10 @@ public class ScreenStack {
 
         /** Called when a screen becomes the top screen, and is therefore made visible. */
         public void wasShown () {
-            closeOnHide(game().update.connect(update.slot()));
-            closeOnHide(game().paint.connect(paint.slot()));
-            closeOnHide(game().plat.graphics().deviceOrient.connectNotify(
-                new Slot<Graphics.Orientation>() {
-                    public void onEmit (Graphics.Orientation orient) {
-                        _sizeValue.updateForce(size());
-                    }
-                }));
+            closeOnHide(game().update.connect(update::emit));
+            closeOnHide(game().paint.connect(paint::emit));
+            closeOnHide(game().plat.graphics().deviceOrient.
+                        connectNotify(orient -> _sizeValue.updateForce(size())));
         }
 
         /** Called when a screen is no longer the top screen (having either been pushed down by
@@ -490,7 +486,7 @@ public class ScreenStack {
 
         protected final Screen _oscreen, _nscreen;
         protected final Transition _trans;
-        protected Closeable _onPaint = Closeable.Util.NOOP;
+        protected Closeable _onPaint = Closeable.NOOP;
         protected int _skipFrames = transSkipFrames();
         protected float _elapsed;
     }

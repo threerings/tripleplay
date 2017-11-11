@@ -9,7 +9,6 @@ import pythagoras.f.IDimension;
 import pythagoras.f.Point;
 
 import react.Slot;
-import react.UnitSlot;
 
 import playn.core.Surface;
 import playn.scene.Layer;
@@ -51,44 +50,34 @@ public class ScrollerDemo extends DemoScreen
         final Label click = new Label();
 
         // updates the size of the content
-        final UnitSlot updateSize = new UnitSlot() {
-            @Override public void onEmit () {
-                ((Content)scroll.content).preferredSize.update(
-                    width.value.get(), height.value.get());
-            }
-        };
+        Slot<Object> updateSize = v -> ((Content)scroll.content).preferredSize.
+            update(width.value.get(), height.value.get());
         width.value.connect(updateSize);
         height.value.connect(updateSize);
 
         // updates the scroll offset
-        UnitSlot updatePos = new UnitSlot() {
-            @Override public void onEmit () {
-                float x = xpos.value.get() * scroll.hrange.max();
-                float y = ypos.value.get() * scroll.vrange.max();
-                scroll.scroll(x, y);
-            }
+        Slot<Object> updatePos = v -> {
+            float x = xpos.value.get() * scroll.hrange.max();
+            float y = ypos.value.get() * scroll.vrange.max();
+            scroll.scroll(x, y);
         };
         xpos.value.connect(updatePos);
         ypos.value.connect(updatePos);
 
-        Button beh = new Button(Behavior.BOTH.name()).onClick(new Slot<Button>() {
-            @Override public void onEmit (Button source) {
-                Behavior[] behs = Behavior.values();
-                Behavior beh = Behavior.valueOf(source.text.get());
-                beh = behs[(beh.ordinal() + 1) % behs.length];
-                scroll.setBehavior(beh);
-                source.text.update(beh.name());
-                xpos.setVisible(beh.hasHorizontal());
-                ypos.setVisible(beh.hasVertical());
-                updateSize.onEmit();
-            }
+        Button behB = new Button(Behavior.BOTH.name()).onClick(source -> {
+            Behavior[] behs = Behavior.values();
+            Behavior beh = Behavior.valueOf(source.text.get());
+            beh = behs[(beh.ordinal() + 1) % behs.length];
+            scroll.setBehavior(beh);
+            source.text.update(beh.name());
+            xpos.setVisible(beh.hasHorizontal());
+            ypos.setVisible(beh.hasVertical());
+            updateSize.onEmit(null);
         });
 
-        scroll.contentClicked().connect(new Slot<Pointer.Event>() {
-            @Override public void onEmit (Pointer.Event e) {
-                Point pt = LayerUtil.screenToLayer(content.layer, e.x(), e.y());
-                click.text.update(pt.x + ", " + pt.y);
-            }
+        scroll.contentClicked().connect(e -> {
+            Point pt = LayerUtil.screenToLayer(content.layer, e.x(), e.y());
+            click.text.update(pt.x + ", " + pt.y);
         });
 
         scroll.addListener(new Scroller.Listener() {
@@ -106,12 +95,12 @@ public class ScrollerDemo extends DemoScreen
         // background so we can see when the content is smaller
         scroll.addStyles(Style.BACKGROUND.is(Background.solid(Colors.LIGHT_GRAY).inset(10)));
 
-        updatePos.onEmit();
-        updateSize.onEmit();
+        updatePos.onEmit(null);
+        updateSize.onEmit(null);
 
         return new Group(AxisLayout.vertical().offStretch()).add(
             new Group(AxisLayout.horizontal()).add(
-                new Label("Size:"), new Shim(15, 1), width, new Label("x"), height, beh),
+                new Label("Size:"), new Shim(15, 1), width, new Label("x"), height, behB),
             new Group(AxisLayout.horizontal()).add(
                 new Label("Pos:"), new Shim(15, 1), xpos, ypos),
             new Group(AxisLayout.horizontal()).add(

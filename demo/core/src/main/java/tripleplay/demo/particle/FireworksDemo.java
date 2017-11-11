@@ -5,8 +5,6 @@
 
 package tripleplay.demo.particle;
 
-import react.UnitSlot;
-
 import playn.core.Canvas;
 import playn.core.Tile;
 
@@ -51,15 +49,14 @@ public class FireworksDemo extends ParticleDemo
         explode1.layer.setTranslation(tx, ty);
         explode2.layer.setTranslation(tx, ty);
 
-        explode1.onEmpty.connect(new UnitSlot() {
-          @Override public void onEmit () {
-            float tx = 100 + rando.getFloat(size().width()-200);
-            float ty = 100 + rando.getFloat(size().height()-200);
-            explode1.layer.setTranslation(tx, ty);
-            explode2.layer.setTranslation(tx, ty);
+        explode1.onEmpty.connect(v -> {
+            float etx = 100 + rando.getFloat(size().width()-200);
+            float ety = 100 + rando.getFloat(size().height()-200);
+            explode1.layer.setTranslation(etx, ety);
+            explode2.layer.setTranslation(etx, ety);
             explode1.generator = Generator.impulse(200);
             explode2.generator = Generator.impulse(200);
-        }});
+        });
     }
 
     protected Emitter createEmitter (ParticleBatch batch, Randoms rando, Tile tile,

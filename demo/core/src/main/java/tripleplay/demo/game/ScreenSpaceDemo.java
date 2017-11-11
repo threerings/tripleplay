@@ -9,7 +9,6 @@ import playn.core.Clock;
 import playn.core.Game;
 
 import react.Slot;
-import react.UnitSlot;
 
 import tripleplay.demo.DemoScreen;
 import tripleplay.demo.TripleDemo;
@@ -56,13 +55,9 @@ public class ScreenSpaceDemo extends DemoScreen {
         _space = null;
     }
 
-    protected UnitSlot addScreen (final ScreenSpace.Dir dir) {
-        return new UnitSlot() {
-            public void onEmit () {
-                ScreenSpace.Screen screen = createScreen(_space.screenCount());
-                _space.add(screen, dir);
-            }
-        };
+    protected void addScreen (ScreenSpace.Dir dir) {
+        ScreenSpace.Screen screen = createScreen(_space.screenCount());
+        _space.add(screen, dir);
     }
 
     protected ScreenSpace.Screen createScreen (final int id) {
@@ -76,21 +71,19 @@ public class ScreenSpaceDemo extends DemoScreen {
                 int blue = (id * 0x16);
                 root.addStyles(Style.BACKGROUND.is(Background.solid(0xFF333300+blue)));
                 root.add(new Label(toString()));
-                root.add(new Button("Up").onClick(addScreen(ScreenSpace.UP)));
-                root.add(new Button("Down").onClick(addScreen(ScreenSpace.DOWN)));
-                root.add(new Button("Left").onClick(addScreen(ScreenSpace.LEFT)));
-                root.add(new Button("Right").onClick(addScreen(ScreenSpace.RIGHT)));
-                root.add(new Button("In").onClick(addScreen(ScreenSpace.IN)));
-                root.add(new Button("Out").onClick(addScreen(ScreenSpace.OUT)));
-                root.add(new Button("Flip").onClick(addScreen(ScreenSpace.FLIP)));
+                root.add(new Button("Up").onClick(b -> addScreen(ScreenSpace.UP)));
+                root.add(new Button("Down").onClick(b -> addScreen(ScreenSpace.DOWN)));
+                root.add(new Button("Left").onClick(b -> addScreen(ScreenSpace.LEFT)));
+                root.add(new Button("Right").onClick(b -> addScreen(ScreenSpace.RIGHT)));
+                root.add(new Button("In").onClick(b -> addScreen(ScreenSpace.IN)));
+                root.add(new Button("Out").onClick(b -> addScreen(ScreenSpace.OUT)));
+                root.add(new Button("Flip").onClick(b -> addScreen(ScreenSpace.FLIP)));
                 final ScreenSpace.Screen self = this;
-                root.add(new Shim(30, 30), new Button("Pop").onClick(new UnitSlot() {
-                    public void onEmit () {
-                        if (_top == self) {
-                            ScreenSpaceDemo.this.back.click();
-                        } else {
-                            _space.pop(self);
-                        }
+                root.add(new Shim(30, 30), new Button("Pop").onClick(b -> {
+                    if (_top == self) {
+                        ScreenSpaceDemo.this.back.click();
+                    } else {
+                        _space.pop(self);
                     }
                 }));
                 root.setSize(size());

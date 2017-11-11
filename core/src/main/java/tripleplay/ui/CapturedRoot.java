@@ -125,7 +125,7 @@ public class CapturedRoot extends Root
         @Override protected void wasRemoved () {
             super.wasRemoved();
             update(null);
-            _conn = Closeable.Util.close(_conn);
+            _conn = Closeable.close(_conn);
         }
 
         protected void update (Texture tex) {
@@ -143,7 +143,7 @@ public class CapturedRoot extends Root
         protected ImageLayer _ilayer;
 
         /** The connection to the captured root's image, or null if we're not added. */
-        protected Closeable _conn = Closeable.Util.NOOP;
+        protected Closeable _conn = Closeable.NOOP;
     }
 
     protected final QuadBatch _defaultBatch;

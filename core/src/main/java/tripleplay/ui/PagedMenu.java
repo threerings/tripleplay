@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import react.Slot;
-import react.UnitSlot;
 import react.Value;
 import react.ValueView;
 
@@ -58,12 +57,8 @@ public class PagedMenu extends Menu
     /**
      * Gets a slot that will increment the page by the given delta when emitted.
      */
-    public UnitSlot incrementPage (final int delta) {
-        return new UnitSlot() {
-            @Override public void onEmit () {
-                setPage(_page.get() + delta);
-            }
-        };
+    public Slot<Object> incrementPage (int delta) {
+        return value -> setPage(_page.get() + delta);
     }
 
     /**

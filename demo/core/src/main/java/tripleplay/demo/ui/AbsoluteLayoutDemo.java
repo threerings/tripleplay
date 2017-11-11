@@ -9,7 +9,7 @@ import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.Point;
 
-import react.UnitSlot;
+import react.Slot;
 import react.Value;
 
 import playn.core.Surface;
@@ -60,18 +60,14 @@ public class AbsoluteLayoutDemo extends DemoScreen
         final Group widget = new Group(AxisLayout.horizontal()).addStyles(
             Style.BACKGROUND.is(Background.solid(Colors.CYAN)));
         group.add(widget);
-        UnitSlot updateConstraint = new UnitSlot() {
-            @Override public void onEmit () {
-                widget.setConstraint(new AbsoluteLayout.Constraint(
-                    position.point.get(), origin.point.get(),
-                    new Dimension(width.value.get(), height.value.get())));
-            }
-        };
+        Slot<Object> updateConstraint = v -> widget.setConstraint(new AbsoluteLayout.Constraint(
+            position.point.get(), origin.point.get(),
+            new Dimension(width.value.get(), height.value.get())));
         width.value.connect(updateConstraint);
         height.value.connect(updateConstraint);
         position.point.connect(updateConstraint);
         origin.point.connect(updateConstraint);
-        updateConstraint.onEmit();
+        updateConstraint.onEmit(null);
         return new Group(AxisLayout.vertical().offStretch()).add(
             new Label("Move the sliders to play with the constraint"),
             new Group(AxisLayout.horizontal()).add(position, origin),
@@ -90,12 +86,8 @@ public class AbsoluteLayoutDemo extends DemoScreen
             initChildren(new Label(label),
                 new Group(AxisLayout.horizontal()).add(new Label("N:"), nx, ny),
                 new Group(AxisLayout.horizontal()).add(new Label("O:"), ox, oy));
-            UnitSlot update = new UnitSlot() {
-                @Override public void onEmit () {
-                    point.update(new BoxPoint(
-                        nx.value.get(), ny.value.get(), ox.value.get(), oy.value.get()));
-                }
-            };
+            Slot<Object> update = v -> point.update(new BoxPoint(nx.value.get(), ny.value.get(),
+                                                                 ox.value.get(), oy.value.get()));
             nx.value.connect(update);
             ny.value.connect(update);
             ox.value.connect(update);

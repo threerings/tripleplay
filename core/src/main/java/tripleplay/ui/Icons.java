@@ -5,7 +5,6 @@
 
 package tripleplay.ui;
 
-import react.Functions;
 import react.RFuture;
 
 import playn.core.Surface;
@@ -51,7 +50,7 @@ public class Icons
             }
             @Override public Layer render () { return new ImageLayer(source); }
             @Override public RFuture<Icon> state () {
-                return source.tileAsync().map(Functions.constant((Icon)this));
+                return source.tileAsync().map(v -> this);
             }
         };
     }

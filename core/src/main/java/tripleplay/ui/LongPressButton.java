@@ -90,7 +90,7 @@ public class LongPressButton extends Button
             }
 
             protected void startLongPressTimer () {
-                if (_longPressInterval > 0 && _timerReg == Closeable.Util.NOOP) {
+                if (_longPressInterval > 0 && _timerReg == Closeable.NOOP) {
                     _timerReg = root().iface.frame.connect(new Slot<Clock>() {
                         @Override public void onEmit (Clock clock) {
                             _accum += clock.dt;
@@ -101,7 +101,7 @@ public class LongPressButton extends Button
                 }
             }
             protected void cancelLongPressTimer () {
-                _timerReg = Closeable.Util.close(_timerReg);
+                _timerReg = Closeable.close(_timerReg);
             }
             protected void fireLongPress () {
                 // cancel the current interaction which will disarm the button
@@ -111,7 +111,7 @@ public class LongPressButton extends Button
             }
 
             protected int _longPressInterval;
-            protected Closeable _timerReg = Closeable.Util.NOOP;
+            protected Closeable _timerReg = Closeable.NOOP;
         };
     }
 

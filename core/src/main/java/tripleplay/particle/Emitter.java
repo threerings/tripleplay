@@ -10,7 +10,6 @@ import java.util.List;
 
 import react.Signal;
 import react.Slot;
-import react.UnitSlot;
 
 import playn.core.Clock;
 import playn.core.QuadBatch;
@@ -82,7 +81,7 @@ public class Emitter
      * Configures this emitter to destroy its layer when it runs out of particles.
      */
     public void destroyOnEmpty () {
-        onEmpty.connect(new UnitSlot() { @Override public void onEmit () { layer.close(); }});
+        onEmpty.connect(v -> layer.close());
     }
 
     protected void paint (Clock clock) {

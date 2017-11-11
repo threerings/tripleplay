@@ -42,7 +42,7 @@ public class Interface implements Closeable
     public Interface (Platform plat, Signal<Clock> frame) {
         this.plat = plat;
         this.frame = frame;
-        _onFrame = Closeable.Util.join(
+        _onFrame = Closeable.join(
             frame.connect(new Slot<Clock>() { public void onEmit (Clock clock) { paint(clock); }}),
             frame.connect(anim.onPaint));
     }

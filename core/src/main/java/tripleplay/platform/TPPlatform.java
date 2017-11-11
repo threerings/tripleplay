@@ -8,8 +8,8 @@ package tripleplay.platform;
 import playn.core.Image;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
+import react.Signal;
 import react.SignalView;
-import react.UnitSignal;
 import react.Value;
 import react.ValueView;
 import tripleplay.ui.Field;
@@ -120,7 +120,7 @@ public abstract class TPPlatform
 
     protected Value<Field> _focus = Value.create(null);
     protected KeyboardFocusController _kfc;
-    protected UnitSignal _activity = new UnitSignal();
+    protected Signal.Unit _activity = new Signal.Unit();
     protected Rectangle _hidden;
 
     protected static TPPlatform _default = new TPPlatform() {};

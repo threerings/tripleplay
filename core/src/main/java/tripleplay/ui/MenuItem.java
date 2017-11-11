@@ -42,9 +42,9 @@ public class MenuItem extends TextWidget<MenuItem> implements Togglable<MenuItem
      */
     public MenuItem (String label, Icon icon) {
         this.text.update(label);
-        this.text.connect(textDidChange());
+        this.text.connect(this::textDidChange);
         // update after connect so we trigger iconDidChange, in case our icon is a not-ready-image
-        this.icon.connect(iconDidChange());
+        this.icon.connect(this::iconDidChange);
         this.icon.update(icon);
     }
 
@@ -137,7 +137,7 @@ public class MenuItem extends TextWidget<MenuItem> implements Togglable<MenuItem
         return new SizableLayoutData(super.createLayoutData(hintX, hintY), _preferredSize);
     }
 
-    protected Closeable _relay = Closeable.Util.NOOP;
+    protected Closeable _relay = Closeable.NOOP;
 
     /** Size override. */
     protected final Dimension _preferredSize = new Dimension(0, 0);

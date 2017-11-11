@@ -11,7 +11,6 @@ import java.util.List;
 import pythagoras.f.IPoint;
 import pythagoras.f.Point;
 
-import react.Function;
 import react.RFuture;
 import react.Slot;
 import react.Try;
@@ -46,11 +45,7 @@ public class JsonLoader {
             @Override public Image load (String path) { return plat.assets().getImage(path); }
         };
         return plat.assets().getText(baseDir + "/library.json").
-            flatMap(new Function<String,RFuture<Library>>() {
-                public RFuture<Library> apply (String text) {
-                    return decodeLibrary(plat.json().parse(text), baseDir, asyncLoader);
-                }
-            });
+            flatMap(text -> decodeLibrary(plat.json().parse(text), baseDir, asyncLoader));
     }
 
     /** Helper interface to load an image from a path. */
@@ -92,11 +87,8 @@ public class JsonLoader {
 
         // aggregate the futures for all the images into a single future which will succeed if they
         // all succeed, or fail if any of them fail, then wire that up to our library result
-        return RFuture.sequence(atlasImages).map(new Function<List<Image>,Library>() {
-            public Library apply (List<Image> atlases) {
-                return new Library(frameRate, movies, textures);
-            }
-        });
+        return RFuture.sequence(atlasImages).
+            map(imgs -> new Library(frameRate, movies, textures));
     }
 
     protected static Movie.Symbol decodeMovie (float frameRate, Json.Object json) {

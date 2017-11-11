@@ -25,7 +25,7 @@ public class ValueLabel extends TextWidget<ValueLabel>
 
     @Override protected void wasAdded () {
         super.wasAdded();
-        _conn = text.connect(textDidChange());
+        _conn = text.connect(this::textDidChange);
     }
 
     @Override protected void wasRemoved () {

@@ -7,7 +7,6 @@ package tripleplay.gesture;
 
 import react.Signal;
 import react.SignalView;
-import react.UnitSignal;
 
 /**
  * A base class for Gestures to extend to get some common functionality.
@@ -97,7 +96,7 @@ public abstract class GestureBase<T extends GestureBase<T>>
 
     private State _state = State.PASSIVE; // state should only be modified via setState()
 
-    protected UnitSignal _started = new UnitSignal();
+    protected Signal.Unit _started = new Signal.Unit();
     protected Signal<Boolean> _completed = Signal.create();
     protected boolean _greedy;
 }

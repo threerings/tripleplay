@@ -12,7 +12,6 @@ import pythagoras.f.Dimension;
 import pythagoras.f.IRectangle;
 import pythagoras.f.Rectangle;
 import react.Closeable;
-import react.UnitSlot;
 
 import tripleplay.ui.Composite;
 import tripleplay.ui.Container;
@@ -266,15 +265,13 @@ public abstract class HistoryGroup<T, W extends Element<?>> extends Composite<Hi
     }
 
     protected void schedule () {
-        if (_conn == Closeable.Util.NOOP && _added) {
-            _conn = root().iface.frame.connect(new UnitSlot() {
-                public void onEmit () { update(); }
-            });
+        if (_conn == Closeable.NOOP && _added) {
+            _conn = root().iface.frame.connect(c -> update());
         }
     }
 
     protected void cancel () {
-        _conn = Closeable.Util.close(_conn);
+        _conn = Closeable.close(_conn);
     }
 
     /** Find the index of the entry at the given y position. */
@@ -474,7 +471,7 @@ public abstract class HistoryGroup<T, W extends Element<?>> extends Composite<Hi
     protected EntriesGroup _entriesGroup;
 
     /** A frame tick registration, or NOOP if we're not updating. */
-    protected Closeable _conn = Closeable.Util.NOOP;
+    protected Closeable _conn = Closeable.NOOP;
 
     /** The list of history entries. */
     protected List<Entry> _entries = new ArrayList<Entry>();

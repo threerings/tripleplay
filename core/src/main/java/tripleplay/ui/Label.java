@@ -6,7 +6,6 @@
 package tripleplay.ui;
 
 import react.Closeable;
-import react.Functions;
 import react.Value;
 import react.ValueView;
 
@@ -39,9 +38,9 @@ public class Label extends TextWidget<Label>
     /** Creates a label with the supplied text and icon. */
     public Label (String text, Icon icon) {
         this.text.update(text);
-        this.text.connect(textDidChange());
+        this.text.connect(this::textDidChange);
         // update after connect so we trigger iconDidChange, in case our icon is a not-ready-image
-        this.icon.connect(iconDidChange());
+        this.icon.connect(this::iconDidChange);
         this.icon.update(icon);
     }
 
@@ -58,7 +57,7 @@ public class Label extends TextWidget<Label>
     public Label bindText (final ValueView<?> textV) {
         return addBinding(new Binding(_bindings) {
             public Closeable connect () {
-                return textV.map(Functions.TO_STRING).connectNotify(text.slot());
+                return textV.map(String::valueOf).connectNotify(text::update);
             }
             @Override public String toString () {
                 return Label.this + ".bindText";
@@ -73,7 +72,7 @@ public class Label extends TextWidget<Label>
     public Label bindIcon (final ValueView<Icon> iconV) {
         return addBinding(new Binding(_bindings) {
             public Closeable connect () {
-                return iconV.connectNotify(icon.slot());
+                return iconV.connectNotify(icon::update);
             }
             @Override public String toString () {
                 return Label.this + ".bindIcon";
