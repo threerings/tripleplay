@@ -207,10 +207,14 @@ public class Slider extends Widget<Slider>
             }
 
             // configure our bar background instances
-            if (_barInst != null) _barInst.close();
+            if (_barInst != null) {
+                _barInst.close();
+                _barInst = null;
+            }
             if (_barOnInst != null) {
                 _barOnLayer.close();
                 _barOnInst.close();
+                _barOnInst = null;                
             }            
             if (width > 0 && height > 0) {
                 _barInst = barBG.instantiate(new Dimension(width-thumbWidth, barHeight));
