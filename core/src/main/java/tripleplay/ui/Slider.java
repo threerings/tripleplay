@@ -125,6 +125,7 @@ public class Slider extends Widget<Slider>
         if (_barOnInst != null) {
             _barOnLayer.close();
             _barOnInst.close();
+            _barOnLayer = null;
             _barOnInst = null;
         }        
         // the thumb is just an image layer and will be destroyed when we are
@@ -214,6 +215,7 @@ public class Slider extends Widget<Slider>
             if (_barOnInst != null) {
                 _barOnLayer.close();
                 _barOnInst.close();
+                _barOnLayer = null;
                 _barOnInst = null;                
             }            
             if (width > 0 && height > 0) {
