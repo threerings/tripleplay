@@ -14,6 +14,7 @@ import react.SignalView;
 import react.UnitSlot;
 import react.Value;
 
+import playn.scene.GroupLayer;
 import playn.scene.Layer;
 import playn.scene.Pointer;
 
@@ -48,6 +49,11 @@ public class Slider extends Widget<Slider>
     public static Style<Background> BAR_BACKGROUND =
         Style.newStyle(true, Background.solid(0xFF000000));
 
+    /** The background that renders the "on" part of the bar, if it should be different from
+     * the default bar background. If this is defined, the background will be instantiated at
+     * the full bar size, and clipped to the visible "on" region. Inherited. */
+    public static Style<Background> BAR_ON_BACKGROUND = Style.newStyle(true, null);
+        
     /** The image to use for the slider thumb. Inherited. */
     public static Style<Icon> THUMB_IMAGE = Style.newStyle(true, createDefaultThumbImage());
 
@@ -116,6 +122,12 @@ public class Slider extends Widget<Slider>
             _barInst.close();
             _barInst = null;
         }
+        if (_barOnInst != null) {
+            _barOnLayer.close();
+            _barOnInst.close();
+            _barOnLayer = null;
+            _barOnInst = null;
+        }        
         // the thumb is just an image layer and will be destroyed when we are
     }
 
@@ -143,7 +155,11 @@ public class Slider extends Widget<Slider>
         if (_thumb == null) return;
         Range r = range.get();
         float thumbPct = (value.get() - r.min) / r.range;
-        _thumb.setTranslation(_thumbLeft + _thumbRange * thumbPct, _thumbY);
+        float thumbOffset = _thumbRange * thumbPct;
+        _thumb.setTranslation(_thumbLeft + thumbOffset, _thumbY);
+
+        if (_barOnLayer != null)
+            _barOnLayer.setWidth(thumbOffset);
     }
 
     protected void setValueFromPointer (float x) {
@@ -166,6 +182,7 @@ public class Slider extends Widget<Slider>
         public final float barWidth = resolveStyle(BAR_WIDTH);
         public final float barHeight = resolveStyle(BAR_HEIGHT);
         public final Background barBG = resolveStyle(BAR_BACKGROUND);
+        public final Background barOnBG = resolveStyle(BAR_ON_BACKGROUND);
         public final Icon thumbImage = resolveStyle(THUMB_IMAGE);
         public final IPoint thumbOrigin = resolveStyle(THUMB_ORIGIN);
 
@@ -190,11 +207,31 @@ public class Slider extends Widget<Slider>
                 _thumb.setOrigin(thumbOrigin.x(), thumbOrigin.y());
             }
 
-            // configure our bar background instance
-            if (_barInst != null) _barInst.close();
+            // configure our bar background instances
+            if (_barInst != null) {
+                _barInst.close();
+                _barInst = null;
+            }
+            if (_barOnInst != null) {
+                _barOnLayer.close();
+                _barOnInst.close();
+                _barOnLayer = null;
+                _barOnInst = null;                
+            }            
             if (width > 0 && height > 0) {
                 _barInst = barBG.instantiate(new Dimension(width-thumbWidth, barHeight));
                 _barInst.addTo(layer, _thumbLeft, top + (height - barHeight)/2, 1);
+
+                if (barOnBG != null)
+                {
+                    _barOnLayer = new GroupLayer(width-thumbWidth, barHeight);
+                    _barOnLayer.setDepth(Background.BACKGROUND_DEPTH + 2);
+                    _barOnLayer.transform().translate(_thumbLeft, top + (height - barHeight)/2);
+                    layer.add(_barOnLayer);
+
+                    _barOnInst = barOnBG.instantiate(new Dimension(width-thumbWidth, barHeight));
+                    _barOnInst.addTo(_barOnLayer, 0, 0, 0);
+                }
             }
 
             // finally update the thumb position
@@ -205,7 +242,8 @@ public class Slider extends Widget<Slider>
     protected final Signal<Slider> _clicked = Signal.create();
 
     protected Layer _thumb;
-    protected Background.Instance _barInst;
+    protected GroupLayer _barOnLayer;
+    protected Background.Instance _barInst, _barOnInst;
     protected float _thumbLeft, _thumbRange, _thumbY;
     protected Float _increment;
 }
