@@ -174,6 +174,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         public Screen (Game game) {
             layer.setName(Screen.this + " layer");
             _game = game;
+            _sizeValue = Value.create(size());
         }
 
         /** Called when this screen is first added to the screen space. */
@@ -290,7 +291,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         protected int _flags;
         protected Closeable _scons = Closeable.Util.NOOP;
         protected final Closeable.Set _closeOnSleep = new Closeable.Set();
-        protected final Value<IDimension> _sizeValue = Value.create(size());
+        protected final Value<IDimension> _sizeValue;
         protected final Game _game;
     }
 
