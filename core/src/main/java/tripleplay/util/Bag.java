@@ -6,7 +6,6 @@
 package tripleplay.util;
 
 import java.util.Iterator;
-
 import react.Function;
 
 /**

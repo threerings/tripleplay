@@ -9,8 +9,6 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import react.UnitSlot;
-
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Element;
@@ -47,24 +45,14 @@ public class BorderLayoutDemo extends DemoScreen
             Styles.make(Style.BACKGROUND.is(Background.solid(0xFFFFFFFF).inset(5))));
 
         for (final String edge : Panel.EDGES) {
-            buttons.add(new Button(edge).onClick(new UnitSlot() {
-                @Override public void onEmit () {
-                    _panel.toggleEdge(edge);
-                }
-            }));
+            buttons.add(new Button(edge).onClick(b -> _panel.toggleEdge(edge)));
         }
 
-        buttons.add(new Shim(10, 1)).add(new Button("Toggle Gaps").onClick(new UnitSlot() {
-            @Override public void onEmit () {
-                setPanel(_panel.useGroups, _panel.gaps == 0 ? 5 : 0);
-            }
-        }));
+        buttons.add(new Shim(10, 1)).add(new Button("Toggle Gaps").onClick(
+            b -> setPanel(_panel.useGroups, _panel.gaps == 0 ? 5 : 0)));
 
-        buttons.add(new Shim(10, 1)).add(new Button("Toggle Sizing").onClick(new UnitSlot() {
-            @Override public void onEmit () {
-                setPanel(!_panel.useGroups, _panel.gaps);
-            }
-        }));
+        buttons.add(new Shim(10, 1)).add(new Button("Toggle Sizing").onClick(
+            b -> setPanel(!_panel.useGroups, _panel.gaps)));
 
         _root = new Group(AxisLayout.vertical().offStretch());
         _root.add(buttons);
@@ -130,16 +118,12 @@ public class BorderLayoutDemo extends DemoScreen
     }
 
     protected static Button getSizer (SizableGroup g, String text, float dw, float dh) {
-        return new Button(text).onClick(getSizer(g.preferredSize, dw, dh));
+        return new Button(text).onClick(b -> resize(g.preferredSize, dw, dh));
     }
 
-    protected static UnitSlot getSizer (final DimensionValue base, final float dw, final float dh) {
-        return new UnitSlot() {
-            @Override public void onEmit () {
-                base.update(Math.max(0, base.get().width() + dw),
-                            Math.max(0, base.get().height() + dh));
-            }
-        };
+    protected static void resize (DimensionValue base, float dw, float dh) {
+        base.update(Math.max(0, base.get().width() + dw),
+                    Math.max(0, base.get().height() + dh));
     }
 
     protected Group _root;

@@ -275,10 +275,10 @@ public abstract class Behavior<T extends Element<T>> extends Pointer.Listener {
 
         /** Cancels this time-based behavior. Called automatically on release and cancel events. */
         protected void cancel () {
-            _conn = Closeable.Util.close(_conn);
+            _conn = Closeable.close(_conn);
         }
 
-        protected Closeable _conn = Closeable.Util.NOOP;
+        protected Closeable _conn = Closeable.NOOP;
     }
 
     /** Captures the pointer and dispatches one click on press, a second after an initial delay

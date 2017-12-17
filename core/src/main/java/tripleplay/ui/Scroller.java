@@ -17,7 +17,6 @@ import react.Closeable;
 import react.Connection;
 import react.Signal;
 import react.Slot;
-import react.UnitSlot;
 
 import playn.core.Clock;
 import playn.core.Color;
@@ -389,11 +388,7 @@ public class Scroller extends Composite<Scroller>
         // means it hasn't been laid out yet and does not have its proper position; in that case
         // defer this process a tick to allow it to be laid out
         if (!scroller.isSet(Flag.VALID)) {
-            elem.root().iface.frame.connect(new UnitSlot() {
-                @Override public void onEmit () {
-                    makeVisible(elem);
-                }
-            }).once();
+            elem.root().iface.frame.connect(c -> makeVisible(elem)).once();
             return true;
         }
 

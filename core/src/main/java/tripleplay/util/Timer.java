@@ -30,7 +30,7 @@ import react.Slot;
  *   });
  * }</pre>
  */
-public class Timer extends Slot<Platform>
+public class Timer implements Slot<Platform>
 {
     /** A handle on registered actions that can be used to cancel them. */
     public static interface Handle {

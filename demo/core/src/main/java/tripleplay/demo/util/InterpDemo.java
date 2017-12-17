@@ -6,7 +6,6 @@
 package tripleplay.demo.util;
 
 import react.Slot;
-import react.UnitSlot;
 
 import playn.core.*;
 import playn.scene.ImageLayer;
@@ -49,14 +48,12 @@ public class InterpDemo extends DemoScreen
             tray.layer.add(knob);
             final Driver driver = new Driver(INTERPS[ii], knob);
             _drivers[ii] = driver;
-            grid.add(new Button(INTERPS[ii].toString()).onClick(new UnitSlot() {
-                public void onEmit () { driver.elapsed = 0; }
-            }));
+            grid.add(new Button(INTERPS[ii].toString()).onClick(b -> { driver.elapsed = 0; }));
             grid.add(tray);
         }
-        grid.add(new Button("ALL").onClick(new UnitSlot() { public void onEmit () {
+        grid.add(new Button("ALL").onClick(b -> {
             for (Driver driver : _drivers) driver.elapsed = 0;
-        }}));
+        }));
         return grid.addStyles(Style.BACKGROUND.is(Background.blank().inset(15)));
     }
 

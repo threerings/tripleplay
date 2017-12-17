@@ -33,7 +33,7 @@ public class SizableGroup extends Group
     public SizableGroup (Layout layout, float wid, float hei) {
         super(layout);
         preferredSize.update(wid, hei);
-        preferredSize.connect(invalidateSlot());
+        preferredSize.connect(ps -> invalidate());
     }
 
     @Override protected LayoutData createLayoutData (float hintX, float hintY) {

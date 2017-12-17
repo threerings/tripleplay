@@ -9,9 +9,7 @@ import pythagoras.f.IDimension;
 import pythagoras.f.MathUtil;
 import pythagoras.f.Rectangle;
 
-import react.Function;
 import react.IntValue;
-import react.UnitSlot;
 
 import playn.core.Image;
 import playn.core.Surface;
@@ -87,17 +85,13 @@ public class MiscDemo extends DemoScreen
                     // new contents, which is jarring
                     setConstraint(Constraints.fixedSize(200, 40)),
                 new Group(AxisLayout.horizontal().gap(5)).add(
-                    new Button("Fade").onClick(new UnitSlot() {
-                        public void onEmit () {
-                            Label nlabel = new Label("I'm faded!").addStyles(GREENBG);
-                            box.transition(nlabel, new Box.Fade(500));
-                        }
+                    new Button("Fade").onClick(b -> {
+                        Label nlabel = new Label("I'm faded!").addStyles(GREENBG);
+                        box.transition(nlabel, new Box.Fade(500));
                     }),
-                    new Button("Flip").onClick(new UnitSlot() {
-                        public void onEmit () {
-                            Label nlabel = new Label("I'm flipped!").addStyles(GREENBG);
-                            box.transition(nlabel, new Box.Flip(500));
-                        }
+                    new Button("Flip").onClick(b -> {
+                        Label nlabel = new Label("I'm flipped!").addStyles(GREENBG);
+                        box.transition(nlabel, new Box.Flip(500));
                     })),
                 new Shim(5, 10),
 
@@ -122,9 +116,7 @@ public class MiscDemo extends DemoScreen
                 new Shim(5, 10),
 
                 new Label("Dialog"),
-                new Button("Show dialog").onClick(new UnitSlot() { public void onEmit () {
-                    showDialog();
-                }})
+                new Button("Show dialog").onClick(b -> showDialog())
             )
         );
 
@@ -142,19 +134,14 @@ public class MiscDemo extends DemoScreen
         });
 
         toggle.selected().update(true);
-        toggle.selected().connect(label2.visibleSlot());
-        toggle2.selected().map(new Function<Boolean,Icon>() {
-            public Icon apply (Boolean checked) {
-                return checked ? tileIcon(squares, 0) : null;
-            }
-        }).connect(label2.icon.slot());
+        toggle.selected().connect(label2::setVisible);
+        toggle2.selected().map(checked -> checked ? tileIcon(squares, 0) : null).
+            connect(label2.icon::update);
 
         final Field source = editable, target = disabled;
-        setField.clicked().connect(new UnitSlot() {
-            @Override public void onEmit () {
-                log().info("Setting text to " + source.text.get());
-                target.text.update(source.text.get());
-            }
+        setField.clicked().connect(b -> {
+            log().info("Setting text to " + source.text.get());
+            target.text.update(source.text.get());
         });
         return iface;
     }
@@ -162,10 +149,9 @@ public class MiscDemo extends DemoScreen
     protected Group buttonsSection (Image squares) {
         ToggleButton toggle3 = new ToggleButton("Toggle Enabled");
         Button disabled = new Button("Disabled");
-        toggle3.selected().connectNotify(disabled.enabledSlot());
-        toggle3.selected().map(new Function<Boolean,String>() {
-            public String apply (Boolean selected) { return selected ? "Enabled" : "Disabled"; }
-        }).connectNotify(disabled.text.slot());
+        toggle3.selected().connectNotify(disabled::setEnabled);
+        toggle3.selected().map(s -> s ? "Enabled" : "Disabled").
+            connectNotify(disabled.text::update);
 
         class ThrobButton extends Button {
             public ThrobButton (String title) {
@@ -192,30 +178,21 @@ public class MiscDemo extends DemoScreen
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 toggle3, AxisLayout.stretch(disabled)),
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
-                new LongPressButton("Long Pressable").onLongPress(new UnitSlot() {
-                    @Override public void onEmit () { pressResult.text.update("Long pressed"); }
-                }).onClick(new UnitSlot() {
-                    @Override public void onEmit () { pressResult.text.update("Clicked"); }
-                }), AxisLayout.stretch(pressResult)),
+                new LongPressButton("Long Pressable").
+                    onLongPress(b -> pressResult.text.update("Long pressed")).
+                    onClick(b ->pressResult.text.update("Clicked")),
+                AxisLayout.stretch(pressResult)),
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
                 new Label("Image button"),
-                new ImageButton(tile(squares, 0), tile(squares, 1)).onClick(new UnitSlot() {
-                    @Override public void onEmit () { clickCount.increment(1); }
-                }),
+                new ImageButton(tile(squares, 0), tile(squares, 1)).
+                    onClick(b -> clickCount.increment(1)),
                 new Label(clickCount)),
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
-                new Button("Fill Box").onClick(new UnitSlot() {
-                    @Override public void onEmit () {
-                        box.set(new Label(box.contents() == null ? "Filled" : "Refilled"));
-                    }
-                }),
+                new Button("Fill Box").onClick(
+                    b -> box.set(new Label(box.contents() == null ? "Filled" : "Refilled"))),
                 box),
             new Group(AxisLayout.horizontal().gap(15), GREENBG).add(
-                throbber.onClick(new UnitSlot() {
-                    @Override public void onEmit () {
-                        throbber.throb();
-                    }
-                }))
+                throbber.onClick(b -> throbber.throb()))
             );
     }
 
@@ -235,10 +212,10 @@ public class MiscDemo extends DemoScreen
             new Label("This here is some very exciting dialog text.\n" +
                       "Who doesn't love to read text in a modal dialog?").
                 addStyles(Style.TEXT_WRAP.is(true)),
-            new Button("OK!").onClick(new UnitSlot() { public void onEmit () {
+            new Button("OK!").onClick(b -> {
                 shadow.close();
                 iface.disposeRoot(root);
-            }}));
+            }));
         root.packToWidth(4*size().width()/5);
         root.setLocation((size().width()-root.size().width())/2,
                          (size().height()-root.size().height())/2);

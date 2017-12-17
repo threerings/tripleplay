@@ -62,7 +62,7 @@ public class GestureRegionDirector extends Touch.Listener
     }
 
     public void remove () {
-        _conn = Closeable.Util.close(_conn);
+        _conn = Closeable.close(_conn);
     }
 
     public Collection<GestureDirector> getRegions () {
@@ -199,7 +199,7 @@ public class GestureRegionDirector extends Touch.Listener
     protected final Platform _plat;
     protected final Timer _timer;
     protected IRectangle _bounds;
-    protected Closeable _conn = Closeable.Util.NOOP;
+    protected Closeable _conn = Closeable.NOOP;
     protected Map<Integer, TrackedTouch> _activeTouches = new HashMap<Integer, TrackedTouch>();
     protected Set<Integer> _ignoredTouches = new HashSet<Integer>();
     protected Map<Rectangle, GestureDirector> _regions = new HashMap<Rectangle, GestureDirector>();

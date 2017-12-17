@@ -9,7 +9,6 @@ import pythagoras.f.Dimension;
 
 import react.SignalView;
 import react.Slot;
-import react.UnitSlot;
 
 import playn.core.TileSource;
 import playn.scene.ImageLayer;
@@ -34,18 +33,14 @@ public class ImageButton extends Widget<ImageButton> implements Clickable<ImageB
     /** Configures the image used in our up state. */
     public ImageButton setUp (TileSource up) {
         _up = up;
-        _up.tileAsync().onSuccess(new UnitSlot() {
-            public void onEmit () { invalidate(); }
-        });
+        _up.tileAsync().onSuccess(v -> invalidate());
         return this;
     }
 
     /** Configures the image used in our down state. */
     public ImageButton setDown (TileSource down) {
         _down = down;
-        _down.tileAsync().onSuccess(new UnitSlot() {
-            public void onEmit () { invalidate(); }
-        });
+        _down.tileAsync().onSuccess(v -> invalidate());
         return this;
     }
 

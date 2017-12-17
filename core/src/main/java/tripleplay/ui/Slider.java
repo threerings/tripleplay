@@ -11,7 +11,6 @@ import pythagoras.f.Point;
 
 import react.Signal;
 import react.SignalView;
-import react.UnitSlot;
 import react.Value;
 
 import playn.scene.GroupLayer;
@@ -76,9 +75,8 @@ public class Slider extends Widget<Slider>
         this.value = Value.create(value);
         range = Value.create(new Range(min, max));
         // update our display if the slider value is changed externally
-        UnitSlot updateThumb = new UnitSlot () { @Override public void onEmit () { updateThumb(); }};
-        this.value.connect(updateThumb);
-        range.connect(updateThumb);
+        this.value.connect(v -> updateThumb());
+        range.connect(v -> updateThumb());
     }
 
     /**

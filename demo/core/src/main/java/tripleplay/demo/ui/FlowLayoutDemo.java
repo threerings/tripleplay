@@ -5,8 +5,6 @@
 
 package tripleplay.demo.ui;
 
-import react.UnitSlot;
-
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
 import tripleplay.ui.Element;
@@ -39,25 +37,21 @@ public class FlowLayoutDemo extends DemoScreen
 
         Group buttons = new Group(AxisLayout.horizontal());
         for (final ElemType type : ElemType.values()) {
-            buttons.add(new Button("Add " + type.toString()).onClick(new UnitSlot() {
-                @Override public void onEmit () { panel.add(create(type)); }
-            }));
+            buttons.add(new Button("Add " + type.toString()).onClick(b -> panel.add(create(type))));
         }
         main.add(buttons);
 
         buttons = new Group(AxisLayout.horizontal());
         buttons.add(new Label("HAlign:"));
         for (final Style.HAlign halign : Style.HAlign.values()) {
-            buttons.add(new Button(halign.toString().substring(0, 1)).onClick(new UnitSlot() {
-                @Override public void onEmit () { panel.addStyles(Style.HALIGN.is(halign)); }
-            }));
+            buttons.add(new Button(halign.toString().substring(0, 1)).
+                        onClick(b -> panel.addStyles(Style.HALIGN.is(halign))));
         }
 
         buttons.add(new Label("VAlign:"));
         for (final Style.VAlign valign : Style.VAlign.values()) {
-            buttons.add(new Button(valign.toString().substring(0, 1)).onClick(new UnitSlot() {
-                @Override public void onEmit () { panel.addStyles(Style.VALIGN.is(valign)); }
-            }));
+            buttons.add(new Button(valign.toString().substring(0, 1)).
+                        onClick(b -> panel.addStyles(Style.VALIGN.is(valign))));
         }
         main.add(buttons);
 

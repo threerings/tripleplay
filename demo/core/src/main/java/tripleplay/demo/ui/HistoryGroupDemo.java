@@ -6,7 +6,6 @@
 package tripleplay.demo.ui;
 
 import react.Slot;
-import react.UnitSlot;
 import tripleplay.demo.DemoScreen;
 import tripleplay.ui.Background;
 import tripleplay.ui.Button;
@@ -50,8 +49,8 @@ public class HistoryGroupDemo extends DemoScreen
                 historyBox.preferredSize.updateWidth(val);
             }
         });
-        add10.clicked().connect(addSome(history, prefix, 10));
-        add100.clicked().connect(addSome(history, prefix, 100));
+        add10.clicked().connect(b -> addSome(history, prefix, 10));
+        add100.clicked().connect(b -> addSome(history, prefix, 100));
         history.setStylesheet(Stylesheet.builder().add(Label.class,
             Style.BACKGROUND.is(Background.composite(
                 Background.blank().inset(0, 2),
@@ -65,14 +64,10 @@ public class HistoryGroupDemo extends DemoScreen
             Style.BACKGROUND.is(Background.blank().inset(5)));
     }
 
-    protected UnitSlot addSome (final HistoryGroup.Labels group, final Field prefix, final int num) {
-        return new UnitSlot() {
-            @Override public void onEmit () {
-                for (int ii = 0; ii < num; ++ii) {
-                    group.addItem(prefix.text.get() + String.valueOf(++_lastNum));
-                }
-            }
-        };
+    protected void addSome (HistoryGroup.Labels group, Field prefix, int num) {
+        for (int ii = 0; ii < num; ++ii) {
+            group.addItem(prefix.text.get() + String.valueOf(++_lastNum));
+        }
     }
 
     protected int _lastNum;

@@ -15,7 +15,6 @@ import react.Closeable;
 import react.Signal;
 import react.SignalView;
 import react.Slot;
-import react.UnitSlot;
 import react.ValueView;
 
 import playn.scene.GroupLayer;
@@ -188,25 +187,13 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Returns a slot which can be used to wire the enabled status of this element to a {@link
-     * react.Signal} or {@link react.Value}.
-     */
-    public Slot<Boolean> enabledSlot () {
-        return new Slot<Boolean>() {
-            @Override public void onEmit (Boolean value) {
-                setEnabled(value);
-            }
-        };
-    }
-
-    /**
      * Binds the enabledness of this element to the supplied value view. The current enabledness
      * will be adjusted to match the state of {@code isEnabled}.
      */
     public T bindEnabled (final ValueView<Boolean> isEnabledV) {
         return addBinding(new Binding(_bindings) {
             @Override public Closeable connect () {
-                return isEnabledV.connectNotify(enabledSlot());
+                return isEnabledV.connectNotify(Element.this::setEnabled);
             }
             @Override public String toString () {
                 return Element.this + ".bindEnabled";
@@ -235,25 +222,13 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Returns a slot which can be used to wire the visible status of this element to a {@link
-     * react.Signal} or {@link react.Value}.
-     */
-    public Slot<Boolean> visibleSlot () {
-        return new Slot<Boolean>() {
-            @Override public void onEmit (Boolean value) {
-                setVisible(value);
-            }
-        };
-    }
-
-    /**
      * Binds the visibility of this element to the supplied value view. The current visibility will
      * be adjusted to match the state of {@code isVisible}.
      */
     public T bindVisible (final ValueView<Boolean> isVisibleV) {
         return addBinding(new Binding(_bindings) {
             public Closeable connect () {
-                return isVisibleV.connectNotify(visibleSlot());
+                return isVisibleV.connectNotify(Element.this::setVisible);
             }
             @Override public String toString () {
                 return Element.this + ".bindVisible";
@@ -392,23 +367,11 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Gets a new slot which will invoke {@link #invalidate()} when emitted.
+     * Invalidates this element and clears layout data.
      */
-    protected UnitSlot invalidateSlot () {
-        return invalidateSlot(false);
-    }
-
-    /**
-     * Gets a new slot which will invoke {@link #invalidate()}.
-     * @param styles if set, the slot will also call {@link #clearLayoutData()} when emitted
-     */
-    protected UnitSlot invalidateSlot (final boolean styles) {
-        return new UnitSlot() {
-            @Override public void onEmit () {
-                invalidate();
-                if (styles) clearLayoutData();
-            }
-        };
+    protected void invalidateAndClear() {
+        invalidate();
+        clearLayoutData();
     }
 
     /**
@@ -825,7 +788,7 @@ public abstract class Element<T extends Element<T>>
       * about and managing this. */
     protected static abstract class Binding {
         public static final Binding NONE = new Binding(null) {
-            public Closeable connect () { return Closeable.Util.NOOP; }
+            public Closeable connect () { return Closeable.NOOP; }
         };
 
         public final Binding next;
@@ -836,14 +799,14 @@ public abstract class Element<T extends Element<T>>
         public abstract Closeable connect ();
 
         public void bind () {
-            assert _conn == Closeable.Util.NOOP : "Already bound: " + this;
+            assert _conn == Closeable.NOOP : "Already bound: " + this;
             _conn = connect();
         }
         public void close () {
-            _conn = Closeable.Util.close(_conn);
+            _conn = Closeable.close(_conn);
         }
 
-        protected Closeable _conn = Closeable.Util.NOOP;
+        protected Closeable _conn = Closeable.NOOP;
     }
 
     protected int _flags = Flag.VISIBLE.mask | Flag.ENABLED.mask;

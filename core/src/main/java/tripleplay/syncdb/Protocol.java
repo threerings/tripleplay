@@ -8,7 +8,6 @@ package tripleplay.syncdb;
 import java.util.HashMap;
 import java.util.Map;
 
-import react.Function;
 import react.RFuture;
 import react.Slot;
 
@@ -145,9 +144,7 @@ public class Protocol
         @Override
         public RFuture<Response> sendSync (int version, Map<String,String> delta) {
             String payload = encodeRequest(new Request(version, delta));
-            return _net.post(syncURL(payload), payload).map(new Function<String,Response>() {
-                public Response apply (String payload) { return decodeResponse(payload); }
-            });
+            return _net.post(syncURL(payload), payload).map(Protocol::decodeResponse);
         }
 
         /** Generates the sync URL, given the supplied payload. The client may wish to sign the URL

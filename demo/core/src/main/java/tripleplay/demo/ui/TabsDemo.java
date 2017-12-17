@@ -8,7 +8,6 @@ package tripleplay.demo.ui;
 import java.util.Random;
 
 import react.Slot;
-import react.UnitSlot;
 
 import playn.core.Color;
 import playn.core.Keyboard;
@@ -38,35 +37,27 @@ public class TabsDemo extends DemoScreen
         final int [] lastTab = {0};
         final Tabs tabs = new Tabs().addStyles(Style.BACKGROUND.is(
             Background.bordered(Colors.WHITE, Colors.BLACK, 1).inset(1)));
-        final Button moveRight = new Button("Move Right").onClick(new UnitSlot() {
-            @Override public void onEmit () {
-                Tabs.Tab tab = tabs.selected.get();
-                if (movable(tab)) {
-                    tabs.repositionTab(tab, tab.index() + 1);
-                }
+        final Button moveRight = new Button("Move Right").onClick(b -> {
+            Tabs.Tab tab = tabs.selected.get();
+            if (movable(tab)) {
+                tabs.repositionTab(tab, tab.index() + 1);
             }
         }).setEnabled(false);
-        final Button hide = new Button("Hide").onClick(new UnitSlot() {
-            @Override public void onEmit () {
-                Tabs.Tab tab = tabs.selected.get();
-                if (tab != null) {
-                    tab.setVisible(false);
-                }
+        final Button hide = new Button("Hide").onClick(b -> {
+            Tabs.Tab tab = tabs.selected.get();
+            if (tab != null) {
+                tab.setVisible(false);
             }
         }).setEnabled(false);
-        tabs.selected.connect(new Slot<Tabs.Tab>() {
-            @Override public void onEmit (Tabs.Tab tab) {
-                moveRight.setEnabled(movable(tab));
-                hide.setEnabled(tab != null);
-            }
+        tabs.selected.connect(tab -> {
+            moveRight.setEnabled(movable(tab));
+            hide.setEnabled(tab != null);
         });
         return new Group(AxisLayout.vertical().offStretch()).add(
             new Group(AxisLayout.horizontal()).add(
-                new Button("Add").onClick(new UnitSlot() {
-                    @Override public void onEmit () {
-                        String label = _prefix + ++lastTab[0];
-                        tabs.add(label, tabContent(label));
-                    }
+                new Button("Add").onClick(b -> {
+                    String label = _prefix + ++lastTab[0];
+                    tabs.add(label, tabContent(label));
                 }),
                 new Button("Remove...").onClick(new TabSelector(tabs) {
                     @Override public void handle (Tabs.Tab tab) {
@@ -77,11 +68,9 @@ public class TabsDemo extends DemoScreen
                     @Override public void handle (Tabs.Tab tab) {
                         tabs.highlighter().highlight(tab, true);
                     }
-                }), moveRight, hide, new Button("Show All").onClick(new UnitSlot() {
-                    @Override public void onEmit () {
-                        for (int ii = 0; ii < tabs.tabCount(); ii++) {
-                            tabs.tabAt(ii).setVisible(true);
-                        }
+                }), moveRight, hide, new Button("Show All").onClick(b -> {
+                    for (int ii = 0; ii < tabs.tabCount(); ii++) {
+                        tabs.tabAt(ii).setVisible(true);
                     }
                 })),
             tabs.setConstraint(AxisLayout.stretched()));
@@ -105,13 +94,13 @@ public class TabsDemo extends DemoScreen
             new Label(label).addStyles(Style.BACKGROUND.is(Background.solid(randColor()))));
     }
 
-    protected abstract class TabSelector extends UnitSlot {
+    protected abstract class TabSelector implements Slot<Object> {
         public Tabs tabs;
         public TabSelector (Tabs tabs) {
             this.tabs = tabs;
         }
 
-        @Override public void onEmit () {
+        @Override public void onEmit (Object ignored) {
             String init = "";
             if (tabs.tabCount() > 0) {
                 Tabs.Tab tab = tabs.tabAt(_rnd.nextInt(tabs.tabCount()));

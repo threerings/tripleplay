@@ -36,7 +36,7 @@ public abstract class SizableWidget<T extends SizableWidget<T>> extends Widget<T
     /** Creates the sizable widget with preferred width and height. */
     public SizableWidget (float width, float height) {
         preferredSize.update(width, height);
-        preferredSize.connect(invalidateSlot());
+        preferredSize.connect(ps -> invalidate());
     }
 
     /** Creates the layout to which the widget's {@link Element.SizableLayoutData} will delegate. */

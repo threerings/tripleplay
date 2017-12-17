@@ -8,8 +8,6 @@ package tripleplay.util;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import react.Function;
-import react.Functions;
 import react.RSet;
 
 import playn.core.Platform;
@@ -20,25 +18,24 @@ public class TypedStorageTest
     @Test public void testSetFor () {
         Platform pf = new StubPlatform();
         TypedStorage ts = new TypedStorage(pf.log(), pf.storage());
-        Function<String,String> id = Functions.identity();
 
-        RSet<String> strings = ts.setFor("strings", id, id);
+        RSet<String> strings = ts.setFor("strings", v -> v, v -> v);
         assertTrue(strings.isEmpty());
         strings.add("one");
 
         // (each call to setFor creates a new set from the curren state of storage)
-        assertTrue(ts.setFor("strings", id, id).contains("one"));
+        assertTrue(ts.setFor("strings", v -> v, v -> v).contains("one"));
 
         strings.remove("one");
-        assertTrue(ts.setFor("strings", id, id).isEmpty());
+        assertTrue(ts.setFor("strings", v -> v, v -> v).isEmpty());
 
         strings.add("");
-        assertTrue(ts.setFor("strings", id, id).contains(""));
+        assertTrue(ts.setFor("strings", v -> v, v -> v).contains(""));
         strings.add("two");
-        assertTrue(ts.setFor("strings", id, id).contains(""));
+        assertTrue(ts.setFor("strings", v -> v, v -> v).contains(""));
         strings.remove("two");
-        assertTrue(ts.setFor("strings", id, id).contains(""));
+        assertTrue(ts.setFor("strings", v -> v, v -> v).contains(""));
         strings.remove("");
-        assertFalse(ts.setFor("strings", id, id).contains(""));
+        assertFalse(ts.setFor("strings", v -> v, v -> v).contains(""));
     }
 }

@@ -7,8 +7,6 @@ package tripleplay.demo.ui;
 
 import playn.core.Font;
 
-import react.Function;
-
 import tripleplay.ui.Background;
 import tripleplay.ui.Behavior;
 import tripleplay.ui.Constraints;
@@ -55,17 +53,11 @@ public class SliderDemo extends DemoScreen
     }
 
     protected Group sliderAndLabel (Slider slider, String minText) {
-        Label label = new Label(slider.value.map(FORMATTER)).
+        Label label = new Label(slider.value.map(v -> String.valueOf(v.intValue()))).
             setStyles(Style.HALIGN.right, Style.FONT.is(FIXED)).
             setConstraint(Constraints.minSize(graphics(), minText));
         return new Group(AxisLayout.horizontal()).add(slider, label);
     }
-
-    protected Function<Float,String> FORMATTER = new Function<Float,String>() {
-        public String apply (Float value) {
-            return String.valueOf(value.intValue());
-        }
-    };
 
     protected static Font FIXED = new Font("Fixed", 16);
 }

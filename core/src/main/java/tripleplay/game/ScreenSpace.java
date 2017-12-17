@@ -268,13 +268,13 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
 
         void setActive (boolean active) {
             _scons.close();
-            if (active) _scons = Closeable.Util.join(
-                _game.update.connect(update.slot()),
-                _game.paint.connect(paint.slot()));
-            else _scons = Closeable.Util.NOOP;
+            if (active) _scons = Closeable.join(
+                _game.update.connect(update::emit),
+                _game.paint.connect(paint::emit));
+            else _scons = Closeable.NOOP;
             layer.setVisible(active);
         }
-        boolean isActive () { return _scons != Closeable.Util.NOOP; }
+        boolean isActive () { return _scons != Closeable.NOOP; }
 
         /** Creates the group layer used by this screen. Subclasses may wish to override and use a
           * clipped group layer instead. Note that the size of the group layer will be set to the
@@ -289,7 +289,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         protected static final int TRANSITING = 1 << 1;
 
         protected int _flags;
-        protected Closeable _scons = Closeable.Util.NOOP;
+        protected Closeable _scons = Closeable.NOOP;
         protected final Closeable.Set _closeOnSleep = new Closeable.Set();
         protected final Value<IDimension> _sizeValue;
         protected final Game _game;
@@ -391,7 +391,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
                 takeFocus(oscr);
                 oscr.dispose();
                 _current = null;
-                _onPointer = Closeable.Util.close(_onPointer);
+                _onPointer = Closeable.close(_onPointer);
             }
         } else {
             // TODO: this screen may be inside UntransListener.previous so we may need to recreate
@@ -451,11 +451,9 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             ntop.screen.setActive(true);
             giveFocus(ntop);
         }
-        else transition(otop, ntop, ntop.dir, 0).onComplete.connect(new UnitSlot() {
-            public void onEmit () {
-                giveFocus(ntop);
-                if (replace) popAt(1);
-            }
+        else transition(otop, ntop, ntop.dir, 0).onComplete.connect(t -> {
+            giveFocus(ntop);
+            if (replace) popAt(1);
         });
     }
 
@@ -478,11 +476,9 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         Dir dir = oscr.dir.untransDir();
         final ActiveScreen nscr = _screens.get(0);
         nscr.check(true); // wake screen, if necessary
-        transition(oscr, nscr, dir, startPct).onComplete.connect(new UnitSlot() {
-            public void onEmit () {
-                giveFocus(nscr);
-                oscr.dispose();
-            }
+        transition(oscr, nscr, dir, startPct).onComplete.connect(t -> {
+            giveFocus(nscr);
+            oscr.dispose();
         });
     }
 
@@ -499,7 +495,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
             // set up a listener to handle that
             ActiveScreen previous = (_screens.size() <= 1) ? null : _screens.get(1);
             _onPointer.close();
-            if (previous == null || !as.dir.canUntrans()) _onPointer = Closeable.Util.NOOP;
+            if (previous == null || !as.dir.canUntrans()) _onPointer = Closeable.NOOP;
             else _onPointer = as.screen.layer.events().connect(new UntransListener(as, previous));
 
         } catch (Exception e) {
@@ -669,7 +665,7 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
         public final ActiveScreen outgoing, incoming;
         public final Dir dir;
         public final float duration;
-        public final UnitSignal onComplete = new UnitSignal();
+        public final Signal.Unit onComplete = new Signal.Unit();
         public final float startPct;
         public final Interpolator interp;
         public final Closeable onPaint;
@@ -732,5 +728,5 @@ public class ScreenSpace implements Iterable<ScreenSpace.Screen>
     protected final List<ActiveScreen> _screens = new ArrayList<ActiveScreen>();
     protected float _transPct;
     protected ActiveScreen _current, _target;
-    protected Closeable _onPointer = Closeable.Util.NOOP;
+    protected Closeable _onPointer = Closeable.NOOP;
 }

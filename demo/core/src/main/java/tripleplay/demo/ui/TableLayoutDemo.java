@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import react.Slot;
-import react.UnitSlot;
 
 import tripleplay.ui.*;
 import tripleplay.ui.layout.AxisLayout;
@@ -102,17 +101,11 @@ public class TableLayoutDemo extends DemoScreen
                 CellAdder (int count) {
                     super("+" + count);
                     this.count = count;
-                    onClick(new UnitSlot() {
-                        @Override public void onEmit () { addCells(CellAdder.this.count); }
-                    });
+                    onClick(b -> addCells(CellAdder.this.count));
                 }
             }
-            Button add = new Button("Add").onClick(new UnitSlot() {
-                @Override public void onEmit () { addColumn(); }
-            });
-            Button reset = new Button("Reset").onClick(new UnitSlot() {
-                @Override public void onEmit () { reset(); }
-            });
+            Button add = new Button("Add").onClick(b -> addColumn());
+            Button reset = new Button("Reset").onClick(b -> reset());
             add(column,
                 new Group(AxisLayout.horizontal()).add(
                     new Label("Columns:"), add, reset, new Shim(5, 1),

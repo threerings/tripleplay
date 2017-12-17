@@ -5,8 +5,6 @@
 
 package tripleplay.demo.game;
 
-import react.UnitSlot;
-
 import playn.core.Game;
 
 import tripleplay.game.ScreenStack;
@@ -45,26 +43,26 @@ public class ScreensDemo extends DemoScreen
     protected void addUI (final ScreenStack.Screen screen, Elements<?> root, final int depth) {
         root.add(new Label("Screen " + depth));
 
-        root.add(new Button("Slide").onClick(new UnitSlot() { public void onEmit () {
+        root.add(new Button("Slide").onClick(b -> {
             _stack.push(createScreen(depth+1), _stack.slide());
-        }}));
-        root.add(new Button("Turn").onClick(new UnitSlot() { public void onEmit () {
+        }));
+        root.add(new Button("Turn").onClick(b -> {
             _stack.push(createScreen(depth+1), _stack.pageTurn());
-        }}));
-        root.add(new Button("Flip").onClick(new UnitSlot() { public void onEmit () {
+        }));
+        root.add(new Button("Flip").onClick(b ->{
             _stack.push(createScreen(depth+1), _stack.flip());
-        }}));
+        }));
 
         if (depth > 0) {
-            root.add(new Button("Replace").onClick(new UnitSlot() { public void onEmit () {
+            root.add(new Button("Replace").onClick(b -> {
                 _stack.replace(createScreen(depth+1), _stack.slide().left());
-            }}));
-            root.add(new Button("Back").onClick(new UnitSlot() { public void onEmit () {
+            }));
+            root.add(new Button("Back").onClick(b -> {
                 _stack.remove(screen, _stack.flip().unflip());
-            }}));
-            root.add(new Button("Top").onClick(new UnitSlot() { public void onEmit () {
+            }));
+            root.add(new Button("Top").onClick(b -> {
                 _stack.popTo(ScreensDemo.this, _stack.slide().right());
-            }}));
+            }));
         }
     }
 

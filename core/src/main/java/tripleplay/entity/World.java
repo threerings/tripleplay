@@ -44,7 +44,7 @@ public class World implements Iterable<Entity>
       * @return an object that can be used to disconnect both connections.
       */
     public Closeable connect (Signal<Clock> update, Signal<Clock> paint) {
-        return Closeable.Util.join(
+        return Closeable.join(
             update.connect(new Slot<Clock>() { public void onEmit (Clock clk) { update(clk); }}),
             paint.connect(new Slot<Clock>() { public void onEmit (Clock clk) { paint(clk); }}));
     }
