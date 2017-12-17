@@ -53,7 +53,7 @@ public class Slider extends Widget<Slider>
      * the default bar background. If this is defined, the background will be instantiated at
      * the full bar size, and clipped to the visible "on" region. Inherited. */
     public static Style<Background> BAR_ON_BACKGROUND = Style.newStyle(true, null);
-        
+
     /** The image to use for the slider thumb. Inherited. */
     public static Style<Icon> THUMB_IMAGE = Style.newStyle(true, createDefaultThumbImage());
 
@@ -127,7 +127,7 @@ public class Slider extends Widget<Slider>
             _barOnInst.close();
             _barOnLayer = null;
             _barOnInst = null;
-        }        
+        }
         // the thumb is just an image layer and will be destroyed when we are
     }
 
@@ -158,8 +158,9 @@ public class Slider extends Widget<Slider>
         float thumbOffset = _thumbRange * thumbPct;
         _thumb.setTranslation(_thumbLeft + thumbOffset, _thumbY);
 
-        if (_barOnLayer != null)
+        if (_barOnLayer != null) {
             _barOnLayer.setWidth(thumbOffset);
+        }
     }
 
     protected void setValueFromPointer (float x) {
@@ -216,14 +217,13 @@ public class Slider extends Widget<Slider>
                 _barOnLayer.close();
                 _barOnInst.close();
                 _barOnLayer = null;
-                _barOnInst = null;                
-            }            
+                _barOnInst = null;
+            }
             if (width > 0 && height > 0) {
                 _barInst = barBG.instantiate(new Dimension(width-thumbWidth, barHeight));
                 _barInst.addTo(layer, _thumbLeft, top + (height - barHeight)/2, 1);
 
-                if (barOnBG != null)
-                {
+                if (barOnBG != null) {
                     _barOnLayer = new GroupLayer(width-thumbWidth, barHeight);
                     _barOnLayer.setDepth(Background.BACKGROUND_DEPTH + 2);
                     _barOnLayer.transform().translate(_thumbLeft, top + (height - barHeight)/2);
