@@ -312,7 +312,7 @@ public class AsteroidsDemo extends DemoScreen
             this.swidth = swidth;
             this.sheight = sheight;
 
-            closeOnHide(input().keyboardEvents.collect(Keyboard.isKeyEvent).connect(event -> {
+            closeOnHide(input().keyboardEvents.collect(Keyboard::isKeyEvent).connect(event -> {
                 (event.down ? keyDown : keyUp).emit(event.key);
             }));
         }

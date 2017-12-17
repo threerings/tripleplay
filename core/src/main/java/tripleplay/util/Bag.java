@@ -6,7 +6,7 @@
 package tripleplay.util;
 
 import java.util.Iterator;
-import java.util.function.Function;
+import react.Function;
 
 /**
  * An unordered collection of elements which may contain duplicates. Elements must not be null. The

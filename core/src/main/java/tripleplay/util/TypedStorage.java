@@ -7,12 +7,12 @@ package tripleplay.util;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
 
 import react.IntValue;
 import react.RSet;
 import react.Slot;
 import react.Value;
+import react.Function;
 
 import playn.core.Log;
 import playn.core.Storage;
