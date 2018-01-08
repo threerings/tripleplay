@@ -277,6 +277,10 @@ public abstract class Style<V>
      * inherited. */
     public static final Flag AUTO_SHRINK = newFlag(false, false);
 
+    /** If {@link #AUTO_SHRINK} is enaled, the minimum font size to use when shrinking. Not
+     * inherited. */
+    public static final Style<Float> MIN_FONT_SIZE = newStyle(false, 6f);
+
     /** The background for an element. Not inherited. */
     public static final Style<Background> BACKGROUND = newStyle(false, Background.blank());
 

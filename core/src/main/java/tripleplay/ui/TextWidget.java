@@ -90,6 +90,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final IconEffect iconEffect = resolveStyle(Style.ICON_EFFECT);
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
         public final boolean autoShrink = resolveStyle(Style.AUTO_SHRINK);
+        public final float minFontSize = resolveStyle(Style.MIN_FONT_SIZE);
 
         public final Graphics gfx = root().iface.plat.graphics();
         public StyledText.Plain text; // mostly final, only changed by autoShrink
@@ -131,7 +132,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 // successively smaller fonts until it fits
                 float twidth = textWidth(), availWidth = hintX - usedWidth;
                 if (twidth > availWidth) {
-                    while (twidth > availWidth && text.style.font.size > MIN_FONT_SIZE) {
+                    while (twidth > availWidth && text.style.font.size > minFontSize) {
                         text = text.resize(text.style.font.size-1);
                         twidth = FloatMath.ceil(textWidth());
                     }
@@ -257,7 +258,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             // if autoShrink is enabled, and our text is too wide, re-lay it out with successively
             // smaller fonts until it fits
             if (autoShrink && twidth > availWidth) {
-                while (twidth > availWidth && text.style.font.size > MIN_FONT_SIZE) {
+                while (twidth > availWidth && text.style.font.size > minFontSize) {
                     text = text.resize(text.style.font.size-1);
                     twidth = FloatMath.ceil(textWidth());
                 }
@@ -297,6 +298,4 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     protected StyledText.Plain _renderedText;
     protected Layer _ilayer;
     protected Icon  _renderedIcon;
-
-    protected static final float MIN_FONT_SIZE = 6; // TODO: make customizable?
 }
