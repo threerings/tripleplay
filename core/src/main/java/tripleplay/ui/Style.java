@@ -277,9 +277,15 @@ public abstract class Style<V>
      * inherited. */
     public static final Flag AUTO_SHRINK = newFlag(false, false);
 
-    /** If {@link #AUTO_SHRINK} is enaled, the minimum font size to use when shrinking. Not
+    /** If {@link #AUTO_SHRINK} is enabled, the minimum font size to use when shrinking. Not
      * inherited. */
     public static final Style<Float> MIN_FONT_SIZE = newStyle(false, 6f);
+
+    /** Whether or not to automatically clip a text widget's text to fit into the horizontal
+     * space it has been allotted. Cannot be used with {@link #TEXT_WRAP}. Can be combined
+     * with {@link #AUTO_SHRINK}: In that case, shrinking will be applied first, then if the
+     * text still does not fit, it will be clipped. Not inherited. */
+    public static final Flag ELLIPSIZE = newFlag(false, false);
 
     /** The background for an element. Not inherited. */
     public static final Style<Background> BACKGROUND = newStyle(false, Background.blank());
