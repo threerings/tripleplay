@@ -128,30 +128,9 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         @Override public Dimension computeSize (float hintX, float hintY) {
             if (text != null && (autoShrink || ellipsize)) {
-                float usedWidth = 0;
-                // account for the icon width and gap
-                if (icon != null && iconPos.horizontal()) usedWidth = icon.width() + iconGap;
-                float twidth = textWidth(), availWidth = hintX - usedWidth;
-                if (twidth > availWidth) {
-                    // if autoShrink is enabled, and our text is too wide, re-lay it out with
-                    // successively smaller fonts until it fits
-                    if (autoShrink) {
-                        while (twidth > availWidth && text.style.font.size > minFontSize) {
-                            text = text.resize(text.style.font.size-1);
-                            twidth = FloatMath.ceil(textWidth());
-                        }
-                    }
-                    // if the text is still too wide, clip to available width and ellipsize
-                    if (ellipsize && twidth > availWidth) {
-                        String curtext = text();
-                        int len = curtext.length();
-                        while (twidth > availWidth && len > 0) {
-                            curtext = curtext.substring(0, --len);
-                            text = new StyledText.Span(gfx, curtext + ELLIPSIS, text.style);
-                            twidth = FloatMath.ceil(textWidth());
-                        }
-                    }
-                }
+                float availWidth = hintX;
+                if (icon != null && iconPos.horizontal()) availWidth -= icon.width() + iconGap;
+                maybeShrinkOrEllipsize(availWidth);
             }
 
             Dimension size = new Dimension();
@@ -266,31 +245,12 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
 
         // this is broken out so that subclasses can extend this action
         protected void updateTextGlyph (float tx, float ty, float availWidth, float availHeight) {
-            float twidth = FloatMath.ceil(textWidth()), theight = FloatMath.ceil(textHeight());
             float awidth = FloatMath.ceil(availWidth), aheight = FloatMath.ceil(availHeight);
-            if (twidth <= 0 || theight <= 0 || awidth <= 0 || aheight <= 0) return;
+            if (awidth <= 0 || aheight <= 0) return;
 
-            if ((autoShrink || ellipsize) && twidth > availWidth) {
-                // if autoShrink is enabled, and our text is too wide, re-lay it out with successively
-                // smaller fonts until it fits
-                if (autoShrink) {
-                    while (twidth > availWidth && text.style.font.size > minFontSize) {
-                        text = text.resize(text.style.font.size-1);
-                        twidth = FloatMath.ceil(textWidth());
-                    }
-                }
-                // if the text is still too wide, clip to available width and ellipsize
-                if (ellipsize && twidth > availWidth) {
-                    String curtext = text();
-                    int len = curtext.length();
-                    while (twidth > availWidth && len > 0) {
-                        curtext = curtext.substring(0, --len);
-                        text = new StyledText.Span(gfx, curtext + ELLIPSIS, text.style);
-                        twidth = FloatMath.ceil(textWidth());
-                    }
-                }
-                theight = FloatMath.ceil(textHeight());
-            }
+            float twidth = maybeShrinkOrEllipsize(availWidth);
+            float theight = FloatMath.ceil(textHeight());
+            if (twidth <= 0 || theight <= 0) return;
 
             // create a canvas no larger than the text, constrained to the available size
             float tgwidth = Math.min(awidth, twidth), tgheight = Math.min(aheight, theight);
@@ -315,6 +275,31 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             // always set the translation since other non-text style changes can affect it
             _tglyph.layer().setTranslation(tx + Math.max(ox, 0) + text.style.effect.offsetX(),
                                            ty + Math.max(oy, 0) + text.style.effect.offsetY());
+        }
+
+        /** Computes the width of the text, shrinking or ellipsizing it if those options are
+          * enabled and it is necessary to fit the text into availWidth. */
+        protected float maybeShrinkOrEllipsize (float availWidth) {
+            float twidth = FloatMath.ceil(textWidth());
+            // if autoShrink is enabled, and our text is too wide, re-lay it out with successively
+            // smaller fonts until it fits
+            if (autoShrink) {
+                while (twidth > availWidth && text.style.font.size > minFontSize) {
+                    text = text.resize(text.style.font.size-1);
+                    twidth = FloatMath.ceil(textWidth());
+                }
+            }
+            // if the text is still too wide, clip to available width and ellipsize
+            if (ellipsize && twidth > availWidth) {
+                String curtext = text();
+                int len = curtext.length();
+                while (twidth > availWidth && len > 0) {
+                    curtext = curtext.substring(0, --len);
+                    text = new StyledText.Span(gfx, curtext + ELLIPSIS, text.style);
+                    twidth = FloatMath.ceil(textWidth());
+                }
+            }
+            return twidth;
         }
 
         protected float textWidth () { return text.width(); }
