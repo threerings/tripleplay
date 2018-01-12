@@ -90,10 +90,14 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         public final IconEffect iconEffect = resolveStyle(Style.ICON_EFFECT);
         public final boolean wrap = resolveStyle(Style.TEXT_WRAP);
         public final boolean autoShrink = resolveStyle(Style.AUTO_SHRINK);
+        public final float minFontSize = resolveStyle(Style.MIN_FONT_SIZE);
+        public final boolean ellipsize = resolveStyle(Style.ELLIPSIZE);
 
         public final Graphics gfx = root().iface.plat.graphics();
         public StyledText.Plain text; // mostly final, only changed by autoShrink
         public final Icon icon;
+
+        private final static String ELLIPSIS = "\u2026";
 
         public TextLayoutData (float hintX, float hintY) {
             String curtext = text();
@@ -123,17 +127,29 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         }
 
         @Override public Dimension computeSize (float hintX, float hintY) {
-            if (text != null && autoShrink) {
+            if (text != null && (autoShrink || ellipsize)) {
                 float usedWidth = 0;
                 // account for the icon width and gap
                 if (icon != null && iconPos.horizontal()) usedWidth = icon.width() + iconGap;
-                // if autoShrink is enabled, and our text is too wide, re-lay it out with
-                // successively smaller fonts until it fits
                 float twidth = textWidth(), availWidth = hintX - usedWidth;
                 if (twidth > availWidth) {
-                    while (twidth > availWidth && text.style.font.size > MIN_FONT_SIZE) {
-                        text = text.resize(text.style.font.size-1);
-                        twidth = FloatMath.ceil(textWidth());
+                    // if autoShrink is enabled, and our text is too wide, re-lay it out with
+                    // successively smaller fonts until it fits
+                    if (autoShrink) {
+                        while (twidth > availWidth && text.style.font.size > minFontSize) {
+                            text = text.resize(text.style.font.size-1);
+                            twidth = FloatMath.ceil(textWidth());
+                        }
+                    }
+                    // if the text is still too wide, clip to available width and ellipsize
+                    if (ellipsize && twidth > availWidth) {
+                        String curtext = text();
+                        int len = curtext.length();
+                        while (twidth > availWidth && len > 0) {
+                            curtext = curtext.substring(0, --len);
+                            text = new StyledText.Span(gfx, curtext + ELLIPSIS, text.style);
+                            twidth = FloatMath.ceil(textWidth());
+                        }
                     }
                 }
             }
@@ -201,7 +217,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             if (text == null) _tglyph.close();
             else {
                 updateTextGlyph(tx, ty, width-usedWidth, height-usedHeight);
-                // if we're cuddling, adjust icon position based on the now known tex position
+                // if we're cuddling, adjust icon position based on the now known text position
                 if (_ilayer != null && iconCuddle) {
                     Layer tlayer = _tglyph.layer();
                     float ctx = (tlayer == null) ? 0 : tlayer.tx();
@@ -254,12 +270,24 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             float awidth = FloatMath.ceil(availWidth), aheight = FloatMath.ceil(availHeight);
             if (twidth <= 0 || theight <= 0 || awidth <= 0 || aheight <= 0) return;
 
-            // if autoShrink is enabled, and our text is too wide, re-lay it out with successively
-            // smaller fonts until it fits
-            if (autoShrink && twidth > availWidth) {
-                while (twidth > availWidth && text.style.font.size > MIN_FONT_SIZE) {
-                    text = text.resize(text.style.font.size-1);
-                    twidth = FloatMath.ceil(textWidth());
+            if ((autoShrink || ellipsize) && twidth > availWidth) {
+                // if autoShrink is enabled, and our text is too wide, re-lay it out with successively
+                // smaller fonts until it fits
+                if (autoShrink) {
+                    while (twidth > availWidth && text.style.font.size > minFontSize) {
+                        text = text.resize(text.style.font.size-1);
+                        twidth = FloatMath.ceil(textWidth());
+                    }
+                }
+                // if the text is still too wide, clip to available width and ellipsize
+                if (ellipsize && twidth > availWidth) {
+                    String curtext = text();
+                    int len = curtext.length();
+                    while (twidth > availWidth && len > 0) {
+                        curtext = curtext.substring(0, --len);
+                        text = new StyledText.Span(gfx, curtext + ELLIPSIS, text.style);
+                        twidth = FloatMath.ceil(textWidth());
+                    }
                 }
                 theight = FloatMath.ceil(textHeight());
             }
@@ -297,6 +325,4 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
     protected StyledText.Plain _renderedText;
     protected Layer _ilayer;
     protected Icon  _renderedIcon;
-
-    protected static final float MIN_FONT_SIZE = 6; // TODO: make customizable?
 }
