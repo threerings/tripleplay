@@ -7,7 +7,7 @@
 <meta name="description" content="JDiff is a Javadoc doclet which generates an HTML report of all the packages, classes, constructors, methods, and fields which have been removed, added or changed in any way, including their documentation, when two APIs are compared.">
 <meta name="keywords" content="diff, jdiff, javadiff, java diff, java difference, API difference, difference between two APIs, API diff, Javadoc, doclet">
 <TITLE>
-tripleplay.ui.util.XYFlicker
+tripleplay.ui.Slider
 </TITLE>
 <LINK REL="stylesheet" TYPE="text/css" HREF="../stylesheet-jdiff.css" TITLE="Style">
 </HEAD>
@@ -18,9 +18,9 @@ tripleplay.ui.util.XYFlicker
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/util/XYFlicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.1</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Slider.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.2</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="jdiff_help.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
     </TR>
@@ -31,10 +31,10 @@ tripleplay.ui.util.XYFlicker
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.ui.Style.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
-  &nbsp;<A HREF="tripleplay.ui.util.XYFlicker.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+  &nbsp;<A HREF="tripleplay.ui.Slider.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell3"><FONT SIZE="-2"> DETAIL: &nbsp;
 CONSTRUCTORS&nbsp;|&nbsp;
 METHODS&nbsp;|&nbsp;
@@ -45,7 +45,7 @@ METHODS&nbsp;|&nbsp;
 <HR>
 <!-- End of nav bar -->
 <H2>
-Class tripleplay.ui.util.<A HREF="../tripleplay/ui/util/XYFlicker.html" target="_top"><tt>XYFlicker</tt></A>
+Class tripleplay.ui.<A HREF="../tripleplay/ui/Slider.html" target="_top"><tt>Slider</tt></A>
 </H2>
 <a NAME="constructors"></a>
 <a NAME="methods"></a>
@@ -58,33 +58,11 @@ Class tripleplay.ui.util.<A HREF="../tripleplay/ui/util/XYFlicker.html" target="
 </TR>
 <TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
   <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.flickXfer"></A>
-  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#flickXfer" target="_top"><tt>flickXfer</tt></A></nobr>
+  <A NAME="tripleplay.ui.Slider.BAR_ON_BACKGROUND"></A>
+  <nobr><code>Style&lt;Background&gt;</code>&nbsp;<A HREF="../tripleplay/ui/Slider.html#BAR_ON_BACKGROUND" target="_top"><tt>BAR_ON_BACKGROUND</tt></A></nobr>
   </TD>
-  <TD VALIGN="TOP">The fraction of flick speed transfered to the entity (a value between 0 and 1).</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.friction"></A>
-  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#friction" target="_top"><tt>friction</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The deceleration (in pixels per ms per ms) applied to non-zero velocity.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.maxClickDelta"></A>
-  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#maxClickDelta" target="_top"><tt>maxClickDelta</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The maximum distance (in pixels) the pointer is allowed to travel while pressed and
- still register as a click.</TD>
-</TR>
-<TR BGCOLOR="#FFFFFF" CLASS="TableRowColor">
-  <TD VALIGN="TOP" WIDTH="25%">
-  <A NAME="tripleplay.ui.util.XYFlicker.maxFlickSpeed"></A>
-  <nobr><code>float</code>&nbsp;<A HREF="../tripleplay/ui/util/XYFlicker.html#maxFlickSpeed" target="_top"><tt>maxFlickSpeed</tt></A></nobr>
-  </TD>
-  <TD VALIGN="TOP">The maximum flick speed that will be transfered to the entity; limits the actual flick
- speed at time of release.</TD>
+  <TD VALIGN="TOP">The background that renders the "on" part of the bar, if it should be different from
+ the default bar background.</TD>
 </TR>
 </TABLE>
 &nbsp;
@@ -95,9 +73,9 @@ Class tripleplay.ui.util.<A HREF="../tripleplay/ui/util/XYFlicker.html" target="
     <TD COLSPAN=2 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
     <TABLE summary="Navigation bar" BORDER="0" CELLPADDING="0" CELLSPACING="3">
     <TR ALIGN="center" VALIGN="top">
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/util/XYFlicker.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.1</tt></B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="../tripleplay/ui/Slider.html" target="_top"><FONT CLASS="NavBarFont1"><B><tt>TriplePlay 2.0.2</tt></B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="changes-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
-      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.util.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
+      <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="pkg_tripleplay.ui.html"><FONT CLASS="NavBarFont1"><B>Package</B></FONT></A>&nbsp;</TD>
       <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
       <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <A HREF="jdiff_help.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
     </TR>
@@ -108,10 +86,10 @@ Class tripleplay.ui.util.<A HREF="../tripleplay/ui/util/XYFlicker.html" target="
 <TR>
   <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<B>PREV CLASS</B>&nbsp;
-&nbsp;<B>NEXT CLASS</B>&nbsp;
+&nbsp;<A HREF="tripleplay.ui.Style.html"><B>NEXT CLASS</B></A>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <A HREF="../changes.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
-  &nbsp;<A HREF="tripleplay.ui.util.XYFlicker.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
+  &nbsp;<A HREF="tripleplay.ui.Slider.html" TARGET="_top"><B>NO FRAMES</B></A></FONT></TD>
 <TD BGCOLOR="0xFFFFFF" CLASS="NavBarCell3"></TD>
 </TR>
 </TABLE>
