@@ -14,7 +14,7 @@
   <description>Build-time tools for use with Triple Play.</description>
 
   <properties>
-    <scala.version>2.11.6</scala.version>
+    <scala.version>2.12.2</scala.version>
   </properties>
 
   <dependencies>
@@ -35,23 +35,15 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.scala-tools</groupId>
-        <artifactId>maven-scala-plugin</artifactId>
-        <version>2.15.2</version>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>3.3.1</version>
         <executions>
           <execution>
-            <id>compile</id>
-            <goals><goal>compile</goal></goals>
-            <phase>compile</phase>
-          </execution>
-          <execution>
-            <id>test-compile</id>
-            <goals><goal>testCompile</goal></goals>
-            <phase>test-compile</phase>
-          </execution>
-          <execution>
-            <phase>process-resources</phase>
-            <goals><goal>compile</goal></goals>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
