@@ -127,7 +127,7 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
         }
 
         @Override public Dimension computeSize (float hintX, float hintY) {
-            if (text != null && (autoShrink || ellipsize)) {
+            if (hintX > 0 && text != null && (autoShrink || ellipsize)) {
                 float availWidth = hintX;
                 if (icon != null && iconPos.horizontal()) availWidth -= icon.width() + iconGap;
                 maybeShrinkOrEllipsize(availWidth);
