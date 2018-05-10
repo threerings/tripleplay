@@ -266,6 +266,7 @@ public class Box extends Container.Mutable<Box> {
         }
         _contents = contents;
         if (contents != null) {
+            removeFromParent(contents, false);
             didAdd(contents);
         }
         invalidate();
