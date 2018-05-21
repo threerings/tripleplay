@@ -193,40 +193,32 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             }
             _renderedIcon = icon;
 
-            if (text == null) {
-                _tglyph.close();
-                // if we're cuddling, adjust icon position; there is no text
-                if (_ilayer != null && iconCuddle) {
+            if (text == null) _tglyph.close();
+            else updateTextGlyph(tx, ty, width-usedWidth, height-usedHeight);
+
+            // if we're cuddling, adjust icon position based on the now known text position
+            if (_ilayer != null && iconCuddle) {
+                float iwid = icon.width(), ihei = icon.height();
+                float ix = _ilayer.tx(), iy = _ilayer.ty();
+                if (text == null) {
                     switch (iconPos) {
                     case LEFT:
-                    case RIGHT:
-                        float ox = MathUtil.ifloor(halign.offset(icon.width(), width));
-                        _ilayer.setTx(left + ox);
-                        break;
+                    case RIGHT: ix = left + MathUtil.ifloor(halign.offset(iwid, width)); break;
                     case ABOVE:
-                    case BELOW:
-                        float oy = MathUtil.ifloor(valign.offset(icon.height(), height));
-                        _ilayer.setTy(top + oy);
-                        break;
+                    case BELOW: iy = top + MathUtil.ifloor(valign.offset(ihei, height)); break;
                     }
-                }
-            } else {
-                updateTextGlyph(tx, ty, width-usedWidth, height-usedHeight);
-                // if we're cuddling, adjust icon position based on the now known text position
-                if (_ilayer != null && iconCuddle) {
+                } else {
                     Layer tlayer = _tglyph.layer();
                     float ctx = (tlayer == null) ? 0 : tlayer.tx();
                     float cty = (tlayer == null) ? 0 : tlayer.ty();
-                    float ix = _ilayer.tx(), iy = _ilayer.ty();
-                    float iwid = icon.width(), ihei = icon.height();
                     switch (iconPos) {
                     case LEFT:  ix = ctx - iwid - iconGap; break;
                     case ABOVE: iy = cty - ihei - iconGap; break;
                     case RIGHT: ix = ctx + textWidth() + iconGap; break;
                     case BELOW: iy = cty + textHeight() + iconGap; break;
                     }
-                    _ilayer.setTranslation(ix, iy);
                 }
+                _ilayer.setTranslation(ix, iy);
             }
         }
 
