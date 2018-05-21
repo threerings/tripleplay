@@ -193,8 +193,24 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
             }
             _renderedIcon = icon;
 
-            if (text == null) _tglyph.close();
-            else {
+            if (text == null) {
+                _tglyph.close();
+                // if we're cuddling, adjust icon position; there is no text
+                if (_ilayer != null && iconCuddle) {
+                    switch (iconPos) {
+                    case LEFT:
+                    case RIGHT:
+                        float ox = MathUtil.ifloor(halign.offset(icon.width(), width));
+                        _ilayer.setTx(left + ox);
+                        break;
+                    case ABOVE:
+                    case BELOW:
+                        float oy = MathUtil.ifloor(valign.offset(icon.height(), height));
+                        _ilayer.setTy(top + oy);
+                        break;
+                    }
+                }
+            } else {
                 updateTextGlyph(tx, ty, width-usedWidth, height-usedHeight);
                 // if we're cuddling, adjust icon position based on the now known text position
                 if (_ilayer != null && iconCuddle) {
