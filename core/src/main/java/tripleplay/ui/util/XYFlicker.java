@@ -11,6 +11,8 @@ import pythagoras.f.Point;
 import react.Signal;
 
 import playn.scene.Pointer;
+import playn.scene.Layer;
+import playn.scene.LayerUtil;
 
 /**
  * Translates pointer input on a layer into an x, y offset. With a sufficiently large drag delta,
@@ -70,6 +72,7 @@ public class XYFlicker extends Pointer.Listener
         _cur.set(_start);
         _prevStamp = 0;
         _curStamp = iact.event.time;
+        _layer = iact.hitLayer;
     }
 
     @Override public void onDrag (Pointer.Interaction iact) {
@@ -155,6 +158,7 @@ public class XYFlicker extends Pointer.Listener
     /** Translates a pointer event into a position. */
     protected void getPosition (Pointer.Event event, Point dest) {
         dest.set(-event.x(), -event.y());
+        LayerUtil.layerToScreen(_layer, dest, dest);
     }
 
     /** Sets the current position, clamping the values between min and max. */
@@ -179,4 +183,5 @@ public class XYFlicker extends Pointer.Listener
     protected final Point _start = new Point(), _cur = new Point(), _prev = new Point();
     protected final Point _max = new Point(), _min = new Point();
     protected double _prevStamp, _curStamp;
+    protected Layer _layer;
 }
