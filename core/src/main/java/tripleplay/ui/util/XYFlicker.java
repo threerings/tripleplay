@@ -67,7 +67,7 @@ public class XYFlicker extends Pointer.Listener
         _vel.set(0, 0);
         _maxDeltaSq = 0;
         _origPos.set(_position);
-        getPosition(iact.event, _start);
+        getPosition(iact, _start);
         _prev.set(_start);
         _cur.set(_start);
         _prevStamp = 0;
@@ -78,7 +78,7 @@ public class XYFlicker extends Pointer.Listener
     @Override public void onDrag (Pointer.Interaction iact) {
         _prev.set(_cur);
         _prevStamp = _curStamp;
-        getPosition(iact.event, _cur);
+        getPosition(iact, _cur);
         _curStamp = iact.event.time;
         float dx = _cur.x - _start.x, dy = _cur.y - _start.y;
         setPosition(_origPos.x + dx, _origPos.y + dy);
@@ -156,9 +156,8 @@ public class XYFlicker extends Pointer.Listener
     }
 
     /** Translates a pointer event into a position. */
-    protected void getPosition (Pointer.Event event, Point dest) {
-        dest.set(-event.x(), -event.y());
-        LayerUtil.layerToScreen(_layer, dest, dest);
+    protected void getPosition (Pointer.Interaction iact, Point dest) {
+        dest.set(-iact.local.x, -iact.local.y);
     }
 
     /** Sets the current position, clamping the values between min and max. */
