@@ -473,7 +473,7 @@ public abstract class Element<T extends Element<T>>
      * Configures the location of this element, relative to its parent.
      */
     protected void setLocation (float x, float y) {
-        layer.setTranslation(MathUtil.ifloor(x), MathUtil.ifloor(y));
+        layer.setTranslation(MathUtil.round(x), MathUtil.round(y));
     }
 
     /**
