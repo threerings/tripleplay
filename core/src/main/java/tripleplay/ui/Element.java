@@ -18,6 +18,7 @@ import react.Slot;
 import react.UnitSlot;
 import react.ValueView;
 
+import playn.core.Scale;
 import playn.scene.GroupLayer;
 import playn.scene.Layer;
 
@@ -417,6 +418,21 @@ public abstract class Element<T extends Element<T>>
      */
     protected void validate () {
         if (!isSet(Flag.VALID)) {
+            // prior to laying ourselves out, ensure that our visual boundaries fall on physical
+            // pixels; this avoids rendering artifacts on devices where the scale factor between
+            // virtual and physical pixels is non-integral
+            Root root = root();
+            if (root != null) {
+                Scale scale = root.iface.plat.graphics().scale();
+                float x = layer.tx(), y = layer.ty();
+                float rx = scale.roundToNearestPixel(x), ry = scale.roundToNearestPixel(y);
+                float rr = scale.roundToNearestPixel(x + _size.width);
+                float rb = scale.roundToNearestPixel(y + _size.height);
+                layer.setTranslation(rx, ry);
+                _size.setSize(rr-rx, rb-ry);
+            }
+
+            // now that our boundaries are adjusted, we can layout our children (if any)
             layout();
             set(Flag.VALID, true);
             wasValidated();
@@ -473,7 +489,7 @@ public abstract class Element<T extends Element<T>>
      * Configures the location of this element, relative to its parent.
      */
     protected void setLocation (float x, float y) {
-        layer.setTranslation(MathUtil.round(x), MathUtil.round(y));
+        layer.setTranslation(x, y);
     }
 
     /**
