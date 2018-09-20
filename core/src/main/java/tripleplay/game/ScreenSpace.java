@@ -1,6 +1,7 @@
 //
-// Verbum - words, fonts, and tasteful shadows
-// Copyright © 2014-2015 Three Rings Design, Inc.
+// Triple Play - utilities for use in PlayN-based games
+// Copyright (c) 2011-2018, Triple Play Authors - All rights reserved.
+// http://github.com/threerings/tripleplay/blob/master/LICENSE
 
 package tripleplay.game;
 
