@@ -8,6 +8,7 @@ package tripleplay.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import playn.core.Scale;
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import pythagoras.f.IPoint;
@@ -443,6 +444,12 @@ public class Scroller extends Composite<Scroller>
             _clippable = new Clippable() {
                 @Override public void setViewArea (float width, float height) { /* noop */ }
                 @Override public void setPosition (float x, float y) {
+                    Root root = root();
+                    if (root != null) {
+                        Scale scale = root.iface.plat.graphics().scale();
+                        if (hrange.active()) x = scale.roundToNearestPixel(x);
+                        if (vrange.active()) y = scale.roundToNearestPixel(y);
+                    }
                     Scroller.this.content.layer.setTranslation(x, y);
                 }
             };
