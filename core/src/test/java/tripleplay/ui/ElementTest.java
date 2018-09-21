@@ -10,9 +10,9 @@ import static org.junit.Assert.*;
 
 import react.Signal;
 
-import playn.core.Clock;
-import playn.core.Platform;
-import playn.core.StubPlatform;
+import pythagoras.f.IDimension;
+
+import playn.core.*;
 // import playn.java.JavaPlatform;
 import tripleplay.ui.layout.AxisLayout;
 
@@ -24,7 +24,32 @@ public class ElementTest
     //     JavaPlatform.register(config);
     // }
 
-    public static Platform stub = new StubPlatform();
+    static class StubGraphics extends Graphics
+    {
+        StubGraphics (Platform plat) {
+            super(plat, null, null);
+        };
+
+        public void setScale (Scale scale) {
+            scaleChanged(scale);
+        }
+
+        public IDimension screenSize () { return null; }
+        protected Canvas createCanvasImpl (Scale scale, int pw, int ph) { return null; }
+        public Path createPath () { return null; }
+        public Gradient createGradient (Gradient.Config config) { return null; }
+        public TextLayout layoutText (String text, TextFormat format) { return null; }
+        public TextLayout[] layoutText (String text, TextFormat format, TextWrap wrap) { return null; }
+    }
+
+    public static Platform stub = new StubPlatform() {
+        Graphics gfx = new StubGraphics(this);
+
+        public Graphics graphics () {
+            return gfx;
+        }
+    };
+
     public final Signal<Clock> frame = Signal.create();
 
     static class TestGroup extends Group
@@ -111,7 +136,7 @@ public class ElementTest
             }
 
             @Override protected void wasAdded () {
-                // steal the children back from brother 
+                // steal the children back from brother
                 add(child1);
                 super.wasAdded();
                 add(child2);
@@ -203,5 +228,41 @@ public class ElementTest
         pa.assertRemoved(2);
         pa.grandchild1.assertAdded(4);
         pa.grandchild2.assertAdded(4);
+    }
+
+    private final static float PIXEL_EPSILON = .05f;
+
+    @Test public void testPixelCoordinates() {
+        float factor = 1.333f;
+        int nitems = 10;
+        int size = 100;
+
+        Scale scale = new Scale(factor);
+        ((StubGraphics) stub.graphics()).setScale(scale);
+
+        Root root = newRoot();
+
+        Group g = new Group(AxisLayout.horizontal().gap(0));
+        Element els[] = new Element[nitems];
+        for (int i = 0; i < nitems; i++) {
+            g.add(els[i] = new Shim(size, size));
+        }
+        root.add(g).pack().validate();
+
+        for (int i = 0; i < nitems; i++) {
+            // Check that the virtual coordinates of the first and last pixel
+            // of each element map to integer physical pixel coordinates
+            float start = scale.scaled(els[i].x());
+            float end   = scale.scaled(els[i].x() + els[i].size().width()) - 1;
+            assertEquals(Math.round(start), start, PIXEL_EPSILON);
+            assertEquals(Math.round(end), end, PIXEL_EPSILON);
+
+            // Check that there are no gaps and no overlapping pixels between
+            // adjacent components
+            if (i != nitems - 1) {
+                float next  = scale.scaled(els[i + 1].x());
+                assertEquals(end + 1, next, PIXEL_EPSILON);
+            }
+        }
     }
 }
