@@ -7,7 +7,7 @@ library on all of its myriad platform targets.
 Various documentation-like-things are available:
 * [Release Notes]
 * A [demo of the UI toolkit]
-* [API documentation]
+* [API documentation] and [API changes since 2.0]
 
 Building
 --------
@@ -79,6 +79,7 @@ Questions, comments, and other worldly endeavors can be handled via the
 [Three Rings Libraries](http://groups.google.com/group/ooo-libs) Google Group.
 
 [API documentation]: http://threerings.github.com/tripleplay/apidocs/overview-summary.html
+[API changes since 2.0]: http://threerings.github.com/tripleplay/apidocs/changes
 [GWT]: http://code.google.com/webtoolkit/
 [Maven]: http://maven.apache.org/
 [PlayN]: http://code.google.com/p/playn
