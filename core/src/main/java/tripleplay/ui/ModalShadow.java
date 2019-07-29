@@ -23,6 +23,8 @@ import pythagoras.f.IDimension;
 public class ModalShadow extends Layer {
     private final IDimension size;
     private int color;
+    private boolean closeOnClick = false;
+    private UnitSignal closed = new UnitSignal();
 
     public ModalShadow (IDimension size) {
         this.size = size;
@@ -30,16 +32,19 @@ public class ModalShadow extends Layer {
         this.events().connect(new Pointer.Listener() {
             public void onStart (Pointer.Interaction iact) {
                 iact.capture();
+                if (closeOnClick) closed.emit();
             }
         });
         this.events().connect(new Mouse.Listener() {
             public void onButton (Mouse.ButtonEvent event, Mouse.Interaction iact) {
                 iact.capture();
+                if (closeOnClick) closed.emit();
             }
         });
         this.events().connect(new Touch.Listener() {
             public void onStart (Touch.Interaction iact) {
                 iact.capture();
+                if (closeOnClick) closed.emit();
             }
         });
     }
@@ -53,6 +58,14 @@ public class ModalShadow extends Layer {
 
     public void setColor(int color, float alpha) {
         this.color = Color.withAlpha(color, Math.round(alpha * 255));
+    }
+    
+    public void setCloseOnClick(boolean closeOnClick) {
+        this.closeOnClick = closeOnClick;
+    }
+    
+    public UnitSignal closed() {
+        return closed;
     }
 
     protected void paintImpl (Surface surf) {
