@@ -12,6 +12,9 @@ import playn.scene.Mouse;
 import playn.scene.Pointer;
 import playn.scene.Touch;
 
+import react.Signal;
+import react.SignalView;
+
 import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 
@@ -23,6 +26,7 @@ import pythagoras.f.IDimension;
 public class ModalShadow extends Layer {
     private final IDimension size;
     private int color;
+    private Signal<ModalShadow> clicked = Signal.create();
 
     public ModalShadow (IDimension size) {
         this.size = size;
@@ -30,16 +34,19 @@ public class ModalShadow extends Layer {
         this.events().connect(new Pointer.Listener() {
             public void onStart (Pointer.Interaction iact) {
                 iact.capture();
+                clicked.emit(ModalShadow.this);
             }
         });
         this.events().connect(new Mouse.Listener() {
             public void onButton (Mouse.ButtonEvent event, Mouse.Interaction iact) {
                 iact.capture();
+                clicked.emit(ModalShadow.this);
             }
         });
         this.events().connect(new Touch.Listener() {
             public void onStart (Touch.Interaction iact) {
                 iact.capture();
+                clicked.emit(ModalShadow.this);
             }
         });
     }
@@ -53,6 +60,15 @@ public class ModalShadow extends Layer {
 
     public void setColor(int color, float alpha) {
         this.color = Color.withAlpha(color, Math.round(alpha * 255));
+    }
+
+    /**
+     * A signal emitted when the a touch, pointer or mouse press is happens on the shadow layer.
+     * This can be useful in situations where one wants to dismiss a modal dialog when the user taps
+     * anywhere outside the dialog.
+     */
+    public SignalView<ModalShadow> clicked () {
+        return this.clicked;
     }
 
     protected void paintImpl (Surface surf) {
