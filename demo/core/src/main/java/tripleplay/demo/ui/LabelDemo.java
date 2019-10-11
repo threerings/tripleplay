@@ -51,7 +51,8 @@ public class LabelDemo extends DemoScreen
                                        Style.TEXT_WRAP.is(true), Style.HALIGN.left,
                                        Style.ICON_GAP.is(5))),
                 AxisLayout.stretch(new Label(TEXT2).addStyles(
-                                       Style.TEXT_WRAP.is(true), Style.HALIGN.center)),
+                                       Style.TEXT_WRAP.is(true), Style.HALIGN.center,
+                                       Style.LINE_SPACING.is(3f))),
                 AxisLayout.stretch(new Label(TEXT3).addStyles(
                                        Style.TEXT_WRAP.is(true), Style.HALIGN.right))),
             new Shim(15, 15),
@@ -89,6 +90,6 @@ public class LabelDemo extends DemoScreen
     }
 
     protected static final String TEXT1 = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
-    protected static final String TEXT2 = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.";
+    protected static final String TEXT2 = "Line spacing = 3.\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.";
     protected static final String TEXT3 = "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.";
 }

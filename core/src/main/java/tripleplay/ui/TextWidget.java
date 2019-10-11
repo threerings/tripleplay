@@ -119,7 +119,8 @@ public abstract class TextWidget<T extends TextWidget<T>> extends Widget<T>
                 // TODO: should we do something with a y-hint?
                 if (hints.width > 0 && wrap) {
                     text = new StyledText.Block(gfx, curtext, style, new TextWrap(hints.width),
-                                                Style.toAlignment(resolveStyle(Style.HALIGN)));
+                                                Style.toAlignment(resolveStyle(Style.HALIGN)),
+                                                resolveStyle(Style.LINE_SPACING));
                 } else {
                     text = new StyledText.Span(gfx, curtext, style);
                 }

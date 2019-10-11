@@ -272,6 +272,10 @@ public abstract class Style<V>
     /** Whether or not to underline text. Inherited. */
     public static final Flag UNDERLINE = newFlag(true, false);
 
+    /** The line spacing to use when rendering multiline text. This is an adjustment to the default
+     * line spacing, not an absolute value. */
+    public static final Style<Float> LINE_SPACING = newStyle(false, 0f);
+
     /** Whether or not to automatically shrink a text widget's font size until it fits into the
      * horizontal space it has been allotted. Cannot be used with {@link #TEXT_WRAP}. Not
      * inherited. */

@@ -99,14 +99,19 @@ public abstract class StyledText
         /** The alignment of wrapped text, unused if not wrapping. */
         public final TextBlock.Align align;
 
+        /** Additional space to be added (or subtracted) from the default line spacing. */
+        public final float lineSpacing;
+
         public Block (Graphics gfx, String text, TextStyle style, TextWrap wrap,
-                      TextBlock.Align align) {
+                      TextBlock.Align align, float lineSpacing) {
             super(gfx, text, style);
             assert wrap != null && align != null;
             this.wrap = wrap;
             this.align = align;
+            this.lineSpacing = lineSpacing;
             _layouts = gfx.layoutText(text, style, wrap);
             _bounds = TextBlock.getBounds(_layouts, new Rectangle());
+            _bounds.height += lineSpacing*(_layouts.length-1);
             _bounds.width = style.effect.adjustWidth(_bounds.width);
             _bounds.height = style.effect.adjustHeight(_bounds.height);
         }
@@ -124,12 +129,13 @@ public abstract class StyledText
                 float lx = x + bx + align.getX(style.effect.adjustWidth(layout.size.width()),
                                                _bounds.width-_bounds.x);
                 style.effect.render(canvas, layout, style.textColor, style.underlined, lx, ly);
-                ly += layout.ascent() + layout.descent() + layout.leading();
+                ly += layout.ascent() + layout.descent() + layout.leading() + this.lineSpacing;
             }
         }
 
         @Override public Block resize (float size) {
-            return new Block(_gfx, text, style.withFont(style.font.derive(size)), wrap, align);
+            return new Block(_gfx, text, style.withFont(style.font.derive(size)),
+                             wrap, align, lineSpacing);
         }
 
         @Override public int hashCode () {
@@ -159,7 +165,7 @@ public abstract class StyledText
     /** Creates a uniformly formatted multiple-lines of text wrapped at {@code wrapWidth} and
      * left-aligned. */
     public static Block block (Graphics gfx, String text, TextStyle style, float wrapWidth) {
-        return new Block(gfx, text, style, new TextWrap(wrapWidth), TextBlock.Align.LEFT);
+        return new Block(gfx, text, style, new TextWrap(wrapWidth), TextBlock.Align.LEFT, 0);
     }
 
     /** The width of this styled text when rendered. */
