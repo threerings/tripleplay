@@ -6,6 +6,7 @@
 package tripleplay.ui.bgs;
 
 import pythagoras.f.IDimension;
+import pythagoras.f.MathUtil;
 
 import playn.core.Surface;
 import playn.core.Tile;
@@ -13,6 +14,8 @@ import playn.core.Tint;
 import playn.scene.Layer;
 
 import tripleplay.ui.Background;
+import tripleplay.ui.Style.HAlign;
+import tripleplay.ui.Style.VAlign;
 import tripleplay.ui.util.Scale9;
 
 /**
@@ -92,11 +95,43 @@ public class Scale9Background extends Background
             protected void drawPart (Surface surf, int x, int y) {
                 float dw = dest.xaxis.size(x), dh = dest.yaxis.size(y);
                 if (dw == 0 || dh == 0) return;
-                surf.draw(_tile, dest.xaxis.coord(x), dest.yaxis.coord(y), dw, dh,
-                          _s9.xaxis.coord(x), _s9.yaxis.coord(y),
-                          _s9.xaxis.size(x),  _s9.yaxis.size(y));
+                float pw = _s9.xaxis.size(x), ph = _s9.yaxis.size(y);
+                int xTimes = MathUtil.iceil(dw / pw);
+                int yTimes = MathUtil.iceil(dh / ph);
+                float startX = dest.xaxis.coord(x);
+                float startY = dest.yaxis.coord(y);
+                if (_repeatMode) {
+                    float absStartX = startX + surf.tx().tx, absStartY = startY + surf.tx().ty;
+                    surf.startClipped(MathUtil.ifloor(absStartX), MathUtil.ifloor(absStartY), MathUtil.iceil(dw), MathUtil.iceil(dh));
+                    if(_verticalAlignment == VAlign.BOTTOM) startY -= Math.abs(yTimes*ph-dh);
+                    if(_horizontalAlignment == HAlign.RIGHT) startX -= Math.abs(xTimes*pw-dw);
+                    for (int c = 0; c < xTimes; c++) {
+                        if (startX > dest.xaxis.coord(x) + dw) break;
+                        for (int r = 0; r < yTimes; r++) {
+                            if (startY > dest.yaxis.coord(y) + dh) break;
+                            surf.draw(_tile, startX, startY, pw, ph, _s9.xaxis.coord(x), _s9.yaxis.coord(y),
+                                    _s9.xaxis.size(x), _s9.yaxis.size(y));
+                            startY += ph;
+                        }
+                        startY = dest.yaxis.coord(y);
+                        startX += pw;
+                    }
+                    surf.endClipped();
+                } else {
+                    surf.draw(_tile, dest.xaxis.coord(x), dest.yaxis.coord(y), dw, dh,
+                            _s9.xaxis.coord(x), _s9.yaxis.coord(y),
+                            _s9.xaxis.size(x),  _s9.yaxis.size(y));
+                }
             }
         });
+    }
+
+    /**
+     * Controls wether the the extended parts are scaled or repeated. 
+     * @param repeat Repeats the extended parts if true otherwise scales them.
+     */
+    public void setRepeatMode (boolean repeat) {
+        _repeatMode = repeat;
     }
 
     /**
@@ -115,8 +150,31 @@ public class Scale9Background extends Background
         return this;
     }
 
+    /**
+     * Defines how the repeated parts are aligned horizontally when the repeatMode is turned on.
+     * By default the repeated parts are aligned to the left border and left corners respectively.
+     * 
+     * @param horizontalAlignment Only left or right alignment are supported.
+     */
+    public void setRepeatAlignment (HAlign horizontalAlignment) {
+        _horizontalAlignment = horizontalAlignment;
+    }
+
+    /**
+     * Defines how the repeated parts are aligned vertically when the repeatMode is turned on.
+     * By default the repeated parts are aligned to the top border and top corners respectively.
+     * 
+     * @param verticalAlignment Only top or bottom alignment are supported.
+     */
+    public void setRepeatAlignment (VAlign verticalAlignment) {
+        _verticalAlignment = verticalAlignment;
+    }
+
     protected Tile _tile;
     protected Scale9 _s9;
     protected float _destScale = 1;
     protected int _tint = Tint.NOOP_TINT;
+    protected boolean _repeatMode = false;
+    protected HAlign _horizontalAlignment = HAlign.LEFT;
+    protected VAlign _verticalAlignment = VAlign.TOP; 
 }
