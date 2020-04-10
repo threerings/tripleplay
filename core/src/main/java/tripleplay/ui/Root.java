@@ -60,6 +60,7 @@ public class Root extends Elements<Root> implements Closeable
     /** Sets the size of this root element. */
     @Override public Root setSize (float width, float height) {
         _size.setSize(width, height);
+        layer.setSize(width, height);
         invalidate();
         return this;
     }

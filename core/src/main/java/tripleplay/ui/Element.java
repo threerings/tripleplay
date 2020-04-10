@@ -498,6 +498,7 @@ public abstract class Element<T extends Element<T>>
     protected T setSize (float width, float height) {
         boolean changed = _size.width != width || _size.height != height;
         _size.setSize(width, height);
+        layer.setSize(width, height);
         // if we have a cached preferred size and this size differs from it, we need to clear our
         // layout data as it may contain computations specific to our preferred size
         if (_preferredSize != null && !_size.equals(_preferredSize)) clearLayoutData();
