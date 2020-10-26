@@ -25,8 +25,8 @@ import playn.scene.LayerUtil;
  * and followed by some usage of the {@link #position()} method. For example:
  *
  * <pre>{@code
- *    XYFlicker flicker = new XYFlicker();
  *    Layer layer = ...;
+ *    XYFlicker flicker = new XYFlicker(layer);
  *    { layer.addListener(flicker); }
  *    void update (int delta) {
  *        flicker.update(delta);
@@ -63,6 +63,11 @@ public class XYFlicker extends Pointer.Listener
         return _position;
     }
 
+    public XYFlicker(Layer scrollLayer)
+    {
+        _scrollLayer = scrollLayer;
+    }
+
     @Override public void onStart (Pointer.Interaction iact) {
         _vel.set(0, 0);
         _maxDeltaSq = 0;
@@ -72,7 +77,6 @@ public class XYFlicker extends Pointer.Listener
         _cur.set(_start);
         _prevStamp = 0;
         _curStamp = iact.event.time;
-        _layer = iact.hitLayer;
     }
 
     @Override public void onDrag (Pointer.Interaction iact) {
@@ -157,7 +161,8 @@ public class XYFlicker extends Pointer.Listener
 
     /** Translates a pointer event into a position. */
     protected void getPosition (Pointer.Interaction iact, Point dest) {
-        dest.set(-iact.local.x, -iact.local.y);
+        LayerUtil.screenToLayer(_scrollLayer, iact.event, dest);
+        dest.set(-dest.x(), -dest.y());
     }
 
     /** Sets the current position, clamping the values between min and max. */
@@ -182,5 +187,5 @@ public class XYFlicker extends Pointer.Listener
     protected final Point _start = new Point(), _cur = new Point(), _prev = new Point();
     protected final Point _max = new Point(), _min = new Point();
     protected double _prevStamp, _curStamp;
-    protected Layer _layer;
+    protected final Layer _scrollLayer;
 }
