@@ -410,7 +410,7 @@ public class Scroller extends Composite<Scroller>
     public final Range hrange = createRange(), vrange = createRange();
 
     /** Handles the flicking physics. */
-    public final XYFlicker flicker = new XYFlicker();
+    public final XYFlicker flicker = new XYFlicker(layer);
 
     /**
      * Creates a new scroller containing the given content and with {@link Scroller.Behavior#BOTH}.
