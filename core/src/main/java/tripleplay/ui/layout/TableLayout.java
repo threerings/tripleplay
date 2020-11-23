@@ -157,6 +157,15 @@ public class TableLayout extends Layout
     }
 
     /**
+     * Configures the minimum row height.
+     * @param minRowHeight Minimum row heigh.
+     */
+    public TableLayout minRowHeight(float minRowHeight) {
+        _minRowHeight = minRowHeight;
+        return this;
+    }
+
+    /**
      * Returns the number of columns configured for this table.
      */
     public int columns () {
@@ -236,6 +245,9 @@ public class TableLayout extends Layout
         // note the minimum width constraints
         for (int cc = 0; cc < columns; cc++) metrics.columnWidths[cc] = _columns[cc]._minWidth;
 
+        // initialize the minimum row height
+        Arrays.fill(metrics.rowHeights, _minRowHeight);
+
         // compute the preferred size of the fixed columns
         int ii = 0;
         for (Element<?> elem : elems) {
@@ -311,4 +323,5 @@ public class TableLayout extends Layout
     protected int _rowgap, _colgap;
     protected boolean _vstretch;
     protected Style.VAlign _rowVAlign = Style.VAlign.CENTER;
+    protected float _minRowHeight = 0f;
 }
