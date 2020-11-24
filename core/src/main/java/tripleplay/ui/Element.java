@@ -417,21 +417,24 @@ public abstract class Element<T extends Element<T>>
      * visualizations, or laying out children, or anything else.
      */
     protected void validate () {
-        if (!isSet(Flag.VALID)) {
-            // prior to laying ourselves out, ensure that our visual boundaries fall on physical
-            // pixels; this avoids rendering artifacts on devices where the scale factor between
-            // virtual and physical pixels is non-integral
-            Root root = root();
-            if (root != null) {
-                Scale scale = root.iface.plat.graphics().scale();
-                float x = layer.tx(), y = layer.ty();
-                float rx = scale.roundToNearestPixel(x), ry = scale.roundToNearestPixel(y);
-                float rr = scale.roundToNearestPixel(x + _size.width);
-                float rb = scale.roundToNearestPixel(y + _size.height);
-                layer.setTranslation(rx, ry);
-                _size.setSize(rr-rx, rb-ry);
-            }
+        // prior to laying ourselves out, ensure that our visual boundaries fall on physical
+        // pixels; this avoids rendering artifacts on devices where the scale factor between
+        // virtual and physical pixels is non-integral.
+        // Note that this needs to be done even if we have not been invalidated, because if
+        // parents have been invalidated, layout() may have been called which may have updated
+        // our layer boundaries.
+        Root root = root();
+        if (root != null) {
+            Scale scale = root.iface.plat.graphics().scale();
+            float x = layer.tx(), y = layer.ty();
+            float rx = scale.roundToNearestPixel(x), ry = scale.roundToNearestPixel(y);
+            float rr = scale.roundToNearestPixel(x + _size.width);
+            float rb = scale.roundToNearestPixel(y + _size.height);
+            layer.setTranslation(rx, ry);
+            _size.setSize(rr-rx, rb-ry);
+        }
 
+        if (!isSet(Flag.VALID)) {
             // now that our boundaries are adjusted, we can layout our children (if any)
             layout();
             set(Flag.VALID, true);
