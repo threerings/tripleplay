@@ -15,6 +15,7 @@ import pythagoras.f.IDimension;
 import playn.core.*;
 // import playn.java.JavaPlatform;
 import tripleplay.ui.layout.AxisLayout;
+import tripleplay.ui.layout.BorderLayout;
 
 public class ElementTest
 {
@@ -232,6 +233,7 @@ public class ElementTest
 
     private final static float PIXEL_EPSILON = .05f;
 
+    /** Tests alignment of element boundaries to physical pixel coordinates. */
     @Test public void testPixelCoordinates() {
         float factor = 1.333f;
         int nitems = 10;
@@ -263,6 +265,43 @@ public class ElementTest
                 float next  = scale.scaled(els[i + 1].x());
                 assertEquals(end + 1, next, PIXEL_EPSILON);
             }
+        }
+    }
+
+    @Test public void testPixelCoordinates2() {
+
+        ((StubGraphics) stub.graphics()).setScale(new Scale(1f));
+
+        class MyShim extends Shim {
+            MyShim() {
+                super(100, 55);
+            }
+
+            void assertCoordsAligned() {
+                float x = x(), y = y();
+                assertEquals(Math.round(x), x, PIXEL_EPSILON);
+                assertEquals(Math.round(y), y, PIXEL_EPSILON);
+            }
+        }
+
+        MyShim els[] = new MyShim[] { new MyShim(), new MyShim() };
+        Group g = new Group(AxisLayout.horizontal().gap(5)).add(els);
+
+        Root root = iface.createRoot(new BorderLayout(), Stylesheet.builder().create()).setSize(300, 100);
+        root.add(g.setConstraint(BorderLayout.CENTER)).validate();
+
+        // Check that both elements are initially aligned to physical pixel coordinates
+        for (MyShim el : els) {
+            el.assertCoordsAligned();
+        }
+
+        // Invalidate one of the elements, and trigger a revalidation
+        els[0].invalidate();
+        root.validate();
+
+        // Check that both elements are still aligned
+        for (MyShim el : els) {
+            el.assertCoordsAligned();
         }
     }
 }
