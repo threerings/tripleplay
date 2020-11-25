@@ -124,10 +124,10 @@ public class BorderLayout extends Layout
     }
 
     /** The horizontal gap between components. */
-    public final float hgap;
+    public float hgap;
 
     /** The vertical gap between components. */
-    public final float vgap;
+    public float vgap;
 
     /**
      * Constructs a new border layout with no gaps.
@@ -150,6 +150,26 @@ public class BorderLayout extends Layout
     public BorderLayout (float hgap, float vgap) {
         this.hgap = hgap;
         this.vgap = vgap;
+    }
+
+    /**
+     * Sets the gap, in pixels, to use between components.
+     * @param gaps the gap to use between components
+     */
+    public BorderLayout gaps (float gaps) {
+        hgap = vgap = gaps;
+        return this;
+    }
+
+    /**
+     * Sets the gap, in pixels, to use between components.
+     * @param hgap the horizontal gap to use between components
+     * @param vgap the vertical gap to use between components
+     */
+    public BorderLayout gaps (float hgap, float vgap) {
+        this.hgap = hgap;
+        this.vgap = vgap;
+        return this;
     }
 
     @Override
