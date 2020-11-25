@@ -5,6 +5,7 @@
 
 package tripleplay.ui;
 
+import pythagoras.f.Dimension;
 import pythagoras.f.IDimension;
 import tripleplay.util.DimensionValue;
 
@@ -36,8 +37,17 @@ public class SizableGroup extends Group
         preferredSize.connect(invalidateSlot());
     }
 
-    @Override protected LayoutData createLayoutData (float hintX, float hintY) {
-        // use a sizable layout data with the usual layout and hybrid size
-        return new SizableLayoutData(super.createLayoutData(hintX, hintY), preferredSize.get());
+    @Override
+    protected Dimension computeSize(LayoutData ldata, float hintX, float hintY) {
+        IDimension pSize = preferredSize.get();
+        float pWidth = pSize.width();
+        float pHeight = pSize.height();
+
+        Dimension size = super.computeSize(ldata, select(pWidth, hintX), select(pHeight, hintY));
+        return new Dimension(select(pWidth, size.width), select(pHeight, size.height));
+    }
+
+    private static float select (float pref, float base) {
+        return pref == 0 ? base : pref;
     }
 }
