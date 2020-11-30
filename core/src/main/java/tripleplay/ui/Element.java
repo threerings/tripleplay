@@ -686,7 +686,7 @@ public abstract class Element<T extends Element<T>>
     /** Ways in which a preferred and an original dimension can be "taken" to produce a result.
      * The name is supposed to be readable in context and compact, for example
      * {@code new SizableLayoutData(...).forWidth(Take.MAX).forHeight(Take.MIN, 200)}. */
-    protected enum Take
+    public enum Take
     {
         /** Uses the maximum of the preferred size and original. */
         MAX {
