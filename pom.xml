@@ -79,7 +79,6 @@
     <!-- <module>ios</module> -->
     <module>java-lwjgl2</module>
     <module>java-swt</module>
-    <!--<module>tools</module>-->
     <module>plugins</module>
   </modules>
 
@@ -93,6 +92,7 @@
         <property><name>!performRelease</name></property>
       </activation>
       <modules>
+        <module>tools</module>
         <module>demo</module>
       </modules>
     </profile>
