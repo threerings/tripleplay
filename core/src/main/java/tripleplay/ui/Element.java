@@ -29,7 +29,7 @@ import tripleplay.util.Ref;
  * The root of the interface element hierarchy. See {@link Widget} for the root of all interactive
  * elements, and {@link Container} for the root of all container elements.
  *
- * @param T used as a "self" type; when subclassing {@code Element}, T must be the type of the
+ * Param T is used as a "self" type; when subclassing {@code Element}, T must be the type of the
  * subclass.
  */
 public abstract class Element<T extends Element<T>>
