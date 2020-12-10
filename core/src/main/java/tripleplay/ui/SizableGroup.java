@@ -19,6 +19,9 @@ public class SizableGroup extends Group
     /** The preferred size of this widget. Update at will. */
     public final DimensionValue preferredSize = new DimensionValue(0, 0);
 
+    private Take widthFn = Take.PREFERRED_IF_SET;
+    private Take heightFn = Take.PREFERRED_IF_SET;
+
     /** Creates the sizable group with preferred width and height of 0. Note that this will
      * cause the base layout preferred size to be used, if overridden. */
     public SizableGroup (Layout layout) {
@@ -37,6 +40,24 @@ public class SizableGroup extends Group
         preferredSize.connect(invalidateSlot());
     }
 
+    /**
+     * Sets the way in which widths are combined to calculate the resulting preferred size.
+     * For example, {@code new SizeableGroup(...).forWidth(Take.MAX)}.
+     */
+    public SizableGroup forWidth (Take fn) {
+        widthFn = fn;
+        return this;
+    }
+
+    /**
+     * Sets the way in which heights are combined to calculate the resulting preferred size.
+     * For example, {@code new SizeableGroup(...).forHeight(Take.MAX)}.
+     */
+    public SizableGroup forHeight (Take fn) {
+        heightFn = fn;
+        return this;
+    }
+
     @Override
     protected Dimension computeSize(LayoutData ldata, float hintX, float hintY) {
         IDimension pSize = preferredSize.get();
@@ -44,7 +65,7 @@ public class SizableGroup extends Group
         float pHeight = pSize.height();
 
         Dimension size = super.computeSize(ldata, select(pWidth, hintX), select(pHeight, hintY));
-        return new Dimension(select(pWidth, size.width), select(pHeight, size.height));
+        return new Dimension(widthFn.apply(pWidth, size.width), heightFn.apply(pHeight, size.height));
     }
 
     private static float select (float pref, float base) {
