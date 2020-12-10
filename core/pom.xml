@@ -57,9 +57,11 @@
         <configuration>
           <quiet>true</quiet>
           <show>public</show>
+          <detectLinks/>
           <additionalparam>-Xdoclint:all -Xdoclint:-missing</additionalparam>
           <links>
-            <link>http://docs.playn.googlecode.com/git/javadoc</link>
+            <link>http://playn.io/docs/api/core/</link>
+            <link>http://playn.io/docs/api/scene/</link>
           </links>
         </configuration>
       </plugin>
