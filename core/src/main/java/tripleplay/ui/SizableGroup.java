@@ -16,11 +16,11 @@ import tripleplay.util.DimensionValue;
  */
 public class SizableGroup extends Group
 {
-    /** The preferred size of this widget. Update at will. */
-    public final DimensionValue preferredSize = new DimensionValue(0, 0);
-
     private Take widthFn = Take.PREFERRED_IF_SET;
     private Take heightFn = Take.PREFERRED_IF_SET;
+
+    /** The preferred size of this widget. Update at will. */
+    public final DimensionValue preferredSize = new DimensionValue(0, 0);
 
     /** Creates the sizable group with preferred width and height of 0. Note that this will
      * cause the base layout preferred size to be used, if overridden. */
@@ -59,7 +59,7 @@ public class SizableGroup extends Group
     }
 
     @Override
-    protected Dimension computeSize(LayoutData ldata, float hintX, float hintY) {
+    protected Dimension computeSize (LayoutData ldata, float hintX, float hintY) {
         IDimension pSize = preferredSize.get();
         float pWidth = pSize.width();
         float pHeight = pSize.height();
