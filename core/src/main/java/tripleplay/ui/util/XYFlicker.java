@@ -8,6 +8,8 @@ package tripleplay.ui.util;
 import pythagoras.f.IPoint;
 import pythagoras.f.MathUtil;
 import pythagoras.f.Point;
+import pythagoras.f.Vector;
+import pythagoras.f.Vectors;
 import react.Signal;
 
 import playn.scene.Pointer;
@@ -103,18 +105,15 @@ public class XYFlicker extends Pointer.Listener
         // if not, maybe impart some velocity
         float dragTime = (float)(iact.event.time - _prevStamp);
         if (dragTime > 0) {
-            Point delta = new Point(_cur.x - _prev.x, _cur.y - _prev.y);
-            Point dragVel = delta.mult(1 / dragTime);
-            float dragSpeed = dragVel.distance(0, 0);
+            Vector dragVel = Vectors.from(_prev, _cur).scaleLocal(1 / dragTime);
+            float dragSpeed = dragVel.length();
             if (dragSpeed > maxFlickSpeed) {
-                dragVel.multLocal(maxFlickSpeed / dragSpeed);
+                dragVel.scaleLocal(maxFlickSpeed / dragSpeed);
                 dragSpeed = maxFlickSpeed;
             }
-            _vel.set(dragVel);
-            _vel.multLocal(flickXfer);
-            float sx = Math.signum(_vel.x), sy = Math.signum(_vel.y);
-            _accel.x = -sx * friction;
-            _accel.y = -sy * friction;
+            dragVel.scale(flickXfer, _vel);
+            if (dragSpeed > 0f)
+                dragVel.scale(-friction / dragSpeed, _accel);
         }
     }
 
@@ -183,7 +182,9 @@ public class XYFlicker extends Pointer.Listener
 
     protected float _maxDeltaSq;
     protected final Point _position = new Point();
-    protected final Point _vel = new Point(), _accel = new Point(), _origPos = new Point();
+    protected final Point _origPos = new Point();
+    protected final Vector _vel = new Vector();
+    protected final Vector _accel = new Vector();
     protected final Point _start = new Point(), _cur = new Point(), _prev = new Point();
     protected final Point _max = new Point(), _min = new Point();
     protected double _prevStamp, _curStamp;
