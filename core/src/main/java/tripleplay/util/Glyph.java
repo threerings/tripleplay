@@ -46,8 +46,7 @@ public class Glyph implements Closeable
             if (_depth != null) layer.setDepth(_depth);
             _parent.add(layer);
             _layer = layer;
-        } else if (layer.width() < width || layer.height() < height) {
-            // TODO: should we ever shrink it?
+        } else if (layer.width() != width || layer.height() != height) {
             layer.resize(width, height);
         }
         _preparedWidth = width;
