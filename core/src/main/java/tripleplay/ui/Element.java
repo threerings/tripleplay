@@ -278,7 +278,8 @@ public abstract class Element<T extends Element<T>>
     }
 
     /**
-     * Configures the layout constraint on this element.
+     * Configures the layout constraint on this element. Note: if the element already has a
+     * constraint set, it will be replaced. Constraints cannot be automatically composed.
      * @return this element for call chaining.
      */
     public T setConstraint (Layout.Constraint constraint) {
