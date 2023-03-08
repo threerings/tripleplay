@@ -282,9 +282,6 @@ public abstract class Element<T extends Element<T>>
      * @return this element for call chaining.
      */
     public T setConstraint (Layout.Constraint constraint) {
-        assert (_constraint == null || constraint == null) :
-            "Cannot set constraint on element which already has a constraint. " +
-            "Layout constraints cannot be automatically composed.";
         if (constraint != null) constraint.setElement(this);
         _constraint = constraint;
         invalidate();
