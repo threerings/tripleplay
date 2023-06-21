@@ -19,19 +19,7 @@
     <url>http://github.com/threerings/tripleplay/issues</url>
   </issueManagement>
 
-  <distributionManagement>
-    <repository>
-      <id>bintray-repo-maven</id>
-      <url>https://api.bintray.com/maven/playn/playn/tripleplay/;publish=1</url>
-    </repository>
-  </distributionManagement>
-
   <repositories>
-    <repository>
-      <!-- reference jcenter repository so we don't have to wait for Maven Central sync -->
-      <id>jcenter</id>
-      <url>https://jcenter.bintray.com/</url>
-    </repository>
     <repository>
       <!-- when we depend on a snapshot PlayN, get that from SonaType's OSS repository -->
       <id>sonatype-snapshots</id>
