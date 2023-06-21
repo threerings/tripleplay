@@ -80,7 +80,7 @@
         <configuration>
           <serverId>ossrh-releases</serverId>
           <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-          <stagingProfileId>a00df38d03dd2c</stagingProfileId>
+          <stagingProfileId>aa555c46fc37d0</stagingProfileId>
         </configuration>
       </plugin>
     </plugins>
