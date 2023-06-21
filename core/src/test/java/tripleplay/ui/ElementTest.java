@@ -36,7 +36,7 @@ public class ElementTest
         }
 
         public IDimension screenSize () { return null; }
-        protected Canvas createCanvasImpl (Scale scale, int pw, int ph) { return null; }
+        public Canvas createCanvas (Scale scale, int pw, int ph) { return null; }
         public Path createPath () { return null; }
         public Gradient createGradient (Gradient.Config config) { return null; }
         public TextLayout layoutText (String text, TextFormat format) { return null; }
