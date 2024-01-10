@@ -78,11 +78,11 @@ Contact
 Questions, comments, and other worldly endeavors can be handled via the
 [Three Rings Libraries](http://groups.google.com/group/ooo-libs) Google Group.
 
-[API documentation]: http://threerings.github.com/tripleplay/apidocs/overview-summary.html
-[API changes since 2.0]: http://threerings.github.com/tripleplay/apidocs/changes
+[API documentation]: https://threerings.github.io/tripleplay/apidocs/overview-summary.html
+[API changes since 2.0]: https://threerings.github.io/tripleplay/apidocs/changes
 [GWT]: http://code.google.com/webtoolkit/
 [Maven]: http://maven.apache.org/
 [PlayN]: http://code.google.com/p/playn
 [Release Notes]: https://github.com/threerings/tripleplay/wiki/ReleaseNotes
 [SBT]: http://github.com/harrah/xsbt/wiki/Setup
-[demo of the UI toolkit]: http://threerings.github.com/tripleplay/widgetdemo.html
+[demo of the UI toolkit]: https://threerings.github.io/tripleplay/widgetdemo.html
